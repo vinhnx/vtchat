@@ -76,13 +76,13 @@ export const ChatModeConfig: Record<
         webSearch: true,
         imageUpload: true,
         retry: true,
-        isAuthRequired: true,
+        isAuthRequired: false,
     },
     [ChatMode.GPT_4o]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
-        isAuthRequired: true,
+        isAuthRequired: false,
     },
     [ChatMode.CLAUDE_4_SONNET]: {
         webSearch: true,
@@ -123,6 +123,7 @@ export const CHAT_MODE_CREDIT_COSTS = {
     [ChatMode.DEEPSEEK_R1_0528]: 5,
     [ChatMode.CLAUDE_4_SONNET]: 5,
     [ChatMode.CLAUDE_4_OPUS]: 8,
+    [ChatMode.GPT_4o]: 3,
     [ChatMode.GPT_4o_Mini]: 1,
     [ChatMode.GPT_4_1]: 5,
     [ChatMode.GPT_4_1_Mini]: 2,
