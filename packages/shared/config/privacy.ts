@@ -39,7 +39,7 @@ These third-party services have their own Privacy Policies, which we recommend y
 
 ### Cookies
 
-\`llmchat.co\` does not directly use cookies. However, some third-party services we utilize, such as PostHog and Sentry, may use cookies to monitor interactions with our Service. Additionally, cookies are used for authentication purposes. You have the option to either accept or decline these cookies and should refer to your browser settings for managing your preferences.
+\`VT\` does not directly use cookies. However, some third-party services we utilize, such as PostHog and Sentry, may use cookies to monitor interactions with our Service. Additionally, cookies are used for authentication purposes. You have the option to either accept or decline these cookies and should refer to your browser settings for managing your preferences.
 
 ### Third-Party Links and Content
 
@@ -47,5 +47,5 @@ The Service may contain links to third-party websites. We advise you to review t
 
 ### Contact Us
 
-If you have any questions or concerns about this Privacy Policy, please feel free to contact us at [support@llmchat.co](mailto:support@llmchat.co). We will do our best to respond to your inquiries promptly.
+If you have any questions or concerns about this Privacy Policy, please feel free to contact us at [support@vtai.vn](mailto:support@vtai.vn). We will do our best to respond to your inquiries promptly.
 `;

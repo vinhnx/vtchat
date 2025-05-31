@@ -20,7 +20,7 @@ export default function GlobalError({ error }: { error: Error }) {
                         <p className="text-brand text-sm">
                             It seems we encountered an unexpected error. Please try refreshing the
                             page or check back later. If the problem persists, feel free to{' '}
-                            <a href="mailto:hello@llmchat.com">contact team</a>.
+                            <a href="mailto:hello@vtai.vn">contact</a>.
                         </p>
                     </div>
                 </div>
