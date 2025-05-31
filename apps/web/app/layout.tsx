@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { RootLayout } from '@repo/common/components';
+import { RootLayout, ThemeProvider } from '@repo/common/components';
 import { ReactQueryProvider, RootProvider } from '@repo/common/context';
 import { TooltipProvider, cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
@@ -105,18 +105,18 @@ export default function ParentLayout({
                 {/* <PostHogProvider> */}
                 <ClerkProvider>
                     <RootProvider>
-                        {/* <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          > */}
-                        <TooltipProvider>
-                            <ReactQueryProvider>
-                                <RootLayout>{children}</RootLayout>
-                            </ReactQueryProvider>
-                        </TooltipProvider>
-                        {/* </ThemeProvider> */}
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                            >
+                                <TooltipProvider>
+                                    <ReactQueryProvider>
+                                        <RootLayout>{children}</RootLayout>
+                                    </ReactQueryProvider>
+                                </TooltipProvider>
+                        </ThemeProvider>
                     </RootProvider>
                 </ClerkProvider>
                 {/* </PostHogProvider> */}
