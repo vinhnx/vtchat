@@ -98,10 +98,10 @@ export const modelOptions = [
     },
     {
         label: 'GPT 4o',
-        value: ChatMode.GPT_4_1_Mini,
+        value: ChatMode.GPT_4o,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
     },
     {
         label: 'GPT 4.1 Mini',
