@@ -3,9 +3,9 @@
 
 ## Introduction
 
-[LLMChat.co](https://llmchat.co) is a sophisticated AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Pro Search and Deep Research for in-depth analysis of complex topics.
+VT is a sophisticated AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Pro Search and Deep Research for in-depth analysis of complex topics. Forked from VT, VT enhances the original with a focus on privacy and local data storage, ensuring that all user interactions remain secure and confidential.
 
-LLMChat.co stands out with its workflow orchestration system and focus on privacy, storing all user data locally in the browser using IndexedDB, ensuring your conversations never leave your device.
+VT stands out with its workflow orchestration system and focus on privacy, storing all user data locally in the browser using IndexedDB, ensuring your conversations never leave your device.
 
 ## Key Features
 
@@ -15,6 +15,7 @@ LLMChat.co stands out with its workflow orchestration system and focus on privac
 - **Pro Search**: Enhanced search with web integration for real-time information
 
 **Multiple LLM Provider Support**
+
 - OpenAI
 - Anthropic
 - Google
@@ -28,13 +29,14 @@ LLMChat.co stands out with its workflow orchestration system and focus on privac
 - **No Server-Side Storage**: Chat history never leaves your device
 
 **Agentic Capabilities**
+
 - **Workflow Orchestration**: Complex task coordination via custom workflow engine
 - **Reflective Analysis**: Self-improvement through analysis of prior reasoning
 - **Structured Output**: Clean presentation of research findings
 
 ## Architecture
 
-LLMChat.co is built as a monorepo with a clear separation of concerns:
+VT is built as a monorepo with a clear separation of concerns:
 
 ```
 ├── apps/
@@ -55,7 +57,7 @@ LLMChat.co is built as a monorepo with a clear separation of concerns:
 
 ## Workflow Orchestration
 
-LLMChat.co's workflow orchestration enables powerful agentic capabilities through a modular, step-by-step approach. Here's how to create a research agent:
+VT's workflow orchestration enables powerful agentic capabilities through a modular, step-by-step approach. Here's how to create a research agent:
 
 ### 1. Define Event and Context Types
 
@@ -326,7 +328,8 @@ The workflow processes through these stages:
 Each step emits events that can update the UI in real-time, allowing users to see the research process unfold.
 
 ## Local Storage
-LLMChat.co prioritizes user privacy by storing all data locally
+
+VT prioritizes user privacy by storing all data locally
 
 ## Tech Stack
 

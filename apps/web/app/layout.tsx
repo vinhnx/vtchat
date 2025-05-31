@@ -16,38 +16,38 @@ const bricolage = Bricolage_Grotesque({
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'llmchat.co - Go Deeper with AI-Powered Research & Agentic Workflows',
+    title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
     description:
-        'Experience deep, AI-powered research with agentic workflows and a wide variety of models for advanced productivity.',
-    keywords: 'AI chat, LLM, language models, privacy, minimal UI, ollama, chatgpt',
-    authors: [{ name: 'Trendy design', url: 'https://trendy.design' }],
-    creator: 'Trendy design',
-    publisher: 'Trendy design',
+        'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
+    keywords: 'agent, ai, chatbot, assistant, openai, llama, multimodal, tool-use, llm, llms, function-calling, ollama',
+    authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
+    creator: 'Vinh Nguyen',
+    publisher: 'Vinh Nguyen',
     openGraph: {
-        title: 'llmchat.co - Go Deeper with AI-Powered Research & Agentic Workflows',
-        siteName: 'llmchat.co',
+        title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
+        siteName: 'VT.ai',
         description:
-            'Experience deep, AI-powered research with agentic workflows and a wide variety of models for advanced productivity.',
-        url: 'https://llmchat.co',
+            'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
+        url: 'https://vtai.vn',
         type: 'website',
         locale: 'en_US',
         images: [
             {
-                url: 'https://llmchat.co/og-image.jpg',
+                url: 'https://vtai.vn/og-image.jpg',
                 width: 1200,
                 height: 630,
-                alt: 'LLMChat Preview',
+                alt: 'VT.ai Preview',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'llmchat.co - Go Deeper with AI-Powered Research & Agentic Workflows',
-        site: 'llmchat.co',
+        title: 'VT.ai - Go Deeper with AI-Powered Research & Agentic Workflows',
+        site: 'VT.ai',
         creator: '@llmchat_co',
         description:
             'Experience deep, AI-powered research with agentic workflows and a wide variety of models for advanced productivity.',
-        images: ['https://llmchat.co/twitter-image.jpg'],
+        images: ['https://vtai.vn/twitter-image.jpg'],
     },
     robots: {
         index: true,
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: 'https://llmchat.co',
+        canonical: 'https://VT',
     },
 };
 

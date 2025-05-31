@@ -2,10 +2,10 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'llmchat.co',
-        short_name: 'llmchat.co',
+        name: 'VT.ai',
+        short_name: 'VT.ai',
         description:
-            'llmchat.co is a modern AI chat client that allows you to chat with AI in a more intuitive way.',
+            'VT.ai is a modern AI chat client that allows you to chat with AI in a more intuitive way.',
         start_url: '/',
         display: 'standalone',
         background_color: 'hsl(60 20% 99%)',
