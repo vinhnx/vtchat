@@ -47,79 +47,96 @@ export const chatOptions = [
 
 export const modelOptions = [
     {
-        label: 'Llama 4 Scout',
-        value: ChatMode.LLAMA_4_SCOUT,
-        // webSearch: true,
+        label: 'Gemini 2.0 Flash',
+        value: ChatMode.GEMINI_2_0_FLASH,
+        webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.LLAMA_4_SCOUT],
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
+    },
+    {
+        label: 'Gemini 2.5 Pro',
+        value: ChatMode.GEMINI_2_5_PRO,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
+    },
+    {
+        label: 'Claude 4 Sonnet',
+        value: ChatMode.CLAUDE_4_SONNET,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_SONNET],
+    },
+
+    {
+        label: 'Claude 4 Opus',
+        value: ChatMode.CLAUDE_4_OPUS,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
+    },
+    {
+        label: 'Deepseek R1 05/28',
+        value: ChatMode.DEEPSEEK_R1_0528,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1_0528],
+    },
+    {
+        label: 'Deepseek R1',
+        value: ChatMode.DEEPSEEK_R1,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
     },
     {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
-        // webSearch: true,
+        webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1],
     },
     {
+        label: 'GPT 4o',
+        value: ChatMode.GPT_4_1_Mini,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
+    },
+    {
         label: 'GPT 4.1 Mini',
         value: ChatMode.GPT_4_1_Mini,
-        // webSearch: true,
+        webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
     },
     {
         label: 'GPT 4.1 Nano',
         value: ChatMode.GPT_4_1_Nano,
-        // webSearch: true,
+        webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
     },
     {
-        label: 'Gemini Flash 2.0',
-        value: ChatMode.GEMINI_2_FLASH,
-        // webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_FLASH],
-    },
-
-    {
         label: 'GPT 4o Mini',
         value: ChatMode.GPT_4o_Mini,
-        // webSearch: true,
+        webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
     },
-
+    {
+        label: 'GPT 4o',
+        value: ChatMode.GPT_4o,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
+    },
     {
         label: 'O4 Mini',
         value: ChatMode.O4_Mini,
-        // webSearch: true,
+        webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.O4_Mini],
-    },
-
-    {
-        label: 'Claude 3.5 Sonnet',
-        value: ChatMode.CLAUDE_3_5_SONNET,
-        // webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_3_5_SONNET],
-    },
-
-    {
-        label: 'Deepseek R1',
-        value: ChatMode.DEEPSEEK_R1,
-        // webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
-    },
-
-    {
-        label: 'Claude 3.7 Sonnet',
-        value: ChatMode.CLAUDE_3_7_SONNET,
-        // webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_3_7_SONNET],
     },
 ];
 

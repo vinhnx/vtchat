@@ -34,3 +34,8 @@ yarn-error.log*
 # turbo
 .turbo
 
+# TODO
+TODO.md
+
+# github prompts
+.github/prompts/*

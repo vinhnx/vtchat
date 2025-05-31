@@ -117,7 +117,7 @@ ${processedResults
       `;
 
         const summary = await generateText({
-            model: ModelEnum.GEMINI_2_FLASH,
+            model: ModelEnum.GEMINI_2_0_FLASH,
             prompt,
         });
 
