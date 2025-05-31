@@ -11,7 +11,7 @@ import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { plausible } from '@repo/shared/utils';
 import { Badge, Button, Flex, Toaster } from '@repo/ui';
-import { IconMoodSadDizzy, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { FC, useEffect } from 'react';
@@ -37,7 +37,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             <div className="bg-tertiary item-center fixed inset-0 z-[99999] flex justify-center md:hidden">
                 <div className="flex flex-col items-center justify-center gap-2">
-                    <IconMoodSadDizzy size={24} strokeWidth={2} className="text-muted-foreground" />
                     <span className="text-muted-foreground text-center text-sm">
                         Mobile version is coming soon.
                         <br /> Please use a desktop browser.
