@@ -3,19 +3,18 @@ import { CoreMessage } from 'ai';
 import { ProviderEnumType } from './providers';
 
 export enum ModelEnum {
+    CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
+    Deepseek_R1_0528 = 'accounts/fireworks/models/deepseek-r1-0528',
+    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
+    GEMINI_2_0_FLASH = 'gemini-2.0-flash',
+    GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
+    CLAUDE_4_OPUS = 'claude-opus-4-20250514',
     GPT_4o_Mini = 'gpt-4o-mini',
     GPT_4o = 'gpt-4o',
     GPT_4_1_Mini = 'gpt-4.1-mini',
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4_1 = 'gpt-4.1',
-    LLAMA_4_SCOUT = 'accounts/fireworks/models/llama4-scout-instruct-basic',
-    Deepseek_R1_Distill_Qwen_14B = 'deepseek-r1-distill-qwen-14b',
-    Claude_3_5_Sonnet = 'claude-3-5-sonnet-20240620',
     O4_Mini = 'o4-mini',
-    GEMINI_2_FLASH = 'gemini-2.0-flash',
-    QWQ_32B = 'accounts/fireworks/models/qwq-32b',
-    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
-    Claude_3_7_Sonnet = 'claude-3-7-sonnet-20250219',
 }
 
 export type Model = {
@@ -28,117 +27,107 @@ export type Model = {
 
 export const models: Model[] = [
     {
-        id: ModelEnum.GPT_4o_Mini,
-        name: 'GPT-4o Mini',
+        id: ModelEnum.GPT_4o,
+        name: 'GPT-4o',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 16_384,
+        contextWindow: 128_000,
     },
     {
         id: ModelEnum.GPT_4_1_Mini,
         name: 'GPT-4.1 Mini',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
-    },
-    {
-        id: ModelEnum.GPT_4_1_Nano,
-        name: 'GPT-4.1 Nano',
-        provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 32_768,
+        contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.GPT_4_1,
         name: 'GPT-4.1',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 32_768,
+        contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.GPT_4o,
         name: 'GPT-4o',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 16_384,
+        contextWindow: 128_000,
     },
     {
         id: ModelEnum.O4_Mini,
         name: 'O4 Mini',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 100_000,
+        contextWindow: 200_000,
     },
     {
         id: ModelEnum.GPT_4o_Mini,
         name: 'GPT-4o Mini',
         provider: 'openai',
-        maxTokens: 16384,
-        contextWindow: 16384,
-    },
-    {
-        id: ModelEnum.Deepseek_R1_Distill_Qwen_14B,
-        name: 'DeepSeek R1 Distill Qwen 14B',
-        provider: 'together',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 100_000,
+        contextWindow: 200_000,
     },
     {
         id: ModelEnum.Deepseek_R1,
         name: 'DeepSeek R1',
         provider: 'fireworks',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 32_768,
+        contextWindow: 200_000,
     },
     {
-        id: ModelEnum.Claude_3_5_Sonnet,
-        name: 'Claude 3.5 Sonnet',
+        id: ModelEnum.CLAUDE_4_SONNET,
+        name: 'Claude 4 Sonnet',
         provider: 'anthropic',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 64_000,
+        contextWindow: 200_000,
     },
     {
-        id: ModelEnum.Claude_3_7_Sonnet,
-        name: 'Claude 3.7 Sonnet',
+        id: ModelEnum.CLAUDE_4_OPUS,
+        name: 'Claude 4 Opus',
         provider: 'anthropic',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 32_000,
+        contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_2_FLASH,
-        name: 'Gemini 2 Flash',
+        id: ModelEnum.GEMINI_2_0_FLASH,
+        name: 'Gemini 2.0 Flash',
         provider: 'google',
-        maxTokens: 200000,
-        contextWindow: 200000,
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.QWQ_32B,
-        name: 'QWQ 32B',
-        provider: 'fireworks',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        id: ModelEnum.GEMINI_2_5_PRO,
+        name: 'Gemini 2.5 Pro',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.LLAMA_4_SCOUT,
-        name: 'Llama 4 Scout',
+        id: ModelEnum.Deepseek_R1_0528,
+        name: 'Deepseek R1 05/28',
         provider: 'fireworks',
-        maxTokens: 16384,
-        contextWindow: 16384,
+        maxTokens: 64_000,
+        contextWindow: 128_000,
     },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
-        case ChatMode.GEMINI_2_FLASH:
-            return ModelEnum.GEMINI_2_FLASH;
+        case ChatMode.GEMINI_2_0_FLASH:
+            return ModelEnum.GEMINI_2_0_FLASH;
+        case ChatMode.GEMINI_2_5_PRO:
+            return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.Deepseek_R1;
-        case ChatMode.CLAUDE_3_5_SONNET:
-            return ModelEnum.Claude_3_5_Sonnet;
-        case ChatMode.CLAUDE_3_7_SONNET:
-            return ModelEnum.Claude_3_7_Sonnet;
+        case ChatMode.CLAUDE_4_SONNET:
+            return ModelEnum.CLAUDE_4_SONNET;
+        case ChatMode.CLAUDE_4_OPUS:
+            return ModelEnum.CLAUDE_4_OPUS;
         case ChatMode.GPT_4o_Mini:
             return ModelEnum.GPT_4o_Mini;
+        case ChatMode.GPT_4o:
+            return ModelEnum.GPT_4o;
         case ChatMode.GPT_4_1:
             return ModelEnum.GPT_4_1;
         case ChatMode.GPT_4_1_Mini:
@@ -155,22 +144,27 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
 
 export const getChatModeMaxTokens = (mode: ChatMode) => {
     switch (mode) {
-        case ChatMode.GEMINI_2_FLASH:
-            return 500000;
+        case ChatMode.GEMINI_2_0_FLASH:
+        case ChatMode.GEMINI_2_5_PRO:
+            return 1_048_576;
         case ChatMode.DEEPSEEK_R1:
-            return 100000;
-        case ChatMode.CLAUDE_3_5_SONNET:
-            return 100000;
-        case ChatMode.CLAUDE_3_7_SONNET:
-            return 100000;
+        case ChatMode.DEEPSEEK_R1_0528:
+            return 128_000;
+        case ChatMode.CLAUDE_4_SONNET:
+        case ChatMode.CLAUDE_4_OPUS:
+            return 200_000;
         case ChatMode.O4_Mini:
-            return 100000;
         case ChatMode.GPT_4o_Mini:
-            return 100000;
+            return 200_000;
+        case ChatMode.GPT_4o:
+            return 128_000;
+        case ChatMode.GPT_4_1_Mini:
+        case ChatMode.GPT_4_1:
+            return 1_047_576;
         case ChatMode.Deep:
-            return 100000;
+            return 100_000;
         default:
-            return 100000;
+            return 100_000;
     }
 };
 
