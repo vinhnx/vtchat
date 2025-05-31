@@ -14,6 +14,7 @@ import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon, ToolIcon } from './icons';
+import { ModeToggle } from './mode-toggle';
 
 export const SettingsModal = () => {
     const isSettingOpen = useAppStore(state => state.isSettingsOpen);
@@ -26,7 +27,7 @@ export const SettingsModal = () => {
             icon: <IconSettings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
-            component: <PersonalizationSettings />,
+            component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
         },
         {
             icon: <IconBolt size={16} strokeWidth={2} className="text-muted-foreground" />,
@@ -460,7 +461,11 @@ export const CreditsSettings = () => {
 
 const MAX_CHAR_LIMIT = 6000;
 
-export const PersonalizationSettings = () => {
+interface PersonalizationSettingsProps {
+    onClose?: () => void;
+}
+
+export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProps) => {
     const customInstructions = useChatStore(state => state.customInstructions);
     const setCustomInstructions = useChatStore(state => state.setCustomInstructions);
     const { editor } = useChatEditor({
@@ -472,14 +477,32 @@ export const PersonalizationSettings = () => {
             setCustomInstructions(props.editor.getText());
         },
     });
+
     return (
-        <div className="flex flex-col gap-1 pb-3">
-            <h3 className="text-base font-semibold">Customize your AI Response</h3>
-            <p className="text-muted-foreground text-sm">
-                These instructions will be added to the beginning of every message.
-            </p>
-            <div className=" shadow-subtle-sm border-border mt-2 rounded-lg border p-3">
-                <ChatEditor editor={editor} />
+        <div className="flex flex-col gap-6 pb-3">
+            {/* Theme Section */}
+            <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-base font-semibold">Theme</h3>
+                    <p className="text-muted-foreground text-sm">
+                        Choose your preferred theme appearance.
+                    </p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium">Theme mode:</span>
+                    <ModeToggle onClose={onClose} />
+                </div>
+            </div>
+
+            {/* Custom Instructions Section */}
+            <div className="flex flex-col gap-1">
+                <h3 className="text-base font-semibold">Customize your AI Response</h3>
+                <p className="text-muted-foreground text-sm">
+                    These instructions will be added to the beginning of every message.
+                </p>
+                <div className=" shadow-subtle-sm border-border mt-2 rounded-lg border p-3">
+                    <ChatEditor editor={editor} />
+                </div>
             </div>
         </div>
     );

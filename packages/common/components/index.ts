@@ -17,6 +17,7 @@ export * from './link-preview';
 export * from './logo';
 export * from './mdx';
 export * from './messages-remaining-badge';
+export * from './mode-toggle';
 export * from './motion-skeleton';
 export * from './popover-confirm';
 export * from './recent-threads';
@@ -27,5 +28,7 @@ export * from './sign-in';
 export * from './sources-stack';
 export * from './table-of-messages';
 export * from './text-shimmer';
+export * from './theme-provider';
 export * from './thread';
 export * from './tools-menu';
+
