@@ -18,6 +18,7 @@ import {
     IconArrowBarLeft,
     IconArrowBarRight,
     IconCommand,
+    IconCrown,
     IconLogout,
     IconPinned,
     IconPlus,
@@ -195,6 +196,24 @@ export const Sidebar = () => {
                             {isSidebarOpen && 'New Thread'}
                         </Button>
                     )}
+
+                    <Link href="/plus" className={isSidebarOpen ? 'w-full' : ''}>
+                        <Button
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant="bordered"
+                            rounded="lg"
+                            tooltip={isSidebarOpen ? undefined : 'View Plans'}
+                            tooltipSide="right"
+                            className={cn(
+                                isSidebarOpen && 'relative w-full',
+                                'text-muted-foreground justify-center px-2'
+                            )}
+                        >
+                            <IconCrown size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                            {isSidebarOpen && 'View Plans'}
+                        </Button>
+                    </Link>
+
                     <Button
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="bordered"
