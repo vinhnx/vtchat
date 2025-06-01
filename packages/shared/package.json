@@ -8,7 +8,10 @@
         "./utils": "./utils/index.ts",
         "./types": "./types.ts",
         "./logger": "./logger.ts",
-        "./posthog": "./posthog.ts"
+        "./posthog": "./posthog.ts",
+        "./types/subscription": "./types/subscription.ts",
+        "./utils/subscription": "./utils/subscription.ts",
+        "./utils/subscription-server": "./utils/subscription-server.ts"
     },
     "scripts": {
         "lint": "eslint .",

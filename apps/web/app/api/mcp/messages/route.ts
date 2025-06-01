@@ -1,4 +1,5 @@
 // pages/api/mcp-proxy/[server]/sse.ts
+import { auth } from '@clerk/nextjs/server';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
 import fetch from 'node-fetch';
@@ -9,6 +10,12 @@ const redis = new Redis({
 });
 
 export async function POST(request: NextRequest) {
+    // Check authentication for MCP tools
+    const session = await auth();
+    if (!session?.userId) {
+        return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     try {
         let jsonRpcRequest;
         let serverURL;

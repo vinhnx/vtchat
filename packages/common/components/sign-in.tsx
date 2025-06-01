@@ -329,8 +329,8 @@ export const CustomSignIn = ({
                 <IconX className="h-4 w-4" />
             </Button>
             <div className="flex w-[320px] flex-col items-center gap-8">
-                <h2 className="text-muted-foreground/70 text-center text-[24px] font-semibold leading-tight">
-                    Sign in to unlock <br /> advanced research tools
+                <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                    Welcome to VT!
                 </h2>
 
                 <div className="flex w-[300px] flex-col space-y-1.5">

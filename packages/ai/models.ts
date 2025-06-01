@@ -4,8 +4,7 @@ import { ProviderEnumType } from './providers';
 
 export enum ModelEnum {
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
-    Deepseek_R1_0528 = 'accounts/fireworks/models/deepseek-r1-0528',
-    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
+    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1-0528',
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',
@@ -56,7 +55,7 @@ export const models: Model[] = [
     },
     {
         id: ModelEnum.O4_Mini,
-        name: 'O4 Mini',
+        name: 'o4 mini',
         provider: 'openai',
         maxTokens: 100_000,
         contextWindow: 200_000,
@@ -102,14 +101,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.Deepseek_R1_0528,
-        name: 'Deepseek R1 05/28',
-        provider: 'fireworks',
-        maxTokens: 64_000,
-        contextWindow: 128_000,
-    },
+    }
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -148,7 +140,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_PRO:
             return 1_048_576;
         case ChatMode.DEEPSEEK_R1:
-        case ChatMode.DEEPSEEK_R1_0528:
             return 128_000;
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:

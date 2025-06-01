@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import { DotSpinner } from '@repo/common/components';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
@@ -76,13 +76,6 @@ export const modelOptions = [
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
     },
     {
-        label: 'Deepseek R1 05/28',
-        value: ChatMode.DEEPSEEK_R1_0528,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1_0528],
-    },
-    {
         label: 'Deepseek R1',
         value: ChatMode.DEEPSEEK_R1,
         webSearch: true,
@@ -132,7 +125,7 @@ export const modelOptions = [
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
     },
     {
-        label: 'O4 Mini',
+        label: 'o4 mini',
         value: ChatMode.O4_Mini,
         webSearch: true,
         icon: undefined,
@@ -159,7 +152,6 @@ export const ChatModeButton = () => {
     const chatMode = useChatStore(state => state.chatMode);
     const setChatMode = useChatStore(state => state.setChatMode);
     const [isChatModeOpen, setIsChatModeOpen] = useState(false);
-    const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
 
     const selectedOption =
@@ -237,7 +229,7 @@ export const ChatModeOptions = ({
     setChatMode: (chatMode: ChatMode) => void;
     isRetry?: boolean;
 }) => {
-    const { isSignedIn } = useUser();
+    const { isSignedIn } = useAuth();
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
