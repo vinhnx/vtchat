@@ -53,7 +53,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.CLAUDE_4_OPUS:
                         return !!apiKeys['ANTHROPIC_API_KEY'];
                     case ChatMode.DEEPSEEK_R1:
-                    case ChatMode.DEEPSEEK_R1_0528:
                         return !!apiKeys['FIREWORKS_API_KEY'];
                     default:
                         return false;

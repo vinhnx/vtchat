@@ -4,6 +4,7 @@
     "private": true,
     "exports": {
         "./hooks": "./hooks/index.ts",
+        "./hooks/use-subscription-access": "./hooks/use-subscription-access.ts",
         "./context": "./context/index.ts",
         "./store": "./store/index.ts",
         "./components": "./components/index.ts",

@@ -31,4 +31,4 @@ export * from './text-shimmer';
 export * from './theme-provider';
 export * from './thread';
 export * from './tools-menu';
-
+export * from './user-tier-badge';

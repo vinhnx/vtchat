@@ -32,6 +32,7 @@ import { motion } from 'framer-motion';
 import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
+import { UserTierBadge } from './user-tier-badge';
 
 export const Sidebar = () => {
     const { threadId: currentThreadId } = useParams();
@@ -359,9 +360,12 @@ export const Sidebar = () => {
                                     </div>
 
                                     {isSidebarOpen && (
-                                        <p className="line-clamp-1 flex-1 !text-sm font-medium">
-                                            {user?.fullName}
-                                        </p>
+                                        <div className="flex flex-1 flex-col items-start">
+                                            <p className="line-clamp-1 !text-sm font-medium">
+                                                {user?.fullName}
+                                            </p>
+                                            <UserTierBadge />
+                                        </div>
                                     )}
                                     {isSidebarOpen && (
                                         <IconSelector
