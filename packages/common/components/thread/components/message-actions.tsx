@@ -20,6 +20,16 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         const useWebSearch = useChatStore(state => state.useWebSearch);
         const [chatMode, setChatMode] = useState<ChatMode>(threadItem.mode);
         const { copyToClipboard, status, copyMarkdown, markdownCopyStatus } = useCopyText();
+
+        const handleGatedFeature = (gateInfo: {
+            feature?: string;
+            plan?: string;
+            title: string;
+            message: string;
+        }) => {
+            // For message actions, show a simple alert since we don't have the modal infrastructure here
+            alert(`${gateInfo.title}: ${gateInfo.message}`);
+        };
         return (
             <div className="flex flex-row items-center gap-1 py-2">
                 {threadItem?.answer?.text && (
@@ -83,6 +93,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                     useWebSearch: useWebSearch,
                                 });
                             }}
+                            onGatedFeature={handleGatedFeature}
                         />
                     </DropdownMenu>
                 )}
