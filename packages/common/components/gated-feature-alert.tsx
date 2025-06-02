@@ -157,7 +157,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
             {gatedChildren}
             {showUpgradeAlert && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                    <Alert variant="destructive" className="max-w-md">
+                    <Alert className="max-w-md">
                         <AlertTitle>{title}</AlertTitle>
                         <AlertDescription>{defaultMessage}</AlertDescription>
                         <div className="mt-4 flex justify-end space-x-2">
