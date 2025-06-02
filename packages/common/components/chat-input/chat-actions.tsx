@@ -3,7 +3,11 @@ import { useAuth } from '@clerk/nextjs';
 import { DotSpinner } from '@repo/common/components';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
 import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
     Button,
     cn,
     DropdownMenu,
@@ -46,42 +50,6 @@ export const chatOptions = [
 ];
 
 export const modelOptions = [
-    {
-        label: 'Gemini 2.0 Flash',
-        value: ChatMode.GEMINI_2_0_FLASH,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
-    },
-    {
-        label: 'Gemini 2.5 Pro',
-        value: ChatMode.GEMINI_2_5_PRO,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
-    },
-    {
-        label: 'Claude 4 Sonnet',
-        value: ChatMode.CLAUDE_4_SONNET,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_SONNET],
-    },
-
-    {
-        label: 'Claude 4 Opus',
-        value: ChatMode.CLAUDE_4_OPUS,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
-    },
-    {
-        label: 'Deepseek R1',
-        value: ChatMode.DEEPSEEK_R1,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
-    },
     {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
@@ -131,6 +99,41 @@ export const modelOptions = [
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.O4_Mini],
     },
+    {
+        label: 'Gemini 2.0 Flash',
+        value: ChatMode.GEMINI_2_0_FLASH,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
+    },
+    {
+        label: 'Gemini 2.5 Pro',
+        value: ChatMode.GEMINI_2_5_PRO,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
+    },
+    {
+        label: 'Claude 4 Sonnet',
+        value: ChatMode.CLAUDE_4_SONNET,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_SONNET],
+    },
+    {
+        label: 'Claude 4 Opus',
+        value: ChatMode.CLAUDE_4_OPUS,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
+    },
+    {
+        label: 'Deepseek R1',
+        value: ChatMode.DEEPSEEK_R1,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
+    },
 ];
 
 export const AttachmentButton = () => {
@@ -153,23 +156,85 @@ export const ChatModeButton = () => {
     const setChatMode = useChatStore(state => state.setChatMode);
     const [isChatModeOpen, setIsChatModeOpen] = useState(false);
     const isChatPage = usePathname().startsWith('/chat');
+    const { push } = useRouter();
+    const [showGateAlert, setShowGateAlert] = useState<{
+        feature?: string;
+        plan?: string;
+        title: string;
+        message: string;
+    } | null>(null);
 
     const selectedOption =
         (isChatPage
             ? [...chatOptions, ...modelOptions].find(option => option.value === chatMode)
             : [...modelOptions].find(option => option.value === chatMode)) ?? modelOptions[0];
 
+    const currentModeConfig = ChatModeConfig[chatMode];
+    const isCurrentModeGated = !!(
+        currentModeConfig?.requiredFeature || currentModeConfig?.requiredPlan
+    );
+
+    const handleGatedFeature = (gateInfo: {
+        feature?: string;
+        plan?: string;
+        title: string;
+        message: string;
+    }) => {
+        setShowGateAlert(gateInfo);
+        setIsChatModeOpen(false); // Close the dropdown
+    };
+
+    const dropdownTrigger = (
+        <Button variant={'secondary'} size="xs">
+            {selectedOption?.icon}
+            {selectedOption?.label}
+            <IconChevronDown size={14} strokeWidth={2} />
+        </Button>
+    );
+
     return (
-        <DropdownMenu open={isChatModeOpen} onOpenChange={setIsChatModeOpen}>
-            <DropdownMenuTrigger asChild>
-                <Button variant={'secondary'} size="xs">
-                    {selectedOption?.icon}
-                    {selectedOption?.label}
-                    <IconChevronDown size={14} strokeWidth={2} />
-                </Button>
-            </DropdownMenuTrigger>
-            <ChatModeOptions chatMode={chatMode} setChatMode={setChatMode} />
-        </DropdownMenu>
+        <>
+            <DropdownMenu open={isChatModeOpen} onOpenChange={setIsChatModeOpen}>
+                <DropdownMenuTrigger asChild>
+                    {isCurrentModeGated ? (
+                        <Button variant={'secondary'} size="xs" className="opacity-70">
+                            {selectedOption?.icon}
+                            {selectedOption?.label} (VT+)
+                            <IconChevronDown size={14} strokeWidth={2} />
+                        </Button>
+                    ) : (
+                        dropdownTrigger
+                    )}
+                </DropdownMenuTrigger>
+                <ChatModeOptions
+                    chatMode={chatMode}
+                    setChatMode={setChatMode}
+                    onGatedFeature={handleGatedFeature}
+                />
+            </DropdownMenu>
+
+            {/* Gated Feature Alert Modal */}
+            {showGateAlert && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                    <Alert variant="destructive" className="max-w-md">
+                        <AlertTitle>{showGateAlert.title}</AlertTitle>
+                        <AlertDescription>{showGateAlert.message}</AlertDescription>
+                        <div className="mt-4 flex justify-end space-x-2">
+                            <Button
+                                variant="outlined"
+                                size="sm"
+                                onClick={() => setShowGateAlert(null)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button size="sm" onClick={() => push('/plus')}>
+                                Upgrade Now
+                            </Button>
+                        </div>
+                    </Alert>
+                </div>
+            )}
+        </>
     );
 };
 
@@ -223,16 +288,59 @@ export const GeneratingStatus = () => {
 export const ChatModeOptions = ({
     chatMode,
     setChatMode,
+    onGatedFeature,
     isRetry = false,
 }: {
     chatMode: ChatMode;
     setChatMode: (chatMode: ChatMode) => void;
+    onGatedFeature: (gateInfo: {
+        feature?: string;
+        plan?: string;
+        title: string;
+        message: string;
+    }) => void;
     isRetry?: boolean;
 }) => {
-    const { isSignedIn } = useAuth();
+    const { isSignedIn, has } = useAuth();
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
+
+    const handleModeSelect = (mode: ChatMode) => {
+        const config = ChatModeConfig[mode];
+
+        // Check auth requirement first
+        if (config?.isAuthRequired && !isSignedIn) {
+            push('/sign-in');
+            return;
+        }
+
+        // Check subscription requirements
+        if (config?.requiredFeature || config?.requiredPlan) {
+            const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+
+            // Check if user has access via checkSubscriptionAccess
+            const hasFeatureAccess = config.requiredFeature
+                ? has && checkSubscriptionAccess(has, { feature: config.requiredFeature })
+                : true;
+            const hasPlanAccess = config.requiredPlan
+                ? has && checkSubscriptionAccess(has, { plan: config.requiredPlan })
+                : true;
+
+            if (!hasFeatureAccess || !hasPlanAccess) {
+                onGatedFeature({
+                    feature: config.requiredFeature,
+                    plan: config.requiredPlan,
+                    title: `${option?.label} requires upgrade`,
+                    message: `${option?.label} is a premium feature. Upgrade to access this ${config.requiredFeature ? 'feature' : 'plan'}.`,
+                });
+                return;
+            }
+        }
+
+        setChatMode(mode);
+    };
+
     return (
         <DropdownMenuContent
             align="start"
@@ -242,61 +350,71 @@ export const ChatModeOptions = ({
             {isChatPage && (
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => (
-                        <DropdownMenuItem
-                            key={option.label}
-                            onSelect={() => {
-                                if (ChatModeConfig[option.value]?.isAuthRequired && !isSignedIn) {
-                                    push('/sign-in');
-                                    return;
-                                }
-                                setChatMode(option.value);
-                            }}
-                            className="h-auto"
-                        >
-                            <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
+                    {chatOptions.map(option => {
+                        const config = ChatModeConfig[option.value];
+                        const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
-                                <div className="flex flex-col gap-0">
-                                    {<p className="m-0 text-sm font-medium">{option.label}</p>}
-                                    {option.description && (
-                                        <p className="text-muted-foreground text-xs font-light">
-                                            {option.description}
+                        return (
+                            <DropdownMenuItem
+                                key={option.label}
+                                onSelect={() => handleModeSelect(option.value)}
+                                className={cn('h-auto', isGated && 'opacity-80')}
+                            >
+                                <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
+                                    <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
+                                    <div className="flex flex-col gap-0">
+                                        <p className="m-0 text-sm font-medium">
+                                            {option.label}
+                                            {isGated && (
+                                                <span className="ml-1 text-xs text-blue-600">
+                                                    (VT+)
+                                                </span>
+                                            )}
                                         </p>
-                                    )}
+                                        {option.description && (
+                                            <p className="text-muted-foreground text-xs font-light">
+                                                {option.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="flex-1" />
+                                    {config?.isNew && <NewIcon />}
                                 </div>
-                                <div className="flex-1" />
-                                {ChatModeConfig[option.value]?.isNew && <NewIcon />}
-                            </div>
-                        </DropdownMenuItem>
-                    ))}
+                            </DropdownMenuItem>
+                        );
+                    })}
                 </DropdownMenuGroup>
             )}
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Models</DropdownMenuLabel>
-                {modelOptions.map(option => (
-                    <DropdownMenuItem
-                        key={option.label}
-                        onSelect={() => {
-                            if (ChatModeConfig[option.value]?.isAuthRequired && !isSignedIn) {
-                                push('/sign-in');
-                                return;
-                            }
-                            setChatMode(option.value);
-                        }}
-                        className="h-auto"
-                    >
-                        <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
-                            <div className="flex flex-col gap-0">
-                                {<p className="text-sm font-medium">{option.label}</p>}
-                            </div>
-                            <div className="flex-1" />
-                            {ChatModeConfig[option.value]?.isNew && <NewIcon />}
+                {modelOptions.map(option => {
+                    const config = ChatModeConfig[option.value];
+                    const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
-                            {hasApiKeyForChatMode(option.value) && <BYOKIcon />}
-                        </div>
-                    </DropdownMenuItem>
-                ))}
+                    return (
+                        <DropdownMenuItem
+                            key={option.label}
+                            onSelect={() => handleModeSelect(option.value)}
+                            className={cn('h-auto', isGated && 'opacity-80')}
+                        >
+                            <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                <div className="flex flex-col gap-0">
+                                    <p className="text-sm font-medium">
+                                        {option.label}
+                                        {isGated && (
+                                            <span className="ml-1 text-xs text-blue-600">
+                                                (VT+)
+                                            </span>
+                                        )}
+                                    </p>
+                                </div>
+                                <div className="flex-1" />
+                                {config?.isNew && <NewIcon />}
+                                {hasApiKeyForChatMode(option.value) && <BYOKIcon />}
+                            </div>
+                        </DropdownMenuItem>
+                    );
+                })}
             </DropdownMenuGroup>
         </DropdownMenuContent>
     );

@@ -8,6 +8,7 @@ export * from './exmaple-prompts';
 export * from './feedback-widget';
 export * from './footer';
 export * from './full-page-loader';
+export * from './gated-feature-alert';
 export * from './history/history-item';
 export * from './icons';
 export * from './intro-dialog';

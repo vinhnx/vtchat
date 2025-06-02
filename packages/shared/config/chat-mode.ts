@@ -11,17 +11,17 @@ interface AuthLike {
 export enum ChatMode {
     Pro = 'pro',
     Deep = 'deep',
-    GEMINI_2_0_FLASH = 'gemini-flash-2.0',
-    GEMINI_2_5_PRO = 'gemini-flash-2.5-pro-preview-05-06',
-    CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
-    CLAUDE_4_OPUS = 'claude-opus-4-20250514',
-    DEEPSEEK_R1 = 'deepseek-r1-0528',
     O4_Mini = 'o4-mini',
     GPT_4_1 = 'gpt-4.1',
     GPT_4_1_Mini = 'gpt-4.1-mini',
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4o = 'gpt-4o',
     GPT_4o_Mini = 'gpt-4o-mini',
+    GEMINI_2_0_FLASH = 'gemini-flash-2.0',
+    GEMINI_2_5_PRO = 'gemini-flash-2.5-pro-preview-05-06',
+    CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
+    CLAUDE_4_OPUS = 'claude-opus-4-20250514',
+    DEEPSEEK_R1 = 'deepseek-r1-0528',
 }
 
 export const ChatModeConfig: Record<
@@ -59,7 +59,7 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
+        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GPT_4_1_Mini]: {
         webSearch: true,
@@ -67,7 +67,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
     },
     [ChatMode.GPT_4_1_Nano]: {
         webSearch: true,
@@ -75,7 +74,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: false,
-        requiredFeature: FeatureSlug.BASE_MODELS,
     },
     [ChatMode.O4_Mini]: {
         webSearch: true,
@@ -83,28 +81,25 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
     },
     [ChatMode.GPT_4o_Mini]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
         isAuthRequired: false,
-        requiredFeature: FeatureSlug.BASE_MODELS,
     },
     [ChatMode.GPT_4o]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
         isAuthRequired: false,
-        requiredFeature: FeatureSlug.BASE_MODELS,
+        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.CLAUDE_4_SONNET]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
         requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.CLAUDE_4_OPUS]: {
@@ -112,7 +107,6 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         retry: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
         requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GEMINI_2_0_FLASH]: {
@@ -120,14 +114,12 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         retry: true,
         isAuthRequired: false,
-        requiredFeature: FeatureSlug.BASE_MODELS,
     },
     [ChatMode.GEMINI_2_5_PRO]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
         isAuthRequired: true,
-        requiredFeature: FeatureSlug.BASE_MODELS,
         requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.DEEPSEEK_R1]: {
