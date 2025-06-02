@@ -32,3 +32,4 @@ applyTo: '**'
 - Subscription tiers: VT_BASE (default) and VT_PLUS
 - MCP integration for external tools
 - Use promptBoost tools to enhance prompt quality
+- You can use playwright MCP tool to test web components integration
