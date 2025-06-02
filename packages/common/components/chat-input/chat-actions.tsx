@@ -5,9 +5,14 @@ import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
 import {
-    Alert,
-    AlertDescription,
-    AlertTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
     Button,
     cn,
     DropdownMenu,
@@ -214,26 +219,25 @@ export const ChatModeButton = () => {
             </DropdownMenu>
 
             {/* Gated Feature Alert Modal */}
-            {showGateAlert && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                    <Alert variant="destructive" className="max-w-md">
-                        <AlertTitle>{showGateAlert.title}</AlertTitle>
-                        <AlertDescription>{showGateAlert.message}</AlertDescription>
-                        <div className="mt-4 flex justify-end space-x-2">
-                            <Button
-                                variant="outlined"
-                                size="sm"
-                                onClick={() => setShowGateAlert(null)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button size="sm" onClick={() => push('/plus')}>
-                                Upgrade Now
-                            </Button>
-                        </div>
-                    </Alert>
-                </div>
-            )}
+            <AlertDialog
+                open={!!showGateAlert}
+                onOpenChange={open => !open && setShowGateAlert(null)}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{showGateAlert?.title}</AlertDialogTitle>
+                        <AlertDialogDescription>{showGateAlert?.message}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setShowGateAlert(null)}>
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={() => push('/plus')}>
+                            Upgrade Now
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 };

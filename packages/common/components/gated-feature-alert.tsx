@@ -3,7 +3,16 @@
 import { useAuth } from '@clerk/nextjs';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
-import { Alert, AlertDescription, AlertTitle, Button } from '@repo/ui';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@repo/ui';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -155,26 +164,23 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     return (
         <>
             {gatedChildren}
-            {showUpgradeAlert && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                    <Alert className="max-w-md">
-                        <AlertTitle>{title}</AlertTitle>
-                        <AlertDescription>{defaultMessage}</AlertDescription>
-                        <div className="mt-4 flex justify-end space-x-2">
-                            <Button
-                                variant="outlined"
-                                size="sm"
-                                onClick={() => setShowUpgradeAlert(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button size="sm" onClick={handleUpgrade}>
-                                Upgrade Now
-                            </Button>
-                        </div>
-                    </Alert>
-                </div>
-            )}
+            <AlertDialog
+                open={showUpgradeAlert}
+                onOpenChange={open => !open && setShowUpgradeAlert(false)}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{title}</AlertDialogTitle>
+                        <AlertDialogDescription>{defaultMessage}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setShowUpgradeAlert(false)}>
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={handleUpgrade}>Upgrade Now</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 };
