@@ -81,6 +81,7 @@
         "@types/prismjs": "^1.26.5",
         "@types/sanitize-html": "^2.13.0",
         "@upstash/ratelimit": "^2.0.1",
+        "@vercel/kv": "^2.0.0",
         "avvvatars-react": "^0.4.2",
         "axios": "^1.7.2",
         "boring-avatars": "^1.10.2",
