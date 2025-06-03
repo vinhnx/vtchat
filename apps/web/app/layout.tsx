@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { RootLayout, ThemeProvider } from '@repo/common/components';
+import { CreditsProvider, RootLayout, ThemeProvider } from '@repo/common/components';
 import { ReactQueryProvider, RootProvider } from '@repo/common/context';
 import { TooltipProvider, cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
@@ -19,7 +19,8 @@ export const metadata: Metadata = {
     title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
     description:
         'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
-    keywords: 'agent, ai, chatbot, assistant, openai, llama, multimodal, tool-use, llm, llms, function-calling, ollama',
+    keywords:
+        'agent, ai, chatbot, assistant, openai, llama, multimodal, tool-use, llm, llms, function-calling, ollama',
     authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
     creator: 'Vinh Nguyen',
     publisher: 'Vinh Nguyen',
@@ -105,18 +106,20 @@ export default function ParentLayout({
                 {/* <PostHogProvider> */}
                 <ClerkProvider>
                     <RootProvider>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
+                        <CreditsProvider>
+                            <ThemeProvider
+                                attribute="class"
+                                defaultTheme="system"
+                                enableSystem
+                                disableTransitionOnChange
                             >
                                 <TooltipProvider>
                                     <ReactQueryProvider>
                                         <RootLayout>{children}</RootLayout>
                                     </ReactQueryProvider>
                                 </TooltipProvider>
-                        </ThemeProvider>
+                            </ThemeProvider>
+                        </CreditsProvider>
                     </RootProvider>
                 </ClerkProvider>
                 {/* </PostHogProvider> */}
