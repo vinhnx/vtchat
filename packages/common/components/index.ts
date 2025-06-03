@@ -2,6 +2,7 @@
 export * from './chat-input';
 export * from './code-block/code-block';
 export * from './command-search';
+export * from './credits-provider';
 export * from './error-boundary';
 export * from './error-placeholder';
 export * from './exmaple-prompts';
@@ -20,6 +21,8 @@ export * from './mdx';
 export * from './messages-remaining-badge';
 export * from './mode-toggle';
 export * from './motion-skeleton';
+export * from './polar-credits-display';
+export * from './polar-credits-shop';
 export * from './popover-confirm';
 export * from './recent-threads';
 export * from './search-results';
