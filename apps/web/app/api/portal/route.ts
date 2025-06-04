@@ -16,17 +16,23 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 500 });
         }
 
+        // Determine API endpoint based on environment (sandbox vs production)
+        const isPolarSandbox =
+            process.env.POLAR_ENVIRONMENT === 'sandbox' || process.env.NODE_ENV === 'development';
+        const polarApiBase = isPolarSandbox
+            ? 'https://sandbox-api.polar.sh/v1'
+            : 'https://api.polar.sh/v1';
+
+        console.log(`Using Polar ${isPolarSandbox ? 'sandbox' : 'production'} API:`, polarApiBase);
+
         // Get the customer portal URL from Polar.sh
         // First, get the customer by external ID (Clerk user ID)
-        const customerResponse = await fetch(
-            `https://api.polar.sh/v1/customers?external_id=${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${polarAccessToken}`,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+        const customerResponse = await fetch(`${polarApiBase}/customers?external_id=${userId}`, {
+            headers: {
+                Authorization: `Bearer ${polarAccessToken}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
         if (!customerResponse.ok) {
             console.error('Failed to get customer from Polar');
@@ -53,7 +59,7 @@ export async function POST(request: NextRequest) {
             return_url: `${process.env.BASE_URL || 'http://localhost:3000'}/dashboard`,
         };
 
-        const portalResponse = await fetch('https://api.polar.sh/v1/customer-portal/', {
+        const portalResponse = await fetch(`${polarApiBase}/customer-portal/`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${polarAccessToken}`,
