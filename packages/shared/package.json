@@ -11,7 +11,9 @@
         "./posthog": "./posthog.ts",
         "./types/subscription": "./types/subscription.ts",
         "./utils/subscription": "./utils/subscription.ts",
-        "./utils/subscription-server": "./utils/subscription-server.ts"
+        "./utils/subscription-server": "./utils/subscription-server.ts",
+        "./utils/chat-credits": "./utils/chat-credits.ts",
+        "./utils/polar": "./utils/polar.ts"
     },
     "scripts": {
         "lint": "eslint .",

@@ -1,9 +1,9 @@
 'use client';
 import { useAuth } from '@clerk/nextjs';
 import { DotSpinner } from '@repo/common/components';
-import { useApiKeysStore, useChatStore } from '@repo/common/store';
+import { useChatModeAccess } from '@repo/common/hooks/use-chat-mode-access';
+import { useApiKeysStore, useChatStore, useCreditsStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -305,13 +305,16 @@ export const ChatModeOptions = ({
     }) => void;
     isRetry?: boolean;
 }) => {
-    const { isSignedIn, has } = useAuth();
+    const { isSignedIn } = useAuth();
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
+    const { checkAccess, getCreditCost } = useChatModeAccess();
+    const { balance: userCredits } = useCreditsStore();
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
+        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
 
         // Check auth requirement first
         if (config?.isAuthRequired && !isSignedIn) {
@@ -319,28 +322,39 @@ export const ChatModeOptions = ({
             return;
         }
 
-        // Check subscription requirements
-        if (config?.requiredFeature || config?.requiredPlan) {
-            const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+        // Check unified access (subscription + credits)
+        const access = checkAccess(mode);
 
-            // Check if user has access via checkSubscriptionAccess
-            const hasFeatureAccess = config.requiredFeature
-                ? has && checkSubscriptionAccess(has, { feature: config.requiredFeature })
-                : true;
-            const hasPlanAccess = config.requiredPlan
-                ? has && checkSubscriptionAccess(has, { plan: config.requiredPlan })
-                : true;
-
-            if (!hasFeatureAccess || !hasPlanAccess) {
+        // Allow if free, subscription, or affordable credits
+        if (access.canAccess) {
+            // If using credits, show a confirmation if it's a high-cost mode
+            if (access.accessType === 'credits' && access.creditCost >= 5) {
+                // For expensive modes, confirm the user wants to spend credits
                 onGatedFeature({
-                    feature: config.requiredFeature,
-                    plan: config.requiredPlan,
-                    title: `${option?.label} requires upgrade`,
-                    message: `${option?.label} is a premium feature. Upgrade to access this ${config.requiredFeature ? 'feature' : 'plan'}.`,
+                    title: `Confirm Credit Usage`,
+                    message: `This will use ${access.creditCost} credits. You have ${userCredits} credits remaining. Continue?`,
+                    feature: 'credit-confirmation', // Using a feature flag instead
                 });
                 return;
             }
+
+            // Otherwise proceed with the mode change
+            setChatMode(mode);
+            return;
         }
+
+        // Access denied - show appropriate message
+        onGatedFeature({
+            feature:
+                access.requiredFeature ||
+                (access.creditCost > 0 ? `credit-cost-${access.creditCost}` : undefined),
+            plan: access.requiredPlan,
+            title: `${option?.label} requires ${access.accessType === 'blocked' && access.reason?.includes('credits') ? 'credits' : 'upgrade'}`,
+            message:
+                access.reason ||
+                `${option?.label} is a premium feature. Upgrade or purchase credits to access.`,
+        });
+        return;
 
         setChatMode(mode);
     };

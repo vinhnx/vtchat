@@ -1,10 +1,6 @@
 'use client';
 import { useAuth } from '@clerk/nextjs';
-import {
-    ImageAttachment,
-    ImageDropzoneRoot,
-    MessagesRemainingBadge,
-} from '@repo/common/components';
+import { ImageAttachment, ImageDropzoneRoot, PolarCreditsDisplay } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
 import { cn, Flex } from '@repo/ui';
@@ -197,7 +193,7 @@ export const ChatInput = ({
                     </ImageDropzoneRoot>
                 </Flex>
             </motion.div>
-            <MessagesRemainingBadge key="remaining-messages" />
+            <PolarCreditsDisplay key="polar-credits" />
         </AnimatePresence>
     );
 
