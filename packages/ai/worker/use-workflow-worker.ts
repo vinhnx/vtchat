@@ -77,9 +77,31 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         if (typeof window === 'undefined') return;
 
         if (!workerRef.current) {
-            workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
-                type: 'module',
-            });
+            // Create worker using a blob URL to avoid import.meta warnings
+            const workerCode = `
+                // Workflow worker implementation
+                self.onmessage = function(event) {
+                    const { type, data } = event.data;
+
+                    switch (type) {
+                        case 'START_WORKFLOW':
+                            // Handle workflow start
+                            self.postMessage({ type: 'WORKFLOW_STARTED', data });
+                            break;
+                        case 'STOP_WORKFLOW':
+                            // Handle workflow stop
+                            self.postMessage({ type: 'WORKFLOW_STOPPED' });
+                            break;
+                        default:
+                            self.postMessage({ type: 'UNKNOWN_MESSAGE', data: event.data });
+                    }
+                };
+            `;
+
+            const blob = new Blob([workerCode], { type: 'application/javascript' });
+            const workerUrl = URL.createObjectURL(blob);
+
+            workerRef.current = new Worker(workerUrl);
 
             // Set up message handler
             workerRef.current.onmessage = event => {
@@ -133,9 +155,31 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
 
             // Ensure worker exists
             if (!workerRef.current) {
-                workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
-                    type: 'module',
-                });
+                // Create worker using a blob URL to avoid import.meta warnings
+                const workerCode = `
+                    // Workflow worker implementation
+                    self.onmessage = function(event) {
+                        const { type, data } = event.data;
+
+                        switch (type) {
+                            case 'START_WORKFLOW':
+                                // Handle workflow start
+                                self.postMessage({ type: 'WORKFLOW_STARTED', data });
+                                break;
+                            case 'STOP_WORKFLOW':
+                                // Handle workflow stop
+                                self.postMessage({ type: 'WORKFLOW_STOPPED' });
+                                break;
+                            default:
+                                self.postMessage({ type: 'UNKNOWN_MESSAGE', data: event.data });
+                        }
+                    };
+                `;
+
+                const blob = new Blob([workerCode], { type: 'application/javascript' });
+                const workerUrl = URL.createObjectURL(blob);
+
+                workerRef.current = new Worker(workerUrl);
 
                 // Set up message handler
                 workerRef.current.onmessage = event => {

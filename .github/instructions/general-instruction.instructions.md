@@ -38,7 +38,7 @@ applyTo: '**'
 
 ## Testing
 
-- Test files should be in `apps/web/tests/`
+- Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
 - Use `bun test` for running tests
 - Use `bun test --watch` for development
 - Use `bun test --coverage` for coverage reports

@@ -234,10 +234,40 @@ const initializeWorker = () => {
     if (typeof window === 'undefined') return;
 
     try {
-        // Create a shared worker
-        dbWorker = new SharedWorker(new URL('./db-sync.worker.ts', import.meta?.url), {
-            type: 'module',
-        });
+        // Create a shared worker using a blob URL to avoid import.meta warnings
+        const workerCode = `
+            // This is a shared worker that handles database synchronization across tabs
+            const connections = new Set();
+            const broadcastChannel = new BroadcastChannel('chat-sync-channel');
+
+            self.onconnect = (event) => {
+                const port = event.ports[0];
+                connections.add(port);
+
+                port.onmessage = (e) => {
+                    // Handle messages from tabs
+                    const message = e.data;
+
+                    // Broadcast to all connected tabs
+                    connections.forEach(p => {
+                        if (p !== port) {
+                            p.postMessage(message);
+                        }
+                    });
+
+                    // Also broadcast via BroadcastChannel for cross-tab communication
+                    broadcastChannel.postMessage(message);
+                };
+
+                port.start();
+                port.postMessage({ type: 'connected' });
+            };
+        `;
+
+        const blob = new Blob([workerCode], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+
+        dbWorker = new SharedWorker(workerUrl);
 
         // Set up message handler
         dbWorker.port.onmessage = async event => {

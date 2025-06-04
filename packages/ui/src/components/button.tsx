@@ -86,7 +86,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         },
         ref
     ) => {
-        const Comp = asChild ? Slot : 'button';
         const PrefixIcon = prefixIcon;
         const SuffixIcon = suffixIcon;
         const Icon = icon;
@@ -100,17 +99,60 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const ToolTipWrapper = tooltip ? Tooltip : React.Fragment;
 
-        const buttonComp = (
-            <Comp
-                className={cn(buttonVariants({ variant, size, rounded, className }))}
-                ref={ref}
-                {...props}
-            >
-                {PrefixIcon && <PrefixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
-                {Icon ? <Icon size={iconSizes[iconSize]} strokeWidth={2} /> : children}
-                {SuffixIcon && <SuffixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
-            </Comp>
-        );
+        // When using asChild with icons, we need to avoid React.Children.only error
+        // by ensuring the Slot component receives exactly one child
+        const hasIcons = Boolean(PrefixIcon || SuffixIcon || Icon);
+
+        let buttonComp;
+
+        if (asChild && !hasIcons) {
+            // Safe to use Slot when no icons are present
+            buttonComp = (
+                <Slot
+                    className={cn(buttonVariants({ variant, size, rounded, className }))}
+                    ref={ref}
+                    {...props}
+                >
+                    {children}
+                </Slot>
+            );
+        } else if (asChild && hasIcons) {
+            // When asChild is true but we have icons, we need to clone the child
+            // and add the icons as props or merge them
+            const child = React.Children.only(children as React.ReactElement);
+            buttonComp = React.cloneElement(child, {
+                className: cn(
+                    buttonVariants({ variant, size, rounded, className }),
+                    child.props.className
+                ),
+                ref,
+                ...props,
+                children: (
+                    <>
+                        {PrefixIcon && <PrefixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
+                        {Icon ? (
+                            <Icon size={iconSizes[iconSize]} strokeWidth={2} />
+                        ) : (
+                            child.props.children
+                        )}
+                        {SuffixIcon && <SuffixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
+                    </>
+                ),
+            });
+        } else {
+            // Regular button element
+            buttonComp = (
+                <button
+                    className={cn(buttonVariants({ variant, size, rounded, className }))}
+                    ref={ref}
+                    {...props}
+                >
+                    {PrefixIcon && <PrefixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
+                    {Icon ? <Icon size={iconSizes[iconSize]} strokeWidth={2} /> : children}
+                    {SuffixIcon && <SuffixIcon size={iconSizes[iconSize]} strokeWidth={2} />}
+                </button>
+            );
+        }
 
         if (tooltip) {
             return (

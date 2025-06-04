@@ -41,10 +41,55 @@ export async function POST(request: NextRequest) {
 
         console.log(`Using Polar ${isPolarSandbox ? 'sandbox' : 'production'} API:`, polarApiUrl);
 
-        // Create checkout session with Polar.sh
+        // Map product price IDs to actual Polar price IDs (UUIDs)
+        // These should be actual price UUIDs from your Polar.sh dashboard
+        const priceMapping = {
+            vt_plus_monthly: process.env.POLAR_VT_PLUS_PRICE_ID || 'demo-price-uuid',
+            credits_100: process.env.POLAR_CREDITS_100_PRICE_ID || 'demo-price-uuid',
+            credits_500: process.env.POLAR_CREDITS_500_PRICE_ID || 'demo-price-uuid',
+            credits_1000: process.env.POLAR_CREDITS_1000_PRICE_ID || 'demo-price-uuid',
+        };
+
+        const priceId = priceMapping[validatedData.priceId as keyof typeof priceMapping];
+        if (!priceId || priceId === 'demo-price-uuid') {
+            console.error(`Invalid or missing price ID for: ${validatedData.priceId}`);
+            return NextResponse.json(
+                {
+                    error: 'Product configuration error',
+                    message: 'This product is not yet configured. Please contact support.',
+                    code: 'PRODUCT_NOT_CONFIGURED',
+                },
+                { status: 503 }
+            );
+        }
+
+        // Get user information for checkout
+        const userEmail =
+            user?.emailAddresses?.[0]?.emailAddress || user?.primaryEmailAddress?.emailAddress;
+        const userName =
+            user?.firstName && user?.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : user?.fullName || 'Unknown User';
+
+        // Validate email domain (Polar.sh validates email domains)
+        if (userEmail && userEmail.includes('@example.com')) {
+            console.error('Invalid email domain detected:', userEmail);
+            return NextResponse.json(
+                {
+                    error: 'Invalid email configuration',
+                    message: 'Please update your email address to continue.',
+                    code: 'INVALID_EMAIL_DOMAIN',
+                },
+                { status: 400 }
+            );
+        }
+
+        // Create checkout session using product_price_id approach (simplest method)
         const checkoutData = {
-            product_price_id: validatedData.priceId,
-            customer_id: userId, // Use Clerk user ID as customer ID
+            product_price_id: priceId, // UUID of the price from Polar.sh dashboard
+            customer_external_id: userId, // Use Clerk user ID as external reference
+            customer_email: userEmail,
+            customer_name: userName,
             success_url:
                 validatedData.successUrl ||
                 process.env.POLAR_SUCCESS_URL ||
@@ -52,6 +97,8 @@ export async function POST(request: NextRequest) {
             metadata: {
                 clerk_user_id: userId,
                 quantity: validatedData.quantity.toString(),
+                original_price_id: validatedData.priceId, // Keep track of our internal ID
+                source: 'vtchat_web',
             },
         };
 
