@@ -32,6 +32,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 500 });
         }
 
+        // Determine API endpoint based on environment (sandbox vs production)
+        const isPolarSandbox =
+            process.env.POLAR_ENVIRONMENT === 'sandbox' || process.env.NODE_ENV === 'development';
+        const polarApiUrl = isPolarSandbox
+            ? 'https://sandbox-api.polar.sh/v1/checkouts/'
+            : 'https://api.polar.sh/v1/checkouts/';
+
+        console.log(`Using Polar ${isPolarSandbox ? 'sandbox' : 'production'} API:`, polarApiUrl);
+
         // Create checkout session with Polar.sh
         const checkoutData = {
             product_price_id: validatedData.priceId,
@@ -46,7 +55,7 @@ export async function POST(request: NextRequest) {
             },
         };
 
-        const response = await fetch('https://api.polar.sh/v1/checkouts/', {
+        const response = await fetch(polarApiUrl, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${polarAccessToken}`,
