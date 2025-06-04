@@ -93,7 +93,7 @@ export function PolarCreditsDisplay() {
                     <div className="flex gap-2">
                         <Button
                             size="sm"
-                            variant={totalCredits < 10 ? 'default' : 'outline'}
+                            variant={totalCredits < 10 ? 'default' : 'outlined'}
                             onClick={handlePurchaseCredits}
                             className="h-7 text-xs"
                         >
@@ -102,7 +102,7 @@ export function PolarCreditsDisplay() {
 
                         <Button
                             size="sm"
-                            variant="outline"
+                            variant="outlined"
                             onClick={() => {
                                 setIsSettingsOpen(true);
                                 setSettingTab('api-keys');

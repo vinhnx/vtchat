@@ -5,5 +5,6 @@ export * from './use-clipboard';
 export * from './use-copy-text';
 export * from './use-editor';
 export * from './use-image-attachment';
+export * from './use-polar-subscription';
 export * from './use-subscription-access';
 export * from './use-text-selection';

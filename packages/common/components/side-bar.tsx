@@ -3,6 +3,7 @@ import { useClerk, useUser } from '@clerk/nextjs';
 import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { usePolarSubscription } from '@repo/common/hooks';
 import { Thread } from '@repo/shared/types';
 import {
     Badge,
@@ -53,6 +54,7 @@ export const Sidebar = () => {
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
+    const { isPlusSubscriber, openCustomerPortal } = usePolarSubscription();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -198,22 +200,29 @@ export const Sidebar = () => {
                         </Button>
                     )}
 
-                    <Link href="/plus" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="bordered"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'View Plans'}
-                            tooltipSide="right"
-                            className={cn(
-                                isSidebarOpen && 'relative w-full',
-                                'text-muted-foreground justify-center px-2'
-                            )}
-                        >
-                            <IconCrown size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
-                            {isSidebarOpen && 'View Plans'}
-                        </Button>
-                    </Link>
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="bordered"
+                        rounded="lg"
+                        tooltip={isSidebarOpen ? undefined : isPlusSubscriber ? 'Manage Subscription' : 'View Plans'}
+                        tooltipSide="right"
+                        className={cn(
+                            isSidebarOpen && 'relative w-full',
+                            'text-muted-foreground justify-center px-2'
+                        )}
+                        onClick={() => {
+                            if (isPlusSubscriber) {
+                                // Open Polar customer portal for subscribers
+                                openCustomerPortal();
+                            } else {
+                                // For non-subscribers, go to /plus page
+                                push('/plus');
+                            }
+                        }}
+                    >
+                        <IconCrown size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                        {isSidebarOpen && (isPlusSubscriber ? 'Manage Subscription' : 'View Plans')}
+                    </Button>
 
                     <Button
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}

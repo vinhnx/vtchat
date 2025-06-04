@@ -22,17 +22,12 @@ export const CHAT_MODE_CREDIT_COSTS = {
     [ChatMode.GPT_4_1_Mini]: 2,
     [ChatMode.GPT_4_1_Nano]: 1,
     [ChatMode.O4_Mini]: 4,
-    [ChatMode.GEMINI_2_FLASH_EXP]: 2,
-    [ChatMode.GEMINI_1_5_PRO]: 4,
-    [ChatMode.GEMINI_1_5_FLASH]: 2,
+    [ChatMode.GEMINI_2_0_FLASH]: 2,
+    [ChatMode.GEMINI_2_5_PRO]: 4,
 } as const;
 
 // Free chat modes (no credits required)
-export const FREE_CHAT_MODES = [
-    ChatMode.GPT_4o_Mini,
-    ChatMode.GPT_4_1_Nano,
-    ChatMode.GEMINI_1_5_FLASH,
-] as const;
+export const FREE_CHAT_MODES = [ChatMode.GPT_4o_Mini, ChatMode.GPT_4_1_Nano] as const;
 
 export interface ChatModeAccess {
     canAccess: boolean;
@@ -138,9 +133,8 @@ function checkChatModeSubscriptionAccess(
         [ChatMode.GPT_4_1_Mini]: null, // Credit-only
         [ChatMode.GPT_4_1_Nano]: null, // Free
         [ChatMode.O4_Mini]: { plan: PlanSlug.VT_PLUS },
-        [ChatMode.GEMINI_2_FLASH_EXP]: { plan: PlanSlug.VT_PLUS },
-        [ChatMode.GEMINI_1_5_PRO]: { plan: PlanSlug.VT_PLUS },
-        [ChatMode.GEMINI_1_5_FLASH]: null, // Free
+        [ChatMode.GEMINI_2_0_FLASH]: { plan: PlanSlug.VT_PLUS },
+        [ChatMode.GEMINI_2_5_PRO]: { plan: PlanSlug.VT_PLUS },
     };
 
     const requirement = subscriptionRequirements[chatMode];

@@ -50,17 +50,17 @@ export interface CreditPackage {
     interval?: 'month' | 'year';
 }
 
-// Polar Credit Purchase Options
+// Polar Credit Purchase Options with internal price IDs (mapped to Polar UUIDs in API)
 export const POLAR_CREDIT_PACKAGES = {
     SMALL: {
-        id: 'credits_100',
+        id: 'credits_100', // Internal ID mapped to Polar UUID in API
         name: '100 Polar Credits',
         credits: 100,
         price: 5, // $5
         description: 'Perfect for light usage',
     },
     MEDIUM: {
-        id: 'credits_500',
+        id: 'credits_500', // Internal ID mapped to Polar UUID in API
         name: '500 Polar Credits',
         credits: 500,
         price: 20, // $20 (20% discount)
@@ -68,14 +68,14 @@ export const POLAR_CREDIT_PACKAGES = {
         popular: true,
     },
     LARGE: {
-        id: 'credits_1000',
+        id: 'credits_1000', // Internal ID mapped to Polar UUID in API
         name: '1,000 Polar Credits',
         credits: 1000,
         price: 35, // $35 (30% discount)
         description: 'Best value for power users',
     },
     PLUS_SUBSCRIPTION: {
-        id: 'vt_plus_monthly',
+        id: 'vt_plus_monthly', // Internal ID mapped to Polar UUID in API
         name: 'VT+ Monthly',
         credits: 1000, // Monthly allowance
         price: 19, // $19/month

@@ -49,7 +49,7 @@ export interface GatedFeatureAlertProps {
  * ```tsx
  * // Gate by feature
  * <GatedFeatureAlert
- *   requiredFeature={FeatureSlug.DARK_MODE}
+ *   requiredFeature={FeatureSlug.DARK_THEME}
  *   title="Dark Mode Available in VT+"
  *   message="Dark mode is a VT+ feature. Upgrade to enjoy a better viewing experience."
  * >

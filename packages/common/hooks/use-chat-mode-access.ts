@@ -8,7 +8,7 @@
  */
 
 import { useAuth } from '@clerk/nextjs';
-import { ChatMode } from '@repo/shared/config/chat-mode';
+import { ChatMode } from '@repo/shared/config';
 import {
     checkChatModeAccess,
     getAvailableChatModes,
@@ -136,7 +136,7 @@ export function useChatModeAccess() {
  * Hook for managing credit usage during chat sessions
  */
 export function useChatCreditUsage() {
-    const { useCredits, canAfford } = useCredits();
+    const { useCredits: spendCredits, canAfford } = useCredits();
     const { checkAccess } = useChatModeAccess();
 
     // Attempt to use credits for a chat mode
@@ -152,12 +152,12 @@ export function useChatCreditUsage() {
             // If credits are required, deduct them
             if (access.accessType === 'credits' && access.canAccess) {
                 const description = `Chat session: ${chatMode}${sessionInfo ? ` - ${sessionInfo}` : ''}`;
-                return useCredits(access.creditCost, description);
+                return spendCredits(access.creditCost, description);
             }
 
             return false;
         },
-        [checkAccess, useCredits]
+        [checkAccess, spendCredits]
     );
 
     // Check if user can afford a chat session

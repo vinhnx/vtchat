@@ -15,6 +15,7 @@ import { useChatStore } from '../store/chat.store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon, ToolIcon } from './icons';
 import { ModeToggle } from './mode-toggle';
+import { UserTierBadge } from './user-tier-badge';
 
 export const SettingsModal = () => {
     const isSettingOpen = useAppStore(state => state.isSettingsOpen);
@@ -412,11 +413,7 @@ export const CreditsSettings = () => {
     const info = [
         {
             title: 'Plan',
-            value: (
-                <Badge variant="secondary" className="bg-brand/10 text-brand rounded-full">
-                    <span className="text-xs font-medium">FREE</span>
-                </Badge>
-            ),
+            value: <UserTierBadge />,
         },
         {
             title: 'Credits',
