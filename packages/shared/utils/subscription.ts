@@ -48,7 +48,7 @@ export type ClerkHasMethod = any;
  * @example
  * // Server-side usage
  * const { has } = await auth();
- * const hasAccess = checkSubscriptionAccess(has, { feature: FeatureSlug.DARK_MODE });
+ * const hasAccess = checkSubscriptionAccess(has, { feature: FeatureSlug.DARK_THEME });
  *
  * @example
  * // Client-side usage
@@ -205,7 +205,37 @@ export function requiresAuth(feature: FeatureSlug): boolean {
  * const isPlus = hasVtPlusPlan(has);
  */
 export function hasVtPlusPlan(hasMethod: ClerkHasMethod): boolean {
-    return checkSubscriptionAccess(hasMethod, { plan: PlanSlug.VT_PLUS });
+    if (!hasMethod || typeof hasMethod !== 'function') {
+        return false;
+    }
+
+    try {
+        // First check Clerk's has() method
+        const hasFromClerk = checkSubscriptionAccess(hasMethod, { plan: PlanSlug.VT_PLUS });
+
+        // Then check user metadata (set by Polar webhook)
+        let hasFromMetadata = false;
+
+        // Get user from the hasMethod context
+        const user = hasMethod.user || hasMethod.actor;
+
+        if (user && user.publicMetadata) {
+            // Check if planSlug in publicMetadata is VT_PLUS
+            hasFromMetadata = user.publicMetadata.planSlug === PlanSlug.VT_PLUS;
+
+            // Also check if there's subscription data that indicates an active subscription
+            if (user.privateMetadata && user.privateMetadata.subscription) {
+                hasFromMetadata =
+                    hasFromMetadata && user.privateMetadata.subscription.isActive === true;
+            }
+        }
+
+        // Return true if either source indicates a valid subscription
+        return hasFromClerk || hasFromMetadata;
+    } catch (error) {
+        console.warn('Error checking VT+ subscription status:', error);
+        return false;
+    }
 }
 
 /**
@@ -225,7 +255,7 @@ export function hasVtBasePlan(hasMethod: ClerkHasMethod): boolean {
  *
  * @example
  * const { has } = useAuth();
- * const canUseDarkMode = hasFeature(has, FeatureSlug.DARK_MODE);
+ * const canUseDarkTheme = hasFeature(has, FeatureSlug.DARK_THEME);
  */
 export function hasFeature(hasMethod: ClerkHasMethod, feature: FeatureSlug): boolean {
     return checkSubscriptionAccess(hasMethod, { feature });
