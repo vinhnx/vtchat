@@ -144,7 +144,7 @@ function SubscriptionPlanCard({ planData, onSubscribe, isLoading }: Subscription
     );
 }
 
-export function PolarCreditsShop() {
+export function CreemCreditsShop() {
     const { balance } = useCredits();
     const { purchasePackage, isLoading, getCreditPackages, getSubscriptionPlans } =
         useCreditPurchasing();
@@ -157,12 +157,37 @@ export function PolarCreditsShop() {
     const handlePurchase = async (packageId: keyof typeof CREEM_CREDIT_PACKAGES) => {
         try {
             setPurchasingPackage(packageId);
-            // Map the package ID from the credit package to the CREEM_CREDIT_PACKAGES key
-            // This is needed because the package IDs returned by getCreditPackages()
-            // are different from the keys in CREEM_CREDIT_PACKAGES
-            await purchasePackage(packageId);
+
+            console.log('[CreemCreditsShop] Starting credit purchase for package:', packageId);
+
+            // Use the API for consistency instead of the store method
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    priceId: packageId, // This will map to our credit packages
+                    successUrl: `${window.location.origin}/success?package=${packageId}`,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('[CreemCreditsShop] Checkout API error:', errorData);
+                throw new Error(errorData.error || 'Failed to create checkout session');
+            }
+
+            const checkout = await response.json();
+            console.log('[CreemCreditsShop] Checkout created:', checkout);
+
+            if (checkout.url) {
+                window.location.href = checkout.url;
+            } else {
+                throw new Error('Invalid checkout URL received');
+            }
         } catch (error) {
-            console.error('Purchase failed:', error);
+            console.error('[CreemCreditsShop] Purchase failed:', error);
 
             // Handle authentication errors
             if (
@@ -182,7 +207,8 @@ export function PolarCreditsShop() {
             } else if (
                 error instanceof Error &&
                 (error.message.includes('Payment system configuration error') ||
-                    error.message.includes('Subscription service temporarily unavailable'))
+                    error.message.includes('Subscription service temporarily unavailable') ||
+                    error.message.includes('PRODUCT_NOT_CONFIGURED'))
             ) {
                 // Handle Creem API token errors specifically
                 toast({
@@ -210,6 +236,8 @@ export function PolarCreditsShop() {
         try {
             setPurchasingPackage('PLUS_SUBSCRIPTION');
 
+            console.log('[CreemCreditsShop] Starting VT+ subscription checkout');
+
             // Use the API for subscribing to ensure consistent behavior
             const response = await fetch('/api/checkout', {
                 method: 'POST',
@@ -224,17 +252,20 @@ export function PolarCreditsShop() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error('[CreemCreditsShop] VT+ subscription checkout error:', errorData);
                 throw new Error(errorData.error || 'Failed to create checkout session');
             }
 
             const checkout = await response.json();
+            console.log('[CreemCreditsShop] VT+ checkout created:', checkout);
+
             if (checkout.url) {
                 window.location.href = checkout.url;
             } else {
                 throw new Error('Invalid checkout URL');
             }
         } catch (error) {
-            console.error('Subscription failed:', error);
+            console.error('[CreemCreditsShop] Subscription failed:', error);
 
             // Handle authentication errors specifically
             if (
@@ -254,7 +285,8 @@ export function PolarCreditsShop() {
             } else if (
                 error instanceof Error &&
                 (error.message.includes('Payment system configuration error') ||
-                    error.message.includes('Subscription service temporarily unavailable'))
+                    error.message.includes('Subscription service temporarily unavailable') ||
+                    error.message.includes('PRODUCT_NOT_CONFIGURED'))
             ) {
                 // Handle Creem API token errors specifically
                 toast({
@@ -371,4 +403,4 @@ export function PolarCreditsShop() {
     );
 }
 
-export default PolarCreditsShop;
+export default CreemCreditsShop;

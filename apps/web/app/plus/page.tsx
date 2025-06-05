@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import { PolarCreditsShop } from '@repo/common/components/polar-credits-shop';
+import { CreemCreditsShop } from '@repo/common/components';
 import { Button, Spinner } from '@repo/ui';
 import { Shield, Sparkles, Users, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -119,7 +119,7 @@ export default function Page() {
                     </p>
                 </div>
 
-                <PolarCreditsShop />
+                <CreemCreditsShop />
             </div>
 
             {/* Social Proof */}

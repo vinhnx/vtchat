@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
     checkSubscriptionAccess,
@@ -192,7 +192,8 @@ export function usePlanAccess(plan: PlanSlug): boolean {
  * }
  */
 export function useVtPlusAccess(): boolean {
-    const { has, isLoaded, user } = useAuth();
+    const { has, isLoaded } = useAuth();
+    const { user } = useUser();
 
     return useMemo(() => {
         if (!isLoaded || !has) return false;
@@ -203,7 +204,7 @@ export function useVtPlusAccess(): boolean {
         has,
         isLoaded,
         user?.publicMetadata?.planSlug,
-        user?.privateMetadata?.subscription?.isActive,
+        (user as any)?.privateMetadata?.subscription?.isActive,
     ]);
 }
 

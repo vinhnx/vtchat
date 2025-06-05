@@ -7,7 +7,7 @@ import {
     DAILY_CREDITS_IP,
     deductCredits,
     getRemainingCredits,
-} from './polar-credit-service';
+} from './creem-credit-service';
 import { executeStream, sendMessage } from './stream-handlers';
 import { completionRequestSchema, SSE_HEADERS } from './types';
 import { getIp } from './utils';

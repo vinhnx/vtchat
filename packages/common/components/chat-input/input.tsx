@@ -1,6 +1,6 @@
 'use client';
 import { useAuth } from '@clerk/nextjs';
-import { ImageAttachment, ImageDropzoneRoot, PolarCreditsDisplay } from '@repo/common/components';
+import { CreemCreditsDisplay, ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
 import { cn, Flex } from '@repo/ui';
@@ -193,7 +193,7 @@ export const ChatInput = ({
                     </ImageDropzoneRoot>
                 </Flex>
             </motion.div>
-            <PolarCreditsDisplay key="polar-credits" />
+            <CreemCreditsDisplay key="creem-credits" />
         </AnimatePresence>
     );
 

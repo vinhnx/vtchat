@@ -6,8 +6,7 @@ import { IconBoltFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-// This was renamed to avoid naming conflicts with creem-credits-display.tsx
-export function PolarCreditsDisplay() {
+export function CreemCreditsDisplay() {
     const { user } = useUser();
     const router = useRouter();
     const chatMode = useChatStore(state => state.chatMode);
@@ -118,5 +117,3 @@ export function PolarCreditsDisplay() {
         </div>
     );
 }
-
-// No longer need backward compatibility export since the component itself is named PolarCreditsDisplay

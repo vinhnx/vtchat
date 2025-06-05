@@ -1,3 +1,4 @@
+import { CreemCheckoutProcessor } from '@repo/common/components';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
 import { ArrowRight, CheckCircle2, CreditCard, Gift, MessageSquare, Sparkles } from 'lucide-react';
 import { Metadata } from 'next';
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
 function SuccessContent() {
     return (
         <div className="container mx-auto px-4 py-16">
+            {/* This component processes the checkout params and updates credits */}
+            <CreemCheckoutProcessor />
+
             <div className="mx-auto max-w-4xl">
                 {/* Hero Success Section */}
                 <div className="mb-12 space-y-6 text-center">

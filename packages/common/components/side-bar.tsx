@@ -2,8 +2,8 @@
 import { useClerk, useUser } from '@clerk/nextjs';
 import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
+import { useCreemSubscription } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
-import { usePolarSubscription } from '@repo/common/hooks';
 import { Thread } from '@repo/shared/types';
 import {
     Badge,
@@ -54,7 +54,7 @@ export const Sidebar = () => {
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
-    const { isPlusSubscriber, openCustomerPortal } = usePolarSubscription();
+    const { isPlusSubscriber, openCustomerPortal } = useCreemSubscription();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -204,7 +204,13 @@ export const Sidebar = () => {
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="bordered"
                         rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : isPlusSubscriber ? 'Manage Subscription' : 'View Plans'}
+                        tooltip={
+                            isSidebarOpen
+                                ? undefined
+                                : isPlusSubscriber
+                                  ? 'Manage Subscription'
+                                  : 'View Plans'
+                        }
                         tooltipSide="right"
                         className={cn(
                             isSidebarOpen && 'relative w-full',
@@ -212,7 +218,7 @@ export const Sidebar = () => {
                         )}
                         onClick={() => {
                             if (isPlusSubscriber) {
-                                // Open Polar customer portal for subscribers
+                                // Open Creem customer portal for subscribers
                                 openCustomerPortal();
                             } else {
                                 // For non-subscribers, go to /plus page

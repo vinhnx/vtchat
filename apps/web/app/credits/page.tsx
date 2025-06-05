@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import PolarCreditsShop from '@repo/common/components/polar-credits-shop';
+import { CreemCreditsShop } from '@repo/common/components';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
@@ -27,7 +27,7 @@ export default async function CreditsPage() {
                     </p>
                 </div>
 
-                <PolarCreditsShop />
+                <CreemCreditsShop />
             </div>
         </div>
     );
