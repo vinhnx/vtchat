@@ -41,41 +41,63 @@ import { useCallback, useMemo } from 'react';
  * }
  */
 export function useSubscriptionAccess() {
-    const { has, isLoaded, isSignedIn } = useAuth();
+    const { isLoaded, isSignedIn } = useAuth();
+    const { user } = useUser();
 
     // Memoize the subscription status to avoid recalculations
     const subscriptionStatus = useMemo(() => {
-        if (!isLoaded || !has) {
+        if (!isLoaded) {
             return null;
         }
-        return getSubscriptionStatus(has);
-    }, [has, isLoaded]);
+
+        // Create subscription context with user data
+        const context = {
+            user,
+        };
+
+        return getSubscriptionStatus(context);
+    }, [isLoaded, user]);
 
     // Create stable callback for access checking
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
-            if (!isLoaded || !has) return false;
-            return checkSubscriptionAccess(has, options);
+            if (!isLoaded) return false;
+
+            const context = {
+                user,
+            };
+
+            return checkSubscriptionAccess(context, options);
         },
-        [has, isLoaded]
+        [isLoaded, user]
     );
 
     // Create stable callback for feature checking
     const canAccess = useCallback(
         (feature: FeatureSlug) => {
-            if (!isLoaded || !has) return false;
-            return hasFeature(has, feature);
+            if (!isLoaded) return false;
+
+            const context = {
+                user,
+            };
+
+            return hasFeature(context, feature);
         },
-        [has, isLoaded]
+        [isLoaded, user]
     );
 
     // Create stable callback for plan checking
     const hasPlan = useCallback(
         (plan: PlanSlug) => {
-            if (!isLoaded || !has) return false;
-            return checkSubscriptionAccess(has, { plan });
+            if (!isLoaded) return false;
+
+            const context = {
+                user,
+            };
+
+            return checkSubscriptionAccess(context, { plan });
         },
-        [has, isLoaded]
+        [isLoaded, user]
     );
 
     return {
@@ -87,9 +109,6 @@ export function useSubscriptionAccess() {
         hasAccess,
         canAccess,
         hasPlan,
-
-        // Direct access to Clerk's has method
-        has,
 
         // Convenience properties
         currentPlan: subscriptionStatus?.currentPlan || PlanSlug.VT_BASE,
@@ -104,18 +123,20 @@ export function useSubscriptionAccess() {
         // Utility functions for complex checks
         hasAnyFeature: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded || !has) return false;
-                return features.some(feature => hasFeature(has, feature));
+                if (!isLoaded) return false;
+                const context = { user };
+                return features.some(feature => hasFeature(context, feature));
             },
-            [has, isLoaded]
+            [isLoaded, user]
         ),
 
         hasAllFeatures: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded || !has) return false;
-                return features.every(feature => hasFeature(has, feature));
+                if (!isLoaded) return false;
+                const context = { user };
+                return features.every(feature => hasFeature(context, feature));
             },
-            [has, isLoaded]
+            [isLoaded, user]
         ),
     };
 }
@@ -139,12 +160,18 @@ export function useSubscriptionAccess() {
  * }
  */
 export function useFeatureAccess(feature: FeatureSlug): boolean {
-    const { has, isLoaded } = useAuth();
+    const { isLoaded } = useAuth();
+    const { user } = useUser();
 
     return useMemo(() => {
-        if (!isLoaded || !has) return false;
-        return hasFeature(has, feature);
-    }, [has, isLoaded, feature]);
+        if (!isLoaded) return false;
+
+        const context = {
+            user,
+        };
+
+        return hasFeature(context, feature);
+    }, [isLoaded, user, feature]);
 }
 
 /**
@@ -166,12 +193,18 @@ export function useFeatureAccess(feature: FeatureSlug): boolean {
  * }
  */
 export function usePlanAccess(plan: PlanSlug): boolean {
-    const { has, isLoaded } = useAuth();
+    const { isLoaded } = useAuth();
+    const { user } = useUser();
 
     return useMemo(() => {
-        if (!isLoaded || !has) return false;
-        return checkSubscriptionAccess(has, { plan });
-    }, [has, isLoaded, plan]);
+        if (!isLoaded) return false;
+
+        const context = {
+            user,
+        };
+
+        return checkSubscriptionAccess(context, { plan });
+    }, [isLoaded, user, plan]);
 }
 
 /**
@@ -192,19 +225,19 @@ export function usePlanAccess(plan: PlanSlug): boolean {
  * }
  */
 export function useVtPlusAccess(): boolean {
-    const { has, isLoaded } = useAuth();
+    const { isLoaded } = useAuth();
     const { user } = useUser();
 
     return useMemo(() => {
-        if (!isLoaded || !has) return false;
+        if (!isLoaded) return false;
 
-        // Check through the hasVtPlusPlan function (which now checks both Clerk and Polar)
-        return hasVtPlusPlan(has);
+        const context = { user };
+        return hasVtPlusPlan(context);
     }, [
-        has,
         isLoaded,
         user?.publicMetadata?.planSlug,
         (user as any)?.privateMetadata?.subscription?.isActive,
+        user,
     ]);
 }
 
@@ -228,10 +261,11 @@ export function useVtPlusAccess(): boolean {
  * }
  */
 export function useCurrentPlan() {
-    const { has, isLoaded } = useAuth();
+    const { isLoaded } = useAuth();
+    const { user } = useUser();
 
     return useMemo(() => {
-        if (!isLoaded || !has) {
+        if (!isLoaded) {
             return {
                 planSlug: PlanSlug.VT_BASE,
                 planInfo: null,
@@ -239,13 +273,14 @@ export function useCurrentPlan() {
             };
         }
 
-        const planSlug = getCurrentPlan(has);
-        const subscriptionStatus = getSubscriptionStatus(has);
+        const context = { user };
+        const planSlug = getCurrentPlan(context);
+        const subscriptionStatus = getSubscriptionStatus(context);
 
         return {
             planSlug,
             planInfo: subscriptionStatus.planInfo,
             canUpgrade: subscriptionStatus.canUpgrade,
         };
-    }, [has, isLoaded]);
+    }, [isLoaded, user]);
 }

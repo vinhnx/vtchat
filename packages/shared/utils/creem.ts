@@ -124,11 +124,34 @@ export class CreemService {
                 request.productId === 'vt_plus_monthly' ||
                 (request.successUrl && request.successUrl.includes('plan=vt_plus'));
 
+            // Get the base URL for success redirect - prioritize explicit app URL
+            const baseUrl =
+                process.env.NEXT_PUBLIC_APP_URL ||
+                process.env.NEXTAUTH_URL ||
+                process.env.VERCEL_URL ||
+                (typeof window !== 'undefined' ? window.location.origin : null) ||
+                'http://localhost:3000';
+
+            // Ensure base URL has protocol
+            const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+
+            // Ensure success URL is properly formatted for redirect - must be absolute URL
+            const successUrl = request.successUrl
+                ? request.successUrl.startsWith('http')
+                    ? request.successUrl
+                    : `${normalizedBaseUrl}${request.successUrl}`
+                : isSubscription
+                  ? `${normalizedBaseUrl}/success?plan=vt_plus`
+                  : `${normalizedBaseUrl}/success?package=${request.productId}&quantity=${request.quantity || 1}`;
+
+            console.log('[CreemService] Using success URL:', successUrl);
+
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
                 createCheckoutRequest: {
                     productId: this.PRODUCT_ID, // Always use our configured Creem product ID
                     units: request.quantity || 1,
+                    successUrl: successUrl, // Add the success URL for redirect
                     customer: request.customerEmail
                         ? {
                               email: request.customerEmail,
@@ -136,7 +159,7 @@ export class CreemService {
                         : undefined,
                     metadata: {
                         packageId: request.productId, // Store the internal package ID for webhook processing
-                        successUrl: request.successUrl || '',
+                        successUrl: successUrl,
                         isSubscription: isSubscription ? 'true' : 'false',
                         source: 'vtchat-app',
                         timestamp: new Date().toISOString(),
@@ -172,32 +195,43 @@ export class CreemService {
      */
     static async getPortalUrl(customerEmail?: string): Promise<PortalResponse> {
         try {
-            // For customer portal, we need a customer ID
-            // This would typically be stored after the first purchase
-            const result = await this.client.generateCustomerLinks({
-                xApiKey: this.API_KEY,
-                createCustomerPortalLinkRequestEntity: {
-                    customerId: 'placeholder', // This should come from user metadata
-                },
-            });
+            // Get base URL for fallback
+            const baseUrl =
+                process.env.NEXT_PUBLIC_APP_URL ||
+                process.env.NEXTAUTH_URL ||
+                process.env.VERCEL_URL ||
+                'https://www.creem.io';
 
-            if (result && typeof result === 'object' && 'customerPortalLink' in result) {
+            const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+
+            // If in sandbox mode, return the Creem.io sandbox customer portal
+            // In production, we would need proper customer ID management
+            if (process.env.NODE_ENV !== 'production') {
                 return {
-                    url: result.customerPortalLink || '',
+                    url: `https://www.creem.io/test/billing?product=${this.PRODUCT_ID}`,
                     success: true,
                 };
             }
 
-            // Fallback to a general URL if we can't generate customer portal
+            // For production, we would need customer ID lookup from user metadata
+            // For now, provide a reasonable fallback that allows subscription management
             return {
-                url: `https://www.creem.io/test/payment/${this.PRODUCT_ID}`,
+                url: `${normalizedBaseUrl}/plus`,
                 success: true,
             };
         } catch (error) {
             console.error('Creem portal error:', error);
             // Return fallback URL instead of throwing
+            const baseUrl =
+                process.env.NEXT_PUBLIC_APP_URL ||
+                process.env.NEXTAUTH_URL ||
+                process.env.VERCEL_URL ||
+                'https://www.creem.io';
+
+            const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+
             return {
-                url: `https://www.creem.io/test/payment/${this.PRODUCT_ID}`,
+                url: `${normalizedBaseUrl}/plus`,
                 success: true,
             };
         }
@@ -223,7 +257,7 @@ export class CreemService {
             productId: this.PRODUCT_ID, // Use the actual Creem product ID
             quantity,
             customerEmail,
-            successUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/success?package=${packageId}&quantity=${quantity}`,
+            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?package=${packageId}&quantity=${quantity}`,
         });
     }
 
@@ -236,7 +270,7 @@ export class CreemService {
         return this.createCheckout({
             productId: this.PRODUCT_ID, // Use the actual Creem product ID, not our internal ID
             customerEmail,
-            successUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/success?plan=vt_plus`,
+            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=vt_plus`,
         });
     }
 

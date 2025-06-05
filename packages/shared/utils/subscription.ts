@@ -1,171 +1,157 @@
 /**
- * VT Chat Subscription Handler Utilities
+ * VT Chat Client-Side Subscription Utilities
  *
- * This module provides utilities for checking subscription access control
- * using Clerk's native has() method for plan and feature access.
- * Client-side checks should primarily use Clerk's <Protect> component or useAuth().has.
+ * Client-side utilities for checking subscription access.
  */
 
-import type { User } from '@clerk/nextjs/server';
-import type { UserResource } from '@clerk/types';
-import {
-    DEFAULT_PLAN,
-    FeatureSlug,
-    PLANS,
-    PlanSlug,
-    type UserSubscription,
-} from '../types/subscription';
+import { FeatureSlug, PLANS, PlanSlug } from '../types/subscription';
 
-/**
- * Unified subscription access check options
- */
-export interface SubscriptionAccessOptions {
-    feature?: FeatureSlug;
-    plan?: PlanSlug;
-    permission?: string;
+// Type for subscription access context
+export interface SubscriptionContext {
+    user?: any; // Clerk user object
 }
 
 /**
- * Clerk's has() method type - we'll use 'any' to avoid complex type conflicts
- * This is compatible with both client-side (useAuth) and server-side (auth) has methods
- *
- * Based on Clerk's official examples:
- * - has({ feature: 'premium_access' })
- * - has({ plan: 'bronze' })
+ * Get user subscription data from Creem.io
+ * This function reads from user metadata (publicMetadata.subscription)
  */
-export type ClerkHasMethod = any;
+function getCreemSubscriptionData(context: SubscriptionContext): {
+    planSlug: PlanSlug;
+    isActive: boolean;
+    expiresAt?: string;
+    source: 'creem' | 'none';
+} {
+    // Try to get user from context or window
+    const user =
+        context.user || (typeof window !== 'undefined' && (window as any).__CLERK_USER__) || null;
 
-/**
- * Unified subscription access check function
- * This is the single interface for all subscription access checks in the application.
- * It works with Clerk's has() method (client-side or server-side) and provides
- * a consistent API for checking feature and plan access throughout the codebase.
- *
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @param options - Access check options (feature, plan, or permission)
- * @returns boolean indicating access (false if hasMethod is null/undefined)
- *
- * @example
- * // Server-side usage
- * const { has } = await auth();
- * const hasAccess = checkSubscriptionAccess(has, { feature: FeatureSlug.DARK_THEME });
- *
- * @example
- * // Client-side usage
- * const { has } = useAuth();
- * const hasAccess = checkSubscriptionAccess(has, { plan: PlanSlug.VT_PLUS });
- */
-export function checkSubscriptionAccess(
-    hasMethod: ClerkHasMethod,
-    options: SubscriptionAccessOptions
-): boolean {
-    // Early return if no hasMethod provided or user not authenticated
-    if (!hasMethod || typeof hasMethod !== 'function') {
-        return false;
-    }
-
-    try {
-        // Check feature access
-        if (options.feature) {
-            const result = hasMethod({ feature: options.feature });
-            return result === true;
+    if (user && user.publicMetadata) {
+        // Check for Creem subscription data in publicMetadata
+        if (user.publicMetadata.subscription) {
+            const subscription = user.publicMetadata.subscription;
+            return {
+                planSlug: subscription.plan || user.publicMetadata.planSlug || PlanSlug.VT_BASE,
+                isActive: subscription.isActive === true,
+                expiresAt: subscription.expiresAt,
+                source: 'creem',
+            };
         }
 
-        // Check plan access
-        if (options.plan) {
-            const result = hasMethod({ plan: options.plan });
-            return result === true;
+        // Check for direct planSlug in publicMetadata
+        if (user.publicMetadata.planSlug) {
+            return {
+                planSlug: user.publicMetadata.planSlug,
+                isActive: true, // Assume active if planSlug is set
+                source: 'creem',
+            };
         }
 
-        // Check permission access
-        if (options.permission) {
-            const result = hasMethod({ permission: options.permission });
-            return result === true;
+        // Check privateMetadata for subscription data
+        if (user.privateMetadata?.subscription) {
+            const subscription = user.privateMetadata.subscription;
+            return {
+                planSlug: subscription.plan || PlanSlug.VT_BASE,
+                isActive: subscription.isActive === true,
+                expiresAt: subscription.expiresAt,
+                source: 'creem',
+            };
         }
-
-        // If no specific options provided, return false (no access)
-        return false;
-    } catch (error) {
-        console.warn('Error checking subscription access:', error);
-        return false;
-    }
-}
-
-/**
- * Extract subscription data from Clerk user object
- * This follows Clerk's pattern for storing plan information in user metadata.
- * This function is primarily for server-side use or for deriving context when direct Clerk hooks are not suitable.
- */
-export function getUserSubscription(user: User | UserResource | null): UserSubscription {
-    if (!user) {
-        return {
-            planSlug: DEFAULT_PLAN,
-            features: [...PLANS[DEFAULT_PLAN].features], // Ensure a new array instance
-            isActive: true, // Default to active for non-logged-in or non-existent users for base features
-        };
     }
 
-    const publicMetadata = user.publicMetadata as any;
-    // User (server-side) has privateMetadata, UserResource (client-side) does not.
-    const privateMetadata = (user as User).privateMetadata as any;
-
-    const planSlug = (publicMetadata?.planSlug as PlanSlug) || DEFAULT_PLAN;
-    const subscriptionDataSource = privateMetadata?.subscription || publicMetadata?.subscription;
-
-    const plan = PLANS[planSlug];
-    if (!plan) {
-        console.warn(`Invalid plan slug: ${planSlug}, falling back to default`);
-        return {
-            planSlug: DEFAULT_PLAN,
-            features: [...PLANS[DEFAULT_PLAN].features], // Ensure a new array instance
-            isActive: true,
-        };
-    }
-
+    // Default to base plan
     return {
-        planSlug,
-        features: [...plan.features], // Ensure a new array instance
-        isActive: subscriptionDataSource?.isActive ?? true,
-        expiresAt: subscriptionDataSource?.expiresAt
-            ? new Date(subscriptionDataSource.expiresAt)
-            : undefined,
+        planSlug: PlanSlug.VT_BASE,
+        isActive: false,
+        source: 'none',
     };
 }
 
 /**
- * Get all available features for a user
+ * Check if a user has VT+ plan
+ *
+ * This function checks Creem.io subscription data to determine
+ * if the user has an active VT+ subscription.
  */
-export function getUserFeatures(user: User | UserResource | null): FeatureSlug[] {
-    const subscription = getUserSubscription(user);
-    return [...subscription.features]; // Return a new array instance
+export function hasVtPlusPlan(context: SubscriptionContext): boolean {
+    const subscriptionData = getCreemSubscriptionData(context);
+    return subscriptionData.planSlug === PlanSlug.VT_PLUS && subscriptionData.isActive;
 }
 
 /**
- * Get user's current plan information
+ * Check if a user has access to a specific feature
  */
-export function getUserPlan(user: User | null) {
-    const subscription = getUserSubscription(user);
-    return PLANS[subscription.planSlug];
+export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): boolean {
+    // For VT+ specific features, check if they have VT+ plan using our enhanced method
+    if (
+        [
+            FeatureSlug.DARK_THEME,
+            FeatureSlug.DEEP_RESEARCH,
+            FeatureSlug.PRO_SEARCH,
+            FeatureSlug.ADVANCED_CHAT_MODES,
+        ].includes(feature)
+    ) {
+        if (hasVtPlusPlan(context)) {
+            return true;
+        }
+    }
+
+    // Fall back to checking if user's plan includes this feature
+    const subscriptionData = getCreemSubscriptionData(context);
+    const planConfig = PLANS[subscriptionData.planSlug];
+
+    return planConfig.features.includes(feature);
 }
 
 /**
- * Check if user is on the default (free) plan
+ * Check if a user has access to a specific plan
  */
-export function isFreePlan(user: User | null): boolean {
-    const subscription = getUserSubscription(user);
-    return subscription.planSlug === DEFAULT_PLAN;
+export function hasPlan(context: SubscriptionContext, plan: PlanSlug): boolean {
+    if (plan === PlanSlug.VT_PLUS) {
+        return hasVtPlusPlan(context);
+    }
+
+    // Everyone has access to the base plan
+    return true;
 }
 
 /**
- * Check if user is on a premium plan
+ * Check subscription access based on options
  */
-export function isPremiumPlan(user: User | null): boolean {
-    return !isFreePlan(user);
+export function checkSubscriptionAccess(
+    context: SubscriptionContext,
+    options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }
+): boolean {
+    const { feature, plan, permission } = options;
+
+    // Check feature access
+    if (feature) {
+        return hasFeature(context, feature);
+    }
+
+    // Check plan access
+    if (plan) {
+        return hasPlan(context, plan);
+    }
+
+    // Permission checks are not supported in the new system
+    if (permission) {
+        console.warn('Permission checks are not supported in the new subscription system');
+        return false;
+    }
+
+    return false;
 }
 
 /**
- * Get plan upgrade suggestions for a feature
- * Returns the minimum plan needed to access a feature
+ * Get the current plan for a user
+ */
+export function getCurrentPlan(context: SubscriptionContext): PlanSlug {
+    const subscriptionData = getCreemSubscriptionData(context);
+    return subscriptionData.planSlug;
+}
+
+/**
+ * Get required plan for a specific feature
  */
 export function getRequiredPlanForFeature(feature: FeatureSlug): PlanSlug | null {
     for (const [planSlug, plan] of Object.entries(PLANS)) {
@@ -177,212 +163,122 @@ export function getRequiredPlanForFeature(feature: FeatureSlug): PlanSlug | null
 }
 
 /**
- * Check if a feature requires authentication/sign-in
+ * Check if a plan is a premium plan
  */
-export function requiresAuth(feature: FeatureSlug): boolean {
-    const basePlanFeatures = PLANS[PlanSlug.VT_BASE].features;
-    return !basePlanFeatures.includes(feature);
+export function isPremiumPlan(plan: PlanSlug): boolean {
+    return plan !== PlanSlug.VT_BASE;
 }
 
 /**
- * Optimized utility functions for common subscription checks
- * These functions provide easy-to-use wrappers around the unified checkSubscriptionAccess function
+ * Check if a plan is a free plan
  */
-
-/**
- * Check if user has VT_PLUS plan
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @returns boolean indicating if user has VT_PLUS plan
- *
- * @example
- * // Server-side
- * const { has } = await auth();
- * const isPlus = hasVtPlusPlan(has);
- *
- * @example
- * // Client-side
- * const { has } = useAuth();
- * const isPlus = hasVtPlusPlan(has);
- */
-export function hasVtPlusPlan(hasMethod: ClerkHasMethod): boolean {
-    if (!hasMethod || typeof hasMethod !== 'function') {
-        return false;
-    }
-
-    try {
-        // First check Clerk's has() method
-        const hasFromClerk = checkSubscriptionAccess(hasMethod, { plan: PlanSlug.VT_PLUS });
-
-        // Then check user metadata (set by Polar webhook)
-        let hasFromMetadata = false;
-
-        // Get user from the hasMethod context
-        const user = hasMethod.user || hasMethod.actor;
-
-        if (user && user.publicMetadata) {
-            // Check if planSlug in publicMetadata is VT_PLUS
-            hasFromMetadata = user.publicMetadata.planSlug === PlanSlug.VT_PLUS;
-
-            // Also check if there's subscription data that indicates an active subscription
-            if (user.privateMetadata && user.privateMetadata.subscription) {
-                hasFromMetadata =
-                    hasFromMetadata && user.privateMetadata.subscription.isActive === true;
-            }
-        }
-
-        // Return true if either source indicates a valid subscription
-        return hasFromClerk || hasFromMetadata;
-    } catch (error) {
-        console.warn('Error checking VT+ subscription status:', error);
-        return false;
-    }
+export function isFreePlan(plan: PlanSlug): boolean {
+    return plan === PlanSlug.VT_BASE;
 }
 
 /**
- * Check if user has VT_BASE plan (free tier)
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @returns boolean indicating if user has VT_BASE plan
+ * Check if a user has a premium plan
  */
-export function hasVtBasePlan(hasMethod: ClerkHasMethod): boolean {
-    return checkSubscriptionAccess(hasMethod, { plan: PlanSlug.VT_BASE });
+export function hasPremiumPlan(context: SubscriptionContext): boolean {
+    return hasVtPlusPlan(context);
 }
 
 /**
- * Check if user has a specific feature
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @param feature - Feature to check access for
- * @returns boolean indicating if user has the feature
- *
- * @example
- * const { has } = useAuth();
- * const canUseDarkTheme = hasFeature(has, FeatureSlug.DARK_THEME);
+ * Check if a user has VT Base plan
  */
-export function hasFeature(hasMethod: ClerkHasMethod, feature: FeatureSlug): boolean {
-    return checkSubscriptionAccess(hasMethod, { feature });
+export function hasVtBasePlan(context: SubscriptionContext): boolean {
+    return !hasVtPlusPlan(context);
 }
 
 /**
- * Check if user has any premium plan (not VT_BASE)
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @returns boolean indicating if user has any premium plan
+ * Get subscription status for a user
  */
-export function hasPremiumPlan(hasMethod: ClerkHasMethod): boolean {
-    return hasVtPlusPlan(hasMethod);
-}
-
-/**
- * Get the current user's plan based on Clerk's has() method
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @returns PlanSlug indicating the user's current plan
- *
- * @example
- * const { has } = useAuth();
- * const currentPlan = getCurrentPlan(has);
- */
-export function getCurrentPlan(hasMethod: ClerkHasMethod): PlanSlug {
-    if (hasVtPlusPlan(hasMethod)) {
-        return PlanSlug.VT_PLUS;
-    }
-    return PlanSlug.VT_BASE;
-}
-
-/**
- * Advanced subscription utilities for complex scenarios
- */
-
-/**
- * Check multiple features at once
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @param features - Array of features to check
- * @returns Object with feature access status
- */
-export function checkMultipleFeatures(
-    hasMethod: ClerkHasMethod,
-    features: FeatureSlug[]
-): Record<FeatureSlug, boolean> {
-    const result = {} as Record<FeatureSlug, boolean>;
-
-    for (const feature of features) {
-        result[feature] = hasFeature(hasMethod, feature);
-    }
-
-    return result;
-}
-
-/**
- * Check if user has access to any of the provided features
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @param features - Array of features to check
- * @returns boolean indicating if user has access to at least one feature
- */
-export function hasAnyFeature(hasMethod: ClerkHasMethod, features: FeatureSlug[]): boolean {
-    return features.some(feature => hasFeature(hasMethod, feature));
-}
-
-/**
- * Check if user has access to all of the provided features
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @param features - Array of features to check
- * @returns boolean indicating if user has access to all features
- */
-export function hasAllFeatures(hasMethod: ClerkHasMethod, features: FeatureSlug[]): boolean {
-    return features.every(feature => hasFeature(hasMethod, feature));
-}
-
-/**
- * Get detailed subscription status with comprehensive information
- * @param hasMethod - Clerk's has() method from useAuth() or auth()
- * @returns Comprehensive subscription status object
- */
-export function getSubscriptionStatus(hasMethod: ClerkHasMethod) {
-    const currentPlan = getCurrentPlan(hasMethod);
-    const isPremium = hasPremiumPlan(hasMethod);
-    const planInfo = PLANS[currentPlan];
+export function getSubscriptionStatus(context: SubscriptionContext): any {
+    const subscriptionData = getCreemSubscriptionData(context);
+    const planInfo = PLANS[subscriptionData.planSlug];
 
     return {
-        currentPlan,
-        isPremium,
-        isVtBase: hasVtBasePlan(hasMethod),
-        isVtPlus: hasVtPlusPlan(hasMethod),
+        currentPlan: subscriptionData.planSlug,
         planInfo,
-        availableFeatures: planInfo.features,
-        canUpgrade: currentPlan === PlanSlug.VT_BASE,
-        displayName: planInfo.name,
-        // Utility functions bound to this user's subscription
-        hasFeature: (feature: FeatureSlug) => hasFeature(hasMethod, feature),
-        hasAnyFeature: (features: FeatureSlug[]) => hasAnyFeature(hasMethod, features),
-        hasAllFeatures: (features: FeatureSlug[]) => hasAllFeatures(hasMethod, features),
+        isPremium: isPremiumPlan(subscriptionData.planSlug),
+        isVtPlus: subscriptionData.planSlug === PlanSlug.VT_PLUS,
+        isVtBase: subscriptionData.planSlug === PlanSlug.VT_BASE,
+        canUpgrade: subscriptionData.planSlug !== PlanSlug.VT_PLUS,
+        isActive: subscriptionData.isActive,
+        expiresAt: subscriptionData.expiresAt,
+        source: subscriptionData.source,
     };
 }
 
 /**
- * Subscription utilities. Many of these are now deprecated in favor of direct Clerk usage.
+ * Get features available to a user
  */
-export const SubscriptionUtils = {
-    // Core unified interface
-    checkSubscriptionAccess,
+export function getUserFeatures(context: SubscriptionContext): FeatureSlug[] {
+    const subscriptionData = getCreemSubscriptionData(context);
+    return PLANS[subscriptionData.planSlug].features;
+}
 
-    // Optimized utility functions for common checks
+/**
+ * Get plan for a user
+ */
+export function getUserPlan(context: SubscriptionContext): PlanSlug {
+    return getCurrentPlan(context);
+}
+
+/**
+ * Get subscription info for a user
+ */
+export function getUserSubscription(user: any): any {
+    const planSlug = user?.publicMetadata?.planSlug || PlanSlug.VT_BASE;
+    const isActive = user?.privateMetadata?.subscription?.isActive || true;
+    const planConfig = PLANS[planSlug as keyof typeof PLANS];
+    const features = planConfig ? planConfig.features : PLANS[PlanSlug.VT_BASE].features;
+    const expiresAt = user?.privateMetadata?.subscription?.expiresAt
+        ? new Date(user.privateMetadata.subscription.expiresAt)
+        : undefined;
+
+    return {
+        planSlug,
+        features,
+        isActive,
+        expiresAt,
+    };
+}
+
+/**
+ * Check if authentication is required
+ */
+export function requiresAuth(options: { feature?: FeatureSlug; plan?: PlanSlug }): boolean {
+    const { feature, plan } = options;
+
+    // Features in the base plan don't require auth
+    if (feature && PLANS[PlanSlug.VT_BASE].features.includes(feature)) {
+        return false;
+    }
+
+    // VT Base plan doesn't require auth
+    if (plan && plan === PlanSlug.VT_BASE) {
+        return false;
+    }
+
+    return true;
+}
+
+// Export as default object for backward compatibility
+export default {
     hasVtPlusPlan,
-    hasVtBasePlan,
     hasFeature,
-    hasPremiumPlan,
+    hasPlan,
+    checkSubscriptionAccess,
     getCurrentPlan,
-
-    // Advanced utilities for complex scenarios
-    checkMultipleFeatures,
-    hasAnyFeature,
-    hasAllFeatures,
+    getRequiredPlanForFeature,
+    isPremiumPlan,
+    isFreePlan,
+    hasPremiumPlan,
+    hasVtBasePlan,
     getSubscriptionStatus,
-
-    // These utilities for getting subscription context can remain useful
-    getUserSubscription,
     getUserFeatures,
     getUserPlan,
-    isFreePlan,
-    isPremiumPlan,
-    getRequiredPlanForFeature,
+    getUserSubscription,
     requiresAuth,
 };
-
-export default SubscriptionUtils;

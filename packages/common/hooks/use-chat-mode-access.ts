@@ -7,7 +7,7 @@
  * for chat modes, providing a unified interface
  */
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { ChatMode } from '@repo/shared/config';
 import {
     checkChatModeAccess,
@@ -19,7 +19,8 @@ import { useCredits } from '../store/credits.store';
 import { useSubscriptionAccess } from './use-subscription-access';
 
 export function useChatModeAccess() {
-    const { has, isLoaded, isSignedIn } = useAuth();
+    const { isLoaded, isSignedIn } = useAuth();
+    const { user } = useUser();
     const { balance: userCredits } = useCredits();
     const { isLoaded: subscriptionLoaded } = useSubscriptionAccess();
 
@@ -35,25 +36,35 @@ export function useChatModeAccess() {
                 };
             }
 
+            // Create subscription context for access checking
+            const subscriptionContext = {
+                user,
+            };
+
             return checkChatModeAccess(chatMode, {
-                hasMethod: has,
+                subscriptionContext,
                 userCredits,
                 isAuthenticated: isSignedIn,
             });
         },
-        [has, isLoaded, userCredits, isSignedIn, subscriptionLoaded]
+        [isLoaded, userCredits, isSignedIn, subscriptionLoaded, user]
     );
 
     // Get all available chat modes with their access status
     const availableModes = useMemo(() => {
         if (!isLoaded || !subscriptionLoaded) return [];
 
+        // Create subscription context for access checking
+        const subscriptionContext = {
+            user,
+        };
+
         return getAvailableChatModes({
-            hasMethod: has,
+            subscriptionContext,
             userCredits,
             isAuthenticated: isSignedIn,
         });
-    }, [has, isLoaded, userCredits, isSignedIn, subscriptionLoaded]);
+    }, [isLoaded, userCredits, isSignedIn, subscriptionLoaded, user]);
 
     // Get modes by access type
     const modesByAccess = useMemo(() => {
@@ -186,7 +197,7 @@ export function useChatCreditUsage() {
  * Hook for chat mode recommendations and pricing
  */
 export function useChatModeRecommendations() {
-    const { modesByAccess, userCredits } = useChatModeAccess();
+    const { modesByAccess, userCredits, getCreditCost } = useChatModeAccess();
     const { isVtPlus } = useSubscriptionAccess();
 
     // Recommend chat modes based on user's current access
@@ -217,7 +228,7 @@ export function useChatModeRecommendations() {
         recommendations.push(
             ...modesByAccess.credits.map(mode => ({
                 mode,
-                reason: `${checkChatModeAccess(mode, { userCredits }).creditCost} credits`,
+                reason: `${getCreditCost(mode)} credits`,
                 priority: 3,
             }))
         );

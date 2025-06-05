@@ -1,6 +1,15 @@
 import { CreemCheckoutProcessor } from '@repo/common/components';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
-import { ArrowRight, CheckCircle2, CreditCard, Gift, MessageSquare, Sparkles } from 'lucide-react';
+import {
+    ArrowRight,
+    CheckCircle2,
+    Clock,
+    CreditCard,
+    DollarSign,
+    Gift,
+    MessageSquare,
+    Sparkles,
+} from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -9,6 +18,45 @@ export const metadata: Metadata = {
     title: 'Purchase Successful | VT Chat',
     description: 'Your purchase was successful - Welcome to VT+!',
 };
+
+function OrderDetailsCard() {
+    return (
+        <Card className="mb-8 border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 dark:border-amber-800 dark:from-amber-950/20 dark:to-orange-950/20">
+            <CardHeader>
+                <div className="flex items-center space-x-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-orange-600">
+                        <DollarSign className="h-5 w-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl">Order Details</CardTitle>
+                </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                        <p className="text-muted-foreground text-sm">Transaction Status</p>
+                        <div className="flex items-center space-x-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            <span className="font-medium text-green-600">Completed</span>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <p className="text-muted-foreground text-sm">Processing Time</p>
+                        <div className="flex items-center space-x-2">
+                            <Clock className="h-4 w-4 text-blue-500" />
+                            <span className="font-medium">Instant</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="rounded-lg border bg-white p-3 dark:bg-gray-900">
+                    <p className="text-muted-foreground text-sm">
+                        Your payment has been processed successfully through Creem.io. Credits have
+                        been added to your account and are ready for immediate use.
+                    </p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
 
 function SuccessContent() {
     return (
@@ -37,6 +85,9 @@ function SuccessContent() {
                         Credits added instantly to your account
                     </div>
                 </div>
+
+                {/* Order Details Card */}
+                <OrderDetailsCard />
 
                 {/* Main Content Grid */}
                 <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
