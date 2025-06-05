@@ -3,7 +3,7 @@
 /**
  * Credits Provider Component
  *
- * Integrates Polar.sh credits system with Clerk user authentication.
+ * Integrates Creem.io credits system with Clerk user authentication.
  * Automatically syncs credit balance from Clerk user privateMetadata
  * where the webhook stores purchased credits.
  */

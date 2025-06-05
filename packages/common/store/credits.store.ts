@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * Polar Credits Store
+ * Creem Credits Store
  *
- * Manages user credits purchased through Polar.sh
+ * Manages user credits purchased through Creem.io
  * Integrates with existing subscription system
  */
 
-import { POLAR_CREDIT_PACKAGES, PolarService } from '@repo/shared/utils/polar';
+import { CREEM_CREDIT_PACKAGES, CreemService } from '@repo/shared/utils';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
@@ -40,7 +40,7 @@ interface CreditsState {
 
     // Purchase helpers
     purchaseCredits: (
-        packageId: keyof typeof POLAR_CREDIT_PACKAGES,
+        packageId: keyof typeof CREEM_CREDIT_PACKAGES,
         quantity?: number
     ) => Promise<void>;
 
@@ -154,11 +154,11 @@ export const useCreditsStore = create<CreditsState>()(
         },
 
         // Purchase helpers
-        purchaseCredits: async (packageId: keyof typeof POLAR_CREDIT_PACKAGES, quantity = 1) => {
+        purchaseCredits: async (packageId: keyof typeof CREEM_CREDIT_PACKAGES, quantity = 1) => {
             try {
                 set({ isLoading: true });
 
-                const checkout = await PolarService.purchaseCredits(packageId, quantity);
+                const checkout = await CreemService.purchaseCredits(packageId, quantity);
 
                 // Redirect to checkout
                 if (checkout.url) {
@@ -215,20 +215,20 @@ export function useCreditPurchasing() {
     const purchaseCredits = useCreditsStore(state => state.purchaseCredits);
     const isLoading = useCreditsStore(state => state.isLoading);
 
-    const purchasePackage = async (packageId: keyof typeof POLAR_CREDIT_PACKAGES, quantity = 1) => {
+    const purchasePackage = async (packageId: keyof typeof CREEM_CREDIT_PACKAGES, quantity = 1) => {
         return purchaseCredits(packageId, quantity);
     };
 
-    const getCreditPackages = () => PolarService.getCreditPackages();
-    const getSubscriptionPlans = () => PolarService.getSubscriptionPlans();
+    const getCreditPackages = () => CreemService.getCreditPackages();
+    const getSubscriptionPlans = () => CreemService.getSubscriptionPlans();
 
     return {
         purchasePackage,
         isLoading,
         getCreditPackages,
         getSubscriptionPlans,
-        calculateCredits: PolarService.calculateCredits,
-        calculatePrice: PolarService.calculatePrice,
+        calculateCredits: CreemService.calculateCredits,
+        calculatePrice: CreemService.calculatePrice,
     };
 }
 

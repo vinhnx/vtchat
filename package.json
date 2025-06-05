@@ -31,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@vercel/functions": "^2.0.0",
     "ai": "^2.2.0",
+    "creem": "^0.3.37",
     "date-fns": "^4.1.0",
     "next": "^15.3.3",
     "node-html-parser": "^7.0.1",
