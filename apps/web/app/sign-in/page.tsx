@@ -3,9 +3,9 @@
 import { useAuth, useSignIn } from '@clerk/nextjs';
 import { CustomSignIn } from '@repo/common/components';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
-export default function OauthSignIn() {
+function SignInContent() {
     const { signIn } = useSignIn();
     const { isSignedIn, isLoaded } = useAuth();
     const router = useRouter();
@@ -31,5 +31,13 @@ export default function OauthSignIn() {
                 }}
             />
         </div>
+    );
+}
+
+export default function OauthSignIn() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SignInContent />
+        </Suspense>
     );
 }

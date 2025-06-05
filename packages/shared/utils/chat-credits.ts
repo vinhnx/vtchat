@@ -7,7 +7,7 @@
 
 import { ChatMode } from '../config/chat-mode';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
-import { checkSubscriptionAccess, type ClerkHasMethod } from './subscription';
+import { checkSubscriptionAccess, type SubscriptionContext } from './subscription';
 
 // Credit costs for each chat mode (imported from existing config)
 export const CHAT_MODE_CREDIT_COSTS = {
@@ -39,7 +39,7 @@ export interface ChatModeAccess {
 }
 
 export interface CreditAccessOptions {
-    hasMethod?: ClerkHasMethod; // Clerk's has() method for subscription checks
+    subscriptionContext?: SubscriptionContext; // Subscription context with user data
     userCredits?: number; // User's current credit balance
     isAuthenticated?: boolean;
 }
@@ -51,7 +51,7 @@ export function checkChatModeAccess(
     chatMode: ChatMode,
     options: CreditAccessOptions = {}
 ): ChatModeAccess {
-    const { hasMethod, userCredits = 0, isAuthenticated = false } = options;
+    const { subscriptionContext, userCredits = 0, isAuthenticated = false } = options;
 
     const creditCost = CHAT_MODE_CREDIT_COSTS[chatMode] || 0;
     const isFreeMode = FREE_CHAT_MODES.includes(chatMode as any);
@@ -65,10 +65,13 @@ export function checkChatModeAccess(
         };
     }
 
-    // Check subscription access first (if hasMethod provided)
-    if (hasMethod) {
+    // Check subscription access first
+    if (subscriptionContext) {
         // Check if user has subscription access to this mode
-        const hasSubscriptionAccess = checkChatModeSubscriptionAccess(chatMode, hasMethod);
+        const hasSubscriptionAccess = checkChatModeSubscriptionAccess(
+            chatMode,
+            subscriptionContext
+        );
 
         if (hasSubscriptionAccess.canAccess) {
             return {
@@ -108,11 +111,11 @@ export function checkChatModeAccess(
 }
 
 /**
- * Check subscription-based access to chat mode (existing logic)
+ * Check subscription-based access to chat mode
  */
 function checkChatModeSubscriptionAccess(
     chatMode: ChatMode,
-    hasMethod: ClerkHasMethod
+    subscriptionContext: SubscriptionContext
 ): { canAccess: boolean; requiredPlan?: PlanSlug; requiredFeature?: FeatureSlug } {
     // Map chat modes to their subscription requirements
     const subscriptionRequirements: Record<
@@ -143,8 +146,8 @@ function checkChatModeSubscriptionAccess(
         return { canAccess: false }; // No subscription access, credit-only or free
     }
 
-    // Check if user has required subscription
-    const hasAccess = checkSubscriptionAccess(hasMethod, {
+    // Check if user has required subscription using the subscription context
+    const hasAccess = checkSubscriptionAccess(subscriptionContext, {
         plan: requirement.plan,
         feature: requirement.feature,
     });

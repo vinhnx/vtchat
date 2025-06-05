@@ -159,6 +159,7 @@ async function updateUserSubscription(
             publicMetadata: {
                 ...user.publicMetadata,
                 subscription: subscriptionData,
+                planSlug: planSlug, // Add planSlug directly for easier access
             },
             privateMetadata: {
                 ...user.privateMetadata,

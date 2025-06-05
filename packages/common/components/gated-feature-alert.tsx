@@ -2,7 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
+import { checkSubscriptionAccess, hasFeature } from '@repo/shared/utils/subscription';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,6 +15,7 @@ import {
 } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useVtPlusAccess } from '../hooks/use-subscription-access';
 
 export interface GatedFeatureAlertProps {
     /** The feature that requires a higher plan */
@@ -79,6 +80,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     const { isLoaded, has } = useAuth();
     const router = useRouter();
     const [showUpgradeAlert, setShowUpgradeAlert] = useState(false);
+    const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     // Don't render anything while auth is loading
     if (!isLoaded) {
@@ -89,8 +91,14 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     const hasAccess = React.useMemo(() => {
         if (!has) return false;
 
+        // If feature requires VT+, use the isVtPlus state directly
+        if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
+            return isVtPlus;
+        }
+
+        // For other features, use the appropriate check functions
         if (requiredFeature) {
-            return checkSubscriptionAccess(has, { feature: requiredFeature });
+            return hasFeature(has, requiredFeature);
         }
 
         if (requiredPlan) {
@@ -98,7 +106,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         }
 
         return true;
-    }, [has, requiredFeature, requiredPlan]);
+    }, [has, requiredFeature, requiredPlan, isVtPlus]);
 
     // Generate default message based on feature/plan
     const defaultMessage = React.useMemo(() => {
@@ -191,12 +199,18 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
  */
 export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: PlanSlug) => {
     const { isLoaded, has } = useAuth();
+    const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     const hasAccess = React.useMemo(() => {
         if (!isLoaded || !has) return false;
 
+        // If feature requires VT+, use the isVtPlus state directly
+        if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
+            return isVtPlus;
+        }
+
         if (requiredFeature) {
-            return checkSubscriptionAccess(has, { feature: requiredFeature });
+            return hasFeature(has, requiredFeature);
         }
 
         if (requiredPlan) {
@@ -204,7 +218,7 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
         }
 
         return true;
-    }, [isLoaded, has, requiredFeature, requiredPlan]);
+    }, [isLoaded, has, requiredFeature, requiredPlan, isVtPlus]);
 
     return {
         hasAccess,

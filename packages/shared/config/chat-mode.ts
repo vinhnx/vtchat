@@ -1,12 +1,5 @@
 import { FeatureSlug, PlanSlug } from '../types/subscription';
-import { checkSubscriptionAccess, type ClerkHasMethod } from '../utils/subscription';
-// Removed import of deprecated hasAccess
-// For client-side, you'd pass useAuth() or a similar object.
-// For server-side, you'd pass the auth() object.
-type HasMethod = ClerkHasMethod;
-interface AuthLike {
-    has: HasMethod;
-}
+import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscription';
 
 export enum ChatMode {
     Pro = 'pro',
@@ -152,11 +145,11 @@ export const CHAT_MODE_CREDIT_COSTS = {
 
 /**
  * Get available chat modes for a user based on their subscription
- * Uses the new Clerk has() pattern for access control
+ * Uses the new SubscriptionContext pattern for access control
  */
-export function getAvailableChatModes(authObject: AuthLike): ChatMode[] {
-    if (!authObject || typeof authObject.has !== 'function') {
-        console.warn('getAvailableChatModes called without a valid authObject.has method.');
+export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] {
+    if (!context) {
+        console.warn('getAvailableChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !config.requiredFeature && !config.requiredPlan && !config.isAuthRequired;
@@ -171,11 +164,11 @@ export function getAvailableChatModes(authObject: AuthLike): ChatMode[] {
         }
 
         if (config.requiredFeature) {
-            return checkSubscriptionAccess(authObject.has, { feature: config.requiredFeature });
+            return checkSubscriptionAccess(context, { feature: config.requiredFeature });
         }
 
         if (config.requiredPlan) {
-            return checkSubscriptionAccess(authObject.has, { plan: config.requiredPlan });
+            return checkSubscriptionAccess(context, { plan: config.requiredPlan });
         }
 
         return false;
@@ -184,11 +177,11 @@ export function getAvailableChatModes(authObject: AuthLike): ChatMode[] {
 
 /**
  * Get restricted chat modes that require upgrade
- * Uses the new Clerk has() pattern for access control
+ * Uses the new SubscriptionContext pattern for access control
  */
-export function getRestrictedChatModes(authObject: AuthLike): ChatMode[] {
-    if (!authObject || typeof authObject.has !== 'function') {
-        console.warn('getRestrictedChatModes called without a valid authObject.has method.');
+export function getRestrictedChatModes(context: SubscriptionContext): ChatMode[] {
+    if (!context) {
+        console.warn('getRestrictedChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !!(config.requiredFeature || config.requiredPlan || config.isAuthRequired);
@@ -202,11 +195,11 @@ export function getRestrictedChatModes(authObject: AuthLike): ChatMode[] {
         }
 
         if (config.requiredFeature) {
-            return !checkSubscriptionAccess(authObject.has, { feature: config.requiredFeature });
+            return !checkSubscriptionAccess(context, { feature: config.requiredFeature });
         }
 
         if (config.requiredPlan) {
-            return !checkSubscriptionAccess(authObject.has, { plan: config.requiredPlan });
+            return !checkSubscriptionAccess(context, { plan: config.requiredPlan });
         }
 
         return false;
