@@ -4,7 +4,7 @@
  * VT Chat Subscription Store
  *
  * Zustand store for managing subscription state on the client-side.
- * Integrates with Clerk's user data and provides reactive subscription access.
+ * Integrates with Better Auth's user data and provides reactive subscription access.
  */
 
 import {

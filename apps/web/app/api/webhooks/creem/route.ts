@@ -1,4 +1,7 @@
+import { db } from '@/lib/database';
+import { users } from '@/lib/database/schema';
 import { CREEM_CREDIT_PACKAGES } from '@repo/shared/utils';
+import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -37,7 +40,8 @@ export async function POST(request: NextRequest) {
 
         // Get the raw body for signature verification
         const body = await request.text();
-        const signature = headers().get('creem-signature');
+        const headerStore = await headers();
+        const signature = headerStore.get('creem-signature');
 
         // TODO: Implement signature verification once Creem provides signature details
         // For now, we'll proceed with processing but log for security review
@@ -77,8 +81,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Customer email required' }, { status: 400 });
         }
 
-        // Find user by email (you'll need to implement this based on your user system)
-        // For now, we'll use the Clerk API to find the user
+        // Find user by email using database
         const user = await findUserByEmail(customerEmail);
         if (!user) {
             console.error('[Creem Webhook] User not found for email:', customerEmail);
@@ -109,24 +112,18 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Find user by email using Clerk API
+ * Find user by email using database
  */
 async function findUserByEmail(email: string) {
     try {
         console.log('[Creem Webhook] Looking up user by email:', email);
 
-        const { clerkClient } = await import('@clerk/nextjs/server');
-        const clerk = await clerkClient();
+        const userResults = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
-        const users = await clerk.users.getUserList({
-            emailAddress: [email],
-            limit: 1,
-        });
-
-        if (users.data && users.data.length > 0) {
-            const user = users.data[0];
+        if (userResults.length > 0) {
+            const user = userResults[0];
             console.log('[Creem Webhook] Found user:', user.id);
-            return { id: user.id, email: user.emailAddresses[0]?.emailAddress || email };
+            return { id: user.id, email: user.email };
         }
 
         console.log('[Creem Webhook] No user found for email:', email);
@@ -212,43 +209,16 @@ async function updateUserSubscription(userId: string, subscriptionData: any) {
     try {
         console.log('[Creem Webhook] Updating user subscription:', userId, subscriptionData);
 
-        const { clerkClient } = await import('@clerk/nextjs/server');
-        const clerk = await clerkClient();
-
-        // Get current user to preserve existing metadata
-        const user = await clerk.users.getUser(userId);
-
-        // Update user subscription status in Clerk metadata
-        await clerk.users.updateUser(userId, {
-            publicMetadata: {
-                ...user.publicMetadata,
-                planSlug: subscriptionData.tier, // Direct planSlug for easier access (VT+ fix)
-                subscription: {
-                    plan: subscriptionData.tier, // Use 'plan' to match other webhook
-                    isActive: subscriptionData.status === 'active',
-                    tier: subscriptionData.tier,
-                    status: subscriptionData.status,
-                    source: 'creem',
-                    creemCustomerId: subscriptionData.creemCustomerId,
-                    subscriptionStartDate: subscriptionData.subscriptionStartDate?.toISOString(),
-                    lastUpdated: new Date().toISOString(),
-                },
-            },
-            privateMetadata: {
-                ...user.privateMetadata,
-                subscription: {
-                    plan: subscriptionData.tier, // Use 'plan' to match other webhook
-                    isActive: subscriptionData.status === 'active',
-                    tier: subscriptionData.tier,
-                    status: subscriptionData.status,
-                    source: 'creem',
-                    creemCustomerId: subscriptionData.creemCustomerId,
-                    subscriptionStartDate: subscriptionData.subscriptionStartDate?.toISOString(),
-                    monthlyCredits: subscriptionData.monthlyCredits,
-                    lastUpdated: new Date().toISOString(),
-                },
-            },
-        });
+        // Update user subscription status in database
+        // Note: This assumes you have subscription-related columns in your users table
+        // You may need to create a separate subscriptions table for more complex subscription management
+        await db
+            .update(users)
+            .set({
+                planSlug: subscriptionData.tier,
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId));
 
         console.log(
             `[Creem Webhook] Updated user ${userId} subscription to ${subscriptionData.tier}`
@@ -266,39 +236,25 @@ async function addCreditsToUser(userId: string, credits: number, metadata: any) 
     try {
         console.log('[Creem Webhook] Adding credits to user:', userId, credits, metadata);
 
-        const { clerkClient } = await import('@clerk/nextjs/server');
-        const clerk = await clerkClient();
-
         // Get current user data
-        const user = await clerk.users.getUser(userId);
-        const currentCredits = (user.privateMetadata.credits as number) || 0;
+        const userResults = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+        if (userResults.length === 0) {
+            throw new Error(`User ${userId} not found in database`);
+        }
+
+        const user = userResults[0];
+        const currentCredits = user.credits || 0;
         const newBalance = currentCredits + credits;
 
-        // Record the transaction in private metadata
-        const transactions = (user.privateMetadata.transactions || []) as Array<any>;
-        const transaction = {
-            id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-            type: metadata.type,
-            amount: credits,
-            description: metadata.description,
-            source: metadata.source,
-            transactionId: metadata.transactionId,
-            packageId: metadata.packageId,
-            timestamp: new Date().toISOString(),
-        };
-
-        // Limit transaction history to 100 items to avoid metadata size issues
-        const updatedTransactions = [transaction, ...transactions].slice(0, 100);
-
-        // Update user credits and transaction history
-        await clerk.users.updateUser(userId, {
-            privateMetadata: {
-                ...user.privateMetadata,
+        // Update user credits in database
+        await db
+            .update(users)
+            .set({
                 credits: newBalance,
-                lastCreditUpdate: new Date().toISOString(),
-                transactions: updatedTransactions,
-            },
-        });
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId));
 
         console.log(
             `[Creem Webhook] Added ${credits} credits to user ${userId}. New balance: ${newBalance}`

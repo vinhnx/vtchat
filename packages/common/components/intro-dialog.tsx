@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Dialog, DialogContent } from '@repo/ui';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,8 @@ import ReactMarkdown from 'react-markdown';
 import { Logo } from './logo';
 export const IntroDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { isSignedIn } = useUser();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
 
     useEffect(() => {
         const hasSeenIntro = localStorage.getItem('hasSeenIntro');

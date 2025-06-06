@@ -1,22 +1,26 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { LoginDialog } from '@/components/login-dialog';
 import { CreemCreditsShop } from '@repo/common/components';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, Spinner } from '@repo/ui';
 import { Shield, Sparkles, Users, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
-    const { isSignedIn, isLoaded } = useAuth();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const isLoaded = true; // Better Auth session is always loaded when available
     const router = useRouter();
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
-            // Redirect to sign-in page with return URL
-            router.push('/sign-in?redirect_url=' + encodeURIComponent('/plus'));
+            // Show login dialog instead of redirecting
+            setShowLoginDialog(true);
         }
-    }, [isLoaded, isSignedIn, router]);
+    }, [isLoaded, isSignedIn]);
 
     // Show loading state while checking authentication
     if (!isLoaded) {
@@ -34,7 +38,25 @@ export default function Page() {
 
     // Don't render the component until authentication is confirmed
     if (!isSignedIn) {
-        return null;
+        return (
+            <>
+                <LoginDialog
+                    isOpen={showLoginDialog}
+                    onClose={() => setShowLoginDialog(false)}
+                    redirectUrl="/plus"
+                />
+                <div className="container mx-auto px-4 py-16">
+                    <div className="flex min-h-[50vh] items-center justify-center">
+                        <div className="space-y-4 text-center">
+                            <p className="text-muted-foreground">
+                                Please sign in to access VT+ plans
+                            </p>
+                            <Button onClick={() => setShowLoginDialog(true)}>Sign In</Button>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     return (

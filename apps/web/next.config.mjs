@@ -1,14 +1,14 @@
-import { withSentryConfig } from '@sentry/nextjs';
-
 const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
     images: {
         remotePatterns: [
             { hostname: 'www.google.com' },
-            { hostname: 'img.clerk.com' },
             { hostname: 'zyqdiwxgffuy8ymd.public.blob.vercel-storage.com' },
         ],
     },
+
+    // Disable development indicators/tools
+    devIndicators: false,
 
     experimental: {
         externalDir: true,
@@ -24,6 +24,16 @@ const nextConfig = {
             layers: true,
         };
 
+        // Optimize webpack cache handling for large strings
+        if (config.cache) {
+            config.cache = {
+                ...config.cache,
+                compression: 'brotli',
+                maxMemoryGenerations: 1,
+                memoryCacheUnaffected: true,
+            };
+        }
+
         return config;
     },
     async redirects() {
@@ -31,13 +41,4 @@ const nextConfig = {
     },
 };
 
-export default withSentryConfig(nextConfig, {
-    // Sentry configuration (unchanged)
-    org: 'saascollect',
-    project: 'javascript-nextjs',
-    silent: !process.env.CI,
-    widenClientFileUpload: true,
-    hideSourceMaps: true,
-    disableLogger: true,
-    automaticVercelMonitors: true,
-});
+export default nextConfig;

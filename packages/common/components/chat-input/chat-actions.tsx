@@ -1,9 +1,9 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
 import { DotSpinner } from '@repo/common/components';
 import { useChatModeAccess } from '@repo/common/hooks/use-chat-mode-access';
 import { useApiKeysStore, useChatStore, useCreditsStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -89,13 +89,6 @@ export const modelOptions = [
         webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
-    },
-    {
-        label: 'GPT 4o',
-        value: ChatMode.GPT_4o,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
     },
     {
         label: 'o4 mini',
@@ -305,7 +298,8 @@ export const ChatModeOptions = ({
     }) => void;
     isRetry?: boolean;
 }) => {
-    const { isSignedIn } = useAuth();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
@@ -318,7 +312,7 @@ export const ChatModeOptions = ({
 
         // Check auth requirement first
         if (config?.isAuthRequired && !isSignedIn) {
-            push('/sign-in');
+            push('/login');
             return;
         }
 

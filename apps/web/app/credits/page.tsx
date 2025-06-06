@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
 import { CreemCreditsShop } from '@repo/common/components';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -10,10 +10,12 @@ export const metadata: Metadata = {
 
 export default async function CreditsPage() {
     // Require authentication for credits page
-    const { userId } = await auth();
+    const session = await auth.api.getSession({
+        headers: await import('next/headers').then(h => h.headers()),
+    });
 
-    if (!userId) {
-        redirect('/sign-in?redirect_url=/credits');
+    if (!session?.user) {
+        redirect('/login?redirect_url=/credits');
     }
 
     return (

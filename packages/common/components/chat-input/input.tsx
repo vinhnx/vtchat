@@ -1,8 +1,8 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
 import { CreemCreditsDisplay, ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
-import { ExamplePrompts } from '../exmaple-prompts';
+import { ExamplePrompts } from '../example-prompts';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -26,7 +26,8 @@ export const ChatInput = ({
     showBottomBar?: boolean;
     isFollowUp?: boolean;
 }) => {
-    const { isSignedIn } = useAuth();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
@@ -65,7 +66,7 @@ export const ChatInput = ({
             !isSignedIn &&
             !!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired
         ) {
-            push('/sign-in');
+            push('/login');
             return;
         }
 

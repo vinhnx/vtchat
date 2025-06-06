@@ -17,10 +17,10 @@ applyTo: '**'
 ## Tech Stack
 
 - Next.js 14 with App Router, TypeScript, Tailwind CSS
-- Zustand for state, Prisma for DB, Clerk for auth
+- Zustand for state, Drizzle ORM for DB, Better Auth for authentication
 - Framer Motion for animations, Radix UI components
 - Shadcn/ui for UI components, Lucide icons, clsx for classnames
-- Payment integration with Polar.sh
+- Payment integration with Creem.io
 
 ## Architecture
 
@@ -39,31 +39,15 @@ applyTo: '**'
 ## Testing
 
 - Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
-- Use `bun test` for running tests
-- Use `bun test --watch` for development
-- Use `bun test --coverage` for coverage reports
-- Use `bun test --update` to update snapshots
 
 ## Bun
 
+- Use `bun` instead of `npm` or `yarn`
 - Use `bun` for all package management and script execution
-- Use `bun add` to install packages
-- Use `bun run` to run scripts
-- Use `bun build` to build the project
-- Use `bun dev` to start the development server
-- Use `bun test` to run tests
-- Use `bun format` to format code
-- Use `bun lint` to lint code
-- Use `bun check` to check for type errors
-- Use `bun generate` to generate code
-- Use `bun deploy` to deploy the project
-- Use `bun analyze` to analyze the bundle size
-- Use `bun start` to start the production server
-- Use `bun run build` to build the project for production
-- Use `bun run dev` to start the development server
 
 ## UI components
 
+- To install shadcn components, check example command: `npx shadcn@latest add label`
 - Use shadcn/ui components for UI elements
 - Use `@repo/ui` for shared UI components
 - Use lucide icons from `lucide-react`

@@ -1,5 +1,7 @@
-import { clerkClient } from '@clerk/nextjs/server';
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
 import crypto from 'crypto';
+import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -87,88 +89,94 @@ function getCreditsFromProduct(productName: string, amount: number): number {
     return Math.floor(amount / 5); // $5 = 100 credits, so amount in cents / 5
 }
 
-// Update user credits in Clerk
+// Update user credits in database
 async function updateUserCredits(
-    clerkUserId: string,
+    userId: string,
     creditsToAdd: number,
     checkoutId?: string,
     productName?: string
 ) {
     try {
-        // Get current user data
-        const clerk = await clerkClient();
-        const user = await clerk.users.getUser(clerkUserId);
-        const currentCredits = (user.privateMetadata.credits as number) || 0;
-        const newBalance = currentCredits + creditsToAdd;
+        // Get current user subscription
+        const existingSubscription = await db
+            .select()
+            .from(userSubscriptions)
+            .where(eq(userSubscriptions.userId, userId))
+            .limit(1);
 
-        // Record the transaction in private metadata
-        const transactions = (user.privateMetadata.transactions || []) as Array<any>;
-        const transaction = {
-            id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-            type: 'purchase',
-            amount: creditsToAdd,
-            timestamp: new Date().toISOString(),
-            checkoutId,
-            productName,
-            source: 'creem',
-        };
+        if (existingSubscription.length === 0) {
+            // Create new subscription with credits
+            await db.insert(userSubscriptions).values({
+                id: crypto.randomUUID(),
+                userId,
+                plan: 'free',
+                status: 'active',
+                creditsRemaining: creditsToAdd,
+                creditsUsed: 0,
+                monthlyCredits: 50,
+            });
+        } else {
+            // Update existing subscription
+            const currentCredits = existingSubscription[0].creditsRemaining;
+            const newBalance = currentCredits + creditsToAdd;
 
-        // Limit transaction history to 100 items to avoid metadata size issues
-        const updatedTransactions = [transaction, ...transactions].slice(0, 100);
+            await db
+                .update(userSubscriptions)
+                .set({
+                    creditsRemaining: newBalance,
+                    updatedAt: new Date(),
+                })
+                .where(eq(userSubscriptions.userId, userId));
+        }
 
-        // Update user credits and transaction history
-        await clerk.users.updateUser(clerkUserId, {
-            privateMetadata: {
-                ...user.privateMetadata,
-                credits: newBalance,
-                lastCreditPurchase: new Date().toISOString(),
-                transactions: updatedTransactions,
-            },
-        });
-
-        console.log(
-            `Added ${creditsToAdd} credits to user ${clerkUserId}. New balance: ${newBalance}`
-        );
+        console.log(`Added ${creditsToAdd} credits to user ${userId}.`);
     } catch (error) {
         console.error('Failed to update user credits:', error);
         throw error;
     }
 }
 
-// Update user subscription in Clerk
+// Update user subscription in database
 async function updateUserSubscription(
-    clerkUserId: string,
+    userId: string,
     planSlug: string,
     isActive: boolean,
     expiresAt?: Date
 ) {
     try {
-        const clerk = await clerkClient();
-        const user = await clerk.users.getUser(clerkUserId);
+        const existingSubscription = await db
+            .select()
+            .from(userSubscriptions)
+            .where(eq(userSubscriptions.userId, userId))
+            .limit(1);
 
         const subscriptionData = {
             plan: planSlug,
-            isActive,
-            ...(expiresAt && { expiresAt: expiresAt.toISOString() }),
-            lastUpdated: new Date().toISOString(),
-            source: 'creem',
+            status: isActive ? 'active' : 'cancelled',
+            ...(expiresAt && { currentPeriodEnd: expiresAt }),
+            updatedAt: new Date(),
         };
 
-        // Update both public and private metadata
-        await clerk.users.updateUser(clerkUserId, {
-            publicMetadata: {
-                ...user.publicMetadata,
-                subscription: subscriptionData,
-                planSlug: planSlug, // Add planSlug directly for easier access
-            },
-            privateMetadata: {
-                ...user.privateMetadata,
-                subscription: subscriptionData,
-            },
-        });
+        if (existingSubscription.length === 0) {
+            // Create new subscription
+            await db.insert(userSubscriptions).values({
+                id: crypto.randomUUID(),
+                userId,
+                ...subscriptionData,
+                creditsRemaining: planSlug === 'free' ? 50 : 1000,
+                creditsUsed: 0,
+                monthlyCredits: planSlug === 'free' ? 50 : 1000,
+            });
+        } else {
+            // Update existing subscription
+            await db
+                .update(userSubscriptions)
+                .set(subscriptionData)
+                .where(eq(userSubscriptions.userId, userId));
+        }
 
         console.log(
-            `Updated subscription for user ${clerkUserId}: ${planSlug} (${isActive ? 'active' : 'inactive'})`
+            `Updated subscription for user ${userId}: ${planSlug} (${isActive ? 'active' : 'inactive'})`
         );
     } catch (error) {
         console.error('Failed to update user subscription:', error);
@@ -180,19 +188,20 @@ async function updateUserSubscription(
 async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventSchema>) {
     const { data } = event;
 
-    // Find user by email since Creem might not have external_id
-    let clerkUserId = data.customer.external_id;
+    // Find user by email or external_id
+    let userId = data.customer.external_id;
 
-    if (!clerkUserId) {
-        // Try to find user by email
+    if (!userId) {
+        // Try to find user by email in our database
         try {
-            const clerk = await clerkClient();
-            const users = await clerk.users.getUserList({
-                emailAddress: [data.customer.email],
-            });
+            const user = await db
+                .select()
+                .from(users)
+                .where(eq(users.email, data.customer.email))
+                .limit(1);
 
-            if (users.data.length > 0) {
-                clerkUserId = users.data[0].id;
+            if (user.length > 0) {
+                userId = user[0].id;
             } else {
                 console.error('No user found for email:', data.customer.email);
                 return;
@@ -207,13 +216,13 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
     const creditsToAdd = getCreditsFromProduct(productName, data.amount);
 
     if (creditsToAdd > 0) {
-        await updateUserCredits(clerkUserId, creditsToAdd, data.id, productName);
+        await updateUserCredits(userId, creditsToAdd, data.id, productName);
     }
 
     // If this is a subscription product, update subscription status
     const planSlug = mapCreemProductToPlan(productName);
     if (planSlug === 'vt_plus') {
-        await updateUserSubscription(clerkUserId, planSlug, true);
+        await updateUserSubscription(userId, planSlug, true);
     }
 }
 
@@ -221,19 +230,20 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
 async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEventSchema>) {
     const { data } = event;
 
-    // Find user by email since Creem might not have external_id
-    let clerkUserId = data.customer.external_id;
+    // Find user by email or external_id
+    let userId = data.customer.external_id;
 
-    if (!clerkUserId) {
-        // Try to find user by email
+    if (!userId) {
+        // Try to find user by email in our database
         try {
-            const clerk = await clerkClient();
-            const users = await clerk.users.getUserList({
-                emailAddress: [data.customer.email],
-            });
+            const user = await db
+                .select()
+                .from(users)
+                .where(eq(users.email, data.customer.email))
+                .limit(1);
 
-            if (users.data.length > 0) {
-                clerkUserId = users.data[0].id;
+            if (user.length > 0) {
+                userId = user[0].id;
             } else {
                 console.error('No user found for email:', data.customer.email);
                 return;
@@ -254,11 +264,11 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
         expiresAt = new Date(data.current_period_end);
     }
 
-    await updateUserSubscription(clerkUserId, planSlug, isActive, expiresAt);
+    await updateUserSubscription(userId, planSlug, isActive, expiresAt);
 
     // For new active subscriptions, add monthly credits
     if (event.type === 'subscription.created' && isActive && planSlug === 'vt_plus') {
-        await updateUserCredits(clerkUserId, 1000, data.id, 'VT+ Monthly Credits');
+        await updateUserCredits(userId, 1000, data.id, 'VT+ Monthly Credits');
     }
 }
 

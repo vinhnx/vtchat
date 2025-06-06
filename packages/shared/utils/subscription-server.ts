@@ -2,24 +2,44 @@
  * VT Chat Server-side Subscription Utilities
  *
  * Server-side utilities for checking subscription access in API routes and server components.
- * Works with Clerk's server-side authentication.
+ * Works with Better Auth's server-side authentication.
  */
 
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
+import { getUserWithSubscription } from '@/lib/database/queries';
 import { NextRequest, NextResponse } from 'next/server';
 import { AccessCheckOptions, FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
 
 /**
- * Server-side subscription access check using Clerk's native has() method.
+ * Server-side subscription access check using Better Auth.
  * Use this in API routes and server components.
  */
-export async function serverHasAccess(options: AccessCheckOptions): Promise<boolean> {
-    const { has, userId } = await auth();
+export async function serverHasAccess(
+    options: AccessCheckOptions,
+    headers?: Headers
+): Promise<boolean> {
+    const session = await auth.api.getSession({ headers });
 
-    if (!userId) {
+    if (!session?.user?.id) {
         return false;
     }
+
+    const userWithSub = await getUserWithSubscription(session.user.id);
+    if (!userWithSub) return false;
+
+    // Mock has function similar to Better Auth's format for compatibility
+    const has = (options: any) => {
+        const subscription = userWithSub.user_subscriptions;
+        if (!subscription) return false;
+
+        if (options.plan) {
+            return subscription.plan === options.plan;
+        }
+
+        // Add feature checks based on plan
+        return subscription.plan !== 'free';
+    };
 
     // Use unified subscription access check
     return checkSubscriptionAccess(has, options);
@@ -28,24 +48,27 @@ export async function serverHasAccess(options: AccessCheckOptions): Promise<bool
 /**
  * Check feature access on server-side
  */
-export async function serverHasFeature(feature: FeatureSlug): Promise<boolean> {
-    return serverHasAccess({ feature });
+export async function serverHasFeature(feature: FeatureSlug, headers?: Headers): Promise<boolean> {
+    return serverHasAccess({ feature }, headers);
 }
 
 /**
  * Check plan access on server-side
  */
-export async function serverHasPlan(plan: PlanSlug): Promise<boolean> {
-    return serverHasAccess({ plan });
+export async function serverHasPlan(plan: PlanSlug, headers?: Headers): Promise<boolean> {
+    return serverHasAccess({ plan }, headers);
 }
 
 /**
  * Get user subscription on server-side
  */
-export async function getServerUserSubscription() {
+export async function getServerUserSubscription(headers?: Headers) {
     try {
-        const user = await currentUser();
-        return getUserSubscription(user);
+        const session = await auth.api.getSession({ headers });
+        if (!session?.user?.id) return null;
+
+        const userWithSub = await getUserWithSubscription(session.user.id);
+        return getUserSubscription(userWithSub?.users || null);
     } catch (error) {
         console.error('Error getting server-side subscription:', error);
         return getUserSubscription(null);

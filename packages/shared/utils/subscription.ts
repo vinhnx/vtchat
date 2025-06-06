@@ -8,7 +8,7 @@ import { FeatureSlug, PLANS, PlanSlug } from '../types/subscription';
 
 // Type for subscription access context
 export interface SubscriptionContext {
-    user?: any; // Clerk user object
+    user?: any; // Better Auth user object
 }
 
 /**
@@ -23,7 +23,9 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
 } {
     // Try to get user from context or window
     const user =
-        context.user || (typeof window !== 'undefined' && (window as any).__CLERK_USER__) || null;
+        context.user ||
+        (typeof window !== 'undefined' && (window as any).__BETTER_AUTH_USER__) ||
+        null;
 
     if (user && user.publicMetadata) {
         // Check for Creem subscription data in publicMetadata

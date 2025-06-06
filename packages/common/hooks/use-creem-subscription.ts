@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { CreemService } from '@repo/shared/utils';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -11,7 +11,9 @@ import { useVtPlusAccess } from './use-subscription-access';
  * Provides methods for managing subscription portals and checkout flows
  */
 export function useCreemSubscription() {
-    const { user, isLoaded: isUserLoaded } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
+    const isUserLoaded = !!session;
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function useCreemSubscription() {
      */
     const openCustomerPortal = useCallback(async () => {
         if (!user) {
-            router.push('/sign-in');
+            router.push('/login');
             return;
         }
 
@@ -53,7 +55,7 @@ export function useCreemSubscription() {
      */
     const startVtPlusSubscription = useCallback(async () => {
         if (!user) {
-            router.push('/sign-in');
+            router.push('/login');
             return;
         }
 

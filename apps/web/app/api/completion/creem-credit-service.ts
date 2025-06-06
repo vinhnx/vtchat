@@ -1,5 +1,7 @@
-import { clerkClient } from '@clerk/nextjs/server';
+import { db } from '@/lib/database';
+import { users } from '@/lib/database/schema';
 import { kv } from '@vercel/kv';
+import { eq } from 'drizzle-orm';
 
 const DAILY_CREDITS_AUTH = process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH
     ? parseInt(process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH)
@@ -52,7 +54,7 @@ export type RequestIdentifier = {
 
 /**
  * Get remaining credits for a user or IP
- * For authenticated users, prioritizes Creem.io credits from Clerk metadata,
+ * For authenticated users, prioritizes Creem.io credits from database,
  * then falls back to traditional daily credits.
  * For unauthenticated users, uses IP-based daily credits.
  */
@@ -70,15 +72,21 @@ export async function getRemainingCredits(identifier: RequestIdentifier): Promis
 
 /**
  * Get remaining credits for authenticated user
- * First checks Creem.io credits from Clerk metadata,
+ * First checks Creem.io credits from database,
  * then falls back to daily credits if no Creem credits available
  */
 async function getRemainingCreditsForUser(userId: string): Promise<number> {
     try {
-        // First, check Creem.io credits from Clerk metadata
-        const clerk = await clerkClient();
-        const user = await clerk.users.getUser(userId);
-        const creemCredits = (user.privateMetadata.credits as number) || 0;
+        // First, check Creem.io credits from database
+        const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+        if (user.length === 0) {
+            console.error(`User ${userId} not found in database`);
+            return 0;
+        }
+
+        const currentUser = user[0];
+        const creemCredits = currentUser.credits || 0;
 
         if (creemCredits > 0) {
             console.log(`User ${userId} has ${creemCredits} Creem.io credits`);
@@ -155,36 +163,29 @@ export async function deductCredits(identifier: RequestIdentifier, cost: number)
  */
 async function deductCreditsFromUser(userId: string, cost: number): Promise<boolean> {
     try {
-        // First, try to deduct from Creem.io credits
-        const clerk = await clerkClient();
-        const user = await clerk.users.getUser(userId);
-        const currentCreemCredits = (user.privateMetadata.credits as number) || 0;
+        // First, try to deduct from Creem.io credits stored in database
+        const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+        if (user.length === 0) {
+            console.error(`User ${userId} not found in database`);
+            return false;
+        }
+
+        const currentUser = user[0];
+        const currentCreemCredits = currentUser.credits || 0;
 
         if (currentCreemCredits >= cost) {
             // Deduct from Creem.io credits
             const newBalance = currentCreemCredits - cost;
 
-            // Record the transaction in private metadata
-            const transactions = (user.privateMetadata.transactions || []) as Array<any>;
-            const transaction = {
-                id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-                type: 'usage',
-                amount: cost,
-                timestamp: new Date().toISOString(),
-                mode: 'chat', // Can be more specific in the future
-            };
-
-            // Limit transaction history to 100 items to avoid metadata size issues
-            const updatedTransactions = [transaction, ...transactions].slice(0, 100);
-
-            await clerk.users.updateUser(userId, {
-                privateMetadata: {
-                    ...user.privateMetadata,
+            // Update user credits in database
+            await db
+                .update(users)
+                .set({
                     credits: newBalance,
-                    lastCreditUsage: new Date().toISOString(),
-                    transactions: updatedTransactions,
-                },
-            });
+                    updatedAt: new Date(),
+                })
+                .where(eq(users.id, userId));
 
             console.log(
                 `Deducted ${cost} Creem.io credits from user ${userId}. New balance: ${newBalance}`
