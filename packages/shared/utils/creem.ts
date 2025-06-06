@@ -2,7 +2,7 @@
  * Creem.io Payment Service
  *
  * Handles integration with Creem.io for payments and subscriptions
- * while maintaining compatibility with existing Clerk-based authentication
+ * while maintaining compatibility with Better Auth authentication
  */
 
 import { Creem } from 'creem';

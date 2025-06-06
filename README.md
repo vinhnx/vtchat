@@ -48,7 +48,7 @@ VT is built as a monorepo with a clear separation of concerns:
     ├── actions/     # Shared actions and API handlers
     ├── common/      # Common utilities and hooks
     ├── orchestrator/# Workflow engine and task management
-    ├── prisma/      # Database schema and client
+    ├── database/    # Database schemas and migrations
     ├── shared/      # Shared types and constants
     ├── ui/          # Reusable UI components
     ├── tailwind-config/ # Shared Tailwind configuration

@@ -1,4 +1,4 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
 import { CreemService } from '@repo/shared/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -14,10 +14,12 @@ export async function POST(request: NextRequest) {
     try {
         console.log('[Checkout API] Starting checkout process...');
 
-        // Check authentication - try multiple methods to ensure we get the user ID
-        const { userId: authUserId } = await auth();
-        const user = await currentUser();
-        const userId = authUserId || user?.id;
+        // Check authentication using Better Auth
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+        const userId = session?.user?.id;
+        const user = session?.user;
 
         if (!userId) {
             console.error('[Checkout API] Authentication failed: No user ID found');
@@ -67,8 +69,7 @@ export async function POST(request: NextRequest) {
         console.log('Mapped to package type:', packageType);
 
         // Get user information for checkout
-        const userEmail =
-            user?.emailAddresses?.[0]?.emailAddress || user?.primaryEmailAddress?.emailAddress;
+        const userEmail = user?.email;
 
         if (!userEmail) {
             console.error('No email found for user:', userId);

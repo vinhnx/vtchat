@@ -117,28 +117,13 @@ export const useCreditsStore = create<CreditsState>()(
                 return;
             }
 
-            // Extract credits and transactions from user data
-            // Handle different versions of Clerk API safely
-            const privateMetadata = (user.privateMetadata as any) || {};
-            const currentBalance = (privateMetadata.credits as number) || 0;
-
-            // Convert stored transactions to our local format
-            const storedTransactions = privateMetadata?.transactions || [];
-            const formattedTransactions = storedTransactions.map((tx: any) => ({
-                id: tx.id || `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                type: tx.type || 'purchase',
-                amount: tx.type === 'usage' ? -tx.amount : tx.amount,
-                description: tx.productName || tx.mode || 'Transaction',
-                timestamp: new Date(tx.timestamp || Date.now()),
-                metadata: {
-                    checkoutId: tx.checkoutId,
-                    mode: tx.mode,
-                },
-            }));
+            // Extract credits from Better Auth user data
+            // Credits are now stored directly in the user's credits field
+            const currentBalance = user.credits || 0;
 
             set({
                 balance: currentBalance,
-                transactions: formattedTransactions,
+                transactions: [], // Transactions will be fetched separately if needed
                 isLoading: false,
                 isInitialized: true,
             });

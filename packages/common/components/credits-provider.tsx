@@ -3,12 +3,12 @@
 /**
  * Credits Provider Component
  *
- * Integrates Creem.io credits system with Clerk user authentication.
- * Automatically syncs credit balance from Clerk user privateMetadata
+ * Integrates credits system with Better Auth user authentication.
+ * Automatically syncs credit balance from the database
  * where the webhook stores purchased credits.
  */
 
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import React, { createContext, ReactNode, useContext, useEffect } from 'react';
 import { useCreditsStore } from '../store/credits.store';
 
@@ -29,10 +29,12 @@ const CreditsContext = createContext<CreditsContextValue>({
 });
 
 export function CreditsProvider({ children }: CreditsProviderProps) {
-    const { user, isLoaded } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
+    const isLoaded = !!session;
     const { updateFromUser, reset, isInitialized, balance, isLoading } = useCreditsStore();
 
-    // Sync credits state with Clerk user data
+    // Sync credits state with Better Auth user data
     useEffect(() => {
         if (!isLoaded) return;
 
@@ -44,19 +46,16 @@ export function CreditsProvider({ children }: CreditsProviderProps) {
         }
     }, [user, isLoaded, updateFromUser, reset]);
 
-    // Watch for changes in user privateMetadata.credits
+    // Watch for changes in user credits from database
     useEffect(() => {
         if (!user) return;
 
-        // Access the private metadata more safely using getField / publicMetadata
-        // This depends on Clerk API version, but using a type cast to avoid a breaking change
-        const userCredits = (user as any).privateMetadata?.credits || 0;
-
-        // Only update if the credits changed (to avoid unnecessary re-renders)
-        if (userCredits !== balance && isInitialized) {
+        // For Better Auth, we'll need to fetch credits from our API
+        // This will be handled by the credits store
+        if (isInitialized) {
             updateFromUser(user);
         }
-    }, [user, balance, isInitialized, updateFromUser]);
+    }, [user, isInitialized, updateFromUser]);
 
     const isReady = isLoaded && isInitialized;
 

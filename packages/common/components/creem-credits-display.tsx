@@ -1,13 +1,14 @@
-import { useUser } from '@clerk/nextjs';
 import { useApiKeysStore, useAppStore, useChatStore, useCreditsStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
 import { IconBoltFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 export function CreemCreditsDisplay() {
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
     const router = useRouter();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeys = useApiKeysStore(state => state.hasApiKeyForChatMode(chatMode));

@@ -7,8 +7,8 @@
  * for chat modes, providing a unified interface
  */
 
-import { useAuth, useUser } from '@clerk/nextjs';
 import { ChatMode } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     checkChatModeAccess,
     getAvailableChatModes,
@@ -19,8 +19,10 @@ import { useCredits } from '../store/credits.store';
 import { useSubscriptionAccess } from './use-subscription-access';
 
 export function useChatModeAccess() {
-    const { isLoaded, isSignedIn } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const isLoaded = true; // Better Auth session is always loaded when available
+    const isSignedIn = !!session;
+    const user = session?.user;
     const { balance: userCredits } = useCredits();
     const { isLoaded: subscriptionLoaded } = useSubscriptionAccess();
 

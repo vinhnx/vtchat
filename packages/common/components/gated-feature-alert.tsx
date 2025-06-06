@@ -1,8 +1,7 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { checkSubscriptionAccess, hasFeature } from '@repo/shared/utils/subscription';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -77,36 +76,42 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     fallback,
     showAlert = true,
 }) => {
-    const { isLoaded, has } = useAuth();
+    const { data: session } = useSession();
     const router = useRouter();
     const [showUpgradeAlert, setShowUpgradeAlert] = useState(false);
     const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     // Don't render anything while auth is loading
-    if (!isLoaded) {
+    if (!session) {
         return null;
     }
 
     // Check if user has access based on feature or plan
     const hasAccess = React.useMemo(() => {
-        if (!has) return false;
-
         // If feature requires VT+, use the isVtPlus state directly
         if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
             return isVtPlus;
         }
 
-        // For other features, use the appropriate check functions
-        if (requiredFeature) {
-            return hasFeature(has, requiredFeature);
+        // For base features, always allow access for authenticated users
+        if (
+            requiredFeature &&
+            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
+                requiredFeature === FeatureSlug.BASE_MODELS ||
+                requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+                requiredFeature === FeatureSlug.PRO_SEARCH ||
+                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+        ) {
+            return true; // Base features are available to all authenticated users
         }
 
-        if (requiredPlan) {
-            return checkSubscriptionAccess(has, { plan: requiredPlan });
+        // For base plan requirements, allow access
+        if (requiredPlan === PlanSlug.VT_BASE) {
+            return true; // Base plan features are available to all authenticated users
         }
 
         return true;
-    }, [has, requiredFeature, requiredPlan, isVtPlus]);
+    }, [requiredFeature, requiredPlan, isVtPlus]);
 
     // Generate default message based on feature/plan
     const defaultMessage = React.useMemo(() => {
@@ -198,27 +203,38 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
  * Useful for conditional rendering without the full gated component
  */
 export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: PlanSlug) => {
-    const { isLoaded, has } = useAuth();
+    const { data: session } = useSession();
     const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     const hasAccess = React.useMemo(() => {
-        if (!isLoaded || !has) return false;
+        if (!session) return false;
 
         // If feature requires VT+, use the isVtPlus state directly
         if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
             return isVtPlus;
         }
 
-        if (requiredFeature) {
-            return hasFeature(has, requiredFeature);
+        // For base features, always allow access for authenticated users
+        if (
+            requiredFeature &&
+            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
+                requiredFeature === FeatureSlug.BASE_MODELS ||
+                requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+                requiredFeature === FeatureSlug.PRO_SEARCH ||
+                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+        ) {
+            return true;
         }
 
-        if (requiredPlan) {
-            return checkSubscriptionAccess(has, { plan: requiredPlan });
+        // For base plan requirements, allow access
+        if (requiredPlan === PlanSlug.VT_BASE) {
+            return true;
         }
 
         return true;
-    }, [isLoaded, has, requiredFeature, requiredPlan, isVtPlus]);
+    }, [session, requiredFeature, requiredPlan, isVtPlus]);
+
+    const isLoaded = !!session;
 
     return {
         hasAccess,

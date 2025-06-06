@@ -1,25 +1,26 @@
-import { auth } from '@clerk/nextjs/server';
-import { prisma } from '@repo/prisma';
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/database';
+import { feedback } from '@/lib/database/schema';
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-    const session = await auth();
-    const userId = session?.userId;
+    const session = await auth.api.getSession({
+        headers: request.headers,
+    });
+    const userId = session?.user?.id;
 
     if (!userId) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { feedback } = await request.json();
+    const { feedback: feedbackText } = await request.json();
 
-    await prisma.feedback.create({
-        data: {
-            userId,
-            feedback,
-            metadata: JSON.stringify({
-                geo: geolocation(request),
-            }),
+    await db.insert(feedback).values({
+        userId,
+        feedback: feedbackText,
+        metadata: {
+            geo: geolocation(request),
         },
     });
 

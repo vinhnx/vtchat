@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
     checkSubscriptionAccess,
@@ -13,7 +13,7 @@ import { useCallback, useMemo } from 'react';
 
 /**
  * Custom hook for optimized subscription access checking
- * Combines Clerk's reactive has() method with convenient utility functions
+ * Combines Better Auth's user session with convenient utility functions
  *
  * This hook is optimized for performance and provides a clean API for
  * checking subscription access throughout the application.
@@ -41,8 +41,10 @@ import { useCallback, useMemo } from 'react';
  * }
  */
 export function useSubscriptionAccess() {
-    const { isLoaded, isSignedIn } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const isLoaded = !!session;
+    const isSignedIn = !!session;
+    const user = session?.user;
 
     // Memoize the subscription status to avoid recalculations
     const subscriptionStatus = useMemo(() => {
@@ -160,18 +162,18 @@ export function useSubscriptionAccess() {
  * }
  */
 export function useFeatureAccess(feature: FeatureSlug): boolean {
-    const { isLoaded } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
 
     return useMemo(() => {
-        if (!isLoaded) return false;
+        if (!session) return false;
 
         const context = {
             user,
         };
 
         return hasFeature(context, feature);
-    }, [isLoaded, user, feature]);
+    }, [session, user, feature]);
 }
 
 /**
@@ -193,18 +195,18 @@ export function useFeatureAccess(feature: FeatureSlug): boolean {
  * }
  */
 export function usePlanAccess(plan: PlanSlug): boolean {
-    const { isLoaded } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
 
     return useMemo(() => {
-        if (!isLoaded) return false;
+        if (!session) return false;
 
         const context = {
             user,
         };
 
         return checkSubscriptionAccess(context, { plan });
-    }, [isLoaded, user, plan]);
+    }, [session, user, plan]);
 }
 
 /**
@@ -225,20 +227,15 @@ export function usePlanAccess(plan: PlanSlug): boolean {
  * }
  */
 export function useVtPlusAccess(): boolean {
-    const { isLoaded } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
 
     return useMemo(() => {
-        if (!isLoaded) return false;
+        if (!session) return false;
 
         const context = { user };
         return hasVtPlusPlan(context);
-    }, [
-        isLoaded,
-        user?.publicMetadata?.planSlug,
-        (user as any)?.privateMetadata?.subscription?.isActive,
-        user,
-    ]);
+    }, [session, user]);
 }
 
 /**
@@ -261,11 +258,11 @@ export function useVtPlusAccess(): boolean {
  * }
  */
 export function useCurrentPlan() {
-    const { isLoaded } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
 
     return useMemo(() => {
-        if (!isLoaded) {
+        if (!session) {
             return {
                 planSlug: PlanSlug.VT_BASE,
                 planInfo: null,
@@ -282,5 +279,5 @@ export function useCurrentPlan() {
             planInfo: subscriptionStatus.planInfo,
             canUpgrade: subscriptionStatus.canUpgrade,
         };
-    }, [isLoaded, user]);
+    }, [session, user]);
 }

@@ -1,4 +1,4 @@
-import { ClerkProvider } from '@clerk/nextjs';
+import { BetterAuthProvider } from '@/components/better-auth-provider';
 import { CreditsProvider, RootLayout, ThemeProvider } from '@repo/common/components';
 import { ReactQueryProvider, RootProvider } from '@repo/common/context';
 import { TooltipProvider, cn } from '@repo/ui';
@@ -104,7 +104,7 @@ export default function ParentLayout({
             </head>
             <body>
                 {/* <PostHogProvider> */}
-                <ClerkProvider>
+                <BetterAuthProvider>
                     <RootProvider>
                         <CreditsProvider>
                             <ThemeProvider
@@ -121,7 +121,7 @@ export default function ParentLayout({
                             </ThemeProvider>
                         </CreditsProvider>
                     </RootProvider>
-                </ClerkProvider>
+                </BetterAuthProvider>
                 {/* </PostHogProvider> */}
             </body>
         </html>

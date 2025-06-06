@@ -8,7 +8,11 @@ const config = {
         './pages/**/*.{js,ts,jsx,tsx,mdx}',
         './lib/**/*.{js,ts,jsx,tsx,mdx}',
         '../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}',
-        '../../packages/common/**/*.{js,ts,jsx,tsx,mdx}',
+        '../../packages/common/components/**/*.{js,ts,jsx,tsx,mdx}',
+        '../../packages/common/context/**/*.{js,ts,jsx,tsx,mdx}',
+        '../../packages/common/hooks/**/*.{js,ts,jsx,tsx,mdx}',
+        '../../packages/common/store/**/*.{js,ts,jsx,tsx,mdx}',
+        '../../packages/common/types/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
         extend: {

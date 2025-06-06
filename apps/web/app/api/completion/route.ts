@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
 import { CHAT_MODE_CREDIT_COSTS, ChatModeConfig } from '@repo/shared/config';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
@@ -18,8 +18,10 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const session = await auth();
-        const userId = session?.userId ?? undefined;
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+        const userId = session?.user?.id ?? undefined;
 
         const parsed = await request.json().catch(() => ({}));
         const validatedBody = completionRequestSchema.safeParse(parsed);

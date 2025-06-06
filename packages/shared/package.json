@@ -9,11 +9,11 @@
         "./types": "./types.ts",
         "./logger": "./logger.ts",
         "./posthog": "./posthog.ts",
+        "./lib/auth-client": "./lib/auth-client.ts",
         "./types/subscription": "./types/subscription.ts",
         "./utils/subscription": "./utils/subscription.ts",
         "./utils/subscription-server": "./utils/subscription-server.ts",
-        "./utils/chat-credits": "./utils/chat-credits.ts",
-        "./utils/polar": "./utils/polar.ts"
+        "./utils/chat-credits": "./utils/chat-credits.ts"
     },
     "scripts": {
         "lint": "eslint .",

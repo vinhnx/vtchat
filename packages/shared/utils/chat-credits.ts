@@ -1,7 +1,7 @@
 /**
  * Credit-based Chat Mode Access Control
  *
- * Integrates Polar credits with existing chat mode system
+ * Integrates Creem.io credits with existing chat mode system
  * Provides fallback to subscription-based access
  */
 

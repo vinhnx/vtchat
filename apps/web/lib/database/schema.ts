@@ -1,0 +1,100 @@
+import { integer, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+
+// Users table for Better Auth
+export const users = pgTable('users', {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+    email: text('email').notNull().unique(),
+    image: text('image'),
+    credits: integer('credits').default(0), // Creem.io credits balance
+    planSlug: text('plan_slug').default('free'), // Subscription plan (free, vt_plus, etc.)
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Sessions table for Better Auth
+export const sessions = pgTable('sessions', {
+    id: text('id').primaryKey(),
+    expiresAt: timestamp('expires_at').notNull(),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    token: text('token'),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Accounts table for OAuth providers
+export const accounts = pgTable('accounts', {
+    id: text('id').primaryKey(),
+    accountId: text('account_id').notNull(),
+    providerId: text('provider_id').notNull(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text('id_token'),
+    expiresAt: timestamp('expires_at'),
+    accessTokenExpiresAt: timestamp('access_token_expires_at'),
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Verification tokens for email verification, password reset, etc.
+export const verifications = pgTable('verifications', {
+    id: text('id').primaryKey(),
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// User subscriptions and credits (managed in database)
+export const userSubscriptions = pgTable('user_subscriptions', {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    plan: text('plan').notNull().default('free'), // free, pro, premium
+    status: text('status').notNull().default('active'), // active, cancelled, expired
+    creditsRemaining: integer('credits_remaining').notNull().default(0),
+    creditsUsed: integer('credits_used').notNull().default(0),
+    monthlyCredits: integer('monthly_credits').notNull().default(50),
+    stripeCustomerId: text('stripe_customer_id'),
+    stripeSubscriptionId: text('stripe_subscription_id'),
+    currentPeriodStart: timestamp('current_period_start'),
+    currentPeriodEnd: timestamp('current_period_end'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Feedback table (fully migrated to Drizzle ORM/Neon)
+export const feedback = pgTable('feedback', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    feedback: text('feedback').notNull(),
+    metadata: json('metadata'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;
+export type Account = typeof accounts.$inferSelect;
+export type NewAccount = typeof accounts.$inferInsert;
+export type Verification = typeof verifications.$inferSelect;
+export type NewVerification = typeof verifications.$inferInsert;
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
+export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
+export type Feedback = typeof feedback.$inferSelect;
+export type NewFeedback = typeof feedback.$inferInsert;

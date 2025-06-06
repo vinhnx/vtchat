@@ -1,6 +1,6 @@
-import { useAuth, useUser } from '@clerk/nextjs';
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, plausible } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
@@ -26,8 +26,9 @@ const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
 export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const { threadId: currentThreadId } = useParams();
-    const { isSignedIn } = useAuth();
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const user = session?.user;
 
     const {
         updateThreadItem,
@@ -356,7 +357,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 !isSignedIn &&
                 !!ChatModeConfig[mode as keyof typeof ChatModeConfig]?.isAuthRequired
             ) {
-                push('/sign-in');
+                push('/login');
 
                 return;
             }
