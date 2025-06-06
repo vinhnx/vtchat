@@ -1,9 +1,9 @@
 'use client';
-import { useClerk, useUser } from '@clerk/nextjs';
 import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { signOut, useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
     Badge,
@@ -47,8 +47,9 @@ export const Sidebar = () => {
         return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
     };
 
-    const { isSignedIn, user } = useUser();
-    const { openUserProfile, signOut, redirectToSignIn } = useClerk();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const user = session?.user;
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
     const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
@@ -357,13 +358,13 @@ export const Sidebar = () => {
                                     )}
                                 >
                                     <div className="bg-brand flex size-5 shrink-0 items-center justify-center rounded-full">
-                                        {user && user.hasImage ? (
+                                        {user && user.image ? (
                                             <img
-                                                src={user?.imageUrl ?? ''}
+                                                src={user.image}
                                                 width={0}
                                                 height={0}
                                                 className="size-full shrink-0 rounded-full"
-                                                alt={user?.fullName ?? ''}
+                                                alt={user.name || user.email}
                                             />
                                         ) : (
                                             <IconUser
@@ -377,7 +378,7 @@ export const Sidebar = () => {
                                     {isSidebarOpen && (
                                         <div className="flex flex-1 flex-col items-start">
                                             <p className="line-clamp-1 !text-sm font-medium">
-                                                {user?.fullName}
+                                                {user?.name || user?.email}
                                             </p>
                                             <UserTierBadge />
                                         </div>
@@ -396,16 +397,10 @@ export const Sidebar = () => {
                                     <IconSettings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
-                                {/* {!isSignedIn && (
-                                <DropdownMenuItem onClick={() => push('/sign-in')}>
-                                    <IconUser size={16} strokeWidth={2} />
-                                    Log in
-                                </DropdownMenuItem>
-                            )} */}
-                                {isSignedIn && (
-                                    <DropdownMenuItem onClick={() => openUserProfile()}>
+                                {!isSignedIn && (
+                                    <DropdownMenuItem onClick={() => push('/login')}>
                                         <IconUser size={16} strokeWidth={2} />
-                                        Profile
+                                        Log in
                                     </DropdownMenuItem>
                                 )}
                                 {isSignedIn && (
@@ -430,7 +425,7 @@ export const Sidebar = () => {
                                 <IconSettings2 size={14} strokeWidth={2} />
                                 Settings
                             </Button>
-                            <Button size="sm" rounded="lg" onClick={() => push('/sign-in')}>
+                            <Button size="sm" rounded="lg" onClick={() => push('/login')}>
                                 Log in / Sign up
                             </Button>
                         </div>

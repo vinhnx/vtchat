@@ -7,8 +7,8 @@
  * - React components and hooks
  * - Server-side helpers
  *
- * NOTE: Custom Protect components have been removed in favor of Clerk's built-in <Protect> component.
- * Use @clerk/nextjs Protect component directly with plan/feature props, and our unified
+ * NOTE: Custom Protect components have been removed in favor of Better Auth's built-in components.
+ * Use Better Auth components directly with plan/feature props, and our unified
  * checkSubscriptionAccess() function for programmatic checks.
  */
 
@@ -22,7 +22,7 @@ export * from '@repo/shared/utils/subscription';
 // If you need server utilities, import from './server' instead.
 
 // React components and hooks
-// export * from './protect'; // REMOVED: Use Clerk's <Protect> component instead
+// export * from './protect'; // REMOVED: Use Better Auth components instead
 export * from './provider';
 // export * from './ui'; // REMOVED: Deprecated UI components
 
