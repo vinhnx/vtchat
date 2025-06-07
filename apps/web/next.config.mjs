@@ -7,9 +7,6 @@ const nextConfig = {
         ],
     },
 
-    // Disable development indicators/tools
-    devIndicators: false,
-
     experimental: {
         externalDir: true,
     },
