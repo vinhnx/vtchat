@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth';
 import { CHAT_MODE_CREDIT_COSTS, ChatModeConfig } from '@repo/shared/config';
 import { logger } from '@repo/shared/logger';
-import { isDevTestMode } from '@repo/shared/utils/dev-test-mode';
+import { isDevTestMode } from '@repo/shared/utils';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
 

@@ -1,4 +1,5 @@
 import { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
+import { logger } from '@repo/shared/logger';
 import { Geo } from '@vercel/functions';
 import {
     CoreMessage,
