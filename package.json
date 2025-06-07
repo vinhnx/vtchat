@@ -3,7 +3,8 @@
     "private": true,
     "scripts": {
         "build": "turbo run build",
-        "dev": "turbo run dev",
+        "dev": "turbo dev --filter=web",
+        "dev:web": "turbo dev --filter=web",
         "lint": "turbo run lint",
         "clean": "turbo run clean && rm -rf node_modules",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",

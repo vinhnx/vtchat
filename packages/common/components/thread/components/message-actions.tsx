@@ -38,7 +38,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                         size="icon-sm"
                         onClick={() => {
                             if (ref && 'current' in ref && ref.current) {
-                                copyToClipboard(ref.current || '');
+                                copyToClipboard(ref.current);
                             }
                         }}
                         tooltip="Copy"

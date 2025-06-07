@@ -120,8 +120,8 @@ export const SideDrawer = () => {
                         <div className="border-border flex flex-row items-center justify-between gap-2 border-b py-1.5 pl-4 pr-2">
                             <div className="text-sm font-medium">
                                 {typeof sideDrawer.title === 'function'
-                                    ? sideDrawer.title()
-                                    : sideDrawer.title}
+                                    ? sideDrawer.title() || ''
+                                    : sideDrawer.title || ''}
                             </div>
                             {sideDrawer.badge && (
                                 <Badge variant="default">{sideDrawer.badge}</Badge>
@@ -141,7 +141,7 @@ export const SideDrawer = () => {
                             ref={scrollRef}
                         >
                             <div ref={contentRef} className="w-full">
-                                {sideDrawer.renderContent()}
+                                {sideDrawer.renderContent() || <></>}
                             </div>
                         </div>
                     </div>
