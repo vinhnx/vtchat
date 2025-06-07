@@ -2,6 +2,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { isDevTestMode } from '@repo/shared/utils';
 import {
     checkSubscriptionAccess,
     getCurrentPlan,
@@ -63,6 +64,15 @@ export function useSubscriptionAccess() {
     // Create stable callback for access checking
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
+            // DEV TEST MODE: Bypass all access checks
+            if (isDevTestMode()) {
+                console.log(
+                    '🚧 DEV TEST MODE: Bypassing subscription access check in hook',
+                    options
+                );
+                return true;
+            }
+
             if (!isLoaded) return false;
 
             const context = {
@@ -77,6 +87,12 @@ export function useSubscriptionAccess() {
     // Create stable callback for feature checking
     const canAccess = useCallback(
         (feature: FeatureSlug) => {
+            // DEV TEST MODE: Bypass all feature checks
+            if (isDevTestMode()) {
+                console.log('🚧 DEV TEST MODE: Bypassing feature check in hook', feature);
+                return true;
+            }
+
             if (!isLoaded) return false;
 
             const context = {
@@ -91,6 +107,12 @@ export function useSubscriptionAccess() {
     // Create stable callback for plan checking
     const hasPlan = useCallback(
         (plan: PlanSlug) => {
+            // DEV TEST MODE: Bypass all plan checks
+            if (isDevTestMode()) {
+                console.log('🚧 DEV TEST MODE: Bypassing plan check in hook', plan);
+                return true;
+            }
+
             if (!isLoaded) return false;
 
             const context = {

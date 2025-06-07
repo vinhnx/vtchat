@@ -69,3 +69,4 @@ applyTo: '**'
 - You can search for documentation using `context7` MCP tool
 - You can search the internet using MCP tool `tavily-search`
 - Documentation should be in `docs/` directory
+- Guides markdown files should be in `docs/guides/`

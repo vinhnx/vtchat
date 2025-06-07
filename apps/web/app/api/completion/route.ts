@@ -1,7 +1,13 @@
 import { auth } from '@/lib/auth';
 import { CHAT_MODE_CREDIT_COSTS, ChatModeConfig } from '@repo/shared/config';
+import { logger } from '@repo/shared/logger';
+import { isDevTestMode } from '@repo/shared/utils/dev-test-mode';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 import {
     DAILY_CREDITS_AUTH,
     DAILY_CREDITS_IP,

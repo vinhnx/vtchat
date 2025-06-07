@@ -3,6 +3,9 @@ import { CreemService } from '@repo/shared/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // Schema for checkout request
 const CheckoutRequestSchema = z.object({
     priceId: z.string(),

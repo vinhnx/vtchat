@@ -6,6 +6,7 @@ export * from './credits-provider';
 export * from './creem-checkout-processor';
 export * from './creem-credits-display';
 export * from './creem-credits-shop';
+export * from './dev-test-mode-banner';
 export * from './error-boundary';
 export * from './error-placeholder';
 export * from './example-prompts';
@@ -36,4 +37,3 @@ export * from './theme-provider';
 export * from './thread';
 export * from './tools-menu';
 export * from './user-tier-badge';
-

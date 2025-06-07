@@ -9,6 +9,7 @@
 
 import { ChatMode } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { isDevTestMode } from '@repo/shared/utils';
 import {
     checkChatModeAccess,
     getAvailableChatModes,
@@ -29,6 +30,16 @@ export function useChatModeAccess() {
     // Check access for a specific chat mode
     const checkAccess = useCallback(
         (chatMode: ChatMode): ChatModeAccess => {
+            // DEV TEST MODE: Bypass all chat mode access checks
+            if (isDevTestMode()) {
+                console.log('🚧 DEV TEST MODE: Bypassing chat mode access check', chatMode);
+                return {
+                    canAccess: true,
+                    accessType: 'free',
+                    creditCost: 0,
+                };
+            }
+
             if (!isLoaded || !subscriptionLoaded) {
                 return {
                     canAccess: false,

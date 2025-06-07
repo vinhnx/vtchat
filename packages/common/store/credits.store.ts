@@ -7,7 +7,7 @@
  * Integrates with existing subscription system
  */
 
-import { CREEM_CREDIT_PACKAGES, CreemService } from '@repo/shared/utils';
+import { CREEM_CREDIT_PACKAGES, CreemService, isDevTestMode } from '@repo/shared/utils';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
@@ -76,6 +76,15 @@ export const useCreditsStore = create<CreditsState>()(
         },
 
         useCredits: (amount: number, description: string) => {
+            // DEV TEST MODE: Always allow credit usage
+            if (isDevTestMode()) {
+                console.log('🚧 DEV TEST MODE: Bypassing credit usage check - always allowing', {
+                    amount,
+                    description,
+                });
+                return true;
+            }
+
             const { balance } = get();
 
             if (balance < amount) {
@@ -159,6 +168,14 @@ export const useCreditsStore = create<CreditsState>()(
 
         // Utility methods
         canAfford: (cost: number) => {
+            // DEV TEST MODE: Always can afford
+            if (isDevTestMode()) {
+                console.log('🚧 DEV TEST MODE: Bypassing canAfford check - always can afford', {
+                    cost,
+                });
+                return true;
+            }
+
             const { balance } = get();
             return balance >= cost;
         },
