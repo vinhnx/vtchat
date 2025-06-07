@@ -10,6 +10,7 @@ import { getUserWithSubscription } from '@/lib/database/queries';
 import { NextRequest, NextResponse } from 'next/server';
 import { AccessCheckOptions, FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
+import { isDevTestMode } from './dev-test-mode';
 
 /**
  * Server-side subscription access check using Better Auth.
@@ -19,6 +20,12 @@ export async function serverHasAccess(
     options: AccessCheckOptions,
     headers?: Headers
 ): Promise<boolean> {
+    // DEV TEST MODE: Bypass server-side subscription checks
+    if (isDevTestMode()) {
+        console.log('🚧 DEV TEST MODE: Bypassing server-side access check', options);
+        return true;
+    }
+
     const session = await auth.api.getSession({ headers });
 
     if (!session?.user?.id) {

@@ -12,7 +12,8 @@
         "./types/subscription": "./types/subscription.ts",
         "./utils/subscription": "./utils/subscription.ts",
         "./utils/subscription-server": "./utils/subscription-server.ts",
-        "./utils/chat-credits": "./utils/chat-credits.ts"
+        "./utils/chat-credits": "./utils/chat-credits.ts",
+        "./utils/dev-test-mode": "./utils/dev-test-mode.ts"
     },
     "scripts": {
         "lint": "eslint .",

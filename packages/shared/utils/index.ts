@@ -7,6 +7,7 @@ export type {
     CreemPrice,
     CreemProduct,
 } from './creem';
+export * from './dev-test-mode';
 export * from './hotjar';
 export * from './messages';
 export * from './plausible';

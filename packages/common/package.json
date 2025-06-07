@@ -12,6 +12,7 @@
         "./components/creem-credits-shop": "./components/creem-credits-shop.tsx",
         "./components/creem-checkout-processor": "./components/creem-checkout-processor.tsx",
         "./components/creem-credits-display": "./components/creem-credits-display.tsx",
+        "./components/dev-test-mode-banner": "./components/dev-test-mode-banner.tsx",
         "./utils": "./utils/index.ts"
     },
     "scripts": {

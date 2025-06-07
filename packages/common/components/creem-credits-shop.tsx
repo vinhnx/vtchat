@@ -9,7 +9,7 @@
 
 import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useCreditPurchasing, useCredits } from '@repo/common/store';
-import { CREEM_CREDIT_PACKAGES, CreemService } from '@repo/shared/utils';
+import { CREEM_CREDIT_PACKAGES, CreemService, isDevTestMode } from '@repo/shared/utils';
 import {
     Badge,
     Button,
@@ -283,6 +283,25 @@ export function CreemCreditsShop() {
 
     return (
         <div className="space-y-8">
+            {/* DEV TEST MODE Banner */}
+            {isDevTestMode() && (
+                <Card className="border-orange-500 bg-orange-50 dark:bg-orange-950/20">
+                    <CardContent className="pt-6">
+                        <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
+                            <span className="text-lg">🚧</span>
+                            <div>
+                                <h3 className="font-bold">DEV TEST MODE Active</h3>
+                                <p className="text-sm">
+                                    All restrictions are bypassed. You have unlimited access to all
+                                    features and chat modes. Purchase functionality is disabled in
+                                    this mode.
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Current Balance */}
             <div className="text-center">
                 <h2 className="mb-2 text-2xl font-bold">Your Credit Balance</h2>

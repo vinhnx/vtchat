@@ -5,26 +5,10 @@
  * Provides fallback to subscription-based access
  */
 
-import { ChatMode } from '../config/chat-mode';
+import { CHAT_MODE_CREDIT_COSTS, ChatMode } from '../config/chat-mode';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
+import { isDevTestMode } from './dev-test-mode';
 import { checkSubscriptionAccess, type SubscriptionContext } from './subscription';
-
-// Credit costs for each chat mode (imported from existing config)
-export const CHAT_MODE_CREDIT_COSTS = {
-    [ChatMode.Deep]: 10,
-    [ChatMode.Pro]: 5,
-    [ChatMode.DEEPSEEK_R1]: 5,
-    [ChatMode.CLAUDE_4_SONNET]: 5,
-    [ChatMode.CLAUDE_4_OPUS]: 8,
-    [ChatMode.GPT_4o]: 3,
-    [ChatMode.GPT_4o_Mini]: 1,
-    [ChatMode.GPT_4_1]: 5,
-    [ChatMode.GPT_4_1_Mini]: 2,
-    [ChatMode.GPT_4_1_Nano]: 1,
-    [ChatMode.O4_Mini]: 4,
-    [ChatMode.GEMINI_2_0_FLASH]: 2,
-    [ChatMode.GEMINI_2_5_PRO]: 4,
-} as const;
 
 // Free chat modes (no credits required)
 export const FREE_CHAT_MODES = [ChatMode.GPT_4o_Mini, ChatMode.GPT_4_1_Nano] as const;
@@ -51,6 +35,16 @@ export function checkChatModeAccess(
     chatMode: ChatMode,
     options: CreditAccessOptions = {}
 ): ChatModeAccess {
+    // DEV TEST MODE: Bypass all restrictions
+    if (isDevTestMode()) {
+        console.log('🚧 DEV TEST MODE: Bypassing chat mode access check for', chatMode);
+        return {
+            canAccess: true,
+            accessType: 'free',
+            creditCost: 0,
+        };
+    }
+
     const { subscriptionContext, userCredits = 0, isAuthenticated = false } = options;
 
     const creditCost = CHAT_MODE_CREDIT_COSTS[chatMode] || 0;
@@ -136,8 +130,11 @@ function checkChatModeSubscriptionAccess(
         [ChatMode.GPT_4_1_Mini]: null, // Credit-only
         [ChatMode.GPT_4_1_Nano]: null, // Free
         [ChatMode.O4_Mini]: { plan: PlanSlug.VT_PLUS },
-        [ChatMode.GEMINI_2_0_FLASH]: { plan: PlanSlug.VT_PLUS },
+        [ChatMode.GEMINI_2_0_FLASH]: null, // Free
+        [ChatMode.GEMINI_2_0_FLASH_LITE]: null, // Free
+        [ChatMode.GEMINI_2_5_FLASH_PREVIEW]: { plan: PlanSlug.VT_PLUS },
         [ChatMode.GEMINI_2_5_PRO]: { plan: PlanSlug.VT_PLUS },
+        [ChatMode.GEMINI_2_5_PRO_PREVIEW]: { plan: PlanSlug.VT_PLUS },
     };
 
     const requirement = subscriptionRequirements[chatMode];
@@ -220,6 +217,5 @@ export default {
     getAvailableChatModes,
     getRecommendedCreditPackage,
     isSubscriptionWorthwhile,
-    CHAT_MODE_CREDIT_COSTS,
     FREE_CHAT_MODES,
 };

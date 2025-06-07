@@ -5,6 +5,7 @@
  */
 
 import { FeatureSlug, PLANS, PlanSlug } from '../types/subscription';
+import { isDevTestMode } from './dev-test-mode';
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -75,6 +76,12 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
  * if the user has an active VT+ subscription.
  */
 export function hasVtPlusPlan(context: SubscriptionContext): boolean {
+    // DEV TEST MODE: Bypass subscription checks
+    if (isDevTestMode()) {
+        console.log('🚧 DEV TEST MODE: Bypassing VT+ plan check');
+        return true;
+    }
+
     const subscriptionData = getCreemSubscriptionData(context);
     return subscriptionData.planSlug === PlanSlug.VT_PLUS && subscriptionData.isActive;
 }
@@ -83,6 +90,12 @@ export function hasVtPlusPlan(context: SubscriptionContext): boolean {
  * Check if a user has access to a specific feature
  */
 export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): boolean {
+    // DEV TEST MODE: Bypass feature checks
+    if (isDevTestMode()) {
+        console.log('🚧 DEV TEST MODE: Bypassing feature check for', feature);
+        return true;
+    }
+
     // For VT+ specific features, check if they have VT+ plan using our enhanced method
     if (
         [
@@ -123,6 +136,12 @@ export function checkSubscriptionAccess(
     context: SubscriptionContext,
     options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }
 ): boolean {
+    // DEV TEST MODE: Bypass all subscription checks
+    if (isDevTestMode()) {
+        console.log('🚧 DEV TEST MODE: Bypassing subscription access check', options);
+        return true;
+    }
+
     const { feature, plan, permission } = options;
 
     // Check feature access
