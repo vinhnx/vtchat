@@ -10,7 +10,7 @@ export enum ChatMode {
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4o = 'gpt-4o',
     GPT_4o_Mini = 'gpt-4o-mini',
-    GEMINI_2_0_FLASH = 'gemini-flash-2.0',
+    GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_5_PRO = 'gemini-flash-2.5-pro-preview-05-06',
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',

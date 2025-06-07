@@ -1,6 +1,5 @@
 -- Better Auth Migration for VT Chat
 -- This migration creates the required tables for Better Auth authentication system
--- and migrates from Clerk to Better Auth
 
 -- Users table for Better Auth
 CREATE TABLE IF NOT EXISTS "users" (
@@ -68,7 +67,6 @@ CREATE TABLE IF NOT EXISTS "user_subscriptions" (
     "updated_at" timestamp DEFAULT now() NOT NULL
 );
 
--- Feedback table (existing table from Prisma)
 CREATE TABLE IF NOT EXISTS "feedback" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "user_id" text NOT NULL,

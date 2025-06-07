@@ -3,8 +3,6 @@
 import Error from 'next/error';
 
 export default function GlobalError({ error }: { error: Error }) {
-    // Global error handling without Sentry
-
     return (
         <html>
             <body>

@@ -12,6 +12,7 @@
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.0-alpha.3",
         "@typescript-eslint/parser": "^8.25.0",
+        "drizzle-kit": "^0.31.1",
         "eslint": "^9.21.0",
         "eslint-plugin-prettier": "^5.2.3",
         "globals": "^16.0.0",
@@ -30,12 +31,15 @@
     ],
     "dependencies": {
         "@mozilla/readability": "^0.6.0",
+        "@neondatabase/serverless": "^1.0.1",
         "@typescript-eslint/eslint-plugin": "^8.25.0",
         "@vercel/functions": "^2.0.0",
         "ai": "^2.2.0",
         "better-auth": "^1.2.8",
         "creem": "^0.3.37",
         "date-fns": "^4.1.0",
+        "dotenv": "^16.5.0",
+        "drizzle-orm": "^0.44.2",
         "next": "^15.3.3",
         "node-html-parser": "^7.0.1",
         "pg": "^8.16.0",
