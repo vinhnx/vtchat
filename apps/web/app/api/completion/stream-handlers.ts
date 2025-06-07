@@ -110,27 +110,6 @@ export async function executeStream({
             logger.debug('Workflow completed', { threadId: data.threadId });
         }
 
-        userId &&
-            posthog.capture({
-                event: EVENT_TYPES.WORKFLOW_SUMMARY,
-                userId,
-                properties: {
-                    userId,
-                    query: data.prompt,
-                    mode: data.mode,
-                    webSearch: data.webSearch || false,
-                    showSuggestions: data.showSuggestions || false,
-                    threadId: data.threadId,
-                    threadItemId: data.threadItemId,
-                    parentThreadItemId: data.parentThreadItemId,
-                    summary: workflow.getTimingSummary(),
-                },
-            });
-
-        console.log('[WORKFLOW SUMMARY]', workflow.getTimingSummary());
-
-        posthog.flush();
-
         sendMessage(controller, encoder, {
             type: 'done',
             status: 'complete',

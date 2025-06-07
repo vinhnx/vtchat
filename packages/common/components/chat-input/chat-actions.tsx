@@ -4,7 +4,6 @@ import { useChatModeAccess } from '@repo/common/hooks/use-chat-mode-access';
 import { useApiKeysStore, useChatStore, useCreditsStore } from '@repo/common/store';
 import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -349,9 +348,6 @@ export const ChatModeOptions = ({
                 access.reason ||
                 `${option?.label} is a premium feature. Upgrade or purchase credits to access.`,
         });
-        return;
-
-        setChatMode(mode);
     };
 
     return (

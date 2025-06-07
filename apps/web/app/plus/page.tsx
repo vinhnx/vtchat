@@ -27,8 +27,7 @@ export default function Page() {
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="flex min-h-[50vh] items-center justify-center">
-                    <div className="space-y-4 text-center">
-                        <Spinner />
+                    <div className="flex flex-col items-center space-y-4 text-center">
                         <p className="text-muted-foreground">Loading...</p>
                     </div>
                 </div>
