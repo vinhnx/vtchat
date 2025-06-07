@@ -62,7 +62,7 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: 'https://VT',
+        canonical: 'https://vtai.vn',
     },
 };
 
