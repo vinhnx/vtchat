@@ -8,7 +8,7 @@ import {
     DAILY_CREDITS_AUTH,
     DAILY_CREDITS_IP,
     getRemainingCredits,
-} from '../../completion/credit-service';
+} from '../../completion/creem-credit-service';
 import { getIp } from '../../completion/utils';
 
 export async function GET(request: NextRequest) {
