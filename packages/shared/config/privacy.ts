@@ -30,16 +30,13 @@ We collect two types of information:
 
 ### Use of Third-Party Services
 
-Our Service may use third-party tools and services to assist in analytics, service optimization, or for technical support. These may include:
-
-- **PostHog**: Used for analytics to better understand user interactions with our Service.
-- **Sentry**: Used for error logging and monitoring to improve the stability and performance of our Service.
+Our Service may use third-party tools and services to assist in analytics, service optimization, or for technical support.
 
 These third-party services have their own Privacy Policies, which we recommend you review.
 
 ### Cookies
 
-\`VT\` does not directly use cookies. However, some third-party services we utilize, such as PostHog and Sentry, may use cookies to monitor interactions with our Service. Additionally, cookies are used for authentication purposes. You have the option to either accept or decline these cookies and should refer to your browser settings for managing your preferences.
+\`VT\` does not directly use cookies. However, some third-party services we utilize may use cookies to monitor interactions with our Service. Additionally, cookies are used for authentication purposes. You have the option to either accept or decline these cookies and should refer to your browser settings for managing your preferences.
 
 ### Third-Party Links and Content
 

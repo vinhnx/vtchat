@@ -101,7 +101,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
-    }
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {

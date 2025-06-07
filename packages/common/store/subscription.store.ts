@@ -75,10 +75,6 @@ export const useSubscriptionStore = create<SubscriptionState>()(
             });
         },
 
-        // Access check methods (REMOVED)
-        // The hasFeature, hasPlan, and hasAccess methods are removed from the store.
-        // Components should use useAuth().has() or the hooks from protect.tsx.
-
         // Convenience getters
         getCurrentPlan: () => {
             const { subscription } = get();

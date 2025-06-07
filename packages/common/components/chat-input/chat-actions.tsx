@@ -56,6 +56,20 @@ export const chatOptions = [
 
 export const modelOptions = [
     {
+        label: 'GPT 4o Mini',
+        value: ChatMode.GPT_4o_Mini,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
+    },
+    {
+        label: 'GPT 4.1 Nano',
+        value: ChatMode.GPT_4_1_Nano,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
+    },
+    {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
         webSearch: true,
@@ -75,20 +89,6 @@ export const modelOptions = [
         webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
-    },
-    {
-        label: 'GPT 4.1 Nano',
-        value: ChatMode.GPT_4_1_Nano,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
-    },
-    {
-        label: 'GPT 4o Mini',
-        value: ChatMode.GPT_4o_Mini,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
     },
     {
         label: 'o4 mini',

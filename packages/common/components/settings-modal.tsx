@@ -315,6 +315,24 @@ export const ApiKeySettings = () => {
             value: apiKeys.GEMINI_API_KEY,
             url: 'https://ai.google.dev/api',
         },
+        {
+            name: 'OpenRouter',
+            key: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            value: apiKeys.OPENROUTER_API_KEY,
+            url: 'https://openrouter.ai/settings/keys',
+        },
+        {
+            name: 'Together AI',
+            key: 'TOGETHER_API_KEY' as keyof ApiKeys,
+            value: apiKeys.TOGETHER_API_KEY,
+            url: 'https://api.together.xyz/settings/api-keys',
+        },
+        {
+            name: 'Fireworks AI',
+            key: 'FIREWORKS_API_KEY' as keyof ApiKeys,
+            value: apiKeys.FIREWORKS_API_KEY,
+            url: 'https://app.fireworks.ai/settings/users/api-keys',
+        },
     ];
 
     const validateApiKey = (apiKey: string, provider: string) => {

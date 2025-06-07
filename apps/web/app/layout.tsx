@@ -96,14 +96,8 @@ export default function ParentLayout({
         >
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
-
-                {/* <script
-                    crossOrigin="anonymous"
-                    src="//unpkg.com/react-scan/dist/auto.global.js"
-                ></script> */}
             </head>
             <body>
-                {/* <PostHogProvider> */}
                 <BetterAuthProvider>
                     <RootProvider>
                         <CreditsProvider>
@@ -122,7 +116,6 @@ export default function ParentLayout({
                         </CreditsProvider>
                     </RootProvider>
                 </BetterAuthProvider>
-                {/* </PostHogProvider> */}
             </body>
         </html>
     );
