@@ -42,6 +42,7 @@
         "@repo/common": "*",
         "@repo/shared": "*",
         "@repo/ui": "*",
+        "ai": "^4.3.16",
         "@supabase/ssr": "^0.4.0",
         "@supabase/supabase-js": "^2.44.4",
         "@tabler/icons-react": "^3.30.0",
@@ -65,7 +66,6 @@
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "cmdk": "^1.0.0",
-        "dexie": "^4.0.11",
         "dotenv": "^16.5.0",
         "drizzle-orm": "^0.44.2",
         "duck-duck-scrape": "^2.2.5",
@@ -146,7 +146,6 @@
         "prettier-plugin-tailwindcss": "^0.6.5",
         "tailwindcss": "3",
         "typescript": "^5",
-        "vtchat": "/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat",
         "yarn": "^1.22.22"
     }
 }
