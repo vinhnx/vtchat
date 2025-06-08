@@ -7,9 +7,7 @@ const ChatInput = dynamic(
     () => import('@repo/common/components').then(mod => ({ default: mod.ChatInput })),
     {
         ssr: false,
-        loading: () => (
-            <div className="flex h-16 w-full items-center justify-center">Loading...</div>
-        ),
+        loading: () => <p className="text-muted-foreground text-sm">Loading...</p>,
     }
 );
 

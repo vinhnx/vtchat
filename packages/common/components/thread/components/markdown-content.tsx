@@ -205,7 +205,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     return (
         <ErrorBoundary fallback={<ErrorPlaceholder />}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<p className="text-muted-foreground text-sm">Loading...</p>}>
                 <MDXRemote {...mdx} components={mdxComponents} />
             </Suspense>
         </ErrorBoundary>

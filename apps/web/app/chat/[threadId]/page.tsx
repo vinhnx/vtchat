@@ -2,10 +2,10 @@
 import { TableOfMessages, Thread } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 
-const ChatSessionPage = ({ params }: { params: { threadId: string } }) => {
+const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) => {
     const router = useRouter();
     const isGenerating = useChatStore(state => state.isGenerating);
     const [shouldScroll, setShouldScroll] = useState(isGenerating);
@@ -15,6 +15,9 @@ const ChatSessionPage = ({ params }: { params: { threadId: string } }) => {
     });
     const switchThread = useChatStore(state => state.switchThread);
     const getThread = useChatStore(state => state.getThread);
+
+    // Unwrap the params Promise
+    const { threadId } = use(params);
 
     useEffect(() => {
         if (isGenerating) {
@@ -28,7 +31,6 @@ const ChatSessionPage = ({ params }: { params: { threadId: string } }) => {
     }, [isGenerating]);
 
     useEffect(() => {
-        const { threadId } = params;
         if (!threadId) {
             return;
         }
@@ -39,7 +41,7 @@ const ChatSessionPage = ({ params }: { params: { threadId: string } }) => {
                 router.push('/chat');
             }
         });
-    }, [params]);
+    }, [threadId, getThread, switchThread, router]);
 
     return (
         <div
