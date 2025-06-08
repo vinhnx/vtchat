@@ -391,7 +391,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 imageAttachment,
             });
 
-            if (hasApiKeyForChatMode(mode)) {
+            if (hasApiKeyForChatMode(mode, isSignedIn)) {
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);
