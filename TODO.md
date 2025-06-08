@@ -3,6 +3,7 @@
 [] sync .env.local keys between .env.example, but keep .env.local secrets
 
 --
+
 [] make sure /plus route is protected bby login
 
 --
@@ -111,17 +112,6 @@ Generate the plan, scheme, and TODO list. For TODO items, suggest relevant files
 
 --
 
-[x] handle login check for input bar accessory actions (examplePrompts.ts)
-[x] add menu option preference to show or hide examplePrompts.ts bar
-[x] handle login check for action before exe 'send message' button
-[x] handle login check for models dropdown list
-[x] handle login check for web search toggle and file attachment button
-[x] add terms, condition pages to settings panel
-[x] new pricing page with animated components and environment-based configuration
-[x] revamp /plus layout and wording using PRICING_CONFIG (no hardcoded values)
-[x] check dev env creem.io webhook guide - Created comprehensive WEBHOOK_SETUP.md
-[x] remove plausible analytics tracking from all components
-
 # IMPORTANT
 
 ### VT+ subscription product description brief specs
@@ -152,10 +142,6 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 
 [] handle current free -> anonymous flow <https://www.better-auth.com/docs/plugins/anonymous>
 [] use plunk for email provider <https://app.useplunk.com/>
-
---
-
-1. remove /success page
 
 --
 
