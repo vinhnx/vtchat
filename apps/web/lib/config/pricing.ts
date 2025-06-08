@@ -2,23 +2,23 @@
 export const PRICING_CONFIG = {
     // Product information
     product: {
-        name: 'VT+',
-        description: 'For everyday productivity',
-        id: process.env.CREEM_PRODUCT_ID,
+        name: process.env.PRODUCT_NAME || 'VT+',
+        description: process.env.PRODUCT_DESCRIPTION || 'For everyday productivity',
+        id: process.env.CREEM_PRODUCT_ID || '',
     },
 
     // Pricing details
     pricing: {
         free: {
-            price: 9.99,
+            price: 0,
             currency: 'USD',
             interval: 'month',
             features: [],
         },
         plus: {
-            price: parseFloat(process.env.VT_PLUS_PRICE || '0.00'),
-            currency: process.env.PRICING_CURRENCY,
-            interval: process.env.PRICING_INTERVAL,
+            price: parseFloat(process.env.VT_PLUS_PRICE || '9.99'),
+            currency: process.env.PRICING_CURRENCY || 'USD',
+            interval: process.env.PRICING_INTERVAL || 'month',
             features: [
                 {
                     name: 'Pro Search',
@@ -51,7 +51,7 @@ export const PRICING_CONFIG = {
 
     // Rate limiting
     limits: {
-        freeDaily: parseInt(process.env.FREE_TIER_DAILY_LIMIT || '', 0),
+        freeDaily: parseInt(process.env.FREE_TIER_DAILY_LIMIT || '10', 10),
     },
 } as const;
 
