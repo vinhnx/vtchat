@@ -54,7 +54,7 @@ const loadInitialData = async () => {
         useWebSearch,
         chatMode,
         customInstructions,
-        showSuggestions: config.showSuggestions ?? true,
+        showSuggestions: false, // Always disable suggestions
     };
 };
 
@@ -460,7 +460,7 @@ export const useChatStore = create(
             isAuthenticated: false,
             isFetched: false,
         },
-        showSuggestions: true,
+        showSuggestions: false, // Always disabled
 
         setCustomInstructions: (customInstructions: string) => {
             const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
@@ -492,9 +492,14 @@ export const useChatStore = create(
         },
 
         setShowSuggestions: (showSuggestions: boolean) => {
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ showSuggestions }));
+            // Always disable suggestions regardless of input value
+            const disabledSuggestions = false;
+            localStorage.setItem(
+                CONFIG_KEY,
+                JSON.stringify({ showSuggestions: disabledSuggestions })
+            );
             set(state => {
-                state.showSuggestions = showSuggestions;
+                state.showSuggestions = disabledSuggestions;
             });
         },
 

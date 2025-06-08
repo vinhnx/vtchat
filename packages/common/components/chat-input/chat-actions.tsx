@@ -70,6 +70,13 @@ export const modelOptions = [
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
     },
     {
+        label: 'GPT 4.1 Mini',
+        value: ChatMode.GPT_4_1_Mini,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
+    },
+    {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
         webSearch: true,
@@ -82,13 +89,6 @@ export const modelOptions = [
         webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
-    },
-    {
-        label: 'GPT 4.1 Mini',
-        value: ChatMode.GPT_4_1_Mini,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
     },
     {
         label: 'o4 mini',
@@ -105,11 +105,32 @@ export const modelOptions = [
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
     },
     {
+        label: 'Gemini 2.0 Flash Lite',
+        value: ChatMode.GEMINI_2_0_FLASH_LITE,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH_LITE],
+    },
+    {
+        label: 'Gemini 2.5 Flash Preview',
+        value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_FLASH_PREVIEW],
+    },
+    {
         label: 'Gemini 2.5 Pro',
         value: ChatMode.GEMINI_2_5_PRO,
         webSearch: true,
         icon: undefined,
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
+    },
+    {
+        label: 'Gemini 2.5 Pro Preview',
+        value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
+        webSearch: true,
+        icon: undefined,
+        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO_PREVIEW],
     },
     {
         label: 'Claude 4 Sonnet',
@@ -126,7 +147,7 @@ export const modelOptions = [
         creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
     },
     {
-        label: 'Deepseek R1',
+        label: 'DeepSeek R1',
         value: ChatMode.DEEPSEEK_R1,
         webSearch: true,
         icon: undefined,
@@ -163,9 +184,8 @@ export const ChatModeButton = () => {
     } | null>(null);
 
     const selectedOption =
-        (isChatPage
-            ? [...chatOptions, ...modelOptions].find(option => option.value === chatMode)
-            : [...modelOptions].find(option => option.value === chatMode)) ?? modelOptions[0];
+        [...chatOptions, ...modelOptions].find(option => option.value === chatMode) ??
+        modelOptions[0];
 
     const currentModeConfig = ChatModeConfig[chatMode];
     const isCurrentModeGated = !!(
@@ -356,44 +376,43 @@ export const ChatModeOptions = ({
             side="bottom"
             className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
         >
-            {isChatPage && (
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => {
-                        const config = ChatModeConfig[option.value];
-                        const isGated = !!(config?.requiredFeature || config?.requiredPlan);
+            {/* Always show Advanced Mode options regardless of page context */}
+            <DropdownMenuGroup>
+                <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
+                {chatOptions.map(option => {
+                    const config = ChatModeConfig[option.value];
+                    const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
-                        return (
-                            <DropdownMenuItem
-                                key={option.label}
-                                onSelect={() => handleModeSelect(option.value)}
-                                className={cn('h-auto', isGated && 'opacity-80')}
-                            >
-                                <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                    <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
-                                    <div className="flex flex-col gap-0">
-                                        <p className="m-0 text-sm font-medium">
-                                            {option.label}
-                                            {isGated && (
-                                                <span className="ml-1 text-xs text-blue-600">
-                                                    (VT+)
-                                                </span>
-                                            )}
-                                        </p>
-                                        {option.description && (
-                                            <p className="text-muted-foreground text-xs font-light">
-                                                {option.description}
-                                            </p>
+                    return (
+                        <DropdownMenuItem
+                            key={option.label}
+                            onSelect={() => handleModeSelect(option.value)}
+                            className={cn('h-auto', isGated && 'opacity-80')}
+                        >
+                            <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
+                                <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
+                                <div className="flex flex-col gap-0">
+                                    <p className="m-0 text-sm font-medium">
+                                        {option.label}
+                                        {isGated && (
+                                            <span className="ml-1 text-xs text-blue-600">
+                                                (VT+)
+                                            </span>
                                         )}
-                                    </div>
-                                    <div className="flex-1" />
-                                    {config?.isNew && <NewIcon />}
+                                    </p>
+                                    {option.description && (
+                                        <p className="text-muted-foreground text-xs font-light">
+                                            {option.description}
+                                        </p>
+                                    )}
                                 </div>
-                            </DropdownMenuItem>
-                        );
-                    })}
-                </DropdownMenuGroup>
-            )}
+                                <div className="flex-1" />
+                                {config?.isNew && <NewIcon />}
+                            </div>
+                        </DropdownMenuItem>
+                    );
+                })}
+            </DropdownMenuGroup>
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Models</DropdownMenuLabel>
                 {modelOptions.map(option => {
