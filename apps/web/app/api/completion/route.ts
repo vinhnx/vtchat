@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import { ChatModeConfig } from '@repo/shared/config';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
-import { checkVTPlusAccess, checkRateLimit } from '../subscription/access-control';
+import { checkRateLimit, checkVTPlusAccess } from '../subscription/access-control';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -83,14 +83,8 @@ export async function POST(request: NextRequest) {
                     remaining: rateLimitResult.remaining || 0,
                     resetTime: rateLimitResult.resetTime?.toISOString(),
                 }),
-                {
-                    status: 429,
-                    headers: { 'Content-Type': 'application/json' },
-                }
+                { status: 429, headers: { 'Content-Type': 'application/json' } }
             );
-        }
-                headers: { 'Content-Type': 'application/json' },
-            });
         }
 
         const enhancedHeaders = {

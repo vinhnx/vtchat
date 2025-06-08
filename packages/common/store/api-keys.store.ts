@@ -1,7 +1,6 @@
 import { ChatMode } from '@repo/shared/config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useSession } from '@repo/shared/lib/auth-client';
 
 export type ApiKeys = {
     OPENAI_API_KEY?: string;
@@ -20,7 +19,7 @@ type ApiKeysState = {
     removeKey: (provider: keyof ApiKeys) => void;
     clearAllKeys: () => void;
     getAllKeys: () => ApiKeys;
-    hasApiKeyForChatMode: (chatMode: ChatMode) => boolean;
+    hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => boolean;
 };
 
 export const useApiKeysStore = create<ApiKeysState>()(
@@ -28,15 +27,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
         (set, get) => ({
             keys: {},
             setKey: (provider, key) => {
-                const { data: session } = useSession();
-                if (!session) return;
+                // const { data: session } = useSession(); // Removed hook call
+                // if (!session) return; // Caller should handle session check
                 set(state => ({
                     keys: { ...state.keys, [provider]: key },
                 }));
             },
             removeKey: provider => {
-                const { data: session } = useSession();
-                if (!session) return;
                 set(state => {
                     const newKeys = { ...state.keys };
                     delete newKeys[provider];
@@ -44,14 +41,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 });
             },
             clearAllKeys: () => {
-                const { data: session } = useSession();
-                if (!session) return;
                 set({ keys: {} });
             },
             getAllKeys: () => get().keys,
-            hasApiKeyForChatMode: (chatMode: ChatMode) => {
-                const { data: session } = useSession();
-                if (!session) return false;
+            hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
+                // Added isSignedIn parameter
+                // const { data: session } = useSession(); // Removed hook call
+                if (!isSignedIn) return false; // Use passed isSignedIn
                 const apiKeys = get().keys;
                 switch (chatMode) {
                     case ChatMode.O4_Mini:
