@@ -1,4 +1,3 @@
-import { LangfuseTraceClient } from 'langfuse';
 import { Context, ContextSchemaDefinition } from './context';
 import { WorkflowEngine } from './engine';
 import { EventSchemaDefinition, TypedEventEmitter } from './events';
@@ -9,7 +8,6 @@ export type WorkflowBuilderOptions<
     TEvent extends EventSchemaDefinition = any,
     TContext extends ContextSchemaDefinition = any,
 > = {
-    trace?: LangfuseTraceClient;
     initialEventState?: Record<string, any>;
     events?: TypedEventEmitter<TEvent>;
     context?: Context<TContext>;
@@ -44,7 +42,6 @@ export class WorkflowBuilder<
     build(): WorkflowEngine<TEvent, TContext> {
         this.workflowInstance = new WorkflowEngine<TEvent, TContext>({
             id: this.workflowId,
-            trace: this.options.trace,
             initialEventState: this.options.initialEventState,
             events: this.options.events,
             context: this.options.context,

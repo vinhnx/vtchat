@@ -1,4 +1,3 @@
-import { LangfuseTraceClient } from 'langfuse';
 import { Context, ContextSchemaDefinition } from './context';
 import { EventSchemaDefinition, TypedEventEmitter } from './events';
 import { ExecutionContext } from './execution-context';
@@ -19,7 +18,6 @@ export type TaskParams<
     data?: any;
     executionContext: ExecutionContext;
     abort: (graceful: boolean) => void;
-    trace?: LangfuseTraceClient;
     events?: TypedEventEmitter<TEvent>;
     context?: Context<TContext>;
     config?: WorkflowConfig;

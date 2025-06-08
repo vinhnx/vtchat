@@ -245,25 +245,62 @@ export const WebSearchButton = () => {
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const { push } = useRouter();
 
     if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
         return null;
 
+    const handleWebSearchToggle = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
+        setUseWebSearch(!useWebSearch);
+    };
+
     return (
-        <Button
-            size={useWebSearch ? 'sm' : 'icon-sm'}
-            tooltip="Web Search"
-            variant={useWebSearch ? 'secondary' : 'ghost'}
-            className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
-            onClick={() => setUseWebSearch(!useWebSearch)}
-        >
-            <IconWorld
-                size={16}
-                strokeWidth={2}
-                className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
-            />
-            {useWebSearch && <p className="text-xs">Web</p>}
-        </Button>
+        <>
+            <Button
+                size={useWebSearch ? 'sm' : 'icon-sm'}
+                tooltip="Web Search"
+                variant={useWebSearch ? 'secondary' : 'ghost'}
+                className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
+                onClick={handleWebSearchToggle}
+            >
+                <IconWorld
+                    size={16}
+                    strokeWidth={2}
+                    className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
+                />
+                {useWebSearch && <p className="text-xs">Web</p>}
+            </Button>
+
+            {/* Login prompt dialog */}
+            {showLoginPrompt && (
+                <AlertDialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Login Required</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Please log in to use web search functionality.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={() => {
+                                    setShowLoginPrompt(false);
+                                    push('/login');
+                                }}
+                            >
+                                Login
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+        </>
     );
 };
 
@@ -314,7 +351,16 @@ export const ChatModeOptions = ({
         const config = ChatModeConfig[mode];
         const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
 
-        // Check auth requirement first
+        // Check if user is signed in for any model selection
+        if (!isSignedIn) {
+            onGatedFeature({
+                title: 'Login Required',
+                message: 'Please log in to select and use different AI models.',
+            });
+            return;
+        }
+
+        // Check auth requirement
         if (config?.isAuthRequired && !isSignedIn) {
             push('/login');
             return;

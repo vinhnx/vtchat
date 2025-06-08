@@ -130,7 +130,6 @@
         "openai": "^4.47.1",
         "pdf-parse": "^1.1.1",
         "pdfjs-dist": "3.11.174",
-        "plausible-tracker": "^0.3.9",
         "prismjs": "^1.29.0",
         "raw-loader": "^4.0.2",
         "react-markdown": "^9.0.3",
@@ -209,7 +208,6 @@
         "dotenv": "^16.4.5",
         "js-tiktoken": "^1.0.19",
         "json-schema-to-zod": "^2.6.0",
-        "langfuse": "^3.36.0",
         "openai": "^4.24.1",
         "together-ai": "^0.13.0",
         "uuid": "^11.0.5",
@@ -1919,10 +1917,6 @@
 
     "langchain": ["langchain@0.2.20", "", { "dependencies": { "@langchain/core": ">=0.2.21 <0.3.0", "@langchain/openai": ">=0.1.0 <0.3.0", "@langchain/textsplitters": "~0.0.0", "binary-extensions": "^2.2.0", "js-tiktoken": "^1.0.12", "js-yaml": "^4.1.0", "jsonpointer": "^5.0.1", "langsmith": "^0.1.56-rc.1", "openapi-types": "^12.1.3", "p-retry": "4", "uuid": "^10.0.0", "yaml": "^2.2.1", "zod": "^3.22.4", "zod-to-json-schema": "^3.22.3" }, "peerDependencies": { "@aws-sdk/client-s3": "*", "@aws-sdk/client-sagemaker-runtime": "*", "@aws-sdk/client-sfn": "*", "@aws-sdk/credential-provider-node": "*", "@azure/storage-blob": "*", "@browserbasehq/sdk": "*", "@gomomento/sdk": "*", "@gomomento/sdk-core": "*", "@gomomento/sdk-web": "^1.51.1", "@langchain/anthropic": "*", "@langchain/aws": "*", "@langchain/cohere": "*", "@langchain/google-genai": "*", "@langchain/google-vertexai": "*", "@langchain/groq": "*", "@langchain/mistralai": "*", "@langchain/ollama": "*", "@mendable/firecrawl-js": "*", "@notionhq/client": "*", "@pinecone-database/pinecone": "*", "@supabase/supabase-js": "*", "@vercel/kv": "*", "@xata.io/client": "*", "apify-client": "*", "assemblyai": "*", "axios": "*", "cheerio": "*", "chromadb": "*", "convex": "*", "couchbase": "*", "d3-dsv": "*", "epub2": "*", "fast-xml-parser": "*", "handlebars": "^4.7.8", "html-to-text": "*", "ignore": "*", "ioredis": "*", "jsdom": "*", "mammoth": "*", "mongodb": "*", "node-llama-cpp": "*", "notion-to-md": "*", "officeparser": "*", "pdf-parse": "*", "peggy": "^3.0.2", "playwright": "*", "puppeteer": "*", "pyodide": ">=0.24.1 <0.27.0", "redis": "*", "sonix-speech-recognition": "*", "srt-parser-2": "*", "typeorm": "*", "weaviate-ts-client": "*", "web-auth-library": "*", "ws": "*", "youtube-transcript": "*", "youtubei.js": "*" }, "optionalPeers": ["@aws-sdk/client-s3", "@aws-sdk/client-sagemaker-runtime", "@aws-sdk/client-sfn", "@aws-sdk/credential-provider-node", "@azure/storage-blob", "@browserbasehq/sdk", "@gomomento/sdk", "@gomomento/sdk-core", "@gomomento/sdk-web", "@langchain/anthropic", "@langchain/aws", "@langchain/cohere", "@langchain/google-genai", "@langchain/google-vertexai", "@langchain/groq", "@langchain/mistralai", "@langchain/ollama", "@mendable/firecrawl-js", "@notionhq/client", "@pinecone-database/pinecone", "@supabase/supabase-js", "@vercel/kv", "@xata.io/client", "apify-client", "assemblyai", "axios", "cheerio", "chromadb", "convex", "couchbase", "d3-dsv", "epub2", "fast-xml-parser", "handlebars", "html-to-text", "ignore", "ioredis", "jsdom", "mammoth", "mongodb", "node-llama-cpp", "notion-to-md", "officeparser", "pdf-parse", "peggy", "playwright", "puppeteer", "pyodide", "redis", "sonix-speech-recognition", "srt-parser-2", "typeorm", "weaviate-ts-client", "web-auth-library", "ws", "youtube-transcript", "youtubei.js"] }, "sha512-tbels6Rr524iMM3VOQ4aTGnEOOjAA1BQuBR8u/8gJ2yT48lMtIQRAN32Y4KVjKK+hEWxHHlmLBrtgLpTphFjNA=="],
 
-    "langfuse": ["langfuse@3.37.4", "", { "dependencies": { "langfuse-core": "^3.37.4" } }, "sha512-MxnJXkS3xqlydMKWouanghkWZb8OqoDns+NIAZoD+y/WQh1mtx40n8c0dOaT7OahzSfB9ZbWj+j+yqJww/PJYQ=="],
-
-    "langfuse-core": ["langfuse-core@3.37.4", "", { "dependencies": { "mustache": "^4.2.0" } }, "sha512-yqXkQ1/8V9TxF8q6oULWPQ4cYZlUs1egN6JfGuhJSWb5x2Ymgt4Qh9of/Kz//CTM7IZgzZqvrlnx0VXhNKDITg=="],
-
     "langsmith": ["langsmith@0.1.68", "", { "dependencies": { "@types/uuid": "^10.0.0", "commander": "^10.0.1", "p-queue": "^6.6.2", "p-retry": "4", "semver": "^7.6.3", "uuid": "^10.0.0" }, "peerDependencies": { "openai": "*" }, "optionalPeers": ["openai"] }, "sha512-otmiysWtVAqzMx3CJ4PrtUBhWRG5Co8Z4o7hSZENPjlit9/j3/vm3TSvbaxpDYakZxtMjhkcJTqrdYFipISEiQ=="],
 
     "language-subtag-registry": ["language-subtag-registry@0.3.23", "", {}, "sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ=="],
@@ -2314,8 +2308,6 @@
     "pirates": ["pirates@4.0.7", "", {}, "sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA=="],
 
     "pkce-challenge": ["pkce-challenge@5.0.0", "", {}, "sha512-ueGLflrrnvwB3xuo/uGob5pd5FN7l0MsLf0Z87o/UQmRtwjvfylfc9MurIxRAWywCYTgrvpXBcqjV4OfCYGCIQ=="],
-
-    "plausible-tracker": ["plausible-tracker@0.3.9", "", {}, "sha512-hMhneYm3GCPyQon88SZrVJx+LlqhM1kZFQbuAgXPoh/Az2YvO1B6bitT9qlhpiTdJlsT5lsr3gPmzoVjb5CDXA=="],
 
     "pluralize": ["pluralize@8.0.0", "", {}, "sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA=="],
 

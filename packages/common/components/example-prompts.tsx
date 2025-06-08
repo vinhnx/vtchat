@@ -1,5 +1,14 @@
-import { useChatStore } from '@repo/common/store';
-import { Button } from '@repo/ui';
+import { useAppStore, useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@repo/ui';
 import {
     IconBook,
     IconBulb,
@@ -8,6 +17,7 @@ import {
     IconQuestionMark,
 } from '@tabler/icons-react';
 import { Editor } from '@tiptap/react';
+import { useState } from 'react';
 
 export const examplePrompts = {
     howTo: [
@@ -69,31 +79,75 @@ const categoryIcons = {
 };
 
 export const ExamplePrompts = () => {
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const showExamplePrompts = useAppStore(state => state.showExamplePrompts);
     const editor: Editor | undefined = useChatStore(state => state.editor);
+
     const handleCategoryClick = (category: keyof typeof examplePrompts) => {
         console.log('editor', editor);
         if (!editor) return;
+
+        // Check if user is signed in before allowing interaction
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
+
         const randomPrompt = getRandomPrompt(category);
         editor.commands.clearContent();
         editor.commands.insertContent(randomPrompt);
     };
 
+    // Don't show if user has disabled it in settings
+    if (!showExamplePrompts) return null;
+
     if (!editor) return null;
 
     return (
-        <div className="animate-fade-in mb-8 flex w-full flex-wrap justify-center gap-2 p-6 transition-all duration-1000">
-            {Object.entries(categoryIcons).map(([category, value], index) => (
-                <Button
-                    key={index}
-                    variant="bordered"
-                    rounded="full"
-                    size="sm"
-                    onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
-                >
-                    <value.icon size={16} className={'text-muted-foreground/50'} />
-                    {value.name}
-                </Button>
-            ))}
-        </div>
+        <>
+            <div className="animate-fade-in mb-8 flex w-full flex-wrap justify-center gap-2 p-6 transition-all duration-1000">
+                {Object.entries(categoryIcons).map(([category, value], index) => (
+                    <Button
+                        key={index}
+                        variant="bordered"
+                        rounded="full"
+                        size="sm"
+                        onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
+                    >
+                        <value.icon size={16} className={'text-muted-foreground/50'} />
+                        {value.name}
+                    </Button>
+                ))}
+            </div>
+
+            {/* Login prompt dialog */}
+            {showLoginPrompt && (
+                <Dialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
+                    <DialogContent className="sm:max-w-[425px]" ariaTitle="Login Required">
+                        <DialogHeader>
+                            <DialogTitle>Login Required</DialogTitle>
+                            <DialogDescription>
+                                Please log in to use example prompts and start chatting.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button variant="outlined" onClick={() => setShowLoginPrompt(false)}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setShowLoginPrompt(false);
+                                    window.location.href = '/login';
+                                }}
+                            >
+                                Login
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
+        </>
     );
 };

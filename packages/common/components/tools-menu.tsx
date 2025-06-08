@@ -12,9 +12,9 @@ import {
     DropdownMenuTrigger,
 } from '@repo/ui';
 
+import { useSession } from '@repo/shared/lib/auth-client';
 import { IconCheck, IconTools } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
-import { useSession } from '@repo/shared/lib/auth-client';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';

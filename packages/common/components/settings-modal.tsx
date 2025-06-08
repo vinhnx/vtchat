@@ -424,6 +424,8 @@ interface PersonalizationSettingsProps {
 export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProps) => {
     const customInstructions = useChatStore(state => state.customInstructions);
     const setCustomInstructions = useChatStore(state => state.setCustomInstructions);
+    const showExamplePrompts = useAppStore(state => state.showExamplePrompts);
+    const setShowExamplePrompts = useAppStore(state => state.setShowExamplePrompts);
 
     const { editor } = useChatEditor({
         charLimit: MAX_CHAR_LIMIT,
@@ -448,6 +450,31 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                 <div className="flex items-center gap-3">
                     <span className="text-sm font-medium">Theme mode:</span>
                     <ModeToggle onClose={onClose} />
+                </div>
+            </div>
+
+            {/* Interface Preferences Section */}
+            <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-base font-semibold">Interface</h3>
+                    <p className="text-muted-foreground text-sm">
+                        Customize your interface preferences.
+                    </p>
+                </div>
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                        <span className="text-sm font-medium">Show Example Prompts</span>
+                        <p className="text-muted-foreground text-xs">
+                            Display example prompt buttons on the home screen
+                        </p>
+                    </div>
+                    <Button
+                        variant={showExamplePrompts ? 'default' : 'outlined'}
+                        size="sm"
+                        onClick={() => setShowExamplePrompts(!showExamplePrompts)}
+                    >
+                        {showExamplePrompts ? 'On' : 'Off'}
+                    </Button>
                 </div>
             </div>
 

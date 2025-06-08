@@ -6,6 +6,8 @@ export const SETTING_TABS = {
     API_KEYS: 'api-keys',
     MCP_TOOLS: 'mcp-tools',
     PERSONALIZATION: 'personalization',
+    TERMS: 'terms',
+    PRIVACY: 'privacy',
 } as const;
 
 type SideDrawerProps = {
@@ -25,6 +27,8 @@ type State = {
     sideDrawer: SideDrawerProps;
     openSideDrawer: (props: SideDrawerProps) => void;
     dismissSideDrawer: () => void;
+    // User preferences
+    showExamplePrompts: boolean;
 };
 
 type Actions = {
@@ -37,6 +41,8 @@ type Actions = {
     openSideDrawer: (props: Omit<SideDrawerProps, 'open'>) => void;
     updateSideDrawer: (props: Partial<SideDrawerProps>) => void;
     dismissSideDrawer: () => void;
+    // User preference actions
+    setShowExamplePrompts: (show: boolean) => void;
 };
 
 // Initialize sidebar state with auto-hide behavior as default
@@ -45,9 +51,27 @@ const initializeSidebarState = () => {
     return { isOpen: false, animationDisabled: false };
 };
 
+// Initialize user preferences from localStorage
+const initializePreferences = () => {
+    if (typeof window === 'undefined') {
+        return { showExamplePrompts: true };
+    }
+
+    const saved = localStorage.getItem('vtchat-preferences');
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch {
+            return { showExamplePrompts: true };
+        }
+    }
+    return { showExamplePrompts: true };
+};
+
 export const useAppStore = create(
     immer<State & Actions>((set, get) => {
         const { isOpen: initialSidebarOpen, animationDisabled } = initializeSidebarState();
+        const { showExamplePrompts } = initializePreferences();
 
         return {
             isSidebarOpen: initialSidebarOpen,
@@ -56,6 +80,7 @@ export const useAppStore = create(
             isSettingsOpen: false,
             settingTab: 'api-keys',
             showSignInModal: false,
+            showExamplePrompts,
             setIsSidebarOpen: (prev: (prev: boolean) => boolean) => {
                 const newState = prev(get().isSidebarOpen);
                 set({ isSidebarOpen: newState });
@@ -69,6 +94,15 @@ export const useAppStore = create(
             setSettingTab: (tab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS]) =>
                 set({ settingTab: tab }),
             setShowSignInModal: (show: boolean) => set({ showSignInModal: show }),
+            setShowExamplePrompts: (show: boolean) => {
+                set({ showExamplePrompts: show });
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem(
+                        'vtchat-preferences',
+                        JSON.stringify({ showExamplePrompts: show })
+                    );
+                }
+            },
             sideDrawer: { open: false, title: '', renderContent: () => null, badge: undefined },
             openSideDrawer: (props: Omit<SideDrawerProps, 'open'>) => {
                 set({ sideDrawer: { ...props, open: true } });

@@ -213,3 +213,31 @@ mark.prompt-highlight {
     background: hsl(var(--background));
     border-bottom-right-radius: 10px;
 }
+
+@keyframes background-shine {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes border-width {
+    from {
+        width: 10px;
+        opacity: 0;
+    }
+    to {
+        width: 100px;
+        opacity: 1;
+    }
+}
+
+.animate-background-shine {
+    animation: background-shine 3s ease-in-out infinite;
+}
+
+.animate-border-width {
+    animation: border-width 3s ease-in-out infinite;
+}
