@@ -1,10 +1,9 @@
 'use client';
 
-import { FeatureSlug, PlanSlug, PLANS } from '@repo/shared/types/subscription';
-import { isDevTestMode } from '@repo/shared/utils';
-import { useCallback } from 'react';
-import { useSubscription, UserProfile } from './use-subscription'; // Changed from use-subscription-status
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
+import { useCallback } from 'react';
+import { useSubscription } from './use-subscription'; // Changed from use-subscription-status
 
 /**
  * Custom hook for optimized subscription access checking.
@@ -17,26 +16,20 @@ export function useSubscriptionAccess() {
     // Use the refactored useSubscription hook
     const {
         subscriptionStatus, // This is UserClientSubscriptionStatus
-        userProfile,        // This is UserProfile | null
+        userProfile, // This is UserProfile | null
         isLoading,
         error,
-        refetch,            // Renamed from refreshSubscriptionStatus for consistency
+        refetch, // Renamed from refreshSubscriptionStatus for consistency
     } = useSubscription();
 
     const isLoaded = !isLoading;
     // isSignedIn can be based on userProfile or if subscriptionStatus indicates an active, known user
     const isSignedIn = !!userProfile && subscriptionStatus.status !== 'none';
 
-
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
-            if (isDevTestMode()) {
-                console.log('🚧 DEV TEST MODE: Bypassing subscription access check in useSubscriptionAccess', options);
-                return true;
-            }
-
             if (!isLoaded || !subscriptionStatus || !subscriptionStatus.isActive) {
-                 // If not loaded, or no status, or overall status is not active, then no access.
+                // If not loaded, or no status, or overall status is not active, then no access.
                 return false;
             }
 
@@ -76,7 +69,9 @@ export function useSubscriptionAccess() {
 
             // If permission is provided (legacy or future use)
             if (options.permission) {
-                console.warn(`Permission checks ('${options.permission}') are not fully implemented in useSubscriptionAccess.`);
+                console.warn(
+                    `Permission checks ('${options.permission}') are not fully implemented in useSubscriptionAccess.`
+                );
                 return false;
             }
 
@@ -85,12 +80,10 @@ export function useSubscriptionAccess() {
         [isLoaded, subscriptionStatus]
     );
 
-    const canAccess = useCallback(
-        (feature: FeatureSlug) => hasAccess({ feature }),
-        [hasAccess]
-    );
+    const canAccess = useCallback((feature: FeatureSlug) => hasAccess({ feature }), [hasAccess]);
 
-    const hasPlanAccess = useCallback( // Renamed from hasPlan to avoid conflict with local var
+    const hasPlanAccess = useCallback(
+        // Renamed from hasPlan to avoid conflict with local var
         (plan: PlanSlug) => hasAccess({ plan }),
         [hasAccess]
     );

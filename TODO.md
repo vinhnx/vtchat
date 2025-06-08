@@ -1,6 +1,9 @@
 # TODO List
 
-[] <https://magicui.design/docs/components/>
+--
+[x] move footer (terms, condition) of /chat to side menu menu profile popup
+[x] apps/web/app/chat/page.tsx update this page
+[x] remove NEXT_PUBLIC_DEV_TEST_MODE and entire dev mode by pass
 --
 
 [] new pricing page use V7 -> <https://v0.dev/chat/vt-subscription-layout-CWqgkAmbme9>
@@ -9,16 +12,14 @@
 [] revamp /plus layout and wording, don't hard code
 --
 
---
-
 [] check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
 --
 
-review and continue where you left off,
-IMPLEMENT COMPLETE REVAMP SYSTEM
 --
 
-VT+ subscription product description brief
+# IMPORTANT
+
+### VT+ subscription product description brief specs
 
 name: VT+
 product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. don't hardcode value)

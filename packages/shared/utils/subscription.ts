@@ -4,8 +4,7 @@
  * Client-side utilities for checking subscription access.
  */
 
-import { FeatureSlug, PLANS, PlanSlug, PlanConfig } from '../types/subscription';
-import { isDevTestMode } from './dev-test-mode';
+import { FeatureSlug, PlanConfig, PLANS, PlanSlug } from '../types/subscription';
 import { SubscriptionStatusEnum } from '../types/subscription-status';
 
 // Type for subscription access context
@@ -84,7 +83,6 @@ export interface UserClientSubscriptionStatus {
     source: 'creem' | 'none';
 }
 
-
 /**
  * Check if a user has VT+ plan
  *
@@ -92,12 +90,6 @@ export interface UserClientSubscriptionStatus {
  * if the user has an active VT+ subscription.
  */
 export function hasVtPlusPlan(context: SubscriptionContext): boolean {
-    // DEV TEST MODE: Bypass subscription checks
-    if (isDevTestMode()) {
-        console.log('🚧 DEV TEST MODE: Bypassing VT+ plan check');
-        return true;
-    }
-
     const status = getSubscriptionStatus(context);
     return status.isVtPlus && status.isActive;
 }
@@ -106,12 +98,6 @@ export function hasVtPlusPlan(context: SubscriptionContext): boolean {
  * Check if a user has access to a specific feature
  */
 export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): boolean {
-    // DEV TEST MODE: Bypass feature checks
-    if (isDevTestMode()) {
-        console.log('🚧 DEV TEST MODE: Bypassing feature check for', feature);
-        return true;
-    }
-
     const status = getSubscriptionStatus(context);
     if (!status.isActive) return false; // If overall subscription is not active, no features are accessible
 
@@ -154,12 +140,6 @@ export function checkSubscriptionAccess(
     context: SubscriptionContext,
     options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }
 ): boolean {
-    // DEV TEST MODE: Bypass all subscription checks
-    if (isDevTestMode()) {
-        console.log('🚧 DEV TEST MODE: Bypassing subscription access check', options);
-        return true;
-    }
-
     const { feature, plan, permission } = options;
 
     // Check feature access
@@ -242,18 +222,20 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
 
     let status: SubscriptionStatusEnum;
     let overallIsActive = subscriptionData.isActive; // Provider's status
-    const parsedExpiresAt = subscriptionData.expiresAt ? new Date(subscriptionData.expiresAt) : undefined;
+    const parsedExpiresAt = subscriptionData.expiresAt
+        ? new Date(subscriptionData.expiresAt)
+        : undefined;
 
     if (parsedExpiresAt && parsedExpiresAt < new Date()) {
         status = SubscriptionStatusEnum.EXPIRED;
         overallIsActive = false; // Overrides provider's status if expired
     } else if (subscriptionData.isActive) {
         status = SubscriptionStatusEnum.ACTIVE;
-    } else if (subscriptionData.source === 'none') { // No subscription record found
+    } else if (subscriptionData.source === 'none') {
+        // No subscription record found
         status = SubscriptionStatusEnum.NONE;
         overallIsActive = false; // Explicitly false if no subscription
-    }
-    else {
+    } else {
         status = SubscriptionStatusEnum.INACTIVE; // e.g. cancelled, payment failed, etc.
         overallIsActive = false;
     }
@@ -263,7 +245,6 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
         status = SubscriptionStatusEnum.ACTIVE; // Free tier is always 'active'
         overallIsActive = true;
     }
-
 
     return {
         currentPlanSlug: subscriptionData.planSlug,
@@ -299,7 +280,12 @@ export function getUserPlan(context: SubscriptionContext): PlanSlug {
 /**
  * Get subscription info for a user (Simplified version, consider deprecating or aligning with getSubscriptionStatus)
  */
-export function getUserSubscription(user: any): { planSlug: PlanSlug; features: FeatureSlug[]; isActive: boolean; expiresAt?: Date } {
+export function getUserSubscription(user: any): {
+    planSlug: PlanSlug;
+    features: FeatureSlug[];
+    isActive: boolean;
+    expiresAt?: Date;
+} {
     // This function seems to duplicate some logic from getCreemSubscriptionData and getSubscriptionStatus.
     // For consistency, it should ideally use getSubscriptionStatus or be refactored.
     // For now, providing a basic mapping based on its original intent.

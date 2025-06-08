@@ -2,7 +2,6 @@
 export * from './chat-input';
 export * from './code-block/code-block';
 export * from './command-search';
-export * from './dev-test-mode-banner';
 export * from './error-boundary';
 export * from './error-placeholder';
 export * from './example-prompts';

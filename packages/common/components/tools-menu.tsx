@@ -14,6 +14,7 @@ import {
 
 import { IconCheck, IconTools } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';
@@ -21,6 +22,8 @@ import { ToolIcon } from './icons';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
     const { mcpConfig, updateSelectedMCP, selectedMCP } = useMcpToolsStore();
     const apiKeys = useApiKeysStore();
     const chatMode = useChatStore(state => state.chatMode);
@@ -28,8 +31,8 @@ export const ToolsMenu = () => {
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const isToolsAvailable = useMemo(
-        () => hasApiKeyForChatMode(chatMode),
-        [chatMode, hasApiKeyForChatMode, apiKeys]
+        () => hasApiKeyForChatMode(chatMode, isSignedIn),
+        [chatMode, hasApiKeyForChatMode, apiKeys, isSignedIn]
     );
 
     const selectedMCPTools = useMemo(() => {

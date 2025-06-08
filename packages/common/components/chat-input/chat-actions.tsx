@@ -243,8 +243,11 @@ export const WebSearchButton = () => {
     const setUseWebSearch = useChatStore(state => state.setUseWebSearch);
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
 
-    if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode)) return null;
+    if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
+        return null;
 
     return (
         <Button
@@ -400,7 +403,7 @@ export const ChatModeOptions = ({
                                 </div>
                                 <div className="flex-1" />
                                 {config?.isNew && <NewIcon />}
-                                {hasApiKeyForChatMode(option.value) && <BYOKIcon />}
+                                {hasApiKeyForChatMode(option.value, isSignedIn) && <BYOKIcon />}
                             </div>
                         </DropdownMenuItem>
                     );
