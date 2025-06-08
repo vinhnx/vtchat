@@ -16,39 +16,36 @@ const bricolage = Bricolage_Grotesque({
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
-    description:
-        'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
+    title: 'VT',
+    description: 'Minimal AI chat application.',
     keywords:
-        'agent, ai, chatbot, assistant, openai, llama, multimodal, tool-use, llm, llms, function-calling, ollama',
+        'agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling',
     authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
     creator: 'Vinh Nguyen',
     publisher: 'Vinh Nguyen',
     openGraph: {
-        title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
-        siteName: 'VT.ai',
-        description:
-            'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
-        url: 'https://vtai.vn',
+        title: 'VT',
+        siteName: 'VT',
+        description: 'Minimal AI chat application.',
+        url: 'https://vtchat.io.vn',
         type: 'website',
         locale: 'en_US',
         images: [
             {
-                url: 'https://vtai.vn/og-image.jpg',
+                url: 'https://vtchat.io.vn/og-image.jpg',
                 width: 1200,
                 height: 630,
-                alt: 'VT.ai Preview',
+                alt: 'VT Preview',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'VT.ai - Go Deeper with AI-Powered Research & Agentic Workflows',
-        site: 'VT.ai',
-        creator: '@llmchat_co',
-        description:
-            'Experience deep, AI-powered research with agentic workflows and a wide variety of models for advanced productivity.',
-        images: ['https://vtai.vn/twitter-image.jpg'],
+        title: 'VT',
+        site: 'VT',
+        creator: '@vinhnx',
+        description: 'Minimal AI chat application.',
+        images: ['https://vtchat.io.vn/twitter-image.jpg'],
     },
     robots: {
         index: true,
@@ -62,7 +59,7 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: 'https://vtai.vn',
+        canonical: 'https://vtchat.io.vn',
     },
 };
 

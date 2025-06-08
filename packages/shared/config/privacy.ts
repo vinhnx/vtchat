@@ -44,5 +44,5 @@ The Service may contain links to third-party websites. We advise you to review t
 
 ### Contact Us
 
-If you have any questions or concerns about this Privacy Policy, please feel free to contact us at [support@vtai.vn](mailto:support@vtai.vn). We will do our best to respond to your inquiries promptly.
+If you have any questions or concerns about this Privacy Policy, please feel free to contact me at vinhnguyen{two}{three}{zero}{eight}@gmail.com (spell out). We will do our best to respond to your inquiries promptly.
 `;

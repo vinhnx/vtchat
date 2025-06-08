@@ -101,6 +101,6 @@ We reserve the right to modify these Terms at any time. If we make material chan
 If you have any questions about these Terms, please contact us at:
 
 VT
-Ho Chi Minh city, Vietnam
-contact@vtai.vn
+An Giang, Vietnam
+contact@vtchat.io.vn
 `;
