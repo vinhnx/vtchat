@@ -39,3 +39,4 @@ TODO.md
 
 # github prompts
 .github/prompts/*
+*.tsbuildinfo

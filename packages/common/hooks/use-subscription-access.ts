@@ -1,20 +1,13 @@
 'use client';
 
-import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { isDevTestMode } from '@repo/shared/utils';
-import {
-    checkSubscriptionAccess,
-    getCurrentPlan,
-    getSubscriptionStatus,
-    hasFeature,
-    hasVtPlusPlan,
-} from '@repo/shared/utils/subscription';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
+import { useSubscriptionStatus } from './use-subscription-status';
 
 /**
  * Custom hook for optimized subscription access checking
- * Combines Better Auth's user session with convenient utility functions
+ * Now uses database-backed subscription status instead of user metadata
  *
  * This hook is optimized for performance and provides a clean API for
  * checking subscription access throughout the application.
@@ -42,25 +35,11 @@ import { useCallback, useMemo } from 'react';
  * }
  */
 export function useSubscriptionAccess() {
-    const { data: session } = useSession();
-    const isLoaded = !!session;
-    const isSignedIn = !!session;
-    const user = session?.user;
+    const { subscriptionStatus, isPlusSubscriber, isLoading, refreshSubscriptionStatus } =
+        useSubscriptionStatus();
 
-    // Memoize the subscription status to avoid recalculations
-    const subscriptionStatus = useMemo(() => {
-        if (!isLoaded) {
-            return null;
-        }
-
-        // Create subscription context with user data
-        const context = {
-            user,
-        };
-
-        return getSubscriptionStatus(context);
-    }, [isLoaded, user]);
-
+    const isLoaded = !isLoading;
+    const isSignedIn = !!subscriptionStatus;
     // Create stable callback for access checking
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
@@ -73,55 +52,56 @@ export function useSubscriptionAccess() {
                 return true;
             }
 
-            if (!isLoaded) return false;
+            if (!isLoaded || !subscriptionStatus) return false;
 
-            const context = {
-                user,
-            };
+            const { feature, plan } = options;
 
-            return checkSubscriptionAccess(context, options);
+            // Check plan access
+            if (plan) {
+                if (plan === PlanSlug.VT_PLUS) {
+                    return isPlusSubscriber;
+                }
+                // Everyone has access to the base plan
+                return true;
+            }
+
+            // Check feature access
+            if (feature) {
+                // VT+ exclusive features
+                const vtPlusFeatures = [
+                    FeatureSlug.DARK_THEME,
+                    FeatureSlug.DEEP_RESEARCH,
+                    FeatureSlug.PRO_SEARCH,
+                    FeatureSlug.ADVANCED_CHAT_MODES,
+                ];
+
+                if (vtPlusFeatures.includes(feature)) {
+                    return isPlusSubscriber;
+                }
+
+                // All other features are available to everyone
+                return true;
+            }
+
+            return false;
         },
-        [isLoaded, user]
+        [isLoaded, subscriptionStatus, isPlusSubscriber]
     );
 
     // Create stable callback for feature checking
     const canAccess = useCallback(
         (feature: FeatureSlug) => {
-            // DEV TEST MODE: Bypass all feature checks
-            if (isDevTestMode()) {
-                console.log('🚧 DEV TEST MODE: Bypassing feature check in hook', feature);
-                return true;
-            }
-
-            if (!isLoaded) return false;
-
-            const context = {
-                user,
-            };
-
-            return hasFeature(context, feature);
+            return hasAccess({ feature });
         },
-        [isLoaded, user]
+        [hasAccess]
     );
 
     // Create stable callback for plan checking
     const hasPlan = useCallback(
         (plan: PlanSlug) => {
-            // DEV TEST MODE: Bypass all plan checks
-            if (isDevTestMode()) {
-                console.log('🚧 DEV TEST MODE: Bypassing plan check in hook', plan);
-                return true;
-            }
-
-            if (!isLoaded) return false;
-
-            const context = {
-                user,
-            };
-
-            return checkSubscriptionAccess(context, { plan });
+            return hasAccess({ plan });
         },
-        [isLoaded, user]
+        [hasAccess]
     );
 
     return {
@@ -135,32 +115,33 @@ export function useSubscriptionAccess() {
         hasPlan,
 
         // Convenience properties
-        currentPlan: subscriptionStatus?.currentPlan || PlanSlug.VT_BASE,
-        isPremium: subscriptionStatus?.isPremium || false,
-        isVtPlus: subscriptionStatus?.isVtPlus || false,
-        isVtBase: subscriptionStatus?.isVtBase || true,
-        canUpgrade: subscriptionStatus?.canUpgrade || true,
+        currentPlan: subscriptionStatus?.plan || 'free',
+        isPremium: isPlusSubscriber,
+        isVtPlus: isPlusSubscriber,
+        isVtBase: !isPlusSubscriber,
+        canUpgrade: !isPlusSubscriber,
 
         // Full subscription status object
         subscriptionStatus,
+
+        // Refresh function
+        refreshSubscriptionStatus,
 
         // Utility functions for complex checks
         hasAnyFeature: useCallback(
             (features: FeatureSlug[]) => {
                 if (!isLoaded) return false;
-                const context = { user };
-                return features.some(feature => hasFeature(context, feature));
+                return features.some(feature => hasAccess({ feature }));
             },
-            [isLoaded, user]
+            [isLoaded, hasAccess]
         ),
 
         hasAllFeatures: useCallback(
             (features: FeatureSlug[]) => {
                 if (!isLoaded) return false;
-                const context = { user };
-                return features.every(feature => hasFeature(context, feature));
+                return features.every(feature => hasAccess({ feature }));
             },
-            [isLoaded, user]
+            [isLoaded, hasAccess]
         ),
     };
 }
@@ -184,18 +165,8 @@ export function useSubscriptionAccess() {
  * }
  */
 export function useFeatureAccess(feature: FeatureSlug): boolean {
-    const { data: session } = useSession();
-    const user = session?.user;
-
-    return useMemo(() => {
-        if (!session) return false;
-
-        const context = {
-            user,
-        };
-
-        return hasFeature(context, feature);
-    }, [session, user, feature]);
+    const { hasAccess } = useSubscriptionAccess();
+    return hasAccess({ feature });
 }
 
 /**
@@ -217,18 +188,8 @@ export function useFeatureAccess(feature: FeatureSlug): boolean {
  * }
  */
 export function usePlanAccess(plan: PlanSlug): boolean {
-    const { data: session } = useSession();
-    const user = session?.user;
-
-    return useMemo(() => {
-        if (!session) return false;
-
-        const context = {
-            user,
-        };
-
-        return checkSubscriptionAccess(context, { plan });
-    }, [session, user, plan]);
+    const { hasAccess } = useSubscriptionAccess();
+    return hasAccess({ plan });
 }
 
 /**
@@ -249,15 +210,8 @@ export function usePlanAccess(plan: PlanSlug): boolean {
  * }
  */
 export function useVtPlusAccess(): boolean {
-    const { data: session } = useSession();
-    const user = session?.user;
-
-    return useMemo(() => {
-        if (!session) return false;
-
-        const context = { user };
-        return hasVtPlusPlan(context);
-    }, [session, user]);
+    const { isPlusSubscriber } = useSubscriptionStatus();
+    return isPlusSubscriber;
 }
 
 /**
@@ -280,26 +234,11 @@ export function useVtPlusAccess(): boolean {
  * }
  */
 export function useCurrentPlan() {
-    const { data: session } = useSession();
-    const user = session?.user;
+    const { subscriptionStatus, isPlusSubscriber } = useSubscriptionStatus();
 
-    return useMemo(() => {
-        if (!session) {
-            return {
-                planSlug: PlanSlug.VT_BASE,
-                planInfo: null,
-                canUpgrade: true,
-            };
-        }
-
-        const context = { user };
-        const planSlug = getCurrentPlan(context);
-        const subscriptionStatus = getSubscriptionStatus(context);
-
-        return {
-            planSlug,
-            planInfo: subscriptionStatus.planInfo,
-            canUpgrade: subscriptionStatus.canUpgrade,
-        };
-    }, [session, user]);
+    return {
+        planSlug: subscriptionStatus?.plan || 'free',
+        canUpgrade: !isPlusSubscriber,
+        isVtPlus: isPlusSubscriber,
+    };
 }

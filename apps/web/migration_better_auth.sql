@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS "users" (
     "email" text NOT NULL UNIQUE,
     "email_verified" boolean DEFAULT false NOT NULL,
     "image" text,
-    "credits" integer DEFAULT 0,
     "plan_slug" text DEFAULT 'free',
+    "creem_customer_id" text,
     "created_at" timestamp DEFAULT now() NOT NULL,
     "updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -50,15 +50,12 @@ CREATE TABLE IF NOT EXISTS "verifications" (
     "updated_at" timestamp DEFAULT now() NOT NULL
 );
 
--- User subscriptions and credits (managed in database)
+-- User subscriptions (managed in database)
 CREATE TABLE IF NOT EXISTS "user_subscriptions" (
     "id" text PRIMARY KEY NOT NULL,
     "user_id" text NOT NULL,
     "plan" text DEFAULT 'free' NOT NULL,
     "status" text DEFAULT 'active' NOT NULL,
-    "credits_remaining" integer DEFAULT 0 NOT NULL,
-    "credits_used" integer DEFAULT 0 NOT NULL,
-    "monthly_credits" integer DEFAULT 50 NOT NULL,
     "stripe_customer_id" text,
     "stripe_subscription_id" text,
     "current_period_start" timestamp,

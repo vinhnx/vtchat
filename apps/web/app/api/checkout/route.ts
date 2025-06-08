@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
-import { CreemService } from '@repo/shared/utils';
+import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -8,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 // Schema for checkout request
 const CheckoutRequestSchema = z.object({
-    priceId: z.string(),
+    priceId: z.literal(PlanSlug.VT_PLUS), // Only VT_PLUS can be checked out
     successUrl: z.string().optional(),
     quantity: z.number().positive().optional().default(1),
 });
@@ -45,19 +46,12 @@ export async function POST(request: NextRequest) {
 
         console.log('Using Creem.io payment system');
 
-        // Map internal price IDs to our product types
-        const priceMapping = {
-            vt_plus_monthly: 'PLUS_SUBSCRIPTION',
-            credits_100: 'SMALL',
-            credits_500: 'MEDIUM',
-            credits_1000: 'LARGE',
-        };
-
+        // Map internal price IDs to our product types using the centralized config
         console.log('Processing checkout with price ID:', validatedData.priceId);
-        console.log('Available price mappings:', Object.keys(priceMapping));
+        console.log('Available price mappings:', Object.keys(PRICE_ID_MAPPING));
 
-        const packageType = priceMapping[validatedData.priceId as keyof typeof priceMapping];
-        if (!packageType) {
+        const packageType = PRICE_ID_MAPPING[validatedData.priceId]; // validatedData.priceId is already PlanSlug.VT_PLUS
+        if (!packageType) { // This check might be redundant if priceId is always VT_PLUS and mapping exists
             console.error(`Invalid price ID: ${validatedData.priceId}`);
             return NextResponse.json(
                 {
@@ -99,17 +93,70 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Create checkout session using Creem
+        // For VT+ subscriptions, check if user already has an active subscription
+        if (packageType === PlanSlug.VT_PLUS) {
+            console.log('Checking existing subscription status for VT+ checkout...');
+
+            try {
+                // Import database utilities inline to avoid circular dependencies
+                const { db } = await import('@/lib/database');
+                const { userSubscriptions } = await import('@/lib/database/schema');
+                const { eq } = await import('drizzle-orm');
+
+                // Check if user already has an active VT+ subscription
+                const existingSubscription = await db
+                    .select()
+                    .from(userSubscriptions)
+                    .where(eq(userSubscriptions.userId, userId))
+                    .limit(1);
+
+                if (existingSubscription.length > 0) {
+                    const sub = existingSubscription[0];
+                    const isActive = sub.status === 'active' && sub.plan === PlanSlug.VT_PLUS;
+                    const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
+
+                    if (isActive && isNotExpired) {
+                        console.log(
+                            `[Checkout API] User ${userId} already has active VT+ subscription:`,
+                            sub.stripeSubscriptionId
+                        );
+                        return NextResponse.json(
+                            {
+                                error: 'Active subscription exists',
+                                message:
+                                    'You already have an active VT+ subscription. Use the customer portal to manage your subscription.',
+                                code: 'SUBSCRIPTION_EXISTS',
+                                hasActiveSubscription: true,
+                                currentPlan: PlanSlug.VT_PLUS,
+                                subscriptionId: sub.stripeSubscriptionId,
+                            },
+                            { status: 409 } // Conflict status code
+                        );
+                    }
+                }
+
+                console.log('No active VT+ subscription found, proceeding with checkout...');
+            } catch (dbError) {
+                console.error('[Checkout API] Error checking existing subscription:', dbError);
+                // Don't block checkout on DB errors, but log for monitoring
+            }
+        }
+
+        // Create checkout session using PaymentService
         let checkout;
         try {
-            if (packageType === 'PLUS_SUBSCRIPTION') {
+            if (packageType === PlanSlug.VT_PLUS) {
                 console.log('Starting VT+ subscription checkout for user:', userEmail);
-                checkout = await CreemService.subscribeToVtPlus(userEmail);
+                checkout = await PaymentService.subscribeToVtPlus(userEmail);
             } else {
-                checkout = await CreemService.purchaseCredits(
-                    packageType as keyof typeof CreemService.getCreditPackages,
-                    validatedData.quantity,
-                    userEmail
+                console.error('Invalid package type for VT+ only system:', packageType);
+                return NextResponse.json(
+                    {
+                        error: 'Product not available',
+                        message: 'Only VT+ subscription is available.',
+                        code: 'PRODUCT_NOT_AVAILABLE',
+                    },
+                    { status: 400 }
                 );
             }
         } catch (error: any) {

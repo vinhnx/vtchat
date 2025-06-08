@@ -1,5 +1,4 @@
 import { runWorkflow } from '@repo/ai/workflow';
-import { CHAT_MODE_CREDIT_COSTS } from '@repo/shared/config';
 import { logger } from '@repo/shared/logger';
 import { Geo } from '@vercel/functions';
 import { CompletionRequestType, StreamController } from './types';
@@ -62,8 +61,6 @@ export async function executeStream({
     onFinish?: () => Promise<void>;
 }): Promise<{ success: boolean } | Response> {
     try {
-        const creditCost = CHAT_MODE_CREDIT_COSTS[data.mode];
-
         const { signal } = abortController;
 
         const workflow = runWorkflow({

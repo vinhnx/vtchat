@@ -1,13 +1,14 @@
-import { integer, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Users table for Better Auth
 export const users = pgTable('users', {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
     email: text('email').notNull().unique(),
+    emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
     image: text('image'),
-    credits: integer('credits').default(0), // Creem.io credits balance
     planSlug: text('plan_slug').default('free'), // Subscription plan (free, vt_plus, etc.)
+    creemCustomerId: text('creem_customer_id'), // Creem.io customer ID for portal access
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -56,7 +57,7 @@ export const verifications = pgTable('verifications', {
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-// User subscriptions and credits (managed in database)
+// User subscriptions (managed in database)
 export const userSubscriptions = pgTable('user_subscriptions', {
     id: text('id').primaryKey(),
     userId: text('user_id')
@@ -64,9 +65,6 @@ export const userSubscriptions = pgTable('user_subscriptions', {
         .references(() => users.id, { onDelete: 'cascade' }),
     plan: text('plan').notNull().default('free'), // free, pro, premium
     status: text('status').notNull().default('active'), // active, cancelled, expired
-    creditsRemaining: integer('credits_remaining').notNull().default(0),
-    creditsUsed: integer('credits_used').notNull().default(0),
-    monthlyCredits: integer('monthly_credits').notNull().default(50),
     stripeCustomerId: text('stripe_customer_id'),
     stripeSubscriptionId: text('stripe_subscription_id'),
     currentPeriodStart: timestamp('current_period_start'),

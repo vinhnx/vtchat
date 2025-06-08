@@ -22,34 +22,26 @@ interface UserTierBadgeProps {
 
 export function UserTierBadge({ className }: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
-    const { planInfo } = useCurrentPlan();
+    const { planSlug, isVtPlus } = useCurrentPlan();
 
-    if (!planInfo) {
-        return (
-            <Badge
-                variant="secondary"
-                className={cn('animate-pulse bg-zinc-700 text-white', className)}
-                size="sm"
-            >
-                ...
-            </Badge>
-        );
-    }
+    // Use isPlusTier from useVtPlusAccess for consistency
+    const isPlus = isPlusTier || isVtPlus;
+    const planName = isPlus ? 'VT Plus' : 'VT Base';
 
     return (
         <Badge
             variant="secondary"
             className={cn(
                 'flex items-center gap-1 transition-colors duration-200',
-                isPlusTier
+                isPlus
                     ? 'bg-[#BFB38F] text-[#262626] hover:bg-[#BFB38F]/90'
                     : 'bg-zinc-700 text-white hover:bg-zinc-900',
                 className
             )}
             size="sm"
         >
-            {isPlusTier && <Sparkle size={12} strokeWidth={2} />}
-            {planInfo.name}
+            {isPlus && <Sparkle size={12} strokeWidth={2} />}
+            {planName}
         </Badge>
     );
 }

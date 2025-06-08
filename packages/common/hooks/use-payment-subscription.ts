@@ -1,10 +1,10 @@
 'use client';
 
+import { PaymentService } from '@repo/shared/config/payment';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { CreemService } from '@repo/shared/utils';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { useVtPlusAccess } from './use-subscription-access';
+import { useSubscriptionStatus } from './use-subscription-status';
 
 /**
  * Hook for interacting with Creem subscriptions
@@ -18,8 +18,13 @@ export function useCreemSubscription() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Use the existing hook to check VT+ access
-    const isPlusSubscriber = useVtPlusAccess();
+    // Use the new database-backed subscription status
+    const {
+        isPlusSubscriber,
+        subscriptionStatus,
+        refreshSubscriptionStatus,
+        isLoading: subscriptionLoading,
+    } = useSubscriptionStatus();
 
     /**
      * Open the Creem customer portal for managing subscription
@@ -34,7 +39,19 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            const result = await CreemService.getPortalUrl();
+            // Call the portal API endpoint instead of direct service call
+            const response = await fetch('/api/portal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to get portal URL: ${response.statusText}`);
+            }
+
+            const result = await response.json();
 
             if (result.success && result.url) {
                 // Open the portal URL in the same window
@@ -63,7 +80,7 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            const result = await CreemService.subscribeToVtPlus();
+            const result = await PaymentService.subscribeToVtPlus(user.email);
 
             if (result.success && result.url) {
                 // Redirect to checkout
@@ -81,11 +98,19 @@ export function useCreemSubscription() {
 
     return {
         isPlusSubscriber,
-        isLoading,
+        subscriptionStatus,
+        isLoading: isLoading || subscriptionLoading,
         error,
         openCustomerPortal,
         startVtPlusSubscription,
+        refreshSubscriptionStatus,
         isReady: isUserLoaded,
+        // Convenience properties from subscription status
+        creditsRemaining: subscriptionStatus?.creditsRemaining ?? 0,
+        monthlyCredits: subscriptionStatus?.monthlyCredits ?? 50,
+        plan: subscriptionStatus?.plan ?? 'free',
+        hasActiveSubscription:
+            subscriptionStatus?.hasSubscription && subscriptionStatus?.status === 'active',
     };
 }
 

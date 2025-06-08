@@ -1,10 +1,5 @@
 'use client';
-import {
-    CommandSearch,
-    IntroDialog,
-    SettingsModal,
-    Sidebar,
-} from '@repo/common/components';
+import { CommandSearch, IntroDialog, SettingsModal, Sidebar } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';

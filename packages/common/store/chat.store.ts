@@ -79,20 +79,12 @@ type State = {
     isLoadingThreads: boolean;
     isLoadingThreadItems: boolean;
     currentSources: string[];
-    creditLimit: {
-        remaining: number | undefined;
-        maxLimit: number | undefined;
-        reset: string | undefined;
-        isAuthenticated: boolean;
-        isFetched: boolean;
-    };
 };
 
 type Actions = {
     setModel: (model: Model) => void;
     setEditor: (editor: any) => void;
     setContext: (context: string) => void;
-    fetchRemainingCredits: () => Promise<void>;
     setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => void;
     clearImageAttachment: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
@@ -586,13 +578,6 @@ export const useChatStore = create(
         isLoadingThreads: false,
         isLoadingThreadItems: false,
         currentSources: [],
-        creditLimit: {
-            remaining: undefined,
-            maxLimit: undefined,
-            reset: undefined,
-            isAuthenticated: false,
-            isFetched: false,
-        },
         showSuggestions: false, // Always disabled
 
         setCustomInstructions: (customInstructions: string) => {
@@ -671,23 +656,6 @@ export const useChatStore = create(
                         : thread
                 );
             });
-        },
-
-        fetchRemainingCredits: async () => {
-            try {
-                const response = await fetch('/api/messages/remaining');
-                if (!response.ok) throw new Error('Failed to fetch credit info');
-
-                const data = await response.json();
-                set({
-                    creditLimit: {
-                        ...data,
-                        isFetched: true,
-                    },
-                });
-            } catch (error) {
-                console.error('Error fetching remaining credits:', error);
-            }
         },
 
         getPinnedThreads: async () => {

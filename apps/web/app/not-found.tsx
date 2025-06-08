@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { FC } from 'react';
 
 const NotFound: FC = () => {
@@ -14,8 +13,8 @@ const NotFound: FC = () => {
                 gap: '1rem',
             }}
         >
-            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Page not found</h3>
-            <Link
+            <h3>Page not found</h3>
+            <a
                 href="/"
                 style={{
                     color: '#BFB38F',
@@ -23,7 +22,7 @@ const NotFound: FC = () => {
                 }}
             >
                 Go back home
-            </Link>
+            </a>
         </div>
     );
 };
