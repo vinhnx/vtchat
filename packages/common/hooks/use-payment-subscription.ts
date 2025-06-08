@@ -106,8 +106,6 @@ export function useCreemSubscription() {
         refreshSubscriptionStatus,
         isReady: isUserLoaded,
         // Convenience properties from subscription status
-        creditsRemaining: subscriptionStatus?.creditsRemaining ?? 0,
-        monthlyCredits: subscriptionStatus?.monthlyCredits ?? 50,
         plan: subscriptionStatus?.plan ?? 'free',
         hasActiveSubscription:
             subscriptionStatus?.hasSubscription && subscriptionStatus?.status === 'active',
