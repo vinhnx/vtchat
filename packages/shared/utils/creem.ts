@@ -6,7 +6,9 @@
  */
 
 import { Creem } from 'creem';
-import { PlanSlug } from '../types/subscription'; // Added import
+import { PlanSlug } from '../types/subscription';
+import { EnvironmentType, getCurrentEnvironment } from '../types/environment';
+import { isProductionEnvironment } from './env';
 
 // Types for Creem.io integration
 export interface CreemProduct {
@@ -46,11 +48,11 @@ export interface PortalResponse {
  * Creem.io Service Class
  */
 export class CreemService {
-    // Configure Creem client to use sandbox mode (serverIdx: 1) for development
+    // Configure Creem client based on environment
     // serverIdx: 0 - Production (https://api.creem.io)
     // serverIdx: 1 - Sandbox (https://test-api.creem.io)
     private static client = new Creem({
-        serverIdx: CreemService.getServerIndex(), // Use helper method to determine server index
+        serverIdx: isProductionEnvironment() ? 0 : 1,
     });
 
     // API Key from environment - MUST be a sandbox API key for development
@@ -59,25 +61,6 @@ export class CreemService {
 
     // Product ID from environment - configurable for different environments
     private static readonly PRODUCT_ID = process.env.CREEM_PRODUCT_ID;
-
-    /**
-     * Get server index for Creem client initialization
-     */
-    private static getServerIndex(): number {
-        return process.env.CREEM_ENVIRONMENT === 'production' ||
-            process.env.NODE_ENV === 'production'
-            ? 0
-            : 1;
-    }
-
-    /**
-     * Check if we're in production environment
-     */
-    private static isProduction(): boolean {
-        return (
-            process.env.CREEM_ENVIRONMENT === 'production' || process.env.NODE_ENV === 'production'
-        );
-    }
 
     /**
      * Get base URL for the application
@@ -247,8 +230,8 @@ export class CreemService {
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
-            // If in sandbox mode, return the Creem.io sandbox customer portal
-            if (!this.isProduction()) {
+            // If not in production, return the Creem.io sandbox customer portal
+            if (!isProductionEnvironment()) {
                 return {
                     url: `https://www.creem.io/test/billing?product=${this.PRODUCT_ID || ''}`,
                     success: true,

@@ -3,10 +3,10 @@ import { ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { cn, Flex } from '@repo/ui';
+import { Button, cn, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
@@ -28,6 +28,8 @@ export const ChatInput = ({
 }) => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const router = useRouter(); // Use the full router object for clarity
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
@@ -39,6 +41,12 @@ export const ChatInput = ({
                     editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
                 }
             }
+            editor.on('focus', () => {
+                if (!isSignedIn) {
+                    setShowLoginPrompt(true);
+                    editor.commands.blur();
+                }
+            });
         },
         onUpdate: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp) {
@@ -59,15 +67,20 @@ export const ChatInput = ({
     const stopGeneration = useChatStore(state => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
-    const { push } = useRouter();
+    // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const sendMessage = async () => {
-        if (
-            !isSignedIn &&
-            !!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired
-        ) {
-            push('/login');
-            return;
+        if (!isSignedIn) {
+            // This specific check for chat mode auth requirement might be redundant
+            // if the focus prompt already directs to login.
+            // However, keeping it for cases where send is triggered programmatically or by other means.
+            if (!!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
+                setShowLoginPrompt(true); // Show prompt instead of direct push
+                return;
+            }
+            // For non-auth-required modes, if any, allow sending.
+            // Or, if all interactions require login, this block can be simplified to:
+            // if (!isSignedIn) { setShowLoginPrompt(true); return; }
         }
 
         if (!editor?.getText()) {
@@ -78,12 +91,13 @@ export const ChatInput = ({
 
         if (!threadId) {
             const optimisticId = uuidv4();
-            push(`/chat/${optimisticId}`);
+            router.push(`/chat/${optimisticId}`); // use router.push
             createThread(optimisticId, {
                 title: editor?.getText(),
             });
             threadId = optimisticId;
         }
+        // Removed duplicated block and misplaced return
 
         // First submit the message
         const formData = new FormData();
@@ -249,6 +263,31 @@ export const ChatInput = ({
                     {/* <ChatFooter /> */}
                 </Flex>
             </div>
+            {showLoginPrompt && (
+                <Dialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
+                    <DialogContent className="sm:max-w-[425px]" ariaTitle="Login Required">
+                        <DialogHeader>
+                            <DialogTitle>Login Required</DialogTitle>
+                            <DialogDescription>
+                                Please log in to start chatting or save your conversation.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button variant="outlined" onClick={() => setShowLoginPrompt(false)}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setShowLoginPrompt(false);
+                                    router.push('/login');
+                                }}
+                            >
+                                Login
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 };

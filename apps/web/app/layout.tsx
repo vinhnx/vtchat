@@ -1,7 +1,7 @@
-import { BetterAuthProvider } from '@/components/better-auth-provider';
-import { CreditsProvider, RootLayout, ThemeProvider } from '@repo/common/components';
-import { ReactQueryProvider, RootProvider } from '@repo/common/context';
-import { TooltipProvider, cn } from '@repo/ui';
+import { RootLayout, ThemeProvider } from '@repo/common/components';
+import { RootProvider } from '@repo/common/context';
+import { cn, TooltipProvider } from '@repo/ui';
+import { BetterAuthProvider } from '../components/better-auth-provider';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
@@ -95,24 +95,20 @@ export default function ParentLayout({
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
             <body>
-                <BetterAuthProvider>
-                    <RootProvider>
-                        <CreditsProvider>
-                            <ThemeProvider
-                                attribute="class"
-                                defaultTheme="system"
-                                enableSystem
-                                disableTransitionOnChange
-                            >
-                                <TooltipProvider>
-                                    <ReactQueryProvider>
-                                        <RootLayout>{children}</RootLayout>
-                                    </ReactQueryProvider>
-                                </TooltipProvider>
-                            </ThemeProvider>
-                        </CreditsProvider>
-                    </RootProvider>
-                </BetterAuthProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <TooltipProvider>
+                        <BetterAuthProvider>
+                            <RootProvider>
+                                <RootLayout>{children}</RootLayout>
+                            </RootProvider>
+                        </BetterAuthProvider>
+                    </TooltipProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

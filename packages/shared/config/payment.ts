@@ -8,6 +8,8 @@
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
 import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
+import { EnvironmentType, getCurrentEnvironment } from '../types/environment';
+import { isProductionEnvironment } from '../utils/env';
 
 // Types for payment integration
 export interface PaymentProduct {
@@ -96,7 +98,7 @@ export const PRICE_ID_MAPPING: Record<PlanSlug.VT_PLUS, PlanSlug.VT_PLUS> = {
 export class PaymentService {
     // Configure payment client for sandbox/production
     private static client = new Creem({
-        serverIdx: PaymentService.getServerIndex(),
+        serverIdx: isProductionEnvironment() ? 0 : 1,
     });
 
     // API Key from environment
@@ -104,25 +106,6 @@ export class PaymentService {
 
     // Product ID from environment
     private static readonly PRODUCT_ID = process.env.CREEM_PRODUCT_ID;
-
-    /**
-     * Get server index for client initialization
-     */
-    private static getServerIndex(): number {
-        return process.env.CREEM_ENVIRONMENT === 'production' ||
-            process.env.NODE_ENV === 'production'
-            ? 0
-            : 1;
-    }
-
-    /**
-     * Check if we're in production environment
-     */
-    private static isProduction(): boolean {
-        return (
-            process.env.CREEM_ENVIRONMENT === 'production' || process.env.NODE_ENV === 'production'
-        );
-    }
 
     /**
      * Get base URL for the application
@@ -285,7 +268,7 @@ export class PaymentService {
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
-            if (!this.isProduction()) {
+            if (!isProductionEnvironment()) {
                 return {
                     url: `https://www.creem.io/test/billing?product=${this.PRODUCT_ID || ''}`,
                     success: true,

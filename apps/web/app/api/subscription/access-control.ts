@@ -10,11 +10,12 @@ import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { getSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { NextRequest } from 'next/server';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 
 export interface AccessCheckResult {
     hasAccess: boolean;
     reason?: string;
-    subscriptionStatus?: 'active' | 'inactive' | 'expired' | 'none';
+    subscriptionStatus?: SubscriptionStatusEnum;
     planSlug?: PlanSlug;
 }
 
@@ -34,7 +35,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         return {
             hasAccess: false,
             reason: 'Authentication required for VT+ features',
-            subscriptionStatus: 'none',
+            subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
     }
@@ -49,7 +50,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         return {
             hasAccess: hasVTPlus,
             reason: hasVTPlus ? undefined : 'VT+ subscription required',
-            subscriptionStatus: subscriptionStatus.isActive ? 'active' : 'inactive',
+            subscriptionStatus: subscriptionStatus.isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE,
             planSlug: subscriptionStatus.planSlug,
         };
     } catch (error) {
@@ -57,7 +58,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         return {
             hasAccess: false,
             reason: 'Failed to verify subscription status',
-            subscriptionStatus: 'none',
+            subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
     }
@@ -182,7 +183,9 @@ export async function checkRateLimit(
 
     // For free tier users, implement basic rate limiting
     // This is a simplified implementation - you might want to use Redis or similar for production
-    const dailyLimit = 10; // 10 requests per day for free tier
+    const dailyLimit = process.env.FREE_TIER_DAILY_LIMIT
+        ? parseInt(process.env.FREE_TIER_DAILY_LIMIT, 10)
+        : 10; // Default to 10 requests per day if not configured
     const now = new Date();
     const resetTime = new Date(now);
     resetTime.setHours(24, 0, 0, 0); // Reset at midnight

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
+import { PlanSlug, PLANS } from '@repo/shared/types/subscription';
 import { Badge, cn } from '@repo/ui';
 import { Sparkle } from 'lucide-react';
 
@@ -22,11 +23,19 @@ interface UserTierBadgeProps {
 
 export function UserTierBadge({ className }: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
-    const { planSlug, isVtPlus } = useCurrentPlan();
+    const { planSlug: rawPlanSlug, isVtPlus } = useCurrentPlan();
 
     // Use isPlusTier from useVtPlusAccess for consistency
     const isPlus = isPlusTier || isVtPlus;
-    const planName = isPlus ? 'VT Plus' : 'VT Base';
+
+    let finalPlanSlug: PlanSlug;
+    // Ensure rawPlanSlug is a valid PlanSlug key or default
+    if (rawPlanSlug && Object.values(PlanSlug).includes(rawPlanSlug as PlanSlug)) {
+        finalPlanSlug = rawPlanSlug as PlanSlug;
+    } else {
+        finalPlanSlug = isPlus ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
+    }
+    const planName = PLANS[finalPlanSlug].name;
 
     return (
         <Badge
