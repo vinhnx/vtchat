@@ -10,7 +10,6 @@ export type {
 export * from './env';
 export * from './hotjar';
 export * from './messages';
-export * from './plausible';
 export * from './subscription';
 export * from './tiptap-extensions';
 export * from './url';

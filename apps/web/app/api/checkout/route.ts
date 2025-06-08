@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         const validatedData = CheckoutRequestSchema.parse(body);
 
         // Get Creem API key from environment
-        const creemApiKey = process.env.CREEM_API_KEY || 'creem_test_5cCavUDzJjNrmU2z9iaKUa';
+        const creemApiKey = process.env.CREEM_API_KEY;
         if (!creemApiKey) {
             console.error('CREEM_API_KEY not configured');
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 500 });

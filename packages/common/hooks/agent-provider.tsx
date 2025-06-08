@@ -2,7 +2,7 @@ import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { ThreadItem } from '@repo/shared/types';
-import { buildCoreMessagesFromThreadItems, plausible } from '@repo/shared/utils';
+import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useMemo } from 'react';
@@ -378,11 +378,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsGenerating(true);
             setCurrentSources([]);
 
-            plausible.trackEvent('send_message', {
-                props: {
-                    mode,
-                },
-            });
 
             // Build core messages array
             const coreMessages = buildCoreMessagesFromThreadItems({
