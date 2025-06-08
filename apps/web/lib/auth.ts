@@ -14,7 +14,7 @@ export const auth = betterAuth({
         },
     }),
     emailAndPassword: {
-        enabled: false, // Disabled - OAuth only
+        enabled: false, // Disabled - OAuth only for now
     },
     socialProviders: {
         github: {
