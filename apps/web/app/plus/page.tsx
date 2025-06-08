@@ -11,12 +11,7 @@ import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
 import { LoginDialog } from '../../components/login-dialog';
 import { ShineText } from '../../components/shine-text';
-import {
-    TypographyH2,
-    TypographyLarge,
-    TypographyMuted,
-    TypographyP,
-} from '../../components/ui/typography';
+import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '../../lib/auth-client';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
 
@@ -93,29 +88,21 @@ export default function PlusPage() {
     };
 
     return (
-        <div className="relative min-h-screen w-full bg-slate-950">
-            {/* Linear Gradient Background */}
-            <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-
-            <div className="container relative mx-auto px-4 py-8">
+        <div className="relative min-h-screen w-full">
+            <div className="container relative z-10 mx-auto px-4 py-8">
                 {/* Hero Section */}
-                <div className="mb-8 space-y-2 text-center">
+                <div className="mb- space-y-3 text-center">
                     <div className="space-y-3">
                         <AnimatedBadge>
                             <Sparkles className="mr-2 h-4 w-4" />
-                            Introducing {PRICING_CONFIG.product.name} Plans
+                            {PRICING_CONFIG.product.name}
                         </AnimatedBadge>
 
-                        <TypographyH2 className="border-none pb-0 text-2xl text-white sm:text-3xl">
+                        <TypographyLarge>
                             <ShineText className="text-2xl sm:text-3xl">
                                 Plans that grow with you
                             </ShineText>
-                        </TypographyH2>
-
-                        <h2 className="mx-auto max-w-2xl scroll-m-20 pb-2 text-3xl font-semibold tracking-tight text-gray-400 first:mt-0">
-                            {PRICING_CONFIG.product.description}. Unlock the full potential of
-                            AI-powered assistance.
-                        </h2>
+                        </TypographyLarge>
                     </div>
                 </div>
 
@@ -134,7 +121,7 @@ export default function PlusPage() {
                         ></div>
                     </div>
 
-                    <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
+                    <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-3 sm:mt-20 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing className="rounded-3xl rounded-t-3xl bg-white p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none">
                             <div>
