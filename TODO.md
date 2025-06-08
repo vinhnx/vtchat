@@ -1,5 +1,114 @@
 # TODO List
 
+[] sync .env.local keys between .env.example, but keep .env.local secrets
+
+--
+[] make sure /plus route is protected bby login
+
+--
+[] check package.json and remove redundant dependencies and unused deps
+
+[] check package.json to review icons lib use -> unify
+
+--
+
+[] improve packages/common/components/intro-dialog.tsx
+
+--
+
+[]
+{
+    name: 'Use your own API key',
+    icon: IconKey,
+    action: () => {
+        setIsSettingsOpen(true);
+        setSettingTab('api-keys');
+        onClose();
+    },
+}
+
+ {
+    name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
+    icon: theme === 'dark' ? IconSun : IconMoon,
+    action: () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+        onClose();
+    },
+},
+
+check gated featured alert for these actions
+
+--
+
+[] check packages/common/components/command-search.tsx action for gated featured alert or login reuired alert
+
+--
+[] `vtchat-preferences` remove hardcode -> use constant enum
+--
+
+[] enhance settings modal contents and wording
+[] if user not logged in, don't show settings -> show alert to login first
+
+--
+
+[] /plus page -> fixed CTA
+[] /plus page -> fixed background full height
+[] /plus page -> make sure click subscription
+
+--
+
+[] move /privacy and /term  out of settings -> or handle click to route to these pages instead of renderin the modal settings
+
+--
+
+Search the codebase to understand existing subscription management. Draft a comprehensive plan and scheme for implementing a full 'VT+' subscription management flow. Add actionable items to my TODO list.
+
+**Product Details for VT+:**
+
+* **Name:** VT+
+* **Product ID:** Use environment variable `CREEM_PRODUCT_ID`. Do not hardcode `prod_1XIVxekQ92QfjjOqbDVQk6`.
+* **Description:** "For everyday productivity"
+* **Payment:** Subscription type, 9.99 USD monthly, price includes tax.
+* **Features:**
+    1. **Pro Search:** "Pro Search: Enhanced search with web integration for real-time information."
+    2. **Dark Mode:** "Access to dark mode."
+    3. **Deep Research:** "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
+
+**Implementation Plan & Scheme Requirements:**
+
+1. **Environment Handling:**
+    * Implement logic to distinguish between development (sandbox API keys, test customer IDs) and production (live API keys, live customer management).
+    * Consult the Creem.io webhook guide for development environment setup: `https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint`.
+
+2. **Core Subscription Logic (Creem.io SDK):**
+    * Implement subscription logic using the Creem.io SDK. Ensure subscription status is correctly checked and updated.
+    * Upon user purchase:
+        * Update internal subscription logic and storage.
+        * Review the codebase for previous subscription logic. Update or migrate from any existing systems (e.g., Zustand storage and schema) as needed.
+    * Sync subscription status to Neon database, associating it with the user ID.
+
+3. **Feature Gating & UI Updates:**
+    * Activate the gated `dark_theme` feature for 'VT+' subscribers and manage its subscription benefit accordingly.
+    * Update the tier plan display in "Settings > Usage Credits": Show a `user-tier-badge` component for 'VT+' subscribers instead of the current "FREE" text.
+    * Modify the "View Plans" button behavior on the sidebar:
+        * If subscribed to 'VT+': Redirect to the user's Creem.io customer portal. (Refer to Creem.io customer portal documentation: `https://docs.creem.io/learn/customers/customer-portal`, example: `https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU`).
+        * If not subscribed: Maintain current "View Plans" functionality.
+
+**Tooling & Notes:**
+
+* Utilize Context7 MCP tools or other MCP tools if necessary.
+* Focus on creating robust code that handles API errors and edge cases.
+
+Generate the plan, scheme, and TODO list. For TODO items, suggest relevant files/modules if identifiable from your codebase search
+
+--
+
+[] the app need 2 refresh on launch
+
+--
+
+[] revamp login page using v0
+
 --
 
 [x] handle login check for input bar accessory actions (examplePrompts.ts)
@@ -8,20 +117,10 @@
 [x] handle login check for models dropdown list
 [x] handle login check for web search toggle and file attachment button
 [x] add terms, condition pages to settings panel
-
---
-
---
-[] new pricing page <https://v0.dev/chat/vt-subscription-layout-CWqgkAmbme9?b=b_6u7S4NPoneb>
---
-
-[] revamp /plus layout and wording, don't hard code
---
-
-[] check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
---
-
---
+[x] new pricing page with animated components and environment-based configuration
+[x] revamp /plus layout and wording using PRICING_CONFIG (no hardcoded values)
+[x] check dev env creem.io webhook guide - Created comprehensive WEBHOOK_SETUP.md
+[x] remove plausible analytics tracking from all components
 
 # IMPORTANT
 
@@ -32,10 +131,10 @@ product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. 
 description: For everyday productivity
 Payment Details:
 
-- type: supbscription
-- pricing: 9.99 USD
-- subscription inverval: monthly
-- price includes tax
+* type: supbscription
+* pricing: 9.99 USD
+* subscription inverval: monthly
+* price includes tax
 Product Features:
 1 Pro Search
 a. description: "Pro Search: Enhanced search with web integration for real-time information."
@@ -46,10 +145,6 @@ a. description: "Access to dark mode."
 a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
 
 --
-
-[] remove plausible
-
-[] remove langfuse
 
 [] <https://www.better-auth.com/docs/plugins/2fa>
 
@@ -68,8 +163,8 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 1. you can use Context7 MCP tools
 2. you can use any mcp tools if stuck.
 1. make sure to check for current environment.
-   - If in development, use sandbox API keys and test customer IDs.
-   - If in production, use live API keys and ensure proper customer management.
+   * If in development, use sandbox API keys and test customer IDs.
+   * If in production, use live API keys and ensure proper customer management.
 
 --
 
@@ -136,12 +231,11 @@ Note
 1. you can use Context7 MCP tools
 2. you can use any mcp tools if stuck.
 1. make sure to check for current environment.
-   - If in development, use sandbox API keys and test customer IDs.
-   - If in production, use live API keys and ensure proper customer management.
+   * If in development, use sandbox API keys and test customer IDs.
+   * If in production, use live API keys and ensure proper customer management.
 
 [] pricing page -> show current tier (including free) check tailwind v0 design
 [] before sending message -> check credit store -> if avail -> send messgae -> otherwise show a toast alert.
-[] remove langfuse
 [] [PLUS] sync thread to neon?
 [] free keep current local threads indexdb
 [] remove api keys when logout/switch accounts
@@ -180,26 +274,27 @@ Note
 Subscription Management
 --
 
-plan/features
+### VT+ subscription product description brief specs
 
-// Plan slug enumerations
-export enum PlanSlug {
-    VT_BASE = 'vt_base',
-    VT_PLUS = 'vt_plus',
-}
+name: VT+
+product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. don't hardcode value)
+description: For everyday productivity
+Payment Details:
 
-// Feature slug enumerations
-export enum FeatureSlug {
-    // Base Plan Features
-    ACCESS_CHAT = 'access_chat',
-    BASE_MODELS = 'base_models',
+* type: supbscription
+* pricing: 9.99 USD
+* subscription inverval: monthly
+* price includes tax
+Product Features:
+1 Pro Search
+a. description: "Pro Search: Enhanced search with web integration for real-time information."
 
-    // VT+ Plan Features
-    DARK_THEME = 'dark_theme',
-    DEEP_RESEARCH = 'deep_research',
-    PRO_SEARCH = 'pro_search',
-    ADVANCED_CHAT_MODES = 'advanced_chat_modes',
-}
+2. Dark Mode:
+a. description: "Access to dark mode."
+3. Deep Research
+a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
+
+Plan
 
 1. Implement the subscription logic using Creem.io SDK, ensuring that the subscription status is checked and updated correctly.
 1. sync subscription to neon with user id
@@ -207,40 +302,36 @@ export enum FeatureSlug {
 1. update tier plan in Settings > Usage Credits -> show badge user-tier-badge component instead of "FREE" currently
 1. activated gated dark_theme feature for the user and handle subscription for this benefit according.
 1. Base on subscription tier -> update handle "View Plans" button on side bar with logic -> if subscribed -> show user's creem.io subscription portal (Search from docs on how to implement) -> if not -> show "View Plans" as of now. Guide <https://docs.creem.io/learn/customers/customer-portal>. example <https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU>
+[] check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
 
 Note
 
 1. you can use Context7 MCP tools
 2. you can use any mcp tools if stuck.
 1. make sure to check for current environment.
-   - If in development, use sandbox API keys and test customer IDs.
-   - If in production, use live API keys and ensure proper customer management.
+   * If in development, use sandbox API keys and test customer IDs.
+   * If in production, use live API keys and ensure proper customer management.
 
-- <https://supersaas.dev/blog/how-to-launch-your-side-project>
+* <https://supersaas.dev/blog/how-to-launch-your-side-project>
 
-[] remove unrelated depedencies from our main stack
+[] remove unrelated depedencies from our main stack -> use [knip](https://knip.dev/)
 
-- use free models default
-- check for commented out todo items in codebase "/*"
-- view terms.ts file
-- review model lists
-- review model token policy CHAT_MODE_CREDIT_COSTS
-- credits system
-- tracing?
-- build terms page <https://llmchat.co/terms>
-- build privacy page <https://llmchat.co/privacy>
-- build landing page
-- buy domain name -> .io.vn (gov sponsor)
-- vtai.io.vn
-- vtchat.io.vn
+* use free models default
+* check for commented out todo items in codebase "/*"
+* view terms.ts file
+* build terms page <https://llmchat.co/terms>
+* build privacy page <https://llmchat.co/privacy>
+* build landing page
+* buy domain name -> .io.vn (gov sponsor)
+* vtai.io.vn
+* vtchat.io.vn
 <https://whois.inet.vn/whois?domain=vtchat.io.vn>
-- <https://vnnic.vn/whois-information>
-- <https://viettelidc.com.vn/Domain/SearchAutomationDomain?keyword=vtchat.io.vn>
-- good <https://secure.vinahost.vn/ac/cart.php?a=confdomains>
-- <https://www.domainsgpt.ai/DomainSearch/?domain=vtai.com>
-- <https://www.namecheap.com/domains/registration/results/?domain=vtai>
-- <https://porkbun.com/checkout/search?prb=d41b158dc5&q=vtai.space>
-- <https://namelix.com/app/?keywords=vtai>
-- <https://domainr.com/?q=vtai>
-- [] Handle usage quota -> prompt to purchase more tokens
-- [] cookie consent
+* <https://vnnic.vn/whois-information>
+* <https://viettelidc.com.vn/Domain/SearchAutomationDomain?keyword=vtchat.io.vn>
+* good <https://secure.vinahost.vn/ac/cart.php?a=confdomains>
+* <https://www.domainsgpt.ai/DomainSearch/?domain=vtai.com>
+* <https://www.namecheap.com/domains/registration/results/?domain=vtai>
+* <https://porkbun.com/checkout/search?prb=d41b158dc5&q=vtai.space>
+* <https://namelix.com/app/?keywords=vtai>
+* <https://domainr.com/?q=vtai>
+* [] cookie consent
