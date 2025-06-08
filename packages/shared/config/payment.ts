@@ -76,6 +76,16 @@ export const VT_PLUS_PRODUCT: Product = {
     paymentProviderProductId: VT_PLUS_PRODUCT_INFO.productId || '', // Ensure it's a string
 };
 
+export const VT_PLUS_PRODUCT_ID = process.env.CREEM_PRODUCT_ID;
+
+export const VT_BASE_PRODUCT_INFO = {
+    id: 'FREE_TIER', // Placeholder ID, as free tier might not have a Creem product ID
+    name: 'VT Base',
+    slug: PlanSlug.VT_BASE,
+    features: [],
+    prices: [], // Free tier has no prices in the same way paid tiers do
+};
+
 // Unified Product Definitions keyed by PlanSlug
 // Only VT_PLUS is a purchasable product.
 export const PRODUCTS_BY_PLAN_SLUG: Record<PlanSlug.VT_PLUS, Product> = {

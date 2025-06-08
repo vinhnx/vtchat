@@ -2,17 +2,17 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { useCallback, useEffect, useState } from 'react';
+import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
+import { PlanSlug } from '../../shared/types/subscription';
 
 export interface SubscriptionStatus {
     plan: string;
     status: string;
     isPlusSubscriber: boolean;
-    creditsRemaining: number;
-    creditsUsed: number;
-    monthlyCredits: number;
     currentPeriodEnd?: Date;
     hasSubscription: boolean;
     subscriptionId?: string;
+    productInfo?: any;
 }
 
 /**
@@ -55,15 +55,14 @@ export function useSubscriptionStatus() {
             setError(err instanceof Error ? err.message : 'Unknown error');
 
             // Fallback to default free plan on error
-            setSubscriptionStatus({
-                plan: 'free',
+            const fallbackFreeTier: SubscriptionStatus = {
+                plan: PlanSlug.VT_BASE,
                 status: 'active',
                 isPlusSubscriber: false,
-                creditsRemaining: 50,
-                creditsUsed: 0,
-                monthlyCredits: 50,
                 hasSubscription: false,
-            });
+                productInfo: VT_BASE_PRODUCT_INFO,
+            };
+            setSubscriptionStatus(fallbackFreeTier);
         } finally {
             setIsLoading(false);
         }
@@ -83,11 +82,9 @@ export function useSubscriptionStatus() {
         subscriptionStatus,
         isLoading,
         error,
-        refreshSubscriptionStatus,
+        refreshSubscriptionStatus, // Ensure this is returned
         // Convenience properties
         isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
-        creditsRemaining: subscriptionStatus?.creditsRemaining ?? 0,
-        monthlyCredits: subscriptionStatus?.monthlyCredits ?? 50,
         plan: subscriptionStatus?.plan ?? 'free',
         hasActiveSubscription:
             subscriptionStatus?.hasSubscription && subscriptionStatus?.status === 'active',

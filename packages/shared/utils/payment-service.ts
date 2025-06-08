@@ -10,6 +10,18 @@ import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from './env';
 
 // Types for Creem.io integration
+export enum PriceType {
+    ONE_TIME = 'one_time',
+    RECURRING = 'recurring',
+}
+
+export enum RecurringInterval {
+    MONTH = 'month',
+    YEAR = 'year',
+    DAY = 'day',
+    WEEK = 'week',
+}
+
 export interface CreemProduct {
     id: string;
     name: string;
@@ -19,10 +31,15 @@ export interface CreemProduct {
 
 export interface CreemPrice {
     id: string;
-    price_amount: number;
-    price_currency: string;
-    type: 'one_time' | 'recurring';
-    recurring_interval?: 'month' | 'year';
+    productId: string;
+    active: boolean;
+    currency: string;
+    description: string | null;
+    type: PriceType;
+    unitAmount: number | null;
+    recurring_interval: RecurringInterval | null;
+    recurring_interval_count: number | null;
+    trial_period_days: number | null;
 }
 
 export interface CheckoutRequest {
