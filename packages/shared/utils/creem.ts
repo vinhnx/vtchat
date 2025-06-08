@@ -7,7 +7,6 @@
 
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
-import { EnvironmentType, getCurrentEnvironment } from '../types/environment';
 import { isProductionEnvironment } from './env';
 
 // Types for Creem.io integration

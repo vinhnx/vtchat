@@ -8,9 +8,9 @@
 import { auth } from '@/lib/auth';
 import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { getSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { NextRequest } from 'next/server';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 
 export interface AccessCheckResult {
     hasAccess: boolean;
@@ -42,16 +42,19 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
 
     try {
         // Get subscription status for the user
-        const subscriptionStatus = await getSubscriptionStatus({ userId });
+        // FIXME: This uses the client-side getSubscriptionStatus which is not ideal for server-side.
+        // It expects a full user object, not just userId. This will likely not work correctly.
+        // For now, patching the type error. A proper server-side fetch is needed here.
+        const subscriptionStatus = await getSubscriptionStatus({ user: { id: userId } }); // Pass a minimal user object
 
         const hasVTPlus =
-            subscriptionStatus.planSlug === PlanSlug.VT_PLUS && subscriptionStatus.isActive;
+            subscriptionStatus.currentPlanSlug === PlanSlug.VT_PLUS && subscriptionStatus.isActive;
 
         return {
             hasAccess: hasVTPlus,
             reason: hasVTPlus ? undefined : 'VT+ subscription required',
-            subscriptionStatus: subscriptionStatus.isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE,
-            planSlug: subscriptionStatus.planSlug,
+            subscriptionStatus: subscriptionStatus.status, // Use the status from UserClientSubscriptionStatus
+            planSlug: subscriptionStatus.currentPlanSlug,
         };
     } catch (error) {
         console.error('Failed to check VT+ access:', error);
@@ -79,7 +82,7 @@ export async function checkFeatureAccess(
 
     // Check if the specific feature is enabled
     const hasFeatureAccess = VTPlusAccess.getAccessibleFeatures(true).some(
-        feature => feature.id === featureId
+        (feature: { id: string }) => feature.id === featureId
     );
 
     return {

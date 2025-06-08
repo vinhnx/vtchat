@@ -40,3 +40,6 @@ TODO.md
 # github prompts
 .github/prompts/*
 *.tsbuildinfo
+
+better-auth-mcp.log
+.roo/mcp.json

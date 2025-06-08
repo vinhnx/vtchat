@@ -1,244 +1,173 @@
 'use client';
 
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { FeatureSlug, PlanSlug, PLANS } from '@repo/shared/types/subscription';
 import { isDevTestMode } from '@repo/shared/utils';
 import { useCallback } from 'react';
-import { useSubscriptionStatus } from './use-subscription-status';
+import { useSubscription, UserProfile } from './use-subscription'; // Changed from use-subscription-status
+import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
 
 /**
- * Custom hook for optimized subscription access checking
- * Now uses database-backed subscription status instead of user metadata
- *
- * This hook is optimized for performance and provides a clean API for
- * checking subscription access throughout the application.
+ * Custom hook for optimized subscription access checking.
+ * This hook leverages the refactored `useSubscription` hook, which uses
+ * the shared `getSubscriptionStatus` utility.
  *
  * @returns Object with subscription access methods and status
- *
- * @example
- * function MyComponent() {
- *   const {
- *     hasAccess,
- *     isPremium,
- *     currentPlan,
- *     canAccess
- *   } = useSubscriptionAccess();
- *
- *   const canUseDarkTheme = hasAccess({ feature: FeatureSlug.DARK_THEME });
- *   const isVtPlus = hasAccess({ plan: PlanSlug.VT_PLUS });
- *
- *   return (
- *     <div>
- *       {canUseDarkMode && <DarkModeToggle />}
- *       {!isPremium && <UpgradeButton />}
- *     </div>
- *   );
- * }
  */
 export function useSubscriptionAccess() {
-    const { subscriptionStatus, isPlusSubscriber, isLoading, refreshSubscriptionStatus } =
-        useSubscriptionStatus();
+    // Use the refactored useSubscription hook
+    const {
+        subscriptionStatus, // This is UserClientSubscriptionStatus
+        userProfile,        // This is UserProfile | null
+        isLoading,
+        error,
+        refetch,            // Renamed from refreshSubscriptionStatus for consistency
+    } = useSubscription();
 
     const isLoaded = !isLoading;
-    const isSignedIn = !!subscriptionStatus;
-    // Create stable callback for access checking
+    // isSignedIn can be based on userProfile or if subscriptionStatus indicates an active, known user
+    const isSignedIn = !!userProfile && subscriptionStatus.status !== 'none';
+
+
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
-            // DEV TEST MODE: Bypass all access checks
             if (isDevTestMode()) {
-                console.log(
-                    '🚧 DEV TEST MODE: Bypassing subscription access check in hook',
-                    options
-                );
+                console.log('🚧 DEV TEST MODE: Bypassing subscription access check in useSubscriptionAccess', options);
                 return true;
             }
 
-            if (!isLoaded || !subscriptionStatus) return false;
+            if (!isLoaded || !subscriptionStatus || !subscriptionStatus.isActive) {
+                 // If not loaded, or no status, or overall status is not active, then no access.
+                return false;
+            }
 
             const { feature, plan } = options;
 
             // Check plan access
             if (plan) {
                 if (plan === PlanSlug.VT_PLUS) {
-                    return isPlusSubscriber;
+                    return subscriptionStatus.isVtPlus;
                 }
-                // Everyone has access to the base plan
-                return true;
+                // If checking for VT_BASE, it's true if current plan is VT_BASE or VT_PLUS (as VT+ includes base)
+                if (plan === PlanSlug.VT_BASE) {
+                    return subscriptionStatus.isVtBase || subscriptionStatus.isVtPlus;
+                }
+                return false; // Unknown plan
             }
 
             // Check feature access
             if (feature) {
-                // VT+ exclusive features
-                const vtPlusFeatures = [
+                // If the plan itself doesn't grant the feature (according to PLANS config)
+                if (!subscriptionStatus.planConfig.features.includes(feature)) {
+                    return false;
+                }
+                // Specific logic for VT+ features (already covered by planConfig if set up correctly, but double-check)
+                const vtPlusExclusiveFeatures = [
                     FeatureSlug.DARK_THEME,
                     FeatureSlug.DEEP_RESEARCH,
                     FeatureSlug.PRO_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
                 ];
-
-                if (vtPlusFeatures.includes(feature)) {
-                    return isPlusSubscriber;
+                if (vtPlusExclusiveFeatures.includes(feature)) {
+                    return subscriptionStatus.isVtPlus;
                 }
-
-                // All other features are available to everyone
+                // If it's a base feature and included in their planConfig, they have access.
                 return true;
             }
 
-            return false;
+            // If permission is provided (legacy or future use)
+            if (options.permission) {
+                console.warn(`Permission checks ('${options.permission}') are not fully implemented in useSubscriptionAccess.`);
+                return false;
+            }
+
+            return false; // Default to no access if no specific check matches
         },
-        [isLoaded, subscriptionStatus, isPlusSubscriber]
+        [isLoaded, subscriptionStatus]
     );
 
-    // Create stable callback for feature checking
     const canAccess = useCallback(
-        (feature: FeatureSlug) => {
-            return hasAccess({ feature });
-        },
+        (feature: FeatureSlug) => hasAccess({ feature }),
         [hasAccess]
     );
 
-    // Create stable callback for plan checking
-    const hasPlan = useCallback(
-        (plan: PlanSlug) => {
-            return hasAccess({ plan });
-        },
+    const hasPlanAccess = useCallback( // Renamed from hasPlan to avoid conflict with local var
+        (plan: PlanSlug) => hasAccess({ plan }),
         [hasAccess]
     );
 
     return {
-        // Loading and auth states
         isLoaded,
+        isLoading, // Keep isLoading for direct use
         isSignedIn,
+        userProfile, // Expose userProfile
+        error, // Expose error state
 
-        // Core access checking functions
         hasAccess,
         canAccess,
-        hasPlan,
+        hasPlan: hasPlanAccess, // Use the renamed callback
 
-        // Convenience properties
-        currentPlan: subscriptionStatus?.plan || 'free',
-        isPremium: isPlusSubscriber,
-        isVtPlus: isPlusSubscriber,
-        isVtBase: !isPlusSubscriber,
-        canUpgrade: !isPlusSubscriber,
+        // Convenience properties derived from subscriptionStatus
+        currentPlan: subscriptionStatus.currentPlanSlug,
+        isPremium: subscriptionStatus.isPremium && subscriptionStatus.isActive,
+        isVtPlus: subscriptionStatus.isVtPlus && subscriptionStatus.isActive,
+        isVtBase: subscriptionStatus.isVtBase && subscriptionStatus.isActive, // Base plan is active if current is base and active
+        canUpgrade: subscriptionStatus.canUpgrade,
 
-        // Full subscription status object
-        subscriptionStatus,
+        subscriptionStatus, // Expose the full detailed status object
 
-        // Refresh function
-        refreshSubscriptionStatus,
+        refreshSubscriptionStatus: refetch, // Expose refetch function
 
-        // Utility functions for complex checks
         hasAnyFeature: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded) return false;
+                if (!isLoaded || !subscriptionStatus.isActive) return false;
                 return features.some(feature => hasAccess({ feature }));
             },
-            [isLoaded, hasAccess]
+            [isLoaded, subscriptionStatus.isActive, hasAccess]
         ),
 
         hasAllFeatures: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded) return false;
+                if (!isLoaded || !subscriptionStatus.isActive) return false;
                 return features.every(feature => hasAccess({ feature }));
             },
-            [isLoaded, hasAccess]
+            [isLoaded, subscriptionStatus.isActive, hasAccess]
         ),
     };
 }
 
-/**
- * Simplified hook for checking a specific feature access
- * Optimized for components that only need to check one feature
- *
- * @param feature - The feature to check access for
- * @returns boolean indicating if the user has access to the feature
- *
- * @example
- * function DarkModeToggle() {
- *   const canUseDarkTheme = useFeatureAccess(FeatureSlug.DARK_THEME);
- *
- *   if (!canUseDarkMode) {
- *     return <UpgradePrompt feature="Dark Mode" />;
- *   }
- *
- *   return <DarkModeSwitch />;
- * }
- */
 export function useFeatureAccess(feature: FeatureSlug): boolean {
-    const { hasAccess } = useSubscriptionAccess();
-    return hasAccess({ feature });
+    const { canAccess, isLoaded } = useSubscriptionAccess();
+    if (!isLoaded) return false; // Or handle loading state appropriately
+    return canAccess(feature);
 }
 
-/**
- * Simplified hook for checking a specific plan access
- * Optimized for components that only need to check one plan
- *
- * @param plan - The plan to check access for
- * @returns boolean indicating if the user has access to the plan
- *
- * @example
- * function PremiumContent() {
- *   const hasVtPlus = usePlanAccess(PlanSlug.VT_PLUS);
- *
- *   if (!hasVtPlus) {
- *     return <UpgradePrompt plan="VT Plus" />;
- *   }
- *
- *   return <PremiumFeatures />;
- * }
- */
 export function usePlanAccess(plan: PlanSlug): boolean {
-    const { hasAccess } = useSubscriptionAccess();
-    return hasAccess({ plan });
+    const { hasPlan, isLoaded } = useSubscriptionAccess();
+    if (!isLoaded) return false;
+    return hasPlan(plan);
 }
 
-/**
- * Hook specifically for checking VT Plus access
- * Commonly used pattern extracted into a dedicated hook
- *
- * @returns boolean indicating if the user has VT Plus plan
- *
- * @example
- * function UserTierBadge() {
- *   const isVtPlus = useVtPlusAccess();
- *
- *   return (
- *     <Badge className={isVtPlus ? 'premium' : 'free'}>
- *       {isVtPlus ? 'VT Plus' : 'VT Base'}
- *     </Badge>
- *   );
- * }
- */
 export function useVtPlusAccess(): boolean {
-    const { isPlusSubscriber } = useSubscriptionStatus();
-    return isPlusSubscriber;
+    const { isVtPlus, isLoaded } = useSubscriptionAccess();
+    if (!isLoaded) return false;
+    return isVtPlus;
 }
 
-/**
- * Hook that provides the current user's plan information
- * Optimized for components that need plan details
- *
- * @returns Object with current plan information
- *
- * @example
- * function SubscriptionCard() {
- *   const { planSlug, planInfo, canUpgrade } = useCurrentPlan();
- *
- *   return (
- *     <Card>
- *       <h3>{planInfo.name}</h3>
- *       <p>{planInfo.description}</p>
- *       {canUpgrade && <UpgradeButton />}
- *     </Card>
- *   );
- * }
- */
-export function useCurrentPlan() {
-    const { subscriptionStatus, isPlusSubscriber } = useSubscriptionStatus();
-
+export function useCurrentPlan(): {
+    planSlug: PlanSlug;
+    planConfig: UserClientSubscriptionStatus['planConfig'];
+    canUpgrade: boolean;
+    isVtPlus: boolean;
+    isActive: boolean;
+    isLoaded: boolean;
+} {
+    const { subscriptionStatus, isLoaded } = useSubscriptionAccess();
     return {
-        planSlug: subscriptionStatus?.plan || 'free',
-        canUpgrade: !isPlusSubscriber,
-        isVtPlus: isPlusSubscriber,
+        planSlug: subscriptionStatus.currentPlanSlug,
+        planConfig: subscriptionStatus.planConfig,
+        canUpgrade: subscriptionStatus.canUpgrade,
+        isVtPlus: subscriptionStatus.isVtPlus && subscriptionStatus.isActive,
+        isActive: subscriptionStatus.isActive,
+        isLoaded,
     };
 }
