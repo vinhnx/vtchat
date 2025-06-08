@@ -17,7 +17,7 @@ export const Sidebar = () => {
     const { push } = useRouter();
     const isChatPage = pathname.startsWith('/chat');
     const threads = useChatStore(state => state.threads);
-    const { data: session } = useSession();
+    const { data: session, isPending: isAuthLoading } = useSession();
     const isSignedIn = !!session;
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
@@ -125,7 +125,7 @@ export const Sidebar = () => {
                     </Button>
                 </Flex>
 
-                {false ? (
+                {isAuthLoading ? (
                     <FullPageLoader />
                 ) : (
                     <Flex
@@ -174,7 +174,9 @@ export const Sidebar = () => {
                         </Button>
                     )}
                     <div className="sticky right-0 top-0 z-50 flex items-center gap-1 px-4 py-2">
-                        {isSignedIn ? (
+                        {isAuthLoading ? (
+                            <div className="bg-muted h-8 w-full animate-pulse rounded-full" />
+                        ) : isSignedIn ? (
                             <UserButton showName />
                         ) : (
                             <Link href="/login">
