@@ -6,20 +6,32 @@ import ReactMarkdown from 'react-markdown';
 import { Logo } from './logo';
 export const IntroDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
     const { data: session } = useSession();
     const isSignedIn = !!session;
 
     useEffect(() => {
-        const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-        if (!hasSeenIntro) {
-            setIsOpen(true);
+        setHasMounted(true);
+        // Only check localStorage after component has mounted
+        if (typeof window !== 'undefined') {
+            const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+            if (!hasSeenIntro) {
+                setIsOpen(true);
+            }
         }
     }, []);
 
     const handleClose = () => {
-        localStorage.setItem('hasSeenIntro', 'true');
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('hasSeenIntro', 'true');
+        }
         setIsOpen(false);
     };
+
+    // Don't render until after hydration to prevent SSR mismatch
+    if (!hasMounted) {
+        return null;
+    }
 
     const icon = (
         <IconCircleCheckFilled className="text-muted-foreground/50 mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full" />

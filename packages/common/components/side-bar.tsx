@@ -53,6 +53,7 @@ export const Sidebar = () => {
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
     const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
+    const sidebarAnimationDisabled = useAppStore(state => state.sidebarAnimationDisabled);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal } = useCreemSubscription();
