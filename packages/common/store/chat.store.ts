@@ -305,7 +305,9 @@ const initializeWorker = () => {
 
         // Handle worker errors
         dbWorker.onerror = err => {
-            console.error('SharedWorker error:', err);
+            console.warn('SharedWorker connection failed, falling back to localStorage sync:', err);
+            // Fallback to localStorage method
+            initializeTabSync();
         };
     } catch (error) {
         console.error('Failed to initialize SharedWorker:', error);

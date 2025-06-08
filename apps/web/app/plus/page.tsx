@@ -28,7 +28,7 @@ export default function Page() {
             <div className="container mx-auto px-4 py-16">
                 <div className="flex min-h-[50vh] items-center justify-center">
                     <div className="flex flex-col items-center space-y-4 text-center">
-                        <p className="text-muted-foreground">Loading...</p>
+                        <p className="text-muted-foreground text-sm">Loading...</p>
                     </div>
                 </div>
             </div>

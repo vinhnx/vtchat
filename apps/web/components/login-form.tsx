@@ -133,7 +133,7 @@ function LoginFormContent({
 
 export function LoginForm({ className, redirectUrl, onClose, ...props }: LoginFormContentProps) {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<p className="text-muted-foreground text-sm">Loading...</p>}>
             <LoginFormContent
                 className={className}
                 redirectUrl={redirectUrl}
