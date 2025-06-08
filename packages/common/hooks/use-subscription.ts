@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 interface User {
     id: string;
     email?: string | null;
-    credits?: number | null;
     planSlug?: string | null;
 }
 
@@ -14,7 +13,6 @@ interface UseSubscriptionResult {
     isLoading: boolean;
     error: string | null;
     isVTPlus: boolean;
-    creditsRemaining: number;
     refetch: () => Promise<void>;
 }
 
@@ -58,14 +56,12 @@ export function useSubscription(): UseSubscriptionResult {
     }, []);
 
     const isVTPlus = user?.planSlug === 'vt_plus';
-    const creditsRemaining = user?.credits || 0;
 
     return {
         user,
         isLoading,
         error,
         isVTPlus,
-        creditsRemaining,
         refetch: fetchUserData,
     };
 }

@@ -1,5 +1,5 @@
 'use client';
-import { CreemCreditsDisplay, ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
+import { ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -194,7 +194,6 @@ export const ChatInput = ({
                     </ImageDropzoneRoot>
                 </Flex>
             </motion.div>
-            <CreemCreditsDisplay key="creem-credits" />
         </AnimatePresence>
     );
 

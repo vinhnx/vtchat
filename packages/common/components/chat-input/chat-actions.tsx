@@ -1,8 +1,7 @@
 'use client';
 import { DotSpinner } from '@repo/common/components';
-import { useChatModeAccess } from '@repo/common/hooks/use-chat-mode-access';
-import { useApiKeysStore, useChatStore, useCreditsStore } from '@repo/common/store';
-import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { useApiKeysStore, useChatStore } from '@repo/common/store';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
     AlertDialog,
@@ -43,14 +42,12 @@ export const chatOptions = [
         description: 'In depth research on complex topic',
         value: ChatMode.Deep,
         icon: <IconAtom size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Deep],
     },
     {
         label: 'Pro Search',
         description: 'Pro search with web search',
         value: ChatMode.Pro,
         icon: <IconNorthStar size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Pro],
     },
 ];
 
@@ -60,98 +57,84 @@ export const modelOptions = [
         value: ChatMode.GPT_4o_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
     },
     {
         label: 'GPT 4.1 Nano',
         value: ChatMode.GPT_4_1_Nano,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
     },
     {
         label: 'GPT 4.1 Mini',
         value: ChatMode.GPT_4_1_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
     },
     {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1],
     },
     {
         label: 'GPT 4o',
         value: ChatMode.GPT_4o,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
     },
     {
         label: 'o4 mini',
         value: ChatMode.O4_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.O4_Mini],
     },
     {
         label: 'Gemini 2.0 Flash',
         value: ChatMode.GEMINI_2_0_FLASH,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
     },
     {
         label: 'Gemini 2.0 Flash Lite',
         value: ChatMode.GEMINI_2_0_FLASH_LITE,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH_LITE],
     },
     {
         label: 'Gemini 2.5 Flash Preview',
         value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_FLASH_PREVIEW],
     },
     {
         label: 'Gemini 2.5 Pro',
         value: ChatMode.GEMINI_2_5_PRO,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
     },
     {
         label: 'Gemini 2.5 Pro Preview',
         value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO_PREVIEW],
     },
     {
         label: 'Claude 4 Sonnet',
         value: ChatMode.CLAUDE_4_SONNET,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_SONNET],
     },
     {
         label: 'Claude 4 Opus',
         value: ChatMode.CLAUDE_4_OPUS,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
     },
     {
         label: 'DeepSeek R1',
         value: ChatMode.DEEPSEEK_R1,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
     },
 ];
 
@@ -323,8 +306,6 @@ export const ChatModeOptions = ({
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
-    const { checkAccess, getCreditCost } = useChatModeAccess();
-    const { balance: userCredits } = useCreditsStore();
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
@@ -336,38 +317,19 @@ export const ChatModeOptions = ({
             return;
         }
 
-        // Check unified access (subscription + credits)
-        const access = checkAccess(mode);
-
-        // Allow if free, subscription, or affordable credits
-        if (access.canAccess) {
-            // If using credits, show a confirmation if it's a high-cost mode
-            if (access.accessType === 'credits' && access.creditCost >= 5) {
-                // For expensive modes, confirm the user wants to spend credits
-                onGatedFeature({
-                    title: `Confirm Credit Usage`,
-                    message: `This will use ${access.creditCost} credits. You have ${userCredits} credits remaining. Continue?`,
-                    feature: 'credit-confirmation', // Using a feature flag instead
-                });
-                return;
-            }
-
-            // Otherwise proceed with the mode change
-            setChatMode(mode);
+        // Check subscription requirements
+        if (config?.requiredFeature || config?.requiredPlan) {
+            onGatedFeature({
+                feature: config.requiredFeature,
+                plan: config.requiredPlan,
+                title: `${option?.label} requires upgrade`,
+                message: `${option?.label} is a premium feature. Upgrade to VT+ to access.`,
+            });
             return;
         }
 
-        // Access denied - show appropriate message
-        onGatedFeature({
-            feature:
-                access.requiredFeature ||
-                (access.creditCost > 0 ? `credit-cost-${access.creditCost}` : undefined),
-            plan: access.requiredPlan,
-            title: `${option?.label} requires ${access.accessType === 'blocked' && access.reason?.includes('credits') ? 'credits' : 'upgrade'}`,
-            message:
-                access.reason ||
-                `${option?.label} is a premium feature. Upgrade or purchase credits to access.`,
-        });
+        // Otherwise proceed with the mode change
+        setChatMode(mode);
     };
 
     return (

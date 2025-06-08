@@ -150,25 +150,6 @@ export const ChatModeConfig: Record<
     },
 };
 
-export const CHAT_MODE_CREDIT_COSTS = {
-    [ChatMode.Deep]: 10,
-    [ChatMode.Pro]: 5,
-    [ChatMode.DEEPSEEK_R1]: 5,
-    [ChatMode.CLAUDE_4_SONNET]: 5,
-    [ChatMode.CLAUDE_4_OPUS]: 8,
-    [ChatMode.GPT_4o]: 3,
-    [ChatMode.GPT_4o_Mini]: 1,
-    [ChatMode.GPT_4_1]: 5,
-    [ChatMode.GPT_4_1_Mini]: 3,
-    [ChatMode.GPT_4_1_Nano]: 2,
-    [ChatMode.O4_Mini]: 5,
-    [ChatMode.GEMINI_2_0_FLASH]: 1,
-    [ChatMode.GEMINI_2_0_FLASH_LITE]: 1,
-    [ChatMode.GEMINI_2_5_FLASH_PREVIEW]: 2,
-    [ChatMode.GEMINI_2_5_PRO]: 3,
-    [ChatMode.GEMINI_2_5_PRO_PREVIEW]: 3,
-};
-
 // Previously deprecated hasChatModeAccess function removed
 
 /**

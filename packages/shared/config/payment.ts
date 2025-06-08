@@ -1,31 +1,43 @@
 /**
- * Creem.io Payment Service
+ * Payment Configuration for VT Chat
  *
- * Handles integration with Creem.io for payments and subscriptions
- * while maintaining compatibility with Better Auth authentication
+ * Centralized configuration for VT+ subscription
+ * using the proper PlanSlug enum
  */
 
 import { Creem } from 'creem';
-import { PlanSlug } from '../types/subscription'; // Added import
+import { PlanSlug } from '../types/subscription';
+import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
 
-// Types for Creem.io integration
-export interface CreemProduct {
+// Types for payment integration
+export interface PaymentProduct {
     id: string;
     name: string;
     description?: string;
-    prices: CreemPrice[];
+    prices: PaymentPrice[];
 }
 
-export interface CreemPrice {
+export interface PaymentPrice {
     id: string;
     price_amount: number;
     price_currency: string;
-    type: 'one_time' | 'recurring';
-    recurring_interval?: 'month' | 'year';
+}
+
+// Unified Product Type
+export interface Product {
+    planSlug: PlanSlug;
+    name: string;
+    description: string;
+    price: number; // e.g., 9.99
+    currency: string; // e.g., 'USD'
+    // interval: 'month' | 'year'; // Assuming monthly for now, can be added if tiers differ
+    features: VTPlusFeature[];
+    paymentProviderProductId: string; // Specific ID for the payment provider
+    // popular?: boolean; // Optional: if we need to highlight a plan
 }
 
 export interface CheckoutRequest {
-    productId: string;
+    productId: string; // This will likely be PlanSlug or paymentProviderProductId
     successUrl?: string;
     customerEmail?: string;
     quantity?: number;
@@ -42,26 +54,59 @@ export interface PortalResponse {
     success: boolean;
 }
 
+// Subscription package interface
+export interface SubscriptionPackage {
+    id: string;
+    planSlug?: PlanSlug;
+    name: string;
+    price: number;
+    description: string;
+    popular?: boolean;
+}
+
+// Single, unified product instance for VT_PLUS
+export const VT_PLUS_PRODUCT: Product = {
+    planSlug: PlanSlug.VT_PLUS,
+    name: VT_PLUS_PRODUCT_INFO.name,
+    description: VT_PLUS_PRODUCT_INFO.description,
+    price: VT_PLUS_PRODUCT_INFO.pricing.amount,
+    currency: VT_PLUS_PRODUCT_INFO.pricing.currency,
+    features: VT_PLUS_PRODUCT_INFO.features,
+    paymentProviderProductId: VT_PLUS_PRODUCT_INFO.productId || '', // Ensure it's a string
+};
+
+// Unified Product Definitions keyed by PlanSlug
+// Only VT_PLUS is a purchasable product.
+export const PRODUCTS_BY_PLAN_SLUG: Record<PlanSlug.VT_PLUS, Product> = {
+    [PlanSlug.VT_PLUS]: VT_PLUS_PRODUCT,
+};
+
+// Price mapping for API routes
+// The key from the client (priceId) is expected to be a PlanSlug.
+// This maps the incoming priceId (which should be a PlanSlug) to the PlanSlug itself.
+// This might be redundant if priceId is always a PlanSlug.
+// Only VT_PLUS is expected as a priceId for a purchasable plan.
+export const PRICE_ID_MAPPING: Record<PlanSlug.VT_PLUS, PlanSlug.VT_PLUS> = {
+    [PlanSlug.VT_PLUS]: PlanSlug.VT_PLUS,
+} as const;
+
 /**
- * Creem.io Service Class
+ * Payment Service Class
  */
-export class CreemService {
-    // Configure Creem client to use sandbox mode (serverIdx: 1) for development
-    // serverIdx: 0 - Production (https://api.creem.io)
-    // serverIdx: 1 - Sandbox (https://test-api.creem.io)
+export class PaymentService {
+    // Configure payment client for sandbox/production
     private static client = new Creem({
-        serverIdx: CreemService.getServerIndex(), // Use helper method to determine server index
+        serverIdx: PaymentService.getServerIndex(),
     });
 
-    // API Key from environment - MUST be a sandbox API key for development
-    // Sandbox API keys usually start with 'creem_test_'
+    // API Key from environment
     private static readonly API_KEY = process.env.CREEM_API_KEY;
 
-    // Product ID from environment - configurable for different environments
+    // Product ID from environment
     private static readonly PRODUCT_ID = process.env.CREEM_PRODUCT_ID;
 
     /**
-     * Get server index for Creem client initialization
+     * Get server index for client initialization
      */
     private static getServerIndex(): number {
         return process.env.CREEM_ENVIRONMENT === 'production' ||
@@ -101,57 +146,55 @@ export class CreemService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            console.log('[CreemService] Creating checkout session with:', {
+            console.log('[PaymentService] Creating checkout session with:', {
                 productId: request.productId,
                 quantity: request.quantity || 1,
                 email: request.customerEmail,
                 successUrl: request.successUrl,
             });
 
-            // Determine if this is for VT+ subscription based on our internal mapping
+            // Determine if this is for VT+ subscription
             const isSubscription =
-                request.productId === PlanSlug.VT_PLUS || // Changed from 'vt_plus_monthly'
-                (request.successUrl && request.successUrl.includes(`plan=${PlanSlug.VT_PLUS}`)); // Used PlanSlug
+                request.productId === PlanSlug.VT_PLUS ||
+                (request.successUrl && request.successUrl.includes(`plan=${PlanSlug.VT_PLUS}`));
 
             // Get the base URL for success redirect
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
-            // Ensure success URL is properly formatted for redirect - must be absolute URL
+            // Create success URL
             const successUrl = request.successUrl
                 ? request.successUrl.startsWith('http')
                     ? request.successUrl
                     : `${normalizedBaseUrl}${request.successUrl}`
-                : `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`; // Used PlanSlug
+                : isSubscription
+                  ? `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`
+                  : `${normalizedBaseUrl}/success?package=${request.productId}&quantity=${request.quantity || 1}`;
 
-            console.log('[CreemService] Using success URL:', successUrl);
+            console.log('[PaymentService] Using success URL:', successUrl);
 
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
                 createCheckoutRequest: {
-                    productId: this.PRODUCT_ID || '', // Use configured product ID with fallback
+                    productId: this.PRODUCT_ID || '',
                     units: request.quantity || 1,
                     successUrl: successUrl,
-                    customer: request.customerEmail
-                        ? {
-                              email: request.customerEmail,
-                          }
-                        : undefined,
+                    customer: request.customerEmail ? { email: request.customerEmail } : undefined,
                     metadata: {
-                        packageId: request.productId || '', // Store the internal package ID for webhook processing
+                        packageId: request.productId || '',
                         successUrl: successUrl,
+                        isSubscription: isSubscription ? 'true' : 'false',
                         source: 'vtchat-app',
                         timestamp: new Date().toISOString(),
                     },
                 },
             });
 
-            console.log('[CreemService] Checkout session created successfully:', {
+            console.log('[PaymentService] Checkout session created successfully:', {
                 checkoutId: result.id,
                 checkoutUrl: result.checkoutUrl,
             });
 
-            // The result should contain the checkout entity with the checkout URL
             if (result && typeof result === 'object' && 'checkoutUrl' in result) {
                 return {
                     checkoutId: result.id || '',
@@ -162,7 +205,7 @@ export class CreemService {
 
             throw new Error('Invalid checkout response - missing checkout URL');
         } catch (error: any) {
-            console.error('[CreemService] Checkout creation failed:', error);
+            console.error('[PaymentService] Checkout creation failed:', error);
             throw new CheckoutError(
                 `Failed to create checkout session: ${error.message || 'Unknown error'}`
             );
@@ -178,12 +221,11 @@ export class CreemService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            // If we have a userId, try to get the customer ID from the database
+            // Try to get customer ID from database if userId provided
             let customerId: string | null = null;
 
             if (userId && typeof require !== 'undefined') {
                 try {
-                    // Import database modules only on server side
                     const { db } = require('@/lib/database');
                     const { users } = require('@/lib/database/schema');
                     const { eq } = require('drizzle-orm');
@@ -196,17 +238,19 @@ export class CreemService {
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
                         console.log(
-                            '[CreemService] Found customer ID for user:',
+                            '[PaymentService] Found customer ID for user:',
                             userId,
                             customerId
                         );
                     }
                 } catch (dbError) {
-                    console.log('[CreemService] Database lookup failed, proceeding with fallback');
+                    console.log(
+                        '[PaymentService] Database lookup failed, proceeding with fallback'
+                    );
                 }
             }
 
-            // If we have a customer ID, use the proper Creem SDK method
+            // If we have a customer ID, use the payment SDK
             if (customerId) {
                 try {
                     const result = await this.client.generateCustomerLinks({
@@ -216,9 +260,7 @@ export class CreemService {
                         },
                     });
 
-                    // Handle the CustomerLinksEntity response properly
                     if (result && typeof result === 'object') {
-                        // The response should contain a portal URL - check different possible properties
                         const portalUrl =
                             (result as any).portalUrl ||
                             (result as any).url ||
@@ -226,7 +268,7 @@ export class CreemService {
 
                         if (portalUrl) {
                             console.log(
-                                '[CreemService] Generated customer portal URL successfully'
+                                '[PaymentService] Generated customer portal URL successfully'
                             );
                             return {
                                 url: portalUrl,
@@ -235,19 +277,14 @@ export class CreemService {
                         }
                     }
                 } catch (sdkError) {
-                    console.error(
-                        '[CreemService] Creem SDK generateCustomerLinks failed:',
-                        sdkError
-                    );
-                    // Fall through to fallback logic
+                    console.error('[PaymentService] SDK generateCustomerLinks failed:', sdkError);
                 }
             }
 
-            // Fallback logic for when customer ID is not available or SDK call fails
+            // Fallback logic
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
-            // If in sandbox mode, return the Creem.io sandbox customer portal
             if (!this.isProduction()) {
                 return {
                     url: `https://www.creem.io/test/billing?product=${this.PRODUCT_ID || ''}`,
@@ -255,14 +292,12 @@ export class CreemService {
                 };
             }
 
-            // For production without customer ID, redirect to subscription management page
             return {
                 url: `${normalizedBaseUrl}/plus`,
                 success: true,
             };
         } catch (error) {
-            console.error('Creem portal error:', error);
-            // Return fallback URL instead of throwing
+            console.error('Payment portal error:', error);
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
@@ -273,21 +308,27 @@ export class CreemService {
         }
     }
 
+    // Removed legacy purchaseCredits method
+
     /**
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        console.log('[CreemService] Creating VT+ subscription checkout for:', customerEmail);
+        console.log('[PaymentService] Creating VT+ subscription checkout for:', customerEmail);
 
         return this.createCheckout({
-            productId: this.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
+            productId: PlanSlug.VT_PLUS,
             customerEmail,
-            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
+            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`,
         });
     }
 
+    // Removed legacy calculatePrice method
+
+    // Removed legacy getSubscriptionPlans method (use PRODUCTS_BY_PLAN_SLUG directly if needed)
+
     /**
-     * Get Creem client instance for advanced operations
+     * Get payment client instance for advanced operations
      */
     static getClient() {
         return this.client;
@@ -295,18 +336,21 @@ export class CreemService {
 }
 
 // Error types
-export class CreemError extends Error {
+export class PaymentError extends Error {
     constructor(message: string) {
         super(message);
-        this.name = 'CreemError';
+        this.name = 'PaymentError';
     }
 }
 
-export class CheckoutError extends CreemError {
+export class CheckoutError extends PaymentError {
     constructor(message: string) {
         super(message);
         this.name = 'CheckoutError';
     }
 }
 
-// No longer exporting backward compatibility aliases
+// Removed legacy getSubscriptionPlans helper function
+
+// Export the service as default for easy importing
+export default PaymentService;

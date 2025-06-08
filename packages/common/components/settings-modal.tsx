@@ -1,13 +1,12 @@
 'use client';
 import { useMcpToolsStore } from '@repo/common/store';
-import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
+import { DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { IconBolt, IconBoltFilled, IconKey, IconSettings2, IconTrash } from '@tabler/icons-react';
+import { IconKey, IconSettings2, IconTrash } from '@tabler/icons-react';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
 
 import { useChatEditor } from '@repo/common/hooks';
-import moment from 'moment';
 import { useState } from 'react';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
@@ -15,7 +14,6 @@ import { useChatStore } from '../store/chat.store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon, ToolIcon } from './icons';
 import { ModeToggle } from './mode-toggle';
-import { UserTierBadge } from './user-tier-badge';
 
 export const SettingsModal = () => {
     const isSettingOpen = useAppStore(state => state.isSettingsOpen);
@@ -29,12 +27,6 @@ export const SettingsModal = () => {
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
-        },
-        {
-            icon: <IconBolt size={16} strokeWidth={2} className="text-muted-foreground" />,
-            title: 'Usage',
-            key: SETTING_TABS.CREDITS,
-            component: <CreditsSettings />,
         },
         {
             icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,
@@ -419,57 +411,6 @@ export const ApiKeySettings = () => {
                     </div>
                 </div>
             ))}
-        </div>
-    );
-};
-
-export const CreditsSettings = () => {
-    const remainingCredits = useChatStore(state => state.creditLimit.remaining);
-    const maxLimit = useChatStore(state => state.creditLimit.maxLimit);
-    const resetDate = useChatStore(state => state.creditLimit.reset);
-
-    const info = [
-        {
-            title: 'Plan',
-            value: <UserTierBadge />,
-        },
-        {
-            title: 'Credits',
-            value: (
-                <div className="flex h-7 flex-row items-center gap-1 rounded-full py-1">
-                    <IconBoltFilled size={14} strokeWidth={2} className="text-brand" />
-                    <span className="text-brand text-sm font-medium">{remainingCredits}</span>
-                    <span className="text-brand text-sm opacity-50">/</span>
-                    <span className="text-brand text-sm opacity-50">{maxLimit}</span>
-                </div>
-            ),
-        },
-        {
-            title: 'Next reset',
-            value: moment(resetDate).fromNow(),
-        },
-    ];
-
-    return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col items-start gap-2">
-                <h2 className="flex items-center gap-1 text-base font-medium">Usage Credits</h2>
-                <Alert variant="info" className="w-full">
-                    <AlertDescription className="text-muted-foreground/70 text-sm leading-tight">
-                        You'll recieve some free credits everyday. Once credits are used, you can
-                        use your own API keys to continue.
-                    </AlertDescription>
-                </Alert>
-
-                <div className="divide-border flex w-full flex-col gap-1 divide-y">
-                    {info.map(item => (
-                        <div key={item.title} className="flex flex-row justify-between gap-1 py-4">
-                            <span className="text-muted-foreground text-sm">{item.title}</span>
-                            <span className="text-sm font-medium">{item.value}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
         </div>
     );
 };

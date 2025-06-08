@@ -89,12 +89,6 @@ export function DevTestModeDebugPanel() {
                             <div
                                 className={`text-xs ${isDevMode ? 'text-green-600' : 'text-red-600'}`}
                             >
-                                {isDevMode ? '✅' : '❌'} Credit Checks:{' '}
-                                {isDevMode ? 'Bypassed' : 'Active'}
-                            </div>
-                            <div
-                                className={`text-xs ${isDevMode ? 'text-green-600' : 'text-red-600'}`}
-                            >
                                 {isDevMode ? '✅' : '❌'} Subscription Requirements:{' '}
                                 {isDevMode ? 'Bypassed' : 'Active'}
                             </div>

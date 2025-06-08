@@ -1,12 +1,12 @@
-export * from './chat-credits';
-export { CREEM_CREDIT_PACKAGES, CheckoutError, CreemError, CreemService } from './creem';
+export { PaymentService, PRODUCTS_BY_PLAN_SLUG, VT_PLUS_PRODUCT } from '../config/payment';
+
 export type {
-    CheckoutRequest as CreemCheckoutRequest,
-    CheckoutResponse as CreemCheckoutResponse,
-    PortalResponse as CreemPortalResponse,
-    CreemPrice,
-    CreemProduct,
-} from './creem';
+    CheckoutRequest,
+    CheckoutResponse,
+    Product as PaymentProductType,
+    PortalResponse,
+} from '../config/payment';
+
 export * from './dev-test-mode';
 export * from './hotjar';
 export * from './messages';

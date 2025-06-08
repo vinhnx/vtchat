@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
             .select({
                 id: users.id,
                 email: users.email,
-                credits: users.credits,
                 planSlug: users.planSlug,
                 name: users.name,
                 image: users.image,
@@ -45,7 +44,6 @@ export async function GET(request: NextRequest) {
                 email: user.email,
                 name: user.name,
                 image: user.image,
-                credits: user.credits || 0,
                 planSlug: user.planSlug || 'free',
             },
             success: true,
