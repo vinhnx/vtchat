@@ -3,7 +3,7 @@
 import { LoginDialog } from '@/components/login-dialog';
 import { CreemCreditsShop } from '@repo/common/components';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, Spinner } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { Shield, Sparkles, Users, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -25,13 +25,9 @@ export default function Page() {
     // Show loading state while checking authentication
     if (!isLoaded) {
         return (
-            <div className="container mx-auto px-4 py-16">
-                <div className="flex min-h-[50vh] items-center justify-center">
-                    <div className="flex flex-col items-center space-y-4 text-center">
-                        <p className="text-muted-foreground text-sm">Loading...</p>
-                    </div>
-                </div>
-            </div>
+            <p className="text-muted-foreground flex h-screen items-center justify-center text-sm">
+                Loading...
+            </p>
         );
     }
 
