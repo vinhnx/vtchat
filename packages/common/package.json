@@ -13,7 +13,7 @@
         "./components/creem-checkout-processor": "./components/creem-checkout-processor.tsx",
         "./components/creem-credits-display": "./components/creem-credits-display.tsx",
         "./components/dev-test-mode-banner": "./components/dev-test-mode-banner.tsx",
-        "./utils": "./utils/index.ts",
+        "./utils": "./utils/index.ts"
     },
     "scripts": {
         "lint": "eslint . --max-warnings 0",
