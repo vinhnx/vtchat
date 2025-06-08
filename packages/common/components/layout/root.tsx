@@ -1,7 +1,6 @@
 'use client';
 import {
     CommandSearch,
-    FeedbackWidget,
     IntroDialog,
     SettingsModal,
     Sidebar,
@@ -77,7 +76,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 </div>
                             </div>
                             <SideDrawer />
-                            <FeedbackWidget />
                             <IntroDialog />
                         </div>
                     </AgentProvider>
