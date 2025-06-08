@@ -1,6 +1,6 @@
 'use client';
 import { useMcpToolsStore } from '@repo/common/store';
-import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
+import { Alert, AlertDescription, Checkbox, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
 import { IconBolt, IconBoltFilled, IconKey, IconSettings2, IconTrash } from '@tabler/icons-react';
 
@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';
+import { useSettingsStore } from '../store/settings.store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon, ToolIcon } from './icons';
 import { ModeToggle } from './mode-toggle';
@@ -483,6 +484,9 @@ interface PersonalizationSettingsProps {
 export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProps) => {
     const customInstructions = useChatStore(state => state.customInstructions);
     const setCustomInstructions = useChatStore(state => state.setCustomInstructions);
+    const sidebarAutoClose = useSettingsStore(state => state.getSidebarAutoClose());
+    const setSidebarAutoClose = useSettingsStore(state => state.setSidebarAutoClose);
+
     const { editor } = useChatEditor({
         charLimit: MAX_CHAR_LIMIT,
         defaultContent: customInstructions,
@@ -507,6 +511,33 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                     <span className="text-sm font-medium">Theme mode:</span>
                     <ModeToggle onClose={onClose} />
                 </div>
+            </div>
+
+            {/* Sidebar Settings Section */}
+            <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-base font-semibold">Sidebar Behavior</h3>
+                    <p className="text-muted-foreground text-sm">
+                        Configure how the sidebar behaves when you launch the app.
+                    </p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <Checkbox
+                        id="sidebar-auto-close"
+                        checked={sidebarAutoClose}
+                        onCheckedChange={checked => setSidebarAutoClose(!!checked)}
+                    />
+                    <label
+                        htmlFor="sidebar-auto-close"
+                        className="cursor-pointer text-sm font-medium"
+                    >
+                        Auto-close sidebar on app launch
+                    </label>
+                </div>
+                <p className="text-muted-foreground ml-8 text-xs">
+                    When enabled, the sidebar will automatically close when you open the app, giving
+                    you more space to focus on your conversations.
+                </p>
             </div>
 
             {/* Custom Instructions Section */}
