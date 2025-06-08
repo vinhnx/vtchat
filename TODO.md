@@ -1,12 +1,18 @@
 # TODO List
 
 --
-[x] move footer (terms, condition) of /chat to side menu menu profile popup
-[x] apps/web/app/chat/page.tsx update this page
-[x] remove NEXT_PUBLIC_DEV_TEST_MODE and entire dev mode by pass
+
+[x] handle login check for input bar accessory actions (examplePrompts.ts)
+[x] add menu option preference to show or hide examplePrompts.ts bar
+[x] handle login check for action before exe 'send message' button
+[x] handle login check for models dropdown list
+[x] handle login check for web search toggle and file attachment button
+[x] add terms, condition pages to settings panel
+
 --
 
-[] new pricing page use V7 -> <https://v0.dev/chat/vt-subscription-layout-CWqgkAmbme9>
+--
+[] new pricing page <https://v0.dev/chat/vt-subscription-layout-CWqgkAmbme9?b=b_6u7S4NPoneb>
 --
 
 [] revamp /plus layout and wording, don't hard code
@@ -55,11 +61,6 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 --
 
 1. remove /success page
-1. remove /credits page -> use openCustomerPortal func
-1. unify subscription experience make sure it work and sync to db and reflecting into the app
-1. check isPlusSubscriber logic, make sure to check subscription status
-can just use return url instead of web hook ?
-<https://docs.creem.io/learn/checkout-session/return-url>
 
 --
 
