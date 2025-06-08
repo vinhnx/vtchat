@@ -2,7 +2,6 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { isDevTestMode } from '@repo/shared/utils';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -89,15 +88,6 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
     // Check if user has access based on feature or plan
     const hasAccess = React.useMemo(() => {
-        // DEV TEST MODE: Bypass all gating
-        if (isDevTestMode()) {
-            console.log('🚧 DEV TEST MODE: Bypassing gated feature check', {
-                requiredFeature,
-                requiredPlan,
-            });
-            return true;
-        }
-
         // If feature requires VT+, use the isVtPlus state directly
         if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
             return isVtPlus;

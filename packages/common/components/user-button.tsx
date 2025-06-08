@@ -10,7 +10,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui/components/ui/dropdown-menu';
-import { LogOut, User } from 'lucide-react';
+import { FileText, LogOut, Shield, User } from 'lucide-react';
+import Link from 'next/link';
 
 interface UserButtonProps {
     showName?: boolean;
@@ -55,6 +56,19 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     <User className="mr-2 h-4 w-4" />
                     Profile
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <Link href="/terms" className="w-full">
+                    <DropdownMenuItem>
+                        <FileText className="mr-2 h-4 w-4" />
+                        Terms
+                    </DropdownMenuItem>
+                </Link>
+                <Link href="/privacy" className="w-full">
+                    <DropdownMenuItem>
+                        <Shield className="mr-2 h-4 w-4" />
+                        Privacy
+                    </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
