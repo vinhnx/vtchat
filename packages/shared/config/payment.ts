@@ -7,9 +7,8 @@
 
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
-import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
-import { EnvironmentType, getCurrentEnvironment } from '../types/environment';
 import { isProductionEnvironment } from '../utils/env';
+import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
 
 // Types for payment integration
 export interface PaymentProduct {
