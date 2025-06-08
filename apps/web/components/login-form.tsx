@@ -89,6 +89,10 @@ function LoginFormContent({
                                                 setLoading(false);
                                                 onClose?.(); // Close dialog if provided
                                             },
+                                            onError: ctx => {
+                                                setLoading(false);
+                                                setError(ctx.error.message || 'Failed to sign in');
+                                            },
                                         }
                                     );
                                 }}
@@ -113,6 +117,10 @@ function LoginFormContent({
                                                 setLoading(false);
                                                 onClose?.(); // Close dialog if provided
                                             },
+                                            onError: ctx => {
+                                                setLoading(false);
+                                                setError(ctx.error.message || 'Failed to sign in');
+                                            },
                                         }
                                     );
                                 }}
@@ -123,7 +131,7 @@ function LoginFormContent({
                     </div>
                 </CardContent>
             </Card>
-            <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+            <div className="text-muted-foreground *:[a]:hover:text-primary *:[a]:underline *:[a]:underline-offset-4 text-balance text-center text-xs">
                 By clicking continue, you agree to our <Link href="/terms">Terms of Service</Link>{' '}
                 and <Link href="/privacy">Privacy Policy</Link>.
             </div>

@@ -10,6 +10,9 @@ applyTo: '**'
 
 ## Code Style
 
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use centralize enum for custom reusable keys.
 - 4-space indentation, single quotes, 100 char line length
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
