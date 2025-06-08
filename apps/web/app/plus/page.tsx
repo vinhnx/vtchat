@@ -89,9 +89,13 @@ export default function PlusPage() {
 
     return (
         <div className="relative min-h-screen w-full">
-            <div className="container relative z-10 mx-auto px-4 py-8">
+            {/* Fixed Grid Background */}
+            <div className="fixed inset-0 h-full w-full bg-slate-950">
+                <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+            </div>
+            <div className="container relative z-10 mx-auto px-4 py-8 pt-16">
                 {/* Hero Section */}
-                <div className="mb- space-y-3 text-center">
+                <div className="mb-8 space-y-3 text-center pt-8">
                     <div className="space-y-3">
                         <AnimatedBadge>
                             <Sparkles className="mr-2 h-4 w-4" />
@@ -107,21 +111,8 @@ export default function PlusPage() {
                 </div>
 
                 {/* Pricing Section */}
-                <div id="pricing" className="relative isolate px-6 py-8 sm:py-10 lg:px-8">
-                    <div
-                        className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
-                        aria-hidden="true"
-                    >
-                        <div
-                            className="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#BFB38F] to-[#D4C5A0] opacity-30"
-                            style={{
-                                clipPath:
-                                    'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-                            }}
-                        ></div>
-                    </div>
-
-                    <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-3 sm:mt-20 lg:max-w-4xl lg:grid-cols-2">
+                <div id="pricing" className="relative px-6 py-4 sm:py-6 lg:px-8">
+                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-3 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing className="rounded-3xl rounded-t-3xl bg-white p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none">
                             <div>
@@ -212,8 +203,8 @@ export default function PlusPage() {
                 </div>
 
                 {/* Features Section - Moved below pricing table */}
-                <div className="mb-16 mt-20">
-                    <div className="mb-12 text-center">
+                <div className="mb-8 mt-8">
+                    <div className="mb-6 text-center">
                         <TypographyLarge className="mb-4 text-white">
                             Powerful Features
                         </TypographyLarge>
@@ -226,7 +217,7 @@ export default function PlusPage() {
                 </div>
 
                 {/* CTA Section */}
-                <div className="mt-16 space-y-4 text-center">
+                <div className="mt-8 space-y-4 text-center">
                     <TypographyLarge className="text-white">Ready to get started?</TypographyLarge>
                     <TypographyP className="mx-auto mt-0 max-w-2xl text-base text-gray-400">
                         Join thousands of users who are already boosting their productivity with{' '}
