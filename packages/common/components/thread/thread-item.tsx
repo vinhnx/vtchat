@@ -1,6 +1,5 @@
 import {
     CitationProvider,
-    FollowupSuggestions,
     MarkdownContent,
     Message,
     MessageActions,
@@ -156,9 +155,7 @@ export const ThreadItem = memo(
                                     isLast={isLast}
                                 />
                             )}
-                        {isAnimationComplete && isLast && (
-                            <FollowupSuggestions suggestions={threadItem.suggestions || []} />
-                        )}
+                        {/* Follow-up suggestions are disabled entirely */}
                     </div>
                 </div>
             </CitationProvider>
