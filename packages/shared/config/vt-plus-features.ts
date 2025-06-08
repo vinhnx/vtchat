@@ -4,8 +4,10 @@
  * Defines all features and capabilities available with VT+ subscription
  */
 
+import { FeatureSlug } from '../types/subscription';
+
 export interface VTPlusFeature {
-    id: string;
+    id: FeatureSlug;
     name: string;
     description: string;
     enabled: boolean;
@@ -14,21 +16,21 @@ export interface VTPlusFeature {
 /**
  * VT+ Features Configuration
  */
-export const VT_PLUS_FEATURES: Record<string, VTPlusFeature> = {
-    PRO_SEARCH: {
-        id: 'pro_search',
+export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
+    [FeatureSlug.PRO_SEARCH]: {
+        id: FeatureSlug.PRO_SEARCH,
         name: 'Pro Search',
         description: 'Pro Search: Enhanced search with web integration for real-time information.',
         enabled: true,
     },
-    DARK_MODE: {
-        id: 'dark_mode',
-        name: 'Dark Mode',
-        description: 'Access to dark mode.',
+    [FeatureSlug.DARK_THEME]: {
+        id: FeatureSlug.DARK_THEME,
+        name: 'Dark Theme',
+        description: 'Access to dark theme.',
         enabled: true,
     },
-    DEEP_RESEARCH: {
-        id: 'deep_research',
+    [FeatureSlug.DEEP_RESEARCH]: {
+        id: FeatureSlug.DEEP_RESEARCH,
         name: 'Deep Research',
         description: 'Deep Research: Comprehensive analysis of complex topics with in-depth exploration.',
         enabled: true,
@@ -55,8 +57,8 @@ export const VT_PLUS_PRODUCT_INFO = {
 /**
  * Check if a specific feature is available for VT+ subscribers
  */
-export function isVTPlusFeatureEnabled(featureId: string): boolean {
-    const feature = Object.values(VT_PLUS_FEATURES).find(f => f.id === featureId);
+export function isVTPlusFeatureEnabled(featureId: FeatureSlug): boolean {
+    const feature = VT_PLUS_FEATURES[featureId];
     return feature?.enabled ?? false;
 }
 
@@ -76,21 +78,21 @@ export const VTPlusAccess = {
      * Check if user has access to Pro Search
      */
     hasProSearch: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled('pro_search');
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.PRO_SEARCH);
     },
 
     /**
      * Check if user has access to Dark Mode
      */
     hasDarkMode: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled('dark_mode');
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DARK_THEME);
     },
 
     /**
      * Check if user has access to Deep Research
      */
     hasDeepResearch: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled('deep_research');
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DEEP_RESEARCH);
     },
 
     /**

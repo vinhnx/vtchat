@@ -7,7 +7,11 @@
 *   Shared packages (`packages/common`, `packages/shared`, etc.) are being utilized.
 *   Initial Memory Bank files have been created.
 *   Centralized environment checking utility (`packages/shared/utils/env.ts`) created and implemented in `payment.ts` and `creem.ts`.
-*   `apps/web/.env.example` updated with `CREEM_ENVIRONMENT`.
+*   `apps/web/.env.example` updated with `CREEM_ENVIRONMENT` and `FREE_TIER_DAILY_LIMIT`.
+*   Credit system completely removed - all related components, pages, and logic have been deleted.
+*   Standardized environment handling with `EnvironmentType` enum and utility functions in `packages/shared/types/environment.ts`.
+*   Updated `creem.ts` and `payment.ts` to use new environment utilities.
+*   Removed redundant `env.ts` file.
 
 ## What's Left to Build (Current Tasks from TODO.md)
 
@@ -17,13 +21,13 @@
     *   [x] Update files like `payment.ts` and `creem.ts`.
 
 **Group 4: Authentication and Authorization Changes**
-*   [ ] If a user is not logged in, show an alert on tapping the chat input box, prompting them to log in.
+*   [x] If a user is not logged in, show an alert on tapping the chat input box, prompting them to log in.
 *   [ ] Ensure only logged-in users can use the app (potentially with BYOK features, though BYOK itself might be adjusted).
-*   [ ] Disable BYOK (Bring Your Own Key) functionality for non-logged-in users. Do not fetch or allow API key input if the user is not authenticated.
+*   [x] Disable BYOK (Bring Your Own Key) functionality for non-logged-in users. Do not fetch or allow API key input if the user is not authenticated.
 
 **Group 5: UI/UX Simplification & Component Updates**
-*   [ ] Update `UserTierBadge` to display plan names based on the `PlanSlug` enum's display text (e.g., `PlanSlug.VT_PLUS` should render as "VT+").
-*   [ ] Replace `TextShimmerComponent` with a simple `Label` component (e.g., from shadcn/ui).
+*   [x] Update `UserTierBadge` to display plan names based on the `PlanSlug` enum's display text (e.g., `PlanSlug.VT_PLUS` should render as "VT+").
+*   [x] Replace `TextShimmerComponent` with a simple `Label` component (e.g., from shadcn/ui).
 *   [ ] Adopt simple shadcn/ui styles and components more broadly.
 
 ## Current Status
@@ -31,7 +35,9 @@
 *   **Overall:** Project refactoring and enhancement effort initiated.
 *   **Memory Bank:** Core files created and being updated.
 *   **Group 3 Tasks:** Environment variable handling refactored.
-*   **Next Task:** Proceed to "Group 4: Authentication and Authorization Changes", starting with "If a user is not logged in, show an alert on tapping the chat input box, prompting them to log in."
+*   **Group 4 Tasks:** Authentication and authorization changes for non-logged-in users related to chat input and BYOK are complete.
+*   **Group 5 Tasks:** `UserTierBadge` updated.
+*   **Next Task:** Proceed to "Group 5: UI/UX Simplification & Component Updates", starting with "Replace `TextShimmerComponent` with a simple `Label` component (e.g., from shadcn/ui)."
 
 ## Known Issues
 

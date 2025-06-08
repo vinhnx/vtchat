@@ -7,6 +7,7 @@ export type {
     PortalResponse,
 } from '../config/payment';
 
+export * from './env';
 export * from './dev-test-mode';
 export * from './hotjar';
 export * from './messages';

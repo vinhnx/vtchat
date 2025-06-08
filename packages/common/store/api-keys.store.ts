@@ -1,6 +1,7 @@
 import { ChatMode } from '@repo/shared/config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useSession } from '@repo/shared/lib/auth-client';
 
 export type ApiKeys = {
     OPENAI_API_KEY?: string;
@@ -26,19 +27,31 @@ export const useApiKeysStore = create<ApiKeysState>()(
     persist(
         (set, get) => ({
             keys: {},
-            setKey: (provider, key) =>
+            setKey: (provider, key) => {
+                const { data: session } = useSession();
+                if (!session) return;
                 set(state => ({
                     keys: { ...state.keys, [provider]: key },
-                })),
-            removeKey: provider =>
+                }));
+            },
+            removeKey: provider => {
+                const { data: session } = useSession();
+                if (!session) return;
                 set(state => {
                     const newKeys = { ...state.keys };
                     delete newKeys[provider];
                     return { keys: newKeys };
-                }),
-            clearAllKeys: () => set({ keys: {} }),
+                });
+            },
+            clearAllKeys: () => {
+                const { data: session } = useSession();
+                if (!session) return;
+                set({ keys: {} });
+            },
             getAllKeys: () => get().keys,
             hasApiKeyForChatMode: (chatMode: ChatMode) => {
+                const { data: session } = useSession();
+                if (!session) return false;
                 const apiKeys = get().keys;
                 switch (chatMode) {
                     case ChatMode.O4_Mini:
