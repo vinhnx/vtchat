@@ -1,4 +1,5 @@
 'use client';
+import { STORAGE_KEYS } from '@repo/shared/config';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -57,7 +58,7 @@ const initializePreferences = () => {
         return { showExamplePrompts: true };
     }
 
-    const saved = localStorage.getItem('vtchat-preferences');
+    const saved = localStorage.getItem(STORAGE_KEYS.USER_PREFERENCES);
     if (saved) {
         try {
             return JSON.parse(saved);
@@ -98,7 +99,7 @@ export const useAppStore = create(
                 set({ showExamplePrompts: show });
                 if (typeof window !== 'undefined') {
                     localStorage.setItem(
-                        'vtchat-preferences',
+                        STORAGE_KEYS.USER_PREFERENCES,
                         JSON.stringify({ showExamplePrompts: show })
                     );
                 }
