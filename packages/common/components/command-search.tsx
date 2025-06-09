@@ -1,6 +1,9 @@
 'use client';
+import { GatedFeatureAlert } from './gated-feature-alert';
 import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     cn,
     CommandDialog,
@@ -37,6 +40,8 @@ export const CommandSearch = () => {
     const clearThreads = useChatStore(state => state.clearAllThreads);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const setSettingTab = useAppStore(state => state.setSettingTab);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
     const groupedThreads: Record<string, typeof threads> = {
         today: [],
         yesterday: [],
@@ -91,7 +96,14 @@ export const CommandSearch = () => {
         return () => document.removeEventListener('keydown', down);
     }, []);
 
-    const actions = [
+    type ActionItem = {
+        name: string;
+        icon: React.ComponentType<any>;
+        action: () => void;
+        requiresAuth?: boolean;
+    };
+
+    const actions: ActionItem[] = [
         {
             name: 'New Thread',
             icon: IconPlus,
@@ -116,18 +128,30 @@ export const CommandSearch = () => {
             name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
             icon: theme === 'dark' ? IconSun : IconMoon,
             action: () => {
+                if (!isSignedIn) {
+                    router.push('/login');
+                    onClose();
+                    return;
+                }
                 setTheme(theme === 'dark' ? 'light' : 'dark');
                 onClose();
             },
+            requiresAuth: true,
         },
         {
             name: 'Use your own API key',
             icon: IconKey,
             action: () => {
+                if (!isSignedIn) {
+                    router.push('/login');
+                    onClose();
+                    return;
+                }
                 setIsSettingsOpen(true);
                 setSettingTab('api-keys');
                 onClose();
             },
+            requiresAuth: true,
         },
         {
             name: 'Remove All Threads',
@@ -157,21 +181,39 @@ export const CommandSearch = () => {
             <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                    {actions.map(action => (
-                        <CommandItem
-                            key={action.name}
-                            className="gap-"
-                            value={action.name}
-                            onSelect={action.action}
-                        >
-                            <action.icon
-                                size={14}
-                                strokeWidth="2"
-                                className="text-muted-foreground flex-shrink-0"
-                            />
-                            {action.name}
-                        </CommandItem>
-                    ))}
+                    {actions.map(action => {
+                        const actionItem = (
+                            <CommandItem
+                                key={action.name}
+                                className="gap-"
+                                value={action.name}
+                                onSelect={action.action}
+                            >
+                                <action.icon
+                                    size={14}
+                                    strokeWidth="2"
+                                    className="text-muted-foreground flex-shrink-0"
+                                />
+                                {action.name}
+                            </CommandItem>
+                        );
+
+                        // Wrap auth-required actions with GatedFeatureAlert
+                        if (action.requiresAuth && !isSignedIn) {
+                            return (
+                                <GatedFeatureAlert
+                                    key={action.name}
+                                    title="Login Required"
+                                    message={`Please sign in to ${action.name.toLowerCase()}.`}
+                                    showAlert={true}
+                                >
+                                    {actionItem}
+                                </GatedFeatureAlert>
+                            );
+                        }
+
+                        return actionItem;
+                    })}
                 </CommandGroup>
                 {Object.entries(groupedThreads).map(
                     ([key, threads]) =>

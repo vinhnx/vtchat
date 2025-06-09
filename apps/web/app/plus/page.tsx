@@ -95,7 +95,7 @@ export default function PlusPage() {
             </div>
             <div className="container relative z-10 mx-auto px-4 py-8 pt-16">
                 {/* Hero Section */}
-                <div className="mb-8 space-y-3 text-center pt-8">
+                <div className="mb-8 space-y-3 pt-8 text-center">
                     <div className="space-y-3">
                         <AnimatedBadge>
                             <Sparkles className="mr-2 h-4 w-4" />

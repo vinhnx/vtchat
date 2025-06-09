@@ -3,6 +3,8 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
 import { IconKey, IconSettings2, IconTrash } from '@tabler/icons-react';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
 

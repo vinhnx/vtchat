@@ -26,7 +26,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== '/plus';
 
-
     return (
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             <div className="bg-tertiary item-center fixed inset-0 z-[99999] flex justify-center md:hidden">
