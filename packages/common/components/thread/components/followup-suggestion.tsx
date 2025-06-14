@@ -1,6 +1,6 @@
 import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';
-import { IconHelpHexagon } from '@tabler/icons-react';
+import { HelpCircle } from 'lucide-react';
 import { Editor } from '@tiptap/react';
 import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
@@ -21,7 +21,7 @@ export const FollowupSuggestions = ({ suggestions }: { suggestions: string[] }) 
             className="border-border my-4 flex flex-col items-start gap-2 border-t border-dashed py-4"
         >
             <div className="text-muted-foreground flex flex-row items-center gap-1.5 py-2 text-xs font-medium">
-                <IconHelpHexagon size={16} strokeWidth={2} className="text-muted-foreground" /> Ask
+                <HelpCircle size={16} strokeWidth={2} className="text-muted-foreground"  /> Ask
                 Followup
             </div>
             <motion.div

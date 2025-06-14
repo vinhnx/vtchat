@@ -1,5 +1,5 @@
 import { Flex } from '@repo/ui';
-import { IconPhotoPlus } from '@tabler/icons-react';
+import { ImagePlus } from 'lucide-react';
 import { FC } from 'react';
 import { DropzoneState } from 'react-dropzone';
 
@@ -17,7 +17,7 @@ export const ImageDropzone: FC<TImageDropzone> = ({ dropzonProps }) => {
                     justify="center"
                     gap="sm"
                 >
-                    <IconPhotoPlus size={16} className="text-muted-foreground" />
+                    <ImagePlus size={16} className="text-muted-foreground"  />
                     <p className="text-muted-foreground text-sm">
                         Drag and drop an image here, or click to select an image
                     </p>

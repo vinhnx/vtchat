@@ -12,7 +12,7 @@ import { useAnimatedText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
-import { IconAlertCircle, IconBook } from '@tabler/icons-react';
+import { AlertCircle, Book } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -82,7 +82,7 @@ export const ThreadItem = memo(
                         )}
 
                         <div className="text-muted-foreground flex flex-row items-center gap-1.5 text-xs font-medium">
-                            <IconBook size={16} strokeWidth={2} />
+                            <Book size={16} strokeWidth={2}  />
                             Answer
                         </div>
 
@@ -127,7 +127,7 @@ export const ThreadItem = memo(
                         {threadItem.error && (
                             <Alert variant="destructive">
                                 <AlertDescription>
-                                    <IconAlertCircle className="mt-0.5 size-3.5" />
+                                    <AlertCircle className="mt-0.5 size-3.5"  />
                                     {typeof threadItem.error === 'string'
                                         ? threadItem.error
                                         : 'Something went wrong while processing your request. Please try again.'}
@@ -138,7 +138,7 @@ export const ThreadItem = memo(
                         {threadItem.status === 'ABORTED' && (
                             <Alert variant="warning">
                                 <AlertDescription>
-                                    <IconAlertCircle className="mt-0.5 size-3.5" />
+                                    <AlertCircle className="mt-0.5 size-3.5"  />
                                     {threadItem.error ?? 'Generation stopped'}
                                 </AlertDescription>
                             </Alert>
