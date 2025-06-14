@@ -16,7 +16,8 @@ export type TRootLayout = {
 };
 
 export const RootLayout: FC<TRootLayout> = ({ children }) => {
-    const { isSidebarOpen, isMobileSidebarOpen, setIsMobileSidebarOpen } = useRootContext();
+    const { isSidebarOpen, isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } =
+        useRootContext();
     const setIsSettingOpen = useAppStore(state => state.setIsSettingsOpen);
     const pathname = usePathname();
 
@@ -25,6 +26,15 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== '/plus';
+
+    // Don't render complex UI until client is ready to prevent hydration mismatch
+    if (!isClient) {
+        return (
+            <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
+                <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
@@ -89,11 +99,42 @@ export const SideDrawer = () => {
     const pathname = usePathname();
     const sideDrawer = useAppStore(state => state.sideDrawer);
     const dismissSideDrawer = useAppStore(state => state.dismissSideDrawer);
+    const { isClient } = useRootContext();
     const { scrollRef, contentRef } = useStickToBottom({
         stiffness: 1,
         damping: 0,
     });
     const isThreadPage = pathname.startsWith('/chat/');
+
+    // Don't render during SSR to prevent hydration issues
+    if (!isClient) {
+        return null;
+    }
+
+    // Safely render title to prevent object-as-child errors
+    const renderTitle = () => {
+        try {
+            if (typeof sideDrawer.title === 'function') {
+                const titleElement = sideDrawer.title();
+                // Ensure we return a valid React node
+                return titleElement || '';
+            }
+            return sideDrawer.title || '';
+        } catch (error) {
+            console.warn('Error rendering sideDrawer title:', error);
+            return '';
+        }
+    };
+
+    // Safely render content to prevent object-as-child errors
+    const renderContent = () => {
+        try {
+            return sideDrawer.renderContent?.() || null;
+        } catch (error) {
+            console.warn('Error rendering sideDrawer content:', error);
+            return null;
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -112,11 +153,7 @@ export const SideDrawer = () => {
                 >
                     <div className="bg-background border-border shadow-subtle-xs flex h-full w-full flex-col overflow-hidden rounded-lg">
                         <div className="border-border flex flex-row items-center justify-between gap-2 border-b py-1.5 pl-4 pr-2">
-                            <div className="text-sm font-medium">
-                                {typeof sideDrawer.title === 'function'
-                                    ? sideDrawer.title() || ''
-                                    : sideDrawer.title || ''}
-                            </div>
+                            <div className="text-sm font-medium">{renderTitle()}</div>
                             {sideDrawer.badge && (
                                 <Badge variant="default">{sideDrawer.badge}</Badge>
                             )}
@@ -135,7 +172,7 @@ export const SideDrawer = () => {
                             ref={scrollRef}
                         >
                             <div ref={contentRef} className="w-full">
-                                {sideDrawer.renderContent() || <></>}
+                                {renderContent()}
                             </div>
                         </div>
                     </div>

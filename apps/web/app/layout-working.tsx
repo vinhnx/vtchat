@@ -8,9 +8,6 @@ import { Bricolage_Grotesque } from 'next/font/google';
 import localFont from 'next/font/local';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 
-// Force dynamic rendering to prevent SSR issues during build
-export const dynamic = 'force-dynamic';
-
 const bricolage = Bricolage_Grotesque({
     subsets: ['latin'],
     variable: '--font-bricolage',
