@@ -1,5 +1,5 @@
 import { Button } from '@repo/ui';
-import { IconHome } from '@tabler/icons-react';
+import { Home } from 'lucide-react';
 import Link from 'next/link';
 
 // Force dynamic rendering to prevent SSR issues
@@ -19,7 +19,7 @@ export default function NotFound() {
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                     <Link href="/chat">
                         <Button size="sm" className="flex items-center gap-2">
-                            <IconHome size={16} />
+                            <Home size={16} />
                             Go back home
                         </Button>
                     </Link>

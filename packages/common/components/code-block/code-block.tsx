@@ -12,18 +12,7 @@ import 'prismjs/components/prism-yaml';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button, cn } from '@repo/ui';
-import {
-    IconBrandJavascript,
-    IconBrandPython,
-    IconBrandReact,
-    IconBrandTypescript,
-    IconCheck,
-    IconCopy,
-    IconFileFilled,
-    IconJson,
-    IconMarkdown,
-    IconTerminal,
-} from '@tabler/icons-react';
+import { Check, Copy, File, FileJson, FileText, Terminal } from 'lucide-react';
 import './code-block.css';
 
 export type CodeBlockProps = {
@@ -56,25 +45,25 @@ export const CodeBlock = ({
     const getLangIcon = () => {
         switch (lang) {
             case 'bash':
-                return <IconTerminal size={14} />;
+                return <Terminal size={14} />;
             case 'json':
-                return <IconJson size={14} />;
+                return <FileJson size={14} />;
             case 'yaml':
-                return <IconJson size={14} />;
+                return <FileJson size={14} />;
             case 'python':
-                return <IconBrandPython size={14} />;
+                return <File size={14} />;
             case 'javascript':
-                return <IconBrandJavascript size={14} />;
+                return <File size={14} />;
             case 'typescript':
-                return <IconBrandTypescript size={14} />;
+                return <File size={14} />;
             case 'jsx':
-                return <IconBrandReact size={14} />;
+                return <File size={14} />;
             case 'markdown':
-                return <IconMarkdown size={14} />;
+                return <FileText size={14} />;
             case 'plaintext':
-                return <IconFileFilled size={14} />;
+                return <File size={14} />;
             default:
-                return <IconFileFilled size={14} />;
+                return <File size={14} />;
         }
     };
 
@@ -100,9 +89,9 @@ export const CodeBlock = ({
                         onClick={() => code && copy(code)}
                     >
                         {showCopied ? (
-                            <IconCheck size={14} strokeWidth="2" />
+                            <Check size={14} strokeWidth="2" />
                         ) : (
-                            <IconCopy size={14} strokeWidth="2" />
+                            <Copy size={14} strokeWidth="2" />
                         )}
                     </Button>
                 </div>
