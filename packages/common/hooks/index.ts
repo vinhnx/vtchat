@@ -6,6 +6,5 @@ export * from './use-editor';
 export * from './use-image-attachment';
 export * from './use-is-client';
 export * from './use-payment-subscription';
-export * from './use-subscription';
 export * from './use-subscription-access';
 export * from './use-text-selection';

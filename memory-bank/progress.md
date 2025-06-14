@@ -2,6 +2,17 @@
 
 ## Completed Tasks
 
+### Deprecation Cleanup (Latest) ✅
+
+- ✅ **Removed Deprecated Files**: Completely removed all deprecated subscription files
+  - Deleted `/packages/common/store/subscription.store.ts` (entire deprecated Zustand store)
+  - Deleted `/packages/common/hooks/use-subscription.ts` (deprecated hook)
+  - Deleted `/packages/common/hooks/use-subscription-status.ts` (deprecated hook)
+  - Deleted `/packages/common/components/subscription/provider.tsx` (legacy provider)
+- ✅ **Updated Exports**: Removed deprecated hook exports from index files
+- ✅ **Migrated Active Code**: Updated `payment-checkout-processor.tsx` to use global provider
+- ✅ **All Active Code Uses Global Provider**: Everything now uses `useGlobalSubscriptionStatus()`
+
 ### Subscription System Unification (Latest)
 
 #### Subscription Store Removal ✅
