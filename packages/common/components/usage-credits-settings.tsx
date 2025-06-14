@@ -14,7 +14,7 @@ interface UsageCreditsSettingsProps {
 export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
     const isVtPlus = useVtPlusAccess();
     const { planSlug, isLoaded } = useCurrentPlan();
-    const { openCustomerPortal } = useCreemSubscription();
+    const { openCustomerPortal, isPortalLoading } = useCreemSubscription();
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
@@ -68,10 +68,11 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         variant="outlined"
                                         size="sm"
                                         onClick={handleManageSubscription}
+                                        disabled={isPortalLoading}
                                         className="gap-2"
                                     >
                                         <IconCreditCard size={16} />
-                                        Manage Subscription
+                                        {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
                                     </Button>
                                 ) : (
                                     <Button

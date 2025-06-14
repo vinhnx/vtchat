@@ -1,6 +1,67 @@
 # TODO List
 
-[] Customer portal:
+1. make sure threads is per account and hide on logged out.
+1. on login to existing or new account, should fetched from store and indexdb
+
+--
+[✅] Customer portal: **FIXED & ENHANCED**
+
+🎉 **IMPLEMENTATION COMPLETED & ISSUES RESOLVED** ✅
+
+The customer portal functionality has been successfully implemented and all issues have been fixed:
+
+✅ Direct Creem.io API integration for customer billing portal
+✅ Environment-based endpoint configuration (sandbox/production)
+✅ Customer ID resolution from users.creem_customer_id and user_subscriptions.stripe_customer_id
+✅ Proper error handling and user feedback
+✅ Integration with existing useCreemSubscription hook
+✅ Comprehensive logging for debugging
+✅ Test suite and documentation
+✅ **FIXED:** API response handling for `customer_portal_link` field
+✅ **ADDED:** Loading states for better user experience
+
+**🐛 Issue Resolved:**
+
+- Fixed "Invalid response format from Creem API - no URL found" error
+- Creem.io API returns portal URL in `customer_portal_link` field (not `url`)
+- Updated PaymentService to handle this response format correctly
+
+**🎨 UX Improvements Added:**
+
+- Portal loading states across all components
+- Disabled buttons during API calls
+- Loading text indicators ("Loading...")
+- Smooth user feedback during operations
+
+**Files modified:**
+
+- `packages/shared/config/payment.ts` - Updated getPortalUrl method + fixed API response handling
+- `packages/common/hooks/use-payment-subscription.ts` - Enhanced error handling + added loading states
+- `packages/shared/constants/creem.ts` - New constants file + updated types
+- `packages/common/components/usage-credits-settings.tsx` - Added loading UI
+- `packages/common/components/side-bar.tsx` - Added loading UI
+- `apps/web/app/plus/page.tsx` - Added loading UI
+- `apps/web/app/tests/test-customer-portal.js` - Test suite
+- `docs/customer-portal-integration.md` - Documentation
+- `scripts/test-customer-portal.js` - Integration test script
+- `scripts/test-portal-fix.js` - Fix verification test
+
+**API Implementation:**
+
+- POST `/api/portal` endpoint calls Creem.io API directly
+- Uses `https://test-api.creem.io/v1/customers/billing` for development
+- Uses `https://api.creem.io/v1/customers/billing` for production
+- Fetches customer_id from database (users.creem_customer_id or user_subscriptions.stripe_customer_id)
+- Includes CREEM_API_KEY in x-api-key header
+- Returns portal URL for subscription management
+- **NOW CORRECTLY HANDLES:** `customer_portal_link` response field
+
+**Usage:**
+
+```typescript
+const { openCustomerPortal, isPortalLoading } = useCreemSubscription();
+await openCustomerPortal(); // Now works correctly with loading states
+```
 
 or calling:
 const redirectUrl = await axios.post(
@@ -15,7 +76,7 @@ const redirectUrl = await axios.post(
 
 NOTE:
 
-1. where {host} is: make sure `https://test-api.creem.io/v1/customers/billing` is for creem.io sandbox and `https://api.creem.io/v1/customers/billin` is production
+1. where {host} is: make sure `https://test-api.creem.io/v1/customers/billing` is for creem.io sandbox and `https://api.creem.io/v1/customers/billing` is production
 1. `customer_id` value in request body is the current `creem_customer_id` or `stripe_customer_id` id in `user_subscriptions` table from neon postgresql db
 1. `x-api-key` in headers is get from `CREEM_API_KEY` in .env file
 1. handle `manage subscription` logic in packages/common/hooks/use-payment-subscription.ts -> fetch above api and handle url response -> open that api to view
@@ -72,10 +133,10 @@ product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. 
 description: For everyday productivity
 Payment Details:
 
-* type: supbscription
-* pricing: 9.99 USD
-* subscription inverval: monthly
-* price includes tax
+- type: supbscription
+- pricing: 9.99 USD
+- subscription inverval: monthly
+- price includes tax
 Product Features:
 1 Pro Search
 a. description: "Pro Search: Enhanced search with web integration for real-time information."
@@ -102,8 +163,8 @@ Note
 1. you can use Neon MCP tools
 2. you can use any mcp tools if stuck.
 1. make sure to check for current environment.
-   * If in development, use sandbox API keys and test customer IDs.
-   * If in production, use live API keys and ensure proper customer management.
+   - If in development, use sandbox API keys and test customer IDs.
+   - If in production, use live API keys and ensure proper customer management.
 --
 Dev Payment Webhook log and config
 
@@ -175,10 +236,10 @@ product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. 
 description: For everyday productivity
 Payment Details:
 
-* type: supbscription
-* pricing: 9.99 USD
-* subscription inverval: monthly
-* price includes tax
+- type: supbscription
+- pricing: 9.99 USD
+- subscription inverval: monthly
+- price includes tax
 Product Features:
 1 Pro Search
 a. description: "Pro Search: Enhanced search with web integration for real-time information."
@@ -276,24 +337,24 @@ can you implement account-based thread managements system with neon and postgres
 
 --
 
-* <https://supersaas.dev/blog/how-to-launch-your-side-project>
+- <https://supersaas.dev/blog/how-to-launch-your-side-project>
 
 [] remove unrelated depedencies from our main stack -> use [knip](https://knip.dev/)
 
-* review and unify icon package usage in #codebase. review package.json and use 1 package (lucide-react) for icons.
-* buy domain name -> .io.vn (gov sponsor)
-* vtai.io.vn
-* vtchat.io.vn
+- review and unify icon package usage in #codebase. review package.json and use 1 package (lucide-react) for icons.
+- buy domain name -> .io.vn (gov sponsor)
+- vtai.io.vn
+- vtchat.io.vn
 <https://whois.inet.vn/whois?domain=vtchat.io.vn>
-* <https://vnnic.vn/whois-information>
-* <https://viettelidc.com.vn/Domain/SearchAutomationDomain?keyword=vtchat.io.vn>
-* good <https://secure.vinahost.vn/ac/cart.php?a=confdomains>
-* <https://www.domainsgpt.ai/DomainSearch/?domain=vtai.com>
-* <https://www.namecheap.com/domains/registration/results/?domain=vtai>
-* <https://porkbun.com/checkout/search?prb=d41b158dc5&q=vtai.space>
-* <https://namelix.com/app/?keywords=vtai>
-* <https://domainr.com/?q=vtai>
-* [] cookie consent
+- <https://vnnic.vn/whois-information>
+- <https://viettelidc.com.vn/Domain/SearchAutomationDomain?keyword=vtchat.io.vn>
+- good <https://secure.vinahost.vn/ac/cart.php?a=confdomains>
+- <https://www.domainsgpt.ai/DomainSearch/?domain=vtai.com>
+- <https://www.namecheap.com/domains/registration/results/?domain=vtai>
+- <https://porkbun.com/checkout/search?prb=d41b158dc5&q=vtai.space>
+- <https://namelix.com/app/?keywords=vtai>
+- <https://domainr.com/?q=vtai>
+- [] cookie consent
 
 --
 

@@ -58,7 +58,7 @@ export const Sidebar = () => {
     const sidebarAnimationDisabled = useAppStore(state => state.sidebarAnimationDisabled);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
-    const { isPlusSubscriber, openCustomerPortal } = useCreemSubscription();
+    const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -251,6 +251,7 @@ export const Sidebar = () => {
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="bordered"
                         rounded="lg"
+                        disabled={isPortalLoading}
                         tooltip={
                             isSidebarOpen
                                 ? undefined
@@ -275,7 +276,11 @@ export const Sidebar = () => {
                     >
                         <IconSparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
                         {isSidebarOpen &&
-                            (isPlusSubscriber ? 'Manage Subscription' : 'Upgrade to Plus')}
+                            (isPortalLoading
+                                ? 'Loading...'
+                                : isPlusSubscriber
+                                  ? 'Manage Subscription'
+                                  : 'Upgrade to Plus')}
                     </Button>
                 </Flex>
 
