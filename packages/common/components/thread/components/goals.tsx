@@ -132,7 +132,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
 
         openSideDrawer({
             badge: stepCounts,
-            title: () => renderTitle(false),
+            title: `${getTitle(threadItem)} - Steps`,
             renderContent: () => (
                 <div className="flex w-full flex-1 flex-col px-2 py-4">
                     {steps.map((step, index) => (

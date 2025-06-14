@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/database';
 import { users, userSubscriptions } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -125,7 +126,7 @@ export async function POST(request: NextRequest) {
                 const subscriptionData = {
                     userId,
                     plan: planSlug,
-                    status: 'active',
+                    status: SubscriptionStatusEnum.ACTIVE,
                     stripeCustomerId: validatedData.customer_id, // Using Creem customer ID
                     stripeSubscriptionId: validatedData.subscription_id,
                     currentPeriodStart: new Date(),
