@@ -1,8 +1,36 @@
 # TODO List
 
+[] Customer portal:
+
+or calling:
+const redirectUrl = await axios.post(
+  `https://{host}/v1/customers/billing`,
+    {
+      "customer_id": "cust_xxxxxxx",
+    },
+    {
+      headers: { "x-api-key": `creem_123456789` },
+    },
+);
+
+NOTE:
+
+1. where {host} is: make sure `https://test-api.creem.io/v1/customers/billing` is for creem.io sandbox and `https://api.creem.io/v1/customers/billin` is production
+1. `customer_id` value in request body is the current `creem_customer_id` or `stripe_customer_id` id in `user_subscriptions` table from neon postgresql db
+1. `x-api-key` in headers is get from `CREEM_API_KEY` in .env file
+1. handle `manage subscription` logic in packages/common/hooks/use-payment-subscription.ts -> fetch above api and handle url response -> open that api to view
+
+--
+check db
+
+1. creem_customer_id in users table
+1. stripe_customer_id, stripe_subscription_id in user_subscriptions table -> rename colum to remove `strip_` -> replace with `creem_`
+1. unify creem_customer_id in users table and newly renamed creem_customer_id, creem_subscription_id in user_subscriptions table
+1. update apps/web/lib/database/schema.ts and apps/web/migration_better_auth.sql, do migration
+1. you can use drizzle orm, context7, neon, better-auth, creem.io MCP tools to make db schema and migration on db
 --
 
-1. check @deprecated in #codebase and read the header document and plan, then execute the plan to migrate to reccommended approach, then cleanup those deprecated.
+1. wow! <https://tailark.com/>
 
 --
 
@@ -12,18 +40,17 @@
 1. check for GatedFeatureAlert entrypoint calling #codebase and check sub status
 1. unify subscription logic and use one unidufy sub use in #editFiles and
 1. update schema and migration if  needed
- --
- you can use context7, neon, better-auth, creem.io MCP tools
+note: you can use context7, neon, better-auth, creem.io MCP tools
 --
-1.double check use-subscription-access and use-supbscriotion logic
 
 1. migrate useVtPlusAccess and use useSubscriptionStatus
 1. make sure unify subscription logic as once and remove redundant logic make sure sync with neon db and web hook from creem.io payment call back
 1. you can use context7, neon, better-auth, creem.io MCP tools
 
 --
-optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
-IMPORTANT: make sure to handle this logic per account and check non-login
+
+1. optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
+1. IMPORTANT: make sure to handle this logic per account and check non-login
 you can use MCP tools like neon context7 creem.io
 --
 
@@ -31,7 +58,7 @@ you can use MCP tools like neon context7 creem.io
 
 --
 
-1. on routing to creem.io page to make payment -> show a loading spinner
+1. on routing to creem.io page to make payment and redirect back to app -> show a loading spinner
 
 --
 
@@ -80,7 +107,6 @@ Note
 --
 Dev Payment Webhook log and config
 
-
 --
 please note that the web hook on dev is
 webhookUrl: <https://0f4c-42-118-189-41.ngrok-free.app//api/webhook/creem>
@@ -92,7 +118,6 @@ subscription.active
 
 Response
 HTTP status code404
-
 
 --
 Webhooks
@@ -129,6 +154,7 @@ import * as crypto from 'crypto';
 In the code snippet above, the payload is the request body, and the secret is the webhook secret. Simply compare the generated Signature with the one received on the header to complete the verification process.
 
 --
+
 1. on click subscribe in VT plus page , the app is asking for subscribe even though user has susribe. fix this.
 1. check vt_plus on plan_slug row of the users table and user_subscriptions table on neon and update local sub store and logic
 --
@@ -220,7 +246,7 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 [] <https://github.com/ibelick/prompt-kit>
 
 implement full remote thread sync.
-can you implement account-based thread managements system with neon and postgres using out existing thread schema and store logic. review #codebase for clues.
+can you implement account-based thread managements system with neon and postgres using out existing thread schema and store logic. review #codebase for clues
 --
 
 [] pricing page -> show current tier (including free) check mark on card /plus page
@@ -271,8 +297,8 @@ can you implement account-based thread managements system with neon and postgres
 
 --
 
-1. Monet: try https://github.com/lingodotdev/lingo.dev
+1. Monet: try <https://github.com/lingodotdev/lingo.dev>
 
 --
 
-1. https://github.com/electron/electron
+1. <https://github.com/electron/electron>
