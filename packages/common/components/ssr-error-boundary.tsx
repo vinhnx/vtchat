@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Component, ReactNode } from 'react';
+import { FullPageLoader } from './full-page-loader';
 
 interface SSRErrorBoundaryState {
     hasError: boolean;
@@ -34,7 +35,7 @@ export class SSRErrorBoundary extends Component<SSRErrorBoundaryProps, SSRErrorB
             return (
                 this.props.fallback || (
                     <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                        <div className="text-muted-foreground text-sm">Loading application...</div>
+                        <FullPageLoader label="Loading application..." />
                     </div>
                 )
             );

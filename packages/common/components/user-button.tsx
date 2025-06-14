@@ -1,16 +1,16 @@
 'use client';
 
 import { useSession, useSignOut } from '@repo/shared/lib/auth-client';
-import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
-import { Button } from '@repo/ui/components/ui/button';
 import {
+    Avatar,
+    Button,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@repo/ui/components/ui/dropdown-menu';
-import { FileText, LogOut, Shield, User } from 'lucide-react';
+} from '@repo/ui';
+import { IconFileText, IconLogout, IconShield, IconUser } from '@tabler/icons-react';
 import Link from 'next/link';
 
 interface UserButtonProps {
@@ -25,22 +25,22 @@ export function UserButton({ showName = false }: UserButtonProps) {
     if (!session?.user) return null;
 
     const user = session.user;
-    const initials = user.name
-        ? user.name
-              .split(' ')
-              .map(n => n[0])
-              .join('')
-              .toUpperCase()
-        : user.email[0].toUpperCase();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex h-auto items-center gap-2 p-1">
-                    <Avatar className="h-6 w-6">
-                        <AvatarImage src={user.image || ''} alt={user.name || user.email} />
-                        <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-                    </Avatar>
+                    {user.image ? (
+                        <img
+                            src={user.image}
+                            width={24}
+                            height={24}
+                            className="rounded-full"
+                            alt={user.name || user.email}
+                        />
+                    ) : (
+                        <Avatar name={user.name || user.email} size="sm" />
+                    )}
                     {showName && (
                         <span className="text-sm font-medium">{user.name || user.email}</span>
                     )}
@@ -53,25 +53,25 @@ export function UserButton({ showName = false }: UserButtonProps) {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
+                    <IconUser className="mr-2 h-4 w-4" />
                     Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <Link href="/terms" className="w-full">
                     <DropdownMenuItem>
-                        <FileText className="mr-2 h-4 w-4" />
-                        Terms
+                        <IconFileText className="mr-2 h-4 w-4" />
+                        Terms of Service
                     </DropdownMenuItem>
                 </Link>
                 <Link href="/privacy" className="w-full">
                     <DropdownMenuItem>
-                        <Shield className="mr-2 h-4 w-4" />
-                        Privacy
+                        <IconShield className="mr-2 h-4 w-4" />
+                        Privacy Policy
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <IconLogout className="mr-2 h-4 w-4" />
                     Sign out
                 </DropdownMenuItem>
             </DropdownMenuContent>

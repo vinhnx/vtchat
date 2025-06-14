@@ -1,5 +1,5 @@
 'use client';
-import { ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
+import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -198,7 +198,7 @@ export const ChatInput = ({
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.15 }}
                                 >
-                                    <div className="animate-pulse">Loading editor...</div>
+                                    <InlineLoader label="Loading editor..." />
                                 </motion.div>
                             )}
                         </motion.div>

@@ -1,4 +1,10 @@
-import { NoSSR, RootLayout, SSRErrorBoundary, ThemeProvider } from '@repo/common/components';
+import {
+    FullPageLoader,
+    NoSSR,
+    RootLayout,
+    SSRErrorBoundary,
+    ThemeProvider,
+} from '@repo/common/components';
 import { RootProvider } from '@repo/common/context';
 import { cn, TooltipProvider } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
@@ -108,9 +114,7 @@ export default function ParentLayout({
                                     <NoSSR
                                         fallback={
                                             <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                                                <div className="text-muted-foreground text-sm">
-                                                    Loading...
-                                                </div>
+                                                <FullPageLoader />
                                             </div>
                                         }
                                     >

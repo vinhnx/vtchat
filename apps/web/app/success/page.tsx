@@ -1,4 +1,4 @@
-import { CreemCheckoutProcessor } from '@repo/common/components';
+import { CreemCheckoutProcessor, FullPageLoader } from '@repo/common/components';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -8,15 +8,7 @@ export const metadata: Metadata = {
 };
 
 function ProcessingMessage() {
-    return (
-        <div className="flex min-h-screen items-center justify-center">
-            <div className="text-center">
-                <div className="border-primary mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
-                <h1 className="mb-2 text-2xl font-semibold">Processing your payment...</h1>
-                <p className="text-muted-foreground">Please wait while we update your account.</p>
-            </div>
-        </div>
-    );
+    return <FullPageLoader label="Processing your payment..." />;
 }
 
 export default function SuccessPage() {

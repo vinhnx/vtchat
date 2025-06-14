@@ -19,14 +19,16 @@ import {
     IconArrowBarLeft,
     IconArrowBarRight,
     IconCommand,
-    IconCrown,
+    IconFileText,
     IconLogout,
+    IconMessagePlus,
     IconPinned,
-    IconPlus,
     IconSearch,
     IconSelector,
     IconSettings,
     IconSettings2,
+    IconShield,
+    IconSparkles,
     IconUser,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
@@ -174,18 +176,23 @@ export const Sidebar = () => {
                     )}
                     gap="xs"
                 >
+                    {/* Primary Actions */}
                     {!isChatPage ? (
                         <Link href="/chat" className={isSidebarOpen ? 'w-full' : ''}>
                             <Button
                                 size={isSidebarOpen ? 'sm' : 'icon-sm'}
                                 variant="bordered"
                                 rounded="lg"
-                                tooltip={isSidebarOpen ? undefined : 'New Thread'}
+                                tooltip={isSidebarOpen ? undefined : 'New Chat'}
                                 tooltipSide="right"
                                 className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                             >
-                                <IconPlus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                                {isSidebarOpen && 'New'}
+                                <IconMessagePlus
+                                    size={16}
+                                    strokeWidth={2}
+                                    className={cn(isSidebarOpen)}
+                                />
+                                {isSidebarOpen && 'New Chat'}
                             </Button>
                         </Link>
                     ) : (
@@ -193,12 +200,16 @@ export const Sidebar = () => {
                             size={isSidebarOpen ? 'sm' : 'icon-sm'}
                             variant="bordered"
                             rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'New Thread'}
+                            tooltip={isSidebarOpen ? undefined : 'New Chat'}
                             tooltipSide="right"
                             className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                         >
-                            <IconPlus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                            {isSidebarOpen && 'New Thread'}
+                            <IconMessagePlus
+                                size={16}
+                                strokeWidth={2}
+                                className={cn(isSidebarOpen)}
+                            />
+                            {isSidebarOpen && 'New Chat'}
                         </Button>
                     )}
 
@@ -206,37 +217,7 @@ export const Sidebar = () => {
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="bordered"
                         rounded="lg"
-                        tooltip={
-                            isSidebarOpen
-                                ? undefined
-                                : isPlusSubscriber
-                                  ? 'Manage Subscription'
-                                  : 'View Plans'
-                        }
-                        tooltipSide="right"
-                        className={cn(
-                            isSidebarOpen && 'relative w-full',
-                            'text-muted-foreground justify-center px-2'
-                        )}
-                        onClick={() => {
-                            if (isPlusSubscriber) {
-                                // Open Creem customer portal for subscribers
-                                openCustomerPortal();
-                            } else {
-                                // For non-subscribers, go to /plus page
-                                push('/plus');
-                            }
-                        }}
-                    >
-                        <IconCrown size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
-                        {isSidebarOpen && (isPlusSubscriber ? 'Manage Subscription' : 'View Plans')}
-                    </Button>
-
-                    <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="bordered"
-                        rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'Search'}
+                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
                         tooltipSide="right"
                         className={cn(
                             isSidebarOpen && 'relative w-full',
@@ -264,33 +245,50 @@ export const Sidebar = () => {
                             </div>
                         )}
                     </Button>
+
+                    {/* Subscription Section */}
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="bordered"
+                        rounded="lg"
+                        tooltip={
+                            isSidebarOpen
+                                ? undefined
+                                : isPlusSubscriber
+                                  ? 'Manage Subscription'
+                                  : 'Upgrade to Plus'
+                        }
+                        tooltipSide="right"
+                        className={cn(
+                            isSidebarOpen && 'relative w-full',
+                            'text-muted-foreground justify-center px-2'
+                        )}
+                        onClick={() => {
+                            if (isPlusSubscriber) {
+                                // Open Creem customer portal for subscribers
+                                openCustomerPortal();
+                            } else {
+                                // For non-subscribers, go to /plus page
+                                push('/plus');
+                            }
+                        }}
+                    >
+                        <IconSparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                        {isSidebarOpen &&
+                            (isPlusSubscriber ? 'Manage Subscription' : 'Upgrade to Plus')}
+                    </Button>
                 </Flex>
+
+                {/* Thread History Section */}
                 <Flex
                     direction="col"
                     gap="xs"
                     className={cn(
-                        'border-hard mt-3 w-full  justify-center border-t border-dashed px-3 py-2',
+                        'border-hard mt-4 w-full justify-center border-t border-dashed px-3 pt-3',
                         !isSidebarOpen && 'items-center justify-center px-0'
                     )}
                 >
-                    {/* <Link href="/recent" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'xs' : 'icon-sm'}
-                            variant="bordered"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Recent'}
-                            tooltipSide="right"
-                            className={cn(
-                                'text-muted-foreground w-full justify-start',
-                                !isSidebarOpen && 'w-auto justify-center'
-                            )}
-                        >
-                            <IconHistory size={14} strokeWidth={2} />
-                            {isSidebarOpen && 'Recent'}
-                            {isSidebarOpen && <span className="inline-flex flex-1" />}
-                            {isSidebarOpen && <IconChevronRight size={14} strokeWidth={2} />}
-                        </Button>
-                    </Link> */}
+                    {/* Thread history will be displayed below when sidebar is open */}
                 </Flex>
 
                 {false ? (
@@ -298,12 +296,13 @@ export const Sidebar = () => {
                 ) : (
                     <Flex
                         direction="col"
-                        gap="md"
+                        gap="lg"
                         className={cn(
                             'no-scrollbar w-full flex-1 overflow-y-auto px-3 pb-[100px]',
                             isSidebarOpen ? 'flex' : 'hidden'
                         )}
                     >
+                        {/* Pinned Conversations */}
                         {renderGroup({
                             title: 'Pinned',
                             threads: threads
@@ -311,19 +310,26 @@ export const Sidebar = () => {
                                 .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
                             groupIcon: <IconPinned size={14} strokeWidth={2} />,
                             renderEmptyState: () => (
-                                <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-2">
-                                    <p className="text-muted-foreground text-xs opacity-50">
-                                        No pinned threads
+                                <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                    <IconPinned
+                                        size={16}
+                                        strokeWidth={1.5}
+                                        className="text-muted-foreground/50"
+                                    />
+                                    <p className="text-muted-foreground text-center text-xs">
+                                        Pin important conversations to keep them at the top
                                     </p>
                                 </div>
                             ),
                         })}
+
+                        {/* Recent Conversations */}
                         {renderGroup({ title: 'Today', threads: groupedThreads.today })}
                         {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
                         {renderGroup({ title: 'Last 7 Days', threads: groupedThreads.last7Days })}
                         {renderGroup({ title: 'Last 30 Days', threads: groupedThreads.last30Days })}
                         {renderGroup({
-                            title: 'Previous Months',
+                            title: 'Older',
                             threads: groupedThreads.previousMonths,
                         })}
                     </Flex>
@@ -398,6 +404,14 @@ export const Sidebar = () => {
                                     <IconSettings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => push('/privacy')}>
+                                    <IconShield size={16} strokeWidth={2} />
+                                    Privacy Policy
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => push('/terms')}>
+                                    <IconFileText size={16} strokeWidth={2} />
+                                    Terms of Service
+                                </DropdownMenuItem>
                                 {!isSignedIn && (
                                     <DropdownMenuItem onClick={() => push('/login')}>
                                         <IconUser size={16} strokeWidth={2} />
@@ -407,7 +421,7 @@ export const Sidebar = () => {
                                 {isSignedIn && (
                                     <DropdownMenuItem onClick={() => signOut()}>
                                         <IconLogout size={16} strokeWidth={2} />
-                                        Logout
+                                        Sign out
                                     </DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
