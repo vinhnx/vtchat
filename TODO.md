@@ -53,10 +53,6 @@ Configure Next.js to skip static generation for error pages
 Use a server-side rendering deployment strategy
 Further isolate the build-time rendering issue
 The app is now ready for development and can be deployed using server-side rendering modes that bypass the static generation step
---
-
-[] revamp login page using v0
-<https://v0.dev/chat/open-in-v0-hBAl1yES9Pm>
 
 --
 
