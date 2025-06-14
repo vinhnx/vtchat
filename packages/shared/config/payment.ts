@@ -6,6 +6,7 @@
  */
 
 import { Creem } from 'creem';
+import { CREEM_API_CONFIG, CreemApiError, CreemCustomerBillingRequest } from '../constants/creem';
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from '../utils/env';
 import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
@@ -219,61 +220,122 @@ export class PaymentService {
             if (userId && typeof require !== 'undefined') {
                 try {
                     const { db } = require('@/lib/database');
-                    const { users } = require('@/lib/database/schema');
+                    const { users, userSubscriptions } = require('@/lib/database/schema');
                     const { eq } = require('drizzle-orm');
 
+                    // First, check users table for creem_customer_id
                     const userResults = await db
                         .select()
                         .from(users)
                         .where(eq(users.id, userId))
                         .limit(1);
+
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
                         console.log(
-                            '[PaymentService] Found customer ID for user:',
+                            '[PaymentService] Found customer ID in users table:',
                             userId,
                             customerId
                         );
+                    } else {
+                        // Fallback: check user_subscriptions table for stripe_customer_id (to be renamed to creem_customer_id)
+                        const subscriptionResults = await db
+                            .select()
+                            .from(userSubscriptions)
+                            .where(eq(userSubscriptions.userId, userId))
+                            .limit(1);
+
+                        if (
+                            subscriptionResults.length > 0 &&
+                            subscriptionResults[0].stripeCustomerId
+                        ) {
+                            customerId = subscriptionResults[0].stripeCustomerId;
+                            console.log(
+                                '[PaymentService] Found customer ID in user_subscriptions table:',
+                                userId,
+                                customerId
+                            );
+                        }
                     }
                 } catch (dbError) {
                     console.log(
-                        '[PaymentService] Database lookup failed, proceeding with fallback'
+                        '[PaymentService] Database lookup failed, proceeding with fallback:',
+                        dbError
                     );
                 }
             }
 
-            // If we have a customer ID, use the payment SDK
+            // If we have a customer ID, call Creem API directly
             if (customerId) {
                 try {
-                    const result = await this.client.generateCustomerLinks({
-                        xApiKey: this.API_KEY!,
-                        createCustomerPortalLinkRequestEntity: {
-                            customerId: customerId,
+                    const apiEndpoint = CREEM_API_CONFIG.getCustomerBillingEndpoint();
+
+                    console.log(`[PaymentService] Calling Creem API: ${apiEndpoint}`);
+
+                    const requestBody: CreemCustomerBillingRequest = {
+                        customer_id: customerId,
+                    };
+
+                    const response = await fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': this.API_KEY!,
                         },
+                        body: JSON.stringify(requestBody),
                     });
 
-                    if (result && typeof result === 'object') {
-                        const portalUrl =
-                            (result as any).portalUrl ||
-                            (result as any).url ||
-                            (result as any).link;
-
-                        if (portalUrl) {
-                            console.log(
-                                '[PaymentService] Generated customer portal URL successfully'
-                            );
-                            return {
-                                url: portalUrl,
-                                success: true,
-                            };
-                        }
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new CreemApiError(
+                            `Creem API error: ${response.status} ${response.statusText} - ${errorText}`,
+                            response.status
+                        );
                     }
-                } catch (sdkError) {
-                    console.error('[PaymentService] SDK generateCustomerLinks failed:', sdkError);
+
+                    const result = await response.json();
+                    console.log('[PaymentService] Creem API response:', result);
+
+                    if (result && typeof result === 'string') {
+                        // If the response is directly a URL string
+                        console.log('[PaymentService] Generated customer portal URL successfully');
+                        return {
+                            url: result,
+                            success: true,
+                        };
+                    } else if (
+                        result &&
+                        (result.url ||
+                            result.portalUrl ||
+                            result.link ||
+                            result.customer_portal_link)
+                    ) {
+                        // If the response contains a url property (including customer_portal_link from Creem API)
+                        const portalUrl =
+                            result.url ||
+                            result.portalUrl ||
+                            result.link ||
+                            result.customer_portal_link;
+                        console.log('[PaymentService] Generated customer portal URL successfully');
+                        return {
+                            url: portalUrl,
+                            success: true,
+                        };
+                    } else {
+                        throw new CreemApiError(
+                            'Invalid response format from Creem API - no URL found'
+                        );
+                    }
+                } catch (apiError) {
+                    console.error('[PaymentService] Creem API call failed:', apiError);
+                    if (apiError instanceof CreemApiError) {
+                        throw apiError; // Re-throw Creem API errors
+                    }
+                    // For other errors, continue to fallback logic
                 }
             }
 
-            // Fallback logic
+            // Fallback logic when no customer ID is found or API call fails
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 

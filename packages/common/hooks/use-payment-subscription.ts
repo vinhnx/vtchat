@@ -20,6 +20,9 @@ export function useCreemSubscription() {
     const isUserLoaded = !!session;
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isPortalLoading, setIsPortalLoading] = useState(false);
+    const [portalUrl, setPortalUrl] = useState<string | null>(null);
+    const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Use the global subscription provider
@@ -35,14 +38,17 @@ export function useCreemSubscription() {
      */
     const openCustomerPortal = useCallback(async () => {
         if (!user) {
+            console.log('[useCreemSubscription] User not authenticated, redirecting to login');
             router.push('/login');
             return;
         }
 
-        setIsLoading(true);
+        setIsPortalLoading(true);
         setError(null);
 
         try {
+            console.log('[useCreemSubscription] Requesting customer portal for user:', user.id);
+
             // Call the portal API endpoint instead of direct service call
             const response = await fetch('/api/portal', {
                 method: 'POST',
@@ -52,24 +58,39 @@ export function useCreemSubscription() {
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to get portal URL: ${response.statusText}`);
+                const errorText = await response.text();
+                console.error(
+                    '[useCreemSubscription] Portal API error:',
+                    response.status,
+                    errorText
+                );
+                throw new Error(
+                    `Failed to get portal URL: ${response.status} ${response.statusText}`
+                );
             }
 
             const result = await response.json();
+            console.log('[useCreemSubscription] Portal API response:', result);
 
             if (result.success && result.url) {
+                console.log('[useCreemSubscription] Redirecting to portal URL:', result.url);
                 // Open the portal URL in the same window
                 window.location.href = result.url;
             } else {
-                throw new Error('Failed to get portal URL');
+                throw new Error(result.error || 'Failed to get portal URL');
             }
         } catch (err: any) {
-            console.error('Error opening customer portal:', err);
+            console.error('[useCreemSubscription] Error opening customer portal:', err);
             setError(err.message || 'Failed to open customer portal');
+            toast({
+                title: 'Portal Error',
+                description: err.message || 'Failed to open customer portal. Please try again.',
+                variant: 'destructive',
+            });
         } finally {
-            setIsLoading(false);
+            setIsPortalLoading(false);
         }
-    }, [user, router]);
+    }, [user, router, toast]);
 
     /**
      * Start a checkout flow to subscribe to VT+
@@ -159,6 +180,7 @@ export function useCreemSubscription() {
         isPlusSubscriber,
         subscriptionStatus,
         isLoading: isLoading || subscriptionLoading,
+        isPortalLoading,
         error,
         openCustomerPortal,
         startVtPlusSubscription,

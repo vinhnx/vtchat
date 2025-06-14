@@ -29,14 +29,18 @@ export default function PlusPage() {
         startVtPlusSubscription,
         openCustomerPortal,
         isLoading: isPaymentLoading,
+        isPortalLoading,
     } = useCreemSubscription();
     const router = useRouter();
 
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
-    const isCurrentlySubscribed = isPlusSubscriber && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
-    const isFreeTier = isLoaded && (!isPlusSubscriber || subscriptionStatus?.status !== SubscriptionStatusEnum.ACTIVE);
+    const isCurrentlySubscribed =
+        isPlusSubscriber && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
+    const isFreeTier =
+        isLoaded &&
+        (!isPlusSubscriber || subscriptionStatus?.status !== SubscriptionStatusEnum.ACTIVE);
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
@@ -81,12 +85,12 @@ export default function PlusPage() {
 
     // Dynamic button text based on user state
     const getSubscribeButtonText = () => {
-        if (isLoading) return 'Loading...';
+        if (isLoading || isPortalLoading) return 'Loading...';
         if (!isSignedIn) return `Subscribe to ${PRICING_CONFIG.product.name}`;
         if (isCurrentlySubscribed) {
             return (
                 <>
-                    Manage Subscription
+                    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
                     <UserTierBadge className="ml-2" />
                 </>
             );
@@ -103,13 +107,13 @@ export default function PlusPage() {
     };
 
     const getCTAButtonText = () => {
-        if (isLoading) return 'Loading...';
+        if (isLoading || isPortalLoading) return 'Loading...';
         if (!isSignedIn) return `Start Your ${PRICING_CONFIG.product.name} Journey`;
         if (isCurrentlySubscribed) {
             return (
                 <>
-                    Manage Subscription
-                    <UserTierBadge className="ml-2" />
+                    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+                    {!isPortalLoading && <UserTierBadge className="ml-2" />}
                 </>
             );
         }
@@ -249,6 +253,7 @@ export default function PlusPage() {
                                 <div className="mt-8 sm:mt-10">
                                     <ButtonAnimatedGradient
                                         onClick={handleSubscribe}
+                                        disabled={isPortalLoading || isPaymentLoading}
                                         className="flex w-full items-center justify-center"
                                     >
                                         {getSubscribeButtonText()}
@@ -283,6 +288,7 @@ export default function PlusPage() {
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
                             onClick={handleSubscribe}
+                            disabled={isPortalLoading || isPaymentLoading}
                             className="flex w-full items-center justify-center"
                         >
                             {getCTAButtonText()}
