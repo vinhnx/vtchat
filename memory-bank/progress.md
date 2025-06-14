@@ -2,6 +2,19 @@
 
 ## Completed Tasks
 
+### `TODO.md` Cleanup and Refinement ✅
+
+**Date:** June 14, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Reviewed and Categorized:** All items in `TODO.md` were reviewed.
+- ✅ **Standardized Format:** Tasks were organized into logical categories (e.g., Authentication, UI/UX, Dependencies).
+- ✅ **Removed Non-Actionable Items:** Links for pure research or notes not representing a direct task were moved to a "Research & Exploration" section or noted for potential migration to other documents.
+- ✅ **Improved Clarity:** The `TODO.md` is now more structured, making it easier to identify and prioritize pending work.
+- ✅ **Omitted Informational Blocks:** Sections like the "VT+ subscription product description" were noted as better suited for `productContext.md` or dedicated specs and were not included in the refactored `TODO.md`.
+
+**Result:** `TODO.md` is now a cleaner, more organized, and actionable list of pending tasks.
+
 ### Customer Portal Tab Integration (Latest) ✅
 
 **Date:** December 14, 2025
