@@ -31,10 +31,7 @@ function mapCreemProductToPlan(
     isSubscription: boolean;
 } {
     // Check for VT+ subscription
-    if (
-        planParam === PlanSlug.VT_PLUS ||
-        packageParam === PlanSlug.VT_PLUS
-    ) {
+    if (planParam === PlanSlug.VT_PLUS || packageParam === PlanSlug.VT_PLUS) {
         return {
             planSlug: PlanSlug.VT_PLUS,
             isSubscription: true,
@@ -90,7 +87,7 @@ export async function POST(request: NextRequest) {
                 .where(eq(users.id, userId))
                 .limit(1);
 
-            const currentPlan = currentUser[0]?.planSlug || 'free';
+            const currentPlan = currentUser[0]?.planSlug || PlanSlug.VT_BASE;
 
             console.log('[Payment Success API] Plan update:', {
                 currentPlan,

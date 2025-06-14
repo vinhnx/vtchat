@@ -22,12 +22,7 @@ export * from '@repo/shared/utils/subscription';
 // If you need server utilities, import from './server' instead.
 
 // React components and hooks
-// export * from './protect'; // REMOVED: Use Better Auth components instead
 export * from './provider';
-// export * from './ui'; // REMOVED: Deprecated UI components
-
-// Store and state management
-export * from '../../store/subscription.store';
 
 // Re-export commonly used items for convenience
 export {
@@ -59,19 +54,3 @@ export {
     useSubscriptionProvider,
     withSubscriptionProvider,
 } from './provider';
-
-export {
-    subscriptionSelectors,
-    useCurrentSubscription,
-    useSubscriptionUpgrade,
-} from '../../store/subscription.store';
-
-// Example components for demonstration
-export {
-    ComprehensiveSubscriptionExample,
-    ConditionalContentExample,
-} from './comprehensive-example';
-
-// Example components from other files
-export * from './client-subscription-example';
-export * from './server-subscription-example';

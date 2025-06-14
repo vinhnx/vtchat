@@ -2,6 +2,25 @@
 
 ## Completed Tasks
 
+### Subscription System Unification (Latest)
+
+#### Subscription Store Removal ✅
+
+- ✅ **Removed Legacy Zustand Store**: Completely removed `/packages/common/store/subscription.store.ts`
+- ✅ **Updated All Export Points**: Removed store exports from index files
+- ✅ **Disabled Legacy Provider**: Updated deprecated subscription provider with warnings
+- ✅ **Fixed API Inconsistencies**: Updated `useCurrentPlan` and `useCreemSubscription` hook usage
+- ✅ **All Subscription Logic Unified**: Everything now uses SubscriptionProvider
+
+#### Plan String Standardization ✅
+
+- ✅ **Replaced Hardcoded Strings**: All `'free'`, `'vt_base'`, `'vt_plus'` strings replaced with PlanSlug enums
+- ✅ **Fixed 'free' → PlanSlug.VT_BASE**: Standardized free tier to use proper enum value
+- ✅ **Updated 9 Files**: Frontend hooks, database schema, API routes, server utils, tests, scripts
+- ✅ **Added Proper Imports**: PlanSlug imported in all relevant files
+- ✅ **Type Safety Achieved**: No more hardcoded plan strings, full enum usage
+- ✅ **Build Verification**: TypeScript compilation passes without errors
+
 ### Group 3: Environment and Configuration Cleanup
 
 - ✅ Removed hardcoded 'production' string comparisons in payment configuration
@@ -37,6 +56,7 @@
 - ✅ Adopted shadcn/ui styles and components
 
 ### Langfuse Removal
+
 - ✅ Removed langfuse and langfuse-core dependencies
 - ✅ Removed langfuse entries from TODO.md
 
@@ -47,6 +67,7 @@
 - ✅ Verified all credit-related files were properly removed
 
 ### Analytics System Removal
+
 - ✅ Completely removed Plausible analytics integration
 - ✅ Removed plausible-tracker dependency from package.json
 - ✅ Deleted packages/shared/utils/plausible.ts utility file

@@ -10,6 +10,7 @@ applyTo: '**'
 
 ## Code Style
 
+- Make sure no string in #codebase, use enum pattern.
 - Don't hard code values in the codebase.
 - Use environment variables for configuration (e.g., API keys, product IDs)
 - Use centralize enum for custom reusable keys.
@@ -73,3 +74,4 @@ applyTo: '**'
 - You can search the internet using MCP tool `tavily-search`
 - Documentation should be in `docs/` directory
 - Guides markdown files should be in `docs/guides/`
+- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.

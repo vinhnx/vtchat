@@ -1,5 +1,143 @@
 # TODO List
 
+
+1. again, make sure no 'vt_plus', or 'vt_base' string in #codebase, use PlanSlug enum.
+1. 'free' string, should be replace and equal to `vt_base`., also use PlanSlug enum.
+
+--
+
+1. 'active' make sure no string in #codebase, use enum patterns
+--
+1. check @deprecated in #codebase and read the header document and plan, then execute the plan to migrate to reccommended approach, then cleanup those deprecated.
+
+--
+
+1. now review #codebase and draft a plan, make sure subscription logic works across the app from payment -> subscription store -> db call on neon db sync -> sync app plan instantly and
+1. should call on app start or page refresh: /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired, Or every page refresh
+1. IMPORTANT: make sure to handle this logic per account and check non-login
+1. check for GatedFeatureAlert entrypoint calling #codebase and check sub status
+1. unify subscription logic and use one unidufy sub use in #editFiles and
+1. update schema and migration if  needed
+ --
+ you can use context7, neon, better-auth, creem.io MCP tools
+--
+1.double check use-subscription-access and use-supbscriotion logic
+
+1. migrate useVtPlusAccess and use useSubscriptionStatus
+1. make sure unify subscription logic as once and remove redundant logic make sure sync with neon db and web hook from creem.io payment call back
+1. you can use context7, neon, better-auth, creem.io MCP tools
+
+--
+optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
+IMPORTANT: make sure to handle this logic per account and check non-login
+you can use MCP tools like neon context7 creem.io
+--
+
+1. rename Usage Credits in settings modal to `Plan` -> also update card components on Usage Credits settings modal to HoverCard components with dark/light mode proper typography and color. better UI on the Plan tab
+
+--
+
+1. on routing to creem.io page to make payment -> show a loading spinner
+
+--
+
+Subscription Management
+--
+
+### VT+ subscription product description brief specs
+
+name: VT+
+product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. don't hardcode value)
+description: For everyday productivity
+Payment Details:
+
+* type: supbscription
+* pricing: 9.99 USD
+* subscription inverval: monthly
+* price includes tax
+Product Features:
+1 Pro Search
+a. description: "Pro Search: Enhanced search with web integration for real-time information."
+
+2. Dark Mode:
+a. description: "Access to dark mode."
+3. Deep Research
+a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
+
+Plan
+
+1. Implement the subscription logic using Creem.io SDK, ensuring that the subscription status is checked and updated correctly.
+1. sync subscription to neon with user id
+1. when user purchase -> make sure subscription logic and storage updated -> review #codebase and update from previous subscription logic. migrate from zustand storage and schema if needed
+1. update tier plan in Settings > Usage Credits -> show badge user-tier-badge component instead of "FREE" currently
+1. activated gated dark_theme feature for the user and handle subscription for this benefit according.
+1. Base on subscription tier -> update handle "View Plans" button on side bar with logic -> if subscribed -> show user's creem.io subscription portal (Search from docs on how to implement) -> if not -> show "View Plans" as of now. Guide <https://docs.creem.io/learn/customers/customer-portal>. example <https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU>
+1. check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
+1. pricing page -> show current tier (including free) check mark on card /plus page
+
+Note
+
+1. you can use Context7 MCP tools
+1. you can use Neon MCP tools
+2. you can use any mcp tools if stuck.
+1. make sure to check for current environment.
+   * If in development, use sandbox API keys and test customer IDs.
+   * If in production, use live API keys and ensure proper customer management.
+--
+Dev Payment Webhook log and config
+
+
+--
+please note that the web hook on dev is
+webhookUrl: <https://0f4c-42-118-189-41.ngrok-free.app//api/webhook/creem>
+--
+
+--
+
+subscription.active
+
+Response
+HTTP status code404
+
+
+--
+Webhooks
+Verify Webhook Requests
+
+How to verify Creem signature on webhook objects.
+​
+How to verify Creem signature?
+
+Creem signature is sent in the creem-signature header of the webhook request. The signature is generated using the HMAC-SHA256 algorithm with the webhook secret as the key, and the request payload as the message.
+Copy
+
+{
+'creem-signature': 'dd7bdd2cf1f6bac6e171c6c508c157b7cd3cc1fd196394277fb59ba0bdd9b87b'
+}
+
+To verify the signature, you need to generate the signature using the same algorithm and compare it with the signature sent in the header. If the two signatures match, the request is authentic.
+
+You can find your webhook secret on the Developers>Webhook page.
+
+To generate the signature, you can use the following code snippet:
+Copy
+
+import * as crypto from 'crypto';
+
+  generateSignature(payload: string, secret: string): string {
+    const computedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(payload)
+      .digest('hex');
+    return computedSignature;
+  }
+
+In the code snippet above, the payload is the request body, and the secret is the webhook secret. Simply compare the generated Signature with the one received on the header to complete the verification process.
+
+--
+1. on click subscribe in VT plus page , the app is asking for subscribe even though user has susribe. fix this.
+1. check vt_plus on plan_slug row of the users table and user_subscriptions table on neon and update local sub store and logic
+--
 [] <https://github.com/zpg6/better-auth-cloudflare>
 --
 
@@ -117,55 +255,12 @@ can you implement account-based thread managements system with neon and postgres
 [] <https://better-auth-ui.com/>
 
 --
-Subscription Management
---
-
-### VT+ subscription product description brief specs
-
-name: VT+
-product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. don't hardcode value)
-description: For everyday productivity
-Payment Details:
-
-* type: supbscription
-* pricing: 9.99 USD
-* subscription inverval: monthly
-* price includes tax
-Product Features:
-1 Pro Search
-a. description: "Pro Search: Enhanced search with web integration for real-time information."
-
-2. Dark Mode:
-a. description: "Access to dark mode."
-3. Deep Research
-a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
-
-Plan
-
-1. Implement the subscription logic using Creem.io SDK, ensuring that the subscription status is checked and updated correctly.
-1. sync subscription to neon with user id
-1. when user purchase -> make sure subscription logic and storage updated -> review #codebase and update from previous subscription logic. migrate from zustand storage and schema if needed
-1. update tier plan in Settings > Usage Credits -> show badge user-tier-badge component instead of "FREE" currently
-1. activated gated dark_theme feature for the user and handle subscription for this benefit according.
-1. Base on subscription tier -> update handle "View Plans" button on side bar with logic -> if subscribed -> show user's creem.io subscription portal (Search from docs on how to implement) -> if not -> show "View Plans" as of now. Guide <https://docs.creem.io/learn/customers/customer-portal>. example <https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU>
-1. check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
-1. pricing page -> show current tier (including free) check mark on card /plus page
-
-Note
-
-1. you can use Context7 MCP tools
-2. you can use any mcp tools if stuck.
-1. make sure to check for current environment.
-   * If in development, use sandbox API keys and test customer IDs.
-   * If in production, use live API keys and ensure proper customer management.
 
 * <https://supersaas.dev/blog/how-to-launch-your-side-project>
 
 [] remove unrelated depedencies from our main stack -> use [knip](https://knip.dev/)
 
 * review and unify icon package usage in #codebase. review package.json and use 1 package (lucide-react) for icons.
-* scan #codebase and rebuild terms page <https://llmchat.co/terms>
-* scan #codebase and rebuild privacy page <https://llmchat.co/privacy>
 * buy domain name -> .io.vn (gov sponsor)
 * vtai.io.vn
 * vtchat.io.vn
@@ -179,3 +274,11 @@ Note
 * <https://namelix.com/app/?keywords=vtai>
 * <https://domainr.com/?q=vtai>
 * [] cookie consent
+
+--
+
+1. Monet: try https://github.com/lingodotdev/lingo.dev
+
+--
+
+1. https://github.com/electron/electron
