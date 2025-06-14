@@ -3,13 +3,12 @@
 import { useCreemSubscription, useSubscription } from '@repo/common/hooks';
 import { Check, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AnimatedBadge } from '../../components/animated-badge';
 import { ButtonAnimatedGradient } from '../../components/button-animated-gradient';
 import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
 import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
-import { LoginDialog } from '../../components/login-dialog';
 import { ShineText } from '../../components/shine-text';
 import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '../../lib/auth-client';
@@ -24,7 +23,6 @@ export default function PlusPage() {
         isLoading: isPaymentLoading,
     } = useCreemSubscription();
     const router = useRouter();
-    const [showLoginDialog, setShowLoginDialog] = useState(false);
 
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
@@ -33,14 +31,14 @@ export default function PlusPage() {
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
-            // Show login dialog instead of redirecting
-            setShowLoginDialog(true);
+            // Redirect to login page instead of showing dialog
+            router.push('/login?redirect_url=/plus');
         }
-    }, [isLoaded, isSignedIn]);
+    }, [isLoaded, isSignedIn, router]);
 
     const handleSubscribe = async () => {
         if (!isSignedIn) {
-            setShowLoginDialog(true);
+            router.push('/login?redirect_url=/plus');
             return;
         }
 
@@ -55,7 +53,7 @@ export default function PlusPage() {
 
     const handleTryFree = () => {
         if (!isSignedIn) {
-            setShowLoginDialog(true);
+            router.push('/login?redirect_url=/chat');
         } else {
             router.push('/chat');
         }
@@ -230,14 +228,6 @@ export default function PlusPage() {
                     </div>
                 </div>
             </div>
-
-            {/* Login Dialog - Non-dismissible on plus page to enforce login for payment */}
-            <LoginDialog
-                isOpen={showLoginDialog}
-                onClose={() => setShowLoginDialog(false)}
-                dismissible={false} // Force login on plus page for payment token access
-                redirectUrl="/plus"
-            />
         </div>
     );
 }
