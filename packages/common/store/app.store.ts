@@ -52,20 +52,8 @@ const initializeSidebarState = () => {
     return { isOpen: false, animationDisabled: false };
 };
 
-// Initialize user preferences from localStorage
+// Initialize user preferences - defer localStorage access to client-side hydration
 const initializePreferences = () => {
-    if (typeof window === 'undefined') {
-        return { showExamplePrompts: true };
-    }
-
-    const saved = localStorage.getItem(STORAGE_KEYS.USER_PREFERENCES);
-    if (saved) {
-        try {
-            return JSON.parse(saved);
-        } catch {
-            return { showExamplePrompts: true };
-        }
-    }
     return { showExamplePrompts: true };
 };
 

@@ -10,6 +10,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import React, { createContext, ReactNode, useContext, useEffect } from 'react';
+import { useIsClient } from '../../hooks';
 import { useSubscriptionStore } from '../../store/subscription.store';
 
 interface SubscriptionProviderProps {
@@ -28,11 +29,12 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const { data: session } = useSession();
     const user = session?.user;
     const isLoaded = !!session;
+    const isClient = useIsClient();
     const { updateFromUser, reset, isInitialized } = useSubscriptionStore();
 
     // Sync subscription state with Better Auth user data
     useEffect(() => {
-        if (!isLoaded) return;
+        if (!isLoaded || !isClient) return;
 
         if (user) {
             updateFromUser(user);
@@ -40,9 +42,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             // User is not signed in, reset to default state
             reset();
         }
-    }, [user, isLoaded, updateFromUser, reset]);
+    }, [user, isLoaded, isClient, updateFromUser, reset]);
 
-    const isReady = isLoaded && isInitialized;
+    const isReady = isLoaded && isInitialized && isClient;
 
     return (
         <SubscriptionContext.Provider value={{ isReady }}>{children}</SubscriptionContext.Provider>

@@ -2,6 +2,7 @@
 import { cn } from '@repo/ui';
 import { motion } from 'framer-motion';
 import React, { useMemo } from 'react';
+import { useIsClient } from '../hooks';
 
 export type TextShimmerProps = {
     children: string;
@@ -22,13 +23,11 @@ function TextShimmerComponent({
     const textContent = typeof children === 'string' ? children : String(children);
 
     const MotionComponent = motion[Component];
+    const isClient = useIsClient();
 
     const dynamicSpread = useMemo(() => {
         return textContent.length * spread;
     }, [textContent, spread]);
-
-    // Handle SSR by checking if we're in browser
-    const isClient = typeof window !== 'undefined';
 
     const baseStyles = cn(
         'relative inline-block bg-[length:250%_100%,auto] bg-clip-text',

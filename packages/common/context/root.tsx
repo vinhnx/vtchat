@@ -9,17 +9,33 @@ export type RootContextType = {
     setIsCommandSearchOpen: (isCommandSearchOpen: boolean) => void;
     isMobileSidebarOpen: boolean;
     setIsMobileSidebarOpen: (isMobileSidebarOpen: boolean) => void;
+    isClient: boolean;
 };
 
 export const RootContext = createContext<RootContextType | null>(null);
 
 export const RootProvider = ({ children }: { children: React.ReactNode }) => {
-    useEffect(() => {
-        initHotjar();
-    }, []);
+    const [isClient, setIsClient] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandSearchOpen, setIsCommandSearchOpen] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        // Only initialize Hotjar on client side and after component has mounted
+        if (typeof window !== 'undefined') {
+            try {
+                initHotjar();
+            } catch (error) {
+                console.warn('Failed to initialize Hotjar:', error);
+            }
+        }
+    }, []);
+
+    // During SSR, don't render children that depend on client-side context
+    if (typeof window === 'undefined') {
+        return <>{children}</>;
+    }
 
     return (
         <RootContext.Provider
@@ -30,6 +46,7 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
                 setIsCommandSearchOpen,
                 isMobileSidebarOpen,
                 setIsMobileSidebarOpen,
+                isClient,
             }}
         >
             {children}

@@ -36,6 +36,10 @@ const nextConfig = {
     async redirects() {
         return [{ source: '/', destination: '/chat', permanent: true }];
     },
+
+    // Disable static generation for error pages to prevent SSR issues
+    output: 'standalone',
+    poweredByHeader: false,
 };
 
 export default nextConfig;

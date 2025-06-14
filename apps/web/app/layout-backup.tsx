@@ -1,15 +1,20 @@
-import { NoSSR, RootLayout, SSRErrorBoundary, ThemeProvider } from '@repo/common/components';
-import { RootProvider } from '@repo/common/context';
-import { cn, TooltipProvider } from '@repo/ui';
+import { cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { Bricolage_Grotesque } from 'next/font/google';
 import localFont from 'next/font/local';
-import { BetterAuthProvider } from '../components/better-auth-provider';
 
-// Force dynamic rendering to prevent SSR issues during build
-export const dynamic = 'force-dynamic';
+// Completely dynamic app to prevent any SSR issues
+const DynamicApp = dynamic(() => import('../components/dynamic-app'), {
+    ssr: false,
+    loading: () => (
+        <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
+            <div className="text-muted-foreground text-sm">Loading VTChat...</div>
+        </div>
+    ),
+}) as React.ComponentType<{ children: React.ReactNode }>;
 
 const bricolage = Bricolage_Grotesque({
     subsets: ['latin'],
@@ -97,33 +102,8 @@ export default function ParentLayout({
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
-            <body>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <TooltipProvider>
-                        <BetterAuthProvider>
-                            <RootProvider>
-                                <SSRErrorBoundary>
-                                    <NoSSR
-                                        fallback={
-                                            <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                                                <div className="text-muted-foreground text-sm">
-                                                    Loading...
-                                                </div>
-                                            </div>
-                                        }
-                                    >
-                                        <RootLayout>{children}</RootLayout>
-                                    </NoSSR>
-                                </SSRErrorBoundary>
-                            </RootProvider>
-                        </BetterAuthProvider>
-                    </TooltipProvider>
-                </ThemeProvider>
+            <body suppressHydrationWarning>
+                <DynamicApp>{children}</DynamicApp>
             </body>
         </html>
     );

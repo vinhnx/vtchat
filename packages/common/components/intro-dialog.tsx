@@ -4,23 +4,24 @@ import { cn, Dialog, DialogContent } from '@repo/ui';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useIsClient } from '../hooks';
 import { Logo } from './logo';
+
 export const IntroDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [hasMounted, setHasMounted] = useState(false);
+    const isClient = useIsClient();
     const { data: session } = useSession();
     const isSignedIn = !!session;
 
     useEffect(() => {
-        setHasMounted(true);
         // Only check localStorage after component has mounted
-        if (typeof window !== 'undefined') {
+        if (isClient && typeof window !== 'undefined') {
             const hasSeenIntro = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_INTRO);
             if (!hasSeenIntro) {
                 setIsOpen(true);
             }
         }
-    }, []);
+    }, [isClient]);
 
     const handleClose = () => {
         if (typeof window !== 'undefined') {
@@ -30,7 +31,7 @@ export const IntroDialog = () => {
     };
 
     // Don't render until after hydration to prevent SSR mismatch
-    if (!hasMounted) {
+    if (!isClient) {
         return null;
     }
 
