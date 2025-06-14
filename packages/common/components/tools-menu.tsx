@@ -1,6 +1,6 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { useMcpToolsStore } from '@repo/common/store';
+import { useAppStore, useMcpToolsStore } from '@repo/common/store';
 import { Button } from '@repo/ui/src/components/button';
 
 import {
@@ -14,22 +14,22 @@ import {
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { IconCheck, IconTools } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
-import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';
 import { ToolIcon } from './icons';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { data: session } = useSession();
+    const router = useRouter();
     const isSignedIn = !!session;
     const { mcpConfig, updateSelectedMCP, selectedMCP } = useMcpToolsStore();
     const apiKeys = useApiKeysStore();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore(state => state.setSettingTab);
     const isToolsAvailable = useMemo(
         () => hasApiKeyForChatMode(chatMode, isSignedIn),
         [chatMode, hasApiKeyForChatMode, apiKeys, isSignedIn]
@@ -99,7 +99,6 @@ export const ToolsMenu = () => {
                                 className="text-muted-foreground text-xs"
                                 onClick={() => {
                                     setIsSettingsOpen(true);
-                                    setSettingTab(SETTING_TABS.MCP_TOOLS);
                                 }}
                             >
                                 <IconPlus
@@ -116,7 +115,6 @@ export const ToolsMenu = () => {
                         <DropdownMenuItem
                             onClick={() => {
                                 setIsSettingsOpen(true);
-                                setSettingTab(SETTING_TABS.MCP_TOOLS);
                             }}
                         >
                             <IconPlus size={14} strokeWidth={2} className="text-muted-foreground" />

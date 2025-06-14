@@ -18,7 +18,7 @@ export type TRootLayout = {
 export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const { isSidebarOpen, isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } =
         useRootContext();
-    const setIsSettingOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const pathname = usePathname();
 
     const containerClass =

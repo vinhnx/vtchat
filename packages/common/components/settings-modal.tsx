@@ -3,7 +3,14 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { IconAlertCircle, IconKey, IconSettings2, IconTrash, IconCreditCard } from '@tabler/icons-react';
+import {
+    IconAlertCircle,
+    IconCreditCard,
+    IconKey,
+    IconSettings2,
+    IconTrash,
+    IconUser,
+} from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -20,8 +27,8 @@ import { ModeToggle } from './mode-toggle';
 import { UsageCreditsSettings } from './usage-credits-settings';
 
 export const SettingsModal = () => {
-    const isSettingOpen = useAppStore(state => state.isSettingsOpen);
-    const setIsSettingOpen = useAppStore(state => state.setIsSettingsOpen);
+    const isSettingsOpen = useAppStore(state => state.isSettingsOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const settingTab = useAppStore(state => state.settingTab);
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
@@ -36,8 +43,8 @@ export const SettingsModal = () => {
 
         return (
             <LoginRequiredDialog
-                isOpen={isSettingOpen}
-                onClose={() => setIsSettingOpen(false)}
+                isOpen={isSettingsOpen}
+                onClose={() => setIsSettingsOpen(false)}
                 title="Login Required"
                 description="Please sign in to access settings and manage your API keys."
                 icon={KeyIcon}
@@ -50,13 +57,13 @@ export const SettingsModal = () => {
             icon: <IconSettings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
-            component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
+            component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
             icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Plan',
             key: SETTING_TABS.USAGE_CREDITS,
-            component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
+            component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
             icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,
@@ -72,7 +79,7 @@ export const SettingsModal = () => {
     ];
 
     return (
-        <Dialog open={isSettingOpen} onOpenChange={() => setIsSettingOpen(false)}>
+        <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
                 ariaTitle="Settings"
                 className="h-full max-h-[600px] !max-w-[760px] overflow-x-hidden rounded-xl p-0"
@@ -125,7 +132,7 @@ export const MCPSettings = () => {
                         className="text-brand inline-flex items-center gap-1 rounded-full bg-transparent"
                     >
                         <span className="bg-brand inline-block size-2 rounded-full"></span>
-                        {mcpConfig && Object.keys(mcpConfig).length} Connected
+                        {mcpConfig ? Object.keys(mcpConfig).length : 0} Connected
                     </Badge>
                 </p>
                 {mcpConfig &&
@@ -136,7 +143,7 @@ export const MCPSettings = () => {
                             className="bg-secondary divide-border border-border flex h-12 w-full flex-1 flex-row items-center gap-2 divide-x-2 rounded-lg border px-2.5 py-2"
                         >
                             <div className="flex w-full flex-row items-center gap-2">
-                                <ToolIcon /> <Badge>{key}</Badge>
+                                <ToolIcon /> <Badge variant="default">{key}</Badge>
                                 <p className="text-muted-foreground line-clamp-1 flex-1 text-sm">
                                     {mcpConfig[key]}
                                 </p>
