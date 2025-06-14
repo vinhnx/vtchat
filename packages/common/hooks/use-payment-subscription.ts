@@ -21,8 +21,6 @@ export function useCreemSubscription() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
-    const [portalUrl, setPortalUrl] = useState<string | null>(null);
-    const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Use the global subscription provider
@@ -35,8 +33,11 @@ export function useCreemSubscription() {
 
     /**
      * Open the Creem customer portal for managing subscription
+     * Opens in new tab/window due to X-Frame-Options restrictions
      */
     const openCustomerPortal = useCallback(async () => {
+        console.log('[useCreemSubscription] openCustomerPortal called');
+
         if (!user) {
             console.log('[useCreemSubscription] User not authenticated, redirecting to login');
             router.push('/login');
@@ -49,12 +50,15 @@ export function useCreemSubscription() {
         try {
             console.log('[useCreemSubscription] Requesting customer portal for user:', user.id);
 
-            // Call the portal API endpoint instead of direct service call
+            // Call the portal API endpoint
             const response = await fetch('/api/portal', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    returnUrl: `${window.location.origin}/chat`, // Return to chat page
+                }),
             });
 
             if (!response.ok) {
@@ -73,9 +77,74 @@ export function useCreemSubscription() {
             console.log('[useCreemSubscription] Portal API response:', result);
 
             if (result.success && result.url) {
-                console.log('[useCreemSubscription] Redirecting to portal URL:', result.url);
-                // Open the portal URL in the same window
-                window.location.href = result.url;
+                console.log('[useCreemSubscription] Opening portal in new window:', result.url);
+
+                // Open portal in new window/tab
+                const portalWindow = window.open(
+                    result.url,
+                    'creem-portal',
+                    'width=800,height=700,scrollbars=yes,resizable=yes,toolbar=no,menubar=no'
+                );
+
+                if (portalWindow) {
+                    // Set up window messaging to detect when user returns
+                    const handleMessage = (event: MessageEvent) => {
+                        // Verify origin for security
+                        if (
+                            event.origin !== 'https://creem.io' &&
+                            event.origin !== 'https://test-creem.io'
+                        ) {
+                            return;
+                        }
+
+                        if (
+                            event.data.type === 'PORTAL_CLOSED' ||
+                            event.data.type === 'PORTAL_COMPLETE'
+                        ) {
+                            console.log(
+                                '[useCreemSubscription] Portal window closed, refreshing subscription'
+                            );
+                            refreshSubscriptionStatus(false, 'manual');
+                            window.removeEventListener('message', handleMessage);
+                        }
+                    };
+
+                    // Listen for messages from portal
+                    window.addEventListener('message', handleMessage);
+
+                    // Also listen for window close (fallback)
+                    const checkClosed = setInterval(() => {
+                        if (portalWindow.closed) {
+                            console.log(
+                                '[useCreemSubscription] Portal window closed, refreshing subscription'
+                            );
+                            refreshSubscriptionStatus(false, 'manual');
+                            clearInterval(checkClosed);
+                            window.removeEventListener('message', handleMessage);
+                        }
+                    }, 1000);
+
+                    // Clean up after 10 minutes
+                    setTimeout(
+                        () => {
+                            clearInterval(checkClosed);
+                            window.removeEventListener('message', handleMessage);
+                        },
+                        10 * 60 * 1000
+                    );
+
+                    // Show success message
+                    toast({
+                        title: 'Portal Opened',
+                        description:
+                            "Manage your subscription in the new window. We'll refresh your status when you return.",
+                        variant: 'default',
+                    });
+                } else {
+                    throw new Error(
+                        'Failed to open portal window. Please allow popups for this site.'
+                    );
+                }
             } else {
                 throw new Error(result.error || 'Failed to get portal URL');
             }
@@ -90,7 +159,7 @@ export function useCreemSubscription() {
         } finally {
             setIsPortalLoading(false);
         }
-    }, [user, router, toast]);
+    }, [user, router, toast, refreshSubscriptionStatus]);
 
     /**
      * Start a checkout flow to subscribe to VT+

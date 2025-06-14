@@ -252,8 +252,11 @@ export default function PlusPage() {
                                 </ul>
                                 <div className="mt-8 sm:mt-10">
                                     <ButtonAnimatedGradient
-                                        onClick={handleSubscribe}
-                                        disabled={isPortalLoading || isPaymentLoading}
+                                        onClick={() => {
+                                            if (!(isPortalLoading || isPaymentLoading)) {
+                                                handleSubscribe();
+                                            }
+                                        }}
                                         className="flex w-full items-center justify-center"
                                     >
                                         {getSubscribeButtonText()}
@@ -287,8 +290,11 @@ export default function PlusPage() {
                     </TypographyP>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
-                            onClick={handleSubscribe}
-                            disabled={isPortalLoading || isPaymentLoading}
+                            onClick={() => {
+                                if (!(isPortalLoading || isPaymentLoading)) {
+                                    handleSubscribe();
+                                }
+                            }}
                             className="flex w-full items-center justify-center"
                         >
                             {getCTAButtonText()}
