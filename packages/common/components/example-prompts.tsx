@@ -1,7 +1,7 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
-import { Book, IconBulb, IconChartBar, Pencil, HelpCircle,  } from 'lucide-react';
+import { Book, Lightbulb, BarChart, Pencil, HelpCircle,  } from 'lucide-react';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';
@@ -58,11 +58,11 @@ export const getRandomPrompt = (category?: keyof typeof examplePrompts) => {
 
 // Map of category to icon component
 const categoryIcons = {
-    howTo: { name: 'How to', icon: IconQuestionMark, color: '!text-yellow-700' },
-    explainConcepts: { name: 'Explain Concepts', icon: IconBulb, color: '!text-blue-700' },
-    creative: { name: 'Creative', icon: IconPencil, color: '!text-green-700' },
-    advice: { name: 'Advice', icon: IconBook, color: '!text-purple-700' },
-    analysis: { name: 'Analysis', icon: IconChartBar, color: '!text-red-700' },
+    howTo: { name: 'How to', icon: HelpCircle, color: '!text-yellow-700' },
+    explainConcepts: { name: 'Explain Concepts', icon: Lightbulb, color: '!text-blue-700' },
+    creative: { name: 'Creative', icon: Pencil, color: '!text-green-700' },
+    advice: { name: 'Advice', icon: Book, color: '!text-purple-700' },
+    analysis: { name: 'Analysis', icon: BarChart, color: '!text-red-700' },
 };
 
 export const ExamplePrompts = () => {
