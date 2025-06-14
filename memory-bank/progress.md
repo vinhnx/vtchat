@@ -2,23 +2,24 @@
 
 ## Completed Tasks
 
-### Customer Portal Window Integration (Latest) ✅
+### Customer Portal Tab Integration (Latest) ✅
 
 **Date:** December 14, 2025
 **Status:** ✅ FULLY IMPLEMENTED & PRODUCTION READY
 
-- ✅ **Refactored to Window-Based Approach**: Completely removed modal, inline, and separate page approaches due to X-Frame-Options restrictions
-- ✅ **Window Opening Logic**: Portal opens in new window/tab using window.open() with proper security settings
-- ✅ **Enhanced useCreemSubscription Hook**: Added portalUrl management and window-based opening logic
+- ✅ **Refactored to Tab-Based Approach**: Completely removed modal, inline, and separate page approaches due to X-Frame-Options restrictions
+- ✅ **Tab Opening Logic**: Portal opens in new tab using `window.open(url, '_blank')` for better user experience
+- ✅ **Enhanced useCreemSubscription Hook**: Added portalUrl management and tab-based opening logic
 - ✅ **Removed All Inline/Modal Code**: Deleted InlinePortal component, CustomerPortalModal, and portal page
 - ✅ **Updated All UI Components**: UsageCreditsSettings, Sidebar, Plus page all use openCustomerPortal()
 - ✅ **Return Handling**: Added `/api/portal/return` route to handle return navigation from portal
-- ✅ **Auto-refresh**: Subscription status refreshes when portal window is closed using window messaging and close detection
-- ✅ **User Feedback**: Toast notifications inform users when portal opens in new window
+- ✅ **Auto-refresh**: Subscription status refreshes when portal tab is closed using window messaging and close detection
+- ✅ **User Feedback**: Toast notifications inform users when portal opens in new tab
 - ✅ **Clean Architecture**: All portal-related state and logic centralized in useCreemSubscription hook
 - ✅ **TypeScript**: Full type safety and no compilation errors
+- ✅ **Updated Terminology**: All comments, logs, and UI text refer to "tab" instead of "window" for consistency
 
-**Result:** Customer portal opens in new window/tab due to Creem.io's X-Frame-Options security policy. Users can manage subscriptions and are automatically returned to the app with refreshed subscription status.
+**Result:** Customer portal opens in new tab due to Creem.io's X-Frame-Options security policy. Users can manage subscriptions and are automatically returned to the app with refreshed subscription status.
 
 ### Customer Portal Modal Integration ✅
 
