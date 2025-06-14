@@ -38,8 +38,6 @@ export const NewIcon = () => {
         </div>
     );
 };
-<<<<<<< HEAD
-=======
 
 export const CreditIcon = ({
     credits,
