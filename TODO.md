@@ -138,15 +138,9 @@ can you implement account-based thread managements system with neon and postgres
 4. #fetch <https://ui.shadcn.com/docs/components/typography> and replace all current hardcode typography to use shadcn typo system
 
 [] <https://patloeber.com/gemini-ai-sdk-cheatsheet/>
-[] <https://docs.creem.io/sdk/nextjs-template> sample creem.io integration
 [] <https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk>
 [] support more providers <https://ai-sdk.dev/providers/ai-sdk-providers>
-[] <https://www.better-auth-kit.com/docs/introduction>
-[] <https://better-auth-ui.com/>
-
 --
-
-- <https://supersaas.dev/blog/how-to-launch-your-side-project>
 
 [] remove unrelated depedencies from our main stack -> use [knip](https://knip.dev/)
 
