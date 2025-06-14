@@ -9,6 +9,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Corrected import
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 
@@ -277,7 +278,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
         plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
         hasActiveSubscription:
-            (subscriptionStatus?.hasSubscription && subscriptionStatus?.status === 'active') ??
+            (subscriptionStatus?.hasSubscription && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE) ??
             false,
         isAnonymous: subscriptionStatus?.isAnonymous ?? !session?.user,
         fromCache: subscriptionStatus?.fromCache ?? false,

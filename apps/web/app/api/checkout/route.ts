@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -112,7 +113,7 @@ export async function POST(request: NextRequest) {
 
                 if (existingSubscription.length > 0) {
                     const sub = existingSubscription[0];
-                    const isActive = sub.status === 'active' && sub.plan === PlanSlug.VT_PLUS;
+                    const isActive = sub.status === SubscriptionStatusEnum.ACTIVE && sub.plan === PlanSlug.VT_PLUS;
                     const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
 
                     if (isActive && isNotExpired) {

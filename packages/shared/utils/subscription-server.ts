@@ -29,7 +29,7 @@ export async function serverHasAccess(
     if (!userWithSub) return false;
 
     // Mock has function similar to Better Auth's format for compatibility
-    const has = (options: any) => {
+    const has = (options: AccessCheckOptions) => { // Used AccessCheckOptions type
         const subscription = userWithSub.user_subscriptions;
         if (!subscription) return false;
 

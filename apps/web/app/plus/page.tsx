@@ -3,6 +3,7 @@
 import { UserTierBadge } from '@repo/common/components';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -34,8 +35,8 @@ export default function PlusPage() {
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
-    const isCurrentlySubscribed = isPlusSubscriber && subscriptionStatus?.status === 'active';
-    const isFreeTier = isLoaded && (!isPlusSubscriber || subscriptionStatus?.status !== 'active');
+    const isCurrentlySubscribed = isPlusSubscriber && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
+    const isFreeTier = isLoaded && (!isPlusSubscriber || subscriptionStatus?.status !== SubscriptionStatusEnum.ACTIVE);
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {

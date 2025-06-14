@@ -75,3 +75,4 @@ applyTo: '**'
 - Documentation should be in `docs/` directory
 - Guides markdown files should be in `docs/guides/`
 - After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
+- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.
