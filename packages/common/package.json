@@ -5,9 +5,14 @@
     "exports": {
         "./hooks": "./hooks/index.ts",
         "./hooks/use-subscription-access": "./hooks/use-subscription-access.ts",
+        "./hooks/use-chat-mode-access": "./hooks/use-chat-mode-access.ts",
         "./context": "./context/index.ts",
         "./store": "./store/index.ts",
         "./components": "./components/index.ts",
+        "./components/payment-checkout-processor": "./components/payment-checkout-processor.tsx",
+        "./components/dev-test-mode-banner": "./components/dev-test-mode-banner.tsx",
+        "./providers": "./providers/index.ts",
+        "./providers/subscription-provider": "./providers/subscription-provider.tsx",
         "./utils": "./utils/index.ts"
     },
     "scripts": {

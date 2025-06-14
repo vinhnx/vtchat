@@ -1,20 +1,12 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@repo/ui';
+import { Button, Dialog, DialogContent } from '@repo/ui';
+import { IconStar } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useVtPlusAccess } from '../hooks/use-subscription-access';
 
 export interface GatedFeatureAlertProps {
     /** The feature that requires a higher plan */
@@ -49,7 +41,7 @@ export interface GatedFeatureAlertProps {
  * ```tsx
  * // Gate by feature
  * <GatedFeatureAlert
- *   requiredFeature={FeatureSlug.DARK_MODE}
+ *   requiredFeature={FeatureSlug.DARK_THEME}
  *   title="Dark Mode Available in VT+"
  *   message="Dark mode is a VT+ feature. Upgrade to enjoy a better viewing experience."
  * >
@@ -76,29 +68,45 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     fallback,
     showAlert = true,
 }) => {
-    const { isLoaded, has } = useAuth();
+    const { data: session } = useSession();
     const router = useRouter();
     const [showUpgradeAlert, setShowUpgradeAlert] = useState(false);
+    const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     // Don't render anything while auth is loading
-    if (!isLoaded) {
+    if (!session) {
         return null;
     }
 
     // Check if user has access based on feature or plan
     const hasAccess = React.useMemo(() => {
-        if (!has) return false;
-
-        if (requiredFeature) {
-            return checkSubscriptionAccess(has, { feature: requiredFeature });
+        // VT+ exclusive features
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+            requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredPlan === PlanSlug.VT_PLUS
+        ) {
+            return isVtPlus;
         }
 
-        if (requiredPlan) {
-            return checkSubscriptionAccess(has, { plan: requiredPlan });
+        // For base features, always allow access for authenticated users
+        if (
+            requiredFeature &&
+            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
+                requiredFeature === FeatureSlug.BASE_MODELS ||
+                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+        ) {
+            return true; // Base features are available to all authenticated users
+        }
+
+        // For base plan requirements, allow access
+        if (requiredPlan === PlanSlug.VT_BASE) {
+            return true; // Base plan features are available to all authenticated users
         }
 
         return true;
-    }, [has, requiredFeature, requiredPlan]);
+    }, [requiredFeature, requiredPlan, isVtPlus]);
 
     // Generate default message based on feature/plan
     const defaultMessage = React.useMemo(() => {
@@ -164,23 +172,25 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     return (
         <>
             {gatedChildren}
-            <AlertDialog
-                open={showUpgradeAlert}
-                onOpenChange={open => !open && setShowUpgradeAlert(false)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{title}</AlertDialogTitle>
-                        <AlertDialogDescription>{defaultMessage}</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowUpgradeAlert(false)}>
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleUpgrade}>Upgrade Now</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Dialog open={showUpgradeAlert} onOpenChange={setShowUpgradeAlert}>
+                <DialogContent ariaTitle={title} className="max-w-md rounded-xl">
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                            <IconStar size={24} className="text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">{title}</h3>
+                            <p className="text-muted-foreground text-sm">{defaultMessage}</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outlined" onClick={() => setShowUpgradeAlert(false)}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleUpgrade}>Upgrade Now</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
@@ -190,21 +200,41 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
  * Useful for conditional rendering without the full gated component
  */
 export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: PlanSlug) => {
-    const { isLoaded, has } = useAuth();
+    const { data: session } = useSession();
+    const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
     const hasAccess = React.useMemo(() => {
-        if (!isLoaded || !has) return false;
+        if (!session) return false;
 
-        if (requiredFeature) {
-            return checkSubscriptionAccess(has, { feature: requiredFeature });
+        // VT+ exclusive features
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+            requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredPlan === PlanSlug.VT_PLUS
+        ) {
+            return isVtPlus;
         }
 
-        if (requiredPlan) {
-            return checkSubscriptionAccess(has, { plan: requiredPlan });
+        // For base features, always allow access for authenticated users
+        if (
+            requiredFeature &&
+            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
+                requiredFeature === FeatureSlug.BASE_MODELS ||
+                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+        ) {
+            return true;
+        }
+
+        // For base plan requirements, allow access
+        if (requiredPlan === PlanSlug.VT_BASE) {
+            return true;
         }
 
         return true;
-    }, [isLoaded, has, requiredFeature, requiredPlan]);
+    }, [session, requiredFeature, requiredPlan, isVtPlus]);
+
+    const isLoaded = !!session;
 
     return {
         hasAccess,

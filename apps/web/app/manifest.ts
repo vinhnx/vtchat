@@ -2,10 +2,9 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'VT.ai',
-        short_name: 'VT.ai',
-        description:
-            'VT.ai is a modern AI chat client that allows you to chat with AI in a more intuitive way.',
+        name: 'VT',
+        short_name: 'VT',
+        description: 'Minimal AI chat application.',
         start_url: '/',
         display: 'standalone',
         background_color: 'hsl(60 20% 99%)',

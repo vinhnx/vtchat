@@ -1,9 +1,9 @@
-import { SearchResultsList, StepStatus, TextShimmer } from '@repo/common/components';
+import { SearchResultsList, StepStatus } from '@repo/common/components';
+import { Label } from '@repo/ui';
 import { Step } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
 import { IconSearch } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import React from 'react';
 
 export type StepRendererType = {
     step: Step;
@@ -38,13 +38,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                 >
                     <div className="flex flex-col gap-2">
                         <div className="w-[100px]">
-                            <TextShimmer
-                                duration={0.7}
-                                spread={step.steps?.search?.status === 'COMPLETED' ? 0 : 2}
-                                className="text-xs"
-                            >
+                            <Label className="text-xs">
                                 Searching
-                            </TextShimmer>
+                            </Label>
                         </div>
 
                         <div className="flex flex-row flex-wrap gap-1">
@@ -79,13 +75,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.3 }}
                 >
                     <div className="w-[100px]">
-                        <TextShimmer
-                            duration={0.7}
-                            spread={step.steps?.read?.status === 'COMPLETED' ? 0 : 2}
-                            className="text-xs"
-                        >
+                        <Label className="text-xs">
                             Reading
-                        </TextShimmer>
+                        </Label>
                     </div>
                     <SearchResultsList
                         sources={Array.isArray(step.steps?.read?.data) ? step.steps.read.data : []}
@@ -109,23 +101,17 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.4 }}
                 >
                     <div className="w-[100px]">
-                        <TextShimmer
-                            duration={0.7}
-                            spread={step.steps?.reasoning?.status === 'COMPLETED' ? 0 : 2}
-                            className="text-xs"
-                        >
+                        <Label className="text-xs">
                             Analyzing
-                        </TextShimmer>
+                        </Label>
                     </div>
-                    <p className="text-muted-foreground text-sm">
+                    <div className="text-muted-foreground text-sm">
                         {reasoningData.split('\n\n').map((line: string, index: number) => (
-                            <React.Fragment key={index}>
-                                <span>{line}</span>
-                                <br />
-                                <br />
-                            </React.Fragment>
+                            <div key={index} className="mb-4 last:mb-0">
+                                {line}
+                            </div>
                         ))}
-                    </p>
+                    </div>
                 </motion.div>
             );
         }
@@ -142,13 +128,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.5 }}
                 >
                     <div className="w-[100px]">
-                        <TextShimmer
-                            duration={0.7}
-                            spread={step.steps?.wrapup?.status === 'COMPLETED' ? 0 : 2}
-                            className="text-xs"
-                        >
+                        <Label className="text-xs">
                             Wrapping up
-                        </TextShimmer>
+                        </Label>
                     </div>
                     <p>{step.steps?.wrapup?.data || ''}</p>
                 </motion.div>

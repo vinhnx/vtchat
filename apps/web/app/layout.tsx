@@ -1,12 +1,22 @@
-import { ClerkProvider } from '@clerk/nextjs';
-import { RootLayout, ThemeProvider } from '@repo/common/components';
-import { ReactQueryProvider, RootProvider } from '@repo/common/context';
-import { TooltipProvider, cn } from '@repo/ui';
+import {
+    FullPageLoader,
+    NoSSR,
+    RootLayout,
+    SSRErrorBoundary,
+    ThemeProvider,
+} from '@repo/common/components';
+import { RootProvider } from '@repo/common/context';
+import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
+import { cn, TooltipProvider } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
 import { Bricolage_Grotesque } from 'next/font/google';
 import localFont from 'next/font/local';
+import { BetterAuthProvider } from '../components/better-auth-provider';
+
+// Force dynamic rendering to prevent SSR issues during build
+export const dynamic = 'force-dynamic';
 
 const bricolage = Bricolage_Grotesque({
     subsets: ['latin'],
@@ -16,38 +26,36 @@ const bricolage = Bricolage_Grotesque({
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
-    description:
-        'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
-    keywords: 'agent, ai, chatbot, assistant, openai, llama, multimodal, tool-use, llm, llms, function-calling, ollama',
+    title: 'VT',
+    description: 'Minimal AI chat application.',
+    keywords:
+        'agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling',
     authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
     creator: 'Vinh Nguyen',
     publisher: 'Vinh Nguyen',
     openGraph: {
-        title: 'VT.ai - multimodal AI chat app with dynamic conversation routing',
-        siteName: 'VT.ai',
-        description:
-            'VT.ai is a multimodal AI chat application designed to simplify interaction with different AI models through a unified interface.',
-        url: 'https://vtai.vn',
+        title: 'VT',
+        siteName: 'VT',
+        description: 'Minimal AI chat application.',
+        url: 'https://vtchat.io.vn',
         type: 'website',
         locale: 'en_US',
         images: [
             {
-                url: 'https://vtai.vn/og-image.jpg',
+                url: 'https://vtchat.io.vn/og-image.jpg',
                 width: 1200,
                 height: 630,
-                alt: 'VT.ai Preview',
+                alt: 'VT Preview',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'VT.ai - Go Deeper with AI-Powered Research & Agentic Workflows',
-        site: 'VT.ai',
-        creator: '@llmchat_co',
-        description:
-            'Experience deep, AI-powered research with agentic workflows and a wide variety of models for advanced productivity.',
-        images: ['https://vtai.vn/twitter-image.jpg'],
+        title: 'VT',
+        site: 'VT',
+        creator: '@vinhnx',
+        description: 'Minimal AI chat application.',
+        images: ['https://vtchat.io.vn/twitter-image.jpg'],
     },
     robots: {
         index: true,
@@ -61,7 +69,7 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: 'https://VT',
+        canonical: 'https://vtchat.io.vn',
     },
 };
 
@@ -95,31 +103,34 @@ export default function ParentLayout({
         >
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
-
-                {/* <script
-                    crossOrigin="anonymous"
-                    src="//unpkg.com/react-scan/dist/auto.global.js"
-                ></script> */}
             </head>
             <body>
-                {/* <PostHogProvider> */}
-                <ClerkProvider>
-                    <RootProvider>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
-                            >
-                                <TooltipProvider>
-                                    <ReactQueryProvider>
-                                        <RootLayout>{children}</RootLayout>
-                                    </ReactQueryProvider>
-                                </TooltipProvider>
-                        </ThemeProvider>
-                    </RootProvider>
-                </ClerkProvider>
-                {/* </PostHogProvider> */}
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="light"
+                    enableSystem={false}
+                    disableTransitionOnChange
+                >
+                    <TooltipProvider>
+                        <BetterAuthProvider>
+                            <SubscriptionProvider>
+                                <RootProvider>
+                                    <SSRErrorBoundary>
+                                        <NoSSR
+                                            fallback={
+                                                <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
+                                                    <FullPageLoader label="Loading..." />
+                                                </div>
+                                            }
+                                        >
+                                            <RootLayout>{children}</RootLayout>
+                                        </NoSSR>
+                                    </SSRErrorBoundary>
+                                </RootProvider>
+                            </SubscriptionProvider>
+                        </BetterAuthProvider>
+                    </TooltipProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

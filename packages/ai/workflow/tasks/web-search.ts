@@ -12,7 +12,7 @@ import {
 
 export const webSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'web-search',
-    execute: async ({ data, trace, events, context, signal }) => {
+    execute: async ({ data, events, context, signal }) => {
         const queries = data?.queries;
         const stepId = data?.stepId;
         const gl = context?.get('gl');
@@ -128,17 +128,6 @@ ${processedResults
                 read: {
                     status: 'COMPLETED',
                 },
-            },
-        });
-
-        trace?.span({
-            name: 'web-search',
-            input: prompt,
-            output: summary,
-            metadata: {
-                queries,
-                stepId,
-                results,
             },
         });
 

@@ -9,6 +9,8 @@ export type ApiKeys = {
     JINA_API_KEY?: string;
     FIREWORKS_API_KEY?: string;
     SERPER_API_KEY?: string;
+    OPENROUTER_API_KEY?: string;
+    TOGETHER_API_KEY?: string;
 };
 
 type ApiKeysState = {
@@ -17,26 +19,35 @@ type ApiKeysState = {
     removeKey: (provider: keyof ApiKeys) => void;
     clearAllKeys: () => void;
     getAllKeys: () => ApiKeys;
-    hasApiKeyForChatMode: (chatMode: ChatMode) => boolean;
+    hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => boolean;
 };
 
 export const useApiKeysStore = create<ApiKeysState>()(
     persist(
         (set, get) => ({
             keys: {},
-            setKey: (provider, key) =>
+            setKey: (provider, key) => {
+                // const { data: session } = useSession(); // Removed hook call
+                // if (!session) return; // Caller should handle session check
                 set(state => ({
                     keys: { ...state.keys, [provider]: key },
-                })),
-            removeKey: provider =>
+                }));
+            },
+            removeKey: provider => {
                 set(state => {
                     const newKeys = { ...state.keys };
                     delete newKeys[provider];
                     return { keys: newKeys };
-                }),
-            clearAllKeys: () => set({ keys: {} }),
+                });
+            },
+            clearAllKeys: () => {
+                set({ keys: {} });
+            },
             getAllKeys: () => get().keys,
-            hasApiKeyForChatMode: (chatMode: ChatMode) => {
+            hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
+                // Added isSignedIn parameter
+                // const { data: session } = useSession(); // Removed hook call
+                if (!isSignedIn) return false; // Use passed isSignedIn
                 const apiKeys = get().keys;
                 switch (chatMode) {
                     case ChatMode.O4_Mini:

@@ -1,11 +1,12 @@
-import { useAuth } from '@clerk/nextjs';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, Textarea } from '@repo/ui';
 import { IconCircleCheckFilled, IconHelpSmall, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 
 export const FeedbackWidget = () => {
-    const { userId } = useAuth();
+    const { data: session } = useSession();
+    const userId = session?.user?.id;
     const [isOpen, setIsOpen] = useState(false);
     const [feedback, setFeedback] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);

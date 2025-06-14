@@ -7,7 +7,6 @@ import {
 import { ChatMode } from '@repo/shared/config';
 import { Geo } from '@vercel/functions';
 import { CoreMessage } from 'ai';
-import { Langfuse } from 'langfuse';
 import {
     analysisTask,
     completionTask,
@@ -135,11 +134,6 @@ export const runWorkflow = ({
     gl?: Geo;
     customInstructions?: string;
 }) => {
-    const langfuse = new Langfuse();
-    const trace = langfuse.trace({
-        name: 'deep-research-workflow',
-    });
-
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
         maxIterations: 2,
@@ -190,7 +184,6 @@ export const runWorkflow = ({
 
     // Use the typed builder
     const builder = new WorkflowBuilder(threadId, {
-        trace,
         initialEventState: events.getAllState(),
         events,
         context,

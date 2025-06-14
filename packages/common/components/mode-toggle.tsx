@@ -21,12 +21,12 @@ export function ModeToggle({ onClose }: ModeToggleProps) {
 
     return (
         <GatedFeatureAlert
-            requiredFeature={FeatureSlug.DARK_MODE}
-            title="Dark Mode Available in VT+"
-            message="Dark mode is a VT+ feature. Please upgrade your plan to use this feature."
+            requiredFeature={FeatureSlug.DARK_THEME}
+            title="Dark Theme Available in VT+"
+            message="Dark theme is a VT+ feature. Please upgrade your plan to use this feature."
             onGatedClick={() => {
                 // Optional: You can add analytics or other side effects here
-                console.log('User attempted to use dark mode without VT+ subscription');
+                console.log('User attempted to use dark theme without VT+ subscription');
             }}
         >
             <Button variant="outlined" size="icon" onClick={handleToggle}>

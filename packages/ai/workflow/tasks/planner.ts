@@ -6,7 +6,7 @@ import { generateObject, getHumanizedDate, handleError, sendEvents } from '../ut
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'planner',
-    execute: async ({ trace, events, context, data, signal }) => {
+    execute: async ({ events, context, data, signal }) => {
         const messages = context?.get('messages') || [];
         const question = context?.get('question') || '';
         const currentYear = new Date().getFullYear();
@@ -16,22 +16,22 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
 
         const prompt = `
                         You're a strategic research planner. Your job is to analyze research questions and develop an initial approach to find accurate information through web searches.
-                        
+
                         **Research Question**:
                         <question>
                         ${question}
                         </question>
-                        
+
                         **Your Task**:
                         1. Identify the 1-2 most important initial aspects of this question to research first
                         2. Formulate 1-2 precise search queries that will yield the most relevant initial information
                         3. Focus on establishing a foundation of knowledge before diving into specifics
-                        
+
                         **Search Strategy Guidelines**:
                         - Create targeted queries using search operators when appropriate
                         - Prioritize broad, foundational information for initial searches
                         - Ensure queries cover different high-priority aspects of the research question
-                
+
                         ## Query Generation Rules
 
 - DO NOT broaden the scope beyond the original research question
@@ -55,7 +55,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
 
 **Important**:
 - Use current date and time for the queries unless speciffically asked for a different time period
-                        
+
                         **Output Format (JSON)**:
                         - reasoning: A brief explanation of your first step to research the question
                         - queries: 2 well-crafted search queries (4-8 words) that targets the most important aspects
@@ -84,15 +84,6 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                     status: 'COMPLETED',
                     data: object.queries,
                 },
-            },
-        });
-
-        trace?.span({
-            name: 'planner',
-            input: prompt,
-            output: object,
-            metadata: {
-                data,
             },
         });
 

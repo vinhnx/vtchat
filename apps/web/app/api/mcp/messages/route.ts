@@ -1,8 +1,11 @@
 // pages/api/mcp-proxy/[server]/sse.ts
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
 import fetch from 'node-fetch';
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
 
 const redis = new Redis({
     url: process.env.KV_REST_API_URL,
@@ -11,8 +14,10 @@ const redis = new Redis({
 
 export async function POST(request: NextRequest) {
     // Check authentication for MCP tools
-    const session = await auth();
-    if (!session?.userId) {
+    const session = await auth.api.getSession({
+        headers: request.headers,
+    });
+    if (!session?.user?.id) {
         return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 

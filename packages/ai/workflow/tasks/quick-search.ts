@@ -75,7 +75,7 @@ const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
 export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'quickSearch',
-    execute: async ({ events, context, signal, trace }) => {
+    execute: async ({ events, context, signal }) => {
         // Helper function to update step status
 
         const { updateStep, updateStatus, addSources, updateAnswer, nextStepId } =

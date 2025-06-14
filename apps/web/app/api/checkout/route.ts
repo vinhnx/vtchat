@@ -1,0 +1,195 @@
+import { auth } from '@/lib/auth';
+import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
+// Schema for checkout request
+const CheckoutRequestSchema = z.object({
+    priceId: z.literal(PlanSlug.VT_PLUS), // Only VT_PLUS can be checked out
+    successUrl: z.string().optional(),
+    quantity: z.number().positive().optional().default(1),
+});
+
+export async function POST(request: NextRequest) {
+    try {
+        console.log('[Checkout API] Starting checkout process...');
+
+        // Check authentication using Better Auth
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+        const userId = session?.user?.id;
+        const user = session?.user;
+
+        if (!userId) {
+            console.error('[Checkout API] Authentication failed: No user ID found');
+            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+        }
+
+        console.log(`[Checkout API] User authenticated: ${userId}`);
+
+        // Parse request body
+        const body = await request.json();
+        console.log('[Checkout API] Request body:', body);
+        const validatedData = CheckoutRequestSchema.parse(body);
+
+        // Get Creem API key from environment
+        const creemApiKey = process.env.CREEM_API_KEY;
+        if (!creemApiKey) {
+            console.error('CREEM_API_KEY not configured');
+            return NextResponse.json({ error: 'Payment system not configured' }, { status: 500 });
+        }
+
+        console.log('Using Creem.io payment system');
+
+        // Map internal price IDs to our product types using the centralized config
+        console.log('Processing checkout with price ID:', validatedData.priceId);
+        console.log('Available price mappings:', Object.keys(PRICE_ID_MAPPING));
+
+        const packageType = PRICE_ID_MAPPING[validatedData.priceId]; // validatedData.priceId is already PlanSlug.VT_PLUS
+        if (!packageType) {
+            // This check might be redundant if priceId is always VT_PLUS and mapping exists
+            console.error(`Invalid price ID: ${validatedData.priceId}`);
+            return NextResponse.json(
+                {
+                    error: 'Product configuration error',
+                    message: 'This product is not available. Please contact support.',
+                    code: 'PRODUCT_NOT_CONFIGURED',
+                },
+                { status: 400 }
+            );
+        }
+
+        console.log('Mapped to package type:', packageType);
+
+        // Get user information for checkout
+        const userEmail = user?.email;
+
+        if (!userEmail) {
+            console.error('No email found for user:', userId);
+            return NextResponse.json(
+                {
+                    error: 'Email required',
+                    message: 'A valid email address is required to complete checkout.',
+                    code: 'EMAIL_REQUIRED',
+                },
+                { status: 400 }
+            );
+        }
+
+        // Validate email domain
+        if (userEmail.includes('@example.com')) {
+            console.error('Invalid email domain detected:', userEmail);
+            return NextResponse.json(
+                {
+                    error: 'Invalid email configuration',
+                    message: 'Please update your email address to continue.',
+                    code: 'INVALID_EMAIL_DOMAIN',
+                },
+                { status: 400 }
+            );
+        }
+
+        // For VT+ subscriptions, check if user already has an active subscription
+        if (packageType === PlanSlug.VT_PLUS) {
+            console.log('Checking existing subscription status for VT+ checkout...');
+
+            try {
+                // Import database utilities inline to avoid circular dependencies
+                const { db } = await import('@/lib/database');
+                const { userSubscriptions } = await import('@/lib/database/schema');
+                const { eq } = await import('drizzle-orm');
+
+                // Check if user already has an active VT+ subscription
+                const existingSubscription = await db
+                    .select()
+                    .from(userSubscriptions)
+                    .where(eq(userSubscriptions.userId, userId))
+                    .limit(1);
+
+                if (existingSubscription.length > 0) {
+                    const sub = existingSubscription[0];
+                    const isActive =
+                        sub.status === SubscriptionStatusEnum.ACTIVE &&
+                        sub.plan === PlanSlug.VT_PLUS;
+                    const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
+
+                    if (isActive && isNotExpired) {
+                        console.log(
+                            `[Checkout API] User ${userId} already has active VT+ subscription:`,
+                            sub.creemSubscriptionId
+                        );
+                        return NextResponse.json(
+                            {
+                                error: 'Active subscription exists',
+                                message:
+                                    'You already have an active VT+ subscription. Use the customer portal to manage your subscription.',
+                                code: 'SUBSCRIPTION_EXISTS',
+                                hasActiveSubscription: true,
+                                currentPlan: PlanSlug.VT_PLUS,
+                                subscriptionId: sub.creemSubscriptionId,
+                            },
+                            { status: 409 } // Conflict status code
+                        );
+                    }
+                }
+
+                console.log('No active VT+ subscription found, proceeding with checkout...');
+            } catch (dbError) {
+                console.error('[Checkout API] Error checking existing subscription:', dbError);
+                // Don't block checkout on DB errors, but log for monitoring
+            }
+        }
+
+        // Create checkout session using PaymentService
+        let checkout;
+        try {
+            if (packageType === PlanSlug.VT_PLUS) {
+                console.log('Starting VT+ subscription checkout for user:', userEmail);
+                checkout = await PaymentService.subscribeToVtPlus(userEmail);
+            } else {
+                console.error('Invalid package type for VT+ only system:', packageType);
+                return NextResponse.json(
+                    {
+                        error: 'Product not available',
+                        message: 'Only VT+ subscription is available.',
+                        code: 'PRODUCT_NOT_AVAILABLE',
+                    },
+                    { status: 400 }
+                );
+            }
+        } catch (error: any) {
+            console.error('Creem checkout error:', error, error.stack);
+            return NextResponse.json(
+                {
+                    error: 'Failed to create checkout session',
+                    message: error.message || 'Payment system temporarily unavailable.',
+                    code: 'CHECKOUT_FAILED',
+                },
+                { status: 503 }
+            );
+        }
+
+        return NextResponse.json({
+            checkoutId: checkout.checkoutId,
+            url: checkout.url,
+            success: checkout.success,
+        });
+    } catch (error) {
+        console.error('Checkout error:', error);
+
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: 'Invalid request data', details: error.errors },
+                { status: 400 }
+            );
+        }
+
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+}

@@ -18,7 +18,7 @@ export enum FeatureSlug {
     BASE_MODELS = 'base_models',
 
     // VT+ Plan Features
-    DARK_MODE = 'dark_mode',
+    DARK_THEME = 'dark_theme',
     DEEP_RESEARCH = 'deep_research',
     PRO_SEARCH = 'pro_search',
     ADVANCED_CHAT_MODES = 'advanced_chat_modes',
@@ -59,7 +59,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.BASE_MODELS,
 
             // Additional VT+ features
-            FeatureSlug.DARK_MODE,
+            FeatureSlug.DARK_THEME,
             FeatureSlug.DEEP_RESEARCH,
             FeatureSlug.PRO_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
@@ -79,9 +79,9 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: 'Base Models',
         description: 'Access to standard AI models',
     },
-    [FeatureSlug.DARK_MODE]: {
-        slug: FeatureSlug.DARK_MODE,
-        name: 'Dark Mode',
+    [FeatureSlug.DARK_THEME]: {
+        slug: FeatureSlug.DARK_THEME,
+        name: 'Dark Theme',
         description: 'Dark theme for better viewing experience',
     },
     [FeatureSlug.DEEP_RESEARCH]: {
