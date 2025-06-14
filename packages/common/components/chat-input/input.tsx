@@ -42,12 +42,8 @@ export const ChatInput = ({
                     editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
                 }
             }
-            editor.on('focus', () => {
-                if (!isSignedIn) {
-                    setShowLoginPrompt(true);
-                    editor.commands.blur();
-                }
-            });
+            // Removed automatic login prompt on focus - users should be able to type without being forced to login
+            // Login will be prompted only when they try to send a message
         },
         onUpdate: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp) {
