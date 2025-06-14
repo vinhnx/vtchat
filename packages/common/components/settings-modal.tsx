@@ -3,7 +3,7 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { IconAlertCircle, IconKey, IconSettings2, IconTrash, IconCreditCard } from '@tabler/icons-react';
+import { AlertCircle, Key, Settings2, Trash, CreditCard } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -31,7 +31,7 @@ export const SettingsModal = () => {
     // If not signed in, show login prompt instead of settings
     if (!isSignedIn) {
         const KeyIcon = ({ size, className }: { size?: number; className?: string }) => (
-            <IconKey size={size} className={className} />
+            <Key size={size} className={className} />
         );
 
         return (
@@ -47,19 +47,19 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            icon: <IconSettings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground"  />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
         },
         {
-            icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <CreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Plan',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
         },
         {
-            icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground"  />,
             title: 'API Keys',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
@@ -148,11 +148,11 @@ export const MCPSettings = () => {
                                         removeMcpConfig(key);
                                     }}
                                 >
-                                    <IconTrash
+                                    <Trash
                                         size={14}
                                         strokeWidth={2}
                                         className="text-muted-foreground"
-                                    />
+                                     />
                                 </Button>
                             </div>
                         </div>
@@ -261,7 +261,7 @@ const AddToolDialog = ({ isOpen, onOpenChange, onAddTool }: AddToolDialogProps) 
 
                     {error && (
                         <Alert variant="destructive">
-                            <IconAlertCircle className="h-4 w-4" />
+                            <AlertCircle className="h-4 w-4" />
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
@@ -425,14 +425,14 @@ export const ApiKeySettings = () => {
             {/* Header Section */}
             <div className="flex flex-col gap-3">
                 <h2 className="flex items-center gap-2 text-base font-semibold">
-                    <IconKey size={20} className="text-blue-500" />
+                    <Key size={20} className="text-blue-500" />
                     API Key Management
                     <BYOKIcon />
                 </h2>
                 <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
                     <div className="flex items-start gap-3">
                         <div className="mt-0.5 rounded-full bg-blue-100 p-1 dark:bg-blue-900/40">
-                            <IconKey size={14} className="text-blue-600 dark:text-blue-400" />
+                            <Key size={14} className="text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1 space-y-2">
                             <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
@@ -471,9 +471,70 @@ export const ApiKeySettings = () => {
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1 text-xs text-blue-500 underline-offset-2 hover:text-blue-600 hover:underline"
                                 >
+<<<<<<< HEAD
                                     Get API key →
                                 </a>
                             </div>
+=======
+                                    {apiKey.value ? 'Change Key' : 'Add Key'}
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export const CreditsSettings = () => {
+    const remainingCredits = useChatStore(state => state.creditLimit.remaining);
+    const maxLimit = useChatStore(state => state.creditLimit.maxLimit);
+    const resetDate = useChatStore(state => state.creditLimit.reset);
+
+    const info = [
+        {
+            title: 'Plan',
+            value: (
+                <Badge variant="secondary" className="bg-brand/10 text-brand rounded-full">
+                    <span className="text-xs font-medium">FREE</span>
+                </Badge>
+            ),
+        },
+        {
+            title: 'Credits',
+            value: (
+                <div className="flex h-7 flex-row items-center gap-1 rounded-full py-1">
+                    <Zap size={14} strokeWidth={2} className="text-brand"  />
+                    <span className="text-brand text-sm font-medium">{remainingCredits}</span>
+                    <span className="text-brand text-sm opacity-50">/</span>
+                    <span className="text-brand text-sm opacity-50">{maxLimit}</span>
+                </div>
+            ),
+        },
+        {
+            title: 'Next reset',
+            value: moment(resetDate).fromNow(),
+        },
+    ];
+
+    return (
+        <div className="flex flex-col gap-6">
+            <div className="flex flex-col items-start gap-2">
+                <h2 className="flex items-center gap-1 text-base font-medium">Usage Credits</h2>
+                <Alert variant="info" className="w-full">
+                    <AlertDescription className="text-muted-foreground/70 text-sm leading-tight">
+                        You'll recieve some free credits everyday. Once credits are used, you can
+                        use your own API keys to continue.
+                    </AlertDescription>
+                </Alert>
+
+                <div className="divide-border flex w-full flex-col gap-1 divide-y">
+                    {info.map(item => (
+                        <div key={item.title} className="flex flex-row justify-between gap-1 py-4">
+                            <span className="text-muted-foreground text-sm">{item.title}</span>
+                            <span className="text-sm font-medium">{item.value}</span>
+>>>>>>> 0c84a71 (feat: unify icon packages to use lucide-react only)
                         </div>
 
                         <div className="space-y-2">
@@ -489,7 +550,7 @@ export const ApiKeySettings = () => {
                                     />
                                     {validationErrors[apiKey.key] && (
                                         <Alert variant="destructive">
-                                            <IconAlertCircle className="h-4 w-4" />
+                                            <AlertCircle className="h-4 w-4" />
                                             <AlertDescription>
                                                 {validationErrors[apiKey.key]}
                                             </AlertDescription>
@@ -547,7 +608,7 @@ export const ApiKeySettings = () => {
                                             }}
                                             className="text-red-600 hover:text-red-700"
                                         >
-                                            <IconTrash size={14} />
+                                            <Trash size={14} />
                                         </Button>
                                     )}
                                 </div>

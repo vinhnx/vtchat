@@ -5,7 +5,7 @@ import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import { Button, cn, Flex } from '@repo/ui';
-import { IconArrowBarLeft, IconArrowBarRight, IconPlus, IconSearch } from '@tabler/icons-react';
+import { PanelLeftClose, PanelRightClose, Plus, Search } from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
@@ -100,11 +100,11 @@ export const Sidebar = () => {
                         className={cn('relative w-full shadow-sm', 'justify-center')}
                         onClick={() => !isChatPage && push('/chat')}
                     >
-                        <IconPlus
+                        <Plus
                             size={16}
                             strokeWidth={2}
                             className={cn(isSidebarOpen && 'absolute left-2')}
-                        />
+                         />
                         {isSidebarOpen && 'New'}
                     </Button>
                     <Button
@@ -116,11 +116,11 @@ export const Sidebar = () => {
                         className={cn('relative w-full', 'justify-center')}
                         onClick={() => setIsCommandSearchOpen(true)}
                     >
-                        <IconSearch
+                        <Search
                             size={16}
                             strokeWidth={2}
                             className={cn(isSidebarOpen && 'absolute left-2')}
-                        />
+                         />
                         {isSidebarOpen && 'Search'}
                     </Button>
                 </Flex>
@@ -159,7 +159,7 @@ export const Sidebar = () => {
                                 className={cn(!isSidebarOpen && 'mx-auto')}
                                 tooltip="Close Sidebar"
                             >
-                                <IconArrowBarLeft size={16} strokeWidth={2} /> Close
+                                <PanelLeftClose size={16} strokeWidth={2}  /> Close
                             </Button>
                         </Flex>
                     )}
@@ -170,7 +170,7 @@ export const Sidebar = () => {
                             onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto')}
                         >
-                            <IconArrowBarRight size={16} strokeWidth={2} />
+                            <PanelRightClose size={16} strokeWidth={2}  />
                         </Button>
                     )}
                     <div className="sticky right-0 top-0 z-50 flex items-center gap-1 px-4 py-2">

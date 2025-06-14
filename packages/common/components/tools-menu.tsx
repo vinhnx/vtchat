@@ -1,4 +1,4 @@
-import { IconPlus } from '@tabler/icons-react';
+import { Plus } from 'lucide-react';
 
 import { useMcpToolsStore } from '@repo/common/store';
 import { Button } from '@repo/ui/src/components/button';
@@ -13,7 +13,7 @@ import {
 } from '@repo/ui';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { IconCheck, IconTools } from '@tabler/icons-react';
+import { Check, Wrench } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
@@ -51,7 +51,7 @@ export const ToolsMenu = () => {
                         rounded="full"
                         disabled={!isToolsAvailable}
                     >
-                        <IconTools size={18} strokeWidth={2} className="text-muted-foreground" />
+                        <Wrench size={18} strokeWidth={2} className="text-muted-foreground"  />
                         {selectedMCPTools?.length > 0 && (
                             <Badge
                                 variant="secondary"
@@ -80,18 +80,18 @@ export const ToolsMenu = () => {
                                 <span>{key}</span>
                                 <div className="flex-1" />
                                 {selectedMCP.includes(key) && (
-                                    <IconCheck size={16} className="text-foreground" />
+                                    <Check size={16} className="text-foreground"  />
                                 )}
                             </div>
                         </DropdownMenuItem>
                     ))}
                     {mcpConfig && Object.keys(mcpConfig).length === 0 && (
                         <div className="flex h-[150px] flex-col items-center justify-center gap-2">
-                            <IconTools
+                            <Wrench
                                 size={16}
                                 strokeWidth={2}
                                 className="text-muted-foreground"
-                            />
+                             />
                             <p className="text-muted-foreground text-sm">No tools found</p>
                             <Button
                                 rounded="full"
@@ -102,11 +102,11 @@ export const ToolsMenu = () => {
                                     setSettingTab(SETTING_TABS.MCP_TOOLS);
                                 }}
                             >
-                                <IconPlus
+                                <Plus
                                     size={14}
                                     strokeWidth={2}
                                     className="text-muted-foreground"
-                                />
+                                 />
                                 Add Tool
                             </Button>
                         </div>
@@ -119,7 +119,7 @@ export const ToolsMenu = () => {
                                 setSettingTab(SETTING_TABS.MCP_TOOLS);
                             }}
                         >
-                            <IconPlus size={14} strokeWidth={2} className="text-muted-foreground" />
+                            <Plus size={14} strokeWidth={2} className="text-muted-foreground"  />
                             Add Tool
                         </DropdownMenuItem>
                     )}

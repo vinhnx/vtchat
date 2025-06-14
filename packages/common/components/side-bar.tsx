@@ -16,23 +16,23 @@ import {
     DropdownMenuTrigger,
     Flex,
 } from '@repo/ui';
-import {
-    IconArrowBarLeft,
-    IconArrowBarRight,
-    IconCommand,
-    IconExternalLink,
-    IconFileText,
-    IconLogout,
-    IconMessagePlus,
-    IconPinned,
-    IconSearch,
-    IconSelector,
-    IconSettings,
-    IconSettings2,
-    IconShield,
-    IconSparkles,
-    IconUser,
-} from '@tabler/icons-react';
+import { 
+    PanelLeftClose, 
+    PanelRightClose, 
+    Command, 
+    ExternalLink, 
+    FileText, 
+    LogOut, 
+    Plus, 
+    Pin, 
+    Search, 
+    ChevronsUpDown, 
+    Settings, 
+    Settings2, 
+    Shield, 
+    Sparkles, 
+    User 
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import moment from 'moment';
 import Link from 'next/link';
@@ -166,7 +166,7 @@ export const Sidebar = () => {
                             onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto', 'mr-2')}
                         >
-                            <IconArrowBarLeft size={16} strokeWidth={2} />
+                            <PanelLeftClose size={16} strokeWidth={2}  />
                         </Button>
                     )}
                 </div>
@@ -189,7 +189,7 @@ export const Sidebar = () => {
                                 tooltipSide="right"
                                 className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                             >
-                                <IconMessagePlus
+                                <Plus
                                     size={16}
                                     strokeWidth={2}
                                     className={cn(isSidebarOpen)}
@@ -206,7 +206,7 @@ export const Sidebar = () => {
                             tooltipSide="right"
                             className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                         >
-                            <IconMessagePlus
+                            <Plus
                                 size={16}
                                 strokeWidth={2}
                                 className={cn(isSidebarOpen)}
@@ -227,7 +227,7 @@ export const Sidebar = () => {
                         )}
                         onClick={() => setIsCommandSearchOpen(true)}
                     >
-                        <IconSearch size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                        <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)}  />
                         {isSidebarOpen && 'Search'}
                         {isSidebarOpen && <div className="flex-1" />}
                         {isSidebarOpen && (
@@ -236,7 +236,7 @@ export const Sidebar = () => {
                                     variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
                                 >
-                                    <IconCommand size={12} strokeWidth={2} className="shrink-0" />
+                                    <Command size={12} strokeWidth={2} className="shrink-0" />
                                 </Badge>
                                 <Badge
                                     variant="secondary"
@@ -276,14 +276,14 @@ export const Sidebar = () => {
                             }
                         }}
                     >
-                        <IconSparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                        <Sparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
                         {isSidebarOpen &&
                             (isPortalLoading
                                 ? BUTTON_TEXT.LOADING
                                 : isPlusSubscriber
                                   ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
                                   : BUTTON_TEXT.UPGRADE_TO_PLUS)}
-                        {isSidebarOpen && isPlusSubscriber && <IconExternalLink size={12} />}
+                        {isSidebarOpen && isPlusSubscriber && <ExternalLink size={12} />}
                     </Button>
                 </Flex>
 
@@ -316,10 +316,10 @@ export const Sidebar = () => {
                             threads: threads
                                 .filter(thread => thread.pinned)
                                 .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
-                            groupIcon: <IconPinned size={14} strokeWidth={2} />,
+                            groupIcon: <Pin size={14} strokeWidth={2} />,
                             renderEmptyState: () => (
                                 <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                    <IconPinned
+                                    <Pin
                                         size={16}
                                         strokeWidth={1.5}
                                         className="text-muted-foreground/50"
@@ -360,7 +360,7 @@ export const Sidebar = () => {
                             onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto')}
                         >
-                            <IconArrowBarRight size={16} strokeWidth={2} />
+                            <PanelRightClose size={16} strokeWidth={2}  />
                         </Button>
                     )}
                     {isSignedIn && (
@@ -382,11 +382,11 @@ export const Sidebar = () => {
                                                 alt={user.name || user.email}
                                             />
                                         ) : (
-                                            <IconUser
+                                            <User
                                                 size={14}
                                                 strokeWidth={2}
                                                 className="text-background"
-                                            />
+                                             />
                                         )}
                                     </div>
 
@@ -399,36 +399,36 @@ export const Sidebar = () => {
                                         </div>
                                     )}
                                     {isSidebarOpen && (
-                                        <IconSelector
+                                        <ChevronsUpDown
                                             size={14}
                                             strokeWidth={2}
                                             className="text-muted-foreground"
-                                        />
+                                         />
                                     )}
                                 </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                                    <IconSettings size={16} strokeWidth={2} />
+                                    <Settings size={16} strokeWidth={2}  />
                                     Settings
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => push('/privacy')}>
-                                    <IconShield size={16} strokeWidth={2} />
+                                    <Shield size={16} strokeWidth={2} />
                                     Privacy Policy
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => push('/terms')}>
-                                    <IconFileText size={16} strokeWidth={2} />
+                                    <FileText size={16} strokeWidth={2} />
                                     Terms of Service
                                 </DropdownMenuItem>
                                 {!isSignedIn && (
                                     <DropdownMenuItem onClick={() => push('/login')}>
-                                        <IconUser size={16} strokeWidth={2} />
+                                        <User size={16} strokeWidth={2} />
                                         Log in
                                     </DropdownMenuItem>
                                 )}
                                 {isSignedIn && (
                                     <DropdownMenuItem onClick={() => signOut()}>
-                                        <IconLogout size={16} strokeWidth={2} />
+                                        <LogOut size={16} strokeWidth={2} />
                                         Sign out
                                     </DropdownMenuItem>
                                 )}
@@ -445,7 +445,7 @@ export const Sidebar = () => {
                                     setIsSettingsOpen(true);
                                 }}
                             >
-                                <IconSettings2 size={14} strokeWidth={2} />
+                                <Settings2 size={14} strokeWidth={2}  />
                                 Settings
                             </Button>
                             <Button size="sm" rounded="lg" onClick={() => push('/login')}>

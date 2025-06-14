@@ -18,39 +18,31 @@ import {
     DropdownMenuTrigger,
     Kbd,
 } from '@repo/ui';
-import {
-    IconArrowUp,
-    IconAtom,
-    IconChevronDown,
-    IconNorthStar,
-    IconPaperclip,
-    IconPlayerStopFilled,
-    IconWorld,
-} from '@tabler/icons-react';
+import { ArrowUp, Atom, ChevronDown, Star, Paperclip, Square, Globe,  } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
-// Create a wrapper component for IconWorld to match expected icon prop type
+// Create a wrapper component for Globe to match expected icon prop type
 const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconWorld size={size} className={className} />;
+}) => <Globe size={size} className={className} />;
 
 export const chatOptions = [
     {
         label: 'Deep Research',
         description: 'In depth research on complex topic',
         value: ChatMode.Deep,
-        icon: <IconAtom size={16} className="text-muted-foreground" strokeWidth={2} />,
+        icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
     {
         label: 'Pro Search',
         description: 'Pro search with web search',
         value: ChatMode.Pro,
-        icon: <IconNorthStar size={16} className="text-muted-foreground" strokeWidth={2} />,
+        icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
 ];
 
@@ -151,7 +143,7 @@ export const AttachmentButton = () => {
             rounded="full"
             disabled
         >
-            <IconPaperclip size={18} strokeWidth={2} className="text-muted-foreground" />
+            <Paperclip size={18} strokeWidth={2} className="text-muted-foreground"  />
         </Button>
     );
 };
@@ -215,7 +207,7 @@ export const ChatModeButton = () => {
         <Button variant={'secondary'} size="xs">
             {selectedOption?.icon}
             {selectedOption?.label}
-            <IconChevronDown size={14} strokeWidth={2} />
+            <ChevronDown size={14} strokeWidth={2}  />
         </Button>
     );
 
@@ -227,7 +219,7 @@ export const ChatModeButton = () => {
                         <Button variant={'secondary'} size="xs" className="opacity-70">
                             {selectedOption?.icon}
                             {selectedOption?.label} (VT+)
-                            <IconChevronDown size={14} strokeWidth={2} />
+                            <ChevronDown size={14} strokeWidth={2}  />
                         </Button>
                     ) : (
                         dropdownTrigger
@@ -248,7 +240,7 @@ export const ChatModeButton = () => {
                 >
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <IconArrowUp
+                            <ArrowUp
                                 size={24}
                                 className="text-purple-600 dark:text-purple-400"
                             />
@@ -311,7 +303,7 @@ export const WebSearchButton = () => {
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
                 onClick={handleWebSearchToggle}
             >
-                <IconWorld
+                <Globe
                     size={16}
                     strokeWidth={2}
                     className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
@@ -333,7 +325,7 @@ export const WebSearchButton = () => {
                 <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
-                            <IconWorld size={24} className="text-blue-600 dark:text-blue-400" />
+                            <Globe size={24} className="text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">VT+ Required</h3>
@@ -595,7 +587,7 @@ export const SendStopButton = ({
                             onClick={stopGeneration}
                             tooltip="Stop Generation"
                         >
-                            <IconPlayerStopFilled size={14} strokeWidth={2} />
+                            <Square size={14} strokeWidth={2}  />
                         </Button>
                     </motion.div>
                 ) : (
@@ -615,7 +607,7 @@ export const SendStopButton = ({
                                 sendMessage();
                             }}
                         >
-                            <IconArrowUp size={16} strokeWidth={2} />
+                            <ArrowUp size={16} strokeWidth={2}  />
                         </Button>
                     </motion.div>
                 )}

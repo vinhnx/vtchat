@@ -3,7 +3,7 @@ import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ThreadItem } from '@repo/shared/types';
 import { Button, cn } from '@repo/ui';
-import { IconCheck, IconCopy, IconPencil } from '@tabler/icons-react';
+import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { ImageMessage } from './image-message';
@@ -84,9 +84,9 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                     tooltip={status === 'copied' ? 'Copied' : 'Copy'}
                                 >
                                     {status === 'copied' ? (
-                                        <IconCheck size={14} strokeWidth={2} />
+                                        <Check size={14} strokeWidth={2}  />
                                     ) : (
-                                        <IconCopy size={14} strokeWidth={2} />
+                                        <Copy size={14} strokeWidth={2}  />
                                     )}
                                 </Button>
                                 <Button
@@ -100,7 +100,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                     tooltip="Edit"
                                     onClick={() => setIsEditing(true)}
                                 >
-                                    <IconPencil size={14} strokeWidth={2} />
+                                    <Pencil size={14} strokeWidth={2}  />
                                 </Button>
                             </div>
                         </div>

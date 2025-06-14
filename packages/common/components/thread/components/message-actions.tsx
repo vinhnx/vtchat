@@ -5,14 +5,7 @@ import { useChatStore } from '@repo/common/store';
 import { ChatMode, getChatModeName } from '@repo/shared/config';
 import { ThreadItem } from '@repo/shared/types';
 import { Alert, AlertDescription, Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
-import {
-    IconAlertCircle,
-    IconCheck,
-    IconCopy,
-    IconMarkdown,
-    IconRefresh,
-    IconTrash,
-} from '@tabler/icons-react';
+import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 type MessageActionsProps = {
     threadItem: ThreadItem;
@@ -57,9 +50,9 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             tooltip="Copy"
                         >
                             {status === 'copied' ? (
-                                <IconCheck size={16} strokeWidth={2} />
+                                <Check size={16} strokeWidth={2} />
                             ) : (
-                                <IconCopy size={16} strokeWidth={2} />
+                                <Copy size={16} strokeWidth={2} />
                             )}
                         </Button>
                     )}
@@ -78,9 +71,9 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             tooltip="Copy Markdown"
                         >
                             {markdownCopyStatus === 'copied' ? (
-                                <IconCheck size={16} strokeWidth={2} />
+                                <Check size={16} strokeWidth={2} />
                             ) : (
-                                <IconMarkdown size={16} strokeWidth={2} />
+                                <FileText size={16} strokeWidth={2} />
                             )}
                         </Button>
                     )}
@@ -93,7 +86,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                         size="icon-sm"
                                         tooltip="Rewrite"
                                     >
-                                        <IconRefresh size={16} strokeWidth={2} />
+                                        <RotateCcw size={16} strokeWidth={2} />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <ChatModeOptions
@@ -127,7 +120,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             }}
                             tooltip="Remove"
                         >
-                            <IconTrash size={16} strokeWidth={2} />
+                            <Trash size={16} strokeWidth={2} />
                         </Button>
                     )}
                     {threadItem.mode && (
@@ -140,7 +133,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                 {/* Gated Feature Alert */}
                 {gatedFeatureAlert && (
                     <Alert variant="destructive">
-                        <IconAlertCircle className="h-4 w-4" />
+                        <AlertCircle className="h-4 w-4" />
                         <AlertDescription>
                             <strong>{gatedFeatureAlert.title}:</strong> {gatedFeatureAlert.message}
                         </AlertDescription>

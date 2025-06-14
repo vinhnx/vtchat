@@ -12,18 +12,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { IconClock, IconPlus, IconTrash } from '@tabler/icons-react';
+import { Clock, Plus, Trash } from 'lucide-react';
 import { CommandItem } from 'cmdk';
 import { MoreHorizontal } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-// Create a wrapper component for IconTrash to match expected icon prop type
+// Create a wrapper component for Trash to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconTrash size={size} className={className} />;
+}) => <Trash size={size} className={className} />;
 
 export default function ThreadsPage() {
     const threads = useChatStore(state => state.threads);
@@ -128,7 +128,7 @@ export default function ThreadsPage() {
                                                     </p>
                                                 )}
                                                 <p className="text-muted-foreground/50 flex flex-row items-center gap-1 text-xs">
-                                                    <IconClock size={12} strokeWidth="2" />
+                                                    <Clock size={12} strokeWidth="2"  />
                                                     {moment(thread.createdAt).fromNow()}
                                                 </p>
                                             </div>
@@ -184,7 +184,7 @@ export default function ThreadsPage() {
                                     </p>
                                 </div>
                                 <Button variant="default" size="sm" onClick={() => push('/chat')}>
-                                    <IconPlus size={14} strokeWidth="2" />
+                                    <Plus size={14} strokeWidth="2"  />
                                     New Thread
                                 </Button>
                             </div>
