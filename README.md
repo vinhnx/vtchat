@@ -1,88 +1,68 @@
-
-<img width="1512" alt="Screenshot 2025-04-14 at 9 13 25 PM" src="https://github.com/user-attachments/assets/b89d1343-7c6f-4685-8bcf-dbcc71ce2229" />
+<img width="1080" alt="VTChat" src="/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/apps/web/public/bg/bg_vt.avif" />
 
 ## Introduction
 
-VT is a sophisticated AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Pro Search and Deep Research for in-depth analysis of complex topics. Forked from VT, VT enhances the original with a focus on privacy and local data storage, ensuring that all user interactions remain secure and confidential.
+VTChat is a minimal AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Pro Search and Deep Research for in-depth analysis of complex topics. A key focus of VTChat is enhancing user privacy by storing all user data locally in the browser using IndexedDB, ensuring conversations remain confidential.
 
-VT stands out with its workflow orchestration system and focus on privacy, storing all user data locally in the browser using IndexedDB, ensuring your conversations never leave your device.
+The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) managed via Creem.io, with a user-friendly customer portal for subscription management.
 
 ## Key Features
 
-**Advanced Research Modes**
-
-- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
-- **Pro Search**: Enhanced search with web integration for real-time information
-
-**Multiple LLM Provider Support**
-
-- OpenAI
-- Anthropic
-- Google
-- Fireworks
-- Together AI
-- xAI
-
-**Privacy-Focused**
-
-- **Local Storage**: All user data stored in browser using IndexedDB via Dexie.js
-- **No Server-Side Storage**: Chat history never leaves your device
-
-**Agentic Capabilities**
-
-- **Workflow Orchestration**: Complex task coordination via custom workflow engine
-- **Reflective Analysis**: Self-improvement through analysis of prior reasoning
-- **Structured Output**: Clean presentation of research findings
+* **Advanced Research Modes**:
+  * **Deep Research**: Comprehensive analysis of complex topics.
+  * **Pro Search**: Enhanced search with web integration.
+* **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
+* **Privacy-Focused**:
+  * **Local Storage**: All user chat data stored in the browser's IndexedDB via Dexie.js.
+  * **No Server-Side Chat Storage**: Chat history does not leave the user's device.
+* **Agentic Capabilities**:
+  * **Workflow Orchestration**: Custom engine for coordinating complex tasks.
+  * **Reflective Analysis**: Potential for self-improvement by analyzing prior reasoning.
+* **Subscription System**:
+  * VT_BASE (free) and VT_PLUS (premium) tiers.
+  * Payment processing via Creem.io.
+  * Integrated Customer Portal for managing subscriptions (opens in a new tab for seamless UX).
+  * Unified subscription logic with global providers and efficient caching.
+* **Modern UI/UX**:
+  * Built with Shadcn UI and Tailwind CSS.
+  * Consistent design and user experience.
+  * Dark mode available for VT_PLUS subscribers.
 
 ## Architecture
 
-VT is built as a monorepo with a clear separation of concerns:
+VTChat utilizes a Turborepo-managed monorepo structure:
 
 ```
+.
 ├── apps/
-│   ├── web/         # Next.js web application
-│   └── desktop/     # Desktop application
-│
-└── packages/
-    ├── ai/          # AI models and workflow orchestration
-    ├── actions/     # Shared actions and API handlers
-    ├── common/      # Common utilities and hooks
-    ├── orchestrator/# Workflow engine and task management
-    ├── database/    # Database schemas and migrations
-    ├── shared/      # Shared types and constants
-    ├── ui/          # Reusable UI components
-    ├── tailwind-config/ # Shared Tailwind configuration
-    └── typescript-config/ # Shared TypeScript configuration
+│   └── web/              # Next.js 14 web application (App Router)
+├── packages/
+│   ├── actions/          # Server actions (e.g., feedback)
+│   ├── ai/               # AI models, providers, tools, workflow logic
+│   ├── common/           # Shared React components, hooks, context, store
+│   ├── orchestrator/     # Workflow engine and task management
+│   ├── shared/           # Shared types, constants, configs, utils, logger
+│   ├── tailwind-config/  # Shared Tailwind CSS configuration
+│   ├── typescript-config/# Shared TypeScript configurations
+│   └── ui/               # Base UI components (from Shadcn UI)
+└── scripts/              # Utility scripts (e.g., data sync)
 ```
 
-## Workflow Orchestration
+## Workflow Orchestration Example
 
-VT's workflow orchestration enables powerful agentic capabilities through a modular, step-by-step approach. Here's how to create a research agent:
+VTChat's workflow orchestration enables powerful agentic capabilities. Here's an example of creating a research agent:
 
 ### 1. Define Event and Context Types
 
-First, establish the data structure for events and context:
-
 ```typescript
-// Define the events emitted by each task
+// packages/ai/workflow/types.ts (Illustrative)
 type AgentEvents = {
-    taskPlanner: {
-        tasks: string[];
-        query: string;
-    };
-    informationGatherer: {
-        searchResults: string[];
-    };
-    informationAnalyzer: {
-        analysis: string;
-        insights: string[];
-    };
-    reportGenerator: {
-        report: string;
-    };
+    taskPlanner: { tasks: string[]; query: string };
+    informationGatherer: { searchResults: string[] };
+    informationAnalyzer: { analysis: string; insights: string[] };
+    reportGenerator: { report: string };
 };
 
-// Define the shared context between tasks
 type AgentContext = {
     query: string;
     tasks: string[];
@@ -95,292 +75,104 @@ type AgentContext = {
 
 ### 2. Initialize Core Components
 
-Next, set up the event emitter, context, and workflow builder:
-
 ```typescript
+// packages/ai/workflow/example.ts (Illustrative)
 import { OpenAI } from 'openai';
-import { createTask } from 'task';
-import { WorkflowBuilder } from './builder';
-import { Context } from './context';
-import { TypedEventEmitter } from './events';
+import { createTask } from '@repo/orchestrator'; // Assuming orchestrator path
+import { WorkflowBuilder } from '@repo/orchestrator';
+import { Context } from '@repo/orchestrator';
+import { TypedEventEmitter } from '@repo/orchestrator';
 
-// Initialize event emitter with proper typing
 const events = new TypedEventEmitter<AgentEvents>();
-
-// Create the workflow builder with proper context
 const builder = new WorkflowBuilder<AgentEvents, AgentContext>('research-agent', {
     events,
-    context: new Context<AgentContext>({
-        query: '',
-        tasks: [],
-        searchResults: [],
-        analysis: '',
-        insights: [],
-        report: '',
-    }),
+    context: new Context<AgentContext>({ /* initial context */ }),
 });
-
-// Initialize LLM client
-const llm = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+const llm = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 ```
 
-### 3. Define Research Tasks
+### 3. Define Research Tasks (Planning, Gathering, Analysis, Reporting)
 
-Create specialized tasks for each step of the research process:
-
-#### Planning Task
-
-```typescript
-// Task Planner: Breaks down a research query into specific tasks
-const taskPlanner = createTask({
-    name: 'taskPlanner',
-    execute: async ({ context, data }) => {
-        const userQuery = data?.query || 'Research the impact of AI on healthcare';
-
-        const planResponse = await llm.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                        'You are a task planning assistant that breaks down research queries into specific search tasks.',
-                },
-                {
-                    role: 'user',
-                    content: `Break down this research query into specific search tasks: "${userQuery}". Return a JSON array of tasks.`,
-                },
-            ],
-            response_format: { type: 'json_object' },
-        });
-
-        const content = planResponse.choices[0].message.content || '{"tasks": []}';
-        const parsedContent = JSON.parse(content);
-        const tasks = parsedContent.tasks || [];
-
-        context?.set('query', userQuery);
-        context?.set('tasks', tasks);
-
-        return {
-            tasks,
-            query: userQuery,
-        };
-    },
-    route: () => 'informationGatherer',
-});
-```
-
-#### Information Gathering Task
-
-```typescript
-// Information Gatherer: Searches for information based on tasks
-const informationGatherer = createTask({
-    name: 'informationGatherer',
-    dependencies: ['taskPlanner'],
-    execute: async ({ context, data }) => {
-        const tasks = data.taskPlanner.tasks;
-        const searchResults: string[] = [];
-
-        // Process each task to gather information
-        for (const task of tasks) {
-            const searchResponse = await llm.chat.completions.create({
-                model: 'gpt-4o',
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a search engine that returns factual information.',
-                    },
-                    {
-                        role: 'user',
-                        content: `Search for information about: ${task}. Return relevant facts and data.`,
-                    },
-                ],
-            });
-
-            const result = searchResponse.choices[0].message.content || '';
-            if (result) {
-                searchResults.push(result);
-            }
-        }
-
-        context?.set('searchResults', searchResults);
-
-        return {
-            searchResults,
-        };
-    },
-    route: () => 'informationAnalyzer',
-});
-```
-
-#### Analysis Task
-
-```typescript
-// Information Analyzer: Analyzes gathered information for insights
-const informationAnalyzer = createTask({
-    name: 'informationAnalyzer',
-    dependencies: ['informationGatherer'],
-    execute: async ({ context, data }) => {
-        const searchResults = data.informationGatherer.searchResults;
-        const query = context?.get('query') || '';
-
-        const analysisResponse = await llm.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                        'You are an analytical assistant that identifies patterns and extracts insights from information.',
-                },
-                {
-                    role: 'user',
-                    content: `Analyze the following information regarding "${query}" and provide a coherent analysis with key insights:\n\n${searchResults.join('\n\n')}`,
-                },
-            ],
-            response_format: { type: 'json_object' },
-        });
-
-        const content =
-            analysisResponse.choices[0].message.content || '{"analysis": "", "insights": []}';
-        const parsedContent = JSON.parse(content);
-        const analysis = parsedContent.analysis || '';
-        const insights = parsedContent.insights || [];
-
-        context?.set('analysis', analysis);
-        context?.set('insights', insights);
-
-        return {
-            analysis,
-            insights,
-        };
-    },
-    route: () => 'reportGenerator',
-});
-```
-
-#### Report Generation Task
-
-```typescript
-// Report Generator: Creates a comprehensive report
-const reportGenerator = createTask({
-    name: 'reportGenerator',
-    dependencies: ['informationAnalyzer'],
-    execute: async ({ context, data }) => {
-        const { analysis, insights } = data.informationAnalyzer;
-        const { query, searchResults } = context?.getAll() || { query: '', searchResults: [] };
-
-        const reportResponse = await llm.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                        'You are a report writing assistant that creates comprehensive, well-structured reports.',
-                },
-                {
-                    role: 'user',
-                    content: `Create a comprehensive report on "${query}" using the following analysis and insights.\n\nAnalysis: ${analysis}\n\nInsights: ${insights.join('\n- ')}\n\nStructure the report with an executive summary, key findings, detailed analysis, and conclusions.`,
-                },
-            ],
-        });
-
-        const report = reportResponse.choices[0].message.content || '';
-
-        context?.set('report', report);
-
-        return {
-            report,
-        };
-    },
-    route: () => 'end',
-});
-```
+(Task definitions for `taskPlanner`, `informationGatherer`, `informationAnalyzer`, `reportGenerator` would follow, similar to the original README example, utilizing the `createTask` utility and interacting with the LLM and context.)
 
 ### 4. Build and Execute the Workflow
 
-Finally, assemble and run the workflow:
-
 ```typescript
-// Add all tasks to the workflow
+// packages/ai/workflow/example.ts (Illustrative)
 builder.addTask(taskPlanner);
 builder.addTask(informationGatherer);
 builder.addTask(informationAnalyzer);
 builder.addTask(reportGenerator);
 
-// Build the workflow
 const workflow = builder.build();
-
-// Start the workflow with an initial query
-workflow.start('taskPlanner', { query: 'Research the impact of AI on healthcare' });
-
-// Export the workflow for external use
+// workflow.start('taskPlanner', { query: 'Research AI impact' });
 export const researchAgent = workflow;
 ```
 
-The workflow processes through these stages:
+This workflow processes research queries through planning, information gathering, analysis, and report generation, with events updating the UI in real-time.
 
-1. **Planning**: Breaks down complex questions into specific research tasks
-2. **Information Gathering**: Collects relevant data for each task
-3. **Analysis**: Synthesizes information and identifies key insights
-4. **Report Generation**: Produces a comprehensive, structured response
+## Local Storage for Privacy
 
-Each step emits events that can update the UI in real-time, allowing users to see the research process unfold.
-
-## Local Storage
-
-VT prioritizes user privacy by storing all data locally
+VTChat stores all chat history and user-specific data (like API keys if "Bring Your Own Key" is used) in the browser's IndexedDB. This ensures that sensitive conversation data remains on the user's device, enhancing privacy.
 
 ## Tech Stack
 
-### Frontend
-
-- **Next.js 14**: React framework with server components
-- **TypeScript**: Type-safe development
-- **Tailwind CSS**: Utility-first styling
-- **Framer Motion**: Smooth animations
-- **Shadcn UI**: Component library
-- **Tiptap**: Rich text editor
-- **Zustand**: State management
-- **Dexie.js**: Used for IndexedDB interaction with a simple and powerful API
-- **AI SDK**: Unified interface for multiple AI providers
-
-### Development
-
-- **Turborepo**: Monorepo management
-- **Bun**: JavaScript runtime and package manager
-- **ESLint & Prettier**: Code quality tools
-- **Husky**: Git hooks
+* **Core Framework**: Next.js 14 (App Router)
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS
+* **UI Components**: Shadcn UI
+* **State Management**: Zustand
+* **Data Fetching (Client)**: React Query (implicitly, common with Zustand)
+* **Database ORM**: Drizzle ORM (for application metadata, not chat logs)
+* **Runtime & Package Manager**: Bun
+* **Monorepo Management**: Turborepo
+* **Authentication**: NextAuth.js (with ongoing considerations for Better Auth/Stack Auth)
+* **Payment Integration**: Creem.io
+* **Local Database**: IndexedDB via Dexie.js (for chat history and user settings)
+* **Linting/Formatting**: ESLint, Prettier
 
 ## Getting Started
 
 ### Prerequisites
 
-- Ensure you have `bun` installed (recommended) or `yarn`
+* Bun (JavaScript runtime and package manager)
+* Node.js (for some Turborepo operations, though Bun is primary)
 
 ### Installation
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/your-repo/llmchat.git
-cd llmchat
-```
+    ```bash
+    git clone https://github.com/your-repo/vtchat.git # Replace with actual repo URL
+    cd vtchat
+    ```
 
 2. Install dependencies:
 
-```bash
-bun install
-# or
-yarn install
-```
+    ```bash
+    bun install
+    ```
 
-3. Start the development server:
+3. Set up environment variables:
+    * Copy `apps/web/.env.example` to `apps/web/.env.local`.
+    * Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys).
 
-```bash
-bun dev
-# or
-yarn dev
-```
+4. Start the development server:
 
-4. Open your browser and navigate to `http://localhost:3000`
+    ```bash
+    bun dev
+    ```
+
+    This command, managed by Turborepo, will typically start the Next.js application.
+
+5. Open your browser and navigate to `http://localhost:3000` (or the port specified by the `dev` script).
+
+## Project Documentation
+
+For more detailed information on specific systems, refer to the `/docs` directory:
+
+* **Subscription System**: Details on plan management, caching, and Creem.io integration.
+* **Customer Portal**: Information on how users manage their subscriptions.
+* **Webhook Setup**: Guide for configuring Creem.io webhooks for development.
+
+The `/memory-bank` directory contains contextual documents used by the AI assistant (Cline) for ongoing development and understanding of the project's state.

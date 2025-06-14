@@ -1,5 +1,6 @@
 # TODO List
 
+--
 @vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (108kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 @vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (144kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 @vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (128kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
@@ -20,30 +21,7 @@
 
 --
 
-1. now review #codebase and draft a plan, make sure subscription logic works across the app from payment -> subscription store -> db call on neon db sync -> sync app plan instantly and
-1. should call on app start or page refresh: /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired, Or every page refresh
-1. IMPORTANT: make sure to handle this logic per account and check non-login
-1. check for GatedFeatureAlert entrypoint calling #codebase and check sub status
-1. unify subscription logic and use one unidufy sub use in #editFiles and
-1. update schema and migration if  needed
-note: you can use context7, neon, better-auth, creem.io MCP tools
-
---
-
-1. migrate useVtPlusAccess and use useSubscriptionStatus
-1. make sure unify subscription logic as once and remove redundant logic make sure sync with neon db and web hook from creem.io payment call back
-1. you can use context7, neon, better-auth, creem.io MCP tools
-
---
-
-1. optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
-1. IMPORTANT: make sure to handle this logic per account and check non-login
-you can use MCP tools like neon context7 creem.io
-
---
-
 Subscription Management
---
 
 # IMPORTANT
 
