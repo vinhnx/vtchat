@@ -1,5 +1,6 @@
 import { VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../lib/utils';
+import { Typography } from './typography';
 
 import React from 'react';
 
@@ -39,12 +40,24 @@ export interface TypeProps
   asChild?: boolean;
 }
 
+/**
+ * @deprecated Use Typography components instead (TypographyP, TypographyMuted, etc.)
+ * This component is kept for backward compatibility.
+ */
 export const Type = React.forwardRef<HTMLParagraphElement, TypeProps>(
   ({ className, size, textColor, weight, asChild = false, ...props }, ref) => {
+    // Map old props to new Typography system
+    const typographyVariant = textColor === 'secondary' ? 'muted' : 'p';
+    
     return (
-      <p className={cn(typeVariants({ size, textColor, className, weight }))} ref={ref} {...props}>
+      <Typography
+        variant={typographyVariant}
+        className={cn(typeVariants({ size, textColor, className, weight }))}
+        ref={ref}
+        {...props}
+      >
         {props.children}
-      </p>
+      </Typography>
     );
   }
 );
