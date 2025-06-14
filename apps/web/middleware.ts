@@ -1,15 +1,15 @@
 import { auth } from '@/lib/auth';
+import { isPublicRoute } from '@repo/shared/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Public routes that don't require authentication
-    const publicRoutes = ['/login', '/api/auth', '/', '/privacy', '/terms'];
-    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+    // Check if the route is public (doesn't require authentication)
+    const isPublic = isPublicRoute(pathname);
 
     // Only check authentication for protected routes
-    if (!isPublicRoute) {
+    if (!isPublic) {
         // If user is not authenticated and trying to access protected route
         const session = await auth.api.getSession({
             headers: request.headers,

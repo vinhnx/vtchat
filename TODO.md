@@ -1,60 +1,15 @@
 # TODO List
 
-[] sync .env.local keys between .env.example, but keep .env.local secrets
+[x] /plus route protection -> enforced non-dismissible login dialog for payment token access
 
---
-
-[] make sure /plus route is protected bby login
-
---
 [] check package.json and remove redundant dependencies and unused deps
 
 [] check package.json to review icons lib use -> unify
 
 --
 
+[] improve apps/web/components/login-dialog.tsx
 [] improve packages/common/components/intro-dialog.tsx
-
---
-
-[]
-{
-    name: 'Use your own API key',
-    icon: IconKey,
-    action: () => {
-        setIsSettingsOpen(true);
-        setSettingTab('api-keys');
-        onClose();
-    },
-}
-
- {
-    name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
-    icon: theme === 'dark' ? IconSun : IconMoon,
-    action: () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
-        onClose();
-    },
-},
-
-check gated featured alert for these actions
-
---
-
-[] check packages/common/components/command-search.tsx action for gated featured alert or login reuired alert
-
---
-[] `vtchat-preferences` remove hardcode -> use constant enum
---
-
-[] enhance settings modal contents and wording
-[] if user not logged in, don't show settings -> show alert to login first
-
---
-
-[] /plus page -> fixed CTA
-[] /plus page -> fixed background full height
-[] /plus page -> make sure click subscription
 
 --
 

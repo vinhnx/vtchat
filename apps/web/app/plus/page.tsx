@@ -231,8 +231,13 @@ export default function PlusPage() {
                 </div>
             </div>
 
-            {/* Login Dialog */}
-            <LoginDialog isOpen={showLoginDialog} onClose={() => setShowLoginDialog(false)} />
+            {/* Login Dialog - Non-dismissible on plus page to enforce login for payment */}
+            <LoginDialog
+                isOpen={showLoginDialog}
+                onClose={() => setShowLoginDialog(false)}
+                dismissible={false} // Force login on plus page for payment token access
+                redirectUrl="/plus"
+            />
         </div>
     );
 }
