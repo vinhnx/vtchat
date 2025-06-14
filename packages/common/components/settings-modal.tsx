@@ -3,7 +3,7 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, Key, Settings2, Trash, CreditCard } from 'lucide-react';
+import { AlertCircle, CreditCard, Key, Settings2, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -47,7 +47,7 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground"  />,
+            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
@@ -59,7 +59,7 @@ export const SettingsModal = () => {
             component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
         },
         {
-            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground"  />,
+            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
@@ -152,7 +152,7 @@ export const MCPSettings = () => {
                                         size={14}
                                         strokeWidth={2}
                                         className="text-muted-foreground"
-                                     />
+                                    />
                                 </Button>
                             </div>
                         </div>
@@ -471,70 +471,9 @@ export const ApiKeySettings = () => {
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1 text-xs text-blue-500 underline-offset-2 hover:text-blue-600 hover:underline"
                                 >
-<<<<<<< HEAD
                                     Get API key →
                                 </a>
                             </div>
-=======
-                                    {apiKey.value ? 'Change Key' : 'Add Key'}
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-export const CreditsSettings = () => {
-    const remainingCredits = useChatStore(state => state.creditLimit.remaining);
-    const maxLimit = useChatStore(state => state.creditLimit.maxLimit);
-    const resetDate = useChatStore(state => state.creditLimit.reset);
-
-    const info = [
-        {
-            title: 'Plan',
-            value: (
-                <Badge variant="secondary" className="bg-brand/10 text-brand rounded-full">
-                    <span className="text-xs font-medium">FREE</span>
-                </Badge>
-            ),
-        },
-        {
-            title: 'Credits',
-            value: (
-                <div className="flex h-7 flex-row items-center gap-1 rounded-full py-1">
-                    <Zap size={14} strokeWidth={2} className="text-brand"  />
-                    <span className="text-brand text-sm font-medium">{remainingCredits}</span>
-                    <span className="text-brand text-sm opacity-50">/</span>
-                    <span className="text-brand text-sm opacity-50">{maxLimit}</span>
-                </div>
-            ),
-        },
-        {
-            title: 'Next reset',
-            value: moment(resetDate).fromNow(),
-        },
-    ];
-
-    return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col items-start gap-2">
-                <h2 className="flex items-center gap-1 text-base font-medium">Usage Credits</h2>
-                <Alert variant="info" className="w-full">
-                    <AlertDescription className="text-muted-foreground/70 text-sm leading-tight">
-                        You'll recieve some free credits everyday. Once credits are used, you can
-                        use your own API keys to continue.
-                    </AlertDescription>
-                </Alert>
-
-                <div className="divide-border flex w-full flex-col gap-1 divide-y">
-                    {info.map(item => (
-                        <div key={item.title} className="flex flex-row justify-between gap-1 py-4">
-                            <span className="text-muted-foreground text-sm">{item.title}</span>
-                            <span className="text-sm font-medium">{item.value}</span>
->>>>>>> 0c84a71 (feat: unify icon packages to use lucide-react only)
                         </div>
 
                         <div className="space-y-2">

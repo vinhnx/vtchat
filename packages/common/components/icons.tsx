@@ -1,12 +1,12 @@
 import { cn } from '@repo/ui';
-import { Zap, Code, Loader, Wrench } from 'lucide-react';
+import { Code, Loader, Wrench, Zap } from 'lucide-react';
 
 export const ToolIcon = ({ className }: { className?: string }) => {
     return (
         <div
             className={`flex size-5 items-center justify-center rounded-md border border-yellow-900 bg-yellow-800 p-0.5 ${className}`}
         >
-            <Wrench size={20} strokeWidth={2} className="text-yellow-400"  />
+            <Wrench size={20} strokeWidth={2} className="text-yellow-400" />
         </div>
     );
 };
@@ -14,13 +14,13 @@ export const ToolIcon = ({ className }: { className?: string }) => {
 export const ToolResultIcon = () => {
     return (
         <div className="flex size-5 items-center justify-center rounded-md border border-yellow-900 bg-yellow-800 p-0.5">
-            <Code size={20} strokeWidth={2} className="text-yellow-400"  />
+            <Code size={20} strokeWidth={2} className="text-yellow-400" />
         </div>
     );
 };
 
 export const DeepResearchIcon = () => {
-    return <Loader size={20} strokeWidth={2} className="text-muted-foreground"  />;
+    return <Loader size={20} strokeWidth={2} className="text-muted-foreground" />;
 };
 
 export const BYOKIcon = () => {
@@ -53,8 +53,7 @@ export const CreditIcon = ({
                 variant === 'muted' && 'border-none'
             )}
         >
-            <Zap size={14} strokeWidth={2} className="text-muted-foreground"  /> {credits}
+            <Zap size={14} strokeWidth={2} className="text-muted-foreground" /> {credits}
         </div>
     );
 };
->>>>>>> 0c84a71 (feat: unify icon packages to use lucide-react only)

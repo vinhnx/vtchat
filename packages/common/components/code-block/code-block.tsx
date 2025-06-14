@@ -12,7 +12,7 @@ import 'prismjs/components/prism-yaml';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button, cn } from '@repo/ui';
-import { IconBrandJavascript, IconBrandPython, IconBrandReact, IconBrandTypescript, Check, Copy, File, FileJson, FileText, Terminal,  } from 'lucide-react';
+import { FileCode, Check, Copy, File, FileJson, FileText, Terminal,  } from 'lucide-react';
 import './code-block.css';
 
 export type CodeBlockProps = {
@@ -51,13 +51,13 @@ export const CodeBlock = ({
             case 'yaml':
                 return <FileJson size={14}  />;
             case 'python':
-                return <IconBrandPython size={14} />;
+                return <FileCode size={14} />;
             case 'javascript':
-                return <IconBrandJavascript size={14} />;
+                return <FileCode size={14} />;
             case 'typescript':
-                return <IconBrandTypescript size={14} />;
+                return <FileCode size={14} />;
             case 'jsx':
-                return <IconBrandReact size={14} />;
+                return <FileCode size={14} />;
             case 'markdown':
                 return <FileText size={14}  />;
             case 'plaintext':

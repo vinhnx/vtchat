@@ -3,7 +3,7 @@ import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
-import { Atom, IconChecklist, IconChevronRight, IconLoader2, Star,  } from 'lucide-react';
+import { Atom, ListChecks, ChevronRight, Loader2, Star,  } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
@@ -25,7 +25,7 @@ const getIcon = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Pro) {
         return <Star size={16} strokeWidth={2} className="text-muted-foreground"  />;
     }
-    return <IconChecklist size={16} strokeWidth={2} className="text-muted-foreground" />;
+    return <ListChecks size={16} strokeWidth={2} className="text-muted-foreground" />;
 };
 
 const getNote = (threadItem: ThreadItem) => {
@@ -143,18 +143,18 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     const renderTitle = (useNote = true) => {
         return (
             <div className="flex flex-row items-start gap-2">
-                <div className="mt-0.5">
-                    {isLoading ? (
-                        <IconLoader2
-                            size={16}
-                            strokeWidth={2}
-                            className=" text-muted-foreground animate-spin"
-                        />
-                    ) : (
-                        getIcon(threadItem)
-                    )}
-                </div>
-                <div className="flex flex-col">
+            <div className="mt-0.5">
+                {isLoading ? (
+                    <Loader2
+                        size={16}
+                        strokeWidth={2}
+                        className=" text-muted-foreground animate-spin"
+                    />
+                ) : (
+                    getIcon(threadItem)
+                )}
+            </div>
+            <div className="flex flex-col">
                     <p className="text-sm font-medium">{getTitle(threadItem)}</p>
                     {useNote && !hasAnswer && (
                         <p className="text-muted-foreground/70 text-xs">{getNote(threadItem)}</p>
@@ -182,7 +182,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                 <Badge variant="default" size="sm">
                     {stepCounts} {stepCounts === 1 ? 'Step' : 'Steps'}
                 </Badge>
-                <IconChevronRight size={14} strokeWidth={2} />
+                <ChevronRight size={14} strokeWidth={2} />
             </div>
         </>
     );
