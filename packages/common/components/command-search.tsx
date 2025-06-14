@@ -1,10 +1,11 @@
 'use client';
-import { GatedFeatureAlert } from './gated-feature-alert';
 import { useRootContext } from '@repo/common/context';
+import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useAppStore, useChatStore } from '@repo/common/store';
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
+    Button,
     cn,
     CommandDialog,
     CommandEmpty,
@@ -12,6 +13,8 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
+    Dialog,
+    DialogContent,
     Kbd,
 } from '@repo/ui';
 import {
@@ -26,7 +29,20 @@ import {
 import moment from 'moment';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { GatedFeatureAlert } from './gated-feature-alert';
+import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
+
+// Create wrapper components for icons to match expected icon prop type
+const KeyIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconKey size={size} className={className} />;
+
+const MoonIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconMoon size={size} className={className} />;
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -42,6 +58,10 @@ export const CommandSearch = () => {
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
+    const { canAccess } = useSubscriptionAccess();
+    const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+
     const groupedThreads: Record<string, typeof threads> = {
         today: [],
         yesterday: [],
@@ -116,6 +136,11 @@ export const CommandSearch = () => {
             name: 'Delete Thread',
             icon: IconTrash,
             action: async () => {
+                if (!isSignedIn) {
+                    requireLogin();
+                    return;
+                }
+
                 const thread = await getThread(currentThreadId as string);
                 if (thread) {
                     removeThread(thread.id);
@@ -123,16 +148,23 @@ export const CommandSearch = () => {
                     onClose();
                 }
             },
+            requiresAuth: true,
         },
         {
             name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
             icon: theme === 'dark' ? IconSun : IconMoon,
             action: () => {
                 if (!isSignedIn) {
-                    router.push('/login');
-                    onClose();
+                    requireLogin();
                     return;
                 }
+
+                // Check if user has VT+ subscription for dark theme
+                if (!canAccess(FeatureSlug.DARK_THEME)) {
+                    setShowSubscriptionDialog(true);
+                    return;
+                }
+
                 setTheme(theme === 'dark' ? 'light' : 'dark');
                 onClose();
             },
@@ -143,8 +175,7 @@ export const CommandSearch = () => {
             icon: IconKey,
             action: () => {
                 if (!isSignedIn) {
-                    router.push('/login');
-                    onClose();
+                    requireLogin();
                     return;
                 }
                 setIsSettingsOpen(true);
@@ -250,6 +281,48 @@ export const CommandSearch = () => {
                         )
                 )}
             </CommandList>
+
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={hideLoginPrompt}
+                title="Login Required"
+                description="Please sign in to access this feature."
+                icon={KeyIcon}
+            />
+
+            <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+                <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                            <IconMoon size={24} className="text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">VT+ Required</h3>
+                            <p className="text-muted-foreground text-sm">
+                                Dark theme is a VT+ exclusive feature. Upgrade to enjoy a better
+                                viewing experience.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outlined"
+                                onClick={() => setShowSubscriptionDialog(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    router.push('/plus');
+                                    setShowSubscriptionDialog(false);
+                                    onClose();
+                                }}
+                            >
+                                Upgrade to VT+
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </CommandDialog>
     );
 };

@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Dialog, DialogContent } from '@repo/ui';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
@@ -14,7 +15,7 @@ export const IntroDialog = () => {
         setHasMounted(true);
         // Only check localStorage after component has mounted
         if (typeof window !== 'undefined') {
-            const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+            const hasSeenIntro = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_INTRO);
             if (!hasSeenIntro) {
                 setIsOpen(true);
             }
@@ -23,7 +24,7 @@ export const IntroDialog = () => {
 
     const handleClose = () => {
         if (typeof window !== 'undefined') {
-            localStorage.setItem('hasSeenIntro', 'true');
+            localStorage.setItem(STORAGE_KEYS.HAS_SEEN_INTRO, 'true');
         }
         setIsOpen(false);
     };

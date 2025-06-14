@@ -1,19 +1,15 @@
 'use client';
 import { DotSpinner } from '@repo/common/components';
+import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
     Button,
     cn,
+    Dialog,
+    DialogContent,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
@@ -35,6 +31,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
+import { LoginRequiredDialog } from '../login-required-dialog';
+
+// Create a wrapper component for IconWorld to match expected icon prop type
+const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconWorld size={size} className={className} />;
 
 export const chatOptions = [
     {
@@ -215,25 +218,33 @@ export const ChatModeButton = () => {
             </DropdownMenu>
 
             {/* Gated Feature Alert Modal */}
-            <AlertDialog
-                open={!!showGateAlert}
-                onOpenChange={open => !open && setShowGateAlert(null)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{showGateAlert?.title}</AlertDialogTitle>
-                        <AlertDialogDescription>{showGateAlert?.message}</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowGateAlert(null)}>
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={() => push('/plus')}>
-                            Upgrade Now
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
+                <DialogContent
+                    ariaTitle={showGateAlert?.title || 'Upgrade Required'}
+                    className="max-w-md rounded-xl"
+                >
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                            <IconArrowUp
+                                size={24}
+                                className="text-purple-600 dark:text-purple-400"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">{showGateAlert?.title}</h3>
+                            <p className="text-muted-foreground text-sm">
+                                {showGateAlert?.message}
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outlined" onClick={() => setShowGateAlert(null)}>
+                                Cancel
+                            </Button>
+                            <Button onClick={() => push('/plus')}>Upgrade Now</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
@@ -246,6 +257,8 @@ export const WebSearchButton = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+    const { canAccess } = useSubscriptionAccess();
     const { push } = useRouter();
 
     if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
@@ -256,6 +269,13 @@ export const WebSearchButton = () => {
             setShowLoginPrompt(true);
             return;
         }
+
+        // Check if user has VT+ subscription for Pro Search (which includes web search)
+        if (!canAccess(FeatureSlug.PRO_SEARCH)) {
+            setShowSubscriptionDialog(true);
+            return;
+        }
+
         setUseWebSearch(!useWebSearch);
     };
 
@@ -277,29 +297,47 @@ export const WebSearchButton = () => {
             </Button>
 
             {/* Login prompt dialog */}
-            {showLoginPrompt && (
-                <AlertDialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Login Required</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Please log in to use web search functionality.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use web search functionality."
+                icon={WorldIcon}
+            />
+
+            {/* Subscription upgrade dialog */}
+            <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+                <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                            <IconWorld size={24} className="text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">VT+ Required</h3>
+                            <p className="text-muted-foreground text-sm">
+                                Web Search is a VT+ Pro Search feature. Upgrade to access enhanced
+                                search with web integration for real-time information.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outlined"
+                                onClick={() => setShowSubscriptionDialog(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
                                 onClick={() => {
-                                    setShowLoginPrompt(false);
-                                    push('/login');
+                                    push('/plus');
+                                    setShowSubscriptionDialog(false);
                                 }}
                             >
-                                Login
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            )}
+                                Upgrade to VT+
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

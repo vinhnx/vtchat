@@ -2,16 +2,8 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@repo/ui';
+import { Button, Dialog, DialogContent } from '@repo/ui';
+import { IconStar } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useVtPlusAccess } from '../hooks/use-subscription-access';
@@ -177,23 +169,25 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     return (
         <>
             {gatedChildren}
-            <AlertDialog
-                open={showUpgradeAlert}
-                onOpenChange={open => !open && setShowUpgradeAlert(false)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{title}</AlertDialogTitle>
-                        <AlertDialogDescription>{defaultMessage}</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowUpgradeAlert(false)}>
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleUpgrade}>Upgrade Now</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Dialog open={showUpgradeAlert} onOpenChange={setShowUpgradeAlert}>
+                <DialogContent ariaTitle={title} className="max-w-md rounded-xl">
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                            <IconStar size={24} className="text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">{title}</h3>
+                            <p className="text-muted-foreground text-sm">{defaultMessage}</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outlined" onClick={() => setShowUpgradeAlert(false)}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleUpgrade}>Upgrade Now</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

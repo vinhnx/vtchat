@@ -19,7 +19,7 @@ const ClarificationResponseSchema = z.object({
 
 export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'refine-query',
-    execute: async ({ trace, events, context, data, signal }) => {
+    execute: async ({ events, context, data, signal }) => {
         const messages = context?.get('messages') || [];
         const question = context?.get('question') || '';
         const { updateStatus, updateAnswer, updateObject } = sendEvents(events);
@@ -43,11 +43,11 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
                 If the user has already responded to previous clarifying questions:
                 - Return needsClarification: false
                 - Provide a refinedQuery incorporating their response
-                
+
                 If the user has not responded to clarifying questions:
                 - Return needsClarification: false
                 - Use the original query
-                
+
                 `;
 
         const object = await generateObject({
@@ -73,15 +73,6 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
         } else {
             context?.update('question', current => object?.refinedQuery || question);
         }
-
-        trace?.span({
-            name: 'refine-query',
-            input: prompt,
-            output: object,
-            metadata: {
-                data,
-            },
-        });
 
         return {
             needsClarification: object?.needsClarification,

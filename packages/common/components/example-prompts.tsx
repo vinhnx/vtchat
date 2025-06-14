@@ -1,14 +1,6 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@repo/ui';
+import { Button } from '@repo/ui';
 import {
     IconBook,
     IconBulb,
@@ -18,6 +10,7 @@ import {
 } from '@tabler/icons-react';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
+import { LoginRequiredDialog } from './login-required-dialog';
 
 export const examplePrompts = {
     howTo: [
@@ -124,29 +117,12 @@ export const ExamplePrompts = () => {
 
             {/* Login prompt dialog */}
             {showLoginPrompt && (
-                <Dialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
-                    <DialogContent className="sm:max-w-[425px]" ariaTitle="Login Required">
-                        <DialogHeader>
-                            <DialogTitle>Login Required</DialogTitle>
-                            <DialogDescription>
-                                Please log in to use example prompts and start chatting.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button variant="outlined" onClick={() => setShowLoginPrompt(false)}>
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setShowLoginPrompt(false);
-                                    window.location.href = '/login';
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                <LoginRequiredDialog
+                    isOpen={showLoginPrompt}
+                    onClose={() => setShowLoginPrompt(false)}
+                    title="Login Required"
+                    description="Please log in to use example prompts and start chatting."
+                />
             )}
         </>
     );

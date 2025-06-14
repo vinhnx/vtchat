@@ -1,4 +1,6 @@
+import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
     Button,
@@ -10,10 +12,17 @@ import {
     Flex,
     Input,
 } from '@repo/ui';
+import { IconTrash } from '@tabler/icons-react';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+// Create a wrapper component for IconTrash to match expected icon prop type
+const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconTrash size={size} className={className} />;
 
 export const HistoryItem = ({
     thread,
@@ -32,6 +41,9 @@ export const HistoryItem = ({
 }) => {
     const { push } = useRouter();
     const { threadId: currentThreadId } = useParams();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const updateThread = useChatStore(state => state.updateThread);
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(thread.title);
@@ -81,6 +93,11 @@ export const HistoryItem = ({
     };
 
     const handleDeleteConfirm = () => {
+        if (!isSignedIn) {
+            requireLogin();
+            return;
+        }
+
         deleteThread(thread.id);
         if (currentThreadId === thread.id) {
             push('/chat');
@@ -163,6 +180,14 @@ export const HistoryItem = ({
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={hideLoginPrompt}
+                title="Login Required"
+                description="Please sign in to delete chat threads."
+                icon={TrashIcon}
+            />
         </div>
     );
 };
