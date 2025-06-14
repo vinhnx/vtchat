@@ -1,3 +1,4 @@
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Users table for Better Auth
@@ -7,7 +8,7 @@ export const users = pgTable('users', {
     email: text('email').notNull().unique(),
     emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
     image: text('image'),
-    planSlug: text('plan_slug').default('free'), // Subscription plan (free, vt_plus, etc.)
+    planSlug: text('plan_slug').default(PlanSlug.VT_BASE), // Subscription plan (vt_base, vt_plus, etc.)
     creemCustomerId: text('creem_customer_id'), // Creem.io customer ID for portal access
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -63,7 +64,7 @@ export const userSubscriptions = pgTable('user_subscriptions', {
     userId: text('user_id')
         .notNull()
         .references(() => users.id, { onDelete: 'cascade' }),
-    plan: text('plan').notNull().default('free'), // free, pro, premium
+    plan: text('plan').notNull().default(PlanSlug.VT_BASE), // vt_base, vt_plus
     status: text('status').notNull().default('active'), // active, cancelled, expired
     stripeCustomerId: text('stripe_customer_id'),
     stripeSubscriptionId: text('stripe_subscription_id'),

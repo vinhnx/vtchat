@@ -1,74 +1,202 @@
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/database';
-import { userSubscriptions } from '@/lib/database/schema';
-import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { userSubscriptions, users } from '@/lib/database/schema';
+import {
+    SessionSubscriptionStatus,
+    getAnonymousSubscriptionStatus,
+    getOrCreateSubscriptionRequest,
+    getSessionSubscriptionStatus,
+} from '@/lib/subscription-session-cache';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { eq } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+
+async function fetchSubscriptionFromDB(
+    userId: string
+): Promise<
+    Omit<
+        SessionSubscriptionStatus,
+        'cachedAt' | 'expiresAt' | 'sessionId' | 'fetchCount' | 'lastRefreshTrigger'
+    >
+> {
+    // Get user plan_slug from users table first
+    const userResults = await db
+        .select({
+            planSlug: users.planSlug,
+        })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
+
+    const userPlanSlug = userResults.length > 0 ? userResults[0].planSlug : null;
+
+    // Get user subscription from database
+    const subscription = await db
+        .select()
+        .from(userSubscriptions)
+        .where(eq(userSubscriptions.userId, userId))
+        .limit(1);
+
+    // Determine plan: prioritize user_subscriptions.plan, fallback to users.plan_slug, default to VT_BASE
+    let finalPlan: PlanSlug;
+    let hasDbSubscription = false;
+    let subscriptionStatus = SubscriptionStatusEnum.ACTIVE;
+    let currentPeriodEnd: Date | null = null;
+    let subscriptionId: string | null = null;
+
+    if (subscription.length > 0) {
+        // User has a subscription record
+        const sub = subscription[0];
+        finalPlan = sub.plan === PlanSlug.VT_PLUS ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
+        subscriptionStatus = sub.status as SubscriptionStatusEnum;
+        currentPeriodEnd = sub.currentPeriodEnd;
+        subscriptionId = sub.stripeSubscriptionId;
+        hasDbSubscription = true;
+
+        // Check if subscription is expired
+        if (currentPeriodEnd && new Date() > currentPeriodEnd) {
+            subscriptionStatus = SubscriptionStatusEnum.EXPIRED;
+        }
+    } else if (userPlanSlug === PlanSlug.VT_PLUS) {
+        // User has vt_plus in users.plan_slug but no subscription record
+        // This indicates they should have VT+ access (possibly from admin grant or legacy data)
+        finalPlan = PlanSlug.VT_PLUS;
+        subscriptionStatus = SubscriptionStatusEnum.ACTIVE;
+        hasDbSubscription = false; // No formal subscription, but has access
+    } else {
+        // No subscription found and no vt_plus plan_slug, return default free plan
+        finalPlan = PlanSlug.VT_BASE;
+        subscriptionStatus = SubscriptionStatusEnum.ACTIVE; // Free tier is always 'active'
+        hasDbSubscription = false;
+    }
+
+    const isPlusSubscriber =
+        finalPlan === PlanSlug.VT_PLUS && subscriptionStatus === SubscriptionStatusEnum.ACTIVE;
+
+    return {
+        plan: finalPlan,
+        status: subscriptionStatus,
+        isPlusSubscriber,
+        currentPeriodEnd: currentPeriodEnd || undefined,
+        hasSubscription: hasDbSubscription || userPlanSlug === PlanSlug.VT_PLUS,
+        subscriptionId: subscriptionId || undefined,
+        userId,
+    };
+}
 
 export async function GET(request: NextRequest) {
     try {
+        // Get refresh trigger from query params
+        const url = new URL(request.url);
+        const refreshTrigger =
+            (url.searchParams.get('trigger') as SessionSubscriptionStatus['lastRefreshTrigger']) ||
+            'page_refresh';
+        const forceRefresh = url.searchParams.get('force') === 'true';
+
+        // Try to get session - handle both logged-in and non-logged-in users
         const session = await auth.api.getSession({
             headers: request.headers,
         });
 
-        if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+        const userId = session?.user?.id || null;
+        const isLoggedIn = !!userId;
 
-        const userId = session.user.id;
+        console.log(
+            `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'} (trigger: ${refreshTrigger})`
+        ); // For non-logged-in users, return cached anonymous status or create it
+        if (!isLoggedIn) {
+            const cached = getSessionSubscriptionStatus(null, refreshTrigger, request);
+            if (cached && !forceRefresh) {
+                console.log(`[Subscription Status API] Cache hit for anonymous user`);
+                return NextResponse.json({
+                    plan: cached.plan,
+                    status: cached.status,
+                    isPlusSubscriber: cached.isPlusSubscriber,
+                    hasSubscription: cached.hasSubscription,
+                    fromCache: true,
+                    cachedAt: cached.cachedAt,
+                    isAnonymous: true,
+                    fetchCount: cached.fetchCount,
+                });
+            }
 
-        // Get user subscription from database
-        const subscription = await db
-            .select()
-            .from(userSubscriptions)
-            .where(eq(userSubscriptions.userId, userId))
-            .limit(1);
+            // Use deduplication for anonymous users as well
+            console.log(
+                `[Subscription Status API] Cache miss for anonymous user, using deduplication`
+            );
+            const cachedResult = await getOrCreateSubscriptionRequest(
+                null,
+                refreshTrigger,
+                request,
+                async () => getAnonymousSubscriptionStatus()
+            );
 
-        if (subscription.length === 0) {
-            // No subscription found, return default free plan
+            console.log(`[Subscription Status API] Created anonymous subscription status`);
             return NextResponse.json({
-                plan: PlanSlug.VT_BASE,
-                status: SubscriptionStatusEnum.ACTIVE, // Free tier is always 'active' in terms of status
-                isPlusSubscriber: false,
-                hasSubscription: false,
+                plan: cachedResult.plan,
+                status: cachedResult.status,
+                isPlusSubscriber: cachedResult.isPlusSubscriber,
+                hasSubscription: cachedResult.hasSubscription,
+                fromCache: false,
+                cachedAt: cachedResult.cachedAt,
+                isAnonymous: true,
+                fetchCount: cachedResult.fetchCount,
             });
         }
 
-        const sub = subscription[0];
-        // Ensure sub.plan is compared against PlanSlug enum
-        const currentPlanSlug = sub.plan === PlanSlug.VT_PLUS ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
-        // Ensure sub.status is one of the SubscriptionStatusEnum values or can be mapped to one
-        let currentStatus = sub.status as SubscriptionStatusEnum; // Assuming db stores compatible values
-
-        const isPlusSubscriber = currentPlanSlug === PlanSlug.VT_PLUS && currentStatus === SubscriptionStatusEnum.ACTIVE;
-
-        // Check if subscription is expired
-        let isExpired = false;
-        if (sub.currentPeriodEnd) {
-            isExpired = new Date() > sub.currentPeriodEnd;
+        // For logged-in users, check session cache first
+        const cached = getSessionSubscriptionStatus(userId, refreshTrigger, request);
+        if (cached && !forceRefresh) {
+            console.log(
+                `[Subscription Status API] Session cache hit for user ${userId} (fetch #${cached.fetchCount})`
+            );
+            return NextResponse.json({
+                plan: cached.plan,
+                status: cached.status,
+                isPlusSubscriber: cached.isPlusSubscriber,
+                currentPeriodEnd: cached.currentPeriodEnd,
+                hasSubscription: cached.hasSubscription,
+                subscriptionId: cached.subscriptionId,
+                fromCache: true,
+                cachedAt: cached.cachedAt,
+                fetchCount: cached.fetchCount,
+                lastRefreshTrigger: cached.lastRefreshTrigger,
+            });
         }
 
-        // Determine final status
-        let finalStatus = currentStatus;
-        if (isExpired) {
-            finalStatus = SubscriptionStatusEnum.EXPIRED;
-        } else if (currentStatus !== SubscriptionStatusEnum.ACTIVE && currentStatus !== SubscriptionStatusEnum.INACTIVE && currentStatus !== SubscriptionStatusEnum.NONE) {
-            // Fallback for unknown status from DB, map to inactive or none
-            finalStatus = SubscriptionStatusEnum.INACTIVE;
-        }
+        console.log(
+            `[Subscription Status API] Session cache miss for user ${userId}, using deduplication for DB fetch (trigger: ${refreshTrigger})`
+        );
 
+        // Use deduplication to prevent multiple simultaneous DB calls for the same user
+        const cachedResult = await getOrCreateSubscriptionRequest(
+            userId,
+            refreshTrigger,
+            request,
+            () => fetchSubscriptionFromDB(userId)
+        );
 
         return NextResponse.json({
-            plan: currentPlanSlug,
-            status: finalStatus,
-            isPlusSubscriber: isPlusSubscriber && !isExpired,
-            currentPeriodEnd: sub.currentPeriodEnd,
-            hasSubscription: true,
-            subscriptionId: sub.stripeSubscriptionId, // This field is reused for Creem subscription ID
+            plan: cachedResult.plan,
+            status: cachedResult.status,
+            isPlusSubscriber: cachedResult.isPlusSubscriber,
+            currentPeriodEnd: cachedResult.currentPeriodEnd,
+            hasSubscription: cachedResult.hasSubscription,
+            subscriptionId: cachedResult.subscriptionId,
+            fromCache: false,
+            cachedAt: cachedResult.cachedAt,
+            fetchCount: cachedResult.fetchCount,
+            lastRefreshTrigger: cachedResult.lastRefreshTrigger,
         });
     } catch (error) {
         console.error('[Subscription Status API] Error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        return NextResponse.json(
+            {
+                error: 'Internal server error',
+                message: error instanceof Error ? error.message : 'Unknown error',
+            },
+            { status: 500 }
+        );
     }
 }

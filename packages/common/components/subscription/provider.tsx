@@ -1,7 +1,19 @@
 'use client';
 
 /**
- * VT Chat Subscription Provider
+ * @deprecated VT Chat Legacy Subscription Provider
+ *
+ * ⚠️ DEPRECATED: This provider is deprecated and should not be used.
+ * Use the global SubscriptionProvider from '@repo/common/providers/subscription-provider' instead.
+ *
+ * The new global provider offers:
+ * - Better performance with deduplication
+ * - Centralized state management
+ * - Automatic cache invalidation
+ * - Proper sync with Neon DB and webhooks
+ * - Session-based caching
+ *
+ * Migration: Replace this provider with SubscriptionProvider from subscription-provider.tsx
  *
  * React context provider that integrates Better Auth's user authentication
  * with our subscription system. Automatically syncs subscription state
@@ -11,7 +23,6 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import React, { createContext, ReactNode, useContext, useEffect } from 'react';
 import { useIsClient } from '../../hooks';
-import { useSubscriptionStore } from '../../store/subscription.store';
 
 interface SubscriptionProviderProps {
     children: ReactNode;
@@ -26,23 +37,25 @@ const SubscriptionContext = createContext<SubscriptionContextValue>({
 });
 
 export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
+    console.warn(
+        'Legacy SubscriptionProvider is deprecated. Use SubscriptionProvider from @repo/common/providers/subscription-provider instead.'
+    );
+
     const { data: session } = useSession();
     const user = session?.user;
     const isLoaded = !!session;
     const isClient = useIsClient();
-    const { updateFromUser, reset, isInitialized } = useSubscriptionStore();
+    // Legacy subscription provider - functionality disabled
+    // const { updateFromUser, reset, isInitialized } = useSubscriptionStore(); // REMOVED
+    const isInitialized = true; // Always ready in legacy mode
 
-    // Sync subscription state with Better Auth user data
+    // Sync subscription state with Better Auth user data - DISABLED in legacy provider
     useEffect(() => {
-        if (!isLoaded || !isClient) return;
-
-        if (user) {
-            updateFromUser(user);
-        } else {
-            // User is not signed in, reset to default state
-            reset();
-        }
-    }, [user, isLoaded, isClient, updateFromUser, reset]);
+        // Legacy provider functionality disabled - use SubscriptionProvider from providers/subscription-provider instead
+        console.warn(
+            'Legacy SubscriptionProvider functionality disabled. Migrate to SubscriptionProvider from @repo/common/providers/subscription-provider'
+        );
+    }, [user, isLoaded, isClient]);
 
     const isReady = isLoaded && isInitialized && isClient;
 
@@ -52,9 +65,13 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 }
 
 /**
- * Hook to get subscription provider state
+ * @deprecated Hook to get subscription provider state
+ * Use useGlobalSubscriptionStatus from SubscriptionProvider instead
  */
 export function useSubscriptionProvider() {
+    console.warn(
+        'useSubscriptionProvider is deprecated. Use useGlobalSubscriptionStatus from SubscriptionProvider instead.'
+    );
     const context = useContext(SubscriptionContext);
     if (!context) {
         throw new Error('useSubscriptionProvider must be used within a SubscriptionProvider');

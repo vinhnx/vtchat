@@ -4,7 +4,7 @@ import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-acces
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Button,
     cn,
@@ -169,14 +169,37 @@ export const ChatModeButton = () => {
         message: string;
     } | null>(null);
 
+    // Use the unified subscription system
+    const { hasAccess, isLoaded } = useSubscriptionAccess();
+
     const selectedOption =
         [...chatOptions, ...modelOptions].find(option => option.value === chatMode) ??
         modelOptions[0];
 
     const currentModeConfig = ChatModeConfig[chatMode];
-    const isCurrentModeGated = !!(
-        currentModeConfig?.requiredFeature || currentModeConfig?.requiredPlan
-    );
+
+    // Check if current mode is gated using the unified system
+    const isCurrentModeGated = (() => {
+        if (!isLoaded) return false; // Don't show as gated while loading
+
+        if (!currentModeConfig?.requiredFeature && !currentModeConfig?.requiredPlan) {
+            return false; // Not gated if no requirements
+        }
+
+        let hasRequiredAccess = true;
+
+        if (currentModeConfig.requiredFeature) {
+            hasRequiredAccess = hasAccess({
+                feature: currentModeConfig.requiredFeature as FeatureSlug,
+            });
+        }
+
+        if (currentModeConfig.requiredPlan && hasRequiredAccess) {
+            hasRequiredAccess = hasAccess({ plan: currentModeConfig.requiredPlan as PlanSlug });
+        }
+
+        return !hasRequiredAccess;
+    })();
 
     const handleGatedFeature = (gateInfo: {
         feature?: string;
@@ -385,6 +408,9 @@ export const ChatModeOptions = ({
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
 
+    // Use the unified subscription system
+    const { hasAccess, isLoaded } = useSubscriptionAccess();
+
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
         const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
@@ -404,19 +430,61 @@ export const ChatModeOptions = ({
             return;
         }
 
-        // Check subscription requirements
+        // Check subscription requirements using the unified system
         if (config?.requiredFeature || config?.requiredPlan) {
-            onGatedFeature({
-                feature: config.requiredFeature,
-                plan: config.requiredPlan,
-                title: `${option?.label} requires upgrade`,
-                message: `${option?.label} is a premium feature. Upgrade to VT+ to access.`,
-            });
-            return;
+            // Wait for subscription status to load
+            if (!isLoaded) {
+                return; // Don't allow selection while loading
+            }
+
+            let hasRequiredAccess = true;
+
+            // Check feature access
+            if (config.requiredFeature) {
+                hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+            }
+
+            // Check plan access
+            if (config.requiredPlan && hasRequiredAccess) {
+                hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+            }
+
+            // If user doesn't have access, show gated feature dialog
+            if (!hasRequiredAccess) {
+                onGatedFeature({
+                    feature: config.requiredFeature,
+                    plan: config.requiredPlan,
+                    title: `${option?.label} requires upgrade`,
+                    message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+                });
+                return;
+            }
         }
 
         // Otherwise proceed with the mode change
         setChatMode(mode);
+    };
+
+    // Helper function to check if a mode is gated
+    const isModeGated = (mode: ChatMode): boolean => {
+        if (!isLoaded) return false; // Don't show as gated while loading
+
+        const config = ChatModeConfig[mode];
+        if (!config?.requiredFeature && !config?.requiredPlan) {
+            return false; // Not gated if no requirements
+        }
+
+        let hasRequiredAccess = true;
+
+        if (config.requiredFeature) {
+            hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+        }
+
+        if (config.requiredPlan && hasRequiredAccess) {
+            hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+        }
+
+        return !hasRequiredAccess;
     };
 
     return (
@@ -429,8 +497,8 @@ export const ChatModeOptions = ({
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
                 {chatOptions.map(option => {
+                    const isGated = isModeGated(option.value);
                     const config = ChatModeConfig[option.value];
-                    const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
                     return (
                         <DropdownMenuItem
@@ -465,8 +533,8 @@ export const ChatModeOptions = ({
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Models</DropdownMenuLabel>
                 {modelOptions.map(option => {
+                    const isGated = isModeGated(option.value);
                     const config = ChatModeConfig[option.value];
-                    const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
                     return (
                         <DropdownMenuItem

@@ -1,10 +1,16 @@
 'use client';
 
+/**
+ * Global Subscription Provider
+ *
+ * Provides centralized subscription state management to prevent multiple API calls.
+ * Uses the optimized session-cached API endpoint and shares state across all components.
+ */
+
 import { useSession } from '@repo/shared/lib/auth-client';
-import { useCallback, useEffect, useState } from 'react';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
-import { PlanSlug } from '../../shared/types/subscription';
-import { SubscriptionStatusEnum } from '../../shared/types/subscription-status';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -23,55 +29,72 @@ export interface SubscriptionStatus {
 
 type RefreshTrigger = 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
 
-// Client-side request deduplication to prevent multiple simultaneous calls
-const clientRequestCache = new Map<string, Promise<SubscriptionStatus>>();
+interface SubscriptionContextType {
+    subscriptionStatus: SubscriptionStatus | null;
+    isLoading: boolean;
+    error: string | null;
+    refreshSubscriptionStatus: (forceRefresh?: boolean, trigger?: RefreshTrigger) => Promise<void>;
 
-/**
- * @deprecated This hook is deprecated. Use useGlobalSubscriptionStatus from
- * the SubscriptionProvider instead. This hook makes redundant API calls.
- *
- * Hook to get subscription status using session-based server caching
- * This replaces the client-side localStorage caching with server-side session cache
- * Includes client-side request deduplication to prevent multiple simultaneous calls
- */
-export function useSubscriptionStatus() {
-    console.warn(
-        'useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus from SubscriptionProvider instead.'
-    );
+    // Convenience properties
+    isPlusSubscriber: boolean;
+    plan: string;
+    hasActiveSubscription: boolean;
+    isAnonymous: boolean;
+    fromCache: boolean;
+    fetchCount: number;
+    lastRefreshTrigger?: string;
+    cachedAt?: Date;
+}
+
+const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
+
+// Global state to prevent multiple simultaneous requests
+let globalFetchPromise: Promise<SubscriptionStatus> | null = null;
+let globalSubscriptionStatus: SubscriptionStatus | null = null;
+let globalIsLoading = true;
+let globalError: string | null = null;
+
+interface SubscriptionProviderProps {
+    children: React.ReactNode;
+}
+
+export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const { data: session } = useSession();
-    const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(
+        globalSubscriptionStatus
+    );
+    const [isLoading, setIsLoading] = useState(globalIsLoading);
+    const [error, setError] = useState<string | null>(globalError);
 
     const fetchSubscriptionStatus = useCallback(
         async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
             const userId = session?.user?.id || null;
             const userDescription = userId ? `user ${userId}` : 'anonymous user';
 
-            // Create a unique key for client-side deduplication
-            const cacheKey = `${userId || 'anonymous'}:${trigger}:${forceRefresh}`;
+            // If there's already a global fetch in progress and not forcing refresh, wait for it
+            if (globalFetchPromise && !forceRefresh) {
+                console.log(
+                    `[Subscription Provider] Using existing global fetch for ${userDescription}`
+                );
+                const result = await globalFetchPromise;
+                setSubscriptionStatus(result);
+                setIsLoading(false);
+                setError(null);
+                return result;
+            }
 
             try {
                 setIsLoading(true);
                 setError(null);
-
-                // Check if there's already a request in flight for this user/trigger
-                const existingRequest = clientRequestCache.get(cacheKey);
-                if (existingRequest && !forceRefresh) {
-                    console.log(
-                        `[Subscription Hook] Using cached request for ${userDescription} (trigger: ${trigger})`
-                    );
-                    const result = await existingRequest;
-                    setSubscriptionStatus(result);
-                    return result;
-                }
+                globalIsLoading = true;
+                globalError = null;
 
                 console.log(
-                    `[Subscription Hook] Starting new request for ${userDescription} (trigger: ${trigger})`
+                    `[Subscription Provider] Starting global fetch for ${userDescription} (trigger: ${trigger})`
                 );
 
-                // Create the fetch promise
-                const fetchPromise = (async (): Promise<SubscriptionStatus> => {
+                // Create the global fetch promise
+                globalFetchPromise = (async (): Promise<SubscriptionStatus> => {
                     // Build API URL with trigger and force refresh parameters
                     const params = new URLSearchParams({
                         trigger,
@@ -104,35 +127,44 @@ export function useSubscriptionStatus() {
                     return status;
                 })();
 
-                // Cache the promise to prevent duplicate requests
-                clientRequestCache.set(cacheKey, fetchPromise);
-
                 // Wait for the result
-                const result = await fetchPromise;
+                const result = await globalFetchPromise;
 
-                // Update state
+                // Update global and local state
+                globalSubscriptionStatus = result;
+                globalIsLoading = false;
                 setSubscriptionStatus(result);
+                setIsLoading(false);
 
-                console.log(`[Subscription Hook] Subscription updated for ${userDescription}:`, {
-                    plan: result.plan,
-                    isPlusSubscriber: result.isPlusSubscriber,
-                    fromCache: result.fromCache,
-                    fetchCount: result.fetchCount,
-                    trigger: result.lastRefreshTrigger,
-                });
+                console.log(
+                    `[Subscription Provider] Global fetch completed for ${userDescription}:`,
+                    {
+                        plan: result.plan,
+                        isPlusSubscriber: result.isPlusSubscriber,
+                        fromCache: result.fromCache,
+                        fetchCount: result.fetchCount,
+                        trigger: result.lastRefreshTrigger,
+                    }
+                );
 
-                // Clean up the cache after a short delay to allow other components to use it
+                // Clear the global promise after a short delay to allow other components to use it
                 setTimeout(() => {
-                    clientRequestCache.delete(cacheKey);
+                    globalFetchPromise = null;
                 }, 1000); // Keep for 1 second
 
                 return result;
             } catch (err) {
-                console.error('Error fetching subscription status:', err);
-                setError(err instanceof Error ? err.message : 'Unknown error');
+                console.error('[Subscription Provider] Error fetching subscription status:', err);
+                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
-                // Clean up failed request from cache
-                clientRequestCache.delete(cacheKey);
+                // Update global and local error state
+                globalError = errorMessage;
+                globalIsLoading = false;
+                setError(errorMessage);
+                setIsLoading(false);
+
+                // Clear the failed promise
+                globalFetchPromise = null;
 
                 // Fallback to default free plan on error
                 const fallbackFreeTier: SubscriptionStatus = {
@@ -143,24 +175,33 @@ export function useSubscriptionStatus() {
                     productInfo: VT_BASE_PRODUCT_INFO,
                     isAnonymous: !session?.user,
                 };
+
+                globalSubscriptionStatus = fallbackFreeTier;
                 setSubscriptionStatus(fallbackFreeTier);
-                return fallbackFreeTier;
-            } finally {
-                setIsLoading(false);
+
+                throw err;
             }
         },
         [session?.user]
     );
 
-    // Initial fetch when hook loads or session changes
+    // Initial fetch when provider mounts or session changes
     useEffect(() => {
+        // If we already have global data and no session change, don't refetch
+        if (globalSubscriptionStatus && !globalIsLoading) {
+            setSubscriptionStatus(globalSubscriptionStatus);
+            setIsLoading(false);
+            setError(globalError);
+            return;
+        }
+
         fetchSubscriptionStatus('initial');
     }, [fetchSubscriptionStatus]);
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
-        (forceRefresh = false, trigger: RefreshTrigger = 'manual') => {
-            fetchSubscriptionStatus(trigger, forceRefresh);
+        async (forceRefresh = false, trigger: RefreshTrigger = 'manual') => {
+            await fetchSubscriptionStatus(trigger, forceRefresh);
         },
         [fetchSubscriptionStatus]
     );
@@ -173,7 +214,7 @@ export function useSubscriptionStatus() {
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
                     console.log(
-                        '[Subscription Hook] Detected return from payment, refreshing subscription'
+                        '[Subscription Provider] Detected return from payment, refreshing subscription'
                     );
                     refreshSubscriptionStatus(true, 'payment');
 
@@ -214,7 +255,7 @@ export function useSubscriptionStatus() {
 
             // Refresh when close to expiration (within 1 day) or already expired
             if (daysDiff <= 1) {
-                console.log('[Subscription Hook] Subscription near expiration, refreshing...');
+                console.log('[Subscription Provider] Subscription near expiration, refreshing...');
                 refreshSubscriptionStatus(true, 'expiration');
             }
         };
@@ -226,22 +267,47 @@ export function useSubscriptionStatus() {
         return () => clearInterval(interval);
     }, [subscriptionStatus?.currentPeriodEnd, refreshSubscriptionStatus]);
 
-    return {
+    const contextValue: SubscriptionContextType = {
         subscriptionStatus,
         isLoading,
         error,
         refreshSubscriptionStatus,
+
         // Convenience properties
         isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
         plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
         hasActiveSubscription:
-            subscriptionStatus?.hasSubscription &&
-            subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE,
+            (subscriptionStatus?.hasSubscription && subscriptionStatus?.status === 'active') ??
+            false,
         isAnonymous: subscriptionStatus?.isAnonymous ?? !session?.user,
-        // New properties for debugging and monitoring
         fromCache: subscriptionStatus?.fromCache ?? false,
         fetchCount: subscriptionStatus?.fetchCount ?? 0,
         lastRefreshTrigger: subscriptionStatus?.lastRefreshTrigger,
         cachedAt: subscriptionStatus?.cachedAt,
     };
+
+    return (
+        <SubscriptionContext.Provider value={contextValue}>{children}</SubscriptionContext.Provider>
+    );
+}
+
+/**
+ * Hook to access subscription context
+ * This replaces the individual useSubscriptionStatus calls
+ */
+export function useGlobalSubscriptionStatus(): SubscriptionContextType {
+    const context = useContext(SubscriptionContext);
+    if (context === undefined) {
+        throw new Error('useGlobalSubscriptionStatus must be used within a SubscriptionProvider');
+    }
+    return context;
+}
+
+/**
+ * Legacy hook for backward compatibility
+ * Wraps the global subscription context
+ */
+export function useSubscriptionStatus() {
+    console.warn('useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
+    return useGlobalSubscriptionStatus();
 }

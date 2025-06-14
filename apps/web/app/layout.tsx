@@ -6,6 +6,7 @@ import {
     ThemeProvider,
 } from '@repo/common/components';
 import { RootProvider } from '@repo/common/context';
+import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
 import { cn, TooltipProvider } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
@@ -112,19 +113,21 @@ export default function ParentLayout({
                 >
                     <TooltipProvider>
                         <BetterAuthProvider>
-                            <RootProvider>
-                                <SSRErrorBoundary>
-                                    <NoSSR
-                                        fallback={
-                                            <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                                                <FullPageLoader label="Loading..." />
-                                            </div>
-                                        }
-                                    >
-                                        <RootLayout>{children}</RootLayout>
-                                    </NoSSR>
-                                </SSRErrorBoundary>
-                            </RootProvider>
+                            <SubscriptionProvider>
+                                <RootProvider>
+                                    <SSRErrorBoundary>
+                                        <NoSSR
+                                            fallback={
+                                                <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
+                                                    <FullPageLoader label="Loading..." />
+                                                </div>
+                                            }
+                                        >
+                                            <RootLayout>{children}</RootLayout>
+                                        </NoSSR>
+                                    </SSRErrorBoundary>
+                                </RootProvider>
+                            </SubscriptionProvider>
                         </BetterAuthProvider>
                     </TooltipProvider>
                 </ThemeProvider>

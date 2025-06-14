@@ -3,7 +3,7 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { IconAlertCircle, IconKey, IconSettings2, IconTrash } from '@tabler/icons-react';
+import { IconAlertCircle, IconKey, IconSettings2, IconTrash, IconCreditCard } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -17,6 +17,7 @@ import { ChatEditor } from './chat-input';
 import { BYOKIcon, ToolIcon } from './icons';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
+import { UsageCreditsSettings } from './usage-credits-settings';
 
 export const SettingsModal = () => {
     const isSettingOpen = useAppStore(state => state.isSettingsOpen);
@@ -50,6 +51,12 @@ export const SettingsModal = () => {
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
+        },
+        {
+            icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
+            title: 'Usage Credits',
+            key: SETTING_TABS.USAGE_CREDITS,
+            component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
         },
         {
             icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,

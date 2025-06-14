@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/database';
 import { users } from '@/lib/database/schema';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -38,13 +39,30 @@ export async function GET(request: NextRequest) {
 
         const user = userResults[0];
 
+        // Create subscription metadata based on user's plan_slug
+        const subscriptionMetadata =
+            user.planSlug && user.planSlug !== PlanSlug.VT_BASE
+                ? {
+                      subscription: {
+                          planSlug: user.planSlug,
+                          isActive: true,
+                          // Don't set expiresAt for plan_slug based subscriptions as they might be admin-granted
+                      },
+                  }
+                : {};
+
         return NextResponse.json({
             user: {
                 id: user.id,
                 email: user.email,
                 name: user.name,
                 image: user.image,
-                planSlug: user.planSlug || 'free',
+                planSlug: user.planSlug || PlanSlug.VT_BASE,
+                // Include subscription metadata for the useSubscription hook
+                publicMetadata: {
+                    planSlug: user.planSlug || PlanSlug.VT_BASE,
+                    ...subscriptionMetadata,
+                },
             },
             success: true,
         });

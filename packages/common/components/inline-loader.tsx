@@ -21,10 +21,10 @@ export const InlineLoader = ({
     };
 
     const textSize = {
-        xs: 'xs' as const,
+        xs: 'xxs' as const,
         sm: 'xs' as const,
         md: 'sm' as const,
-        lg: 'md' as const,
+        lg: 'base' as const,
     };
 
     return (

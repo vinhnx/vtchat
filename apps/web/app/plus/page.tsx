@@ -1,7 +1,9 @@
 'use client';
 
-import { useCreemSubscription, useSubscription } from '@repo/common/hooks';
-import { Check, Sparkles } from 'lucide-react';
+import { UserTierBadge } from '@repo/common/components';
+import { useCreemSubscription } from '@repo/common/hooks';
+import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AnimatedBadge } from '../../components/animated-badge';
@@ -16,7 +18,12 @@ import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export default function PlusPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
-    const { subscriptionStatus, isLoading: isSubscriptionLoading, isVTPlus } = useSubscription();
+    const {
+        subscriptionStatus,
+        isPlusSubscriber,
+        isLoading: isSubscriptionLoading,
+        refreshSubscriptionStatus,
+    } = useGlobalSubscriptionStatus();
     const {
         startVtPlusSubscription,
         openCustomerPortal,
@@ -27,7 +34,8 @@ export default function PlusPage() {
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
-    const isCurrentlySubscribed = isVTPlus && subscriptionStatus.isActive;
+    const isCurrentlySubscribed = isPlusSubscriber && subscriptionStatus?.status === 'active';
+    const isFreeTier = isLoaded && (!isPlusSubscriber || subscriptionStatus?.status !== 'active');
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
@@ -35,6 +43,13 @@ export default function PlusPage() {
             router.push('/login?redirect_url=/plus');
         }
     }, [isLoaded, isSignedIn, router]);
+
+    // Refresh subscription status when page loads (useful after payment completion)
+    useEffect(() => {
+        if (isSignedIn && !isSubscriptionLoading) {
+            refreshSubscriptionStatus();
+        }
+    }, [isSignedIn, refreshSubscriptionStatus, isSubscriptionLoading]);
 
     const handleSubscribe = async () => {
         if (!isSignedIn) {
@@ -67,21 +82,36 @@ export default function PlusPage() {
     const getSubscribeButtonText = () => {
         if (isLoading) return 'Loading...';
         if (!isSignedIn) return `Subscribe to ${PRICING_CONFIG.product.name}`;
-        if (isCurrentlySubscribed) return 'Manage Subscription';
+        if (isCurrentlySubscribed) {
+            return (
+                <>
+                    Manage Subscription
+                    <UserTierBadge className="ml-2" />
+                </>
+            );
+        }
         return `Upgrade to ${PRICING_CONFIG.product.name}`;
     };
 
     const getFreeButtonText = () => {
         if (isLoading) return 'Loading...';
         if (!isSignedIn) return 'Sign Up Free';
-        if (isCurrentlySubscribed) return 'Continue to Chat';
-        return 'Try Free';
+        // If signed in:
+        if (isCurrentlySubscribed) return 'Continue to Chat'; // User is VT+
+        return 'Continue'; // User is signed in and on Free tier
     };
 
     const getCTAButtonText = () => {
         if (isLoading) return 'Loading...';
         if (!isSignedIn) return `Start Your ${PRICING_CONFIG.product.name} Journey`;
-        if (isCurrentlySubscribed) return `Continue with ${PRICING_CONFIG.product.name}`;
+        if (isCurrentlySubscribed) {
+            return (
+                <>
+                    Manage Subscription
+                    <UserTierBadge className="ml-2" />
+                </>
+            );
+        }
         return `Upgrade to ${PRICING_CONFIG.product.name}`;
     };
 
@@ -112,14 +142,28 @@ export default function PlusPage() {
                 <div id="pricing" className="relative px-6 py-4 sm:py-6 lg:px-8">
                     <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-3 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
-                        <CardSpotlightPricing className="rounded-3xl rounded-t-3xl bg-white p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none">
+                        <CardSpotlightPricing
+                            className={`rounded-3xl rounded-t-3xl bg-white p-8 ring-1 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
+                                isFreeTier ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                            }`}
+                        >
                             <div>
-                                <h3
-                                    id="tier-free"
-                                    className="text-base/7 font-semibold text-[#BFB38F]"
-                                >
-                                    Free
-                                </h3>
+                                <div className="flex items-center justify-between">
+                                    <h3
+                                        id="tier-free"
+                                        className="text-base/7 font-semibold text-[#BFB38F]"
+                                    >
+                                        Free
+                                    </h3>
+                                    {isFreeTier && (
+                                        <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/10 px-3 py-1">
+                                            <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
+                                            <span className="text-sm font-medium text-[#BFB38F]">
+                                                Current Plan
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
                                 <p className="mt-4 flex items-baseline gap-x-2">
                                     <span className="text-5xl font-semibold tracking-tight text-gray-900">
                                         ${PRICING_CONFIG.pricing.free.price}
@@ -147,21 +191,35 @@ export default function PlusPage() {
                                         onClick={handleTryFree}
                                         className="w-full"
                                     >
-                                        Try Free
+                                        {getFreeButtonText()}
                                     </ButtonShadowGradient>
                                 </div>
                             </div>
                         </CardSpotlightPricing>
 
                         {/* VT+ Plan Card */}
-                        <CardSpotlightPricing className="rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
+                        <CardSpotlightPricing
+                            className={`rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
+                                isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                            }`}
+                        >
                             <div>
-                                <h3
-                                    id="tier-vt-plus"
-                                    className="text-base/7 font-semibold text-[#BFB38F]"
-                                >
-                                    {PRICING_CONFIG.product.name}
-                                </h3>
+                                <div className="flex items-center justify-between">
+                                    <h3
+                                        id="tier-vt-plus"
+                                        className="text-base/7 font-semibold text-[#BFB38F]"
+                                    >
+                                        {PRICING_CONFIG.product.name}
+                                    </h3>
+                                    {isCurrentlySubscribed && (
+                                        <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1">
+                                            <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
+                                            <span className="text-sm font-medium text-[#BFB38F]">
+                                                Current Plan
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
                                 <p className="mt-4 flex items-baseline gap-x-2">
                                     <span className="text-5xl font-semibold tracking-tight text-white">
                                         ${PRICING_CONFIG.pricing.plus.price}
@@ -190,9 +248,9 @@ export default function PlusPage() {
                                 <div className="mt-8 sm:mt-10">
                                     <ButtonAnimatedGradient
                                         onClick={handleSubscribe}
-                                        className="w-full"
+                                        className="flex w-full items-center justify-center"
                                     >
-                                        Subscribe to {PRICING_CONFIG.product.name}
+                                        {getSubscribeButtonText()}
                                     </ButtonAnimatedGradient>
                                 </div>
                             </div>
@@ -222,8 +280,11 @@ export default function PlusPage() {
                         {PRICING_CONFIG.product.name}
                     </TypographyP>
                     <div className="mx-auto max-w-md pt-4">
-                        <ButtonAnimatedGradient onClick={handleSubscribe} className="w-full">
-                            Start Your {PRICING_CONFIG.product.name} Journey
+                        <ButtonAnimatedGradient
+                            onClick={handleSubscribe}
+                            className="flex w-full items-center justify-center"
+                        >
+                            {getCTAButtonText()}
                         </ButtonAnimatedGradient>
                     </div>
                 </div>

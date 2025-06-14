@@ -38,7 +38,7 @@ export async function serverHasAccess(
         }
 
         // Add feature checks based on plan
-        return subscription.plan !== 'free';
+        return subscription.plan !== PlanSlug.VT_BASE;
     };
 
     // Use unified subscription access check

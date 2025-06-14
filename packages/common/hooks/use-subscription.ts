@@ -1,133 +1,95 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import {
-    getSubscriptionStatus,
-    SubscriptionContext, // This is { user?: any; }
-    UserClientSubscriptionStatus,
-} from '@repo/shared/utils/subscription';
-import { PlanSlug } from '@repo/shared/types/subscription'; // For default values
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
+import { useCallback } from 'react';
+import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
 
 // Define a more specific UserProfile type based on what /api/user/profile returns
-// and what getSubscriptionStatus expects in its context.user
+// This is kept for backward compatibility but no longer fetched by this hook
 export interface UserProfile {
     id: string;
     email?: string | null;
-    // Assuming the user object from /api/user/profile might contain these:
+    planSlug?: PlanSlug | null;
     publicMetadata?: {
         planSlug?: PlanSlug;
         subscription?: {
             planSlug?: PlanSlug;
-            plan?: PlanSlug; // Legacy support
+            plan?: PlanSlug;
             isActive?: boolean;
-            expiresAt?: string; // ISO Date string
+            expiresAt?: string;
         };
     };
     privateMetadata?: {
-         subscription?: {
+        subscription?: {
             planSlug?: PlanSlug;
-            plan?: PlanSlug; // Legacy support
+            plan?: PlanSlug;
             isActive?: boolean;
-            expiresAt?: string; // ISO Date string
+            expiresAt?: string;
         };
     };
-    // Include other relevant fields from your actual user profile structure
-    // For example, if planSlug is a top-level property:
-    planSlug?: PlanSlug | null;
 }
 
 // The hook's return type
 export interface UseSubscriptionResult {
-    subscriptionStatus: UserClientSubscriptionStatus; // No longer nullable, provides default
-    userProfile: UserProfile | null;
+    subscriptionStatus: UserClientSubscriptionStatus;
+    userProfile: UserProfile | null; // No longer fetched, kept for compatibility
     isLoading: boolean;
     error: string | null;
-    isVTPlus: boolean; // Convenience flag
+    isVTPlus: boolean;
     refetch: () => Promise<void>;
 }
 
-const defaultSubscriptionStatus: UserClientSubscriptionStatus = {
-    currentPlanSlug: PlanSlug.VT_BASE,
-    planConfig: { // Provide a default PlanConfig for VT_BASE
-        slug: PlanSlug.VT_BASE,
-        name: 'Base',
-        description: 'Basic access',
-        features: [], // Define actual base features if known, or keep empty
-        isDefault: true,
-    },
-    status: SubscriptionStatusEnum.NONE,
-    isPremium: false,
-    isVtPlus: false,
-    isVtBase: true,
-    canUpgrade: true,
-    isActive: false, // Default to not active until user data confirms
-    expiresAt: undefined,
-    source: 'none',
-};
-
-
 /**
- * Subscription hook for VTChat
- * Leverages @repo/shared/utils/subscription for status determination
+ * Subscription hook for VTChat - MIGRATED TO GLOBAL PROVIDER
+ *
+ * This hook now uses the global SubscriptionProvider instead of making
+ * its own API calls to /api/user/profile. This eliminates redundancy
+ * and ensures all subscription state is centralized.
+ *
+ * @deprecated Consider using useGlobalSubscriptionStatus directly
  */
 export function useSubscription(): UseSubscriptionResult {
-    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-    const [subscriptionStatus, setSubscriptionStatus] = useState<UserClientSubscriptionStatus>(defaultSubscriptionStatus);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const {
+        subscriptionStatus: globalStatus,
+        isLoading,
+        error,
+        refreshSubscriptionStatus,
+    } = useGlobalSubscriptionStatus();
 
-    const fetchUserDataAndSubscription = useCallback(async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+    // Convert the global subscription status to the expected format
+    const subscriptionStatus: UserClientSubscriptionStatus = {
+        currentPlanSlug: (globalStatus?.plan as PlanSlug) || PlanSlug.VT_BASE,
+        planConfig: {
+            slug: (globalStatus?.plan as PlanSlug) || PlanSlug.VT_BASE,
+            name: globalStatus?.plan === PlanSlug.VT_PLUS ? 'VT+' : 'Base',
+            description:
+                globalStatus?.plan === PlanSlug.VT_PLUS ? 'Enhanced features' : 'Basic access',
+            features: [], // Populated from PLANS config elsewhere
+            isDefault: globalStatus?.plan === PlanSlug.VT_BASE,
+        },
+        status:
+            globalStatus?.status === 'active'
+                ? SubscriptionStatusEnum.ACTIVE
+                : SubscriptionStatusEnum.NONE,
+        isPremium: globalStatus?.isPlusSubscriber || false,
+        isVtPlus: globalStatus?.isPlusSubscriber || false,
+        isVtBase: !globalStatus?.isPlusSubscriber,
+        canUpgrade: !globalStatus?.isPlusSubscriber,
+        isActive: globalStatus?.status === 'active',
+        expiresAt: globalStatus?.currentPeriodEnd,
+        source: globalStatus?.hasSubscription ? 'creem' : 'none',
+    };
 
-            // Fetch user data from your API
-            const response = await fetch('/api/user/profile', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    // No longer fetch user profile - this was causing redundant API calls
+    const userProfile: UserProfile | null = null;
 
-            if (!response.ok) {
-                // If user is not logged in (e.g., 401), they have default/anonymous status
-                if (response.status === 401 || response.status === 403) {
-                    setUserProfile(null);
-                    const anonContext: SubscriptionContext = { user: null };
-                    setSubscriptionStatus(getSubscriptionStatus(anonContext));
-                    return; // Exit early
-                }
-                throw new Error(`Failed to fetch user data: ${response.statusText} (${response.status})`);
-            }
+    const refetch = useCallback(async () => {
+        await refreshSubscriptionStatus(true, 'manual');
+    }, [refreshSubscriptionStatus]);
 
-            const profileData = await response.json();
-
-            // Ensure profileData.user exists and is an object
-            const fetchedUser = profileData && typeof profileData.user === 'object' ? profileData.user : null;
-            setUserProfile(fetchedUser as UserProfile | null);
-
-            // Determine subscription status using the fetched user profile
-            const context: SubscriptionContext = { user: fetchedUser };
-            setSubscriptionStatus(getSubscriptionStatus(context));
-
-        } catch (err) {
-            console.error('Error in useSubscription:', err);
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
-            setUserProfile(null);
-            // In case of error, set to default/anonymous status
-            const errorContext: SubscriptionContext = { user: null };
-            setSubscriptionStatus(getSubscriptionStatus(errorContext));
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchUserDataAndSubscription();
-    }, [fetchUserDataAndSubscription]);
-
-    // Convenience flag, derived from the detailed subscriptionStatus
+    // Convenience flag derived from the subscription status
     const isVTPlus = subscriptionStatus.isVtPlus && subscriptionStatus.isActive;
 
     return {
@@ -136,7 +98,7 @@ export function useSubscription(): UseSubscriptionResult {
         isLoading,
         error,
         isVTPlus,
-        refetch: fetchUserDataAndSubscription,
+        refetch,
     };
 }
 
