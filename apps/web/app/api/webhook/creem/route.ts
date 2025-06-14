@@ -182,7 +182,7 @@ async function updateUserSubscription(
                 plan: planSlug,
                 status: isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.CANCELED, // Use enum
                 ...(expiresAt && { currentPeriodEnd: expiresAt }),
-                ...(subscriptionId && { stripeSubscriptionId: subscriptionId }), // Reuse this field for Creem subscription ID
+                ...(subscriptionId && { creemSubscriptionId: subscriptionId }), // Store Creem subscription ID
                 updatedAt: new Date(),
             };
 

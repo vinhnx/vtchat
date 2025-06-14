@@ -12,6 +12,7 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Corrected import
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
+import { PortalReturnIndicator } from '../components/portal-return-indicator';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -35,6 +36,14 @@ interface SubscriptionContextType {
     isLoading: boolean;
     error: string | null;
     refreshSubscriptionStatus: (forceRefresh?: boolean, trigger?: RefreshTrigger) => Promise<void>;
+
+    // Portal return state
+    isPortalReturn: boolean;
+    setIsPortalReturn: (value: boolean) => void;
+
+    // Portal loading state
+    isPortalLoading: boolean;
+    setIsPortalLoading: (value: boolean) => void;
 
     // Convenience properties
     isPlusSubscriber: boolean;
@@ -66,6 +75,8 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     );
     const [isLoading, setIsLoading] = useState(globalIsLoading);
     const [error, setError] = useState<string | null>(globalError);
+    const [isPortalReturn, setIsPortalReturn] = useState(false);
+    const [isPortalLoading, setIsPortalLoading] = useState(false);
 
     const fetchSubscriptionStatus = useCallback(
         async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
@@ -199,6 +210,14 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         fetchSubscriptionStatus('initial');
     }, [fetchSubscriptionStatus]);
 
+    // Trigger subscription status check when session becomes available or changes
+    useEffect(() => {
+        if (session?.user) {
+            console.log('[Subscription Provider] Session detected, refreshing subscription status');
+            fetchSubscriptionStatus('initial', false);
+        }
+    }, [session?.user?.id, fetchSubscriptionStatus]);
+
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
         async (forceRefresh = false, trigger: RefreshTrigger = 'manual') => {
@@ -217,6 +236,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     console.log(
                         '[Subscription Provider] Detected return from payment, refreshing subscription'
                     );
+                    setIsPortalReturn(true);
                     refreshSubscriptionStatus(true, 'payment');
 
                     // Clean up URL parameters after handling
@@ -274,11 +294,20 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         error,
         refreshSubscriptionStatus,
 
+        // Portal return state
+        isPortalReturn,
+        setIsPortalReturn,
+
+        // Portal loading state
+        isPortalLoading,
+        setIsPortalLoading,
+
         // Convenience properties
         isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
         plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
         hasActiveSubscription:
-            (subscriptionStatus?.hasSubscription && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE) ??
+            (subscriptionStatus?.hasSubscription &&
+                subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE) ??
             false,
         isAnonymous: subscriptionStatus?.isAnonymous ?? !session?.user,
         fromCache: subscriptionStatus?.fromCache ?? false,
@@ -288,7 +317,13 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     };
 
     return (
-        <SubscriptionContext.Provider value={contextValue}>{children}</SubscriptionContext.Provider>
+        <SubscriptionContext.Provider value={contextValue}>
+            {children}
+            <PortalReturnIndicator
+                isVisible={isPortalReturn}
+                onComplete={() => setIsPortalReturn(false)}
+            />
+        </SubscriptionContext.Provider>
     );
 }
 

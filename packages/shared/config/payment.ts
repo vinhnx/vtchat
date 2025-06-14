@@ -238,7 +238,7 @@ export class PaymentService {
                             customerId
                         );
                     } else {
-                        // Fallback: check user_subscriptions table for stripe_customer_id (to be renamed to creem_customer_id)
+                        // Fallback: check user_subscriptions table for creem_customer_id
                         const subscriptionResults = await db
                             .select()
                             .from(userSubscriptions)
@@ -247,9 +247,9 @@ export class PaymentService {
 
                         if (
                             subscriptionResults.length > 0 &&
-                            subscriptionResults[0].stripeCustomerId
+                            subscriptionResults[0].creemCustomerId
                         ) {
-                            customerId = subscriptionResults[0].stripeCustomerId;
+                            customerId = subscriptionResults[0].creemCustomerId;
                             console.log(
                                 '[PaymentService] Found customer ID in user_subscriptions table:',
                                 userId,

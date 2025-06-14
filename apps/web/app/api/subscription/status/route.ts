@@ -51,7 +51,7 @@ async function fetchSubscriptionFromDB(
         finalPlan = sub.plan === PlanSlug.VT_PLUS ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
         subscriptionStatus = sub.status as SubscriptionStatusEnum;
         currentPeriodEnd = sub.currentPeriodEnd;
-        subscriptionId = sub.stripeSubscriptionId;
+        subscriptionId = sub.creemSubscriptionId;
         hasDbSubscription = true;
 
         // Check if subscription is expired

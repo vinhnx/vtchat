@@ -29,6 +29,7 @@ export function useCreemSubscription() {
         subscriptionStatus,
         refreshSubscriptionStatus,
         isLoading: subscriptionLoading,
+        setIsPortalReturn,
     } = useGlobalSubscriptionStatus();
 
     /**
@@ -100,6 +101,7 @@ export function useCreemSubscription() {
                             console.log(
                                 '[useCreemSubscription] Portal tab closed, refreshing subscription'
                             );
+                            setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             window.removeEventListener('message', handleMessage);
                         }
@@ -114,6 +116,7 @@ export function useCreemSubscription() {
                             console.log(
                                 '[useCreemSubscription] Portal tab closed, refreshing subscription'
                             );
+                            setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             clearInterval(checkClosed);
                             window.removeEventListener('message', handleMessage);
@@ -200,6 +203,12 @@ export function useCreemSubscription() {
             if (result.success && result.url) {
                 // Refresh subscription status with payment trigger before redirecting
                 refreshSubscriptionStatus(false, 'payment');
+
+                // Show loading state before redirect
+                toast({
+                    title: 'Redirecting to Payment...',
+                    description: 'Please wait while we redirect you to complete your subscription.',
+                });
 
                 // Redirect to checkout
                 window.location.href = result.url;
