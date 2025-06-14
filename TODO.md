@@ -5,16 +5,6 @@
 
 [] check package.json and remove redundant dependencies and unused deps
 [] check package.json to review icons lib use -> unify
---
-
-[] improve packages/common/components/intro-dialog.tsx
-
---
-
-1. review and unify "Loading..." state everywhere in #codebase  with FullPageLoader or Component loader
-2. revamp side bar menu with proper group related to featured and update icons, wording.
-3. move /privacy and /term  out of settings -> handle click to route to these pages full screen. instead of renderin the modal settings
-4. add private and term page to user selection popup
 
 --
 
@@ -48,15 +38,6 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 
 [] handle current free -> anonymous flow <https://www.better-auth.com/docs/plugins/anonymous>
 [] use plunk for email provider <https://app.useplunk.com/>
-
---
-
-1. you can use better auth mcp
-1. you can use Context7 MCP tools
-2. you can use any mcp tools if stuck.
-1. make sure to check for current environment.
-   * If in development, use sandbox API keys and test customer IDs.
-   * If in production, use live API keys and ensure proper customer management.
 
 --
 
@@ -99,8 +80,6 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 
 [] PLUS TIER ONLY? sync store user_subscriptions to neon db <https://console.neon.tech/app/projects/lucky-cake-27376292/branches/br-sparkling-glitter-a1wtucle/tables?database=vt_dev>
 [] replace redis with <https://www.better-auth.com/docs/concepts/database#secondary-storage>
-[] build error page
-[] build welcome page
 [] update better auth config on /error /welcome route <https://www.better-auth.com/docs/basic-usage#sign-in-with-social-providers>
 [] ref pricing <https://chorus.sh/pricing>
 [] user avatar better auth from oauth provider and sync neon db
@@ -110,19 +89,10 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 
 implement full remote thread sync.
 can you implement account-based thread managements system with neon and postgres using out existing thread schema and store logic. review #codebase for clues.
+--
 
-Note
-
-1. make sure thread is per account.
-1. you can use Neon MCP to make schema and db migration.
-1. you can use Context7 MCP tools
-2. you can use any mcp tools if stuck.
-1. make sure to check for current environment.
-   * If in development, use sandbox API keys and test customer IDs.
-   * If in production, use live API keys and ensure proper customer management.
-
-[] pricing page -> show current tier (including free) check tailwind v0 design
-[] before sending message -> check credit store -> if avail -> send messgae -> otherwise show a toast alert.
+[] pricing page -> show current tier (including free) check mark on card /plus page
+[] before sending message in input bar -> check credit store -> if avail -> send messgae -> otherwise show a toast alert.
 [] [PLUS] sync thread to neon?
 [] free keep current local threads indexdb
 [] remove api keys when logout/switch accounts
@@ -133,7 +103,6 @@ Note
 [] <https://github.com/better-auth/awesome>
 [] <https://github.com/better-auth/utils>
 [] improve ui/ux
-[] <https://tailwindcss.com/plus/ui-blocks/marketing/feedback/404-pages>
 
 1. migrate `@repo/ui` to use shadcn's components/ui
 2. cleanup old repo ui code to unify ui and cleanup
@@ -141,9 +110,6 @@ Note
 4. #fetch <https://ui.shadcn.com/docs/components/typography> and replace all current hardcode typography to use shadcn typo system
 
 [] <https://patloeber.com/gemini-ai-sdk-cheatsheet/>
-[] <https://www.youraiscroll.com/pricing>
-[] show Free plan, current plan
-[] replace @repo/ui with shadcn components
 [] <https://docs.creem.io/sdk/nextjs-template> sample creem.io integration
 [] <https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk>
 [] support more providers <https://ai-sdk.dev/providers/ai-sdk-providers>
@@ -182,7 +148,8 @@ Plan
 1. update tier plan in Settings > Usage Credits -> show badge user-tier-badge component instead of "FREE" currently
 1. activated gated dark_theme feature for the user and handle subscription for this benefit according.
 1. Base on subscription tier -> update handle "View Plans" button on side bar with logic -> if subscribed -> show user's creem.io subscription portal (Search from docs on how to implement) -> if not -> show "View Plans" as of now. Guide <https://docs.creem.io/learn/customers/customer-portal>. example <https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU>
-[] check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
+1. check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
+1. pricing page -> show current tier (including free) check mark on card /plus page
 
 Note
 
@@ -196,12 +163,9 @@ Note
 
 [] remove unrelated depedencies from our main stack -> use [knip](https://knip.dev/)
 
-* use free models default
-* check for commented out todo items in codebase "/*"
-* view terms.ts file
-* build terms page <https://llmchat.co/terms>
-* build privacy page <https://llmchat.co/privacy>
-* build landing page
+* review and unify icon package usage in #codebase. review package.json and use 1 package (lucide-react) for icons.
+* scan #codebase and rebuild terms page <https://llmchat.co/terms>
+* scan #codebase and rebuild privacy page <https://llmchat.co/privacy>
 * buy domain name -> .io.vn (gov sponsor)
 * vtai.io.vn
 * vtchat.io.vn
