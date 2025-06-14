@@ -80,8 +80,13 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
     // Check if user has access based on feature or plan
     const hasAccess = React.useMemo(() => {
-        // If feature requires VT+, use the isVtPlus state directly
-        if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
+        // VT+ exclusive features
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+            requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredPlan === PlanSlug.VT_PLUS
+        ) {
             return isVtPlus;
         }
 
@@ -90,8 +95,6 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
             requiredFeature &&
             (requiredFeature === FeatureSlug.ACCESS_CHAT ||
                 requiredFeature === FeatureSlug.BASE_MODELS ||
-                requiredFeature === FeatureSlug.DEEP_RESEARCH ||
-                requiredFeature === FeatureSlug.PRO_SEARCH ||
                 requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
         ) {
             return true; // Base features are available to all authenticated users
@@ -203,8 +206,13 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
     const hasAccess = React.useMemo(() => {
         if (!session) return false;
 
-        // If feature requires VT+, use the isVtPlus state directly
-        if (requiredFeature === FeatureSlug.DARK_THEME || requiredPlan === PlanSlug.VT_PLUS) {
+        // VT+ exclusive features
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
+            requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredPlan === PlanSlug.VT_PLUS
+        ) {
             return isVtPlus;
         }
 
@@ -213,8 +221,6 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
             requiredFeature &&
             (requiredFeature === FeatureSlug.ACCESS_CHAT ||
                 requiredFeature === FeatureSlug.BASE_MODELS ||
-                requiredFeature === FeatureSlug.DEEP_RESEARCH ||
-                requiredFeature === FeatureSlug.PRO_SEARCH ||
                 requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
         ) {
             return true;
