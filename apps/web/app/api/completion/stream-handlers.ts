@@ -1,7 +1,6 @@
 import { runWorkflow } from '@repo/ai/workflow';
-import { CHAT_MODE_CREDIT_COSTS } from '@repo/shared/config';
 import { logger } from '@repo/shared/logger';
-import { EVENT_TYPES, posthog } from '@repo/shared/posthog';
+import { EnvironmentType } from '@repo/shared/types/environment';
 import { Geo } from '@vercel/functions';
 import { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
@@ -63,8 +62,6 @@ export async function executeStream({
     onFinish?: () => Promise<void>;
 }): Promise<{ success: boolean } | Response> {
     try {
-        const creditCost = CHAT_MODE_CREDIT_COSTS[data.mode];
-
         const { signal } = abortController;
 
         const workflow = runWorkflow({
@@ -99,7 +96,7 @@ export async function executeStream({
             });
         });
 
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
             logger.debug('Starting workflow', { threadId: data.threadId });
         }
 
@@ -107,30 +104,9 @@ export async function executeStream({
             question: data.prompt,
         });
 
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
             logger.debug('Workflow completed', { threadId: data.threadId });
         }
-
-        userId &&
-            posthog.capture({
-                event: EVENT_TYPES.WORKFLOW_SUMMARY,
-                userId,
-                properties: {
-                    userId,
-                    query: data.prompt,
-                    mode: data.mode,
-                    webSearch: data.webSearch || false,
-                    showSuggestions: data.showSuggestions || false,
-                    threadId: data.threadId,
-                    threadItemId: data.threadItemId,
-                    parentThreadItemId: data.parentThreadItemId,
-                    summary: workflow.getTimingSummary(),
-                },
-            });
-
-        console.log('[WORKFLOW SUMMARY]', workflow.getTimingSummary());
-
-        posthog.flush();
 
         sendMessage(controller, encoder, {
             type: 'done',
@@ -144,7 +120,7 @@ export async function executeStream({
     } catch (error) {
         if (abortController.signal.aborted) {
             // Aborts are normal user actions, not errors
-            if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
                 logger.debug('Workflow aborted', { threadId: data.threadId });
             }
 

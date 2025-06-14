@@ -1,8 +1,10 @@
 'use client';
-import { useClerk, useUser } from '@clerk/nextjs';
 import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
+import { useCreemSubscription } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
+import { signOut, useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
     Badge,
@@ -18,14 +20,17 @@ import {
     IconArrowBarLeft,
     IconArrowBarRight,
     IconCommand,
-    IconCrown,
+    IconExternalLink,
+    IconFileText,
     IconLogout,
+    IconMessagePlus,
     IconPinned,
-    IconPlus,
     IconSearch,
     IconSelector,
     IconSettings,
     IconSettings2,
+    IconShield,
+    IconSparkles,
     IconUser,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
@@ -46,13 +51,16 @@ export const Sidebar = () => {
         return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
     };
 
-    const { isSignedIn, user } = useUser();
-    const { openUserProfile, signOut, redirectToSignIn } = useClerk();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const user = session?.user;
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
     const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
+    const sidebarAnimationDisabled = useAppStore(state => state.sidebarAnimationDisabled);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
+    const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -170,18 +178,23 @@ export const Sidebar = () => {
                     )}
                     gap="xs"
                 >
+                    {/* Primary Actions */}
                     {!isChatPage ? (
                         <Link href="/chat" className={isSidebarOpen ? 'w-full' : ''}>
                             <Button
                                 size={isSidebarOpen ? 'sm' : 'icon-sm'}
                                 variant="bordered"
                                 rounded="lg"
-                                tooltip={isSidebarOpen ? undefined : 'New Thread'}
+                                tooltip={isSidebarOpen ? undefined : 'New Chat'}
                                 tooltipSide="right"
                                 className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                             >
-                                <IconPlus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                                {isSidebarOpen && 'New'}
+                                <IconMessagePlus
+                                    size={16}
+                                    strokeWidth={2}
+                                    className={cn(isSidebarOpen)}
+                                />
+                                {isSidebarOpen && 'New Chat'}
                             </Button>
                         </Link>
                     ) : (
@@ -189,37 +202,24 @@ export const Sidebar = () => {
                             size={isSidebarOpen ? 'sm' : 'icon-sm'}
                             variant="bordered"
                             rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'New Thread'}
+                            tooltip={isSidebarOpen ? undefined : 'New Chat'}
                             tooltipSide="right"
                             className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                         >
-                            <IconPlus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                            {isSidebarOpen && 'New Thread'}
+                            <IconMessagePlus
+                                size={16}
+                                strokeWidth={2}
+                                className={cn(isSidebarOpen)}
+                            />
+                            {isSidebarOpen && 'New Chat'}
                         </Button>
                     )}
-
-                    <Link href="/plus" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="bordered"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'View Plans'}
-                            tooltipSide="right"
-                            className={cn(
-                                isSidebarOpen && 'relative w-full',
-                                'text-muted-foreground justify-center px-2'
-                            )}
-                        >
-                            <IconCrown size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
-                            {isSidebarOpen && 'View Plans'}
-                        </Button>
-                    </Link>
 
                     <Button
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="bordered"
                         rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'Search'}
+                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
                         tooltipSide="right"
                         className={cn(
                             isSidebarOpen && 'relative w-full',
@@ -247,33 +247,56 @@ export const Sidebar = () => {
                             </div>
                         )}
                     </Button>
+
+                    {/* Subscription Section */}
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="bordered"
+                        rounded="lg"
+                        disabled={isPortalLoading}
+                        tooltip={
+                            isSidebarOpen
+                                ? undefined
+                                : isPlusSubscriber
+                                  ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
+                                  : TOOLTIP_TEXT.UPGRADE_TO_PLUS
+                        }
+                        tooltipSide="right"
+                        className={cn(
+                            isSidebarOpen && 'relative w-full',
+                            'text-muted-foreground justify-center px-2'
+                        )}
+                        onClick={() => {
+                            if (isPlusSubscriber) {
+                                // Open Creem customer portal for subscribers
+                                openCustomerPortal();
+                            } else {
+                                // For non-subscribers, go to /plus page
+                                push('/plus');
+                            }
+                        }}
+                    >
+                        <IconSparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                        {isSidebarOpen &&
+                            (isPortalLoading
+                                ? BUTTON_TEXT.LOADING
+                                : isPlusSubscriber
+                                  ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
+                                  : BUTTON_TEXT.UPGRADE_TO_PLUS)}
+                        {isSidebarOpen && isPlusSubscriber && <IconExternalLink size={12} />}
+                    </Button>
                 </Flex>
+
+                {/* Thread History Section */}
                 <Flex
                     direction="col"
                     gap="xs"
                     className={cn(
-                        'border-hard mt-3 w-full  justify-center border-t border-dashed px-3 py-2',
+                        'border-hard mt-4 w-full justify-center border-t border-dashed px-3 pt-3',
                         !isSidebarOpen && 'items-center justify-center px-0'
                     )}
                 >
-                    {/* <Link href="/recent" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'xs' : 'icon-sm'}
-                            variant="bordered"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Recent'}
-                            tooltipSide="right"
-                            className={cn(
-                                'text-muted-foreground w-full justify-start',
-                                !isSidebarOpen && 'w-auto justify-center'
-                            )}
-                        >
-                            <IconHistory size={14} strokeWidth={2} />
-                            {isSidebarOpen && 'Recent'}
-                            {isSidebarOpen && <span className="inline-flex flex-1" />}
-                            {isSidebarOpen && <IconChevronRight size={14} strokeWidth={2} />}
-                        </Button>
-                    </Link> */}
+                    {/* Thread history will be displayed below when sidebar is open */}
                 </Flex>
 
                 {false ? (
@@ -281,12 +304,13 @@ export const Sidebar = () => {
                 ) : (
                     <Flex
                         direction="col"
-                        gap="md"
+                        gap="lg"
                         className={cn(
                             'no-scrollbar w-full flex-1 overflow-y-auto px-3 pb-[100px]',
                             isSidebarOpen ? 'flex' : 'hidden'
                         )}
                     >
+                        {/* Pinned Conversations */}
                         {renderGroup({
                             title: 'Pinned',
                             threads: threads
@@ -294,19 +318,26 @@ export const Sidebar = () => {
                                 .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
                             groupIcon: <IconPinned size={14} strokeWidth={2} />,
                             renderEmptyState: () => (
-                                <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-2">
-                                    <p className="text-muted-foreground text-xs opacity-50">
-                                        No pinned threads
+                                <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                    <IconPinned
+                                        size={16}
+                                        strokeWidth={1.5}
+                                        className="text-muted-foreground/50"
+                                    />
+                                    <p className="text-muted-foreground text-center text-xs">
+                                        Pin important conversations to keep them at the top
                                     </p>
                                 </div>
                             ),
                         })}
+
+                        {/* Recent Conversations */}
                         {renderGroup({ title: 'Today', threads: groupedThreads.today })}
                         {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
                         {renderGroup({ title: 'Last 7 Days', threads: groupedThreads.last7Days })}
                         {renderGroup({ title: 'Last 30 Days', threads: groupedThreads.last30Days })}
                         {renderGroup({
-                            title: 'Previous Months',
+                            title: 'Older',
                             threads: groupedThreads.previousMonths,
                         })}
                     </Flex>
@@ -342,13 +373,13 @@ export const Sidebar = () => {
                                     )}
                                 >
                                     <div className="bg-brand flex size-5 shrink-0 items-center justify-center rounded-full">
-                                        {user && user.hasImage ? (
+                                        {user && user.image ? (
                                             <img
-                                                src={user?.imageUrl ?? ''}
+                                                src={user.image}
                                                 width={0}
                                                 height={0}
                                                 className="size-full shrink-0 rounded-full"
-                                                alt={user?.fullName ?? ''}
+                                                alt={user.name || user.email}
                                             />
                                         ) : (
                                             <IconUser
@@ -362,7 +393,7 @@ export const Sidebar = () => {
                                     {isSidebarOpen && (
                                         <div className="flex flex-1 flex-col items-start">
                                             <p className="line-clamp-1 !text-sm font-medium">
-                                                {user?.fullName}
+                                                {user?.name || user?.email}
                                             </p>
                                             <UserTierBadge />
                                         </div>
@@ -381,22 +412,24 @@ export const Sidebar = () => {
                                     <IconSettings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
-                                {/* {!isSignedIn && (
-                                <DropdownMenuItem onClick={() => push('/sign-in')}>
-                                    <IconUser size={16} strokeWidth={2} />
-                                    Log in
+                                <DropdownMenuItem onClick={() => push('/privacy')}>
+                                    <IconShield size={16} strokeWidth={2} />
+                                    Privacy Policy
                                 </DropdownMenuItem>
-                            )} */}
-                                {isSignedIn && (
-                                    <DropdownMenuItem onClick={() => openUserProfile()}>
+                                <DropdownMenuItem onClick={() => push('/terms')}>
+                                    <IconFileText size={16} strokeWidth={2} />
+                                    Terms of Service
+                                </DropdownMenuItem>
+                                {!isSignedIn && (
+                                    <DropdownMenuItem onClick={() => push('/login')}>
                                         <IconUser size={16} strokeWidth={2} />
-                                        Profile
+                                        Log in
                                     </DropdownMenuItem>
                                 )}
                                 {isSignedIn && (
                                     <DropdownMenuItem onClick={() => signOut()}>
                                         <IconLogout size={16} strokeWidth={2} />
-                                        Logout
+                                        Sign out
                                     </DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
@@ -415,7 +448,7 @@ export const Sidebar = () => {
                                 <IconSettings2 size={14} strokeWidth={2} />
                                 Settings
                             </Button>
-                            <Button size="sm" rounded="lg" onClick={() => push('/sign-in')}>
+                            <Button size="sm" rounded="lg" onClick={() => push('/login')}>
                                 Log in / Sign up
                             </Button>
                         </div>

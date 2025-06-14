@@ -1,27 +1,60 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
-import Error from 'next/error';
-import { useEffect } from 'react';
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
 
 export default function GlobalError({ error }: { error: Error }) {
-    useEffect(() => {
-        if (process.env.NODE_ENV === 'production') {
-            Sentry.captureException(error);
-        }
-    }, [error]);
-
     return (
         <html>
             <body>
-                <div className="flex h-screen w-screen flex-col items-center justify-center bg-emerald-50">
-                    <div className="flex w-[300px] flex-col gap-2">
-                        <p className="text-base">Oops! Something went wrong.</p>
-                        <p className="text-brand text-sm">
+                <div
+                    style={{
+                        display: 'flex',
+                        height: '100vh',
+                        width: '100vw',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#f9fafb',
+                        fontFamily:
+                            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '300px',
+                            flexDirection: 'column',
+                            gap: '0.5rem',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#374151' }}>
+                            Something went wrong
+                        </h3>
+                        <p
+                            style={{
+                                margin: 0,
+                                fontSize: '0.875rem',
+                                fontWeight: '500',
+                                lineHeight: '1.25',
+                                color: '#6b7280',
+                            }}
+                        >
                             It seems we encountered an unexpected error. Please try refreshing the
-                            page or check back later. If the problem persists, feel free to{' '}
-                            <a href="mailto:hello@vtai.vn">contact</a>.
+                            page or check back later.
                         </p>
+                        <a
+                            href="/"
+                            style={{
+                                color: '#BFB38F',
+                                textDecoration: 'underline',
+                                fontSize: '0.875rem',
+                                marginTop: '1rem',
+                            }}
+                        >
+                            Go back home
+                        </a>
                     </div>
                 </div>
             </body>

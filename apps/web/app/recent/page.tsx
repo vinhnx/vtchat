@@ -1,5 +1,7 @@
 'use client';
+import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Button,
     Command,
@@ -10,12 +12,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { IconClock, IconPlus } from '@tabler/icons-react';
+import { IconClock, IconPlus, IconTrash } from '@tabler/icons-react';
 import { CommandItem } from 'cmdk';
 import { MoreHorizontal } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+// Create a wrapper component for IconTrash to match expected icon prop type
+const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconTrash size={size} className={className} />;
 
 export default function ThreadsPage() {
     const threads = useChatStore(state => state.threads);
@@ -26,6 +34,9 @@ export default function ThreadsPage() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [title, setTitle] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
 
     useEffect(() => {
         if (editingId && inputRef.current) {
@@ -65,6 +76,12 @@ export default function ThreadsPage() {
 
     const handleDeleteThread = (threadId: string, e: React.MouseEvent) => {
         e.stopPropagation();
+
+        if (!isSignedIn) {
+            requireLogin();
+            return;
+        }
+
         deleteThread(threadId);
     };
 
@@ -175,6 +192,14 @@ export default function ThreadsPage() {
                     </CommandList>
                 </Command>
             </div>
+
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={hideLoginPrompt}
+                title="Login Required"
+                description="Please sign in to delete chat threads."
+                icon={TrashIcon}
+            />
         </div>
     );
 }

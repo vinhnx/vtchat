@@ -6,7 +6,7 @@ import { generateObject, getHumanizedDate, handleError, sendEvents } from '../ut
 
 export const reflectorTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'reflector',
-    execute: async ({ trace, data, events, context, signal, redirectTo }) => {
+    execute: async ({ data, events, context, signal, redirectTo }) => {
         const question = context?.get('question') || '';
         const messages = context?.get('messages') || [];
         const prevQueries = context?.get('queries') || [];
@@ -120,15 +120,6 @@ Current date: ${getHumanizedDate()}
         if (!object?.queries?.length || !object?.reasoning) {
             redirectTo('analysis');
         }
-
-        trace?.span({
-            name: 'reflector',
-            input: prompt,
-            output: object,
-            metadata: {
-                data,
-            },
-        });
 
         return {
             queries: object?.queries,

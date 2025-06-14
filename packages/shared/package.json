@@ -4,14 +4,22 @@
     "private": true,
     "exports": {
         "./config": "./config/index.ts",
+        "./config/payment": "./config/payment.ts",
+        "./config/vt-plus-features": "./config/vt-plus-features.ts",
+        "./constants": "./constants/index.ts",
+        "./constants/routes": "./constants/routes.ts",
         "./db": "./db/index.ts",
         "./utils": "./utils/index.ts",
         "./types": "./types.ts",
+        "./types/environment": "./types/environment.ts",
         "./logger": "./logger.ts",
-        "./posthog": "./posthog.ts",
+        "./lib/auth-client": "./lib/auth-client.ts",
         "./types/subscription": "./types/subscription.ts",
+        "./types/subscription-status": "./types/subscription-status.ts",
         "./utils/subscription": "./utils/subscription.ts",
-        "./utils/subscription-server": "./utils/subscription-server.ts"
+        "./utils/subscription-server": "./utils/subscription-server.ts",
+        "./utils/chat-credits": "./utils/chat-credits.ts",
+        "./utils/dev-test-mode": "./utils/dev-test-mode.ts"
     },
     "scripts": {
         "lint": "eslint .",

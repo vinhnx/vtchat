@@ -1,106 +1,240 @@
 export const termsMdx = `
-### Terms and Conditions
---------------------------------
+# Terms of Service
 
-Last Updated: August 10, 2024
+**Last Updated:** June 14, 2025
 
-Welcome to VT! These Terms and Conditions ("Terms") govern your use of the VT website and services (the "Service"). By accessing or using our Service, you agree to be bound by these Terms. If you do not agree with any part of these Terms, you must not use the Service.
+Welcome to **VT** ("we," "our," or "us"), an advanced AI-powered research and chat platform. These Terms of Service ("Terms") govern your use of our website, application, and services (collectively, the "Service").
 
-### 1. Acceptance of Terms
+By accessing or using VT, you agree to be bound by these Terms. If you disagree with any part of these Terms, please do not use our Service.
 
-By using the Service, you agree to comply with and be legally bound by these Terms, whether you are a registered user or not. If you do not agree to these Terms, you must not use the Service.
+---
 
-### 2. Definitions
+## 1. Service Overview
 
-- "Service" refers to the VT platform, including all related software, applications, and services provided by VT.
-- "User" refers to any individual or entity that accesses or uses the Service.
-- "Content" refers to any text, images, code, or other data uploaded, posted, or otherwise made available through the Service.
+VT is a privacy-focused AI platform featuring advanced research capabilities that enables you to:
+- **Agentic Workflows**: Complex task coordination via custom workflow orchestration
+- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
+- **Pro Search**: Enhanced search with web integration for real-time information
+- **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models
+- **Local Privacy**: All conversations stored locally on your device using IndexedDB
+- **BYOK Support**: Use your own API keys for unlimited access
+- **MCP Integration**: Connect with Model Context Protocol servers and external tools
+- **VT+ Premium Features**: Enhanced capabilities through subscription
 
-### 3. Age Requirements
+---
 
-You must be at least 13 years of age to use the Service. If you are under 18 years of age, you must have the consent of a parent or legal guardian to use the Service. By using the Service, you represent and warrant that you meet these age requirements. We reserve the right to request proof of age at any time, and to suspend or terminate your access to the Service if we have reason to believe you do not meet the minimum age requirements.
+## 2. Account Registration & Age Requirements
 
-### 4. Privacy and Data Storage
+### 2.1 Account Creation
+- You may use VT anonymously for basic functionality
+- Account registration (via Google or GitHub OAuth) is required for:
+  - VT+ subscription features (Pro Search, Deep Research, Dark Mode)
+  - Daily usage tracking and fair usage enforcement
+  - Thread synchronization and account-based management
+- You must provide accurate information during registration
 
-At VT, we prioritize your privacy. We do not store your chat history on our servers. All chat history is stored locally on your device, and we do not have access to your personal conversations. By using the Service, you agree to this local storage and understand that you are responsible for securing your own data.
+### 2.2 Age Requirements
+- You must be at least 13 years old to use VT
+- Users under 18 must have parental or legal guardian consent
+- We reserve the right to request age verification at any time
+- Account access may be suspended if age requirements are not met
 
-### 5. User Authorization and Login
+---
 
-Users are only required to log in to authorize themselves if they wish to access certain freely available usage on a daily basis. This authorization helps us manage fair usage and prevent abuse of the free features. Your login information will be used solely for authentication and access management.
+## 3. Privacy & Data Handling
 
-### 6. Use of the Service
+### 3.1 Local Storage Architecture
+- **Your conversations are stored locally** on your device using IndexedDB and Local Storage
+- **API keys are encrypted** and stored locally in your browser
+- **We do not store, access, or backup** your chat history on our servers
+- **You are solely responsible** for backing up your data if desired
+- **Account-based users** may optionally sync threads to our database for cross-device access
 
-You agree to use the Service only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of the Service by, any third party. Prohibited activities include, but are not limited to:
+### 3.2 Data We Collect
+**User-Provided Information:**
+- Account information (email, name, profile picture) from OAuth providers (Google, GitHub)
+- Payment information for VT+ subscriptions (processed securely through Creem.io)
+- Support communications and feedback
 
-- Engaging in illegal activities or using the Service to transmit or store illegal content.
-- Violating any applicable laws or regulations.
-- Interfering with or disrupting the integrity or performance of the Service.
-- Using the Service for any harmful, threatening, abusive, harassing, defamatory, or otherwise objectionable purpose.
-- Attempting to gain unauthorized access to servers or networks connected to the Service.
-- Transmitting viruses, malware, or other malicious code.
-- Collecting or harvesting personal data about other users.
-- Using the Service to generate or share content that infringes on intellectual property or privacy rights of others.
+**Automatically Collected Information:**
+- Usage analytics and error logs to improve our service (anonymized)
+- Technical information (IP address, browser type, device information)
+- Performance metrics and crash reports
 
-### 7. AI Outputs and No Professional Advice
+### 3.3 API Communications
+- **Direct communication**: Messages sent directly from your browser to AI providers
+- **Proxy requests**: Some models may route through our proxy servers without logging content
+- **No content storage**: We never store the content of your conversations
+- **Provider policies apply**: Each AI provider has their own terms and data handling practices
 
-The outputs from VT are generated using large language models. These outputs might not always be accurate, complete, or up-to-date. You acknowledge that all outputs and responses are provided on an "as is" basis. The Service is not a substitute for professional advice (legal, medical, financial, or otherwise). Always seek the guidance of qualified professionals before making decisions based on the outputs generated by the Service.
+---
 
-### 8. Intellectual Property
+## 4. Subscription & Billing (VT+)
 
-- Ownership: VT and its licensors own all rights, title, and interest in and to the Service, including any underlying software, technology, and content (excluding User Content).
-- User Content License: By submitting or transmitting any content ("User Content") to the Service, you grant VT a non-exclusive, worldwide, royalty-free license to store, display, process, and use your User Content in connection with providing and improving the Service.
-- Trademarks: All trademarks, service marks, logos, and trade names belonging to VT are trademarks of VT.
+### 4.1 VT+ Subscription Features
+VT+ is a monthly subscription service for **$9.99 USD** that includes:
+- **Pro Search**: Enhanced search with web integration for real-time information
+- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
+- **Dark Mode**: Access to dark theme interface
+- **Advanced Chat Modes**: Additional AI model access and capabilities
+- **Priority Support**: Enhanced customer support
 
-### 9. Termination
+### 4.2 Payment Terms
+- All payments are processed securely through **Creem.io**
+- Subscription fees are charged monthly in advance
+- Pricing includes applicable taxes
+- Automatic renewal unless cancelled
+- Payment processed via secure PCI-compliant infrastructure
 
-We reserve the right to terminate or suspend your account and access to the Service at our sole discretion, without notice, for conduct that we believe violates these Terms or is harmful to other users or the Service.
+### 4.3 Cancellation & Refunds
+- You may cancel your subscription at any time through the customer portal
+- Access to premium features continues until the end of your current billing period
+- **No automatic refunds** - refunds are evaluated on a case-by-case basis
+- Contact support for refund requests with valid justification
 
-### 10. Warranties and Disclaimers
+---
 
-The Service is provided "as is" and "as available" without any warranties of any kind, whether express or implied. We do not warrant that the Service will be uninterrupted, secure, or free of errors or viruses. Since your data is stored locally, we are not responsible for data loss or corruption. We do not guarantee the accuracy, completeness, or timeliness of any information provided through the Service.
+## 5. Acceptable Use Policy
 
-### 11. Limitation of Liability
+### 5.1 Permitted Use
+You may use VT for lawful purposes including:
+- Personal and professional AI-assisted conversations
+- Research, analysis, and educational activities
+- Content creation, writing assistance, and brainstorming
+- Productivity enhancement and workflow automation
+- Code development and technical problem-solving
+- Learning and skill development
 
-In no event shall VT, its affiliates, or its licensors be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from:
+### 5.2 Prohibited Activities
+You may not use VT to:
+- Engage in illegal activities or generate harmful, threatening, or abusive content
+- Violate intellectual property rights or privacy rights of others
+- Attempt to reverse engineer, hack, or compromise our systems or security
+- Share accounts, violate usage limits, or abuse fair usage policies
+- Collect or harvest personal data about other users
+- Transmit viruses, malware, or other malicious code
+- Generate spam, fraud, or deceptive content
+- Bypass or circumvent subscription restrictions or access controls
+- Impersonate others or misrepresent your identity
 
-- Your use or inability to use the Service.
-- Any unauthorized access to or use of our servers.
-- Any bugs, viruses, or other harmful code.
+---
 
-In no event will VT's total liability exceed one hundred US dollars (USD $100).
+## 6. AI-Generated Content & Disclaimers
 
-### 12. Indemnification
+### 6.1 Nature of AI Responses
+- **AI-generated content** is produced by third-party language models from various providers
+- **Accuracy not guaranteed**: Content may not always be accurate, current, complete, or appropriate
+- **No endorsement**: We do not endorse, verify, or guarantee the accuracy of AI-generated content
+- **Use at your own risk**: Users must evaluate and verify AI responses independently
 
-You agree to indemnify, defend, and hold harmless VT, its affiliates, and its licensors from and against any and all claims, damages, losses, liabilities, costs, and expenses arising from or related to your use of the Service or any violation of these Terms.
+### 6.2 No Professional Advice
+- **VT is not a substitute** for professional advice (legal, medical, financial, tax, etc.)
+- **Always consult qualified professionals** before making decisions based on AI outputs
+- **Informational purposes only**: Use AI responses for general information and ideation
+- **No liability**: We disclaim liability for decisions made based on AI-generated content
 
-### 13. Third-Party Services
+---
 
-The Service may integrate or link to third-party services or content. We do not endorse or assume responsibility for such third-party services. Your interactions with these third-party services are governed by their own terms and policies.
+## 7. Intellectual Property Rights
 
-### 14. Changes to the Service
+### 7.1 Our Rights
+- VT platform, software, technology, and branding are our proprietary intellectual property
+- Our trademarks, service marks, and logos are protected intellectual property
+- Unauthorized use of our intellectual property is prohibited
 
-We reserve the right to modify, suspend, or discontinue the Service (in whole or in part) at any time, with or without notice to you. We will not be liable to you or any third party for any such modifications, suspension, or discontinuation.
+### 7.2 Your Content
+- **You retain ownership** of content you input into VT
+- **Limited license granted**: You grant us a limited, non-exclusive license to process your content to provide the Service
+- **Your responsibility**: You must ensure you have rights to any content you share
+- **User-generated content**: You're responsible for the accuracy and legality of your inputs
 
-### 15. Governing Law
+### 7.3 AI Provider Terms
+- Use of AI models is subject to their respective terms of service and policies
+- You agree to comply with all applicable AI provider terms and usage policies
+- Different providers may have different restrictions and requirements
 
-These Terms shall be governed by and construed in accordance with the laws of Canada. Any disputes arising from or relating to these Terms or the Service shall be resolved in the courts of Quebec, Canada.
+---
 
-### 16. General Provisions
+## 8. Service Availability & Changes
 
-- Severability: If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions will continue in full force and effect.
-- No Waiver: Any failure by us to enforce any right or provision under these Terms does not constitute a waiver of future enforcement of that right or provision.
-- Entire Agreement: These Terms constitute the entire agreement between you and VT regarding your use of the Service.
-- Assignment: You may not assign or transfer these Terms without our prior written consent. We may freely assign or transfer these Terms.
+### 8.1 Uptime & Maintenance
+- We strive for high availability but **cannot guarantee 100% uptime**
+- Planned maintenance will be communicated when reasonably possible
+- Emergency maintenance may occur without advance notice
+- **No liability** for service interruptions or downtime
 
-### 17. Changes to Terms
+### 8.2 Service Modifications
+- We reserve the right to modify, suspend, or discontinue features at any time
+- Significant changes will be communicated to users via email or platform notifications
+- **Continued use constitutes acceptance** of changes
+- **No guaranteed feature permanence**: Features may be added, modified, or removed
 
-We reserve the right to modify these Terms at any time. If we make material changes to the Terms, we will notify you by posting a notice on our website prior to the effective date of the changes. Your continued use of the Service after the effective date constitutes your acceptance of the modified Terms.
+---
 
-### 18. Contact Information
+## 9. Limitation of Liability
 
-If you have any questions about these Terms, please contact us at:
+**TO THE MAXIMUM EXTENT PERMITTED BY LAW:**
 
-VT
-Ho Chi Minh city, Vietnam
-contact@vtai.vn
+- **VT IS PROVIDED "AS IS"** WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED
+- **WE DISCLAIM ALL WARRANTIES** including merchantability, fitness for purpose, and non-infringement
+- **WE ARE NOT LIABLE** for any indirect, incidental, special, consequential, or punitive damages
+- **OUR TOTAL LIABILITY** shall not exceed $100 USD or your last 12 months of subscription fees, whichever is greater
+- **WE ARE NOT RESPONSIBLE** for AI provider outages, third-party service issues, or data loss
+- **LOCAL STORAGE RISKS**: You acknowledge risks of local data storage and browser-based data loss
+
+---
+
+## 10. Account Termination
+
+### 10.1 Your Rights
+- You may delete your account and cease using VT at any time
+- Account deletion will remove your server-stored data according to our privacy policy
+- **Local data remains** on your device until manually cleared
+
+### 10.2 Our Rights
+We may suspend or terminate your account if you:
+- Violate these Terms or our policies
+- Engage in fraudulent, abusive, or illegal activity
+- Misuse or abuse the Service or its features
+- Fail to pay subscription fees (for VT+ users)
+
+### 10.3 Effect of Termination
+- **Immediate cessation** of access to VT+ features upon termination
+- **Local data preserved** on your device (not automatically deleted)
+- **No refund obligation** unless required by applicable law
+
+---
+
+## 11. Legal & Compliance
+
+### 11.1 Governing Law
+- These Terms are governed by the **laws of Vietnam**
+- Any disputes will be resolved in Vietnamese courts with competent jurisdiction
+- **Arbitration**: We may require binding arbitration for certain disputes
+
+### 11.2 Changes to Terms
+- We may update these Terms periodically to reflect service changes or legal requirements
+- **Material changes** will be communicated via email or prominent platform notification
+- **Continued use** after changes constitutes acceptance of updated Terms
+- **Review regularly**: Users should review Terms periodically for updates
+
+### 11.3 Severability & Interpretation
+- If any provision is found invalid or unenforceable, remaining Terms continue in effect
+- **No waiver**: Failure to enforce any provision does not waive future enforcement
+- **Entire agreement**: These Terms constitute the complete agreement between parties
+
+---
+
+## 12. Contact Information
+
+For questions about these Terms, please contact us:
+
+**Email:** contact@vtchat.io.vn
+**Address:** An Giang, Vietnam
+**Support:** Available through our platform
+**Business Hours:** Monday-Friday, 9 AM - 6 PM ICT
+
+---
+
+*By using VT, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.*
 `;

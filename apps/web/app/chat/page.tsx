@@ -1,11 +1,13 @@
 'use client';
 
-import { Footer } from '@repo/common/components';
+import { Thread } from '@repo/common/components';
 
 const ChatPage = () => {
     return (
-        <div className="absolute bottom-0 z-10 flex w-full flex-col">
-            <Footer />
+        <div className="flex h-screen flex-col">
+            <div className="flex-grow overflow-y-auto">
+                <Thread />
+            </div>
         </div>
     );
 };

@@ -1,22 +1,19 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
-import {
-    ImageAttachment,
-    ImageDropzoneRoot,
-    MessagesRemainingBadge,
-} from '@repo/common/components';
+import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
-import { ChatModeConfig } from '@repo/shared/config';
+import { ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
-import { ExamplePrompts } from '../exmaple-prompts';
+import { ExamplePrompts } from '../example-prompts';
+import { LoginRequiredDialog } from '../login-required-dialog';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -30,22 +27,27 @@ export const ChatInput = ({
     showBottomBar?: boolean;
     isFollowUp?: boolean;
 }) => {
-    const { isSignedIn } = useAuth();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const router = useRouter(); // Use the full router object for clarity
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
         placeholder: isFollowUp ? 'Ask follow up' : 'Ask anything',
         onInit: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
-                const draftMessage = window.localStorage.getItem('draft-message');
+                const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
                     editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
                 }
             }
+            // Removed automatic login prompt on focus - users should be able to type without being forced to login
+            // Login will be prompted only when they try to send a message
         },
         onUpdate: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp) {
-                window.localStorage.setItem('draft-message', editor.getText());
+                window.localStorage.setItem(STORAGE_KEYS.DRAFT_MESSAGE, editor.getText());
             }
         },
     });
@@ -62,15 +64,20 @@ export const ChatInput = ({
     const stopGeneration = useChatStore(state => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
-    const { push } = useRouter();
+    // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const sendMessage = async () => {
-        if (
-            !isSignedIn &&
-            !!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired
-        ) {
-            push('/sign-in');
-            return;
+        if (!isSignedIn) {
+            // This specific check for chat mode auth requirement might be redundant
+            // if the focus prompt already directs to login.
+            // However, keeping it for cases where send is triggered programmatically or by other means.
+            if (!!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
+                setShowLoginPrompt(true); // Show prompt instead of direct push
+                return;
+            }
+            // For non-auth-required modes, if any, allow sending.
+            // Or, if all interactions require login, this block can be simplified to:
+            // if (!isSignedIn) { setShowLoginPrompt(true); return; }
         }
 
         if (!editor?.getText()) {
@@ -81,12 +88,13 @@ export const ChatInput = ({
 
         if (!threadId) {
             const optimisticId = uuidv4();
-            push(`/chat/${optimisticId}`);
+            router.push(`/chat/${optimisticId}`); // use router.push
             createThread(optimisticId, {
                 title: editor?.getText(),
             });
             threadId = optimisticId;
         }
+        // Removed duplicated block and misplaced return
 
         // First submit the message
         const formData = new FormData();
@@ -104,7 +112,7 @@ export const ChatInput = ({
             ),
             useWebSearch,
         });
-        window.localStorage.removeItem('draft-message');
+        window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
         clearImageAttachment();
     };
@@ -190,14 +198,13 @@ export const ChatInput = ({
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.15 }}
                                 >
-                                    <div className="animate-pulse">Loading editor...</div>
+                                    <InlineLoader label="Loading editor..." />
                                 </motion.div>
                             )}
                         </motion.div>
                     </ImageDropzoneRoot>
                 </Flex>
             </motion.div>
-            <MessagesRemainingBadge key="remaining-messages" />
         </AnimatePresence>
     );
 
@@ -253,6 +260,14 @@ export const ChatInput = ({
                     {/* <ChatFooter /> */}
                 </Flex>
             </div>
+            {showLoginPrompt && (
+                <LoginRequiredDialog
+                    isOpen={showLoginPrompt}
+                    onClose={() => setShowLoginPrompt(false)}
+                    title="Login Required"
+                    description="Please log in to start chatting or save your conversation."
+                />
+            )}
         </div>
     );
 };

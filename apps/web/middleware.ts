@@ -1,9 +1,29 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { isPublicRoute } from '@repo/shared/constants';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default clerkMiddleware(async (auth, req) => {
+export default async function middleware(request: NextRequest) {
+    const { pathname } = request.nextUrl;
+
+    // Check if the route is public (doesn't require authentication)
+    const isPublic = isPublicRoute(pathname);
+
+    // Only check authentication for protected routes
+    if (!isPublic) {
+        // If user is not authenticated and trying to access protected route
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+
+        if (!session) {
+            const loginUrl = new URL('/login', request.url);
+            loginUrl.searchParams.set('redirect_url', pathname);
+            return NextResponse.redirect(loginUrl);
+        }
+    }
+
     return NextResponse.next();
-});
+}
 
 export const config = {
     matcher: [

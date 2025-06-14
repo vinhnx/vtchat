@@ -1,0 +1,13 @@
+{
+    "version": "5",
+    "dialect": "pg",
+    "entries": [
+        {
+            "idx": 0,
+            "version": "7",
+            "when": 1749209007997,
+            "tag": "0000_handy_boomer",
+            "breakpoints": true
+        }
+    ]
+}

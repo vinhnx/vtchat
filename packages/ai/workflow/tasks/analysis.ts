@@ -5,7 +5,7 @@ import { ChunkBuffer, generateText, getHumanizedDate, handleError, sendEvents } 
 
 export const analysisTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'analysis',
-    execute: async ({ trace, events, context, signal }) => {
+    execute: async ({ events, context, signal }) => {
         const messages = context?.get('messages') || [];
         const question = context?.get('question') || '';
         const prevSummaries = context?.get('summaries') || [];
@@ -14,13 +14,13 @@ export const analysisTask = createTask<WorkflowEventSchema, WorkflowContextSchem
         const stepId = nextStepId();
 
         const prompt = `
-          
+
 
                 # Research Analysis Framework
 
 Today is ${getHumanizedDate()}.
 
-You are a Research Analyst tasked with thoroughly analyzing findings related to "${question}" before composing a comprehensive report. 
+You are a Research Analyst tasked with thoroughly analyzing findings related to "${question}" before composing a comprehensive report.
 
 You gonna perform pre-writing analysis of the research findings.
 
@@ -84,16 +84,6 @@ ${s}
         });
 
         addSources(context?.get('sources') || []);
-
-        trace?.span({
-            name: 'analysis',
-            input: prompt,
-            output: text,
-            metadata: {
-                question,
-                prevSummaries,
-            },
-        });
 
         return {
             queries: [],

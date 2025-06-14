@@ -34,8 +34,9 @@ yarn-error.log*
 # turbo
 .turbo
 
-# TODO
-TODO.md
-
 # github prompts
 .github/prompts/*
+*.tsbuildinfo
+
+better-auth-mcp.log
+.roo/mcp.json

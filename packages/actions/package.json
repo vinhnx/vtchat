@@ -6,9 +6,7 @@
     "exports": {
         ".": "./index.ts"
     },
-    "dependencies": {
-        "@repo/prisma": "workspace:*"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@repo/typescript-config": "*",
         "eslint": "^8.56.0",

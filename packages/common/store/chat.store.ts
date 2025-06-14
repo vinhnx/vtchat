@@ -54,7 +54,7 @@ const loadInitialData = async () => {
         useWebSearch,
         chatMode,
         customInstructions,
-        showSuggestions: config.showSuggestions ?? true,
+        showSuggestions: false, // Always disable suggestions
     };
 };
 
@@ -79,20 +79,12 @@ type State = {
     isLoadingThreads: boolean;
     isLoadingThreadItems: boolean;
     currentSources: string[];
-    creditLimit: {
-        remaining: number | undefined;
-        maxLimit: number | undefined;
-        reset: string | undefined;
-        isAuthenticated: boolean;
-        isFetched: boolean;
-    };
 };
 
 type Actions = {
     setModel: (model: Model) => void;
     setEditor: (editor: any) => void;
     setContext: (context: string) => void;
-    fetchRemainingCredits: () => Promise<void>;
     setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => void;
     clearImageAttachment: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
@@ -234,81 +226,150 @@ const initializeWorker = () => {
     if (typeof window === 'undefined') return;
 
     try {
-        // Create a shared worker
-        dbWorker = new SharedWorker(new URL('./db-sync.worker.ts', import.meta?.url), {
+        // Create a shared worker using the public JS file
+        dbWorker = new SharedWorker('/db-sync.worker.js', {
             type: 'module',
         });
 
-        // Set up message handler
+        // Set up message handler with enhanced error handling
         dbWorker.port.onmessage = async event => {
             const message = event.data;
 
             if (!message || !message.type) return;
 
-            // Handle different message types
-            switch (message.type) {
-                case 'connected':
-                    console.log('Connected to SharedWorker');
-                    break;
+            try {
+                // Handle different message types
+                switch (message.type) {
+                    case 'connected':
+                        console.log('[ChatStore] Connected to SharedWorker:', message.workerId);
+                        break;
 
-                case 'thread-update':
-                    // Refresh threads list
-                    const threads = await db.threads.toArray();
-                    useChatStore.setState({
-                        threads: threads.sort(
-                            (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-                        ),
-                    });
-                    break;
-
-                case 'thread-item-update':
-                    // Refresh thread items if we're on the same thread
-                    const currentThreadId = useChatStore.getState().currentThreadId;
-                    if (message.data?.threadId === currentThreadId) {
-                        await useChatStore.getState().loadThreadItems(message.data.threadId);
-                    }
-                    break;
-
-                case 'thread-delete':
-                    // Handle thread deletion
-                    useChatStore.setState(state => {
-                        const newState = { ...state };
-                        newState.threads = state.threads.filter(
-                            t => t.id !== message.data.threadId
-                        );
-
-                        // Update current thread if the deleted one was active
-                        if (state.currentThreadId === message.data.threadId) {
-                            newState.currentThreadId = newState.threads[0]?.id || null;
-                            newState.currentThread = newState.threads[0] || null;
+                    case 'db-operation-result':
+                        // Handle database operation results
+                        if (message.success) {
+                            console.log(
+                                '[ChatStore] Database operation succeeded:',
+                                message.requestId
+                            );
+                        } else {
+                            console.error('[ChatStore] Database operation failed:', message.error);
                         }
+                        break;
 
-                        return newState;
-                    });
-                    break;
+                    case 'worker-error':
+                        console.error('[ChatStore] Worker error:', message.error);
+                        // Fallback to localStorage sync on worker errors
+                        initializeTabSync();
+                        break;
 
-                case 'thread-item-delete':
-                    // Handle thread item deletion
-                    if (message.data?.threadId === useChatStore.getState().currentThreadId) {
-                        useChatStore.setState(state => ({
-                            threadItems: state.threadItems.filter(
-                                item => item.id !== message.data.id
-                            ),
-                        }));
-                    }
-                    break;
+                    case 'thread-update':
+                        // Refresh threads list with better error handling
+                        try {
+                            const threads = await db.threads.toArray();
+                            useChatStore.setState({
+                                threads: threads.sort(
+                                    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+                                ),
+                            });
+                        } catch (error) {
+                            console.error('[ChatStore] Failed to refresh threads:', error);
+                        }
+                        break;
+
+                    case 'thread-item-update':
+                        // Refresh thread items if we're on the same thread with better error handling
+                        try {
+                            const currentThreadId = useChatStore.getState().currentThreadId;
+                            if (message.data?.threadId === currentThreadId) {
+                                await useChatStore
+                                    .getState()
+                                    .loadThreadItems(message.data.threadId);
+                            }
+                        } catch (error) {
+                            console.error('[ChatStore] Failed to refresh thread items:', error);
+                        }
+                        break;
+
+                    case 'thread-delete':
+                        // Handle thread deletion with error handling
+                        try {
+                            useChatStore.setState(state => {
+                                const newState = { ...state };
+                                newState.threads = state.threads.filter(
+                                    t => t.id !== message.data.threadId
+                                );
+
+                                // Update current thread if the deleted one was active
+                                if (state.currentThreadId === message.data.threadId) {
+                                    newState.currentThreadId = newState.threads[0]?.id || null;
+                                    newState.currentThread = newState.threads[0] || null;
+                                }
+
+                                return newState;
+                            });
+                        } catch (error) {
+                            console.error('[ChatStore] Failed to handle thread deletion:', error);
+                        }
+                        break;
+
+                    case 'thread-item-delete':
+                        // Handle thread item deletion with error handling
+                        try {
+                            if (
+                                message.data?.threadId === useChatStore.getState().currentThreadId
+                            ) {
+                                useChatStore.setState(state => ({
+                                    threadItems: state.threadItems.filter(
+                                        item => item.id !== message.data.id
+                                    ),
+                                }));
+                            }
+                        } catch (error) {
+                            console.error(
+                                '[ChatStore] Failed to handle thread item deletion:',
+                                error
+                            );
+                        }
+                        break;
+
+                    default:
+                        // Handle unknown message types
+                        if (message.fromWorker) {
+                            console.log(
+                                '[ChatStore] Received unknown message from worker:',
+                                message.type
+                            );
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error('[ChatStore] Error processing worker message:', error);
             }
         };
 
         // Start the connection
         dbWorker.port.start();
 
-        // Handle worker errors
+        // Handle worker errors with proper fallback
         dbWorker.onerror = err => {
-            console.error('SharedWorker error:', err);
+            console.warn(
+                '[ChatStore] SharedWorker connection failed, falling back to localStorage sync:',
+                err
+            );
+            // Fallback to localStorage method
+            initializeTabSync();
         };
+
+        // Handle worker port errors (using addEventListener instead of onerror)
+        dbWorker.port.addEventListener('error', (err: Event) => {
+            console.warn(
+                '[ChatStore] SharedWorker port error, falling back to localStorage sync:',
+                err
+            );
+            initializeTabSync();
+        });
     } catch (error) {
-        console.error('Failed to initialize SharedWorker:', error);
+        console.error('[ChatStore] Failed to initialize SharedWorker:', error);
         // Fallback to localStorage method if SharedWorker isn't supported
         initializeTabSync();
     }
@@ -408,9 +469,9 @@ const initializeTabSync = () => {
     window.notifyTabSync = notifyOtherTabs;
 };
 
-// Function to notify the worker about a change
-const notifyWorker = (type: string, data: any) => {
-    if (!dbWorker) {
+// Function to notify the worker about a change with enhanced database operation support
+const notifyWorker = (type: string, data: any, dbOperation?: any) => {
+    if (!dbWorker || !dbWorker.port) {
         // Use localStorage fallback if worker isn't available
         if (typeof window !== 'undefined' && window.notifyTabSync) {
             window.notifyTabSync(type, data);
@@ -419,13 +480,77 @@ const notifyWorker = (type: string, data: any) => {
     }
 
     try {
-        dbWorker.port.postMessage({
+        const message = {
             type,
             data,
             timestamp: Date.now(),
+            requestId: Math.random().toString(36),
+            dbOperation: dbOperation || null,
+        };
+
+        dbWorker.port.postMessage(message);
+    } catch (error) {
+        console.error('[ChatStore] Error notifying worker:', error);
+
+        // Fallback to localStorage if worker communication fails
+        if (typeof window !== 'undefined' && window.notifyTabSync) {
+            window.notifyTabSync(type, data);
+        }
+    }
+};
+
+// Enhanced function for database operations through worker
+const performWorkerDatabaseOperation = async (
+    operation: any,
+    data: any,
+    fallbackFn: () => Promise<any>
+) => {
+    if (!dbWorker || !dbWorker.port) {
+        // Use direct database operation if worker isn't available
+        return await fallbackFn();
+    }
+
+    try {
+        return new Promise((resolve, reject) => {
+            const requestId = Math.random().toString(36);
+            const timeout = setTimeout(() => {
+                reject(new Error('Worker database operation timeout'));
+            }, 5000); // 5 second timeout
+
+            // Listen for the result
+            const handleMessage = (event: MessageEvent) => {
+                if (
+                    event.data.type === 'db-operation-result' &&
+                    event.data.requestId === requestId
+                ) {
+                    clearTimeout(timeout);
+                    dbWorker!.port.removeEventListener('message', handleMessage);
+
+                    if (event.data.success) {
+                        resolve(event.data.result);
+                    } else {
+                        reject(new Error(event.data.error));
+                    }
+                }
+            };
+
+            if (dbWorker?.port) {
+                dbWorker.port.addEventListener('message', handleMessage);
+
+                // Send the operation request
+                dbWorker.port.postMessage({
+                    type: 'db-operation',
+                    requestId,
+                    dbOperation: operation,
+                    data,
+                });
+            } else {
+                throw new Error('SharedWorker port not available');
+            }
         });
     } catch (error) {
-        console.error('Error notifying worker:', error);
+        console.error('[ChatStore] Worker database operation failed, using fallback:', error);
+        return await fallbackFn();
     }
 };
 
@@ -453,14 +578,7 @@ export const useChatStore = create(
         isLoadingThreads: false,
         isLoadingThreadItems: false,
         currentSources: [],
-        creditLimit: {
-            remaining: undefined,
-            maxLimit: undefined,
-            reset: undefined,
-            isAuthenticated: false,
-            isFetched: false,
-        },
-        showSuggestions: true,
+        showSuggestions: false, // Always disabled
 
         setCustomInstructions: (customInstructions: string) => {
             const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
@@ -492,9 +610,14 @@ export const useChatStore = create(
         },
 
         setShowSuggestions: (showSuggestions: boolean) => {
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ showSuggestions }));
+            // Always disable suggestions regardless of input value
+            const disabledSuggestions = false;
+            localStorage.setItem(
+                CONFIG_KEY,
+                JSON.stringify({ showSuggestions: disabledSuggestions })
+            );
             set(state => {
-                state.showSuggestions = showSuggestions;
+                state.showSuggestions = disabledSuggestions;
             });
         },
 
@@ -533,23 +656,6 @@ export const useChatStore = create(
                         : thread
                 );
             });
-        },
-
-        fetchRemainingCredits: async () => {
-            try {
-                const response = await fetch('/api/messages/remaining');
-                if (!response.ok) throw new Error('Failed to fetch credit info');
-
-                const data = await response.json();
-                set({
-                    creditLimit: {
-                        ...data,
-                        isFetched: true,
-                    },
-                });
-            } catch (error) {
-                console.error('Error fetching remaining credits:', error);
-            }
         },
 
         getPinnedThreads: async () => {

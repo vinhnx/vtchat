@@ -1,20 +1,15 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
 import { DotSpinner } from '@repo/common/components';
+import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
-import { CHAT_MODE_CREDIT_COSTS, ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { checkSubscriptionAccess } from '@repo/shared/utils/subscription';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
     Button,
     cn,
+    Dialog,
+    DialogContent,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
@@ -36,6 +31,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
+import { LoginRequiredDialog } from '../login-required-dialog';
+
+// Create a wrapper component for IconWorld to match expected icon prop type
+const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+    size,
+    className,
+}) => <IconWorld size={size} className={className} />;
 
 export const chatOptions = [
     {
@@ -43,101 +45,99 @@ export const chatOptions = [
         description: 'In depth research on complex topic',
         value: ChatMode.Deep,
         icon: <IconAtom size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Deep],
     },
     {
         label: 'Pro Search',
         description: 'Pro search with web search',
         value: ChatMode.Pro,
         icon: <IconNorthStar size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Pro],
     },
 ];
 
 export const modelOptions = [
     {
-        label: 'GPT 4.1',
-        value: ChatMode.GPT_4_1,
+        label: 'GPT 4o Mini',
+        value: ChatMode.GPT_4o_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1],
-    },
-    {
-        label: 'GPT 4o',
-        value: ChatMode.GPT_4o,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
-    },
-    {
-        label: 'GPT 4.1 Mini',
-        value: ChatMode.GPT_4_1_Mini,
-        webSearch: true,
-        icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Mini],
     },
     {
         label: 'GPT 4.1 Nano',
         value: ChatMode.GPT_4_1_Nano,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4_1_Nano],
     },
     {
-        label: 'GPT 4o Mini',
-        value: ChatMode.GPT_4o_Mini,
+        label: 'GPT 4.1 Mini',
+        value: ChatMode.GPT_4_1_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o_Mini],
+    },
+    {
+        label: 'GPT 4.1',
+        value: ChatMode.GPT_4_1,
+        webSearch: true,
+        icon: undefined,
     },
     {
         label: 'GPT 4o',
         value: ChatMode.GPT_4o,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GPT_4o],
     },
     {
         label: 'o4 mini',
         value: ChatMode.O4_Mini,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.O4_Mini],
     },
     {
         label: 'Gemini 2.0 Flash',
         value: ChatMode.GEMINI_2_0_FLASH,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_0_FLASH],
+    },
+    {
+        label: 'Gemini 2.0 Flash Lite',
+        value: ChatMode.GEMINI_2_0_FLASH_LITE,
+        webSearch: true,
+        icon: undefined,
+    },
+    {
+        label: 'Gemini 2.5 Flash Preview',
+        value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
+        webSearch: true,
+        icon: undefined,
     },
     {
         label: 'Gemini 2.5 Pro',
         value: ChatMode.GEMINI_2_5_PRO,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.GEMINI_2_5_PRO],
+    },
+    {
+        label: 'Gemini 2.5 Pro Preview',
+        value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
+        webSearch: true,
+        icon: undefined,
     },
     {
         label: 'Claude 4 Sonnet',
         value: ChatMode.CLAUDE_4_SONNET,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_SONNET],
     },
     {
         label: 'Claude 4 Opus',
         value: ChatMode.CLAUDE_4_OPUS,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.CLAUDE_4_OPUS],
     },
     {
-        label: 'Deepseek R1',
+        label: 'DeepSeek R1',
         value: ChatMode.DEEPSEEK_R1,
         webSearch: true,
         icon: undefined,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.DEEPSEEK_R1],
     },
 ];
 
@@ -169,15 +169,37 @@ export const ChatModeButton = () => {
         message: string;
     } | null>(null);
 
+    // Use the unified subscription system
+    const { hasAccess, isLoaded } = useSubscriptionAccess();
+
     const selectedOption =
-        (isChatPage
-            ? [...chatOptions, ...modelOptions].find(option => option.value === chatMode)
-            : [...modelOptions].find(option => option.value === chatMode)) ?? modelOptions[0];
+        [...chatOptions, ...modelOptions].find(option => option.value === chatMode) ??
+        modelOptions[0];
 
     const currentModeConfig = ChatModeConfig[chatMode];
-    const isCurrentModeGated = !!(
-        currentModeConfig?.requiredFeature || currentModeConfig?.requiredPlan
-    );
+
+    // Check if current mode is gated using the unified system
+    const isCurrentModeGated = (() => {
+        if (!isLoaded) return false; // Don't show as gated while loading
+
+        if (!currentModeConfig?.requiredFeature && !currentModeConfig?.requiredPlan) {
+            return false; // Not gated if no requirements
+        }
+
+        let hasRequiredAccess = true;
+
+        if (currentModeConfig.requiredFeature) {
+            hasRequiredAccess = hasAccess({
+                feature: currentModeConfig.requiredFeature as FeatureSlug,
+            });
+        }
+
+        if (currentModeConfig.requiredPlan && hasRequiredAccess) {
+            hasRequiredAccess = hasAccess({ plan: currentModeConfig.requiredPlan as PlanSlug });
+        }
+
+        return !hasRequiredAccess;
+    })();
 
     const handleGatedFeature = (gateInfo: {
         feature?: string;
@@ -219,25 +241,33 @@ export const ChatModeButton = () => {
             </DropdownMenu>
 
             {/* Gated Feature Alert Modal */}
-            <AlertDialog
-                open={!!showGateAlert}
-                onOpenChange={open => !open && setShowGateAlert(null)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{showGateAlert?.title}</AlertDialogTitle>
-                        <AlertDialogDescription>{showGateAlert?.message}</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowGateAlert(null)}>
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={() => push('/plus')}>
-                            Upgrade Now
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
+                <DialogContent
+                    ariaTitle={showGateAlert?.title || 'Upgrade Required'}
+                    className="max-w-md rounded-xl"
+                >
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                            <IconArrowUp
+                                size={24}
+                                className="text-purple-600 dark:text-purple-400"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">{showGateAlert?.title}</h3>
+                            <p className="text-muted-foreground text-sm">
+                                {showGateAlert?.message}
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outlined" onClick={() => setShowGateAlert(null)}>
+                                Cancel
+                            </Button>
+                            <Button onClick={() => push('/plus')}>Upgrade Now</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
@@ -247,24 +277,91 @@ export const WebSearchButton = () => {
     const setUseWebSearch = useChatStore(state => state.setUseWebSearch);
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+    const { canAccess } = useSubscriptionAccess();
+    const { push } = useRouter();
 
-    if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode)) return null;
+    if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
+        return null;
+
+    const handleWebSearchToggle = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
+
+        // Check if user has VT+ subscription for Pro Search (which includes web search)
+        if (!canAccess(FeatureSlug.PRO_SEARCH)) {
+            setShowSubscriptionDialog(true);
+            return;
+        }
+
+        setUseWebSearch(!useWebSearch);
+    };
 
     return (
-        <Button
-            size={useWebSearch ? 'sm' : 'icon-sm'}
-            tooltip="Web Search"
-            variant={useWebSearch ? 'secondary' : 'ghost'}
-            className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
-            onClick={() => setUseWebSearch(!useWebSearch)}
-        >
-            <IconWorld
-                size={16}
-                strokeWidth={2}
-                className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
+        <>
+            <Button
+                size={useWebSearch ? 'sm' : 'icon-sm'}
+                tooltip="Web Search"
+                variant={useWebSearch ? 'secondary' : 'ghost'}
+                className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
+                onClick={handleWebSearchToggle}
+            >
+                <IconWorld
+                    size={16}
+                    strokeWidth={2}
+                    className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
+                />
+                {useWebSearch && <p className="text-xs">Web</p>}
+            </Button>
+
+            {/* Login prompt dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use web search functionality."
+                icon={WorldIcon}
             />
-            {useWebSearch && <p className="text-xs">Web</p>}
-        </Button>
+
+            {/* Subscription upgrade dialog */}
+            <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+                <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
+                    <div className="flex flex-col items-center gap-4 p-6 text-center">
+                        <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                            <IconWorld size={24} className="text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">VT+ Required</h3>
+                            <p className="text-muted-foreground text-sm">
+                                Web Search is a VT+ Pro Search feature. Upgrade to access enhanced
+                                search with web integration for real-time information.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outlined"
+                                onClick={() => setShowSubscriptionDialog(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    push('/plus');
+                                    setShowSubscriptionDialog(false);
+                                }}
+                            >
+                                Upgrade to VT+
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 
@@ -305,44 +402,89 @@ export const ChatModeOptions = ({
     }) => void;
     isRetry?: boolean;
 }) => {
-    const { isSignedIn, has } = useAuth();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
 
+    // Use the unified subscription system
+    const { hasAccess, isLoaded } = useSubscriptionAccess();
+
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
+        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
 
-        // Check auth requirement first
-        if (config?.isAuthRequired && !isSignedIn) {
-            push('/sign-in');
+        // Check if user is signed in for any model selection
+        if (!isSignedIn) {
+            onGatedFeature({
+                title: 'Login Required',
+                message: 'Please log in to select and use different AI models.',
+            });
             return;
         }
 
-        // Check subscription requirements
+        // Check auth requirement
+        if (config?.isAuthRequired && !isSignedIn) {
+            push('/login');
+            return;
+        }
+
+        // Check subscription requirements using the unified system
         if (config?.requiredFeature || config?.requiredPlan) {
-            const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+            // Wait for subscription status to load
+            if (!isLoaded) {
+                return; // Don't allow selection while loading
+            }
 
-            // Check if user has access via checkSubscriptionAccess
-            const hasFeatureAccess = config.requiredFeature
-                ? has && checkSubscriptionAccess(has, { feature: config.requiredFeature })
-                : true;
-            const hasPlanAccess = config.requiredPlan
-                ? has && checkSubscriptionAccess(has, { plan: config.requiredPlan })
-                : true;
+            let hasRequiredAccess = true;
 
-            if (!hasFeatureAccess || !hasPlanAccess) {
+            // Check feature access
+            if (config.requiredFeature) {
+                hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+            }
+
+            // Check plan access
+            if (config.requiredPlan && hasRequiredAccess) {
+                hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+            }
+
+            // If user doesn't have access, show gated feature dialog
+            if (!hasRequiredAccess) {
                 onGatedFeature({
                     feature: config.requiredFeature,
                     plan: config.requiredPlan,
                     title: `${option?.label} requires upgrade`,
-                    message: `${option?.label} is a premium feature. Upgrade to access this ${config.requiredFeature ? 'feature' : 'plan'}.`,
+                    message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
                 });
                 return;
             }
         }
 
+        // Otherwise proceed with the mode change
         setChatMode(mode);
+    };
+
+    // Helper function to check if a mode is gated
+    const isModeGated = (mode: ChatMode): boolean => {
+        if (!isLoaded) return false; // Don't show as gated while loading
+
+        const config = ChatModeConfig[mode];
+        if (!config?.requiredFeature && !config?.requiredPlan) {
+            return false; // Not gated if no requirements
+        }
+
+        let hasRequiredAccess = true;
+
+        if (config.requiredFeature) {
+            hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+        }
+
+        if (config.requiredPlan && hasRequiredAccess) {
+            hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+        }
+
+        return !hasRequiredAccess;
     };
 
     return (
@@ -351,49 +493,48 @@ export const ChatModeOptions = ({
             side="bottom"
             className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
         >
-            {isChatPage && (
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => {
-                        const config = ChatModeConfig[option.value];
-                        const isGated = !!(config?.requiredFeature || config?.requiredPlan);
+            {/* Always show Advanced Mode options regardless of page context */}
+            <DropdownMenuGroup>
+                <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
+                {chatOptions.map(option => {
+                    const isGated = isModeGated(option.value);
+                    const config = ChatModeConfig[option.value];
 
-                        return (
-                            <DropdownMenuItem
-                                key={option.label}
-                                onSelect={() => handleModeSelect(option.value)}
-                                className={cn('h-auto', isGated && 'opacity-80')}
-                            >
-                                <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                    <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
-                                    <div className="flex flex-col gap-0">
-                                        <p className="m-0 text-sm font-medium">
-                                            {option.label}
-                                            {isGated && (
-                                                <span className="ml-1 text-xs text-blue-600">
-                                                    (VT+)
-                                                </span>
-                                            )}
-                                        </p>
-                                        {option.description && (
-                                            <p className="text-muted-foreground text-xs font-light">
-                                                {option.description}
-                                            </p>
+                    return (
+                        <DropdownMenuItem
+                            key={option.label}
+                            onSelect={() => handleModeSelect(option.value)}
+                            className={cn('h-auto', isGated && 'opacity-80')}
+                        >
+                            <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
+                                <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
+                                <div className="flex flex-col gap-0">
+                                    <p className="m-0 text-sm font-medium">
+                                        {option.label}
+                                        {isGated && (
+                                            <span className="ml-1 text-xs text-blue-600">
+                                                (VT+)
+                                            </span>
                                         )}
-                                    </div>
-                                    <div className="flex-1" />
-                                    {config?.isNew && <NewIcon />}
+                                    </p>
+                                    {option.description && (
+                                        <p className="text-muted-foreground text-xs font-light">
+                                            {option.description}
+                                        </p>
+                                    )}
                                 </div>
-                            </DropdownMenuItem>
-                        );
-                    })}
-                </DropdownMenuGroup>
-            )}
+                                <div className="flex-1" />
+                                {config?.isNew && <NewIcon />}
+                            </div>
+                        </DropdownMenuItem>
+                    );
+                })}
+            </DropdownMenuGroup>
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Models</DropdownMenuLabel>
                 {modelOptions.map(option => {
+                    const isGated = isModeGated(option.value);
                     const config = ChatModeConfig[option.value];
-                    const isGated = !!(config?.requiredFeature || config?.requiredPlan);
 
                     return (
                         <DropdownMenuItem
@@ -414,7 +555,7 @@ export const ChatModeOptions = ({
                                 </div>
                                 <div className="flex-1" />
                                 {config?.isNew && <NewIcon />}
-                                {hasApiKeyForChatMode(option.value) && <BYOKIcon />}
+                                {hasApiKeyForChatMode(option.value, isSignedIn) && <BYOKIcon />}
                             </div>
                         </DropdownMenuItem>
                     );
