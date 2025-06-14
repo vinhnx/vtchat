@@ -8,6 +8,7 @@ The immediate focus is on improving user feedback and UI consistency related to 
 
 ## Recent Changes
 
+*   **`TODO.md` Cleanup and Refinement:** Organized and categorized tasks in `TODO.md` for better clarity and actionability. Removed non-actionable items and notes better suited for other documentation.
 *   **Dynamic CTA Buttons on Plus Page:** Updated `apps/web/app/plus/page.tsx` to make the Call to Action (CTA) buttons more dynamic:
     *   The "Free" plan button now shows "Continue" (and links to `/chat`) if the user is signed in and on the free tier.
     *   The main CTA button at the bottom of the page and the button on the VT+ plan card now display "Manage Subscription" along with the `UserTierBadge` if the user is currently subscribed to VT+. They correctly trigger `openCustomerPortal`.
@@ -27,7 +28,7 @@ The immediate focus is on improving user feedback and UI consistency related to 
 
 ## Next Steps
 
-*   Review `TODO.md` for any remaining tasks.
+*   Address high-priority items from the refined `TODO.md`.
 *   Monitor for any issues arising from recent changes, including the new error toast functionality.
 
 ## Active Decisions and Considerations
