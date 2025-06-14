@@ -2,7 +2,7 @@ import { SearchResultsList, StepStatus } from '@repo/common/components';
 import { Label } from '@repo/ui';
 import { Step } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
-import { IconSearch } from '@tabler/icons-react';
+import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export type StepRendererType = {
@@ -53,7 +53,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                                         transition={{ duration: 0.2, delay: 0.1 + index * 0.05 }}
                                     >
                                         <Badge>
-                                            <IconSearch size={12} className="opacity-50" />
+                                            <Search size={12} className="opacity-50"  />
                                             {query}
                                         </Badge>
                                     </motion.div>

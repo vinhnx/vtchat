@@ -3,13 +3,7 @@ import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
-import {
-    IconAtom,
-    IconChecklist,
-    IconChevronRight,
-    IconLoader2,
-    IconNorthStar,
-} from '@tabler/icons-react';
+import { Atom, IconChecklist, IconChevronRight, IconLoader2, Star,  } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
@@ -26,10 +20,10 @@ const getTitle = (threadItem: ThreadItem) => {
 
 const getIcon = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
-        return <IconAtom size={16} strokeWidth={2} className="text-muted-foreground" />;
+        return <Atom size={16} strokeWidth={2} className="text-muted-foreground"  />;
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return <IconNorthStar size={16} strokeWidth={2} className="text-muted-foreground" />;
+        return <Star size={16} strokeWidth={2} className="text-muted-foreground"  />;
     }
     return <IconChecklist size={16} strokeWidth={2} className="text-muted-foreground" />;
 };

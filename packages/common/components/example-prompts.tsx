@@ -1,13 +1,7 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
-import {
-    IconBook,
-    IconBulb,
-    IconChartBar,
-    IconPencil,
-    IconQuestionMark,
-} from '@tabler/icons-react';
+import { Book, IconBulb, IconChartBar, Pencil, HelpCircle,  } from 'lucide-react';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';

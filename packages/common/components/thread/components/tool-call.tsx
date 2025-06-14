@@ -1,7 +1,7 @@
 import { CodeBlock, ToolIcon } from '@repo/common/components';
 import { ToolCall as ToolCallType } from '@repo/shared/types';
 import { Badge, cn } from '@repo/ui';
-import { IconCaretDownFilled } from '@tabler/icons-react';
+import { ChevronDown } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
 export type ToolCallProps = {
@@ -23,14 +23,14 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                     <Badge>{toolCall.toolName}</Badge>
                 </div>
                 <div className="pr-2">
-                    <IconCaretDownFilled
+                    <ChevronDown
                         size={14}
                         strokeWidth={2}
                         className={cn(
                             'text-muted-foreground transform transition-transform',
                             isOpen && 'rotate-180'
                         )}
-                    />
+                     />
                 </div>
             </div>
             {isOpen && (

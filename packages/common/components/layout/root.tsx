@@ -4,7 +4,7 @@ import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { Badge, Button, Flex, Toaster } from '@repo/ui';
-import { IconX } from '@tabler/icons-react';
+import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import React, { FC } from 'react';
@@ -188,7 +188,7 @@ export const SideDrawer = () => {
                                 onClick={() => dismissSideDrawer()}
                                 tooltip="Close"
                             >
-                                <IconX size={14} strokeWidth={2} />
+                                <X size={14} strokeWidth={2}  />
                             </Button>
                         </div>
                         <div
