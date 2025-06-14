@@ -15,6 +15,7 @@ import { sessions, users, userSubscriptions } from '@/lib/database/schema';
 import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
 import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import crypto from 'crypto';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
@@ -72,7 +73,14 @@ const CreemSubscriptionEventSchema = z.object({
     created_at: z.number(),
     object: z.object({
         id: z.string(),
-        status: z.enum(['active', 'canceled', 'incomplete', 'past_due', 'trialing', 'expired']),
+        status: z.enum([
+            SubscriptionStatusEnum.ACTIVE,
+            SubscriptionStatusEnum.CANCELED,
+            SubscriptionStatusEnum.INCOMPLETE,
+            SubscriptionStatusEnum.PAST_DUE,
+            SubscriptionStatusEnum.TRIALING,
+            SubscriptionStatusEnum.EXPIRED,
+        ]),
         customer: z.object({
             id: z.string(),
             email: z.string(),
@@ -171,7 +179,7 @@ async function updateUserSubscription(
 
             const subscriptionData = {
                 plan: planSlug,
-                status: isActive ? 'active' : 'cancelled',
+                status: isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.CANCELED, // Use enum
                 ...(expiresAt && { currentPeriodEnd: expiresAt }),
                 ...(subscriptionId && { stripeSubscriptionId: subscriptionId }), // Reuse this field for Creem subscription ID
                 updatedAt: new Date(),
@@ -304,7 +312,7 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
 
     const productName = data.product.name;
     const planSlug = mapCreemProductToPlan(productName, data.metadata);
-    const isActive = data.status === 'active';
+    const isActive = data.status === SubscriptionStatusEnum.ACTIVE;
 
     // Parse expiration date if available
     let expiresAt: Date | undefined;

@@ -58,7 +58,7 @@ async function syncSubscriptionData() {
                 id: crypto.randomUUID(),
                 userId: user.id,
                 plan: PlanSlug.VT_PLUS,
-                status: 'active',
+                status: SubscriptionStatusEnum.ACTIVE,
                 creditsRemaining: 1000,
                 creditsUsed: 0,
                 monthlyCredits: 1000,

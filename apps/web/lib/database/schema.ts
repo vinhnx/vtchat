@@ -1,4 +1,5 @@
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Users table for Better Auth
@@ -65,7 +66,7 @@ export const userSubscriptions = pgTable('user_subscriptions', {
         .notNull()
         .references(() => users.id, { onDelete: 'cascade' }),
     plan: text('plan').notNull().default(PlanSlug.VT_BASE), // vt_base, vt_plus
-    status: text('status').notNull().default('active'), // active, cancelled, expired
+    status: text('status').notNull().default(SubscriptionStatusEnum.ACTIVE), // active, cancelled, expired
     stripeCustomerId: text('stripe_customer_id'),
     stripeSubscriptionId: text('stripe_subscription_id'),
     currentPeriodStart: timestamp('current_period_start'),

@@ -70,14 +70,14 @@ export function useSubscription(): UseSubscriptionResult {
             isDefault: globalStatus?.plan === PlanSlug.VT_BASE,
         },
         status:
-            globalStatus?.status === 'active'
+            globalStatus?.status === SubscriptionStatusEnum.ACTIVE
                 ? SubscriptionStatusEnum.ACTIVE
                 : SubscriptionStatusEnum.NONE,
         isPremium: globalStatus?.isPlusSubscriber || false,
         isVtPlus: globalStatus?.isPlusSubscriber || false,
         isVtBase: !globalStatus?.isPlusSubscriber,
         canUpgrade: !globalStatus?.isPlusSubscriber,
-        isActive: globalStatus?.status === 'active',
+        isActive: globalStatus?.status === SubscriptionStatusEnum.ACTIVE,
         expiresAt: globalStatus?.currentPeriodEnd,
         source: globalStatus?.hasSubscription ? 'creem' : 'none',
     };
