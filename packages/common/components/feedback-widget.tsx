@@ -1,6 +1,6 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, Textarea } from '@repo/ui';
-import { IconCircleCheckFilled, IconHelpSmall, IconX } from '@tabler/icons-react';
+import { CheckCircle, HelpCircle, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 
@@ -60,7 +60,7 @@ export const FeedbackWidget = () => {
                         whileTap={{ scale: 0.95 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <IconHelpSmall size={24} strokeWidth={2} className="text-background" />
+                        <HelpCircle size={24} strokeWidth={2} className="text-background"  />
                     </motion.button>
                 ) : (
                     <motion.div
@@ -80,7 +80,7 @@ export const FeedbackWidget = () => {
                                         rounded="full"
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        <IconX size={14} strokeWidth={2} />
+                                        <X size={14} strokeWidth={2}  />
                                     </Button>
                                 </div>
                                 <Textarea
@@ -105,11 +105,11 @@ export const FeedbackWidget = () => {
                         ) : (
                             <div className="flex w-full flex-row gap-3 p-4">
                                 <div className="flex flex-col items-center justify-center">
-                                    <IconCircleCheckFilled
+                                    <CheckCircle
                                         size={24}
                                         strokeWidth={2}
                                         className="text-brand"
-                                    />
+                                     />
                                 </div>
                                 <div className="flex flex-col gap-0">
                                     <p className="text-sm font-medium">Thank you!</p>

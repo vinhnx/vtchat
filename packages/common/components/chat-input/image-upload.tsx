@@ -4,16 +4,16 @@ import { ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Tooltip } from '@repo/ui';
-import { IconPaperclip } from '@tabler/icons-react';
+import { Paperclip } from 'lucide-react';
 import { FC, useState } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
-// Create a wrapper component for IconPaperclip to match expected icon prop type
+// Create a wrapper component for Paperclip to match expected icon prop type
 const PaperclipIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconPaperclip size={size} className={className} />;
+}) => <Paperclip size={size} className={className} />;
 
 export type TImageUpload = {
     id: string;
@@ -72,7 +72,7 @@ export const ImageUpload: FC<TImageUpload> = ({
             <Tooltip content={tooltip}>
                 {showIcon ? (
                     <Button variant="ghost" size="icon-sm" onClick={handleFileSelect}>
-                        <IconPaperclip size={16} strokeWidth={2} />
+                        <Paperclip size={16} strokeWidth={2}  />
                     </Button>
                 ) : (
                     <Button variant="bordered" onClick={handleFileSelect}>

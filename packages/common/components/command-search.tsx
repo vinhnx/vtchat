@@ -18,15 +18,15 @@ import {
     Kbd,
 } from '@repo/ui';
 import {
-    IconCommand,
-    IconKey,
-    IconMessageCircleFilled,
-    IconMoon,
-    IconPlus,
-    IconSettings,
-    IconSun,
-    IconTrash,
-} from '@tabler/icons-react';
+    Command,
+    Key,
+    MessageCircle,
+    Moon,
+    Plus,
+    Settings,
+    Sun,
+    Trash,
+} from 'lucide-react';
 import moment from 'moment';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
@@ -38,12 +38,12 @@ import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 const KeyIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconKey size={size} className={className} />;
+}) => <Key size={size} className={className} />;
 
 const MoonIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconMoon size={size} className={className} />;
+}) => <Moon size={size} className={className} />;
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -127,7 +127,7 @@ export const CommandSearch = () => {
     const actions: ActionItem[] = [
         {
             name: 'New Thread',
-            icon: IconPlus,
+            icon: Plus,
             action: () => {
                 router.push('/chat');
                 onClose();
@@ -135,7 +135,7 @@ export const CommandSearch = () => {
         },
         {
             name: 'Delete Thread',
-            icon: IconTrash,
+            icon: Trash,
             action: async () => {
                 if (!isSignedIn) {
                     requireLogin();
@@ -153,7 +153,7 @@ export const CommandSearch = () => {
         },
         {
             name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
-            icon: theme === 'dark' ? IconSun : IconMoon,
+            icon: theme === 'dark' ? Sun : Moon,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
@@ -173,7 +173,7 @@ export const CommandSearch = () => {
         },
         {
             name: 'Settings',
-            icon: IconSettings,
+            icon: Settings,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
@@ -186,7 +186,7 @@ export const CommandSearch = () => {
         },
         {
             name: 'Use your own API key',
-            icon: IconKey,
+            icon: Key,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
@@ -200,7 +200,7 @@ export const CommandSearch = () => {
         },
         {
             name: 'Remove All Threads',
-            icon: IconTrash,
+            icon: Trash,
             action: () => {
                 clearThreads();
                 router.push('/chat');
@@ -215,7 +215,7 @@ export const CommandSearch = () => {
                 <CommandInput placeholder="Search..." className="w-full" />
                 <div className="flex shrink-0 items-center gap-1 px-2">
                     <Kbd className="h-5 w-5">
-                        <IconCommand size={12} strokeWidth={2} className="shrink-0" />
+                        <Command size={12} strokeWidth={2} className="shrink-0" />
                     </Kbd>
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
@@ -278,11 +278,11 @@ export const CommandSearch = () => {
                                             onClose();
                                         }}
                                     >
-                                        <IconMessageCircleFilled
+                                        <MessageCircle
                                             size={16}
                                             strokeWidth={2}
                                             className="text-muted-foreground/50"
-                                        />
+                                         />
                                         <span className="w-full truncate font-normal">
                                             {thread.title}
                                         </span>
@@ -308,7 +308,7 @@ export const CommandSearch = () => {
                 <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <IconMoon size={24} className="text-purple-600 dark:text-purple-400" />
+                            <Moon size={24} className="text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">VT+ Required</h3>
