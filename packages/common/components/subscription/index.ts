@@ -18,12 +18,6 @@ export * from '@repo/shared/types/subscription';
 // Client-side utilities
 export * from '@repo/shared/utils/subscription';
 
-// Server-side utilities should NOT be exported here to avoid client/server bundle issues.
-// If you need server utilities, import from './server' instead.
-
-// React components and hooks
-export * from './provider';
-
 // Re-export commonly used items for convenience
 export {
     DEFAULT_PLAN,
@@ -33,6 +27,7 @@ export {
     PlanSlug,
 } from '@repo/shared/types/subscription';
 
+// Utility functions for subscription access control
 export {
     checkSubscriptionAccess,
     getCurrentPlan,
@@ -48,9 +43,3 @@ export {
     isPremiumPlan,
     requiresAuth,
 } from '@repo/shared/utils/subscription';
-
-export {
-    SubscriptionProvider,
-    useSubscriptionProvider,
-    withSubscriptionProvider,
-} from './provider';

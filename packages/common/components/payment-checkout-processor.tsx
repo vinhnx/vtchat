@@ -4,7 +4,6 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 import { useToast } from '@repo/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useSubscription } from '../hooks/use-subscription';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
 
 // Extend window interface for order details
@@ -26,7 +25,6 @@ export function CreemCheckoutProcessor() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { refreshSubscriptionStatus } = useGlobalSubscriptionStatus();
-    const { refetch: refetchSubscription } = useSubscription();
     const { toast } = useToast();
     const [orderDetails, setOrderDetails] = useState<any>(null);
     const [processing, setProcessing] = useState(false);
@@ -229,8 +227,7 @@ export function CreemCheckoutProcessor() {
                 console.log(
                     '[CreemCheckoutProcessor] Refreshing subscription status from database...'
                 );
-                await refreshSubscriptionStatus();
-                await refetchSubscription();
+                await refreshSubscriptionStatus(true, 'payment');
 
                 // Don't reload the page as it causes infinite redirect loop
                 // The subscription refresh above should be sufficient
@@ -274,7 +271,7 @@ export function CreemCheckoutProcessor() {
         };
 
         processCheckout();
-    }, [searchParams, toast, refreshSubscriptionStatus, refetchSubscription]);
+    }, [searchParams, toast, refreshSubscriptionStatus]);
 
     // This component doesn't render anything visible, but we could add order details
     if (orderDetails) {
