@@ -2,13 +2,14 @@
 import { TableOfMessages, Thread } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useRouter } from 'next/navigation';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 
 const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) => {
     const router = useRouter();
     const isGenerating = useChatStore(state => state.isGenerating);
     const [shouldScroll, setShouldScroll] = useState(isGenerating);
+    const [threadId, setThreadId] = useState<string | null>(null);
     const { scrollRef, contentRef } = useStickToBottom({
         stiffness: 1,
         damping: 0,
@@ -16,8 +17,12 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     const switchThread = useChatStore(state => state.switchThread);
     const getThread = useChatStore(state => state.getThread);
 
-    // Unwrap the params Promise
-    const { threadId } = use(params);
+    // Handle the async params
+    useEffect(() => {
+        params.then(({ threadId }) => {
+            setThreadId(threadId);
+        });
+    }, [params]);
 
     useEffect(() => {
         if (isGenerating) {
@@ -44,16 +49,24 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     }, [threadId, getThread, switchThread, router]);
 
     return (
-        <div
-            className="no-scrollbar flex w-full flex-1 flex-col items-center overflow-y-auto px-8"
-            ref={shouldScroll ? scrollRef : undefined}
-        >
-            <div className="mx-auto w-full max-w-3xl px-4 pb-[200px] pt-2" ref={contentRef}>
-                <Thread />
-            </div>
+        <>
+            {threadId ? (
+                <div
+                    className="no-scrollbar flex w-full flex-1 flex-col items-center overflow-y-auto px-8"
+                    ref={shouldScroll ? scrollRef : undefined}
+                >
+                    <div className="mx-auto w-full max-w-3xl px-4 pb-[200px] pt-2" ref={contentRef}>
+                        <Thread />
+                    </div>
 
-            <TableOfMessages />
-        </div>
+                    <TableOfMessages />
+                </div>
+            ) : (
+                <div className="flex w-full flex-1 items-center justify-center">
+                    <div>Loading...</div>
+                </div>
+            )}
+        </>
     );
 };
 

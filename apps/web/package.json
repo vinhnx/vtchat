@@ -99,6 +99,8 @@
         "pdfjs-dist": "3.11.174",
         "prismjs": "^1.29.0",
         "raw-loader": "^4.0.2",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "react-markdown": "^9.0.3",
         "recharts": "^2.12.7",
         "remark": "^15.0.1",
