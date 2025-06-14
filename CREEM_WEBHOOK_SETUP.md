@@ -66,9 +66,10 @@ bun dev
 ```
 
 2. Check the console for webhook environment logging:
+
 ```
 [Creem Webhook] Environment: {
-  nodeEnv: 'development',
+  nodeEnv: EnvironmentType.DEVELOPMENT,
   hasWebhookSecret: true,
   webhookUrl: 'https://abc123.ngrok.io/api/webhook/creem'
 }

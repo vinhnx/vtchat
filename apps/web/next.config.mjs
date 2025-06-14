@@ -40,6 +40,11 @@ const nextConfig = {
     // Disable static generation for error pages to prevent SSR issues
     output: 'standalone',
     poweredByHeader: false,
+
+    // Skip error page generation during build
+    generateBuildId: async () => {
+        return process.env.BUILD_ID || EnvironmentType.DEVELOPMENT;
+    },
 };
 
 export default nextConfig;

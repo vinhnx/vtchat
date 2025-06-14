@@ -7,7 +7,7 @@ import { Badge, Button, Flex, Toaster } from '@repo/ui';
 import { IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 import { Drawer } from 'vaul';
 
@@ -115,29 +115,54 @@ export const SideDrawer = () => {
         try {
             if (typeof sideDrawer.title === 'function') {
                 const titleElement = sideDrawer.title();
-                // Ensure we return a valid React node
-                return titleElement || '';
+                // Handle React elements properly
+                if (React.isValidElement(titleElement)) {
+                    return titleElement;
+                }
+                // Handle other types safely
+                if (titleElement === null || titleElement === undefined) {
+                    return '';
+                }
+                return String(titleElement);
             }
-            return sideDrawer.title || '';
+            return String(sideDrawer.title || '');
         } catch (error) {
             console.warn('Error rendering sideDrawer title:', error);
-            return '';
+            return 'Error loading title';
         }
     };
 
     // Safely render content to prevent object-as-child errors
     const renderContent = () => {
         try {
-            return sideDrawer.renderContent?.() || null;
+            if (!sideDrawer.renderContent) {
+                return null;
+            }
+            const content = sideDrawer.renderContent();
+            // Handle React elements properly
+            if (React.isValidElement(content)) {
+                return content;
+            }
+            // Handle other types
+            if (content === null || content === undefined) {
+                return null;
+            }
+            // For strings or numbers, convert safely
+            if (typeof content === 'string' || typeof content === 'number') {
+                return content;
+            }
+            // For other object types, don't render them directly
+            console.warn('Invalid content type for sideDrawer:', typeof content, content);
+            return null;
         } catch (error) {
             console.warn('Error rendering sideDrawer content:', error);
-            return null;
+            return <div>Error loading content</div>;
         }
     };
 
     return (
         <AnimatePresence>
-            {sideDrawer.open && isThreadPage && (
+            {sideDrawer.open && isThreadPage && isClient && (
                 <motion.div
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}

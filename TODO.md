@@ -1,10 +1,7 @@
 # TODO List
 
-
-1. again, make sure no 'vt_plus', or 'vt_base' string in #codebase, use PlanSlug enum.
-1. 'free' string, should be replace and equal to `vt_base`., also use PlanSlug enum.
-1. 'active' make sure no string in #codebase, use enum patterns
 --
+
 1. check @deprecated in #codebase and read the header document and plan, then execute the plan to migrate to reccommended approach, then cleanup those deprecated.
 
 --

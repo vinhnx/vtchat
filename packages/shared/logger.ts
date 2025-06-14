@@ -1,3 +1,5 @@
+import { EnvironmentType } from "./types/environment";
+
 type LogContext = Record<string, any>;
 
 export const logger = {
@@ -18,7 +20,10 @@ export const logger = {
 
     // Only use locally, never in production
     debug: (message: string, context: LogContext = {}) => {
-        if (process.env.LOG_LEVEL === 'debug' || process.env.NODE_ENV === 'development') {
+        if (
+            process.env.LOG_LEVEL === 'debug' ||
+            process.env.NODE_ENV === EnvironmentType.DEVELOPMENT
+        ) {
             console.debug(`[DEBUG] ${message}`, context);
         }
     },

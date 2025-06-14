@@ -153,7 +153,7 @@ async function updateUserSubscription(
 ) {
     try {
         console.log(
-            `[Creem Webhook] Updating subscription for user ${userId}: ${planSlug} (${isActive ? 'active' : 'inactive'})`
+            `[Creem Webhook] Updating subscription for user ${userId}: ${planSlug} (${isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE})`
         );
 
         // Start a transaction to ensure data consistency
@@ -203,7 +203,7 @@ async function updateUserSubscription(
         });
 
         console.log(
-            `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${isActive ? 'active' : 'inactive'})`
+            `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE})`
         );
 
         // Invalidate subscription cache to force fresh data on next request
@@ -406,7 +406,7 @@ export async function POST(request: NextRequest) {
         const webhookSecret = process.env.CREEM_WEBHOOK_SECRET;
 
         // In development, we might not have webhook secret configured
-        const isDevelopment = process.env.NODE_ENV === 'development';
+        const isDevelopment = process.env.NODE_ENV === EnvironmentType.DEVELOPMENT;
 
         if (!webhookSecret && !isDevelopment) {
             console.error('[Creem Webhook] CREEM_WEBHOOK_SECRET not configured');
