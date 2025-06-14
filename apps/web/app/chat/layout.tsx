@@ -1,5 +1,6 @@
 'use client';
 
+import { InlineLoader } from '@repo/common/components';
 import dynamic from 'next/dynamic';
 
 // Dynamically import ChatInput to avoid SSR issues
@@ -8,9 +9,9 @@ const ChatInput = dynamic(
     {
         ssr: false,
         loading: () => (
-            <p className="text-muted-foreground flex h-full items-center justify-center text-sm">
-                Loading...
-            </p>
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
         ),
     }
 );

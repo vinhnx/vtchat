@@ -12,6 +12,7 @@ export * from './full-page-loader';
 export * from './gated-feature-alert';
 export * from './history/history-item';
 export * from './icons';
+export * from './inline-loader';
 export * from './intro-dialog';
 export * from './layout/client-root';
 export * from './layout/minimal';

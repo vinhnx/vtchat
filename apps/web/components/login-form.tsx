@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn } from '@/lib/auth-client';
+import { InlineLoader } from '@repo/common/components';
 import { Alert, AlertDescription, Button, cn } from '@repo/ui';
 import { IconAlertCircle } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -134,7 +135,7 @@ function LoginFormContent({
 
 export function LoginForm({ className, redirectUrl, onClose, ...props }: LoginFormContentProps) {
     return (
-        <Suspense fallback={<p className="text-muted-foreground text-sm">Loading...</p>}>
+        <Suspense fallback={<InlineLoader />}>
             <LoginFormContent
                 className={className}
                 redirectUrl={redirectUrl}

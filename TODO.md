@@ -1,58 +1,20 @@
 # TODO List
 
---
-
-[] <https://animate-ui.com/docs/base>
--
-
 [] <https://github.com/zpg6/better-auth-cloudflare>
--
+--
 
 [] check package.json and remove redundant dependencies and unused deps
-
 [] check package.json to review icons lib use -> unify
-
 --
 
-[] improve apps/web/components/login-dialog.tsx
 [] improve packages/common/components/intro-dialog.tsx
 
 --
 
-[] move /privacy and /term  out of settings -> or handle click to route to these pages instead of renderin the modal settings
-
---
-
-[] the app need 2 refresh on launch
-Summary
-We have successfully resolved the core SSR hydration issues that were causing the app to require two refreshes. Here's what we accomplished:
-
-✅ FIXED - Main Hydration Issues:
-Fixed TypeScript error in with-client-only.tsx (Next.js dynamic loading prop type)
-Added useIsClient hook for safe client detection
-Refactored providers to handle SSR safely:
-BetterAuthProvider now returns null during SSR
-RootProvider handles SSR gracefully
-Added proper error boundaries
-Fixed component rendering issues in SideDrawer to prevent object-as-child errors
-Added defensive rendering throughout the component tree
-✅ APP WORKS CORRECTLY:
-Development mode works perfectly (confirmed via dev server)
-No more hydration mismatches
-No more double-refresh requirement
-All SSR/client rendering issues resolved
-🔧 Build Issue (Non-Critical):
-The remaining issue is a build-time static generation error during prerendering of error pages. This is not a runtime issue - it's specifically a build optimization problem. The app works correctly in all runtime scenarios.
-
-🎯 Task Status: SUBSTANTIALLY COMPLETED
-The core objective has been achieved: The VTChat app no longer requires two refreshes to fully compile and render on launch. The hydration mismatches and SSR/client rendering bugs have been eliminated.
-
-The remaining build issue is a deployment optimization problem that doesn't affect the app's functionality. The solution would be to either:
-
-Configure Next.js to skip static generation for error pages
-Use a server-side rendering deployment strategy
-Further isolate the build-time rendering issue
-The app is now ready for development and can be deployed using server-side rendering modes that bypass the static generation step
+1. review and unify "Loading..." state everywhere in #codebase  with FullPageLoader or Component loader
+2. revamp side bar menu with proper group related to featured and update icons, wording.
+3. move /privacy and /term  out of settings -> handle click to route to these pages full screen. instead of renderin the modal settings
+4. add private and term page to user selection popup
 
 --
 
@@ -116,10 +78,7 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 <https://nextjs.org/docs/app/api-reference/directives/use-server>
 
 --
-[] IMPORTANT
-handle creemio subscription hook to sync to neon db and user session. connect with better auth if needed
-
-this is the log on payment success
+[] IMPORTANT handle creemio subscription hook to sync to neon db and user session. connect with better auth if needed
 
 --
 
@@ -131,8 +90,6 @@ this is the log on payment success
 [] optimize <https://www.better-auth.com/docs/guides/optimizing-for-performance>
 [] email verify <https://www.better-auth.com/docs/authentication/email-password#email-verification>
 [] build user profile <https://www.better-auth.com/docs/concepts/users-accounts>;;
-
-[] on start next.js compile /chat by default to speed up
 
 /better-auth-llmstxt
 
@@ -176,14 +133,7 @@ Note
 [] <https://github.com/better-auth/awesome>
 [] <https://github.com/better-auth/utils>
 [] improve ui/ux
-[] remove /success content page on payment success, just keep as loading and a redirect to homepage -> only show success message toast({
-    title: 'Welcome to VT+! 🎉',
-    description:
-        'Your subscription is now active with monthly credits included.',
-});
-[] <https://tailwindcss.com/plus/ui-blocks/marketing/sections/pricing>
 [] <https://tailwindcss.com/plus/ui-blocks/marketing/feedback/404-pages>
-[] update side bar ui <https://ui.shadcn.com/blocks/sidebar#sidebar-09>
 
 1. migrate `@repo/ui` to use shadcn's components/ui
 2. cleanup old repo ui code to unify ui and cleanup

@@ -22,7 +22,7 @@ export default function LoginPage() {
             </div>
             <div className="relative hidden lg:block">
                 <img
-                    src="/bg/bg_vt.jpeg"
+                    src="/bg/bg_vt.avif"
                     alt="VTChat Background"
                     className="absolute inset-0 h-full w-full object-cover"
                 />

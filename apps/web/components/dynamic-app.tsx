@@ -1,6 +1,12 @@
 'use client';
 
-import { NoSSR, RootLayout, SSRErrorBoundary, ThemeProvider } from '@repo/common/components';
+import {
+    FullPageLoader,
+    NoSSR,
+    RootLayout,
+    SSRErrorBoundary,
+    ThemeProvider,
+} from '@repo/common/components';
 import { RootProvider } from '@repo/common/context';
 import { TooltipProvider } from '@repo/ui';
 import { BetterAuthProvider } from './better-auth-provider';
@@ -20,9 +26,7 @@ export default function DynamicApp({ children }: { children: React.ReactNode }) 
                             <NoSSR
                                 fallback={
                                     <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                                        <div className="text-muted-foreground text-sm">
-                                            Loading...
-                                        </div>
+                                        <FullPageLoader label="Loading..." />
                                     </div>
                                 }
                             >

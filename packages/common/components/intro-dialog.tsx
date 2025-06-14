@@ -1,7 +1,13 @@
 import { STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { cn, Dialog, DialogContent } from '@repo/ui';
-import { IconCircleCheckFilled } from '@tabler/icons-react';
+import { Badge, Button, Dialog, DialogContent } from '@repo/ui';
+import {
+    IconCircleCheckFilled,
+    IconCode,
+    IconShield,
+    IconSparkles,
+    IconX,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useIsClient } from '../hooks';
@@ -35,38 +41,30 @@ export const IntroDialog = () => {
         return null;
     }
 
-    const icon = (
-        <IconCircleCheckFilled className="text-muted-foreground/50 mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full" />
+    const checkIcon = (
+        <IconCircleCheckFilled className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full text-emerald-500" />
     );
 
     const points = [
         {
-            icon,
-            text: `**Privacy-focused**: Your chat history never leaves your device.`,
+            icon: <IconShield className="mt-0.5 flex size-4 shrink-0 text-blue-500" />,
+            text: `**Privacy-first**: Your conversations stay on your device - we never see your data.`,
         },
         {
-            icon,
-            text: `**Open source**: Fully transparent and modifiable. Easily deploy it yourself.`,
+            icon: <IconCode className="mt-0.5 flex size-4 shrink-0 text-purple-500" />,
+            text: `**Open source**: Transparent, auditable, and self-hostable code.`,
         },
         {
-            icon,
-            text: `**Research-friendly**: Leverage Web Search, Pro Search, and Deep Research features.`,
+            icon: <IconSparkles className="mt-0.5 flex size-4 shrink-0 text-orange-500" />,
+            text: `**AI-powered**: Web search, deep research, and comprehensive model support.`,
         },
         {
-            icon,
-            text: `**Comprehensive model support**: Compatible with all mainstream model providers.`,
+            icon: checkIcon,
+            text: `**BYOK**: Use your own API keys for unlimited, cost-effective conversations.`,
         },
         {
-            icon,
-            text: `**BYOK (Bring Your Own Key)**: Use your own API key for unlimited chat.`,
-        },
-        {
-            icon,
-            text: `**MCP Compatibility**: Connect with any MCP servers/tools (coming soon).`,
-        },
-        {
-            icon,
-            text: `**Usage Tracking**: Monitor your model usage without paying (coming soon).`,
+            icon: checkIcon,
+            text: `**MCP tools**: Extensible with Model Context Protocol integrations.`,
         },
     ];
 
@@ -86,53 +84,76 @@ export const IntroDialog = () => {
             }}
         >
             <DialogContent
-                ariaTitle="Introduction"
-                className="flex max-w-[420px] flex-col gap-0 overflow-hidden p-0"
+                ariaTitle="Welcome to VT"
+                className="flex max-w-[480px] flex-col gap-0 overflow-hidden p-0"
             >
-                <div className="flex flex-col gap-8 p-5">
-                    <div className="flex flex-col gap-2">
-                        <div
-                            className={cn(
-                                'flex h-8 w-full cursor-pointer items-center justify-start gap-1.5 '
-                            )}
-                        >
-                            <Logo className="text-brand size-5" />
-                            <p className="font-clash text-foreground text-lg font-bold tracking-wide">
+                {/* Header */}
+                <div className="relative flex flex-col gap-4 p-6 pb-0">
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="absolute right-2 top-2"
+                        onClick={handleClose}
+                    >
+                        <IconX size={16} />
+                    </Button>
+
+                    <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                            <Logo className="text-brand size-6" />
+                            <p className="font-clash text-foreground text-xl font-bold tracking-wide">
                                 VT
                             </p>
+                            <Badge variant="secondary" className="ml-2">
+                                Free & Open Source
+                            </Badge>
                         </div>
-                        <p className="text-base font-semibold">
-                            Private, Open-Source, and Built for You
-                        </p>
+                        <div>
+                            <p className="text-lg font-semibold">
+                                Welcome to the future of AI chat
+                            </p>
+                            <p className="text-muted-foreground text-sm">
+                                Private, powerful, and completely under your control
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Features */}
+                <div className="flex flex-col gap-4 p-6">
+                    <div className="flex flex-col gap-3">
+                        {points.map((point, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                                {point.icon}
+                                <ReactMarkdown
+                                    className="flex-1 text-sm"
+                                    components={{
+                                        p: ({ children }) => (
+                                            <p className="text-muted-foreground text-sm leading-relaxed">
+                                                {children}
+                                            </p>
+                                        ),
+                                        strong: ({ children }) => (
+                                            <span className="text-foreground font-semibold">
+                                                {children}
+                                            </span>
+                                        ),
+                                    }}
+                                >
+                                    {point.text}
+                                </ReactMarkdown>
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-semibold">Key benefits:</h3>
-
-                        <div className="flex flex-col items-start gap-1.5">
-                            {points.map((point, index) => (
-                                <div key={index} className="flex-inline flex items-start gap-2">
-                                    {point.icon}
-                                    <ReactMarkdown
-                                        className="text-sm"
-                                        components={{
-                                            p: ({ children }) => (
-                                                <p className="text-muted-foreground text-sm">
-                                                    {children}
-                                                </p>
-                                            ),
-                                            strong: ({ children }) => (
-                                                <span className="text-sm font-semibold">
-                                                    {children}
-                                                </span>
-                                            ),
-                                        }}
-                                    >
-                                        {point.text}
-                                    </ReactMarkdown>
-                                </div>
-                            ))}
-                        </div>
+                    {/* Call to Action */}
+                    <div className="mt-4 flex flex-col gap-2">
+                        <Button onClick={handleClose} className="w-full" size="sm">
+                            Start Chatting
+                        </Button>
+                        <p className="text-muted-foreground text-center text-xs">
+                            No signup required • Your data stays private
+                        </p>
                     </div>
                 </div>
             </DialogContent>

@@ -1,3 +1,4 @@
+import { FullPageLoader } from '@repo/common/components';
 import { cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
@@ -11,7 +12,7 @@ const DynamicApp = dynamic(() => import('../components/dynamic-app'), {
     ssr: false,
     loading: () => (
         <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-            <div className="text-muted-foreground text-sm">Loading VTChat...</div>
+            <FullPageLoader label="Loading VTChat..." />
         </div>
     ),
 }) as React.ComponentType<{ children: React.ReactNode }>;
