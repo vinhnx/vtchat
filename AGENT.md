@@ -27,3 +27,21 @@
 - Follow Cline's memory bank patterns in `.clinerules`
 - Read all memory bank files at start of tasks
 - Update `memory-bank/` files when making significant changes
+
+## AI Agent System Overview
+
+The project includes an "Agentic Graph System" located in `packages/ai/` for building AI agent workflows. Key features and concepts include:
+
+-   **Graph-Based Workflow Management**: Workflows are structured as graphs of interconnected nodes.
+-   **Specialized Node Types**:
+    -   **Executor Node**: Handles specific task execution.
+    -   **Router Node**: Provides intelligent routing between nodes.
+    -   **Memory Node**: Manages state and interaction history.
+    -   **Observer Node**: Monitors system behavior and analyzes patterns.
+-   **Event-Driven Architecture**: The system uses events for communication and state changes (e.g., `workflow.started`, `node.processing`).
+-   **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, and Together AI.
+-   **Configuration**: Managed via environment variables (see `packages/ai/.env.example`).
+-   **Core Components**:
+    -   `packages/ai/workflow/flow.ts`: Defines workflow logic.
+    -   `packages/ai/worker/worker.ts`: Manages workflow execution.
+    -   `packages/ai/tools/mcp.ts`: Handles MCP tool integration.
