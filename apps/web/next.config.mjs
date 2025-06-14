@@ -43,7 +43,7 @@ const nextConfig = {
 
     // Skip error page generation during build
     generateBuildId: async () => {
-        return process.env.BUILD_ID || EnvironmentType.DEVELOPMENT;
+        return process.env.BUILD_ID || 'development';
     },
 };
 

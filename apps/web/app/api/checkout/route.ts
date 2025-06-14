@@ -52,7 +52,8 @@ export async function POST(request: NextRequest) {
         console.log('Available price mappings:', Object.keys(PRICE_ID_MAPPING));
 
         const packageType = PRICE_ID_MAPPING[validatedData.priceId]; // validatedData.priceId is already PlanSlug.VT_PLUS
-        if (!packageType) { // This check might be redundant if priceId is always VT_PLUS and mapping exists
+        if (!packageType) {
+            // This check might be redundant if priceId is always VT_PLUS and mapping exists
             console.error(`Invalid price ID: ${validatedData.priceId}`);
             return NextResponse.json(
                 {
@@ -113,13 +114,15 @@ export async function POST(request: NextRequest) {
 
                 if (existingSubscription.length > 0) {
                     const sub = existingSubscription[0];
-                    const isActive = sub.status === SubscriptionStatusEnum.ACTIVE && sub.plan === PlanSlug.VT_PLUS;
+                    const isActive =
+                        sub.status === SubscriptionStatusEnum.ACTIVE &&
+                        sub.plan === PlanSlug.VT_PLUS;
                     const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
 
                     if (isActive && isNotExpired) {
                         console.log(
                             `[Checkout API] User ${userId} already has active VT+ subscription:`,
-                            sub.stripeSubscriptionId
+                            sub.creemSubscriptionId
                         );
                         return NextResponse.json(
                             {
@@ -129,7 +132,7 @@ export async function POST(request: NextRequest) {
                                 code: 'SUBSCRIPTION_EXISTS',
                                 hasActiveSubscription: true,
                                 currentPlan: PlanSlug.VT_PLUS,
-                                subscriptionId: sub.stripeSubscriptionId,
+                                subscriptionId: sub.creemSubscriptionId,
                             },
                             { status: 409 } // Conflict status code
                         );

@@ -67,8 +67,8 @@ export const userSubscriptions = pgTable('user_subscriptions', {
         .references(() => users.id, { onDelete: 'cascade' }),
     plan: text('plan').notNull().default(PlanSlug.VT_BASE), // vt_base, vt_plus
     status: text('status').notNull().default(SubscriptionStatusEnum.ACTIVE), // active, cancelled, expired
-    stripeCustomerId: text('stripe_customer_id'),
-    stripeSubscriptionId: text('stripe_subscription_id'),
+    creemCustomerId: text('creem_customer_id'), // Creem.io customer ID for subscription management
+    creemSubscriptionId: text('creem_subscription_id'), // Creem.io subscription ID for tracking active subscriptions
     currentPeriodStart: timestamp('current_period_start'),
     currentPeriodEnd: timestamp('current_period_end'),
     createdAt: timestamp('created_at').notNull().defaultNow(),

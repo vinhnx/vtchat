@@ -1,24 +1,19 @@
 # TODO List
 
-1. after calling `/api/auth/get-session` should call `/api/subscription/status` next and refresh
-@vtchat/web:dev:  ○ Compiling /api/auth/[...better-auth] ...
-@vtchat/web:dev:  ✓ Compiled /api/auth/[...better-auth] in 5.1s (4809 modules)
-@vtchat/web:dev:  GET /api/auth/get-session 200 in 4770ms
-/api/subscription/status?trigger=initial
-as currently it need a manual refresh
+@vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (108kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+@vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (144kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+@vtchat/web:dev: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (128kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+@vtchat/web:dev:  ✓ Compiled /chat in 6.3s (4302 modules)
+
+--
+
+[] Implement <https://better-auth-ui.com/getting-started/installation>
+
 --
 
 1. make sure threads is per account and hide on logged out.
 1. on login to existing or new account, should fetched from store and indexdb
 
---
-check db
-
-1. creem_customer_id in users table
-1. stripe_customer_id, stripe_subscription_id in user_subscriptions table -> rename colum to remove `strip_` -> replace with `creem_`
-1. unify creem_customer_id in users table and newly renamed creem_customer_id, creem_subscription_id in user_subscriptions table
-1. update apps/web/lib/database/schema.ts and apps/web/migration_better_auth.sql, do migration
-1. you can use drizzle orm, context7, neon, better-auth, creem.io MCP tools to make db schema and migration on db
 --
 
 1. wow! <https://tailark.com/>
@@ -44,14 +39,6 @@ note: you can use context7, neon, better-auth, creem.io MCP tools
 1. optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
 1. IMPORTANT: make sure to handle this logic per account and check non-login
 you can use MCP tools like neon context7 creem.io
-
---
-
-1. rename Usage Credits in settings modal to `Plan` -> also update card components on Usage Credits settings modal to HoverCard components with dark/light mode proper typography and color. better UI on the Plan tab
-
---
-
-1. on routing to creem.io page to make payment and redirect back to app -> show a loading spinner
 
 --
 
@@ -155,7 +142,6 @@ a. description:: "Deep Research: Comprehensive analysis of complex topics with i
 implement full remote thread sync.
 can you implement account-based thread managements system with neon and postgres using out existing thread schema and store logic. review #codebase for clues
 --
-
 
 [] [PLUS] sync thread to neon?
 [] free keep current local threads indexdb

@@ -127,8 +127,8 @@ export async function POST(request: NextRequest) {
                     userId,
                     plan: planSlug,
                     status: SubscriptionStatusEnum.ACTIVE,
-                    stripeCustomerId: validatedData.customer_id, // Using Creem customer ID
-                    stripeSubscriptionId: validatedData.subscription_id,
+                    creemCustomerId: validatedData.customer_id, // Using Creem customer ID
+                    creemSubscriptionId: validatedData.subscription_id,
                     currentPeriodStart: new Date(),
                     currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
                     updatedAt: new Date(),

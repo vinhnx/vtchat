@@ -23,6 +23,7 @@ import {
     IconMessageCircleFilled,
     IconMoon,
     IconPlus,
+    IconSettings,
     IconSun,
     IconTrash,
 } from '@tabler/icons-react';
@@ -166,6 +167,19 @@ export const CommandSearch = () => {
                 }
 
                 setTheme(theme === 'dark' ? 'light' : 'dark');
+                onClose();
+            },
+            requiresAuth: true,
+        },
+        {
+            name: 'Settings',
+            icon: IconSettings,
+            action: () => {
+                if (!isSignedIn) {
+                    requireLogin();
+                    return;
+                }
+                setIsSettingsOpen(true);
                 onClose();
             },
             requiresAuth: true,
