@@ -1,43 +1,13 @@
 # TODO List
 
-[x] ~~update 'manage subscription' button tooltip to indicate portal will be open in new tab. also add new tab icon on the button~~ COMPLETED: Portal now opens in new tab using `window.open(url, '_blank')` and all UI text and comments updated to reflect tab instead of window/popup.
-
--
-
-ok the issue is:
-Firefox Can’t Open This Page
-
-To protect your security, <www.creem.io> will not allow Firefox to display the page if another site has embedded it. To see this page, you need to open it in a new window.
-
-Website will not allow Firefox to display the page if another site has embedded it
-Firefox, Firefox for Android
-Last updated:
-4/6/25 37% of users voted this helpful
-
-If you encounter this error, it is likely because a website is attempting to display another website without the owner's consent. This issue typically arises from a security misconfiguration.
-
-Websites can utilize x-frame options or a content security policy to control whether other websites can embed them. These are essential security tools designed to prevent clickjacking, a type of attack where malicious sites trick users into clicking on something different from what they perceive.
-
-To visit a site that displays this error message, you can hold down the control key while you click the link and select Open Link in New Tab or Open Link in New Window. Alternatively, you can copy and paste the link into an already open new tab or window. However, be aware that the embedding page may not function correctly without access to the blocked content. In such cases, you may need to contact the owner of the problematic site for further assistance.
-
--> find a better way to open portal page but also a way to let user back to our app at /chat.
-
-Content-Security-Policy: The page’s settings blocked the loading of a resource (frame-ancestors) at <unknown> because it violates the following directive: “frame-ancestors 'self'”
-
-~~1. i mean showing the customer-portal in the app, keep inside the main container, keep showing the sidebar, similar to how the /plus page is rendered~~ ✅ COMPLETED
-
---
-
 1. after calling `/api/auth/get-session` should call `/api/subscription/status` next and refresh
 @vtchat/web:dev:  ○ Compiling /api/auth/[...better-auth] ...
 @vtchat/web:dev:  ✓ Compiled /api/auth/[...better-auth] in 5.1s (4809 modules)
 @vtchat/web:dev:  GET /api/auth/get-session 200 in 4770ms
 /api/subscription/status?trigger=initial
--- as currently it need a manual refresh
+as currently it need a manual refresh
 --
 
-1. 'Manage Subscription', 'Upgrade to Plus' make enum constants and replace hardcode string in #codebase
---
 1. make sure threads is per account and hide on logged out.
 1. on login to existing or new account, should fetched from store and indexdb
 
@@ -186,8 +156,7 @@ implement full remote thread sync.
 can you implement account-based thread managements system with neon and postgres using out existing thread schema and store logic. review #codebase for clues
 --
 
-[] pricing page -> show current tier (including free) check mark on card /plus page
-[] before sending message in input bar -> check credit store -> if avail -> send messgae -> otherwise show a toast alert.
+
 [] [PLUS] sync thread to neon?
 [] free keep current local threads indexdb
 [] remove api keys when logout/switch accounts

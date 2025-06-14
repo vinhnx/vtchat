@@ -54,7 +54,7 @@ export const SettingsModal = () => {
         },
         {
             icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
-            title: 'Usage Credits',
+            title: 'Plan',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
         },

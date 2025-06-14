@@ -3,6 +3,7 @@
 import { UserTierBadge } from '@repo/common/components';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { BUTTON_TEXT } from '@repo/shared/constants';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -85,12 +86,12 @@ export default function PlusPage() {
 
     // Dynamic button text based on user state
     const getSubscribeButtonText = () => {
-        if (isLoading || isPortalLoading) return 'Loading...';
+        if (isLoading || isPortalLoading) return BUTTON_TEXT.LOADING;
         if (!isSignedIn) return `Subscribe to ${PRICING_CONFIG.product.name}`;
         if (isCurrentlySubscribed) {
             return (
                 <>
-                    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+                    {isPortalLoading ? BUTTON_TEXT.LOADING : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
                     <UserTierBadge className="ml-2" />
                 </>
             );
@@ -99,7 +100,7 @@ export default function PlusPage() {
     };
 
     const getFreeButtonText = () => {
-        if (isLoading) return 'Loading...';
+        if (isLoading) return BUTTON_TEXT.LOADING;
         if (!isSignedIn) return 'Sign Up Free';
         // If signed in:
         if (isCurrentlySubscribed) return 'Continue to Chat'; // User is VT+
@@ -107,12 +108,12 @@ export default function PlusPage() {
     };
 
     const getCTAButtonText = () => {
-        if (isLoading || isPortalLoading) return 'Loading...';
+        if (isLoading || isPortalLoading) return BUTTON_TEXT.LOADING;
         if (!isSignedIn) return `Start Your ${PRICING_CONFIG.product.name} Journey`;
         if (isCurrentlySubscribed) {
             return (
                 <>
-                    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+                    {isPortalLoading ? BUTTON_TEXT.LOADING : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
                     {!isPortalLoading && <UserTierBadge className="ml-2" />}
                 </>
             );

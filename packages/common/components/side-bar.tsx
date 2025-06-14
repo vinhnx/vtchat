@@ -3,6 +3,7 @@ import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { signOut, useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
@@ -19,6 +20,7 @@ import {
     IconArrowBarLeft,
     IconArrowBarRight,
     IconCommand,
+    IconExternalLink,
     IconFileText,
     IconLogout,
     IconMessagePlus,
@@ -256,8 +258,8 @@ export const Sidebar = () => {
                             isSidebarOpen
                                 ? undefined
                                 : isPlusSubscriber
-                                  ? 'Manage Subscription'
-                                  : 'Upgrade to Plus'
+                                  ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
+                                  : TOOLTIP_TEXT.UPGRADE_TO_PLUS
                         }
                         tooltipSide="right"
                         className={cn(
@@ -277,10 +279,11 @@ export const Sidebar = () => {
                         <IconSparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
                         {isSidebarOpen &&
                             (isPortalLoading
-                                ? 'Loading...'
+                                ? BUTTON_TEXT.LOADING
                                 : isPlusSubscriber
-                                  ? 'Manage Subscription'
-                                  : 'Upgrade to Plus')}
+                                  ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
+                                  : BUTTON_TEXT.UPGRADE_TO_PLUS)}
+                        {isSidebarOpen && isPlusSubscriber && <IconExternalLink size={12} />}
                     </Button>
                 </Flex>
 
