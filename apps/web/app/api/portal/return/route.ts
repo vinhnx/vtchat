@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 <head>
     <title>Returning from Portal...</title>
     <script>
-        // If this page is opened in the portal window, send message to parent and close
+        // If this page is opened in the portal tab, send message to parent and close
         if (window.opener && !window.opener.closed) {
             try {
                 window.opener.postMessage({

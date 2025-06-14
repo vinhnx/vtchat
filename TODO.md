@@ -1,6 +1,6 @@
 # TODO List
 
-[] update 'manage subscription' button tooltip to indicate portal will be open in new tab. also add new tab icon on the button
+[x] ~~update 'manage subscription' button tooltip to indicate portal will be open in new tab. also add new tab icon on the button~~ COMPLETED: Portal now opens in new tab using `window.open(url, '_blank')` and all UI text and comments updated to reflect tab instead of window/popup.
 
 -
 

@@ -33,7 +33,7 @@ export function useCreemSubscription() {
 
     /**
      * Open the Creem customer portal for managing subscription
-     * Opens in new tab/window due to X-Frame-Options restrictions
+     * Opens in new tab due to X-Frame-Options restrictions
      */
     const openCustomerPortal = useCallback(async () => {
         console.log('[useCreemSubscription] openCustomerPortal called');
@@ -77,14 +77,10 @@ export function useCreemSubscription() {
             console.log('[useCreemSubscription] Portal API response:', result);
 
             if (result.success && result.url) {
-                console.log('[useCreemSubscription] Opening portal in new window:', result.url);
+                console.log('[useCreemSubscription] Opening portal in new tab:', result.url);
 
-                // Open portal in new window/tab
-                const portalWindow = window.open(
-                    result.url,
-                    'creem-portal',
-                    'width=800,height=700,scrollbars=yes,resizable=yes,toolbar=no,menubar=no'
-                );
+                // Open portal in new tab
+                const portalWindow = window.open(result.url, '_blank');
 
                 if (portalWindow) {
                     // Set up window messaging to detect when user returns
@@ -102,7 +98,7 @@ export function useCreemSubscription() {
                             event.data.type === 'PORTAL_COMPLETE'
                         ) {
                             console.log(
-                                '[useCreemSubscription] Portal window closed, refreshing subscription'
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
                             );
                             refreshSubscriptionStatus(false, 'manual');
                             window.removeEventListener('message', handleMessage);
@@ -116,7 +112,7 @@ export function useCreemSubscription() {
                     const checkClosed = setInterval(() => {
                         if (portalWindow.closed) {
                             console.log(
-                                '[useCreemSubscription] Portal window closed, refreshing subscription'
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
                             );
                             refreshSubscriptionStatus(false, 'manual');
                             clearInterval(checkClosed);
@@ -137,12 +133,12 @@ export function useCreemSubscription() {
                     toast({
                         title: 'Portal Opened',
                         description:
-                            "Manage your subscription in the new window. We'll refresh your status when you return.",
+                            "Manage your subscription in the new tab. We'll refresh your status when you return.",
                         variant: 'default',
                     });
                 } else {
                     throw new Error(
-                        'Failed to open portal window. Please allow popups for this site.'
+                        'Failed to open portal tab. Please allow popups for this site.'
                     );
                 }
             } else {
