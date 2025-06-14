@@ -1,7 +1,8 @@
 'use client';
 
 import { ChatMode } from '@repo/shared/config';
-import { Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
+import { Alert, AlertDescription, Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { useState } from 'react';
 import { ChatModeButton, ChatModeOptions } from './chat-actions';
 
@@ -10,6 +11,10 @@ import { ChatModeButton, ChatModeOptions } from './chat-actions';
  */
 export const ChatActionsTest = () => {
     const [chatMode, setChatMode] = useState(ChatMode.GEMINI_2_0_FLASH);
+    const [alertInfo, setAlertInfo] = useState<{
+        title: string;
+        message: string;
+    } | null>(null);
 
     const handleGatedFeature = (gateInfo: {
         feature?: string;
@@ -18,7 +23,7 @@ export const ChatActionsTest = () => {
         message: string;
     }) => {
         console.log('Gated feature accessed:', gateInfo);
-        alert(`${gateInfo.title}: ${gateInfo.message}`);
+        setAlertInfo({ title: gateInfo.title, message: gateInfo.message });
     };
 
     return (
@@ -56,6 +61,15 @@ export const ChatActionsTest = () => {
                     <h3 className="mb-2 text-sm font-medium">Current Mode</h3>
                     <p className="text-muted-foreground text-sm">Selected: {chatMode}</p>
                 </div>
+
+                {alertInfo && (
+                    <Alert variant="destructive">
+                        <IconAlertCircle className="h-4 w-4" />
+                        <AlertDescription>
+                            <strong>{alertInfo.title}:</strong> {alertInfo.message}
+                        </AlertDescription>
+                    </Alert>
+                )}
             </div>
         </div>
     );

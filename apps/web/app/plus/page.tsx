@@ -208,7 +208,7 @@ export default function PlusPage() {
                         <TypographyLarge className="mb-4 text-white">
                             Powerful Features
                         </TypographyLarge>
-                        <TypographyMuted className="mx-auto max-w-2xl text-gray-400">
+                        <TypographyMuted className="mx-auto max-w-2xl text-white">
                             Discover what makes {PRICING_CONFIG.product.name} the perfect choice for
                             your productivity needs
                         </TypographyMuted>
@@ -219,7 +219,7 @@ export default function PlusPage() {
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
                     <TypographyLarge className="text-white">Ready to get started?</TypographyLarge>
-                    <TypographyP className="mx-auto mt-0 max-w-2xl text-base text-gray-400">
+                    <TypographyP className="mx-auto mt-0 max-w-2xl text-base text-white">
                         Join thousands of users who are already boosting their productivity with{' '}
                         {PRICING_CONFIG.product.name}
                     </TypographyP>
@@ -232,11 +232,7 @@ export default function PlusPage() {
             </div>
 
             {/* Login Dialog */}
-            <LoginDialog
-                open={showLoginDialog}
-                onOpenChange={setShowLoginDialog}
-                onSuccess={() => setShowLoginDialog(false)}
-            />
+            <LoginDialog isOpen={showLoginDialog} onClose={() => setShowLoginDialog(false)} />
         </div>
     );
 }

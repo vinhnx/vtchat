@@ -1,7 +1,8 @@
 'use client';
 
 import { signIn } from '@/lib/auth-client';
-import { Button, Card, CardContent, cn } from '@repo/ui';
+import { Alert, AlertDescription, Button, Card, CardContent, cn } from '@repo/ui';
+import { IconAlertCircle } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -69,7 +70,10 @@ function LoginFormContent({
                                 </p>
                             </div>
                             {error && (
-                                <div className="text-destructive text-center text-sm">{error}</div>
+                                <Alert variant="destructive">
+                                    <IconAlertCircle className="h-4 w-4" />
+                                    <AlertDescription>{error}</AlertDescription>
+                                </Alert>
                             )}
                             <Button
                                 variant="outlined"

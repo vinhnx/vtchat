@@ -6,7 +6,7 @@ import { ChunkBuffer, generateText, handleError, sendEvents } from '../utils';
 
 export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'writer',
-    execute: async ({ trace, events, context, data, signal }) => {
+    execute: async ({ events, context, data, signal }) => {
         const analysis = data?.analysis || '';
 
         const question = context?.get('question') || '';
@@ -117,12 +117,6 @@ Your report should demonstrate subject matter expertise while remaining intellec
 
         updateStatus('COMPLETED');
 
-        trace?.span({
-            name: 'writer',
-            input: prompt,
-            output: answer,
-            metadata: context?.getAll(),
-        });
         context?.update('answer', _ => answer);
 
         return answer;

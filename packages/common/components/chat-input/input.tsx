@@ -1,9 +1,9 @@
 'use client';
 import { ImageAttachment, ImageDropzoneRoot } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
-import { ChatModeConfig } from '@repo/shared/config';
+import { ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, cn, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Flex } from '@repo/ui';
+import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
+import { LoginRequiredDialog } from '../login-required-dialog';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -36,7 +37,7 @@ export const ChatInput = ({
         placeholder: isFollowUp ? 'Ask follow up' : 'Ask anything',
         onInit: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
-                const draftMessage = window.localStorage.getItem('draft-message');
+                const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
                     editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
                 }
@@ -50,7 +51,7 @@ export const ChatInput = ({
         },
         onUpdate: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp) {
-                window.localStorage.setItem('draft-message', editor.getText());
+                window.localStorage.setItem(STORAGE_KEYS.DRAFT_MESSAGE, editor.getText());
             }
         },
     });
@@ -115,7 +116,7 @@ export const ChatInput = ({
             ),
             useWebSearch,
         });
-        window.localStorage.removeItem('draft-message');
+        window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
         clearImageAttachment();
     };
@@ -264,29 +265,12 @@ export const ChatInput = ({
                 </Flex>
             </div>
             {showLoginPrompt && (
-                <Dialog open={showLoginPrompt} onOpenChange={setShowLoginPrompt}>
-                    <DialogContent className="sm:max-w-[425px]" ariaTitle="Login Required">
-                        <DialogHeader>
-                            <DialogTitle>Login Required</DialogTitle>
-                            <DialogDescription>
-                                Please log in to start chatting or save your conversation.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button variant="outlined" onClick={() => setShowLoginPrompt(false)}>
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setShowLoginPrompt(false);
-                                    router.push('/login');
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                <LoginRequiredDialog
+                    isOpen={showLoginPrompt}
+                    onClose={() => setShowLoginPrompt(false)}
+                    title="Login Required"
+                    description="Please log in to start chatting or save your conversation."
+                />
             )}
         </div>
     );
