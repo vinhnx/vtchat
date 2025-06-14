@@ -106,8 +106,8 @@ export default function ParentLayout({
             <body>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="light"
+                    enableSystem={false}
                     disableTransitionOnChange
                 >
                     <TooltipProvider>
