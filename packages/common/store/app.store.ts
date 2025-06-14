@@ -31,6 +31,11 @@ type State = {
     dismissSideDrawer: () => void;
     // User preferences
     showExamplePrompts: boolean;
+    // Customer portal state
+    portalState: {
+        isOpen: boolean;
+        url: string | null;
+    };
 };
 
 type Actions = {
@@ -45,6 +50,10 @@ type Actions = {
     dismissSideDrawer: () => void;
     // User preference actions
     setShowExamplePrompts: (show: boolean) => void;
+    // Customer portal actions
+    setPortalState: (state: { isOpen: boolean; url: string | null }) => void;
+    openPortal: (url: string) => void;
+    closePortal: () => void;
 };
 
 // Initialize sidebar state with auto-hide behavior as default
@@ -71,6 +80,7 @@ export const useAppStore = create(
             settingTab: 'api-keys',
             showSignInModal: false,
             showExamplePrompts,
+            portalState: { isOpen: false, url: null },
             setIsSidebarOpen: (prev: (prev: boolean) => boolean) => {
                 const newState = prev(get().isSidebarOpen);
                 set({ isSidebarOpen: newState });
@@ -93,6 +103,10 @@ export const useAppStore = create(
                     );
                 }
             },
+            setPortalState: (state: { isOpen: boolean; url: string | null }) =>
+                set({ portalState: state }),
+            openPortal: (url: string) => set({ portalState: { isOpen: true, url } }),
+            closePortal: () => set({ portalState: { isOpen: false, url: null } }),
             sideDrawer: { open: false, title: '', renderContent: () => null, badge: undefined },
             openSideDrawer: (props: Omit<SideDrawerProps, 'open'>) => {
                 set({ sideDrawer: { ...props, open: true } });

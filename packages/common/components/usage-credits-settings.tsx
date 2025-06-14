@@ -207,10 +207,11 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                 variant="outlined"
                                 size="sm"
                                 onClick={handleManageSubscription}
+                                disabled={isPortalLoading}
                                 className="gap-2"
                             >
                                 <IconCreditCard size={16} />
-                                Manage Billing
+                                {isPortalLoading ? 'Loading...' : 'Manage Billing'}
                             </Button>
                         </div>
                     </Card>

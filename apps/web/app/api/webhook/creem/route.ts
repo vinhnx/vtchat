@@ -14,6 +14,7 @@ import { db } from '@/lib/database';
 import { sessions, users, userSubscriptions } from '@/lib/database/schema';
 import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
 import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
+import { EnvironmentType } from '@repo/shared/types/environment';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import crypto from 'crypto';

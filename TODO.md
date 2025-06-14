@@ -1,85 +1,45 @@
 # TODO List
 
-1. make sure threads is per account and hide on logged out.
-1. on login to existing or new account, should fetched from store and indexdb
+[] update 'manage subscription' button tooltip to indicate portal will be open in new tab. also add new tab icon on the button
+
+-
+
+ok the issue is:
+Firefox Can’t Open This Page
+
+To protect your security, <www.creem.io> will not allow Firefox to display the page if another site has embedded it. To see this page, you need to open it in a new window.
+
+Website will not allow Firefox to display the page if another site has embedded it
+Firefox, Firefox for Android
+Last updated:
+4/6/25 37% of users voted this helpful
+
+If you encounter this error, it is likely because a website is attempting to display another website without the owner's consent. This issue typically arises from a security misconfiguration.
+
+Websites can utilize x-frame options or a content security policy to control whether other websites can embed them. These are essential security tools designed to prevent clickjacking, a type of attack where malicious sites trick users into clicking on something different from what they perceive.
+
+To visit a site that displays this error message, you can hold down the control key while you click the link and select Open Link in New Tab or Open Link in New Window. Alternatively, you can copy and paste the link into an already open new tab or window. However, be aware that the embedding page may not function correctly without access to the blocked content. In such cases, you may need to contact the owner of the problematic site for further assistance.
+
+-> find a better way to open portal page but also a way to let user back to our app at /chat.
+
+Content-Security-Policy: The page’s settings blocked the loading of a resource (frame-ancestors) at <unknown> because it violates the following directive: “frame-ancestors 'self'”
+
+~~1. i mean showing the customer-portal in the app, keep inside the main container, keep showing the sidebar, similar to how the /plus page is rendered~~ ✅ COMPLETED
 
 --
-[✅] Customer portal: **FIXED & ENHANCED**
 
-🎉 **IMPLEMENTATION COMPLETED & ISSUES RESOLVED** ✅
+1. after calling `/api/auth/get-session` should call `/api/subscription/status` next and refresh
+@vtchat/web:dev:  ○ Compiling /api/auth/[...better-auth] ...
+@vtchat/web:dev:  ✓ Compiled /api/auth/[...better-auth] in 5.1s (4809 modules)
+@vtchat/web:dev:  GET /api/auth/get-session 200 in 4770ms
+/api/subscription/status?trigger=initial
+-- as currently it need a manual refresh
+--
 
-The customer portal functionality has been successfully implemented and all issues have been fixed:
-
-✅ Direct Creem.io API integration for customer billing portal
-✅ Environment-based endpoint configuration (sandbox/production)
-✅ Customer ID resolution from users.creem_customer_id and user_subscriptions.stripe_customer_id
-✅ Proper error handling and user feedback
-✅ Integration with existing useCreemSubscription hook
-✅ Comprehensive logging for debugging
-✅ Test suite and documentation
-✅ **FIXED:** API response handling for `customer_portal_link` field
-✅ **ADDED:** Loading states for better user experience
-
-**🐛 Issue Resolved:**
-
-- Fixed "Invalid response format from Creem API - no URL found" error
-- Creem.io API returns portal URL in `customer_portal_link` field (not `url`)
-- Updated PaymentService to handle this response format correctly
-
-**🎨 UX Improvements Added:**
-
-- Portal loading states across all components
-- Disabled buttons during API calls
-- Loading text indicators ("Loading...")
-- Smooth user feedback during operations
-
-**Files modified:**
-
-- `packages/shared/config/payment.ts` - Updated getPortalUrl method + fixed API response handling
-- `packages/common/hooks/use-payment-subscription.ts` - Enhanced error handling + added loading states
-- `packages/shared/constants/creem.ts` - New constants file + updated types
-- `packages/common/components/usage-credits-settings.tsx` - Added loading UI
-- `packages/common/components/side-bar.tsx` - Added loading UI
-- `apps/web/app/plus/page.tsx` - Added loading UI
-- `apps/web/app/tests/test-customer-portal.js` - Test suite
-- `docs/customer-portal-integration.md` - Documentation
-- `scripts/test-customer-portal.js` - Integration test script
-- `scripts/test-portal-fix.js` - Fix verification test
-
-**API Implementation:**
-
-- POST `/api/portal` endpoint calls Creem.io API directly
-- Uses `https://test-api.creem.io/v1/customers/billing` for development
-- Uses `https://api.creem.io/v1/customers/billing` for production
-- Fetches customer_id from database (users.creem_customer_id or user_subscriptions.stripe_customer_id)
-- Includes CREEM_API_KEY in x-api-key header
-- Returns portal URL for subscription management
-- **NOW CORRECTLY HANDLES:** `customer_portal_link` response field
-
-**Usage:**
-
-```typescript
-const { openCustomerPortal, isPortalLoading } = useCreemSubscription();
-await openCustomerPortal(); // Now works correctly with loading states
-```
-
-or calling:
-const redirectUrl = await axios.post(
-  `https://{host}/v1/customers/billing`,
-    {
-      "customer_id": "cust_xxxxxxx",
-    },
-    {
-      headers: { "x-api-key": `creem_123456789` },
-    },
-);
-
-NOTE:
-
-1. where {host} is: make sure `https://test-api.creem.io/v1/customers/billing` is for creem.io sandbox and `https://api.creem.io/v1/customers/billing` is production
-1. `customer_id` value in request body is the current `creem_customer_id` or `stripe_customer_id` id in `user_subscriptions` table from neon postgresql db
-1. `x-api-key` in headers is get from `CREEM_API_KEY` in .env file
-1. handle `manage subscription` logic in packages/common/hooks/use-payment-subscription.ts -> fetch above api and handle url response -> open that api to view
+1. 'Manage Subscription', 'Upgrade to Plus' make enum constants and replace hardcode string in #codebase
+--
+1. make sure threads is per account and hide on logged out.
+1. on login to existing or new account, should fetched from store and indexdb
 
 --
 check db
@@ -102,6 +62,7 @@ check db
 1. unify subscription logic and use one unidufy sub use in #editFiles and
 1. update schema and migration if  needed
 note: you can use context7, neon, better-auth, creem.io MCP tools
+
 --
 
 1. migrate useVtPlusAccess and use useSubscriptionStatus
@@ -113,6 +74,7 @@ note: you can use context7, neon, better-auth, creem.io MCP tools
 1. optimize /api/subscription/status should be call once and update to db, only refresh after payment callback or sub expired
 1. IMPORTANT: make sure to handle this logic per account and check non-login
 you can use MCP tools like neon context7 creem.io
+
 --
 
 1. rename Usage Credits in settings modal to `Plan` -> also update card components on Usage Credits settings modal to HoverCard components with dark/light mode proper typography and color. better UI on the Plan tab
@@ -124,107 +86,6 @@ you can use MCP tools like neon context7 creem.io
 --
 
 Subscription Management
---
-
-### VT+ subscription product description brief specs
-
-name: VT+
-product id: prod_1XIVxekQ92QfjjOqbDVQk6 (use env: CREEM_PRODUCT_ID key instead. don't hardcode value)
-description: For everyday productivity
-Payment Details:
-
-- type: supbscription
-- pricing: 9.99 USD
-- subscription inverval: monthly
-- price includes tax
-Product Features:
-1 Pro Search
-a. description: "Pro Search: Enhanced search with web integration for real-time information."
-
-2. Dark Mode:
-a. description: "Access to dark mode."
-3. Deep Research
-a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
-
-Plan
-
-1. Implement the subscription logic using Creem.io SDK, ensuring that the subscription status is checked and updated correctly.
-1. sync subscription to neon with user id
-1. when user purchase -> make sure subscription logic and storage updated -> review #codebase and update from previous subscription logic. migrate from zustand storage and schema if needed
-1. update tier plan in Settings > Usage Credits -> show badge user-tier-badge component instead of "FREE" currently
-1. activated gated dark_theme feature for the user and handle subscription for this benefit according.
-1. Base on subscription tier -> update handle "View Plans" button on side bar with logic -> if subscribed -> show user's creem.io subscription portal (Search from docs on how to implement) -> if not -> show "View Plans" as of now. Guide <https://docs.creem.io/learn/customers/customer-portal>. example <https://www.creem.io/test/my-orders/JDJhJDE1JHhTMzUvcU1nRFJhYnV3anVhSFVpTmU>
-1. check dev env creem.io webhook guide <https://docs.creem.io/learn/webhooks/introduction#2-register-your-development-webhook-endpoint>
-1. pricing page -> show current tier (including free) check mark on card /plus page
-
-Note
-
-1. you can use Context7 MCP tools
-1. you can use Neon MCP tools
-2. you can use any mcp tools if stuck.
-1. make sure to check for current environment.
-   - If in development, use sandbox API keys and test customer IDs.
-   - If in production, use live API keys and ensure proper customer management.
---
-Dev Payment Webhook log and config
-
---
-please note that the web hook on dev is
-webhookUrl: <https://0f4c-42-118-189-41.ngrok-free.app//api/webhook/creem>
---
-
---
-
-subscription.active
-
-Response
-HTTP status code404
-
---
-Webhooks
-Verify Webhook Requests
-
-How to verify Creem signature on webhook objects.
-​
-How to verify Creem signature?
-
-Creem signature is sent in the creem-signature header of the webhook request. The signature is generated using the HMAC-SHA256 algorithm with the webhook secret as the key, and the request payload as the message.
-Copy
-
-{
-'creem-signature': 'dd7bdd2cf1f6bac6e171c6c508c157b7cd3cc1fd196394277fb59ba0bdd9b87b'
-}
-
-To verify the signature, you need to generate the signature using the same algorithm and compare it with the signature sent in the header. If the two signatures match, the request is authentic.
-
-You can find your webhook secret on the Developers>Webhook page.
-
-To generate the signature, you can use the following code snippet:
-Copy
-
-import * as crypto from 'crypto';
-
-  generateSignature(payload: string, secret: string): string {
-    const computedSignature = crypto
-      .createHmac('sha256', secret)
-      .update(payload)
-      .digest('hex');
-    return computedSignature;
-  }
-
-In the code snippet above, the payload is the request body, and the secret is the webhook secret. Simply compare the generated Signature with the one received on the header to complete the verification process.
-
---
-
-1. on click subscribe in VT plus page , the app is asking for subscribe even though user has susribe. fix this.
-1. check vt_plus on plan_slug row of the users table and user_subscriptions table on neon and update local sub store and logic
---
-[] <https://github.com/zpg6/better-auth-cloudflare>
---
-
-[] check package.json and remove redundant dependencies and unused deps
-[] check package.json to review icons lib use -> unify
-
 --
 
 # IMPORTANT
@@ -250,6 +111,21 @@ a. description: "Access to dark mode."
 a. description:: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
 
 --
+
+1. you can use Context7 MCP tools
+1. you can use Neon MCP tools
+2. you can use any mcp tools if stuck.
+1. make sure to check for current environment.
+   - If in development, use sandbox API keys and test customer IDs.
+   - If in production, use live API keys and ensure proper customer management.
+
+--
+
+[] <https://github.com/zpg6/better-auth-cloudflare>
+--
+
+[] check package.json and remove redundant dependencies and unused deps
+[] check package.json to review icons lib use -> unify
 
 [] <https://www.better-auth.com/docs/plugins/2fa>
 
