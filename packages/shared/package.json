@@ -6,6 +6,7 @@
         "./config": "./config/index.ts",
         "./config/payment": "./config/payment.ts",
         "./config/vt-plus-features": "./config/vt-plus-features.ts",
+        "./constants": "./constants/index.ts",
         "./db": "./db/index.ts",
         "./utils": "./utils/index.ts",
         "./types": "./types.ts",
