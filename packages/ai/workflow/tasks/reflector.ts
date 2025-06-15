@@ -2,7 +2,13 @@ import { createTask } from '@repo/orchestrator';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { generateObject, getHumanizedDate, handleError, sendEvents } from '../utils';
+import {
+    generateObject,
+    getHumanizedDate,
+    handleError,
+    selectAvailableModel,
+    sendEvents,
+} from '../utils';
 
 export const reflectorTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'reflector',
@@ -90,15 +96,19 @@ Current date: ${getHumanizedDate()}
 **CRITICAL: Your primary goal is to avoid redundancy. If you cannot identify genuinely new angles to explore that would yield different information, return null for queries.**
 `;
 
+        const byokKeys = context?.get('apiKeys');
+
+        // Select an appropriate model based on available API keys
+        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_FLASH_PREVIEW, byokKeys);
+
         const object = await generateObject({
             prompt,
-            model: ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
+            model: selectedModel,
             schema: z.object({
                 reasoning: z.string(),
                 queries: z.array(z.string()).optional().nullable(),
             }),
-            byokKeys: context?.get('apiKeys'),
-
+            byokKeys,
             messages: messages as any,
             signal,
         });

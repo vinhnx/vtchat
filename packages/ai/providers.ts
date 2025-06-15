@@ -54,8 +54,8 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
 
         // For browser environments (self is also defined in browser)
         try {
-            if (typeof window !== 'undefined' && window.AI_API_KEYS) {
-                return window.AI_API_KEYS[provider] || '';
+            if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
+            return (window as any).AI_API_KEYS[provider] || '';
             }
         } catch (error) {
             // window is not available in this environment
