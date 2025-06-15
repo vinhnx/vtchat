@@ -265,9 +265,15 @@ export const WebSearchButton = () => {
     const isSignedIn = !!session;
     const { canAccess } = useSubscriptionAccess();
 
-    // Hide web search button if chat mode doesn't support it and no API key
-    if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
+    // Hide web search button if chat mode doesn't support it (like Deep Research and Pro Search)
+    if (!ChatModeConfig[chatMode]?.webSearch) {
         return null;
+    }
+
+    // Hide web search button if no API key is available for this chat mode
+    if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
+        return null;
+    }
 
     // Hide web search button for non-subscribers to simplify workflow
     if (!isSignedIn || !canAccess(FeatureSlug.PRO_SEARCH)) {
