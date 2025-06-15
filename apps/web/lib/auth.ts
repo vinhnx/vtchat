@@ -16,22 +16,6 @@ export const auth = betterAuth({
         },
     }),
     plugins: [emailHarmony()],
-    emailAndPassword: {
-        enabled: false, // Disabled - OAuth only
-    },
-    magicLink: {
-        enabled: false, // Disabled - OAuth only
-    },
-    passkey: {
-        enabled: false, // Disabled - OAuth only
-    },
-    twoFactor: {
-        enabled: false, // Disabled - OAuth only
-    },
-    multiSession: {
-        enabled: true,
-        maximumSessions: 10,
-    },
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,
