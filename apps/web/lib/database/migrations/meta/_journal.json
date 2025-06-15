@@ -15,6 +15,20 @@
       "when": 1749923168821,
       "tag": "0001_opposite_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749947318647,
+      "tag": "0002_greedy_thunderbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1749947478079,
+      "tag": "0003_busy_forgotten_one",
+      "breakpoints": true
     }
   ]
 }

@@ -7,6 +7,7 @@ export const users = pgTable('users', {
     id: text('id').primaryKey(),
     name: text('name').notNull(), // Using name as the username field (non-unique to allow display names)
     email: text('email').notNull().unique(),
+    normalizedEmail: text('normalized_email').unique(), // emailHarmony plugin field
     emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
     image: text('image'),
     planSlug: text('plan_slug').default(PlanSlug.VT_BASE), // Subscription plan (vt_base, vt_plus, etc.)

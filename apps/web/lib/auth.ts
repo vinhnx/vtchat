@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth';
+import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './database';
 import * as schema from './database/schema';
@@ -14,6 +15,7 @@ export const auth = betterAuth({
             subscription: schema.userSubscriptions,
         },
     }),
+    plugins: [emailHarmony()],
     emailAndPassword: {
         enabled: false, // Disabled - OAuth only
     },
