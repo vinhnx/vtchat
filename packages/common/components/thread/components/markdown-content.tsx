@@ -1,7 +1,6 @@
 import {
     ErrorBoundary,
     ErrorPlaceholder,
-    InlineLoader,
     mdxComponents,
     useMdxChunker,
 } from '@repo/common/components';
@@ -206,7 +205,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     return (
         <ErrorBoundary fallback={<ErrorPlaceholder />}>
-            <Suspense fallback={<InlineLoader size="xs" />}>
+            <Suspense fallback={<div>Loading...</div>}>
                 <MDXRemote {...mdx} components={mdxComponents} />
             </Suspense>
         </ErrorBoundary>

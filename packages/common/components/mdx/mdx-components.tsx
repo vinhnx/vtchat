@@ -24,14 +24,14 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
 
         return (
             <LinkPreviewPopover source={source}>
-                <div className="bg-quaternary text-quaternary-foreground/50 hover:bg-brand group mx-0.5 inline-flex size-3.5 flex-row items-center justify-center gap-1 rounded-sm text-[10px] font-medium hover:text-white">
+                <span className="bg-quaternary text-quaternary-foreground/50 hover:bg-brand group mx-0.5 inline-flex size-3.5 flex-row items-center justify-center gap-1 rounded-sm text-[10px] font-medium hover:text-white">
                     {source?.index}
-                </div>
+                </span>
             </LinkPreviewPopover>
         );
     },
     p: ({ children }) => {
-        return <p>{children}</p>;
+        return <div className="mb-4">{children}</div>;
     },
     li: ({ children }) => {
         return <li>{children}</li>;

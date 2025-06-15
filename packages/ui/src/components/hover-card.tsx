@@ -1,6 +1,6 @@
 'use client';
 
-import { flip, offset, shift, useFloating, useHover, useInteractions } from '@floating-ui/react';
+import { flip, offset, shift, useFloating, useHover, useInteractions, FloatingPortal } from '@floating-ui/react';
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
@@ -62,14 +62,14 @@ const HoverCard = ({ openDelay = 200, closeDelay = 200, children }: HoverCardPro
     return <HoverCardContext.Provider value={contextValue}>{children}</HoverCardContext.Provider>;
 };
 
-type HoverCardTriggerProps = React.HTMLAttributes<HTMLDivElement>;
+type HoverCardTriggerProps = React.HTMLAttributes<HTMLSpanElement>;
 
-const HoverCardTrigger = React.forwardRef<HTMLDivElement, HoverCardTriggerProps>(
+const HoverCardTrigger = React.forwardRef<HTMLSpanElement, HoverCardTriggerProps>(
     ({ className, ...props }, ref) => {
         const { getReferenceProps, refs } = useHoverCard();
 
         return (
-            <div
+            <span
                 ref={node => {
                     refs.setReference(node);
                     if (typeof ref === 'function') {
@@ -98,24 +98,26 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
         }
 
         return (
-            <div
-                ref={node => {
-                    refs.setFloating(node);
-                    if (typeof ref === 'function') {
-                        ref(node);
-                    } else if (ref) {
-                        ref.current = node;
-                    }
-                }}
-                style={{ ...floatingStyles, zIndex: 999 }}
-                {...getFloatingProps()}
-                className={cn(
-                    'bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-none',
-                    'animate-in fade-in-0 zoom-in-95',
-                    className
-                )}
-                {...props}
-            />
+            <FloatingPortal>
+                <div
+                    ref={node => {
+                        refs.setFloating(node);
+                        if (typeof ref === 'function') {
+                            ref(node);
+                        } else if (ref) {
+                            ref.current = node;
+                        }
+                    }}
+                    style={{ ...floatingStyles, zIndex: 999 }}
+                    {...getFloatingProps()}
+                    className={cn(
+                        'bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-none',
+                        'animate-in fade-in-0 zoom-in-95',
+                        className
+                    )}
+                    {...props}
+                />
+            </FloatingPortal>
         );
     }
 );
