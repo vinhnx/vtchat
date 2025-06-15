@@ -53,6 +53,7 @@ export const CommandSearch = () => {
     const removeThread = useChatStore(state => state.deleteThread);
     const switchThread = useChatStore(state => state.switchThread);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore(state => state.setSettingTab);
     const router = useRouter();
     const { theme, setTheme } = useTheme();
     const clearThreads = useChatStore(state => state.clearAllThreads);
