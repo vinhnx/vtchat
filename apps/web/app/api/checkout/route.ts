@@ -1,7 +1,6 @@
 import { auth } from '@/lib/auth';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -100,46 +99,46 @@ export async function POST(request: NextRequest) {
             console.log('Checking existing subscription status for VT+ checkout...');
 
             try {
-                // Import database utilities inline to avoid circular dependencies
+                // Import database utilities and verification function
                 const { db } = await import('@/lib/database');
-                const { userSubscriptions } = await import('@/lib/database/schema');
+                const { userSubscriptions, users } = await import('@/lib/database/schema');
                 const { eq } = await import('drizzle-orm');
+                const { verifyExistingCreemSubscription } = await import(
+                    '@repo/shared/utils/subscription-verification'
+                );
 
-                // Check if user already has an active VT+ subscription
-                const existingSubscription = await db
-                    .select()
-                    .from(userSubscriptions)
-                    .where(eq(userSubscriptions.userId, userId))
-                    .limit(1);
+                // Use comprehensive verification that checks both tables
+                const verification = await verifyExistingCreemSubscription(
+                    userId,
+                    { db, userSubscriptions, users, eq },
+                    PlanSlug.VT_PLUS
+                );
 
-                if (existingSubscription.length > 0) {
-                    const sub = existingSubscription[0];
-                    const isActive =
-                        sub.status === SubscriptionStatusEnum.ACTIVE &&
-                        sub.plan === PlanSlug.VT_PLUS;
-                    const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
+                if (verification.hasActiveSubscription) {
+                    console.log(
+                        `[Checkout API] User ${userId} already has active VT+ subscription:`,
+                        verification.subscriptionDetails?.creemSubscriptionId ||
+                            'legacy/admin-granted',
+                        `Source: ${verification.verificationSource}`
+                    );
 
-                    if (isActive && isNotExpired) {
-                        console.log(
-                            `[Checkout API] User ${userId} already has active VT+ subscription:`,
-                            sub.creemSubscriptionId
-                        );
-                        return NextResponse.json(
-                            {
-                                error: 'Active subscription exists',
-                                message:
-                                    'You already have an active VT+ subscription. Use the customer portal to manage your subscription.',
-                                code: 'SUBSCRIPTION_EXISTS',
-                                hasActiveSubscription: true,
-                                currentPlan: PlanSlug.VT_PLUS,
-                                subscriptionId: sub.creemSubscriptionId,
-                            },
-                            { status: 409 } // Conflict status code
-                        );
-                    }
+                    return NextResponse.json(
+                        {
+                            error: 'Active subscription exists',
+                            message: verification.message,
+                            code: 'SUBSCRIPTION_EXISTS',
+                            hasActiveSubscription: true,
+                            currentPlan: PlanSlug.VT_PLUS,
+                            subscriptionId: verification.subscriptionDetails?.creemSubscriptionId,
+                            verificationSource: verification.verificationSource,
+                        },
+                        { status: 409 } // Conflict status code
+                    );
                 }
 
-                console.log('No active VT+ subscription found, proceeding with checkout...');
+                console.log(
+                    `[Checkout API] No active VT+ subscription found (${verification.verificationSource}), proceeding with checkout...`
+                );
             } catch (dbError) {
                 console.error('[Checkout API] Error checking existing subscription:', dbError);
                 // Don't block checkout on DB errors, but log for monitoring
