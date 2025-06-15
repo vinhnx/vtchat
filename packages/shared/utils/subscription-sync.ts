@@ -30,7 +30,7 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
                 planSlug: users.planSlug,
             })
             .from(users)
-            .leftJoin(userSubscriptions, eq(users.id, userSubscriptions.userId))
+            .leftJoin(userSubscriptions, eq(users.id, userSubscriptions.userId) as any)
             .where(and(eq(users.planSlug, PlanSlug.VT_PLUS), isNull(userSubscriptions.id)));
 
         if (usersWithoutSubscriptions.length === 0) {
