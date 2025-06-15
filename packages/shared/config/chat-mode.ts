@@ -234,7 +234,7 @@ export const getChatModeName = (mode: ChatMode) => {
         case ChatMode.Deep:
             return 'Deep Research';
         case ChatMode.Pro:
-            return 'Pro Search';
+            return 'Web Search Grounding With Gemini';
         case ChatMode.GPT_4_1:
             return 'GPT 4.1';
         case ChatMode.GPT_4_1_Mini:

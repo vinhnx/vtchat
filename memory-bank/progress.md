@@ -339,6 +339,30 @@ The comprehensive runtime logging successfully identified two main issues:
 
 **Result:** Gemini web search now works correctly in all environments (browser, server-side, Web Worker) with proper message filtering, comprehensive error handling, and clear user guidance.
 
+### Search Terminology Updates ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Updated 'Web Search' to 'Grounding Web Search - by Gemini'**: Changed all instances of "Web Search" in tooltips and UI components to reflect the Gemini-powered grounding functionality
+- ✅ **Updated 'Pro Search' to 'Web Search Grounding With Gemini'**: Changed all instances of "Pro Search" throughout the application to the new naming convention
+- ✅ **Core Configuration Updates**: Modified subscription types, chat mode configuration, and VT+ features to use new terminology
+- ✅ **Component Updates**: Updated chat actions, features accordion, and all UI components displaying search functionality
+- ✅ **Documentation Updates**: Updated terms of service, pricing information, and feature descriptions
+- ✅ **Tooltip Enhancements**: Enhanced tooltips to specify "Grounding Web Search - by Gemini (Native)" for native support and "Grounding Web Search - by Gemini (models only)" for limited support
+
+**Files Modified:**
+
+- `packages/shared/config/vt-plus-features.ts` - Updated feature name to "Grounding Web Search - by Gemini"
+- `packages/shared/types/subscription.ts` - Updated Pro Search to "Web Search Grounding With Gemini"
+- `packages/shared/config/chat-mode.ts` - Updated chat mode display name
+- `packages/common/components/chat-input/chat-actions.tsx` - Updated UI labels and tooltips
+- `apps/web/components/features-accordion.tsx` - Updated accordion trigger text
+- `packages/shared/config/terms.ts` - Updated terms of service documentation
+- Various other components with search-related text
+
+**Result:** All search-related terminology now clearly indicates Gemini-powered grounding functionality, providing users with better understanding of the AI-enhanced web search capabilities.
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:

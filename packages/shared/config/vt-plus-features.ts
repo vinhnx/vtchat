@@ -19,7 +19,7 @@ export interface VTPlusFeature {
 export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
         id: FeatureSlug.PRO_SEARCH,
-        name: 'Web Search',
+        name: 'Grounding Web Search - by Gemini',
         description: '"Web Search: Real-time web-enabled search with advanced grounding features"',
         enabled: true,
     },

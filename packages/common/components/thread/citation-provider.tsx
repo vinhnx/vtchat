@@ -31,6 +31,10 @@ const getFavIcon = (host?: string) => {
     if (!host) {
         return null;
     }
+    // Skip favicon for grounding API redirects
+    if (host.includes('vertexaisearch.cloud.google.com') || host.includes('grounding-api-redirect')) {
+        return null;
+    }
     try {
         return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
     } catch (error) {

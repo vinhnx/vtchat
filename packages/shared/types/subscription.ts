@@ -91,7 +91,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
     },
     [FeatureSlug.PRO_SEARCH]: {
         slug: FeatureSlug.PRO_SEARCH,
-        name: 'Pro Search',
+        name: 'Web Search Grounding With Gemini',
         description: 'Enhanced search with web integration',
     },
     [FeatureSlug.ADVANCED_CHAT_MODES]: {

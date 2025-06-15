@@ -20,6 +20,10 @@ const getFavIcon = (host?: string) => {
     if (!host) {
         return null;
     }
+    // Skip favicon for grounding API redirects
+    if (host.includes('vertexaisearch.cloud.google.com') || host.includes('grounding-api-redirect')) {
+        return null;
+    }
     try {
         return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
     } catch (error) {
@@ -34,15 +38,14 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
     return (
         <div className="bg-secondary flex flex-row items-center gap-2 rounded-full border p-1 text-xs">
             <div className="-gap-2 flex flex-row">
-                {urls.slice(0, 3).map(url => {
+                {urls.slice(0, 3).map((url, index) => {
                     const host = getHost(url);
                     const favIcon = getFavIcon(host ?? '');
-                    if (isValidUrl(url)) {
+                    if (isValidUrl(url) && favIcon) {
                         return (
-                            <div className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border">
-                                {' '}
+                            <div key={index} className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border">
                                 <Image
-                                    src={favIcon ?? ''}
+                                    src={favIcon}
                                     alt={host ?? ''}
                                     fill
                                     className="not-prose absolute inset-0 h-full w-full object-cover"

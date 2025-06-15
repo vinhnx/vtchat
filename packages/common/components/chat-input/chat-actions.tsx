@@ -39,7 +39,7 @@ export const chatOptions = [
         icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
     {
-        label: 'Pro Search',
+        label: 'Web Search Grounding With Gemini',
         description: 'Pro search with web search',
         value: ChatMode.Pro,
         icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
@@ -300,11 +300,11 @@ export const WebSearchButton = () => {
                 tooltip={
                     useWebSearch
                         ? webSearchType === 'native'
-                            ? 'Web Search (Gemini Native)'
+                            ? 'Grounding Web Search - by Gemini (Native)'
                             : webSearchType === 'unsupported'
-                            ? 'Web Search (Gemini models only)'
-                            : 'Web Search'
-                        : 'Web Search'
+                            ? 'Grounding Web Search - by Gemini (models only)'
+                            : 'Grounding Web Search - by Gemini'
+                        : 'Grounding Web Search - by Gemini'
                 }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
@@ -341,7 +341,7 @@ export const WebSearchButton = () => {
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">VT+ Required</h3>
                             <p className="text-muted-foreground text-sm">
-                                Web Search is a VT+ Pro Search feature. Upgrade to access enhanced
+                                Grounding Web Search - by Gemini is a VT+ feature. Upgrade to access enhanced
                                 search with web integration for real-time information.
                             </p>
                         </div>
