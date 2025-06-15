@@ -49,7 +49,6 @@
 - [ ] Explore additional Better Auth resources:
   - [ ] Better Auth Utils: [https://github.com/better-auth/utils](https://github.com/better-auth/utils)
   - [ ] Better Auth OTP: <https://github.com/better-auth/utils?tab=readme-ov-file#otp>
-  - [ ] Better Auth Harmony: [https://github.com/GeKorm/better-auth-harmony](https://github.com/GeKorm/better-auth-harmony) (also [https://github.com/gekorm/better-auth-harmony/](https://github.com/gekorm/better-auth-harmony/))
   - [ ] Better Auth Cloudflare: [https://github.com/zpg6/better-auth-cloudflare](https://github.com/zpg6/better-auth-cloudflare)
   - [ ] Better Auth Validation: [https://github.com/Daanish2003/validation-better-auth](https://github.com/Daanish2003/validation-better-auth)
 - [ ] Consider replacing Redis with Better Auth secondary storage options: [https://www.better-auth.com/docs/concepts/database#secondary-storage](https://www.better-auth.com/docs/concepts/database#secondary-storage)
