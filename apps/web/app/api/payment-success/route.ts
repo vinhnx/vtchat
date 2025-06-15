@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/database';
 import { users, userSubscriptions } from '@/lib/database/schema';

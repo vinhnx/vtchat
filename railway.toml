@@ -1,0 +1,16 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+
+[environments.development]
+branch = "dev"
+variables = { NODE_ENV = "development" }
+
+[environments.production]
+branch = "main"
+variables = { NODE_ENV = "production" }

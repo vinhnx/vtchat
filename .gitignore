@@ -40,3 +40,4 @@ yarn-error.log*
 
 better-auth-mcp.log
 .roo/mcp.json
+.env.prod.backup
