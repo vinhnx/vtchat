@@ -18,12 +18,11 @@ import {
     DropdownMenuTrigger,
     Kbd,
 } from '@repo/ui';
-import { ArrowUp, Atom, ChevronDown, Star, Paperclip, Square, Globe,  } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUp, Atom, ChevronDown, Globe, Paperclip, Square, Star } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
-import { LoginRequiredDialog } from '../login-required-dialog';
 
 // Create a wrapper component for Globe to match expected icon prop type
 const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -33,14 +32,14 @@ const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
 
 export const chatOptions = [
     {
-        label: 'Deep Research',
+        label: 'Grounding Web Search',
         description: 'In depth research on complex topic',
         value: ChatMode.Deep,
         icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
     {
-        label: 'Web Search Grounding With Gemini',
-        description: 'Pro search with web search',
+        label: 'Grounding Web Search',
+        description: 'Enhanced web search with Gemini grounding',
         value: ChatMode.Pro,
         icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
@@ -143,7 +142,7 @@ export const AttachmentButton = () => {
             rounded="full"
             disabled
         >
-            <Paperclip size={18} strokeWidth={2} className="text-muted-foreground"  />
+            <Paperclip size={18} strokeWidth={2} className="text-muted-foreground" />
         </Button>
     );
 };
@@ -207,7 +206,7 @@ export const ChatModeButton = () => {
         <Button variant={'secondary'} size="xs">
             {selectedOption?.icon}
             {selectedOption?.label}
-            <ChevronDown size={14} strokeWidth={2}  />
+            <ChevronDown size={14} strokeWidth={2} />
         </Button>
     );
 
@@ -219,7 +218,7 @@ export const ChatModeButton = () => {
                         <Button variant={'secondary'} size="xs" className="opacity-70">
                             {selectedOption?.icon}
                             {selectedOption?.label} (VT+)
-                            <ChevronDown size={14} strokeWidth={2}  />
+                            <ChevronDown size={14} strokeWidth={2} />
                         </Button>
                     ) : (
                         dropdownTrigger
@@ -240,10 +239,7 @@ export const ChatModeButton = () => {
                 >
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <ArrowUp
-                                size={24}
-                                className="text-purple-600 dark:text-purple-400"
-                            />
+                            <ArrowUp size={24} className="text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">{showGateAlert?.title}</h3>
@@ -265,31 +261,25 @@ export const ChatModeButton = () => {
 };
 
 export const WebSearchButton = () => {
-    const { useWebSearch, setUseWebSearch, webSearchType, supportsNativeSearch } = useWebSearchHook();
+    const { useWebSearch, setUseWebSearch, webSearchType, supportsNativeSearch } =
+        useWebSearchHook();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-    const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
     const { canAccess } = useSubscriptionAccess();
-    const { push } = useRouter();
 
+    // Hide web search button if chat mode doesn't support it and no API key
     if (!ChatModeConfig[chatMode]?.webSearch && !hasApiKeyForChatMode(chatMode, isSignedIn))
         return null;
 
+    // Hide web search button for non-subscribers to simplify workflow
+    if (!isSignedIn || !canAccess(FeatureSlug.PRO_SEARCH)) {
+        return null;
+    }
+
     const handleWebSearchToggle = () => {
-        if (!isSignedIn) {
-            setShowLoginPrompt(true);
-            return;
-        }
-
-        // Check if user has VT+ subscription for Pro Search (which includes web search)
-        if (!canAccess(FeatureSlug.PRO_SEARCH)) {
-            setShowSubscriptionDialog(true);
-            return;
-        }
-
+        // Since we already filtered out non-subscribers, simply toggle web search
         setUseWebSearch(!useWebSearch);
     };
 
@@ -302,8 +292,8 @@ export const WebSearchButton = () => {
                         ? webSearchType === 'native'
                             ? 'Grounding Web Search - by Gemini (Native)'
                             : webSearchType === 'unsupported'
-                            ? 'Grounding Web Search - by Gemini (models only)'
-                            : 'Grounding Web Search - by Gemini'
+                              ? 'Grounding Web Search - by Gemini (models only)'
+                              : 'Grounding Web Search - by Gemini'
                         : 'Grounding Web Search - by Gemini'
                 }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
@@ -317,53 +307,16 @@ export const WebSearchButton = () => {
                 />
                 {useWebSearch && (
                     <p className="text-xs">
-                        {webSearchType === 'native' ? 'Gemini' : webSearchType === 'unsupported' ? 'N/A' : 'Web'}
+                        {webSearchType === 'native'
+                            ? 'Gemini'
+                            : webSearchType === 'unsupported'
+                              ? 'N/A'
+                              : 'Web'}
                     </p>
                 )}
             </Button>
 
-            {/* Login prompt dialog */}
-            <LoginRequiredDialog
-                isOpen={showLoginPrompt}
-                onClose={() => setShowLoginPrompt(false)}
-                title="Login Required"
-                description="Please log in to use web search functionality."
-                icon={WorldIcon}
-            />
 
-            {/* Subscription upgrade dialog */}
-            <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
-                <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
-                    <div className="flex flex-col items-center gap-4 p-6 text-center">
-                        <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
-                            <Globe size={24} className="text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-semibold">VT+ Required</h3>
-                            <p className="text-muted-foreground text-sm">
-                                Grounding Web Search - by Gemini is a VT+ feature. Upgrade to access enhanced
-                                search with web integration for real-time information.
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button
-                                variant="outlined"
-                                onClick={() => setShowSubscriptionDialog(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    push('/plus');
-                                    setShowSubscriptionDialog(false);
-                                }}
-                            >
-                                Upgrade to VT+
-                            </Button>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
         </>
     );
 };
@@ -598,7 +551,7 @@ export const SendStopButton = ({
                             onClick={stopGeneration}
                             tooltip="Stop Generation"
                         >
-                            <Square size={14} strokeWidth={2}  />
+                            <Square size={14} strokeWidth={2} />
                         </Button>
                     </motion.div>
                 ) : (
@@ -618,7 +571,7 @@ export const SendStopButton = ({
                                 sendMessage();
                             }}
                         >
-                            <ArrowUp size={16} strokeWidth={2}  />
+                            <ArrowUp size={16} strokeWidth={2} />
                         </Button>
                     </motion.div>
                 )}

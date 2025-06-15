@@ -232,9 +232,9 @@ export function getChatModeUpgradeRequirements(mode: ChatMode): {
 export const getChatModeName = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Deep:
-            return 'Deep Research';
+            return 'Grounding Web Search';
         case ChatMode.Pro:
-            return 'Web Search Grounding With Gemini';
+            return 'Grounding Web Search';
         case ChatMode.GPT_4_1:
             return 'GPT 4.1';
         case ChatMode.GPT_4_1_Mini:

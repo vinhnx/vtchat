@@ -3,7 +3,7 @@ import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
-import { Atom, ListChecks, ChevronRight, Loader2, Star,  } from 'lucide-react';
+import { Atom, ChevronRight, ListChecks, Loader2, Star } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
@@ -13,17 +13,17 @@ const getTitle = (threadItem: ThreadItem) => {
         return 'Thinking';
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return 'Pro Search';
+        return 'Grounding Web Search';
     }
     return 'Steps';
 };
 
 const getIcon = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
-        return <Atom size={16} strokeWidth={2} className="text-muted-foreground"  />;
+        return <Atom size={16} strokeWidth={2} className="text-muted-foreground" />;
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return <Star size={16} strokeWidth={2} className="text-muted-foreground"  />;
+        return <Star size={16} strokeWidth={2} className="text-muted-foreground" />;
     }
     return <ListChecks size={16} strokeWidth={2} className="text-muted-foreground" />;
 };
@@ -140,18 +140,18 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     const renderTitle = (useNote = true) => {
         return (
             <div className="flex flex-row items-start gap-2">
-            <div className="mt-0.5">
-                {isLoading ? (
-                    <Loader2
-                        size={16}
-                        strokeWidth={2}
-                        className=" text-muted-foreground animate-spin"
-                    />
-                ) : (
-                    getIcon(threadItem)
-                )}
-            </div>
-            <div className="flex flex-col">
+                <div className="mt-0.5">
+                    {isLoading ? (
+                        <Loader2
+                            size={16}
+                            strokeWidth={2}
+                            className=" text-muted-foreground animate-spin"
+                        />
+                    ) : (
+                        getIcon(threadItem)
+                    )}
+                </div>
+                <div className="flex flex-col">
                     <p className="text-sm font-medium">{getTitle(threadItem)}</p>
                     {useNote && !hasAnswer && (
                         <p className="text-muted-foreground/70 text-xs">{getNote(threadItem)}</p>

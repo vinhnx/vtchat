@@ -13,8 +13,7 @@ import {
     geminiWebSearchTask,
     modeRoutingTask,
     plannerTask,
-    proSearchTask,
-    quickSearchTask,
+
     refineQueryTask,
     reflectorTask,
     suggestionsTask,
@@ -207,8 +206,7 @@ export const runWorkflow = ({
         modeRoutingTask,
         completionTask,
         suggestionsTask,
-        quickSearchTask,
-        proSearchTask,
+
     ]);
 
     return builder.build();

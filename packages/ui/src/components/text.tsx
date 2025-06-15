@@ -1,65 +1,53 @@
 import { VariantProps, cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { Typography } from './typography';
 
 import React from 'react';
 
 const typeVariants = cva('text flex !my-0', {
-  variants: {
-    size: {
-      xxs: 'text-xs',
-      xs: 'text-xs',
-      sm: 'text-xs md:text-sm',
-      base: 'text-sm md:text-base',
-      lg: 'text-base md:text-lg',
-      xl: 'text-lg md:text-xl',
+    variants: {
+        size: {
+            xxs: 'text-xs',
+            xs: 'text-xs',
+            sm: 'text-xs md:text-sm',
+            base: 'text-sm md:text-base',
+            lg: 'text-base md:text-lg',
+            xl: 'text-lg md:text-xl',
+        },
+        textColor: {
+            primary: 'text-foreground',
+            secondary: 'text-muted-foreground',
+            tertiary: 'text-tertiary-foreground',
+            white: 'text-white',
+        },
+        weight: {
+            regular: 'font-normal',
+            medium: 'font-medium',
+            bold: 'font-semibold',
+        },
     },
-    textColor: {
-      primary: 'text-foreground',
-      secondary: 'text-muted-foreground',
-      tertiary: 'text-tertiary-foreground',
-      white: 'text-white',
-    },
-    weight: {
-      regular: 'font-normal',
-      medium: 'font-medium',
-      bold: 'font-semibold',
-    },
-  },
 
-  defaultVariants: {
-    size: 'sm',
-    textColor: 'primary',
-    weight: 'regular',
-  },
+    defaultVariants: {
+        size: 'sm',
+        textColor: 'primary',
+        weight: 'regular',
+    },
 });
 
 export interface TypeProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
-    VariantProps<typeof typeVariants> {
-  asChild?: boolean;
+    extends React.HTMLAttributes<HTMLParagraphElement>,
+        VariantProps<typeof typeVariants> {
+    asChild?: boolean;
 }
 
-/**
- * @deprecated Use Typography components instead (TypographyP, TypographyMuted, etc.)
- * This component is kept for backward compatibility.
- */
 export const Type = React.forwardRef<HTMLParagraphElement, TypeProps>(
-  ({ className, size, textColor, weight, asChild = false, ...props }, ref) => {
-    // Map old props to new Typography system
-    const typographyVariant = textColor === 'secondary' ? 'muted' : 'p';
-    
-    return (
-      <Typography
-        variant={typographyVariant}
-        className={cn(typeVariants({ size, textColor, className, weight }))}
-        ref={ref}
-        {...props}
-      >
-        {props.children}
-      </Typography>
-    );
-  }
+    ({ className, size, textColor, weight, asChild = false, ...props }, ref) => {
+        const Comp = asChild ? 'span' : 'p';
+        return (
+            <Comp
+                className={typeVariants({ size, textColor, weight, className })}
+                ref={ref}
+                {...props}
+            />
+        );
+    }
 );
-
 Type.displayName = 'Type';
