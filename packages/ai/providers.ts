@@ -45,27 +45,6 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
         if (byokKey) return byokKey;
     }
 
-    // For server environments
-    if (typeof process !== 'undefined' && process.env) {
-        switch (provider) {
-            case Providers.OPENAI:
-                if (process.env.OPENAI_API_KEY) return process.env.OPENAI_API_KEY;
-                break;
-            case Providers.ANTHROPIC:
-                if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY;
-                break;
-            case Providers.TOGETHER:
-                if (process.env.TOGETHER_API_KEY) return process.env.TOGETHER_API_KEY;
-                break;
-            case Providers.GOOGLE:
-                if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
-                break;
-            case Providers.FIREWORKS:
-                if (process.env.FIREWORKS_API_KEY) return process.env.FIREWORKS_API_KEY;
-                break;
-        }
-    }
-
     // For worker environments (use self)
     if (typeof self !== 'undefined') {
         // Check if AI_API_KEYS exists on self
@@ -94,36 +73,61 @@ export const getProviderInstance = (
 
     switch (provider) {
         case Providers.OPENAI:
+            if (!apiKey) {
+                throw new Error(
+                    'OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys'
+                );
+            }
             return createOpenAI({
-                apiKey: apiKey || 'dummy-key', // Provide fallback to prevent immediate errors
+                apiKey: apiKey,
             });
         case 'anthropic':
+            if (!apiKey) {
+                throw new Error(
+                    'Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/'
+                );
+            }
             return createAnthropic({
-                apiKey: apiKey || 'dummy-key',
+                apiKey: apiKey,
                 headers: {
                     'anthropic-dangerous-direct-browser-access': 'true',
                 },
             });
         case 'together':
+            if (!apiKey) {
+                throw new Error(
+                    'Together AI API key required. Please add your API key in Settings → API Keys → Together AI. Get a key at https://api.together.xyz/'
+                );
+            }
             return createTogetherAI({
-                apiKey: apiKey || 'dummy-key',
+                apiKey: apiKey,
             });
         case 'google':
             if (!apiKey) {
                 throw new Error(
-                    'Google/Gemini API key is required but not found. Please configure your API key.'
+                    'Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api'
                 );
             }
             return createGoogleGenerativeAI({
                 apiKey: apiKey,
             });
         case 'fireworks':
+            if (!apiKey) {
+                throw new Error(
+                    'Fireworks AI API key required. Please add your API key in Settings → API Keys → Fireworks AI. Get a key at https://app.fireworks.ai/'
+                );
+            }
             return createFireworks({
-                apiKey: apiKey || 'dummy-key',
+                apiKey: apiKey,
             });
         default:
+            if (!apiKey) {
+                throw new Error(
+                    'OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys'
+                );
+            }
             return createOpenAI({
-                apiKey: apiKey || 'dummy-key',
+                apiKey: apiKey,
             });
     }
 };
@@ -220,12 +224,8 @@ export const getLanguageModel = (
         console.error('Error in getLanguageModel:', error);
         console.error('Error stack:', error.stack);
 
-        // Re-throw with more context
-        if (error.message?.includes('API key')) {
-            throw new Error(
-                `${model.provider} API key is required for model ${model.name}. Please configure your API key.`
-            );
-        }
+        // Re-throw the original error without modification to preserve
+        // the clear, actionable error messages from getProviderInstance
         throw error;
     }
 };
