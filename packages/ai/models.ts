@@ -130,6 +130,10 @@ export const models: Model[] = [
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
+        case ChatMode.Deep:
+            return ModelEnum.GEMINI_2_5_FLASH_PREVIEW;
+        case ChatMode.Pro:
+            return ModelEnum.GEMINI_2_0_FLASH;
         case ChatMode.GEMINI_2_0_FLASH:
             return ModelEnum.GEMINI_2_0_FLASH;
         case ChatMode.GEMINI_2_0_FLASH_LITE:
@@ -165,6 +169,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
 
 export const getChatModeMaxTokens = (mode: ChatMode) => {
     switch (mode) {
+        case ChatMode.Pro:
+        case ChatMode.Deep:
         case ChatMode.GEMINI_2_0_FLASH:
         case ChatMode.GEMINI_2_0_FLASH_LITE:
         case ChatMode.GEMINI_2_5_FLASH_PREVIEW:

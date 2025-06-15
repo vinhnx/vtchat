@@ -92,7 +92,7 @@ export const generateTextWithGeminiSearch = async ({
         // Check if we have a valid API key for Google models
         let windowApiKey = false;
         try {
-            windowApiKey = typeof window !== 'undefined' && !!window.AI_API_KEYS?.google;
+            windowApiKey = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS?.google;
         } catch (error) {
             // window is not available in this environment
             windowApiKey = false;
@@ -896,4 +896,150 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
     };
 
     return { updateStep, addSources, updateAnswer, nextStepId, updateStatus, updateObject };
+};
+
+/**
+ * Selects an appropriate model based on available API keys
+ * Provides fallback mechanism when primary model isn't available
+ */
+export const selectAvailableModel = (
+    preferredModel: ModelEnum,
+    byokKeys?: Record<string, string>
+): ModelEnum => {
+    console.log('=== selectAvailableModel START ===');
+    
+    // Safe window/self checks for debugging
+    let hasSelfApiKeys = false;
+    let hasWindowApiKeys = false;
+    
+    try {
+        hasSelfApiKeys = typeof self !== 'undefined' && !!(self as any).AI_API_KEYS;
+    } catch (error) {
+        // self not available
+    }
+    
+    try {
+        hasWindowApiKeys = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS;
+    } catch (error) {
+        // window not available
+    }
+    
+    console.log('Input:', {
+        preferredModel,
+        availableKeys: byokKeys ? Object.keys(byokKeys).filter(key => byokKeys[key]) : [],
+        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        hasSelf: typeof self !== 'undefined',
+        hasWindow: (() => {
+            try {
+                return typeof window !== 'undefined';
+            } catch (error) {
+                return false;
+            }
+        })(),
+        hasSelfApiKeys,
+        hasWindowApiKeys,
+    });
+
+    // Check if preferred model's provider has an API key
+    const hasApiKeyForModel = (model: ModelEnum): boolean => {
+        const providers = {
+            // Gemini models
+            [ModelEnum.GEMINI_2_0_FLASH]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_0_FLASH_LITE]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_5_FLASH_PREVIEW]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_5_PRO_PREVIEW]: 'GEMINI_API_KEY',
+            // OpenAI models
+            [ModelEnum.GPT_4o_Mini]: 'OPENAI_API_KEY',
+            [ModelEnum.GPT_4o]: 'OPENAI_API_KEY',
+            [ModelEnum.GPT_4_1]: 'OPENAI_API_KEY',
+            [ModelEnum.GPT_4_1_Mini]: 'OPENAI_API_KEY',
+            [ModelEnum.GPT_4_1_Nano]: 'OPENAI_API_KEY',
+            [ModelEnum.O4_Mini]: 'OPENAI_API_KEY',
+            // Anthropic models
+            [ModelEnum.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',
+            [ModelEnum.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
+            // Fireworks models
+            [ModelEnum.Deepseek_R1]: 'FIREWORKS_API_KEY',
+        };
+
+        const requiredKey = providers[model];
+        if (!requiredKey) return false;
+
+        // Check BYOK keys first
+        if (byokKeys?.[requiredKey]) return true;
+
+        // Check environment variables
+        if (typeof process !== 'undefined' && process.env?.[requiredKey]) return true;
+
+        // Check self (worker environment)
+        try {
+            if (typeof self !== 'undefined' && (self as any).AI_API_KEYS) {
+                // Map API key names to provider names
+                const providerMap: Record<string, string> = {
+                    'GEMINI_API_KEY': 'google',
+                    'OPENAI_API_KEY': 'openai',
+                    'ANTHROPIC_API_KEY': 'anthropic',
+                    'FIREWORKS_API_KEY': 'fireworks',
+                    'TOGETHER_API_KEY': 'together',
+                };
+                
+                const providerName = providerMap[requiredKey];
+                if (providerName && (self as any).AI_API_KEYS[providerName]) {
+                    return true;
+                }
+            }
+        } catch (error) {
+            // self not available
+        }
+
+        // Check window (browser environment)
+        try {
+            if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
+                // Map API key names to provider names  
+                const providerMap: Record<string, string> = {
+                    'GEMINI_API_KEY': 'google',
+                    'OPENAI_API_KEY': 'openai',
+                    'ANTHROPIC_API_KEY': 'anthropic',
+                    'FIREWORKS_API_KEY': 'fireworks',
+                    'TOGETHER_API_KEY': 'together',
+                };
+                
+                const providerName = providerMap[requiredKey];
+                if (providerName && ((window as any).AI_API_KEYS as any)[providerName]) {
+                    return true;
+                }
+            }
+        } catch (error) {
+            // window not available
+        }
+
+        return false;
+    };
+
+    // Try preferred model first
+    if (hasApiKeyForModel(preferredModel)) {
+        console.log('Using preferred model:', preferredModel);
+        return preferredModel;
+    }
+
+    // Fallback priority list - most reliable and cost-effective models first
+    const fallbackModels = [
+        ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model
+        ModelEnum.GEMINI_2_0_FLASH, // Free/cheap Gemini model
+        ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
+        ModelEnum.GPT_4o, // More expensive but reliable
+        ModelEnum.GEMINI_2_5_FLASH_PREVIEW, // Newer Gemini
+    ];
+
+    for (const model of fallbackModels) {
+        if (hasApiKeyForModel(model)) {
+            console.log('Using fallback model:', model);
+            return model;
+        }
+    }
+
+    console.warn('No API key found for any model, will fail with clear error message');
+    // Return the preferred model to let the provider give a clear error message
+    return preferredModel;
 };

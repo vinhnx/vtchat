@@ -2,7 +2,13 @@ import { createTask } from '@repo/orchestrator';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { generateObject, getHumanizedDate, handleError, sendEvents } from '../utils';
+import {
+    generateObject,
+    getHumanizedDate,
+    handleError,
+    selectAvailableModel,
+    sendEvents,
+} from '../utils';
 
 const ClarificationResponseSchema = z.object({
     needsClarification: z.boolean(),
@@ -50,13 +56,18 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
                 `;
 
+        const byokKeys = context?.get('apiKeys');
+
+        // Select an appropriate model based on available API keys
+        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_FLASH_PREVIEW, byokKeys);
+
         const object = await generateObject({
             prompt,
-            model: ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
+            model: selectedModel,
             schema: ClarificationResponseSchema,
             messages: messages as any,
             signal,
-            byokKeys: context?.get('apiKeys'),
+            byokKeys,
         });
 
         if (object?.needsClarification) {

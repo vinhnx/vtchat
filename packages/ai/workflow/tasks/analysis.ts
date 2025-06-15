@@ -2,7 +2,14 @@ import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { ChunkBuffer, generateText, getHumanizedDate, handleError, sendEvents } from '../utils';
+import {
+    ChunkBuffer,
+    generateText,
+    getHumanizedDate,
+    handleError,
+    selectAvailableModel,
+    sendEvents,
+} from '../utils';
 
 export const analysisTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'analysis',
@@ -65,11 +72,12 @@ ${s}
         });
 
         const mode = context?.get('mode') || '';
-        // For Deep Research workflow, use Gemini as the default model for better performance
-        const model =
+        // For Deep Research workflow, select available model with fallback mechanism
+        const baseModel =
             mode === ChatMode.Deep
                 ? ModelEnum.GEMINI_2_5_FLASH_PREVIEW
                 : getModelFromChatMode(mode);
+        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
         const text = await generateText({
             prompt,

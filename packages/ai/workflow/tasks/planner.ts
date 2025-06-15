@@ -3,7 +3,13 @@ import { ChatMode } from '@repo/shared/config';
 import { z } from 'zod';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { generateObject, getHumanizedDate, handleError, sendEvents } from '../utils';
+import {
+    generateObject,
+    getHumanizedDate,
+    handleError,
+    selectAvailableModel,
+    sendEvents,
+} from '../utils';
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'planner',
@@ -63,11 +69,12 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                 `;
 
         const mode = context?.get('mode') || '';
-        // For Deep Research workflow, use Gemini as the default model for better performance
-        const model =
+        // For Deep Research workflow, select available model with fallback mechanism
+        const baseModel =
             mode === ChatMode.Deep
                 ? ModelEnum.GEMINI_2_5_FLASH_PREVIEW
                 : getModelFromChatMode(mode);
+        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
         const object = await generateObject({
             prompt,
