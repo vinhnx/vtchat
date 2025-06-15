@@ -8,7 +8,7 @@ export type ApiKeys = {
     GEMINI_API_KEY?: string;
     JINA_API_KEY?: string;
     FIREWORKS_API_KEY?: string;
-    SERPER_API_KEY?: string;
+
     OPENROUTER_API_KEY?: string;
     TOGETHER_API_KEY?: string;
 };
