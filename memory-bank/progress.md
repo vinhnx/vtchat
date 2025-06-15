@@ -2,6 +2,38 @@
 
 ## Completed Tasks
 
+### Gemini Default Models Implementation ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Deep Research Workflow**: All key workflow tasks now default to Gemini models for Deep Research mode
+  - `refine-query.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
+  - `reflector.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
+  - `planner.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+  - `analysis.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+  - `writer.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+  - `web-search.ts` - Already uses `ModelEnum.GEMINI_2_0_FLASH` for search summarization
+- ✅ **Pro Search Workflow**: Routes to `gemini-web-search` task which uses Gemini models for web search capabilities
+- ✅ **Proper ChatMode Enum Usage**: Updated tasks to use `ChatMode.Deep` enum instead of string comparison
+- ✅ **Context7 Documentation Review**: Verified Gemini configuration best practices with Vercel AI SDK
+- ✅ **Model Selection Strategy**: Uses `GEMINI_2_5_FLASH_PREVIEW` as default for Deep Research tasks while preserving user choice for other workflows
+- ✅ **UI Bug Fixes**: Fixed React duplicate key warning and improved chat mode labels
+  - Fixed duplicate "Grounding Web Search" labels causing React key conflicts
+  - Updated labels to unique values: "Deep Research" and "Pro Search"
+  - Implemented unique React keys using ChatMode values instead of labels
+- ✅ **Import Standardization**: Fixed ChatMode enum imports across all workflow files to use `@repo/shared/config`
+- ✅ **Development Server Validation**: Confirmed changes work correctly in development environment
+- ✅ **TODO Items Marked Complete**: Updated TODO.md to reflect completion of all Gemini-related tasks
+
+**Files Modified:**
+
+- `packages/ai/workflow/tasks/writer.ts` - Added Gemini default for Deep Research, imported ChatMode enum
+- `packages/common/components/chat-input/chat-actions.tsx` - Fixed duplicate React keys and updated labels
+- `TODO.md` - Marked Gemini default model tasks and UI fixes as completed
+
+**Result:** Both Deep Research and Pro Search workflows now default to Gemini models, providing enhanced performance and capabilities while maintaining flexibility for users to choose different models in other workflows.
+
 ### `TODO.md` Cleanup and Refinement ✅
 
 **Date:** June 14, 2025
@@ -362,6 +394,90 @@ The comprehensive runtime logging successfully identified two main issues:
 - Various other components with search-related text
 
 **Result:** All search-related terminology now clearly indicates Gemini-powered grounding functionality, providing users with better understanding of the AI-enhanced web search capabilities.
+
+### Fixed VT+ Access Control Bug ✅
+
+**Status:** Completed
+**Date:** January 15, 2025
+
+Fixed the critical bug where VT+ subscribers were getting 403 errors when trying to use Deep Research and Pro Search features.
+
+### Problem
+
+- VT+ users were being blocked from premium features despite having active subscriptions
+- Server-side access control was using a client-side utility (`getSubscriptionStatus`) that doesn't work properly on the server
+- Console logs showed client-side showed correct VT+ status but server returned 403 errors
+
+### Solution
+
+- Replaced client-side `getSubscriptionStatus` with proper server-side `getComprehensiveSubscriptionStatus`
+- Updated import from `@repo/shared/utils/subscription` to the subscription-sync utility
+- Fixed the subscription checking logic to use database-backed verification
+- The new function checks both `user_subscriptions` table and `users.plan_slug` for comprehensive status
+
+### Technical Changes
+
+- **File:** `/apps/web/app/api/subscription/access-control.ts`
+- **Import:** Changed to `getComprehensiveSubscriptionStatus` from subscription-sync
+- **Logic:** Updated `checkVTPlusAccess` to use proper server-side DB queries
+- **Validation:** Removed client-side dependency and FIXME comments
+
+### Impact
+
+- VT+ subscribers can now access Deep Research and Pro Search without 403 errors
+- Server-side subscription verification is now accurate and reliable
+- Consistent subscription status between client and server
+
+### ✅ Fixed React Fragment onClick Error
+
+**Status:** Completed
+**Date:** January 15, 2025
+
+Fixed a React console error where an invalid `onClick` prop was being supplied to `React.Fragment`.
+
+#### Problem
+
+- Console showed: "Invalid prop `onClick` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props."
+- Error was occurring in ChatInput component's chat-actions.tsx file
+- Issue was related to conditional rendering inside DropdownMenuTrigger with asChild prop
+
+#### Root Cause
+
+- In the ChatModeButton component, there was conditional rendering inside `DropdownMenuTrigger asChild`
+- When `isCurrentModeGated` was false, it rendered a variable `dropdownTrigger` instead of direct JSX
+- The `asChild` prop causes the DropdownMenuTrigger to pass its props to its child
+- This was causing props to be incorrectly passed to a React Fragment
+
+#### Solution
+
+- Removed the `dropdownTrigger` variable that was causing the issue
+- Inlined the Button component directly in both branches of the conditional
+- This ensures props are passed correctly to Button components, not Fragments
+
+#### Technical Changes
+
+```tsx
+// Before (causing Fragment error):
+{isCurrentModeGated ? (
+    <Button>...</Button>
+) : (
+    dropdownTrigger  // This variable could cause Fragment issues
+)}
+
+// After (fixed):
+{isCurrentModeGated ? (
+    <Button>...</Button>
+) : (
+    <Button>...</Button>  // Direct JSX prevents Fragment issues
+)}
+```
+
+#### Impact
+
+- React console errors eliminated
+- Chat mode dropdown functions correctly
+- No more Fragment-related prop warnings
+- Component renders properly in all states
 
 ## Current Status
 

@@ -9,8 +9,8 @@ import { auth } from '@/lib/auth';
 import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { getSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { NextRequest } from 'next/server';
+import { getComprehensiveSubscriptionStatus } from '../../../../../packages/shared/utils/subscription-sync';
 
 export interface AccessCheckResult {
     hasAccess: boolean;
@@ -41,20 +41,19 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
     }
 
     try {
-        // Get subscription status for the user
-        // FIXME: This uses the client-side getSubscriptionStatus which is not ideal for server-side.
-        // It expects a full user object, not just userId. This will likely not work correctly.
-        // For now, patching the type error. A proper server-side fetch is needed here.
-        const subscriptionStatus = await getSubscriptionStatus({ user: { id: userId } }); // Pass a minimal user object
+        // Get comprehensive subscription status from database
+        const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
 
         const hasVTPlus =
-            subscriptionStatus.currentPlanSlug === PlanSlug.VT_PLUS && subscriptionStatus.isActive;
+            subscriptionStatus.plan === PlanSlug.VT_PLUS && subscriptionStatus.isActive;
 
         return {
             hasAccess: hasVTPlus,
             reason: hasVTPlus ? undefined : 'VT+ subscription required',
-            subscriptionStatus: subscriptionStatus.status, // Use the status from UserClientSubscriptionStatus
-            planSlug: subscriptionStatus.currentPlanSlug,
+            subscriptionStatus: hasVTPlus
+                ? SubscriptionStatusEnum.ACTIVE
+                : SubscriptionStatusEnum.NONE,
+            planSlug: subscriptionStatus.plan,
         };
     } catch (error) {
         console.error('Failed to check VT+ access:', error);

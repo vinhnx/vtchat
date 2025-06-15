@@ -1,58 +1,51 @@
 # TODO List
 
-Yes, both ChatMode.Pro and ChatMode.Deep are directly related to the 'Grounding Web Search' feature:
-
-Key findings:
-
-Both modes are named "Web Search Grounding With Gemini" in the UI (lines 235-237)
-
-Configuration details:
-
-ChatMode.Deep: webSearch: false but requires FeatureSlug.DEEP_RESEARCH
-ChatMode.Pro: webSearch: false but requires FeatureSlug.PRO_SEARCH
-These are specialized research modes, not traditional web search:
-
-They have webSearch: false because they use custom Gemini-powered grounding workflows
-They require VT+ subscription (requiredPlan: PlanSlug.VT_PLUS)
-They're routed to special workflow tasks (like gemini-web-search for Pro mode)
-The distinction:
-
-Regular chat modes with webSearch: true = standard web search
-Pro/Deep modes with webSearch: false = specialized "Grounding Web Search - by Gemini" with custom workflows
-So yes, these ChatMode values are the core implementation of your "Grounding Web Search" feature - they're the premium, Gemini-powered research modes that provide enhanced web grounding capabilities
---
-
-simplify this since we are now only show/enable 'Web Search' button for subscribed/premium users
+Check gemini models doesn't work on chat mode
+[] gemini 2.5 pro preview
+[] gemini 2.5 flash preview
+[] Gemini 2.0 Flash
 
 --
-
-[] remove 'Web Search' button if not subscribed -> simply workflow
---
-
-[]
-
-Pro = 'pro',
-Deep = 'deep',
-review these ChatMode and see if relates to 'Grounding Web Search' feature?
+[][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
 -
+
+[] <https://ai-sdk.dev/cookbook/node/mcp-tools>
+--
+
+[] <https://ai-sdk.dev/cookbook/node/local-caching-middleware>
+
+--
+[][monet] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
+--
+
+[ ] <https://ai-sdk.dev/cookbook/node/web-search-agent#perplexity>
+
+--
+
+[] <https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
+--
 
 [] check all provided models and features in dropdown
 [] check for gated feature selection on models
 [] check for llm api repsonse
 
 --
-[] use Gemini as main and default models for Deep Research
-[] use Gemini as main and default models for Pro Search
-
---
 [] support openai full
-[] https://ai-sdk.dev/providers/ai-sdk-providers/openai
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/openai>
+[][monet] OpenAI web search - <https://ai-sdk.dev/providers/ai-sdk-providers/openai#web-search>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#audio-input>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#reasoning-summaries>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#reasoning-summaries>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#image-models>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#image-models>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#speech-models>
 --
+
 [] Gemini
-[] https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#cached-content
-[] https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs
-[] monet - https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching
-[] monet - dynamicRetrievalConfig https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#dynamic-retrieval
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#cached-content>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs>
+[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching>
+[][monet] dynamicRetrievalConfig <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#dynamic-retrieval>
 --
 
 [] Remove free/default models, use BYOK completely -> when click on a model on chat models selection list in chat input -> check for existing BYOK settings on Settings cache. if not it should open a modal to save a BYOK model and retry.
@@ -62,11 +55,7 @@ review these ChatMode and see if relates to 'Grounding Web Search' feature?
 [] Handle credits system
 
 --
-[] https://github.com/trendy-design/llmchat?tab=readme-ov-file#workflow-orchestration
-
---
-
-[] Double check VT+ features
+[] <https://github.com/trendy-design/llmchat?tab=readme-ov-file#workflow-orchestration>
 
 --
 [] Pro Search Enhanced search with web integration for real-time information.
@@ -84,7 +73,7 @@ review these ChatMode and see if relates to 'Grounding Web Search' feature?
 
 [] check MCP Tools in settings
 
-- [] https://resend.com/docs/introduction
+- [] <https://resend.com/docs/introduction>
 
 - (Review and populate based on current sprint/goals)
 

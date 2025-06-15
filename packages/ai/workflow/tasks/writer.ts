@@ -1,4 +1,5 @@
 import { createTask } from '@repo/orchestrator';
+import { ChatMode } from '@repo/shared/config';
 import { format } from 'date-fns';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -91,8 +92,12 @@ Your report should demonstrate subject matter expertise while remaining intellec
         });
 
         const mode = context?.get('mode') || '';
-        const model = getModelFromChatMode(mode);
-        
+        // For Deep Research workflow, use Gemini as the default model for better performance
+        const model =
+            mode === ChatMode.Deep
+                ? ModelEnum.GEMINI_2_5_FLASH_PREVIEW
+                : getModelFromChatMode(mode);
+
         const answer = await generateText({
             prompt,
             model,
