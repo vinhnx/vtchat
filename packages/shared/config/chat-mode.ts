@@ -13,7 +13,7 @@ export enum ChatMode {
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     GEMINI_2_5_FLASH_PREVIEW = 'gemini-2.5-flash-preview-05-20',
-    GEMINI_2_5_PRO = 'gemini-flash-2.5-pro-preview-05-06',
+    GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
     GEMINI_2_5_PRO_PREVIEW = 'gemini-2.5-pro-preview-06-05',
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',

@@ -227,7 +227,7 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_PRO_PREVIEW,
     ];
-    
+
     return googleModels.includes(model);
 };
 

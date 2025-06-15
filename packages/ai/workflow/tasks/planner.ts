@@ -1,9 +1,9 @@
 import { createTask } from '@repo/orchestrator';
+import { ChatMode } from '@repo/shared/config';
 import { z } from 'zod';
-import { ModelEnum } from '../../models';
+import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { generateObject, getHumanizedDate, handleError, sendEvents } from '../utils';
-import { getModelFromChatMode, supportsNativeWebSearch } from '../../models';
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'planner',
@@ -63,8 +63,12 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                 `;
 
         const mode = context?.get('mode') || '';
-        const model = getModelFromChatMode(mode);
-        
+        // For Deep Research workflow, use Gemini as the default model for better performance
+        const model =
+            mode === ChatMode.Deep
+                ? ModelEnum.GEMINI_2_5_FLASH_PREVIEW
+                : getModelFromChatMode(mode);
+
         const object = await generateObject({
             prompt,
             model,

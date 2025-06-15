@@ -32,13 +32,13 @@ const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
 
 export const chatOptions = [
     {
-        label: 'Grounding Web Search',
+        label: 'Deep Research',
         description: 'In depth research on complex topic',
         value: ChatMode.Deep,
         icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
     },
     {
-        label: 'Grounding Web Search',
+        label: 'Pro Search',
         description: 'Enhanced web search with Gemini grounding',
         value: ChatMode.Pro,
         icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
@@ -202,14 +202,6 @@ export const ChatModeButton = () => {
         setIsChatModeOpen(false); // Close the dropdown
     };
 
-    const dropdownTrigger = (
-        <Button variant={'secondary'} size="xs">
-            {selectedOption?.icon}
-            {selectedOption?.label}
-            <ChevronDown size={14} strokeWidth={2} />
-        </Button>
-    );
-
     return (
         <>
             <DropdownMenu open={isChatModeOpen} onOpenChange={setIsChatModeOpen}>
@@ -221,7 +213,11 @@ export const ChatModeButton = () => {
                             <ChevronDown size={14} strokeWidth={2} />
                         </Button>
                     ) : (
-                        dropdownTrigger
+                        <Button variant={'secondary'} size="xs">
+                            {selectedOption?.icon}
+                            {selectedOption?.label}
+                            <ChevronDown size={14} strokeWidth={2} />
+                        </Button>
                     )}
                 </DropdownMenuTrigger>
                 <ChatModeOptions
@@ -315,8 +311,6 @@ export const WebSearchButton = () => {
                     </p>
                 )}
             </Button>
-
-
         </>
     );
 };
@@ -458,7 +452,7 @@ export const ChatModeOptions = ({
 
                     return (
                         <DropdownMenuItem
-                            key={option.label}
+                            key={`advanced-${option.value}`}
                             onSelect={() => handleModeSelect(option.value)}
                             className={cn('h-auto', isGated && 'opacity-80')}
                         >
@@ -494,7 +488,7 @@ export const ChatModeOptions = ({
 
                     return (
                         <DropdownMenuItem
-                            key={option.label}
+                            key={`model-${option.value}`}
                             onSelect={() => handleModeSelect(option.value)}
                             className={cn('h-auto', isGated && 'opacity-80')}
                         >
