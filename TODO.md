@@ -1,5 +1,19 @@
 # TODO List
 
+[] https://github.com/trendy-design/llmchat?tab=readme-ov-file#workflow-orchestration
+
+--
+
+[] Double check VT+ features
+
+--
+[] Pro Search Enhanced search with web integration for real-time information.
+
+--
+
+[] Deep Research: Comprehensive analysis of complex topics with in-depth exploration.
+
+--
 [] use <vinhnguyenxuan@icloud.com> for ampcode
 
 --
@@ -28,15 +42,13 @@
   - [ ] Move `auth-client.ts` to `packages/shared/lib/` (or a more appropriate shared location).
   - [ ] Rename `apps/web/lib/auth.ts` to `auth-server.ts` (if it's purely server-side).
 - [ ] Update Better Auth config for `/error` and `/welcome` routes: [https://www.better-auth.com/docs/basic-usage#sign-in-with-social-providers](https://www.better-auth.com/docs/basic-usage#sign-in-with-social-providers)
-- [ ] Implement user avatar handling from OAuth provider and sync to Neon DB.
+- [ ] Implement request user avatar when login/signup from OAuth provider like Google and gitHub and sync to Neon DB.
 - [ ] Handle account verification to protect against bots: [https://www.better-auth.com/docs/concepts/email](https://www.better-auth.com/docs/concepts/email)
 - [ ] Ensure API keys are removed from client-side/session on logout or account switch.
 - [ ] Review Better Auth general options: [https://www.better-auth.com/docs/reference/options](https://www.better-auth.com/docs/reference/options)
-- [ ] Explore Better Auth UI Components: [https://www.better-auth-kit.com/docs/cli/ui-components](https://www.better-auth-kit.com/docs/cli/ui-components)
-- [ ] Implement Legal Consent plugin if required: [https://www.better-auth-kit.com/docs/plugins/legal-consent](https://www.better-auth-kit.com/docs/plugins/legal-consent)
 - [ ] Explore additional Better Auth resources:
-  - [ ] Awesome Better Auth: [https://github.com/better-auth/awesome](https://github.com/better-auth/awesome)
   - [ ] Better Auth Utils: [https://github.com/better-auth/utils](https://github.com/better-auth/utils)
+  - [ ] Better Auth OTP: <https://github.com/better-auth/utils?tab=readme-ov-file#otp>
   - [ ] Better Auth Harmony: [https://github.com/GeKorm/better-auth-harmony](https://github.com/GeKorm/better-auth-harmony) (also [https://github.com/gekorm/better-auth-harmony/](https://github.com/gekorm/better-auth-harmony/))
   - [ ] Better Auth Cloudflare: [https://github.com/zpg6/better-auth-cloudflare](https://github.com/zpg6/better-auth-cloudflare)
   - [ ] Better Auth Validation: [https://github.com/Daanish2003/validation-better-auth](https://github.com/Daanish2003/validation-better-auth)
@@ -44,17 +56,14 @@
 
 ## Subscription & Payments (Creemio & Neon Integration)
 
-- [ ] **IMPORTANT**: Verify existing Creem subscription status before allowing a new subscription to prevent duplicates. you can use neon mcp tools
-
 ## Thread Management (Account-based & Neon Sync)
 
 - [ ] Ensure threads are per-account and hidden when a user is logged out.
-
 - [ ] On login (to existing or new account), fetch threads from the appropriate store (e.g., remote DB via API, then update local IndexedDB/Zustand).
-- [ ] Implement full remote thread synchronization with Neon DB.
 - [ ] Design and implement an account-based thread management system using Neon/Postgres, leveraging existing thread schema and store logic. Review codebase for current implementation details.
-- [ ] [PLUS TIER ONLY?] Sync threads to Neon DB.
 - [ ] Free tier: Continue using local IndexedDB for threads.
+- [ ] [PLUS TIER ONLY] Implement full remote thread synchronization with Neon DB.
+- [ ] [PLUS TIER ONLY] Sync threads to Neon DB.
 
 ## UI/UX Improvements
 
@@ -71,14 +80,12 @@
 ## AI & Providers
 
 - [ ] Expand support for more AI providers using the AI SDK: [https://ai-sdk.dev/providers/ai-sdk-providers](https://ai-sdk.dev/providers/ai-sdk-providers)
-
 - [ ] Review Gemini AI SDK Cheatsheet for potential optimizations/features: [https://patloeber.com/gemini-ai-sdk-cheatsheet/](https://patloeber.com/gemini-ai-sdk-cheatsheet/)
 - [ ] Explore OpenAI Agents JS examples for advanced AI interactions: [https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk](https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk)
 
 ## Research & Exploration
 
 - [ ] Explore Tailark: [https://tailark.com/](https://tailark.com/)
-
 - [ ] UI Inspiration - ibelick.com: [https://ui.ibelick.com/](https://ui.ibelick.com/)
 - [ ] Prompt Kit by ibelick: [https://github.com/ibelick/prompt-kit](https://github.com/ibelick/prompt-kit)
 - [ ] Monetization Exploration - Lingo.dev: [https://github.com/lingodotdev/lingo.dev](https://github.com/lingodotdev/lingo.dev)
@@ -87,6 +94,3 @@
   - Whois VN: [https://whois.inet.vn/whois?domain=vtchat.io.vn](https://whois.inet.vn/whois?domain=vtchat.io.vn)
   - VinaHost: [https://secure.vinahost.vn/ac/cart.php?a=confdomains](https://secure.vinahost.vn/ac/cart.php?a=confdomains)
   - <https://www.matbao.net/ten-mien/ket-qua-kiem-tra-ten-mien.html?tenmien=vtchat.io.vn#top_search>
-
----
-*Note: The "Subscription Management" product brief section from the original TODO.md has been omitted as it's informational rather than a task. This information should ideally reside in `productContext.md` or a dedicated specification document.*

@@ -17,6 +17,7 @@
         "./types/subscription": "./types/subscription.ts",
         "./types/subscription-status": "./types/subscription-status.ts",
         "./utils/subscription": "./utils/subscription.ts",
+        "./utils/subscription-verification": "./utils/subscription-verification.ts",
         "./utils/subscription-server": "./utils/subscription-server.ts",
         "./utils/chat-credits": "./utils/chat-credits.ts",
         "./utils/dev-test-mode": "./utils/dev-test-mode.ts"
