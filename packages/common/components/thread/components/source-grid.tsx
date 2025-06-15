@@ -13,7 +13,20 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
         return null;
     }
 
-    const sortedSources = [...sources].sort((a, b) => a?.index - b?.index);
+    // Filter out invalid sources and ensure they have required properties
+    const validSources = sources.filter(source => 
+        source && 
+        typeof source.title === 'string' && 
+        typeof source.link === 'string' && 
+        source.link.trim() !== '' &&
+        typeof source.index === 'number'
+    );
+
+    if (validSources.length === 0) {
+        return null;
+    }
+
+    const sortedSources = [...validSources].sort((a, b) => a?.index - b?.index);
 
     return (
         <div className="grid grid-cols-4 gap-2 pb-8 pt-2">
@@ -36,20 +49,20 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     <p className="line-clamp-2 text-xs font-medium">{source?.title}</p>
                 </div>
             ))}
-            {sources.length > 3 && (
+            {sortedSources.length > 3 && (
                 <div
                     key={4}
                     className="bg-quaternary/60 hover:bg-quaternary flex cursor-pointer flex-col items-start gap-1 rounded-md p-2"
                     onClick={() => {
                         openSideDrawer({
                             title: 'Sources',
-                            badge: sources.length,
-                            renderContent: () => <SourceList sources={sources} />,
+                            badge: sortedSources.length,
+                            renderContent: () => <SourceList sources={sortedSources} />,
                         });
                     }}
                 >
                     <div className="flex flex-row gap-1">
-                        {sources
+                        {sortedSources
                             .slice(3)
                             .slice(0, 5)
                             .map((source, index) => (
@@ -60,7 +73,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     </div>
                     <div className="flex-1" />
                     <p className="text-muted-foreground flex flex-row items-center gap-1 text-xs">
-                        +{sources.length - 3} Sources
+                        +{sortedSources.length - 3} Sources
                     </p>
                 </div>
             )}

@@ -1,6 +1,4 @@
 import { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
-import { logger } from '@repo/shared/logger';
-import { Geo } from '@vercel/functions';
 import {
     CoreMessage,
     extractReasoningMiddleware,
@@ -60,6 +58,272 @@ export class ChunkBuffer {
     }
 }
 
+export const generateTextWithGeminiSearch = async ({
+    prompt,
+    model,
+    onChunk,
+    messages,
+    signal,
+    byokKeys,
+}: {
+    prompt: string;
+    model: ModelEnum;
+    onChunk?: (chunk: string, fullText: string) => void;
+    messages?: CoreMessage[];
+    signal?: AbortSignal;
+    byokKeys?: Record<string, string>;
+}) => {
+    // Add comprehensive runtime logging
+    console.log('=== generateTextWithGeminiSearch START ===');
+    console.log('Input parameters:', {
+        prompt: prompt?.slice(0, 100) + '...',
+        model,
+        hasOnChunk: !!onChunk,
+        messagesLength: messages?.length,
+        hasSignal: !!signal,
+        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+    });
+
+    try {
+        if (signal?.aborted) {
+            throw new Error('Operation aborted');
+        }
+
+        // Check if we have a valid API key for Google models
+        let windowApiKey = false;
+        try {
+            windowApiKey = typeof window !== 'undefined' && !!window.AI_API_KEYS?.google;
+        } catch (error) {
+            // window is not available in this environment
+            windowApiKey = false;
+        }
+
+        const hasGeminiKey =
+            byokKeys?.GEMINI_API_KEY ||
+            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) ||
+            windowApiKey;
+
+        console.log('API key check:', {
+            hasGeminiKey,
+            byokApiKey: !!byokKeys?.GEMINI_API_KEY,
+            processEnvKey: !!(typeof process !== 'undefined' && process.env?.GEMINI_API_KEY),
+            windowKey: windowApiKey,
+        });
+
+        if (!hasGeminiKey) {
+            throw new Error('Gemini API key is required for web search functionality');
+        }
+
+        console.log('Getting language model for:', model);
+        const selectedModel = getLanguageModel(model, undefined, byokKeys, true);
+        console.log('Selected model result:', {
+            selectedModel: selectedModel ? 'object' : selectedModel,
+            modelType: typeof selectedModel,
+            modelKeys: selectedModel ? Object.keys(selectedModel) : undefined,
+        });
+
+        if (!selectedModel) {
+            throw new Error('Failed to initialize Gemini model');
+        }
+
+        // Additional validation for the model object
+        if (typeof selectedModel !== 'object' || selectedModel === null) {
+            console.error('Invalid model object:', selectedModel);
+            throw new Error('Invalid model configuration. Model must be a valid object.');
+        }
+
+        console.log('Preparing streamText call with:', {
+            hasMessages: !!messages?.length,
+            messagesCount: messages?.length,
+            promptLength: prompt?.length,
+        });
+
+        // Filter out messages with empty content to prevent Gemini API errors
+        let filteredMessages = messages;
+        if (messages?.length) {
+            filteredMessages = messages.filter(message => {
+                const hasContent =
+                    message.content &&
+                    (typeof message.content === 'string'
+                        ? message.content.trim() !== ''
+                        : Array.isArray(message.content)
+                          ? message.content.length > 0
+                          : true);
+
+                if (!hasContent) {
+                    console.warn('Filtering out message with empty content in GeminiSearch:', {
+                        role: message.role,
+                        contentType: typeof message.content,
+                    });
+                }
+
+                return hasContent;
+            });
+
+            console.log('GeminiSearch message filtering:', {
+                originalCount: messages.length,
+                filteredCount: filteredMessages.length,
+                removedCount: messages.length - filteredMessages.length,
+            });
+        }
+
+        let streamResult;
+
+        try {
+            const streamTextConfig = !!filteredMessages?.length
+                ? {
+                      system: prompt,
+                      model: selectedModel,
+                      messages: filteredMessages,
+                      abortSignal: signal,
+                  }
+                : {
+                      prompt,
+                      model: selectedModel,
+                      abortSignal: signal,
+                  };
+
+            console.log('StreamText config:', {
+                configType: !!filteredMessages?.length ? 'with-messages' : 'prompt-only',
+                hasSystem: !!(streamTextConfig as any).system,
+                hasPrompt: !!(streamTextConfig as any).prompt,
+                hasModel: !!streamTextConfig.model,
+                hasAbortSignal: !!streamTextConfig.abortSignal,
+            });
+
+            streamResult = streamText(streamTextConfig as any);
+            console.log('StreamText call successful, result type:', typeof streamResult);
+        } catch (error: any) {
+            console.error('Error creating streamText:', error);
+            console.error('Error stack:', error.stack);
+            if (error.message?.includes('undefined to object')) {
+                throw new Error(
+                    'Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.'
+                );
+            }
+            throw error;
+        }
+
+        if (!streamResult) {
+            console.error('StreamResult is null/undefined');
+            throw new Error('Failed to initialize text stream');
+        }
+
+        console.log('StreamResult properties:', Object.keys(streamResult));
+
+        // Don't destructure sources and providerMetadata immediately
+        console.log('Accessing fullStream...');
+        const { fullStream } = streamResult;
+        console.log('FullStream extracted:', {
+            hasFullStream: !!fullStream,
+            fullStreamType: typeof fullStream,
+        });
+
+        if (!fullStream) {
+            console.error('FullStream is null/undefined');
+            throw new Error('Failed to get fullStream from streamText result');
+        }
+
+        let fullText = '';
+        console.log('Starting to iterate over fullStream...');
+
+        try {
+            for await (const chunk of fullStream) {
+                if (signal?.aborted) {
+                    throw new Error('Operation aborted');
+                }
+
+                console.log('Received chunk:', {
+                    type: chunk?.type,
+                    hasTextDelta: !!(chunk as any)?.textDelta,
+                    chunkKeys: chunk ? Object.keys(chunk) : undefined,
+                });
+
+                if (chunk.type === 'text-delta') {
+                    fullText += chunk.textDelta;
+                    onChunk?.(chunk.textDelta, fullText);
+                }
+            }
+        } catch (error: any) {
+            console.error('Error iterating over fullStream:', error);
+            console.error('Error stack:', error.stack);
+            throw error;
+        }
+
+        console.log('Stream iteration completed, fullText length:', fullText.length);
+
+        // Safely handle potentially undefined sources and metadata
+        console.log('Resolving sources and metadata...');
+        let resolvedSources: any[] = [];
+        let groundingMetadata: any = null;
+
+        try {
+            console.log('Checking streamResult.sources:', {
+                hasSources: !!streamResult?.sources,
+                sourcesType: typeof streamResult?.sources,
+            });
+            if (streamResult?.sources) {
+                resolvedSources = (await streamResult.sources) || [];
+                console.log('Sources resolved:', resolvedSources.length);
+            }
+        } catch (error) {
+            console.warn('Failed to resolve sources:', error);
+            resolvedSources = [];
+        }
+
+        try {
+            console.log('Checking streamResult.providerMetadata:', {
+                hasProviderMetadata: !!streamResult?.providerMetadata,
+                providerMetadataType: typeof streamResult?.providerMetadata,
+            });
+            if (streamResult?.providerMetadata) {
+                const metadata = await streamResult.providerMetadata;
+                console.log('ProviderMetadata resolved:', {
+                    hasMetadata: !!metadata,
+                    hasGoogle: !!metadata?.google,
+                    hasGroundingMetadata: !!metadata?.google?.groundingMetadata,
+                });
+                groundingMetadata = metadata?.google?.groundingMetadata || null;
+            }
+        } catch (error) {
+            console.warn('Failed to resolve provider metadata:', error);
+            groundingMetadata = null;
+        }
+
+        const result = {
+            text: fullText,
+            sources: resolvedSources,
+            groundingMetadata,
+        };
+
+        console.log('=== generateTextWithGeminiSearch END ===');
+        console.log('Returning result:', {
+            textLength: result.text.length,
+            sourcesCount: result.sources.length,
+            hasGroundingMetadata: !!result.groundingMetadata,
+        });
+
+        return result;
+    } catch (error: any) {
+        console.error('Error in generateTextWithGeminiSearch:', error);
+
+        // Provide more specific error messages
+        if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+            throw new Error(
+                'Invalid or missing Gemini API key. Please check your API key configuration.'
+            );
+        } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+            throw new Error('Gemini API access forbidden. Please check your API key permissions.');
+        } else if (error.message?.includes('429')) {
+            throw new Error('Gemini API rate limit exceeded. Please try again later.');
+        } else if (error.message?.includes('undefined to object')) {
+            throw new Error('Gemini web search configuration error. Please check your API setup.');
+        }
+
+        throw error;
+    }
+};
+
 export const generateText = async ({
     prompt,
     model,
@@ -73,6 +337,7 @@ export const generateText = async ({
     toolChoice = 'auto',
     maxSteps = 2,
     byokKeys,
+    useSearchGrounding = false,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -86,10 +351,26 @@ export const generateText = async ({
     toolChoice?: 'auto' | 'none' | 'required';
     maxSteps?: number;
     byokKeys?: Record<string, string>;
+    useSearchGrounding?: boolean;
 }) => {
     try {
         if (signal?.aborted) {
             throw new Error('Operation aborted');
+        }
+
+        // Filter out messages with empty content to prevent Gemini API errors
+        let filteredMessages = messages;
+        if (messages?.length) {
+            filteredMessages = messages.filter(message => {
+                const hasContent =
+                    message.content &&
+                    (typeof message.content === 'string'
+                        ? message.content.trim() !== ''
+                        : Array.isArray(message.content)
+                          ? message.content.length > 0
+                          : true);
+                return hasContent;
+            });
         }
 
         const middleware = extractReasoningMiddleware({
@@ -97,12 +378,12 @@ export const generateText = async ({
             separator: '\n',
         });
 
-        const selectedModel = getLanguageModel(model, middleware, byokKeys);
-        const { fullStream } = !!messages?.length
+        const selectedModel = getLanguageModel(model, middleware, byokKeys, useSearchGrounding);
+        const { fullStream } = !!filteredMessages?.length
             ? streamText({
                   system: prompt,
                   model: selectedModel,
-                  messages,
+                  messages: filteredMessages,
                   tools,
                   maxSteps,
                   toolChoice: toolChoice as any,
@@ -171,13 +452,69 @@ export const generateObject = async ({
             throw new Error('Operation aborted');
         }
 
+        console.log('=== generateObject START ===');
+        console.log('Input parameters:', {
+            prompt: prompt?.slice(0, 100) + '...',
+            model,
+            hasSchema: !!schema,
+            messagesLength: messages?.length,
+            hasSignal: !!signal,
+            byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        });
+
+        // Filter out messages with empty content to prevent Gemini API errors
+        let filteredMessages = messages;
+        if (messages?.length) {
+            filteredMessages = messages.filter(message => {
+                const hasContent =
+                    message.content &&
+                    (typeof message.content === 'string'
+                        ? message.content.trim() !== ''
+                        : Array.isArray(message.content)
+                          ? message.content.length > 0
+                          : true);
+
+                if (!hasContent) {
+                    console.warn('Filtering out message with empty content:', {
+                        role: message.role,
+                        contentType: typeof message.content,
+                        contentLength: Array.isArray(message.content)
+                            ? message.content.length
+                            : typeof message.content === 'string'
+                              ? message.content.length
+                              : 0,
+                    });
+                }
+
+                return hasContent;
+            });
+
+            console.log('Message filtering:', {
+                originalCount: messages.length,
+                filteredCount: filteredMessages.length,
+                removedCount: messages.length - filteredMessages.length,
+            });
+        }
+
         const selectedModel = getLanguageModel(model, undefined, byokKeys);
-        const { object } = !!messages?.length
+        console.log('Selected model for generateObject:', {
+            hasModel: !!selectedModel,
+            modelType: typeof selectedModel,
+        });
+
+        console.log('Calling generateObjectAi with:', {
+            configType: !!filteredMessages?.length ? 'with-messages' : 'prompt-only',
+            hasPrompt: !!prompt,
+            hasSchema: !!schema,
+            messagesCount: filteredMessages?.length,
+        });
+
+        const { object } = !!filteredMessages?.length
             ? await generateObjectAi({
                   system: prompt,
                   model: selectedModel,
                   schema,
-                  messages,
+                  messages: filteredMessages,
                   abortSignal: signal,
               })
             : await generateObjectAi({
@@ -187,9 +524,34 @@ export const generateObject = async ({
                   abortSignal: signal,
               });
 
+        console.log('generateObjectAi successful, result:', {
+            hasObject: !!object,
+            objectType: typeof object,
+        });
+
+        console.log('=== generateObject END ===');
         return JSON.parse(JSON.stringify(object));
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in generateObject:', error);
+
+        // Provide more specific error messages for common issues
+        if (error.message?.includes('contents.parts must not be empty')) {
+            console.error(
+                'Empty parts error - this indicates messages with empty content were passed to Gemini API'
+            );
+            throw new Error(
+                'Invalid message format: Some messages have empty content. Please ensure all messages have valid content.'
+            );
+        } else if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+            throw new Error(
+                'Invalid or missing API key for the selected model. Please check your API key configuration.'
+            );
+        } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+            throw new Error('API access forbidden. Please check your API key permissions.');
+        } else if (error.message?.includes('429')) {
+            throw new Error('API rate limit exceeded. Please try again later.');
+        }
+
         throw error; // Re-throw to let caller handle the error appropriately
     }
 };
@@ -275,74 +637,6 @@ export function createEventManager<T extends Record<string, any>>(
 
 export const getHumanizedDate = () => {
     return format(new Date(), 'MMMM dd, yyyy, h:mm a');
-};
-
-export const getSERPResults = async (queries: string[], gl?: Geo, byokKeys?: Record<string, string>) => {
-    const myHeaders = new Headers();
-    let apiKey = '';
-    
-    // Check BYOK keys first
-    if (byokKeys?.SERPER_API_KEY) {
-        apiKey = byokKeys.SERPER_API_KEY;
-    } else {
-        // Fall back to environment variables
-        apiKey = process.env.SERPER_API_KEY || (self as any).SERPER_API_KEY || '';
-    }
-
-    if (!apiKey) {
-        throw new Error('SERPER_API_KEY is not configured');
-    }
-
-    myHeaders.append('X-API-KEY', apiKey);
-    myHeaders.append('Content-Type', 'application/json');
-
-    const raw = JSON.stringify(
-        queries.slice(0, 3).map(query => ({
-            q: query,
-            gl: gl?.country,
-            location: gl?.city,
-        }))
-    );
-
-    console.log('raw', raw);
-
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-        const response = await fetch('https://google.serper.dev/search', {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow',
-            signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            throw new Error(`SERP API responded with status: ${response.status}`);
-        }
-
-        const batchResult = await response.json();
-
-        const organicResultsLists =
-            batchResult?.map((result: any) => result.organic?.slice(0, 10)) || [];
-        const allOrganicResults = organicResultsLists.flat();
-        const uniqueOrganicResults = allOrganicResults.filter(
-            (result: any, index: number, self: any[]) =>
-                index === self.findIndex((r: any) => r?.link === result?.link)
-        );
-
-        return uniqueOrganicResults.slice(0, 10).map((item: any) => ({
-            title: item.title,
-            link: item.link,
-            snippet: item.snippet,
-        }));
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
 };
 
 export const getWebPageContent = async (url: string) => {
@@ -482,21 +776,6 @@ export const processWebPages = async (
         signal?.removeEventListener('abort', () => combinedSignal.abort());
         timeoutSignal.removeEventListener('abort', () => combinedSignal.abort());
     }
-};
-
-export const executeWebSearch = async (queries: string[], signal?: AbortSignal, gl?: Geo, byokKeys?: Record<string, string>) => {
-    if (signal?.aborted) {
-        throw new Error('Operation aborted');
-    }
-
-    const flatQueries = queries.flat();
-    const results = await getSERPResults(flatQueries, gl, byokKeys);
-    const uniqueResults = results.filter(
-        (result: { link: string }, index: number, self: { link: string }[]) =>
-            index === self.findIndex((t: { link: string }) => t.link === result.link)
-    );
-
-    return uniqueResults;
 };
 
 export type TReaderResponse = {

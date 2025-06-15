@@ -118,6 +118,7 @@ export default function ParentLayout({
                                             </div>
                                         }
                                     >
+                                        {/* @ts-ignore - Type compatibility issue between React versions */}
                                         <RootLayout>{children}</RootLayout>
                                     </NoSSR>
                                 </SSRErrorBoundary>

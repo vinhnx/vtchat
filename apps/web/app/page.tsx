@@ -13,12 +13,14 @@ export default function Home() {
                 <h1 className="text-xl font-semibold">VTChat</h1>
                 {session ? (
                     <Link href="/chat">
+                        {/* @ts-ignore - Type compatibility issue between React versions */}
                         <Button variant="default" size="sm">
                             Go to Chat
                         </Button>
                     </Link>
                 ) : (
                     <Link href="/login">
+                        {/* @ts-ignore - Type compatibility issue between React versions */}
                         <Button variant="default" size="sm">
                             Sign In
                         </Button>

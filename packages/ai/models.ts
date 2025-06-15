@@ -219,6 +219,18 @@ export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
     return totalTokens;
 };
 
+export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
+    const googleModels = [
+        ModelEnum.GEMINI_2_0_FLASH,
+        ModelEnum.GEMINI_2_0_FLASH_LITE,
+        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
+        ModelEnum.GEMINI_2_5_PRO,
+        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
+    ];
+    
+    return googleModels.includes(model);
+};
+
 export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: ChatMode) => {
     const maxTokens = getChatModeMaxTokens(chatMode);
     let trimmedMessages = [...messages];

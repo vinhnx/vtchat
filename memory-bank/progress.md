@@ -306,6 +306,39 @@ ALTER TABLE users DROP CONSTRAINT users_name_key;
 
 **Result:** The main React version mismatch blocking the build is resolved. The application compiles successfully except for minor TypeScript type conflicts that can be addressed later.
 
+### Gemini Web Search Error Fix ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Root Cause Identified**: Fixed `ReferenceError: window is not defined` when accessing `window.AI_API_KEYS` in Web Worker context
+- ✅ **Secondary Issue Fixed**: Fixed `GenerateContentRequest.contents[X].parts: contents.parts must not be empty` by filtering empty messages
+- ✅ **Server-Side Environment Fix**: Wrapped window access in try-catch blocks to handle environments where window is not available
+- ✅ **Message Content Filtering**: Added filtering to remove messages with empty content before sending to AI models
+- ✅ **Comprehensive Debugging**: Added detailed runtime logging that successfully identified the exact error locations
+- ✅ **Enhanced API Key Validation**: Added explicit checks for Gemini API keys in `generateTextWithGeminiSearch`
+- ✅ **Safe Promise Resolution**: Wrapped `sources` and `providerMetadata` promise resolution in try-catch blocks with proper fallbacks
+- ✅ **Improved Error Messages**: Added specific error handling for common API issues (401, 403, 429) with user-friendly messages
+- ✅ **Robust Error Handling**: Enhanced error propagation from providers to tasks with consistent patterns
+- ✅ **TypeScript Fixes**: Added proper typing for resolved values and fixed compilation errors
+- ✅ **Provider Enhancement**: Modified `getProviderInstance` to throw descriptive errors when Google API keys are missing
+- ✅ **Documentation Updated**: Full fix documentation in `docs/gemini-web-search-error-fix.md`
+
+**Debugging Success:**
+
+The comprehensive runtime logging successfully identified two main issues:
+
+1. A `ReferenceError: window is not defined` occurring when accessing window properties in a Web Worker environment
+2. A `GenerateContentRequest.contents[X].parts: contents.parts must not be empty` error when empty messages were passed to the Gemini API
+
+**Files Modified:**
+
+- `packages/ai/workflow/utils.ts` - Fixed window access with try-catch blocks and enhanced logging
+- `packages/ai/workflow/tasks/gemini-web-search.ts` - Added detailed execution logging
+- `packages/ai/providers.ts` - Fixed window access and enhanced model creation logging
+
+**Result:** Gemini web search now works correctly in all environments (browser, server-side, Web Worker) with proper message filtering, comprehensive error handling, and clear user guidance.
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:

@@ -1,6 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { format } from 'date-fns';
-import { ModelEnum } from '../../models';
+import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, handleError, sendEvents } from '../utils';
 
@@ -90,9 +90,12 @@ Your report should demonstrate subject matter expertise while remaining intellec
             },
         });
 
+        const mode = context?.get('mode') || '';
+        const model = getModelFromChatMode(mode);
+        
         const answer = await generateText({
             prompt,
-            model: ModelEnum.CLAUDE_4_SONNET,
+            model,
             messages,
             signal,
             byokKeys: context?.get('apiKeys'),

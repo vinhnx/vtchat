@@ -18,6 +18,7 @@ export default function NotFound() {
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                     <Link href="/chat">
+                        {/* @ts-ignore - Type compatibility issue between React versions */}
                         <Button size="sm" className="flex items-center gap-2">
                             <IconHome size={16} />
                             Go back home

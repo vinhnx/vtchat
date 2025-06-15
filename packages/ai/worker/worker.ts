@@ -38,6 +38,8 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 config,
                 apiKeys: newApiKeys,
                 mcpConfig,
+                webSearch,
+                showSuggestions,
             } = payload;
 
             // Set API keys if provided
@@ -66,6 +68,8 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 config,
                 mcpConfig,
                 apiKeys: newApiKeys,
+                webSearch,
+                showSuggestions,
                 onFinish: (data: any) => {},
             });
 

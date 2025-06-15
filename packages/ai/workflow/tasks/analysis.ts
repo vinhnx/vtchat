@@ -1,5 +1,5 @@
 import { createTask } from '@repo/orchestrator';
-import { ModelEnum } from '../../models';
+import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, getHumanizedDate, handleError, sendEvents } from '../utils';
 
@@ -63,9 +63,12 @@ ${s}
             },
         });
 
+        const mode = context?.get('mode') || '';
+        const model = getModelFromChatMode(mode);
+        
         const text = await generateText({
             prompt,
-            model: ModelEnum.Deepseek_R1,
+            model,
             messages: messages as any,
             signal,
             byokKeys: context?.get('apiKeys'),

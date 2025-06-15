@@ -69,8 +69,23 @@ export const ThreadItem = memo(
                 threadItem?.status === 'ERROR'
             );
         }, [threadItem]);
+
+        const steps = useMemo(() => {
+            return Object.values(threadItem?.steps || {});
+        }, [threadItem.steps]);
+
+        const validSources = useMemo(() => {
+            const sources = threadItem.sources || [];
+            return sources.filter(source => 
+                source && 
+                typeof source.title === 'string' && 
+                typeof source.link === 'string' && 
+                source.link.trim() !== '' &&
+                typeof source.index === 'number'
+            );
+        }, [threadItem.sources]);
         return (
-            <CitationProvider sources={threadItem.sources || []}>
+            <CitationProvider sources={validSources}>
                 <div className="w-full" ref={inViewRef} id={`thread-item-${threadItem.id}`}>
                     <div className={cn('flex w-full flex-col items-start gap-3 pt-4')}>
                         {threadItem.query && (
@@ -88,7 +103,7 @@ export const ThreadItem = memo(
 
                         {threadItem.steps && (
                             <Steps
-                                steps={Object.values(threadItem?.steps || {})}
+                                steps={steps}
                                 threadItem={threadItem}
                             />
                         )}
@@ -105,7 +120,7 @@ export const ThreadItem = memo(
                         <div ref={messageRef} className="w-full">
                             {hasAnswer && threadItem.answer?.text && (
                                 <div className="flex flex-col">
-                                    <SourceGrid sources={threadItem.sources || []} />
+                                    <SourceGrid sources={validSources} />
 
                                     <MarkdownContent
                                         content={animatedText || ''}
