@@ -3,9 +3,8 @@ export * from './chat-mode-router';
 export * from './completion';
 export * from './planner';
 
+export * from './gemini-web-search';
 export * from './refine-query';
 export * from './reflector';
 export * from './suggestion';
-export * from './web-search';
-export * from './gemini-web-search';
 export * from './writer';

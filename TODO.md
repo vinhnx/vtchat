@@ -1,9 +1,9 @@
 # TODO List
 
-Check gemini models doesn't work on chat mode
-[] gemini 2.5 pro preview
-[] gemini 2.5 flash preview
-[] Gemini 2.0 Flash
+
+--
+https://oxc.rs/
+https://oxc.rs/blog/2025-06-10-oxlint-stable
 
 --
 [][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
@@ -49,23 +49,6 @@ Check gemini models doesn't work on chat mode
 --
 
 [] Remove free/default models, use BYOK completely -> when click on a model on chat models selection list in chat input -> check for existing BYOK settings on Settings cache. if not it should open a modal to save a BYOK model and retry.
-
---
-
-[] Handle credits system
-
---
-[] <https://github.com/trendy-design/llmchat?tab=readme-ov-file#workflow-orchestration>
-
---
-[] Pro Search Enhanced search with web integration for real-time information.
-
---
-
-[] Deep Research: Comprehensive analysis of complex topics with in-depth exploration.
-
---
-[] use <vinhnguyenxuan@icloud.com> for ampcode
 
 --
 

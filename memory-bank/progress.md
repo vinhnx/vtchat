@@ -479,6 +479,84 @@ Fixed a React console error where an invalid `onClick` prop was being supplied t
 - No more Fragment-related prop warnings
 - Component renders properly in all states
 
+### Chat Mode Thread Creation Enhancement ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+**Overview:** Implemented automatic new thread creation when users switch between specific chat modes to improve user experience and workflow separation.
+
+**Features Implemented:**
+
+1. **Deep Research ↔ Pro Search Mode Switching**
+   - When user switches from "Deep Research" to "Pro Search" mode (or vice versa)
+   - Automatically creates a new chat thread with proper thread title
+   - Preserves mode-specific workflow context separation
+
+2. **Research Mode to Custom Model Switching**
+   - When user switches from either "Deep Research" or "Pro Search" to any custom model
+   - Creates new thread to maintain clear separation between research workflows and regular chat
+   - Custom models include: GPT 4o Mini, GPT 4.1 series, Claude 4 series, Gemini models, etc.
+
+3. **Web Search Button Hide Enhancement**
+   - Fixed WebSearchButton logic to properly hide when Deep Research or Pro Search modes are selected
+   - Improved conditional rendering with separate conditions instead of combined AND logic
+   - Button now correctly respects `webSearch: false` configuration for research modes
+
+**Technical Implementation:**
+
+- **File Modified:** `packages/common/components/chat-input/chat-actions.tsx`
+- **Logic Added:** Enhanced `handleModeSelect` function with thread creation detection
+- **Navigation:** Uses Next.js router to navigate to new thread with generated nanoid
+- **Thread Management:** Integrates with useChatStore's `createThread` method
+- **Mode Setting:** Implements delayed mode setting after navigation (100ms timeout)
+
+**Test Cases Created:**
+
+- Created test file: `apps/web/app/tests/test-chat-mode-thread-creation.js`
+- Documented expected behaviors for all switching scenarios
+- Manual test scenarios for verification
+
+**User Experience Improvements:**
+
+- Clear workflow separation between research modes and regular chat
+- Automatic thread organization prevents mode confusion
+- Seamless transitions with proper navigation and state management
+- Thread titles automatically set to "{Mode} Chat" for easy identification
+
+**Result:** Users now experience better workflow organization with automatic thread creation when switching between research modes or from research modes to custom models, while the Web Search button is properly hidden for research modes that have built-in search capabilities.
+
+### Legacy webSearchTask Removal ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Deprecated Task Analysis**: Confirmed `webSearchTask` in `packages/ai/workflow/tasks/web-search.ts` throws error and is no longer used
+- ✅ **Workflow Routing Update**: Updated `reflectorTask` to route to `'gemini-web-search'` instead of `'web-search'`
+- ✅ **Import Cleanup**: Removed `webSearchTask` import from `packages/ai/workflow/flow.ts`
+- ✅ **Task Registration Cleanup**: Removed `webSearchTask` from workflow builder tasks array
+- ✅ **Export Cleanup**: Removed `webSearchTask` export from `packages/ai/workflow/tasks/index.ts`
+- ✅ **File Removal**: Deleted deprecated `packages/ai/workflow/tasks/web-search.ts` file
+- ✅ **Reference Verification**: Confirmed no remaining references to deprecated task in active code paths
+
+**Background:**
+The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` which provides better web search capabilities using Gemini models. The old task only threw an error directing users to use Gemini models instead.
+
+**Current Workflow Routing:**
+
+- Deep Research mode → `refine-query` → `reflector` → `gemini-web-search` → `analysis`
+- Pro Search mode → `gemini-web-search` → `reflector` → `gemini-web-search` → `analysis`
+- Planner mode → `gemini-web-search` → routing continues based on results
+
+**Files Modified:**
+
+- `packages/ai/workflow/tasks/reflector.ts` - Updated routing from 'web-search' to 'gemini-web-search'
+- `packages/ai/workflow/flow.ts` - Removed webSearchTask import and registration
+- `packages/ai/workflow/tasks/index.ts` - Removed webSearchTask export
+- `packages/ai/workflow/tasks/web-search.ts` - File deleted
+
+**Result:** Workflow system is now cleaner with only active, functional tasks. All web search operations now consistently use the modern Gemini-based implementation.
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:

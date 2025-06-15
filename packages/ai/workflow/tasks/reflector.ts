@@ -140,7 +140,7 @@ Current date: ${getHumanizedDate()}
     onError: handleError,
     route: ({ result, executionContext, config, context }) => {
         if (result?.queries?.filter(Boolean)?.length > 0) {
-            return 'web-search';
+            return 'gemini-web-search';
         }
 
         return 'analysis';
