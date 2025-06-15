@@ -229,7 +229,7 @@ We may suspend or terminate your account if you:
 
 For questions about these Terms, please contact us:
 
-**Email:** contact@vtchat.io.vn
+**Email:** vtchat.io@gmail.com
 **Address:** An Giang, Vietnam
 **Support:** Available through our platform
 **Business Hours:** Monday-Friday, 9 AM - 6 PM ICT

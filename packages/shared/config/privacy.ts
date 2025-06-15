@@ -311,21 +311,21 @@ VT is built with **privacy-first principles** at its core:
 
 ### 11.1 Privacy Inquiries
 **For privacy-related questions:**
-- **Email:** contact@vtchat.io.vn
+- **Email:** vtchat.io@gmail.com
 - **Subject Line:** "Privacy Policy Inquiry"
 - **Response time:** We aim to respond within 72 hours
 - **Language:** Inquiries in English or Vietnamese
 
 ### 11.2 Data Subject Requests
 **To exercise your privacy rights:**
-- **Email:** contact@vtchat.io.vn
+- **Email:** vtchat.io@gmail.com
 - **Subject Line:** "Data Subject Request"
 - **Identity verification:** May be required for security purposes
 - **Processing time:** Requests fulfilled within 30 days when possible
 
 ### 11.3 Security Incidents
 **To report security concerns:**
-- **Email:** contact@vtchat.io.vn
+- **Email:** vtchat.io@gmail.com
 - **Subject Line:** "Security Issue"
 - **Responsible disclosure:** We appreciate responsible vulnerability reporting
 
