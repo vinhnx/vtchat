@@ -3,14 +3,7 @@ import { z } from 'zod';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { readWebPagesWithTimeout, TReaderResult } from '../reader';
-import {
-    generateObject,
-    generateText,
-    getHumanizedDate,
-    getSERPResults,
-    handleError,
-    sendEvents,
-} from '../utils';
+import { generateObject, generateText, getHumanizedDate, handleError, sendEvents } from '../utils';
 
 const buildWebSearchPrompt = (results: TReaderResult[]): string => {
     const today = new Date().toLocaleDateString();
@@ -122,7 +115,9 @@ export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSc
             });
         } catch (error) {
             console.error('Failed to generate search query:', error);
-            throw new Error('Failed to generate search query. Please check your API configuration.');
+            throw new Error(
+                'Failed to generate search query. Please check your API configuration.'
+            );
         }
 
         if (!query?.query) {
@@ -139,17 +134,9 @@ export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSc
             },
         });
 
-        const results = await getSERPResults([query.query], gl, context?.get('apiKeys'));
-
-        if (!results || results.length === 0) {
-            throw new Error('No results found');
-        }
-
-        // Mark search as COMPLETED and read as PENDING with data
-        const resultsData = results.map((result: any) => ({
-            title: result.title,
-            link: result.link,
-        }));
+        throw new Error(
+            'Quick search is no longer supported. Please use Web Search with Gemini models instead.'
+        );
 
         updateStep({
             stepId: 0,

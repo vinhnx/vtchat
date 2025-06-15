@@ -24,7 +24,6 @@ declare global {
         AI_API_KEYS?: {
             [key in ProviderEnumType]?: string;
         };
-        SERPER_API_KEY?: string;
         JINA_API_KEY?: string;
         NEXT_PUBLIC_APP_URL?: string;
     }
@@ -41,7 +40,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
             [Providers.GOOGLE]: 'GEMINI_API_KEY',
             [Providers.FIREWORKS]: 'FIREWORKS_API_KEY',
         };
-        
+
         const byokKey = byokKeys[keyMapping[provider]];
         if (byokKey) return byokKey;
     }
@@ -75,52 +74,158 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
         }
 
         // For browser environments (self is also defined in browser)
-        if (typeof window !== 'undefined' && window.AI_API_KEYS) {
-            return window.AI_API_KEYS[provider] || '';
+        try {
+            if (typeof window !== 'undefined' && window.AI_API_KEYS) {
+                return window.AI_API_KEYS[provider] || '';
+            }
+        } catch (error) {
+            // window is not available in this environment
         }
     }
 
     return '';
 };
 
-export const getProviderInstance = (provider: ProviderEnumType, byokKeys?: Record<string, string>) => {
+export const getProviderInstance = (
+    provider: ProviderEnumType,
+    byokKeys?: Record<string, string>
+) => {
+    const apiKey = getApiKey(provider, byokKeys);
+
     switch (provider) {
         case Providers.OPENAI:
             return createOpenAI({
-                apiKey: getApiKey(Providers.OPENAI, byokKeys),
+                apiKey: apiKey || 'dummy-key', // Provide fallback to prevent immediate errors
             });
         case 'anthropic':
             return createAnthropic({
-                apiKey: getApiKey(Providers.ANTHROPIC, byokKeys),
+                apiKey: apiKey || 'dummy-key',
                 headers: {
                     'anthropic-dangerous-direct-browser-access': 'true',
                 },
             });
         case 'together':
             return createTogetherAI({
-                apiKey: getApiKey(Providers.TOGETHER, byokKeys),
+                apiKey: apiKey || 'dummy-key',
             });
         case 'google':
+            if (!apiKey) {
+                throw new Error(
+                    'Google/Gemini API key is required but not found. Please configure your API key.'
+                );
+            }
             return createGoogleGenerativeAI({
-                apiKey: getApiKey(Providers.GOOGLE, byokKeys),
+                apiKey: apiKey,
             });
         case 'fireworks':
             return createFireworks({
-                apiKey: getApiKey(Providers.FIREWORKS, byokKeys),
+                apiKey: apiKey || 'dummy-key',
             });
         default:
             return createOpenAI({
-                apiKey: getApiKey(Providers.OPENAI, byokKeys),
+                apiKey: apiKey || 'dummy-key',
             });
     }
 };
 
-export const getLanguageModel = (m: ModelEnum, middleware?: LanguageModelV1Middleware, byokKeys?: Record<string, string>) => {
+export const getLanguageModel = (
+    m: ModelEnum,
+    middleware?: LanguageModelV1Middleware,
+    byokKeys?: Record<string, string>,
+    useSearchGrounding?: boolean
+) => {
+    console.log('=== getLanguageModel START ===');
+    console.log('Parameters:', {
+        modelEnum: m,
+        hasMiddleware: !!middleware,
+        hasByokKeys: !!byokKeys,
+        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        useSearchGrounding,
+    });
+
     const model = models.find(model => model.id === m);
-    const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys);
-    const selectedModel = instance(model?.id || ChatMode.GEMINI_2_0_FLASH);
-    if (middleware) {
-        return wrapLanguageModel({ model: selectedModel, middleware }) as LanguageModelV1;
+    console.log('Found model:', {
+        found: !!model,
+        modelId: model?.id,
+        modelName: model?.name,
+        modelProvider: model?.provider,
+    });
+
+    if (!model) {
+        console.error('Model not found:', m);
+        throw new Error(`Model ${m} not found`);
     }
-    return selectedModel as LanguageModelV1;
+
+    try {
+        console.log('Getting provider instance for:', model.provider);
+        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys);
+        console.log('Provider instance created:', {
+            hasInstance: !!instance,
+            instanceType: typeof instance,
+        });
+
+        // Handle Gemini models with search grounding
+        if (model?.provider === 'google' && useSearchGrounding) {
+            console.log('Creating Gemini model with search grounding...');
+            const modelId = model?.id || ChatMode.GEMINI_2_0_FLASH;
+            console.log('Using model ID:', modelId);
+
+            try {
+                const selectedModel = instance(modelId, {
+                    useSearchGrounding: true,
+                });
+                console.log('Gemini model with grounding created:', {
+                    hasModel: !!selectedModel,
+                    modelType: typeof selectedModel,
+                });
+
+                if (middleware) {
+                    console.log('Wrapping model with middleware...');
+                    return wrapLanguageModel({
+                        model: selectedModel,
+                        middleware,
+                    }) as LanguageModelV1;
+                }
+                return selectedModel as LanguageModelV1;
+            } catch (error: any) {
+                console.error('Error creating Gemini model with grounding:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
+            }
+        }
+
+        console.log('Creating standard model...');
+        const modelId = model?.id || ChatMode.GEMINI_2_0_FLASH;
+        console.log('Using model ID:', modelId);
+
+        try {
+            const selectedModel = instance(modelId);
+            console.log('Standard model created:', {
+                hasModel: !!selectedModel,
+                modelType: typeof selectedModel,
+            });
+
+            if (middleware) {
+                console.log('Wrapping model with middleware...');
+                return wrapLanguageModel({ model: selectedModel, middleware }) as LanguageModelV1;
+            }
+            console.log('=== getLanguageModel END ===');
+            return selectedModel as LanguageModelV1;
+        } catch (error: any) {
+            console.error('Error creating standard model:', error);
+            console.error('Error stack:', error.stack);
+            throw error;
+        }
+    } catch (error: any) {
+        console.error('Error in getLanguageModel:', error);
+        console.error('Error stack:', error.stack);
+
+        // Re-throw with more context
+        if (error.message?.includes('API key')) {
+            throw new Error(
+                `${model.provider} API key is required for model ${model.name}. Please configure your API key.`
+            );
+        }
+        throw error;
+    }
 };

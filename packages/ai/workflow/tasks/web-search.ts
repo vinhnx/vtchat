@@ -1,14 +1,7 @@
 import { createTask } from '@repo/orchestrator';
 import { ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import {
-    executeWebSearch,
-    generateText,
-    getHumanizedDate,
-    handleError,
-    processWebPages,
-    sendEvents,
-} from '../utils';
+import { generateText, getHumanizedDate, handleError, processWebPages, sendEvents } from '../utils';
 
 export const webSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'web-search',
@@ -17,13 +10,9 @@ export const webSearchTask = createTask<WorkflowEventSchema, WorkflowContextSche
         const stepId = data?.stepId;
         const gl = context?.get('gl');
         const { updateStep } = sendEvents(events);
-        const results = await executeWebSearch(queries, signal, gl);
-
-        const searchResultsData = results?.map((result: any) => ({
-            title: result.title,
-            link: result.link,
-            snippet: result.snippet,
-        }));
+        throw new Error(
+            'Traditional web search is no longer supported. Please use Web Search with Gemini models instead.'
+        );
 
         updateStep({
             stepId,

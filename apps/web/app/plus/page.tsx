@@ -14,7 +14,7 @@ import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
 import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
 import { ShineText } from '../../components/shine-text';
-import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
+// import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '../../lib/auth-client';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
 
@@ -136,11 +136,11 @@ export default function PlusPage() {
                             {PRICING_CONFIG.product.name}
                         </AnimatedBadge>
 
-                        <TypographyLarge>
+                        <div>
                             <ShineText className="text-2xl sm:text-3xl">
                                 Plans that grow with you
                             </ShineText>
-                        </TypographyLarge>
+                        </div>
                     </div>
                 </div>
 
@@ -271,24 +271,20 @@ export default function PlusPage() {
                 {/* Features Section - Moved below pricing table */}
                 <div className="mb-8 mt-8">
                     <div className="mb-6 text-center">
-                        <TypographyLarge className="mb-4 text-white">
+                        <h2 className="mb-4 text-white text-lg font-semibold">
                             Powerful Features
-                        </TypographyLarge>
-                        <TypographyMuted className="mx-auto max-w-2xl text-white">
+                        </h2>
+                        <p className="mx-auto max-w-2xl text-white text-sm text-muted-foreground">
                             Discover what makes {PRICING_CONFIG.product.name} the perfect choice for
                             your productivity needs
-                        </TypographyMuted>
+                        </p>
                     </div>
                     <FeaturesAccordion />
                 </div>
 
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
-                    <TypographyLarge className="text-white">Ready to get started?</TypographyLarge>
-                    <TypographyP className="mx-auto mt-0 max-w-2xl text-base text-white">
-                        Join thousands of users who are already boosting their productivity with{' '}
-                        {PRICING_CONFIG.product.name}
-                    </TypographyP>
+                    <h2 className="text-white text-lg font-semibold">Ready to get started?</h2>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
                             onClick={() => {

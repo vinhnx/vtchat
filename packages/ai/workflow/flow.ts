@@ -10,6 +10,7 @@ import { CoreMessage } from 'ai';
 import {
     analysisTask,
     completionTask,
+    geminiWebSearchTask,
     modeRoutingTask,
     plannerTask,
     proSearchTask,
@@ -198,6 +199,7 @@ export const runWorkflow = ({
     builder.addTasks([
         plannerTask,
         webSearchTask,
+        geminiWebSearchTask,
         reflectorTask,
         analysisTask,
         writerTask,

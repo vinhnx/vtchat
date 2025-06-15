@@ -1,4 +1,4 @@
-import { trimMessageHistoryEstimated } from '@repo/ai/models';
+import { getModelFromChatMode, supportsNativeWebSearch, trimMessageHistoryEstimated } from '@repo/ai/models';
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -19,10 +19,21 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
         updateStatus('PENDING');
 
+        const webSearch = context?.get('webSearch') || false;
+        const model = getModelFromChatMode(mode);
+
         if (mode === ChatMode.Deep) {
             redirectTo('refine-query');
         } else if (mode === ChatMode.Pro) {
             redirectTo('pro-search');
+        } else if (webSearch) {
+            // Only support web search for Gemini models to save costs
+            if (supportsNativeWebSearch(model)) {
+                redirectTo('planner');
+            } else {
+                // For non-Gemini models with web search, redirect to completion with a note
+                redirectTo('completion');
+            }
         } else {
             redirectTo('completion');
         }

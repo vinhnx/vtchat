@@ -1,6 +1,6 @@
 'use client';
 import { DotSpinner } from '@repo/common/components';
-import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
+import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -265,8 +265,7 @@ export const ChatModeButton = () => {
 };
 
 export const WebSearchButton = () => {
-    const useWebSearch = useChatStore(state => state.useWebSearch);
-    const setUseWebSearch = useChatStore(state => state.setUseWebSearch);
+    const { useWebSearch, setUseWebSearch, webSearchType, supportsNativeSearch } = useWebSearchHook();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
@@ -298,7 +297,15 @@ export const WebSearchButton = () => {
         <>
             <Button
                 size={useWebSearch ? 'sm' : 'icon-sm'}
-                tooltip="Web Search"
+                tooltip={
+                    useWebSearch
+                        ? webSearchType === 'native'
+                            ? 'Web Search (Gemini Native)'
+                            : webSearchType === 'unsupported'
+                            ? 'Web Search (Gemini models only)'
+                            : 'Web Search'
+                        : 'Web Search'
+                }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
                 onClick={handleWebSearchToggle}
@@ -308,7 +315,11 @@ export const WebSearchButton = () => {
                     strokeWidth={2}
                     className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
                 />
-                {useWebSearch && <p className="text-xs">Web</p>}
+                {useWebSearch && (
+                    <p className="text-xs">
+                        {webSearchType === 'native' ? 'Gemini' : webSearchType === 'unsupported' ? 'N/A' : 'Web'}
+                    </p>
+                )}
             </Button>
 
             {/* Login prompt dialog */}

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { generateObject, getHumanizedDate, handleError, sendEvents } from '../utils';
+import { getModelFromChatMode, supportsNativeWebSearch } from '../../models';
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'planner',
@@ -61,9 +62,12 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                         - queries: 2 well-crafted search queries (4-8 words) that targets the most important aspects
                 `;
 
+        const mode = context?.get('mode') || '';
+        const model = getModelFromChatMode(mode);
+        
         const object = await generateObject({
             prompt,
-            model: ModelEnum.GPT_4o_Mini,
+            model,
             schema: z.object({
                 reasoning: z.string(),
                 queries: z.array(z.string()),
@@ -94,5 +98,5 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
         };
     },
     onError: handleError,
-    route: ({ result }) => 'web-search',
+    route: () => 'gemini-web-search',
 });

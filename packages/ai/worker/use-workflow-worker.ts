@@ -110,6 +110,8 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         config,
         apiKeys,
         mcpConfig,
+        webSearch,
+        showSuggestions,
     }: {
         mode: ChatMode;
         question: string;
@@ -121,6 +123,8 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         config?: WorkflowConfig;
         apiKeys?: Record<string, string>;
         mcpConfig?: Record<string, string>;
+        webSearch?: boolean;
+        showSuggestions?: boolean;
     }) => {
         // Reset state
         setError(null);
@@ -160,6 +164,8 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                     config,
                     apiKeys: apiKeys || {},
                     mcpConfig,
+                    webSearch,
+                    showSuggestions,
                 },
             });
 

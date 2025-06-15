@@ -399,6 +399,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     threadItemId: optimisticAiThreadItemId,
                     parentThreadItemId: '',
                     customInstructions,
+                    webSearch: useWebSearch,
+                    showSuggestions: showSuggestions ?? true,
                     apiKeys: apiKeys(),
                 });
             } else {
