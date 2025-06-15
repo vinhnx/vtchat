@@ -304,10 +304,10 @@ export const WebSearchButton = () => {
                 {useWebSearch && (
                     <p className="text-xs">
                         {webSearchType === 'native'
-                            ? 'Gemini'
+                            ? 'Web Search (Native)'
                             : webSearchType === 'unsupported'
                               ? 'N/A'
-                              : 'Web'}
+                              : 'Web Search'}
                     </p>
                 )}
             </Button>
