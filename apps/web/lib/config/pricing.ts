@@ -21,17 +21,13 @@ export const PRICING_CONFIG = {
             interval: process.env.PRICING_INTERVAL || 'month',
             features: [
                 {
-                    name: 'Pro Search',
-                    description: 'Enhanced search with web integration for real-time information',
+                    name: 'Grounding Web Search',
+                    description:
+                        'Enhanced search with web integration and comprehensive analysis for real-time information',
                 },
                 {
                     name: 'Dark Mode',
                     description: 'Access to beautiful dark mode interface',
-                },
-                {
-                    name: 'Deep Research',
-                    description:
-                        'Comprehensive analysis of complex topics with in-depth exploration',
                 },
                 {
                     name: 'Priority Support',

@@ -13,8 +13,8 @@ By accessing or using VT, you agree to be bound by these Terms. If you disagree 
 
 VT is a privacy-focused AI platform featuring advanced research capabilities that enables you to:
 - **Agentic Workflows**: Complex task coordination via custom workflow orchestration
-- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
-- **Web Search Grounding With Gemini**: Enhanced search with web integration for real-time information
+- **Grounding Web Search**: Comprehensive analysis of complex topics with in-depth exploration
+- **Grounding Web Search**: Enhanced search with web integration for real-time information
 - **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models
 - **Local Privacy**: All conversations stored locally on your device using IndexedDB
 - **BYOK Support**: Use your own API keys for unlimited access
@@ -28,7 +28,7 @@ VT is a privacy-focused AI platform featuring advanced research capabilities tha
 ### 2.1 Account Creation
 - You may use VT anonymously for basic functionality
 - Account registration (via Google or GitHub OAuth) is required for:
-  - VT+ subscription features (Pro Search, Deep Research, Dark Mode)
+  - VT+ subscription features (Grounding Web Search, Dark Mode)
   - Daily usage tracking and fair usage enforcement
   - Thread synchronization and account-based management
 - You must provide accurate information during registration
@@ -73,8 +73,8 @@ VT is a privacy-focused AI platform featuring advanced research capabilities tha
 
 ### 4.1 VT+ Subscription Features
 VT+ is a monthly subscription service for **$9.99 USD** that includes:
-- **Web Search Grounding With Gemini**: Enhanced search with web integration for real-time information
-- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
+- **Grounding Web Search**: Enhanced search with web integration for real-time information
+- **Grounding Web Search**: Comprehensive analysis of complex topics with in-depth exploration
 - **Dark Mode**: Access to dark theme interface
 - **Advanced Chat Modes**: Additional AI model access and capabilities
 - **Priority Support**: Enhanced customer support

@@ -25,7 +25,7 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
         if (mode === ChatMode.Deep) {
             redirectTo('refine-query');
         } else if (mode === ChatMode.Pro) {
-            redirectTo('pro-search');
+            redirectTo('gemini-web-search');
         } else if (webSearch) {
             // Only support web search for Gemini models to save costs
             if (supportsNativeWebSearch(model)) {

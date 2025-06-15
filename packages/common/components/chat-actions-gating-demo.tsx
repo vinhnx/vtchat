@@ -65,8 +65,10 @@ export const ChatActionsGatingDemo = () => {
                                     <option value={ChatMode.CLAUDE_4_SONNET}>
                                         Claude 4 Sonnet (VT+)
                                     </option>
-                                    <option value={ChatMode.Deep}>Deep Research (VT+)</option>
-                                    <option value={ChatMode.Pro}>Pro Search (VT+)</option>
+                                    <option value={ChatMode.Deep}>
+                                        Grounding Web Search (VT+)
+                                    </option>
+                                    <option value={ChatMode.Pro}>Grounding Web Search (VT+)</option>
                                 </select>
                             </div>
                         </div>
@@ -86,13 +88,7 @@ export const ChatActionsGatingDemo = () => {
                             <h4 className="mb-3 text-sm font-medium">Advanced Chat Modes</h4>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span>Deep Research</span>
-                                    <span className="rounded bg-purple-100 px-2 py-0.5 text-xs text-purple-700">
-                                        VT+ Required
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Pro Search</span>
+                                    <span>Grounding Web Search</span>
                                     <span className="rounded bg-purple-100 px-2 py-0.5 text-xs text-purple-700">
                                         VT+ Required
                                     </span>

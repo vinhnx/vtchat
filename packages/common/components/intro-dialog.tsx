@@ -35,7 +35,7 @@ export const IntroDialog = () => {
         },
         {
             icon,
-            text: `**Research-friendly**: Leverage Web Search, Pro Search, and Deep Research features.`,
+            text: `**Research-friendly**: Leverage Grounding Web Search - by Gemini for enhanced research capabilities.`,
         },
         {
             icon,

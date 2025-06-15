@@ -345,7 +345,7 @@ The comprehensive runtime logging successfully identified two main issues:
 **Status:** ✅ COMPLETED
 
 - ✅ **Updated 'Web Search' to 'Grounding Web Search - by Gemini'**: Changed all instances of "Web Search" in tooltips and UI components to reflect the Gemini-powered grounding functionality
-- ✅ **Updated 'Pro Search' to 'Web Search Grounding With Gemini'**: Changed all instances of "Pro Search" throughout the application to the new naming convention
+- ✅ **Updated 'Pro Search' to 'Grounding Web Search'**: Changed all instances of "Pro Search" throughout the application to the new naming convention
 - ✅ **Core Configuration Updates**: Modified subscription types, chat mode configuration, and VT+ features to use new terminology
 - ✅ **Component Updates**: Updated chat actions, features accordion, and all UI components displaying search functionality
 - ✅ **Documentation Updates**: Updated terms of service, pricing information, and feature descriptions
@@ -354,7 +354,7 @@ The comprehensive runtime logging successfully identified two main issues:
 **Files Modified:**
 
 - `packages/shared/config/vt-plus-features.ts` - Updated feature name to "Grounding Web Search - by Gemini"
-- `packages/shared/types/subscription.ts` - Updated Pro Search to "Web Search Grounding With Gemini"
+- `packages/shared/types/subscription.ts` - Updated Pro Search to "Grounding Web Search"
 - `packages/shared/config/chat-mode.ts` - Updated chat mode display name
 - `packages/common/components/chat-input/chat-actions.tsx` - Updated UI labels and tooltips
 - `apps/web/components/features-accordion.tsx` - Updated accordion trigger text

@@ -86,12 +86,12 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
     },
     [FeatureSlug.DEEP_RESEARCH]: {
         slug: FeatureSlug.DEEP_RESEARCH,
-        name: 'Deep Research',
+        name: 'Grounding Web Search',
         description: 'Advanced research capabilities with comprehensive analysis',
     },
     [FeatureSlug.PRO_SEARCH]: {
         slug: FeatureSlug.PRO_SEARCH,
-        name: 'Web Search Grounding With Gemini',
+        name: 'Grounding Web Search',
         description: 'Enhanced search with web integration',
     },
     [FeatureSlug.ADVANCED_CHAT_MODES]: {

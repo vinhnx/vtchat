@@ -2,15 +2,14 @@
 
 ## Introduction
 
-VTChat is a minimal AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Pro Search and Deep Research for in-depth analysis of complex topics. A key focus of VTChat is enhancing user privacy by storing all user data locally in the browser using IndexedDB, ensuring conversations remain confidential.
+VTChat is a minimal AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Grounding Web Search for in-depth analysis of complex topics. A key focus of VTChat is enhancing user privacy by storing all user data locally in the browser using IndexedDB, ensuring conversations remain confidential.
 
 The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) managed via Creem.io, with a user-friendly customer portal for subscription management.
 
 ## Key Features
 
 * **Advanced Research Modes**:
-  * **Deep Research**: Comprehensive analysis of complex topics.
-  * **Pro Search**: Enhanced search with web integration.
+  * **Grounding Web Search**: Enhanced search with web integration and comprehensive analysis.
 * **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
 * **Privacy-Focused**:
   * **Local Storage**: All user chat data stored in the browser's IndexedDB via Dexie.js.

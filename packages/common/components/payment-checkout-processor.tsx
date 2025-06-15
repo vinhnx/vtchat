@@ -210,7 +210,7 @@ export function CreemCheckoutProcessor() {
                     toast({
                         title: 'Welcome to VT+! 🎉',
                         description:
-                            'Your subscription is now active. Enjoy Pro Search, Dark Mode, and Deep Research features!',
+                            'Your subscription is now active. Enjoy Grounding Web Search, Dark Mode, and advanced features!',
                     });
 
                     console.log('[CreemCheckoutProcessor] VT+ subscription activated');

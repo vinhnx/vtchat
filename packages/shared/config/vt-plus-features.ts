@@ -31,9 +31,9 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     },
     [FeatureSlug.DEEP_RESEARCH]: {
         id: FeatureSlug.DEEP_RESEARCH,
-        name: 'Deep Research',
+        name: 'Grounding Web Search',
         description:
-            'Deep Research: Comprehensive analysis of complex topics with in-depth exploration.',
+            'Grounding Web Search: Comprehensive analysis of complex topics with in-depth exploration.',
         enabled: true,
     },
 } as const;
@@ -76,7 +76,7 @@ export function getEnabledVTPlusFeatures(): VTPlusFeature[] {
  */
 export const VTPlusAccess = {
     /**
-     * Check if user has access to Pro Search
+     * Check if user has access to Grounding Web Search
      */
     hasProSearch: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.PRO_SEARCH);
