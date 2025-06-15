@@ -80,6 +80,7 @@ export async function executeStream({
             mcpConfig: data.mcpConfig || {},
             showSuggestions: data.showSuggestions || false,
             onFinish: onFinish,
+            apiKeys: data.apiKeys,
         });
 
         workflow.onAll((event, payload) => {

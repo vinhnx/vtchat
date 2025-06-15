@@ -30,8 +30,22 @@ declare global {
     }
 }
 
-// Helper function to get API key from env or global
-const getApiKey = (provider: ProviderEnumType): string => {
+// Helper function to get API key from env, global, or BYOK keys
+const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>): string => {
+    // First check BYOK keys if provided
+    if (byokKeys) {
+        const keyMapping: Record<ProviderEnumType, string> = {
+            [Providers.OPENAI]: 'OPENAI_API_KEY',
+            [Providers.ANTHROPIC]: 'ANTHROPIC_API_KEY',
+            [Providers.TOGETHER]: 'TOGETHER_API_KEY',
+            [Providers.GOOGLE]: 'GEMINI_API_KEY',
+            [Providers.FIREWORKS]: 'FIREWORKS_API_KEY',
+        };
+        
+        const byokKey = byokKeys[keyMapping[provider]];
+        if (byokKey) return byokKey;
+    }
+
     // For server environments
     if (typeof process !== 'undefined' && process.env) {
         switch (provider) {
@@ -69,41 +83,41 @@ const getApiKey = (provider: ProviderEnumType): string => {
     return '';
 };
 
-export const getProviderInstance = (provider: ProviderEnumType) => {
+export const getProviderInstance = (provider: ProviderEnumType, byokKeys?: Record<string, string>) => {
     switch (provider) {
         case Providers.OPENAI:
             return createOpenAI({
-                apiKey: getApiKey(Providers.OPENAI),
+                apiKey: getApiKey(Providers.OPENAI, byokKeys),
             });
         case 'anthropic':
             return createAnthropic({
-                apiKey: getApiKey(Providers.ANTHROPIC),
+                apiKey: getApiKey(Providers.ANTHROPIC, byokKeys),
                 headers: {
                     'anthropic-dangerous-direct-browser-access': 'true',
                 },
             });
         case 'together':
             return createTogetherAI({
-                apiKey: getApiKey(Providers.TOGETHER),
+                apiKey: getApiKey(Providers.TOGETHER, byokKeys),
             });
         case 'google':
             return createGoogleGenerativeAI({
-                apiKey: getApiKey(Providers.GOOGLE),
+                apiKey: getApiKey(Providers.GOOGLE, byokKeys),
             });
         case 'fireworks':
             return createFireworks({
-                apiKey: getApiKey(Providers.FIREWORKS),
+                apiKey: getApiKey(Providers.FIREWORKS, byokKeys),
             });
         default:
             return createOpenAI({
-                apiKey: getApiKey(Providers.OPENAI),
+                apiKey: getApiKey(Providers.OPENAI, byokKeys),
             });
     }
 };
 
-export const getLanguageModel = (m: ModelEnum, middleware?: LanguageModelV1Middleware) => {
+export const getLanguageModel = (m: ModelEnum, middleware?: LanguageModelV1Middleware, byokKeys?: Record<string, string>) => {
     const model = models.find(model => model.id === m);
-    const instance = getProviderInstance(model?.provider as ProviderEnumType);
+    const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys);
     const selectedModel = instance(model?.id || ChatMode.GEMINI_2_0_FLASH);
     if (middleware) {
         return wrapLanguageModel({ model: selectedModel, middleware }) as LanguageModelV1;

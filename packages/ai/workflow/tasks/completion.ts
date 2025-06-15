@@ -92,6 +92,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             signal,
             toolChoice: 'auto',
             maxSteps: 2,
+            byokKeys: context?.get('apiKeys'),
             onReasoning: (chunk, fullText) => {
                 reasoningBuffer.add(chunk);
             },

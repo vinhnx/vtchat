@@ -103,6 +103,7 @@ export type WorkflowContextSchema = {
     showSuggestions: boolean;
     customInstructions?: string;
     onFinish: (data: any) => void;
+    apiKeys?: Record<string, string>;
 };
 
 export const runWorkflow = ({
@@ -119,6 +120,7 @@ export const runWorkflow = ({
     onFinish,
     customInstructions,
     gl,
+    apiKeys,
 }: {
     mcpConfig: Record<string, string>;
     mode: ChatMode;
@@ -133,6 +135,7 @@ export const runWorkflow = ({
     onFinish?: (data: any) => void;
     gl?: Geo;
     customInstructions?: string;
+    apiKeys?: Record<string, string>;
 }) => {
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
@@ -180,6 +183,7 @@ export const runWorkflow = ({
         threadItemId,
         showSuggestions,
         onFinish: onFinish as any,
+        apiKeys,
     });
 
     // Use the typed builder

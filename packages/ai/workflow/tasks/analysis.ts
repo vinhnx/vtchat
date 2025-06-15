@@ -68,6 +68,7 @@ ${s}
             model: ModelEnum.Deepseek_R1,
             messages: messages as any,
             signal,
+            byokKeys: context?.get('apiKeys'),
             onReasoning: reasoning => {
                 chunkBuffer.add(reasoning);
             },

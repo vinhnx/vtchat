@@ -68,6 +68,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                 reasoning: z.string(),
                 queries: z.array(z.string()),
             }),
+            byokKeys: context?.get('apiKeys'),
             messages: messages as any,
             signal,
         });

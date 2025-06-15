@@ -66,6 +66,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 messages,
                 config,
                 mcpConfig,
+                apiKeys: newApiKeys,
                 onFinish: (data: any) => {},
             });
 

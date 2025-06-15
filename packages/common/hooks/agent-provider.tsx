@@ -138,9 +138,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 if (data.type === 'done') {
                     setIsGenerating(false);
-                    if (data?.threadItemId) {
-                        threadItemMap.delete(data.threadItemId);
-                    }
+                    // Don't delete the thread item from memory as it's needed for future reference
+                    // The threadItemMap serves as a cache and should retain completed items
                 }
             },
             [handleThreadItemUpdate, setIsGenerating, threadItemMap]
@@ -421,6 +420,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     parentThreadItemId: '',
                     webSearch: useWebSearch,
                     showSuggestions: showSuggestions ?? true,
+                    apiKeys: useWebSearch ? apiKeys() : undefined,
                 });
             }
         },
