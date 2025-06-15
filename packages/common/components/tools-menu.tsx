@@ -1,6 +1,6 @@
-import { Plus } from 'lucide-react';
+import { IconPlus } from '@tabler/icons-react';
 
-import { useMcpToolsStore } from '@repo/common/store';
+import { useAppStore, useMcpToolsStore } from '@repo/common/store';
 import { Button } from '@repo/ui/src/components/button';
 
 import {
@@ -13,23 +13,23 @@ import {
 } from '@repo/ui';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Check, Wrench } from 'lucide-react';
+import { IconCheck, IconTools } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
-import { SETTING_TABS, useAppStore } from '../store/app.store';
 import { useChatStore } from '../store/chat.store';
 import { ToolIcon } from './icons';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { data: session } = useSession();
+    const router = useRouter();
     const isSignedIn = !!session;
     const { mcpConfig, updateSelectedMCP, selectedMCP } = useMcpToolsStore();
     const apiKeys = useApiKeysStore();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore(state => state.setSettingTab);
     const isToolsAvailable = useMemo(
         () => hasApiKeyForChatMode(chatMode, isSignedIn),
         [chatMode, hasApiKeyForChatMode, apiKeys, isSignedIn]
@@ -51,7 +51,7 @@ export const ToolsMenu = () => {
                         rounded="full"
                         disabled={!isToolsAvailable}
                     >
-                        <Wrench size={18} strokeWidth={2} className="text-muted-foreground"  />
+                        <IconTools size={18} strokeWidth={2} className="text-muted-foreground" />
                         {selectedMCPTools?.length > 0 && (
                             <Badge
                                 variant="secondary"
@@ -80,18 +80,18 @@ export const ToolsMenu = () => {
                                 <span>{key}</span>
                                 <div className="flex-1" />
                                 {selectedMCP.includes(key) && (
-                                    <Check size={16} className="text-foreground"  />
+                                    <IconCheck size={16} className="text-foreground" />
                                 )}
                             </div>
                         </DropdownMenuItem>
                     ))}
                     {mcpConfig && Object.keys(mcpConfig).length === 0 && (
                         <div className="flex h-[150px] flex-col items-center justify-center gap-2">
-                            <Wrench
+                            <IconTools
                                 size={16}
                                 strokeWidth={2}
                                 className="text-muted-foreground"
-                             />
+                            />
                             <p className="text-muted-foreground text-sm">No tools found</p>
                             <Button
                                 rounded="full"
@@ -99,14 +99,13 @@ export const ToolsMenu = () => {
                                 className="text-muted-foreground text-xs"
                                 onClick={() => {
                                     setIsSettingsOpen(true);
-                                    setSettingTab(SETTING_TABS.MCP_TOOLS);
                                 }}
                             >
-                                <Plus
+                                <IconPlus
                                     size={14}
                                     strokeWidth={2}
                                     className="text-muted-foreground"
-                                 />
+                                />
                                 Add Tool
                             </Button>
                         </div>
@@ -116,10 +115,9 @@ export const ToolsMenu = () => {
                         <DropdownMenuItem
                             onClick={() => {
                                 setIsSettingsOpen(true);
-                                setSettingTab(SETTING_TABS.MCP_TOOLS);
                             }}
                         >
-                            <Plus size={14} strokeWidth={2} className="text-muted-foreground"  />
+                            <IconPlus size={14} strokeWidth={2} className="text-muted-foreground" />
                             Add Tool
                         </DropdownMenuItem>
                     )}

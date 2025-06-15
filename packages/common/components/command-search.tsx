@@ -52,11 +52,10 @@ export const CommandSearch = () => {
     const getThread = useChatStore(state => state.getThread);
     const removeThread = useChatStore(state => state.deleteThread);
     const switchThread = useChatStore(state => state.switchThread);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const router = useRouter();
     const { theme, setTheme } = useTheme();
     const clearThreads = useChatStore(state => state.clearAllThreads);
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();

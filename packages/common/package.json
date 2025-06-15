@@ -28,8 +28,8 @@
     },
     "devDependencies": {
         "@repo/typescript-config": "*",
-        "@types/react": "^18.2.45",
-        "@types/react-dom": "^18.2.18",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
         "autoprefixer": "^10.4.21",
         "eslint": "^8.56.0",
         "postcss": "^8.5.3",

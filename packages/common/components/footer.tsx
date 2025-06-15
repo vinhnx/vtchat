@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { TypographySmall } from '@repo/ui';
 
 export const Footer = () => {
     const links = [
@@ -25,7 +26,7 @@ export const Footer = () => {
                     </Link>
                 ))}
             </div>
-            <div className="text-muted-foreground text-xs">© 2025 VT. All rights reserved.</div>
+            <TypographySmall className="text-muted-foreground text-xs">© 2025 VT. All rights reserved.</TypographySmall>
         </div>
     );
 };

@@ -5,7 +5,7 @@ import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-co
 // Users table for Better Auth
 export const users = pgTable('users', {
     id: text('id').primaryKey(),
-    name: text('name').notNull(),
+    name: text('name').notNull(), // Using name as the username field (non-unique to allow display names)
     email: text('email').notNull().unique(),
     emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
     image: text('image'),

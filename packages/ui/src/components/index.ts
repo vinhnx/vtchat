@@ -34,6 +34,7 @@ export * from './textarea';
 export * from './toast';
 export * from './toaster';
 export * from './tooltip';
+export * from './typography';
 export * from './use-confirm-popover';
 export * from './use-toast';
 

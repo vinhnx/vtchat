@@ -11,19 +11,22 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
+    TypographyH3,
+    TypographyP,
+    TypographyMuted,
 } from '@repo/ui';
-import { Clock, Plus, Trash } from 'lucide-react';
+import { IconClock, IconPlus, IconTrash } from '@tabler/icons-react';
 import { CommandItem } from 'cmdk';
 import { MoreHorizontal } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-// Create a wrapper component for Trash to match expected icon prop type
+// Create a wrapper component for IconTrash to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <Trash size={size} className={className} />;
+}) => <IconTrash size={size} className={className} />;
 
 export default function ThreadsPage() {
     const threads = useChatStore(state => state.threads);
@@ -93,9 +96,9 @@ export default function ThreadsPage() {
     return (
         <div className="flex w-full flex-col gap-2">
             <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-2 pt-16">
-                <h3 className="font-clash text-brand text-2xl font-semibold tracking-wide">
+                <TypographyH3 className="font-clash text-brand tracking-wide">
                     Chat History
-                </h3>
+                </TypographyH3>
                 <Command className="bg-secondary !max-h-auto w-full">
                     <CommandInput
                         placeholder="Search"
@@ -123,14 +126,14 @@ export default function ThreadsPage() {
                                                         onClick={e => e.stopPropagation()}
                                                     />
                                                 ) : (
-                                                    <p className="line-clamp-2 w-full text-sm font-medium">
-                                                        {thread.title}
-                                                    </p>
+                                                    <TypographyP className="line-clamp-2 w-full text-sm font-medium !mt-0">
+                                                    {thread.title}
+                                                    </TypographyP>
                                                 )}
-                                                <p className="text-muted-foreground/50 flex flex-row items-center gap-1 text-xs">
-                                                    <Clock size={12} strokeWidth="2"  />
+                                                <TypographyMuted className="opacity-50 flex flex-row items-center gap-1 !mt-0">
+                                                    <IconClock size={12} strokeWidth="2" />
                                                     {moment(thread.createdAt).fromNow()}
-                                                </p>
+                                                </TypographyMuted>
                                             </div>
 
                                             <DropdownMenu>
@@ -176,15 +179,15 @@ export default function ThreadsPage() {
                         ) : (
                             <div className="border-hard mt-2 flex w-full flex-col items-center justify-center gap-4 rounded-md border border-dashed p-4">
                                 <div className="flex flex-col items-center gap-0">
-                                    <p className="text-muted-foreground text-sm">
+                                    <TypographyMuted className="!mt-0">
                                         No threads found
-                                    </p>
-                                    <p className="text-muted-foreground/70 mt-1 text-xs">
+                                    </TypographyMuted>
+                                    <TypographyMuted className="opacity-70 !mt-1 text-xs">
                                         Start a new conversation to create a thread
-                                    </p>
+                                    </TypographyMuted>
                                 </div>
                                 <Button variant="default" size="sm" onClick={() => push('/chat')}>
-                                    <Plus size={14} strokeWidth="2"  />
+                                    <IconPlus size={14} strokeWidth="2" />
                                     New Thread
                                 </Button>
                             </div>
