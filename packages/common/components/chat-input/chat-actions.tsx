@@ -1,7 +1,7 @@
 'use client';
 import { DotSpinner } from '@repo/common/components';
 import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
-import { useApiKeysStore, useChatStore } from '@repo/common/store';
+import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
@@ -10,12 +10,15 @@ import {
     cn,
     Dialog,
     DialogContent,
+    DialogHeader,
+    DialogTitle,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuTrigger,
+    Input,
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -45,90 +48,105 @@ export const chatOptions = [
     },
 ];
 
+// BYOK-only models - all models require API keys
 export const modelOptions = [
     {
         label: 'GPT 4o Mini',
         value: ChatMode.GPT_4o_Mini,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'GPT 4.1 Nano',
         value: ChatMode.GPT_4_1_Nano,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'GPT 4.1 Mini',
         value: ChatMode.GPT_4_1_Mini,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'GPT 4.1',
         value: ChatMode.GPT_4_1,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'GPT 4o',
         value: ChatMode.GPT_4o,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'o4 mini',
         value: ChatMode.O4_Mini,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Gemini 2.0 Flash',
         value: ChatMode.GEMINI_2_0_FLASH,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Gemini 2.0 Flash Lite',
         value: ChatMode.GEMINI_2_0_FLASH_LITE,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Gemini 2.5 Flash Preview',
         value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Gemini 2.5 Pro',
         value: ChatMode.GEMINI_2_5_PRO,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Gemini 2.5 Pro Preview',
         value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Claude 4 Sonnet',
         value: ChatMode.CLAUDE_4_SONNET,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Claude 4 Opus',
         value: ChatMode.CLAUDE_4_OPUS,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'DeepSeek R1',
         value: ChatMode.DEEPSEEK_R1,
         webSearch: true,
         icon: undefined,
+        requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
     },
 ];
 
@@ -342,6 +360,143 @@ export const GeneratingStatus = () => {
     );
 };
 
+// BYOK Setup Modal Component
+export const BYOKSetupModal = ({
+    isOpen,
+    onClose,
+    requiredApiKey,
+    modelName,
+    onApiKeySaved,
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    requiredApiKey: keyof ApiKeys;
+    modelName: string;
+    onApiKeySaved: () => void;
+}) => {
+    const setApiKey = useApiKeysStore(state => state.setKey);
+    const [apiKeyValue, setApiKeyValue] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+
+    const getProviderInfo = (key: keyof ApiKeys) => {
+        switch (key) {
+            case 'OPENAI_API_KEY':
+                return {
+                    name: 'OpenAI',
+                    url: 'https://platform.openai.com/api-keys',
+                    placeholder: 'sk-...',
+                };
+            case 'ANTHROPIC_API_KEY':
+                return {
+                    name: 'Anthropic',
+                    url: 'https://console.anthropic.com/settings/keys',
+                    placeholder: 'sk-ant-...',
+                };
+            case 'GEMINI_API_KEY':
+                return {
+                    name: 'Google Gemini',
+                    url: 'https://ai.google.dev/api',
+                    placeholder: 'AIza...',
+                };
+            case 'FIREWORKS_API_KEY':
+                return {
+                    name: 'Fireworks AI',
+                    url: 'https://app.fireworks.ai/settings/users/api-keys',
+                    placeholder: 'fw-...',
+                };
+            default:
+                return {
+                    name: 'API Provider',
+                    url: '#',
+                    placeholder: 'Enter API key...',
+                };
+        }
+    };
+
+    const provider = getProviderInfo(requiredApiKey);
+
+    const handleSave = async () => {
+        if (!apiKeyValue.trim()) return;
+
+        setIsSaving(true);
+        try {
+            setApiKey(requiredApiKey, apiKeyValue.trim());
+            setApiKeyValue('');
+            onApiKeySaved();
+            onClose();
+        } catch (error) {
+            console.error('Failed to save API key:', error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleClose = () => {
+        setApiKeyValue('');
+        onClose();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={handleClose}>
+            <DialogContent className="max-w-md rounded-xl" ariaTitle="Setup API Key Required">
+                <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                        <BYOKIcon />
+                        Setup API Key Required
+                    </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 p-6">
+                    <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">
+                            To use <span className="font-medium">{modelName}</span>, you need to
+                            provide your own {provider.name} API key.
+                        </p>
+                        <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-950/20">
+                            <p className="text-xs text-blue-700 dark:text-blue-300">
+                                Your API key is stored locally and never sent to our servers.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="space-y-3">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                                {provider.name} API Key
+                            </label>
+                            <Input
+                                type="password"
+                                placeholder={provider.placeholder}
+                                value={apiKeyValue}
+                                onChange={e => setApiKeyValue(e.target.value)}
+                                className="font-mono"
+                            />
+                        </div>
+                        <a
+                            href={provider.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-blue-500 underline-offset-2 hover:text-blue-600 hover:underline"
+                        >
+                            Get {provider.name} API key →
+                        </a>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="outlined" onClick={handleClose} className="flex-1">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSave}
+                            disabled={!apiKeyValue.trim() || isSaving}
+                            className="flex-1"
+                        >
+                            {isSaving ? 'Saving...' : 'Save & Continue'}
+                        </Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 export const ChatModeOptions = ({
     chatMode,
     setChatMode,
@@ -361,8 +516,17 @@ export const ChatModeOptions = ({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
+    const apiKeys = useApiKeysStore(state => state.getAllKeys());
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
+
+    // BYOK modal state
+    const [byokModalOpen, setBYOKModalOpen] = useState(false);
+    const [pendingMode, setPendingMode] = useState<{
+        mode: ChatMode;
+        requiredApiKey: keyof ApiKeys;
+        modelName: string;
+    } | null>(null);
 
     // Use the unified subscription system
     const { hasAccess, isLoaded } = useSubscriptionAccess();
@@ -370,6 +534,7 @@ export const ChatModeOptions = ({
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
         const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+        const modelOption = modelOptions.find(opt => opt.value === mode);
 
         // Check if user is signed in for any model selection
         if (!isSignedIn) {
@@ -384,6 +549,22 @@ export const ChatModeOptions = ({
         if (config?.isAuthRequired && !isSignedIn) {
             push('/login');
             return;
+        }
+
+        // BYOK Check: For model options, check if required API key exists
+        if (modelOption?.requiredApiKey) {
+            const hasRequiredApiKey = !!apiKeys[modelOption.requiredApiKey];
+            
+            if (!hasRequiredApiKey) {
+                // Store the pending mode selection and open BYOK modal
+                setPendingMode({
+                    mode,
+                    requiredApiKey: modelOption.requiredApiKey,
+                    modelName: option?.label || 'this model',
+                });
+                setBYOKModalOpen(true);
+                return;
+            }
         }
 
         // Check subscription requirements using the unified system
@@ -421,6 +602,19 @@ export const ChatModeOptions = ({
         setChatMode(mode);
     };
 
+    const handleBYOKSaved = () => {
+        // After API key is saved, retry the mode selection
+        if (pendingMode) {
+            setChatMode(pendingMode.mode);
+            setPendingMode(null);
+        }
+    };
+
+    const handleBYOKClose = () => {
+        setBYOKModalOpen(false);
+        setPendingMode(null);
+    };
+
     // Helper function to check if a mode is gated
     const isModeGated = (mode: ChatMode): boolean => {
         if (!isLoaded) return false; // Don't show as gated while loading
@@ -444,80 +638,93 @@ export const ChatModeOptions = ({
     };
 
     return (
-        <DropdownMenuContent
-            align="start"
-            side="bottom"
-            className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
-        >
-            {/* Always show Advanced Mode options regardless of page context */}
-            <DropdownMenuGroup>
-                <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                {chatOptions.map(option => {
-                    const isGated = isModeGated(option.value);
-                    const config = ChatModeConfig[option.value];
+        <>
+            <DropdownMenuContent
+                align="start"
+                side="bottom"
+                className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
+            >
+                {/* Always show Advanced Mode options regardless of page context */}
+                <DropdownMenuGroup>
+                    <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
+                    {chatOptions.map(option => {
+                        const isGated = isModeGated(option.value);
+                        const config = ChatModeConfig[option.value];
 
-                    return (
-                        <DropdownMenuItem
-                            key={`advanced-${option.value}`}
-                            onSelect={() => handleModeSelect(option.value)}
-                            className={cn('h-auto', isGated && 'opacity-80')}
-                        >
-                            <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
-                                <div className="flex flex-col gap-0">
-                                    <p className="m-0 text-sm font-medium">
-                                        {option.label}
-                                        {isGated && (
-                                            <span className="ml-1 text-xs text-blue-600">
-                                                (VT+)
-                                            </span>
-                                        )}
-                                    </p>
-                                    {option.description && (
-                                        <p className="text-muted-foreground text-xs font-light">
-                                            {option.description}
+                        return (
+                            <DropdownMenuItem
+                                key={`advanced-${option.value}`}
+                                onSelect={() => handleModeSelect(option.value)}
+                                className={cn('h-auto', isGated && 'opacity-80')}
+                            >
+                                <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
+                                    <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
+                                    <div className="flex flex-col gap-0">
+                                        <p className="m-0 text-sm font-medium">
+                                            {option.label}
+                                            {isGated && (
+                                                <span className="ml-1 text-xs text-blue-600">
+                                                    (VT+)
+                                                </span>
+                                            )}
                                         </p>
-                                    )}
-                                </div>
-                                <div className="flex-1" />
-                                {config?.isNew && <NewIcon />}
-                            </div>
-                        </DropdownMenuItem>
-                    );
-                })}
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
-                <DropdownMenuLabel>Models</DropdownMenuLabel>
-                {modelOptions.map(option => {
-                    const isGated = isModeGated(option.value);
-                    const config = ChatModeConfig[option.value];
-
-                    return (
-                        <DropdownMenuItem
-                            key={`model-${option.value}`}
-                            onSelect={() => handleModeSelect(option.value)}
-                            className={cn('h-auto', isGated && 'opacity-80')}
-                        >
-                            <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
-                                <div className="flex flex-col gap-0">
-                                    <p className="text-sm font-medium">
-                                        {option.label}
-                                        {isGated && (
-                                            <span className="ml-1 text-xs text-blue-600">
-                                                (VT+)
-                                            </span>
+                                        {option.description && (
+                                            <p className="text-muted-foreground text-xs font-light">
+                                                {option.description}
+                                            </p>
                                         )}
-                                    </p>
+                                    </div>
+                                    <div className="flex-1" />
+                                    {config?.isNew && <NewIcon />}
                                 </div>
-                                <div className="flex-1" />
-                                {config?.isNew && <NewIcon />}
-                                {hasApiKeyForChatMode(option.value, isSignedIn) && <BYOKIcon />}
-                            </div>
-                        </DropdownMenuItem>
-                    );
-                })}
-            </DropdownMenuGroup>
-        </DropdownMenuContent>
+                            </DropdownMenuItem>
+                        );
+                    })}
+                </DropdownMenuGroup>
+                <DropdownMenuGroup>
+                    <DropdownMenuLabel>Models</DropdownMenuLabel>
+                    {modelOptions.map(option => {
+                        const isGated = isModeGated(option.value);
+                        const config = ChatModeConfig[option.value];
+
+                        return (
+                            <DropdownMenuItem
+                                key={`model-${option.value}`}
+                                onSelect={() => handleModeSelect(option.value)}
+                                className={cn('h-auto', isGated && 'opacity-80')}
+                            >
+                                <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                    <div className="flex flex-col gap-0">
+                                        <p className="text-sm font-medium">
+                                            {option.label}
+                                            {isGated && (
+                                                <span className="ml-1 text-xs text-blue-600">
+                                                    (VT+)
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                    <div className="flex-1" />
+                                    {config?.isNew && <NewIcon />}
+                                    {hasApiKeyForChatMode(option.value, isSignedIn) && <BYOKIcon />}
+                                </div>
+                            </DropdownMenuItem>
+                        );
+                    })}
+                </DropdownMenuGroup>
+            </DropdownMenuContent>
+            
+            {/* BYOK Setup Modal */}
+            {pendingMode && (
+                <BYOKSetupModal
+                    isOpen={byokModalOpen}
+                    onClose={handleBYOKClose}
+                    requiredApiKey={pendingMode.requiredApiKey}
+                    modelName={pendingMode.modelName}
+                    onApiKeySaved={handleBYOKSaved}
+                />
+            )}
+        </>
     );
 };
 
