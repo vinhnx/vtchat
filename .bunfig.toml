@@ -1,0 +1,7 @@
+[install]
+# Use exact versions
+exact = true
+
+[install.lockfile]
+# Save exact lockfile
+save = true

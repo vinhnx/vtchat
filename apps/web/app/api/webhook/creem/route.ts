@@ -1,5 +1,6 @@
 // Force dynamic rendering for this webhook route
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // Log webhook environment on startup
 console.log('[Creem Webhook] Environment:', {

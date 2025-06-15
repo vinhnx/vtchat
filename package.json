@@ -4,6 +4,7 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
+        "start": "cd apps/web && bun start",
         "lint": "turbo run lint",
         "clean": "turbo run clean && rm -rf node_modules",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
