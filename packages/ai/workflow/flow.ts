@@ -13,11 +13,9 @@ import {
     geminiWebSearchTask,
     modeRoutingTask,
     plannerTask,
-
     refineQueryTask,
     reflectorTask,
     suggestionsTask,
-    webSearchTask,
     writerTask,
 } from './tasks';
 
@@ -197,7 +195,6 @@ export const runWorkflow = ({
 
     builder.addTasks([
         plannerTask,
-        webSearchTask,
         geminiWebSearchTask,
         reflectorTask,
         analysisTask,
@@ -206,7 +203,6 @@ export const runWorkflow = ({
         modeRoutingTask,
         completionTask,
         suggestionsTask,
-
     ]);
 
     return builder.build();
