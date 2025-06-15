@@ -37,8 +37,12 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 # Copy source code
 COPY . .
 
-# Copy build environment and build
-RUN cd apps/web && cp .env.build .env.local && npm run build && rm .env.local
+# Build the application with build-time environment variables
+# Runtime environment variables will be provided by Railway
+RUN cd apps/web && \
+    if [ -f .env.build ]; then cp .env.build .env.local; fi && \
+    bun run build && \
+    rm -f .env.local
 
 # Stage 4: Production
 FROM node:20-alpine AS runner
