@@ -19,8 +19,8 @@ export interface VTPlusFeature {
 export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
         id: FeatureSlug.PRO_SEARCH,
-        name: 'Pro Search',
-        description: 'Pro Search: Enhanced search with web integration for real-time information.',
+        name: 'Web Search',
+        description: '"Web Search: Real-time web-enabled search with advanced grounding features"',
         enabled: true,
     },
     [FeatureSlug.DARK_THEME]: {
@@ -32,7 +32,8 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.DEEP_RESEARCH]: {
         id: FeatureSlug.DEEP_RESEARCH,
         name: 'Deep Research',
-        description: 'Deep Research: Comprehensive analysis of complex topics with in-depth exploration.',
+        description:
+            'Deep Research: Comprehensive analysis of complex topics with in-depth exploration.',
         enabled: true,
     },
 } as const;
