@@ -119,6 +119,7 @@ ${processedResults
         const summary = await generateText({
             model: ModelEnum.GEMINI_2_0_FLASH,
             prompt,
+            byokKeys: context?.get('apiKeys'),
         });
 
         updateStep({

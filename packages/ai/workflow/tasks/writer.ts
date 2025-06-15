@@ -95,6 +95,7 @@ Your report should demonstrate subject matter expertise while remaining intellec
             model: ModelEnum.CLAUDE_4_SONNET,
             messages,
             signal,
+            byokKeys: context?.get('apiKeys'),
             onChunk: (chunk, fullText) => {
                 chunkBuffer.add(chunk);
             },

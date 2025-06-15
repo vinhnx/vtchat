@@ -72,6 +72,7 @@ export const generateText = async ({
     signal,
     toolChoice = 'auto',
     maxSteps = 2,
+    byokKeys,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -84,6 +85,7 @@ export const generateText = async ({
     signal?: AbortSignal;
     toolChoice?: 'auto' | 'none' | 'required';
     maxSteps?: number;
+    byokKeys?: Record<string, string>;
 }) => {
     try {
         if (signal?.aborted) {
@@ -95,7 +97,7 @@ export const generateText = async ({
             separator: '\n',
         });
 
-        const selectedModel = getLanguageModel(model, middleware);
+        const selectedModel = getLanguageModel(model, middleware, byokKeys);
         const { fullStream } = !!messages?.length
             ? streamText({
                   system: prompt,
@@ -155,19 +157,21 @@ export const generateObject = async ({
     schema,
     messages,
     signal,
+    byokKeys,
 }: {
     prompt: string;
     model: ModelEnum;
     schema: ZodSchema;
     messages?: CoreMessage[];
     signal?: AbortSignal;
+    byokKeys?: Record<string, string>;
 }) => {
     try {
         if (signal?.aborted) {
             throw new Error('Operation aborted');
         }
 
-        const selectedModel = getLanguageModel(model);
+        const selectedModel = getLanguageModel(model, undefined, byokKeys);
         const { object } = !!messages?.length
             ? await generateObjectAi({
                   system: prompt,
@@ -185,8 +189,8 @@ export const generateObject = async ({
 
         return JSON.parse(JSON.stringify(object));
     } catch (error) {
-        console.error(error);
-        return null;
+        console.error('Error in generateObject:', error);
+        throw error; // Re-throw to let caller handle the error appropriately
     }
 };
 
@@ -273,9 +277,17 @@ export const getHumanizedDate = () => {
     return format(new Date(), 'MMMM dd, yyyy, h:mm a');
 };
 
-export const getSERPResults = async (queries: string[], gl?: Geo) => {
+export const getSERPResults = async (queries: string[], gl?: Geo, byokKeys?: Record<string, string>) => {
     const myHeaders = new Headers();
-    const apiKey = process.env.SERPER_API_KEY || (self as any).SERPER_API_KEY || '';
+    let apiKey = '';
+    
+    // Check BYOK keys first
+    if (byokKeys?.SERPER_API_KEY) {
+        apiKey = byokKeys.SERPER_API_KEY;
+    } else {
+        // Fall back to environment variables
+        apiKey = process.env.SERPER_API_KEY || (self as any).SERPER_API_KEY || '';
+    }
 
     if (!apiKey) {
         throw new Error('SERPER_API_KEY is not configured');
@@ -472,13 +484,13 @@ export const processWebPages = async (
     }
 };
 
-export const executeWebSearch = async (queries: string[], signal?: AbortSignal, gl?: Geo) => {
+export const executeWebSearch = async (queries: string[], signal?: AbortSignal, gl?: Geo, byokKeys?: Record<string, string>) => {
     if (signal?.aborted) {
         throw new Error('Operation aborted');
     }
 
     const flatQueries = queries.flat();
-    const results = await getSERPResults(flatQueries, gl);
+    const results = await getSERPResults(flatQueries, gl, byokKeys);
     const uniqueResults = results.filter(
         (result: { link: string }, index: number, self: { link: string }[]) =>
             index === self.findIndex((t: { link: string }) => t.link === result.link)

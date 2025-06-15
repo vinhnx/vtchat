@@ -108,17 +108,24 @@ export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSc
             ];
         }
 
-        const query = await generateObject({
-            prompt: `Today is ${getHumanizedDate()}.${gl?.country ? `You are in ${gl?.country}\n\n` : ''}
+        let query;
+        try {
+            query = await generateObject({
+                prompt: `Today is ${getHumanizedDate()}.${gl?.country ? `You are in ${gl?.country}\n\n` : ''}
  Generate a query to search the web for information make sure query is not too broad and be specific for recent information`,
-            model: ModelEnum.GPT_4o_Mini,
-            messages,
-            schema: z.object({
-                query: z.string(),
-            }),
-        });
+                model: ModelEnum.GPT_4o_Mini,
+                messages,
+                schema: z.object({
+                    query: z.string(),
+                }),
+                byokKeys: context?.get('apiKeys'),
+            });
+        } catch (error) {
+            console.error('Failed to generate search query:', error);
+            throw new Error('Failed to generate search query. Please check your API configuration.');
+        }
 
-        if (!query.query) {
+        if (!query?.query) {
             throw new Error('No query generated');
         }
 
@@ -132,7 +139,7 @@ export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSc
             },
         });
 
-        const results = await getSERPResults([query.query], gl);
+        const results = await getSERPResults([query.query], gl, context?.get('apiKeys'));
 
         if (!results || results.length === 0) {
             throw new Error('No results found');
@@ -204,6 +211,7 @@ export const quickSearchTask = createTask<WorkflowEventSchema, WorkflowContextSc
                     status: 'PENDING',
                 });
             },
+            byokKeys: context?.get('apiKeys'),
         });
 
         updateAnswer({

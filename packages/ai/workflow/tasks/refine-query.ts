@@ -56,6 +56,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             schema: ClarificationResponseSchema,
             messages: messages as any,
             signal,
+            byokKeys: context?.get('apiKeys'),
         });
 
         if (object?.needsClarification) {

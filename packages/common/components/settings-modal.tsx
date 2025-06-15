@@ -9,7 +9,6 @@ import {
     IconKey,
     IconSettings2,
     IconTrash,
-    IconUser,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
@@ -382,36 +381,7 @@ export const ApiKeySettings = () => {
         },
     ];
 
-    const validateApiKey = (apiKey: string, provider: string): string | null => {
-        if (!apiKey.trim()) {
-            return 'API key is required';
-        }
-
-        // Basic format validation
-        const validations: Record<string, RegExp> = {
-            OpenAI: /^sk-[a-zA-Z0-9]{32,}$/,
-            Anthropic: /^sk-ant-[a-zA-Z0-9\-_]{32,}$/,
-            'Google Gemini': /^AIza[a-zA-Z0-9\-_]{35}$/,
-            OpenRouter: /^sk-or-[a-zA-Z0-9\-_]{32,}$/,
-            'Together AI': /^tok-[a-zA-Z0-9]{32,}$/,
-            'Fireworks AI': /^fw-[a-zA-Z0-9]{32,}$/,
-        };
-
-        const pattern = validations[provider];
-        if (pattern && !pattern.test(apiKey)) {
-            return `Invalid ${provider} API key format`;
-        }
-
-        return null;
-    };
-
     const handleSave = (keyName: keyof ApiKeys, value: string, provider: string) => {
-        const error = validateApiKey(value, provider);
-        if (error) {
-            setValidationErrors(prev => ({ ...prev, [keyName]: error }));
-            return;
-        }
-
         setValidationErrors(prev => ({ ...prev, [keyName]: '' }));
         setApiKey(keyName, value);
         setIsEditing(null);

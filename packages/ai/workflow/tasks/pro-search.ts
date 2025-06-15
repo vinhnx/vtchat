@@ -117,6 +117,7 @@ export const proSearchTask = createTask<WorkflowEventSchema, WorkflowContextSche
                     schema: z.object({
                         query: z.string().min(1),
                     }),
+                    byokKeys: context?.get('apiKeys'),
                 });
             } catch (error) {
                 throw new Error(
@@ -129,7 +130,7 @@ export const proSearchTask = createTask<WorkflowEventSchema, WorkflowContextSche
             try {
                 const gl = context?.get('gl');
                 console.log('gl', gl);
-                searchResults = await getSERPResults([query.query], gl);
+                searchResults = await getSERPResults([query.query], gl, context?.get('apiKeys'));
                 if (!searchResults || searchResults.length === 0) {
                     throw new Error('No search results found');
                 }
@@ -231,6 +232,7 @@ export const proSearchTask = createTask<WorkflowEventSchema, WorkflowContextSche
                     prompt: getAnalysisPrompt(question, webPageContent),
                     model: ModelEnum.Deepseek_R1,
                     messages,
+                    byokKeys: context?.get('apiKeys'),
                     onReasoning: chunk => {
                         reasoningBuffer.add(chunk);
                     },

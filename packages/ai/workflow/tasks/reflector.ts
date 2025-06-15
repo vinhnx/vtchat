@@ -97,6 +97,7 @@ Current date: ${getHumanizedDate()}
                 reasoning: z.string(),
                 queries: z.array(z.string()).optional().nullable(),
             }),
+            byokKeys: context?.get('apiKeys'),
 
             messages: messages as any,
             signal,
