@@ -77,8 +77,9 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         if (typeof window === 'undefined') return;
 
         if (!workerRef.current) {
-            // Create worker using a static path
-            workerRef.current = new Worker(new URL('./workflow-worker.js', import.meta.url), { type: 'module' });
+            workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
+                type: 'module',
+            });
 
             // Set up message handler
             workerRef.current.onmessage = event => {
@@ -132,22 +133,17 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
 
             // Ensure worker exists
             if (!workerRef.current) {
-                // This should ideally not happen if the useEffect hook initializes the worker correctly.
-                // However, as a fallback or if initialization is delayed:
-                console.warn('Worker not initialized, attempting to initialize now.');
-                workerRef.current = new Worker(new URL('./workflow-worker.js', import.meta.url), { type: 'module' });
+                workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
+                    type: 'module',
+                });
+
+                // Set up message handler
                 workerRef.current.onmessage = event => {
                     const data = event.data;
                     if (onMessageRef.current) {
                         onMessageRef.current(data);
                     }
                 };
-                // It might be better to throw an error or wait for initialization
-                // For now, we'll proceed, but this indicates a potential race condition or setup issue.
-            }
-
-            if (!workerRef.current) {
-                 throw new Error('Worker could not be initialized.');
             }
 
             // Start workflow with existing worker
