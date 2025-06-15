@@ -17,10 +17,27 @@ const FallbackIcon = ({ size, className }: { size: 'sm' | 'md' | 'lg'; className
     />
 );
 
+const extractDomain = (url?: string): string | null => {
+    if (!url) return null;
+    
+    try {
+        // Handle grounding API redirects or other redirect URLs
+        if (url.includes('vertexaisearch.cloud.google.com') || url.includes('grounding-api-redirect')) {
+            return null; // Return null for redirect URLs to use fallback
+        }
+        
+        const urlObj = new URL(url);
+        return urlObj.hostname;
+    } catch {
+        return null;
+    }
+};
+
 export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = 'sm' }) => {
     const [error, setError] = useState<boolean>(false);
+    const domain = extractDomain(link);
 
-    if (error) {
+    if (error || !domain) {
         return <FallbackIcon size={size} className={className} />;
     }
 
@@ -35,7 +52,7 @@ export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = 'sm' 
         >
             <div className="border-foreground/10 absolute inset-0 z-[2] rounded-full border" />
             <img
-                src={`https://www.google.com/s2/favicons?domain=${link}&sz=${128}`}
+                src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
                 alt="favicon"
                 onError={() => setError(true)}
                 className={cn('absolute inset-0 h-full w-full rounded-sm object-cover', className)}

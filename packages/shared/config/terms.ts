@@ -14,7 +14,7 @@ By accessing or using VT, you agree to be bound by these Terms. If you disagree 
 VT is a privacy-focused AI platform featuring advanced research capabilities that enables you to:
 - **Agentic Workflows**: Complex task coordination via custom workflow orchestration
 - **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
-- **Pro Search**: Enhanced search with web integration for real-time information
+- **Web Search Grounding With Gemini**: Enhanced search with web integration for real-time information
 - **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models
 - **Local Privacy**: All conversations stored locally on your device using IndexedDB
 - **BYOK Support**: Use your own API keys for unlimited access
@@ -73,7 +73,7 @@ VT is a privacy-focused AI platform featuring advanced research capabilities tha
 
 ### 4.1 VT+ Subscription Features
 VT+ is a monthly subscription service for **$9.99 USD** that includes:
-- **Pro Search**: Enhanced search with web integration for real-time information
+- **Web Search Grounding With Gemini**: Enhanced search with web integration for real-time information
 - **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
 - **Dark Mode**: Access to dark theme interface
 - **Advanced Chat Modes**: Additional AI model access and capabilities
