@@ -14,6 +14,8 @@ interface SSRErrorBoundaryProps {
 }
 
 export class SSRErrorBoundary extends Component<SSRErrorBoundaryProps, SSRErrorBoundaryState> {
+    refs: Record<string, any> = {};
+
     constructor(props: SSRErrorBoundaryProps) {
         super(props);
         this.state = { hasError: false };
@@ -29,7 +31,7 @@ export class SSRErrorBoundary extends Component<SSRErrorBoundaryProps, SSRErrorB
         console.warn('SSR Error Boundary caught an error:', error, errorInfo);
     }
 
-    render() {
+    render(): React.ReactNode {
         if (this.state.hasError) {
             // Render fallback UI during SSR
             return (

@@ -3,7 +3,14 @@ import { useMcpToolsStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, DialogFooter } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, CreditCard, Key, Settings2, Trash } from 'lucide-react';
+import {
+    IconAlertCircle,
+    IconCreditCard,
+    IconKey,
+    IconSettings2,
+    IconTrash,
+    IconUser,
+} from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -20,8 +27,8 @@ import { ModeToggle } from './mode-toggle';
 import { UsageCreditsSettings } from './usage-credits-settings';
 
 export const SettingsModal = () => {
-    const isSettingOpen = useAppStore(state => state.isSettingsOpen);
-    const setIsSettingOpen = useAppStore(state => state.setIsSettingsOpen);
+    const isSettingsOpen = useAppStore(state => state.isSettingsOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const settingTab = useAppStore(state => state.settingTab);
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
@@ -31,13 +38,13 @@ export const SettingsModal = () => {
     // If not signed in, show login prompt instead of settings
     if (!isSignedIn) {
         const KeyIcon = ({ size, className }: { size?: number; className?: string }) => (
-            <Key size={size} className={className} />
+            <IconKey size={size} className={className} />
         );
 
         return (
             <LoginRequiredDialog
-                isOpen={isSettingOpen}
-                onClose={() => setIsSettingOpen(false)}
+                isOpen={isSettingsOpen}
+                onClose={() => setIsSettingsOpen(false)}
                 title="Login Required"
                 description="Please sign in to access settings and manage your API keys."
                 icon={KeyIcon}
@@ -47,19 +54,19 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <IconSettings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
-            component: <PersonalizationSettings onClose={() => setIsSettingOpen(false)} />,
+            component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <CreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Plan',
             key: SETTING_TABS.USAGE_CREDITS,
-            component: <UsageCreditsSettings onClose={() => setIsSettingOpen(false)} />,
+            component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
@@ -72,7 +79,7 @@ export const SettingsModal = () => {
     ];
 
     return (
-        <Dialog open={isSettingOpen} onOpenChange={() => setIsSettingOpen(false)}>
+        <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
                 ariaTitle="Settings"
                 className="h-full max-h-[600px] !max-w-[760px] overflow-x-hidden rounded-xl p-0"
@@ -125,7 +132,7 @@ export const MCPSettings = () => {
                         className="text-brand inline-flex items-center gap-1 rounded-full bg-transparent"
                     >
                         <span className="bg-brand inline-block size-2 rounded-full"></span>
-                        {mcpConfig && Object.keys(mcpConfig).length} Connected
+                        {mcpConfig ? Object.keys(mcpConfig).length : 0} Connected
                     </Badge>
                 </p>
                 {mcpConfig &&
@@ -136,7 +143,7 @@ export const MCPSettings = () => {
                             className="bg-secondary divide-border border-border flex h-12 w-full flex-1 flex-row items-center gap-2 divide-x-2 rounded-lg border px-2.5 py-2"
                         >
                             <div className="flex w-full flex-row items-center gap-2">
-                                <ToolIcon /> <Badge>{key}</Badge>
+                                <ToolIcon /> <Badge variant="default">{key}</Badge>
                                 <p className="text-muted-foreground line-clamp-1 flex-1 text-sm">
                                     {mcpConfig[key]}
                                 </p>
@@ -148,7 +155,7 @@ export const MCPSettings = () => {
                                         removeMcpConfig(key);
                                     }}
                                 >
-                                    <Trash
+                                    <IconTrash
                                         size={14}
                                         strokeWidth={2}
                                         className="text-muted-foreground"
@@ -261,7 +268,7 @@ const AddToolDialog = ({ isOpen, onOpenChange, onAddTool }: AddToolDialogProps) 
 
                     {error && (
                         <Alert variant="destructive">
-                            <AlertCircle className="h-4 w-4" />
+                            <IconAlertCircle className="h-4 w-4" />
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
@@ -425,14 +432,14 @@ export const ApiKeySettings = () => {
             {/* Header Section */}
             <div className="flex flex-col gap-3">
                 <h2 className="flex items-center gap-2 text-base font-semibold">
-                    <Key size={20} className="text-blue-500" />
+                    <IconKey size={20} className="text-blue-500" />
                     API Key Management
                     <BYOKIcon />
                 </h2>
                 <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
                     <div className="flex items-start gap-3">
                         <div className="mt-0.5 rounded-full bg-blue-100 p-1 dark:bg-blue-900/40">
-                            <Key size={14} className="text-blue-600 dark:text-blue-400" />
+                            <IconKey size={14} className="text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1 space-y-2">
                             <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
@@ -489,7 +496,7 @@ export const ApiKeySettings = () => {
                                     />
                                     {validationErrors[apiKey.key] && (
                                         <Alert variant="destructive">
-                                            <AlertCircle className="h-4 w-4" />
+                                            <IconAlertCircle className="h-4 w-4" />
                                             <AlertDescription>
                                                 {validationErrors[apiKey.key]}
                                             </AlertDescription>
@@ -547,7 +554,7 @@ export const ApiKeySettings = () => {
                                             }}
                                             className="text-red-600 hover:text-red-700"
                                         >
-                                            <Trash size={14} />
+                                            <IconTrash size={14} />
                                         </Button>
                                     )}
                                 </div>

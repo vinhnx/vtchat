@@ -15,7 +15,20 @@ export const auth = betterAuth({
         },
     }),
     emailAndPassword: {
-        enabled: false, // Disabled - OAuth only for now
+        enabled: false, // Disabled - OAuth only
+    },
+    magicLink: {
+        enabled: false, // Disabled - OAuth only
+    },
+    passkey: {
+        enabled: false, // Disabled - OAuth only
+    },
+    twoFactor: {
+        enabled: false, // Disabled - OAuth only
+    },
+    multiSession: {
+        enabled: true,
+        maximumSessions: 10,
     },
     socialProviders: {
         github: {

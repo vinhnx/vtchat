@@ -1,4 +1,7 @@
+'use client';
+
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 const LoadingDot = {
     display: 'block',
@@ -46,6 +49,16 @@ const DotTransition = {
 };
 
 export function Spinner() {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return <div className="bg-muted-foreground/20 h-4 w-4 animate-pulse rounded-full" />;
+    }
+
     return (
         <svg
             fill="none"
