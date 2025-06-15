@@ -84,13 +84,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             parentThreadItemId?: string,
             shouldPersistToDB: boolean = true
         ) => {
-            console.log(
-                'handleThreadItemUpdate',
-                threadItemId,
-                eventType,
-                eventData,
-                shouldPersistToDB
-            );
             const prevItem = threadItemMap.get(threadItemId) || ({} as ThreadItem);
             const updatedItem: ThreadItem = {
                 ...prevItem,

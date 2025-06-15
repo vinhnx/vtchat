@@ -12,8 +12,6 @@ export const FollowupSuggestions = ({ suggestions }: { suggestions: string[] }) 
         return null;
     }
 
-    console.log('suggestions', suggestions);
-
     return (
         <motion.div
             initial={{ opacity: 0 }}

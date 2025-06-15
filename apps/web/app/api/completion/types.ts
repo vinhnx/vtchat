@@ -19,7 +19,7 @@ export const completionRequestSchema = z.object({
         GEMINI_API_KEY: z.string().optional(),
         JINA_API_KEY: z.string().optional(),
         FIREWORKS_API_KEY: z.string().optional(),
-        SERPER_API_KEY: z.string().optional(),
+
         OPENROUTER_API_KEY: z.string().optional(),
         TOGETHER_API_KEY: z.string().optional(),
     }).optional(),
