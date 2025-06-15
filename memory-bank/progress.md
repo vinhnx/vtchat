@@ -557,6 +557,35 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 
 **Result:** Workflow system is now cleaner with only active, functional tasks. All web search operations now consistently use the modern Gemini-based implementation.
 
+### Subscription Access Control Fix ✅
+
+**Date:** June 15, 2025
+**Status:** ✅ COMPLETED
+
+- ✅ **Fixed Temporary Implementation**: Replaced disabled subscription status function with robust solution
+- ✅ **Dynamic Import System**: Added dynamic imports to avoid build-time drizzle dependency issues
+- ✅ **Multi-Layer Fallback**: Implemented 3-tier fallback system:
+  1. Primary: subscription-sync module import
+  2. Secondary: Direct database queries
+  3. Tertiary: Safe defaults (free tier)
+- ✅ **Enhanced Rate Limiting**: Integrated Redis-based rate limiting for free tier users
+  - Uses Upstash Redis with automatic daily reset
+  - Supports both `KV_REST_API_*` and `UPSTASH_REDIS_REST_*` variables
+  - Fallback to in-memory when Redis unavailable
+- ✅ **Improved Error Handling**: Comprehensive error logging with graceful degradation
+- ✅ **Subscription Status Logic**: Proper handling of multiple data sources (subscription table vs user plan_slug)
+- ✅ **Production Ready**: No more temporary implementations, fully functional access control
+
+**Files Modified:**
+- `apps/web/app/api/subscription/access-control.ts` - Complete rewrite of subscription status function
+- `ACCESS-CONTROL-FIX-SUMMARY.md` - Detailed documentation of changes
+
+**Benefits:**
+- Production-ready subscription enforcement
+- Redis-based rate limiting for scalability
+- Fault-tolerant design with multiple fallbacks
+- Proper VT+ feature access control
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:

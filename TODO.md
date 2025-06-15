@@ -1,9 +1,64 @@
 # TODO List
 
+[]
+remember to publish Google Auth
+https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5
 
 --
-https://oxc.rs/
-https://oxc.rs/blog/2025-06-10-oxlint-stable
+[] check FREE_TIER_DAILY_LIMIT env
+--
+
+[] <https://vercel.com/ai-accelerator>
+
+--
+
+[] build waitlist ?
+
+--
+[] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
+
+--
+[✅] use Railway - COMPLETED!
+<https://claude.ai/chat/bf7ba5bc-ce28-4876-ba33-91098db425af>
+[✅] deployment success - LIVE AT: <https://vtchat-web-production.up.railway.app/chat>
+
+NEXT STEPS FOR RAILWAY:
+[✅] Complete deployment configuration guides created:
+
+DOCUMENTATION CREATED:
+
+- docs/railway-complete-guide.md - Comprehensive Railway deployment guide
+- docs/local-development-setup.md - Complete local development environment setup
+- docs/railway-env-vars-guide.md - Step-by-step environment variables configuration
+
+IMMEDIATE ACTIONS:
+[] Set critical environment variables in Railway dashboard:
+
+- BETTER_AUTH_SECRET (generate 32-char secret)
+- DATABASE_URL (add Railway PostgreSQL or use external)
+- AI API keys (OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY)
+- Application URLs (auto-filled templates provided)
+[] Test authentication flows
+[] Test AI chat functionality with API keys
+[] Optional: Configure social auth (GitHub, Google OAuth)
+[] Optional: Set up payment integration (Creem.io)
+[] Monitor deployment health and logs
+
+--
+Railway: Best Alternative for Your Stack ✅ PROVEN!
+Why Railway > Vercel for you:
+
+✅ No vendor lock-in - Standard Docker deployments - WORKING
+✅ Better Bun support - Native runtime - WORKING
+✅ Cheaper scaling - $5/month → usage-based vs Vercel's $20 jump - ACTIVE
+✅ PostgreSQL included - Matches your Drizzle setup - READY
+✅ Vietnam-friendly - Better pricing/performance - CONFIRMED
+
+Deployment Documentation:
+
+- docs/railway-deployment-success.md - Complete success report
+- docs/railway-env-setup.md - Environment variable setup guide
+- docs/railway-troubleshooting.md - Full troubleshooting log
 
 --
 [][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
@@ -46,9 +101,6 @@ https://oxc.rs/blog/2025-06-10-oxlint-stable
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs>
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching>
 [][monet] dynamicRetrievalConfig <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#dynamic-retrieval>
---
-
-[] Remove free/default models, use BYOK completely -> when click on a model on chat models selection list in chat input -> check for existing BYOK settings on Settings cache. if not it should open a modal to save a BYOK model and retry.
 
 --
 
