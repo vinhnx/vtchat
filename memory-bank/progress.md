@@ -40,6 +40,7 @@
    - Healthcheck path properly configured in Railway settings
 
 **CURRENT RAILWAY SETUP**:
+
 - **Services**: `vtchat` (production), `vtchat-development` (dev), shared `Postgres`
 - **Configuration**: Environment-specific settings in `railway.toml` and `railway.json`
 - **Resources**: 2 vCPU, 1GB RAM, serverless enabled for cost optimization
@@ -47,6 +48,7 @@
 - **CI/CD**: GitHub Actions configured for branch-based deployments
 
 **NEXT STEPS**:
+
 - Set environment variables in Railway Dashboard for development environment
 - Test deployment of dev branch to development environment
 - Monitor performance and adjust resource allocation if needed

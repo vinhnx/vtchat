@@ -1,10 +1,10 @@
 'use client';
 import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { useCreemSubscription } from '@repo/common/hooks';
+import { useCreemSubscription, useLogout } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
-import { signOut, useSession } from '@repo/shared/lib/auth-client';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
     Badge,
@@ -16,24 +16,24 @@ import {
     DropdownMenuTrigger,
     Flex,
 } from '@repo/ui';
-import { 
-    PanelLeftClose, 
-    PanelRightClose, 
-    Command, 
-    ExternalLink, 
-    FileText, 
-    LogOut, 
-    Plus, 
-    Pin, 
-    Search, 
-    ChevronsUpDown, 
-    Settings, 
-    Settings2, 
-    Shield, 
-    Sparkles, 
-    User 
-} from 'lucide-react';
 import { motion } from 'framer-motion';
+import {
+    ChevronsUpDown,
+    Command,
+    ExternalLink,
+    FileText,
+    LogOut,
+    PanelLeftClose,
+    PanelRightClose,
+    Pin,
+    Plus,
+    Search,
+    Settings,
+    Settings2,
+    Shield,
+    Sparkles,
+    User,
+} from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
@@ -61,6 +61,7 @@ export const Sidebar = () => {
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
+    const { logout } = useLogout();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -166,7 +167,7 @@ export const Sidebar = () => {
                             onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto', 'mr-2')}
                         >
-                            <PanelLeftClose size={16} strokeWidth={2}  />
+                            <PanelLeftClose size={16} strokeWidth={2} />
                         </Button>
                     )}
                 </div>
@@ -189,11 +190,7 @@ export const Sidebar = () => {
                                 tooltipSide="right"
                                 className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                             >
-                                <Plus
-                                    size={16}
-                                    strokeWidth={2}
-                                    className={cn(isSidebarOpen)}
-                                />
+                                <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
                                 {isSidebarOpen && 'New Chat'}
                             </Button>
                         </Link>
@@ -206,11 +203,7 @@ export const Sidebar = () => {
                             tooltipSide="right"
                             className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
                         >
-                            <Plus
-                                size={16}
-                                strokeWidth={2}
-                                className={cn(isSidebarOpen)}
-                            />
+                            <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
                             {isSidebarOpen && 'New Chat'}
                         </Button>
                     )}
@@ -227,7 +220,7 @@ export const Sidebar = () => {
                         )}
                         onClick={() => setIsCommandSearchOpen(true)}
                     >
-                        <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)}  />
+                        <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
                         {isSidebarOpen && 'Search'}
                         {isSidebarOpen && <div className="flex-1" />}
                         {isSidebarOpen && (
@@ -360,7 +353,7 @@ export const Sidebar = () => {
                             onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto')}
                         >
-                            <PanelRightClose size={16} strokeWidth={2}  />
+                            <PanelRightClose size={16} strokeWidth={2} />
                         </Button>
                     )}
                     {isSignedIn && (
@@ -386,7 +379,7 @@ export const Sidebar = () => {
                                                 size={14}
                                                 strokeWidth={2}
                                                 className="text-background"
-                                             />
+                                            />
                                         )}
                                     </div>
 
@@ -403,13 +396,13 @@ export const Sidebar = () => {
                                             size={14}
                                             strokeWidth={2}
                                             className="text-muted-foreground"
-                                         />
+                                        />
                                     )}
                                 </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                                    <Settings size={16} strokeWidth={2}  />
+                                    <Settings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => push('/privacy')}>
@@ -427,7 +420,7 @@ export const Sidebar = () => {
                                     </DropdownMenuItem>
                                 )}
                                 {isSignedIn && (
-                                    <DropdownMenuItem onClick={() => signOut()}>
+                                    <DropdownMenuItem onClick={() => logout()}>
                                         <LogOut size={16} strokeWidth={2} />
                                         Sign out
                                     </DropdownMenuItem>
@@ -445,7 +438,7 @@ export const Sidebar = () => {
                                     setIsSettingsOpen(true);
                                 }}
                             >
-                                <Settings2 size={14} strokeWidth={2}  />
+                                <Settings2 size={14} strokeWidth={2} />
                                 Settings
                             </Button>
                             <Button size="sm" rounded="lg" onClick={() => push('/login')}>

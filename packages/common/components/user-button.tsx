@@ -1,6 +1,7 @@
 'use client';
 
-import { useSession, useSignOut } from '@repo/shared/lib/auth-client';
+import { useLogout } from '@repo/common/hooks';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Avatar,
     Button,
@@ -20,7 +21,7 @@ interface UserButtonProps {
 
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
-    const { signOut } = useSignOut();
+    const { logout } = useLogout();
 
     if (!session?.user) return null;
 
@@ -70,7 +71,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem onClick={() => logout()}>
                     <IconLogout className="mr-2 h-4 w-4" />
                     Sign out
                 </DropdownMenuItem>
