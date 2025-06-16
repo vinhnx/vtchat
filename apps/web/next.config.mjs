@@ -17,6 +17,35 @@ const nextConfig = {
     // Moved from experimental to root level (Next.js 15+)
     outputFileTracingRoot: path.join(__dirname, '../../'),
 
+    async headers() {
+        return [
+            {
+                // Apply CORS headers to all API routes
+                source: '/api/:path*',
+                headers: [
+                    {
+                        key: 'Access-Control-Allow-Origin',
+                        value:
+                            process.env.NEXT_PUBLIC_BASE_URL ||
+                            'https://vtchat-web-development.up.railway.app',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Headers',
+                        value: 'Content-Type, Authorization, X-Requested-With',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Credentials',
+                        value: 'true',
+                    },
+                ],
+            },
+        ];
+    },
+
     async redirects() {
         return [{ source: '/', destination: '/chat', permanent: true }];
     },
