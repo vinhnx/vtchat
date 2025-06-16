@@ -7,12 +7,25 @@ healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 
+# Development environment - optimized for faster builds and lower resource usage
 [environments.development]
+[environments.development.build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
 [environments.development.deploy]
+healthcheckPath = "/api/health"
 healthcheckTimeout = 180
 restartPolicyType = "ON_FAILURE"
+# Shorter healthcheck timeout for dev environment
 
+# Production environment - optimized for reliability and performance
 [environments.production]
+[environments.production.build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
 [environments.production.deploy]
+healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"

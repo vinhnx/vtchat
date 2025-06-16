@@ -8,6 +8,7 @@
 1. ✅ use `main` branch for trigger railway `production` env deployment when push to github.
 1. ✅ create a github action workflow for PR base on this rule
 1. ✅ update docker and railway.toml config if need
+1. ✅ Railway configuration review and optimization completed
 1. ✅ use context7 or mcp
 
 --
