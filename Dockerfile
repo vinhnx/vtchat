@@ -162,5 +162,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application with proper port binding
-CMD ["sh", "-c", "PORT=${PORT:-3000} node server.js"]
+# Start the application with proper port binding and correct server.js path
+CMD ["sh", "-c", "PORT=${PORT:-3000} node apps/web/server.js"]
