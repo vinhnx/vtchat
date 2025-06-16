@@ -1,5 +1,11 @@
 # TODO List
 
+[] Add wording for plus benefits: More features coming soon.
+
+--
+[] https://scira.ai/pricing
+
+--
 [] consider create 2 rw apps
 You should create 2 separate Railway projects (one for dev, one for production) rather than using environments within a single project.
 Here's why this approach is better:
