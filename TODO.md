@@ -1,5 +1,20 @@
 # TODO List
 
+1. check my dockerfile deployment config to make sure it use proper config
+1. note that for deployment railway for development env the base url should be <https://vtchat-web-development.up.railway.app>
+1. deployment railway for production env the base url should be <https://vtchat-web-production.up.railway.app>
+1. local dev is localhost:3000.
+use context7
+
+
+--
+[] open free chat for logged in user -> use vtchat gemini key
+[] free: if use pre-defined key: 9 per day
+[] plus: if use pre-defined key: 30 per day
+[] -> if has gemini in byok -> unlimited
+[] implement credit tracking (FREE_TIER_DAILY_LIMIT)
+--
+
 [] when user input and send chat message -> check for existing api keys byok -> if not exists -> show popup to let user set keys
 
 --
@@ -26,42 +41,6 @@ Workflow recommendations for deployment strategies
 
 --
 [] <https://scira.ai/pricing>
-
---
-[] consider create 2 rw apps
-You should create 2 separate Railway projects (one for dev, one for production) rather than using environments within a single project.
-Here's why this approach is better:
-Separate Projects Benefits:
-
-Complete isolation: Dev experiments can't accidentally affect production
-Independent scaling: Different resource limits and configurations for each environment
-Separate billing: Clear cost tracking between dev and production usage
-Different deployment strategies: You might want manual deploys for prod, auto-deploys for dev
-Team access control: Different permissions for different environments
-Database separation: Completely separate databases prevent dev data from mixing with production
-
-Recommended setup:
-my-app-dev (Project 1)
-├── Web service (your app)
-├── Database (if needed)
-└── Any other services
-
-my-app-production (Project 2)
-├── Web service (your app)
-├── Database (if needed)
-└── Any other services
-
-Workflow:
-
-Develop and test in my-app-dev
-When ready, deploy the same code to my-app-production
-Use different environment variables in each project for API keys, database URLs, etc.
-
-Alternative consideration:
-Railway's "environments" feature within a single project could work for simpler setups, but separate projects give you maximum isolation and flexibility, which is especially important as your application grows.
-The separate projects approach is the industry standard and what most teams use for good reason - it's worth the small overhead of managing two projects.
-
-<https://claude.ai/chat/dc6bca24-00a5-4ef2-845a-4897eca05f08>
 
 --
 []
@@ -209,7 +188,9 @@ Deployment Documentation:
 
 ## Thread Management (Account-based & Neon Sync)
 
-- [ ] Ensure threads are per-account and hidden when a user is logged out.
+- [] Ensure threads are per-account
+- [] Ensure API keys are per-account
+- [] when user log out -> clear all threads and api keys
 - [ ] On login (to existing or new account), fetch threads from the appropriate store (e.g., remote DB via API, then update local IndexedDB/Zustand).
 - [ ] Design and implement an account-based thread management system using Neon/Postgres, leveraging existing thread schema and store logic. Review codebase for current implementation details.
 - [ ] Free tier: Continue using local IndexedDB for threads.
