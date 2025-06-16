@@ -11,28 +11,6 @@
 [] when user input and send chat message -> check for existing api keys byok -> if not exists -> show popup to let user set keys
 
 --
-[] TODO: add more login options -> more users
-
---
-
-Strong recommendation: Use 2 separate Railway projects instead of environments within a single project.
-
-Created comprehensive guide: railway-separate-projects-strategy.md covering:
-
-Benefits of Separate Projects:
-
-Complete isolation between dev/prod
-Independent scaling and configuration
-Separate billing and cost tracking
-Better security and risk management
-Industry standard approach
-Migration Plan:
-
-Step-by-step instructions for creating vtchat-development and vtchat-production projects
-Environment variable mappings for each project
-Workflow recommendations for deployment strategies
-
---
 [] <https://scira.ai/pricing>
 
 --
