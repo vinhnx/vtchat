@@ -38,7 +38,7 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY . .
 
 # Accept build-time environment variables from Railway
-ARG NODE_ENV
+# NOTE: NODE_ENV is automatically set by Next.js (development for dev, production for build)
 ARG BASE_URL
 ARG BETTER_AUTH_URL
 ARG BETTER_AUTH_SECRET
@@ -134,9 +134,9 @@ ENV CREEM_ENVIRONMENT=${CREEM_ENVIRONMENT}
 # Build the application with environment variables
 RUN cd apps/web && \
     echo "=== BUILD ENVIRONMENT DEBUG ===" && \
-    echo "NODE_ENV: $NODE_ENV" && \
     echo "NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL" && \
     echo "BASE_URL: $BASE_URL" && \
+    echo "NODE_ENV will be automatically set by Next.js build process" && \
     echo "==============================" && \
     bun run build
 
@@ -159,8 +159,8 @@ USER nextjs
 # Expose port
 EXPOSE 3000
 
-# Set environment variables (will be overridden by Railway)
-ENV NODE_ENV=development
+# Set environment variables (PORT will be overridden by Railway)
+# NODE_ENV is automatically managed by Next.js - don't override it
 ENV PORT=3000
 
 # Start the application
