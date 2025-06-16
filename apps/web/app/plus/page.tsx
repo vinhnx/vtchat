@@ -274,7 +274,7 @@ export default function PlusPage() {
                         <h2 className="mb-4 text-white text-lg font-semibold">
                             Powerful Features
                         </h2>
-                        <p className="mx-auto max-w-2xl text-white text-sm text-muted-foreground">
+                        <p className="mx-auto max-w-2xl text-sm text-gray-400">
                             Discover what makes {PRICING_CONFIG.product.name} the perfect choice for
                             your productivity needs
                         </p>

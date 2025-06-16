@@ -69,7 +69,7 @@
         --vaul-overlay-background-start: transparent;
         --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
 
-        --background: 180 0% 10%;
+        --background: 0 0% 15%; /* #262626 */
         --foreground: 180 0% 98%;
 
         --secondary: 180 0% 8%;
@@ -100,6 +100,7 @@
         --destructive-foreground: 40 30% 98%;
 
         --border: 180 0% 16%;
+        --border-accent-dark: 45 27% 65%; /* #BFB38F */
         --soft: 180 0% 8%;
         --hard: 180 0% 22%;
         --input: 180 0% 16%;
