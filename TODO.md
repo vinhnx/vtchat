@@ -1,5 +1,41 @@
 # TODO List
 
+[] consider create 2 rw apps
+You should create 2 separate Railway projects (one for dev, one for production) rather than using environments within a single project.
+Here's why this approach is better:
+Separate Projects Benefits:
+
+Complete isolation: Dev experiments can't accidentally affect production
+Independent scaling: Different resource limits and configurations for each environment
+Separate billing: Clear cost tracking between dev and production usage
+Different deployment strategies: You might want manual deploys for prod, auto-deploys for dev
+Team access control: Different permissions for different environments
+Database separation: Completely separate databases prevent dev data from mixing with production
+
+Recommended setup:
+my-app-dev (Project 1)
+├── Web service (your app)
+├── Database (if needed)
+└── Any other services
+
+my-app-production (Project 2)
+├── Web service (your app)
+├── Database (if needed)
+└── Any other services
+
+Workflow:
+
+Develop and test in my-app-dev
+When ready, deploy the same code to my-app-production
+Use different environment variables in each project for API keys, database URLs, etc.
+
+Alternative consideration:
+Railway's "environments" feature within a single project could work for simpler setups, but separate projects give you maximum isolation and flexibility, which is especially important as your application grows.
+The separate projects approach is the industry standard and what most teams use for good reason - it's worth the small overhead of managing two projects.
+
+https://claude.ai/chat/dc6bca24-00a5-4ef2-845a-4897eca05f08
+
+--
 []
 remember to publish Google Auth
 https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5
