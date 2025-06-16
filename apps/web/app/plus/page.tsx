@@ -142,7 +142,7 @@ export default function PlusPage() {
 
                 {/* Pricing Section */}
                 <div id="pricing" className="relative px-6 py-4 sm:py-6 lg:px-8">
-                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-1 lg:max-w-4xl lg:grid-cols-2">
+                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
                             className={`rounded-3xl rounded-t-3xl bg-white p-8 ring-1 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
@@ -242,24 +242,35 @@ export default function PlusPage() {
                                     {PRICING_CONFIG.pricing.plus.features.map((feature, index) => (
                                         <li key={index} className="flex gap-x-3">
                                             <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                            {typeof feature === 'string'
-                                                ? feature
-                                                : `${feature.name}: ${feature.description}`}
+                                            {typeof feature === 'string' ? feature : feature.name}
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="mt-8 sm:mt-10">
-                                    <ButtonAnimatedGradient
-                                        onClick={() => {
-                                            if (!(isPortalLoading || isPaymentLoading)) {
-                                                handleSubscribe();
-                                            }
-                                        }}
-                                        className="flex w-full items-center justify-center"
-                                    >
-                                        {getSubscribeButtonText()}
-                                    </ButtonAnimatedGradient>
+                                <ButtonAnimatedGradient
+                                onClick={() => {
+                                if (!(isPortalLoading || isPaymentLoading)) {
+                                handleSubscribe();
+                                }
+                                }}
+                                className="flex w-full items-center justify-center"
+                                >
+                                {getSubscribeButtonText()}
+                                </ButtonAnimatedGradient>
                                 </div>
+
+                                 {/* Terms and Privacy Links */}
+                                 <div className="mt-4 flex justify-center space-x-4 text-sm text-gray-400">
+                                     <span className="text-gray-500">Please review our</span>
+                                     <a href="/terms" className="hover:text-[#BFB38F] transition-colors underline">
+                                         Terms of Service
+                                     </a>
+                                     <span>and</span>
+                                     <a href="/privacy" className="hover:text-[#BFB38F] transition-colors underline">
+                                         Privacy Policy
+                                     </a>
+                                     <span className="text-gray-500">before subscribing</span>
+                                 </div>
                                 </div>
                             </CardSpotlightPricing>
                         </div>
@@ -295,6 +306,19 @@ export default function PlusPage() {
                             {getCTAButtonText()}
                         </ButtonAnimatedGradient>
                     </div>
+                </div>
+
+                {/* Contact Section */}
+                <div className="mb-8 mt-8 text-center">
+                    <p className="text-base text-gray-600">
+                        Have questions? Get in touch:{' '}
+                        <a
+                            href="mailto:vtchat.io@gmail.com"
+                            className="text-[#BFB38F] hover:text-[#BFB38F]/80 transition-colors font-medium"
+                        >
+                            vtchat.io@gmail.com
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
