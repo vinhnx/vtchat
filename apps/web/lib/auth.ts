@@ -5,6 +5,11 @@ import { db } from './database';
 import * as schema from './database/schema';
 
 export const auth = betterAuth({
+    baseURL:
+        process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+        process.env.NEXT_PUBLIC_BASE_URL ||
+        'http://localhost:3000',
+    basePath: '/api/auth',
     database: drizzleAdapter(db, {
         provider: 'pg',
         schema: {
@@ -35,6 +40,12 @@ export const auth = betterAuth({
         window: 10, // time window in seconds
         max: 100, // max requests in the window
     },
+    trustedOrigins: [
+        'https://vtchat-web-development.up.railway.app',
+        process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ],
     fetchOptions: {
         onError: async (context: { response: Response; request: Request }) => {
             const { response } = context;

@@ -12,7 +12,7 @@ if ! command -v railway &> /dev/null; then
 fi
 
 # Check if logged in
-if ! railway projects > /dev/null 2>&1; then
+if ! railway list > /dev/null 2>&1; then
     echo "❌ Not logged in to Railway. Please run: railway login"
     exit 1
 fi

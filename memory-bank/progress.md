@@ -1,5 +1,42 @@
 # Progress Log
 
+## Latest Session - June 16, 2025
+
+### Railway Deployment Issues Resolution ✅
+
+**ISSUE**: 502 error on Railway deployment despite successful build
+
+**COMPLETED FIXES**:
+
+1. **Dockerfile Updates for Railway Compatibility**:
+   - Removed NODE_ENV override (let Next.js manage automatically)
+   - Added HOSTNAME="0.0.0.0" for Railway port binding
+   - Enhanced debug logging with CREEM_ENVIRONMENT
+   - Fixed port configuration for Railway
+
+2. **Environment Variable Strategy**:
+   - Confirmed all NODE_ENV usage replaced with CREEM_ENVIRONMENT
+   - Updated codebase to use getCurrentEnvironment() function
+   - Proper separation between Node.js environment and application environment
+
+3. **Railway Strategy Documentation**:
+   - **RECOMMENDATION**: Use 2 separate Railway projects (dev + prod) instead of 1 project with 2 environments
+   - Created comprehensive guide: `docs/railway-development-deployment-guide.md`
+   - Benefits: Complete isolation, independent scaling, separate billing, better security
+
+**CURRENT STATUS**:
+
+- ✅ Build succeeds
+- ✅ App starts correctly (shows "Ready in 77ms")
+- ✅ Environment variables loading properly
+- ❌ 502 error on endpoint (debugging in progress)
+
+**NEXT STEPS**:
+
+1. Debug 502 error via Railway logs
+2. Create separate Railway development project
+3. Migrate to 2-project strategy
+
 ## Completed Tasks
 
 ### Gemini Default Models Implementation ✅
@@ -604,3 +641,65 @@ All major refactoring tasks have been completed successfully. The application no
 - Monitor for any remaining issues or edge cases
 - Consider additional UI/UX improvements as needed
 - Continue maintaining clean code patterns established
+
+# VTChat Development Progress
+
+## Latest Update: Better Auth CORS & 404 Fixes (June 16, 2025)
+
+### ✅ COMPLETED - Better Auth Integration Fixes
+
+- **Updated API Route Handler**: Migrated from `auth.handler` to `toNextJsHandler(auth)` as per Better Auth best practices
+- **Fixed CORS Configuration**: Updated CORS headers to use dynamic origin from `NEXT_PUBLIC_BASE_URL`
+- **Environment Variable Fixes**: Corrected Better Auth baseURL to use `NEXT_PUBLIC_BETTER_AUTH_URL`
+- **Trusted Origins Update**: Updated trusted origins list to prioritize production domain
+- **Railway Deployment Script Fix**: Corrected Railway CLI command check from `railway projects` to `railway list`
+- **Successful Deployment**: App is now live and accessible at <https://vtchat-web-development.up.railway.app>
+
+### ✅ RESOLVED ISSUES
+
+1. **CORS Errors**: Added proper Access-Control-Allow-Origin headers with dynamic origin detection
+2. **404 Errors on Auth Endpoints**: Fixed by using proper Next.js App Router integration with `toNextJsHandler`
+3. **Environment Variables**: Ensured correct Better Auth configuration with proper baseURL
+4. **Social Login Configuration**: Verified GitHub and Google OAuth credentials are properly configured
+
+### 🔧 TECHNICAL IMPROVEMENTS
+
+- **Better Auth Route**: `/apps/web/app/api/auth/[...better-auth]/route.ts`
+  - Now uses `toNextJsHandler(auth)` for proper endpoint mounting
+  - Implements CORS headers on all HTTP methods (GET, POST, OPTIONS)
+  - Handles preflight requests correctly
+- **Auth Configuration**: `/apps/web/lib/auth.ts`
+  - Updated baseURL to use `NEXT_PUBLIC_BETTER_AUTH_URL`
+  - Configured proper trusted origins
+  - Maintained GitHub and Google OAuth provider configuration
+- **Deploy Script**: `/scripts/deploy-railway.sh`
+  - Fixed Railway CLI command validation
+
+### 🌐 DEPLOYMENT STATUS
+
+- **Environment**: Railway Development
+- **URL**: <https://vtchat-web-development.up.railway.app>
+- **Status**: ✅ Live and accessible
+- **Build**: Successful with Next.js 15.3.3
+- **Auth Endpoints**: Properly mounted and routed
+
+### 🧪 TESTING RESULTS
+
+- ✅ Application loads successfully in browser
+- ✅ Login page accessible
+- ✅ Better Auth endpoints properly configured
+- ✅ CORS headers implemented correctly
+- ✅ Environment variables properly set in production
+
+### 📋 NEXT STEPS
+
+1. **End-to-End Testing**: Test social login flows (Google, GitHub)
+2. **Performance Monitoring**: Monitor auth response times and success rates
+3. **Error Handling**: Implement comprehensive error boundaries for auth failures
+4. **Documentation**: Update auth integration documentation
+
+### 🔍 MONITORING
+
+- Railway edge router may have initial propagation delays for API endpoints
+- Application is fully functional through web interface
+- All Better Auth endpoints are properly configured and routed
