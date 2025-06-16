@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Environment Configuration Verification Script for VTChat Railway Deployment
+# Environment Configuration Verification Script for VT Railway Deployment
 
-echo "🔍 VTChat Railway Deployment Configuration Verification"
+echo "🔍 VT Railway Deployment Configuration Verification"
 echo "=================================================="
 
 # Check if we're in the correct directory

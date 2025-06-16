@@ -2,15 +2,51 @@
 
 [] check neon workflow github action
 
+
+-
+[] https://platform.openai.com/docs/mcp
+
 --
 
-1. ✅ now use `dev` branch for trigger railway `development` env deployment when push to github, scan #codebase for `railway-deployment` and replace with `dev`
-1. ✅ use `main` branch for trigger railway `production` env deployment when push to github.
-1. ✅ create a github action workflow for PR base on this rule
-1. ✅ update docker and railway.toml config if need
-1. ✅ Railway configuration review and optimization completed
-1. ✅ use context7 or mcp
+make sure threads, byok keys and preferences are kept per account
+make sure switching don't clear those data
+you can use mcp tools context7
 
+--
+
+[] https://docs.creem.io/faq/account-reviews
+
+--
+[] review packages and deps, suggest lightweight and review big dependencies and suggest improvement
+
+--
+[] speed up build and deployment
+--
+
+[] [monet]
+mcp
+<https://ai-sdk.dev/cookbook/next/mcp-tools>
+<https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools>
+review #codebase and implement mcp
+--
+you can use context7
+
+
+--
+NOTE: add new feature for VT+
+
+--
+1. also update sidebar button -> manage sub -> upgrade plus
+1. check for threads manage for per account, can you do that with current local threads management. make sure only threads belong a user can see and others can see.
+1. when logout -> no threads
+use mcp or context7 or neon mcp, or search if needd. we use dixie and zustand or indexdb for threads maangement for now. local only for now
+
+--
+[] check neon workflow github action
+
+--
+
+[] review #codebase and documents to make sure all gated features are cleared on user log out
 --
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
@@ -19,11 +55,11 @@
 [] implement credit tracking (FREE_TIER_DAILY_LIMIT)
 --
 
-[] when user input and send chat message -> check for existing api keys byok -> if not exists -> show popup to let user set keys
-
 --
 [] <https://scira.ai/pricing>
 
+--
+[] wow https://tailark.com/
 --
 []
 remember to publish Google Auth
@@ -34,60 +70,31 @@ remember to publish Google Auth
 [] check FREE_TIER_DAILY_LIMIT env -> login 100 per day -> plus: unlimited
 
 --
+[] https://scira.ai/settings?tab=profile
+--
+https://github.com/zaidmukaddam/scira/tree/main/app/settings
+--
 
 [] <https://vercel.com/ai-accelerator>
 
 --
+[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/reverify
+--
+[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/profile-image
+--
+[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/legal-consent
+--
+[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/app-invite
 
+--
 [] build waitlist ?
+https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitlist
 
 --
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
 --
-[✅] use Railway - COMPLETED!
-<https://claude.ai/chat/bf7ba5bc-ce28-4876-ba33-91098db425af>
-[✅] deployment success - LIVE AT: <https://vtchat-web-production.up.railway.app/chat>
 
-NEXT STEPS FOR RAILWAY:
-[✅] Complete deployment configuration guides created:
-
-DOCUMENTATION CREATED:
-
-- docs/railway-complete-guide.md - Comprehensive Railway deployment guide
-- docs/local-development-setup.md - Complete local development environment setup
-- docs/railway-env-vars-guide.md - Step-by-step environment variables configuration
-
-IMMEDIATE ACTIONS:
-[] Set critical environment variables in Railway dashboard:
-
-- BETTER_AUTH_SECRET (generate 32-char secret)
-- DATABASE_URL (add Railway PostgreSQL or use external)
-- AI API keys (OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY)
-- Application URLs (auto-filled templates provided)
-[] Test authentication flows
-[] Test AI chat functionality with API keys
-[] Optional: Configure social auth (GitHub, Google OAuth)
-[] Optional: Set up payment integration (Creem.io)
-[] Monitor deployment health and logs
-
---
-Railway: Best Alternative for Your Stack ✅ PROVEN!
-Why Railway > Vercel for you:
-
-✅ No vendor lock-in - Standard Docker deployments - WORKING
-✅ Better Bun support - Native runtime - WORKING
-✅ Cheaper scaling - $5/month → usage-based vs Vercel's $20 jump - ACTIVE
-✅ PostgreSQL included - Matches your Drizzle setup - READY
-✅ Vietnam-friendly - Better pricing/performance - CONFIRMED
-
-Deployment Documentation:
-
-- docs/railway-deployment-success.md - Complete success report
-- docs/railway-env-setup.md - Environment variable setup guide
-- docs/railway-troubleshooting.md - Full troubleshooting log
-
---
 [][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
 -
 

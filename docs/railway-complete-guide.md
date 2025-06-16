@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide provides a complete setup for deploying VTChat (Bun + Next.js 15 + Turborepo) to Railway with best practices for both development and production environments.
+This guide provides a complete setup for deploying VT (Bun + Next.js 15 + Turborepo) to Railway with best practices for both development and production environments.
 
 ## 📋 Prerequisites
 
@@ -465,7 +465,7 @@ railway up --detach
 
 ---
 
-**🎉 Success!** Your VTChat app is now successfully deployed on Railway with a robust configuration for both development and production environments.
+**🎉 Success!** Your VT app is now successfully deployed on Railway with a robust configuration for both development and production environments.
 
 **Live URL**: <https://vtchat-web-production.up.railway.app>
 

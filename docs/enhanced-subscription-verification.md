@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the implementation of comprehensive subscription verification to prevent duplicate Creem subscriptions in VTChat.
+This document describes the implementation of comprehensive subscription verification to prevent duplicate Creem subscriptions in VT.
 
 ## Problem Statement
 

@@ -1,8 +1,8 @@
-<img width="1080" alt="VTChat" src="/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/apps/web/public/bg/bg_vt.avif" />
+<img width="1080" alt="VT" src="/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/apps/web/public/bg/bg_vt.avif" />
 
 ## Introduction
 
-VTChat is a minimal AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Grounding Web Search for in-depth analysis of complex topics. A key focus of VTChat is enhancing user privacy by storing all user data locally in the browser using IndexedDB, ensuring conversations remain confidential.
+VT is a minimal AI-powered chatbot platform that prioritizes privacy while offering powerful research and agentic capabilities. Built as a monorepo with Next.js, TypeScript, and cutting-edge AI technologies, it provides multiple specialized chat modes including Grounding Web Search for in-depth analysis of complex topics. A key focus of VT is enhancing user privacy by storing all user data locally in the browser using IndexedDB, ensuring conversations remain confidential.
 
 The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) managed via Creem.io, with a user-friendly customer portal for subscription management.
 
@@ -29,7 +29,7 @@ The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) m
 
 ## Architecture
 
-VTChat utilizes a Turborepo-managed monorepo structure:
+VT utilizes a Turborepo-managed monorepo structure:
 
 ```
 .
@@ -49,7 +49,7 @@ VTChat utilizes a Turborepo-managed monorepo structure:
 
 ## Workflow Orchestration Example
 
-VTChat's workflow orchestration enables powerful agentic capabilities. Here's an example of creating a research agent:
+VT's workflow orchestration enables powerful agentic capabilities. Here's an example of creating a research agent:
 
 ### 1. Define Event and Context Types
 
@@ -112,7 +112,7 @@ This workflow processes research queries through planning, information gathering
 
 ## Local Storage for Privacy
 
-VTChat stores all chat history and user-specific data (like API keys if "Bring Your Own Key" is used) in the browser's IndexedDB. This ensures that sensitive conversation data remains on the user's device, enhancing privacy.
+VT stores all chat history and user-specific data (like API keys if "Bring Your Own Key" is used) in the browser's IndexedDB. This ensures that sensitive conversation data remains on the user's device, enhancing privacy.
 
 ## Tech Stack
 

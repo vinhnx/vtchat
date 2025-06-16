@@ -12,7 +12,7 @@ const DynamicApp = dynamic(() => import('../components/dynamic-app'), {
     ssr: false,
     loading: () => (
         <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-            <FullPageLoader label="Loading VTChat..." />
+            <FullPageLoader label="Loading VT..." />
         </div>
     ),
 }) as React.ComponentType<{ children: React.ReactNode }>;

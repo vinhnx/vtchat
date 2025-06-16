@@ -11,7 +11,7 @@ export default function LoginPage() {
                         <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md">
                             <MessageSquare className="size-4" />
                         </div>
-                        VTChat
+                        VT
                     </a>
                 </div>
                 <div className="flex flex-1 items-center justify-center">
@@ -23,7 +23,7 @@ export default function LoginPage() {
             <div className="relative hidden lg:block">
                 <img
                     src="/bg/bg_vt.avif"
-                    alt="VTChat Background"
+                    alt="VT Background"
                     className="absolute inset-0 h-full w-full object-cover"
                 />
             </div>

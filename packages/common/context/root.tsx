@@ -1,6 +1,8 @@
 'use client';
 import { initHotjar } from '@repo/shared/utils';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useThreadAuth } from '../hooks';
+import { initializeStorageCleanup } from '../utils/storage-cleanup';
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -20,6 +22,9 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandSearchOpen, setIsCommandSearchOpen] = useState(false);
 
+    // Initialize thread authentication and database switching
+    useThreadAuth();
+
     useEffect(() => {
         setIsClient(true);
         // Only initialize Hotjar on client side and after component has mounted
@@ -28,6 +33,13 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
                 initHotjar();
             } catch (error) {
                 console.warn('Failed to initialize Hotjar:', error);
+            }
+
+            try {
+                // Initialize storage cleanup to handle corrupted localStorage data
+                initializeStorageCleanup();
+            } catch (error) {
+                console.warn('Failed to initialize storage cleanup:', error);
             }
         }
     }, []);

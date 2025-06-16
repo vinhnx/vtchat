@@ -1,8 +1,8 @@
-# VTChat Subscription System
+# VT Subscription System
 
 ## Overview
 
-VTChat uses a dual-source subscription system that maintains consistency between user plan assignments and formal subscription records.
+VT uses a dual-source subscription system that maintains consistency between user plan assignments and formal subscription records.
 
 ## Data Sources
 

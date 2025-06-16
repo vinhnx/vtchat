@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document reviews the current Railway configuration for VTChat and provides recommendations for optimal development and production deployment settings.
+This document reviews the current Railway configuration for VT and provides recommendations for optimal development and production deployment settings.
 
 ## Current Configuration Status ✅
 
