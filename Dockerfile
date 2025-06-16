@@ -157,9 +157,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 # Switch to non-root user
 USER nextjs
 
-# Expose port (Railway will set PORT dynamically)
+# Expose port and set environment
 EXPOSE 3000
+ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the application with proper port binding
+CMD ["sh", "-c", "PORT=${PORT:-3000} node server.js"]
