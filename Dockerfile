@@ -133,9 +133,12 @@ ENV CREEM_ENVIRONMENT=${CREEM_ENVIRONMENT}
 
 # Build the application with environment variables
 RUN cd apps/web && \
-    if [ -f .env.build ]; then cp .env.build .env.local; fi && \
-    bun run build && \
-    rm -f .env.local
+    echo "=== BUILD ENVIRONMENT DEBUG ===" && \
+    echo "NODE_ENV: $NODE_ENV" && \
+    echo "NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL" && \
+    echo "BASE_URL: $BASE_URL" && \
+    echo "==============================" && \
+    bun run build
 
 # Stage 4: Production
 FROM node:20-alpine AS runner
