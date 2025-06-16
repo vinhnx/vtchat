@@ -31,8 +31,8 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# Railway environment files (keep templates)
-.env.railway
+# railway env files
+.env.railway.*
 .env.railway.development
 .env.railway.production
 

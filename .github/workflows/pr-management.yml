@@ -1,0 +1,160 @@
+name: Pull Request Management
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened, closed]
+        branches:
+            - main
+            - dev
+
+jobs:
+    # Create preview environment for PRs to main (production)
+    create-preview-production:
+        name: Create Production Preview
+        runs-on: ubuntu-latest
+        if: |
+            github.event.pull_request.base.ref == 'main' &&
+            (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install Railway CLI
+              run: npm install -g @railway/cli
+
+            - name: Create/Update PR Environment
+              run: |
+                  railway login --token ${{ secrets.RAILWAY_TOKEN }}
+                  railway link ${{ vars.RAILWAY_PROJECT_ID }}
+
+                  # Create or update PR environment
+                  PR_ENV_NAME="pr-${{ github.event.number }}-main"
+
+                  # Try to create environment (will fail if exists, that's ok)
+                  railway environment new $PR_ENV_NAME --copy production || true
+
+                  # Switch to the PR environment and deploy
+                  railway environment $PR_ENV_NAME
+                  railway up --detach
+              env:
+                  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+            - name: Comment PR with preview URL
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const prNumber = context.issue.number;
+                      const envName = `pr-${prNumber}-main`;
+                      const previewUrl = `https://vtchat-web-${envName}.up.railway.app`;
+
+                      github.rest.issues.createComment({
+                        issue_number: prNumber,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `🚀 **Production Preview Deployed!**
+
+                        📱 **Preview URL**: ${previewUrl}
+                        🔧 **Environment**: \`${envName}\`
+                        🎯 **Target**: Production (\`main\` branch)
+
+                        This preview environment will be automatically cleaned up when the PR is closed.`
+                      });
+
+    # Create preview environment for PRs to dev (development)
+    create-preview-development:
+        name: Create Development Preview
+        runs-on: ubuntu-latest
+        if: |
+            github.event.pull_request.base.ref == 'dev' &&
+            (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install Railway CLI
+              run: npm install -g @railway/cli
+
+            - name: Create/Update PR Environment
+              run: |
+                  railway login --token ${{ secrets.RAILWAY_TOKEN }}
+                  railway link ${{ vars.RAILWAY_PROJECT_ID }}
+
+                  # Create or update PR environment
+                  PR_ENV_NAME="pr-${{ github.event.number }}-dev"
+
+                  # Try to create environment (will fail if exists, that's ok)
+                  railway environment new $PR_ENV_NAME --copy development || true
+
+                  # Switch to the PR environment and deploy
+                  railway environment $PR_ENV_NAME
+                  railway up --detach
+              env:
+                  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+            - name: Comment PR with preview URL
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const prNumber = context.issue.number;
+                      const envName = `pr-${prNumber}-dev`;
+                      const previewUrl = `https://vtchat-web-${envName}.up.railway.app`;
+
+                      github.rest.issues.createComment({
+                        issue_number: prNumber,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `🔧 **Development Preview Deployed!**
+
+                        📱 **Preview URL**: ${previewUrl}
+                        🔧 **Environment**: \`${envName}\`
+                        🎯 **Target**: Development (\`dev\` branch)
+
+                        This preview environment will be automatically cleaned up when the PR is closed.`
+                      });
+
+    # Cleanup preview environments when PR is closed
+    cleanup-preview:
+        name: Cleanup Preview Environment
+        runs-on: ubuntu-latest
+        if: github.event.action == 'closed'
+
+        steps:
+            - name: Install Railway CLI
+              run: npm install -g @railway/cli
+
+            - name: Delete PR Environment
+              run: |
+                  railway login --token ${{ secrets.RAILWAY_TOKEN }}
+                  railway link ${{ vars.RAILWAY_PROJECT_ID }}
+
+                  # Determine environment name based on target branch
+                  if [ "${{ github.event.pull_request.base.ref }}" = "main" ]; then
+                    PR_ENV_NAME="pr-${{ github.event.number }}-main"
+                  else
+                    PR_ENV_NAME="pr-${{ github.event.number }}-dev"
+                  fi
+
+                  # Delete the environment (ignore errors if it doesn't exist)
+                  railway environment delete $PR_ENV_NAME || true
+              env:
+                  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+            - name: Comment cleanup completion
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const prNumber = context.issue.number;
+                      const targetBranch = context.payload.pull_request.base.ref;
+                      const envName = `pr-${prNumber}-${targetBranch === 'main' ? 'main' : 'dev'}`;
+
+                      github.rest.issues.createComment({
+                        issue_number: prNumber,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `🧹 **Preview Environment Cleaned Up**
+
+                        Environment \`${envName}\` has been deleted.
+                        Thank you for your contribution! 🎉`
+                      });

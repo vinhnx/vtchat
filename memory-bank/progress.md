@@ -787,6 +787,65 @@ HTTP/2 404 (with CORS headers) ⚠️
 
 **NEXT INVESTIGATION**: Better Auth endpoint patterns - the 404s with correct CORS headers suggest the auth routes exist but aren't matching the expected URL patterns.
 
+### GitHub Actions & Railway Configuration Updates ✅
+
+**COMPLETED**: Updated branch-based deployment strategy and Railway configuration
+
+**IMPLEMENTATION**:
+
+1. **Branch Strategy Implementation**:
+   - ✅ `dev` branch → triggers Railway `development` environment deployment
+   - ✅ `main` branch → triggers Railway `production` environment deployment
+   - ✅ Updated all references from `railway-deployment` to `dev` branch
+
+2. **GitHub Actions Workflows**:
+   - ✅ **Railway Deploy Workflow** (`.github/workflows/railway-deploy.yml`):
+     - Automatic deployment to development on `dev` branch push
+     - Automatic deployment to production on `main` branch push
+     - Build validation for all PRs
+   - ✅ **PR Management Workflow** (`.github/workflows/pr-management.yml`):
+     - Creates preview environments for PRs targeting `main` or `dev`
+     - Automatic cleanup when PRs are closed
+     - Environment-specific commenting and URL generation
+
+3. **Railway Configuration Updates**:
+   - ✅ Updated `railway.json` with environment-specific configurations
+   - ✅ Updated `railway.toml` with environment-specific health check settings
+   - ✅ Development environment: 180s health check timeout
+   - ✅ Production environment: 300s health check timeout
+
+4. **Documentation Review**:
+   - ✅ Used Context7 to review Railway best practices
+   - ✅ Verified branch-based deployment patterns align with Railway recommendations
+   - ✅ Confirmed environment-specific configuration support
+
+**WORKFLOW STRUCTURE**:
+
+```yaml
+GitHub Events:
+  - Push to `dev` → Railway Development Environment
+  - Push to `main` → Railway Production Environment
+  - PR to `dev/main` → Preview Environment + Build Validation
+  - PR closed → Preview Environment Cleanup
+```
+
+**FILES UPDATED**:
+
+- ✅ `railway.json` - Added environment-specific configurations
+- ✅ `railway.toml` - Added environment health check overrides
+- ✅ `TODO.md` - Marked all deployment tasks as completed
+- ✅ No script updates needed (already using correct references)
+
+**BENEFITS**:
+
+- 🚀 Automatic deployments based on branch strategy
+- 🔍 PR preview environments for testing
+- 🛡️ Environment isolation (dev/prod)
+- 🧹 Automatic cleanup of preview environments
+- ⚡ Optimized health checks per environment
+
+**STATUS**: All GitHub Actions and Railway configurations are now properly set up for branch-based deployment strategy.
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:

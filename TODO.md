@@ -1,5 +1,15 @@
 # TODO List
 
+[] check neon workflow github action
+
+--
+
+1. ✅ now use `dev` branch for trigger railway `development` env deployment when push to github, scan #codebase for `railway-deployment` and replace with `dev`
+1. ✅ use `main` branch for trigger railway `production` env deployment when push to github.
+1. ✅ create a github action workflow for PR base on this rule
+1. ✅ update docker and railway.toml config if need
+1. ✅ use context7 or mcp
+
 --
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
