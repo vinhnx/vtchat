@@ -1,9 +1,31 @@
 # TODO List
 
-[] Add wording for plus benefits: More features coming soon.
+[] when user input and send chat message -> check for existing api keys byok -> if not exists -> show popup to let user set keys
 
 --
-[] https://scira.ai/pricing
+[] TODO: add more login options -> more users
+
+--
+
+Strong recommendation: Use 2 separate Railway projects instead of environments within a single project.
+
+Created comprehensive guide: railway-separate-projects-strategy.md covering:
+
+Benefits of Separate Projects:
+
+Complete isolation between dev/prod
+Independent scaling and configuration
+Separate billing and cost tracking
+Better security and risk management
+Industry standard approach
+Migration Plan:
+
+Step-by-step instructions for creating vtchat-development and vtchat-production projects
+Environment variable mappings for each project
+Workflow recommendations for deployment strategies
+
+--
+[] <https://scira.ai/pricing>
 
 --
 [] consider create 2 rw apps
@@ -39,15 +61,17 @@ Alternative consideration:
 Railway's "environments" feature within a single project could work for simpler setups, but separate projects give you maximum isolation and flexibility, which is especially important as your application grows.
 The separate projects approach is the industry standard and what most teams use for good reason - it's worth the small overhead of managing two projects.
 
-https://claude.ai/chat/dc6bca24-00a5-4ef2-845a-4897eca05f08
+<https://claude.ai/chat/dc6bca24-00a5-4ef2-845a-4897eca05f08>
 
 --
 []
 remember to publish Google Auth
-https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5
+<https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5>
 
 --
-[] check FREE_TIER_DAILY_LIMIT env
+
+[] check FREE_TIER_DAILY_LIMIT env -> login 100 per day -> plus: unlimited
+
 --
 
 [] <https://vercel.com/ai-accelerator>
