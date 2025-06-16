@@ -1,45 +1,60 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
-import { Book, Lightbulb, BarChart, Pencil, HelpCircle,  } from 'lucide-react';
 import { Editor } from '@tiptap/react';
+import { BarChart, Book, HelpCircle, Lightbulb, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';
 
 export const examplePrompts = {
     howTo: [
-        'How to plan a sustainable vegetable garden for small spaces?',
-        'How to prepare for your first international travel experience?',
-        'How to set up a personal budget that actually works?',
-        'How to improve your public speaking skills for professional settings?',
+        'How to use AI tools to improve daily productivity?',
+        'How to start a successful newsletter in 2025?',
+        'How to create engaging short-form video content for social media?',
+        'How to navigate the complexities of personal data privacy online?',
+        'How to build a personal brand online effectively?',
+        'How to identify and avoid online phishing scams?',
+        'How to create a compelling presentation for a diverse audience?',
     ],
 
     explainConcepts: [
-        'Explain how blockchain technology works in simple terms.',
-        'What is quantum computing and how does it differ from traditional computing?',
-        'Explain the concept of emotional intelligence and its importance.',
-        'How does carbon capture technology work to combat climate change?',
+        'Explain how Large Language Models work.',
+        'Explain the concept of "prompt engineering" for AI models.',
+        'What is the metaverse and what are its potential real-world applications?',
+        'Explain the current state of quantum computing and its near-term impact.',
+        'Explain the role of decentralized autonomous organizations (DAOs).',
+        'Explain the concept of digital twins and their applications.',
+        'What is edge computing and how does it relate to IoT?',
     ],
 
     creative: [
-        "Write a short story about a chance encounter that changes someone's life.",
-        'Create a recipe for a fusion dish combining Italian and Japanese cuisines.',
-        'Design a fictional sustainable city of the future.',
-        'Develop a character profile for the protagonist of a science fiction novel.',
+        'Write a news headline from the year 2042.',
+        'Imagine a dialogue between an AI assistant and a philosopher about consciousness.',
+        'Draft a pitch for a startup leveraging AI to solve a global challenge.',
+        'Describe a day in the life of someone living in a fully smart city.',
+        'Develop a concept for a documentary exploring the future of work.',
+        'Write a short script for a podcast episode discussing future technologies.',
+        'Design an innovative solution for reducing plastic waste using current tech.',
     ],
 
     advice: [
-        "What's the best approach to negotiate a salary increase?",
-        'How should I prepare for a marathon as a beginner runner?',
-        'What strategies can help manage work-life balance when working remotely?',
-        'What should I consider when adopting a pet for the first time?',
+        'What are key skills to develop for the future job market shaped by AI?',
+        'How can individuals combat misinformation in the digital age?',
+        'What are some ethical guidelines for using generative AI in creative work?',
+        'How to adapt to rapidly changing technologies in the workplace?',
+        'What are effective strategies for lifelong learning in a fast-changing world?',
+        'What are practical steps to improve critical thinking skills?',
+        'How to foster innovation within a team or organization?',
     ],
 
     analysis: [
-        'Analyze the potential impact of artificial intelligence on healthcare.',
-        'Compare different approaches to addressing climate change.',
-        'Examine the pros and cons of various renewable energy sources.',
-        'Analyze how social media has transformed communication in the past decade.',
+        'Analyze the societal impact of widespread AI adoption in various industries.',
+        'Compare the potential benefits and risks of advanced AI systems.',
+        'Examine the role of AI in accelerating scientific discovery.',
+        'Analyze the future of remote work and its effect on urban planning.',
+        'Evaluate the impact of generative AI on creative industries.',
+        'Analyze the challenges and opportunities of global supply chain resilience.',
+        'Evaluate the effectiveness of different cybersecurity measures for small businesses.',
     ],
 };
 
@@ -98,13 +113,13 @@ export const ExamplePrompts = () => {
                 {Object.entries(categoryIcons).map(([category, value], index) => (
                     <Button
                         key={index}
-                        variant="bordered"
-                        rounded="full"
+                        variant="outlined"
                         size="sm"
                         onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
+                        className="dark:hover:ring-offset-background transition-all hover:ring-2 hover:ring-offset-2"
                     >
-                        <value.icon size={16} className={'text-muted-foreground/50'} />
-                        {value.name}
+                        <value.icon size={16} className={value.color} />
+                        <span className="ml-2">{value.name}</span>
                     </Button>
                 ))}
             </div>
