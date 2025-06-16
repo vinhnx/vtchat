@@ -8,9 +8,7 @@ healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 
 [environments.development]
-branch = "dev"
-variables = { NODE_ENV = "development" }
+branch = "railway-deployment"
 
 [environments.production]
 branch = "main"
-variables = { NODE_ENV = "production" }
