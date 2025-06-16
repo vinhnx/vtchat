@@ -625,6 +625,76 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 - Fault-tolerant design with multiple fallbacks
 - Proper VT+ feature access control
 
+### Dockerfile Server Path Fix ✅
+
+**Date:** June 16, 2025
+**Status:** ✅ COMPLETED - CRITICAL FIX
+
+**ISSUE**: Railway deployment failing with "Cannot find module '/app/server.js'" error
+
+**ROOT CAUSE**:
+
+- Next.js app configured with `output: 'standalone'` in `next.config.mjs`
+- Standalone build places `server.js` at `apps/web/server.js` within the build output
+- Dockerfile was trying to run `node server.js` from root instead of `node apps/web/server.js`
+
+**SOLUTION**:
+
+- Updated Dockerfile CMD from `node server.js` to `node apps/web/server.js`
+- This matches the actual location of the server file in Next.js standalone output
+
+**FILES MODIFIED**:
+
+- `Dockerfile` - Updated CMD path
+- `docs/dockerfile-server-path-fix.md` - Documentation of fix
+- `test-deployment-fix.sh` - Validation script for endpoints
+
+**EXPECTED RESULT**:
+
+- App should now start successfully on Railway
+- All endpoints including `/api/auth/*` should be accessible
+- No more "Cannot find module" errors
+
+**VERIFICATION NEEDED**:
+
+1. ✅ Check Railway deployment logs show successful startup
+2. ⏳ Test auth endpoints (200/302 responses, not 404)
+3. ⏳ Verify CORS headers working correctly
+4. ⏳ Confirm login functionality works end-to-end
+
+### 🎉 BREAKTHROUGH: Server Path Fix SUCCESS
+
+**VERIFICATION RESULTS** (June 16, 2025 15:14):
+
+```bash
+# ✅ Main site working
+curl -I https://vtchat-web-development.up.railway.app/
+HTTP/2 308 (redirect to /chat) ✅
+
+# ✅ Login page working
+curl -I https://vtchat-web-development.up.railway.app/login
+HTTP/2 200 ✅
+
+# ❌ Auth endpoints returning 404 (but CORS headers present)
+curl -I https://vtchat-web-development.up.railway.app/api/auth/session
+HTTP/2 404 (with CORS headers) ⚠️
+
+curl -I https://vtchat-web-development.up.railway.app/api/auth/providers
+HTTP/2 404 (with CORS headers) ⚠️
+```
+
+**CRITICAL SUCCESS**: Our Dockerfile server path fix (`node apps/web/server.js`) completely resolved the deployment startup issue!
+
+**STATUS ANALYSIS**:
+
+- ✅ **Server startup**: NO MORE "Cannot find module '/app/server.js'" errors
+- ✅ **App functionality**: Pages loading, redirects working
+- ✅ **CORS headers**: Properly configured and present
+- ❌ **Better Auth routing**: 404s suggest route pattern mismatch
+- ✅ **Railway deployment**: Fully operational
+
+**NEXT INVESTIGATION**: Better Auth endpoint patterns - the 404s with correct CORS headers suggest the auth routes exist but aren't matching the expected URL patterns.
+
 ## Current Status
 
 All major refactoring tasks have been completed successfully. The application now has:
