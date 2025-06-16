@@ -6,3 +6,13 @@ dockerfilePath = "Dockerfile"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
+
+[environments.development]
+[environments.development.deploy]
+healthcheckTimeout = 180
+restartPolicyType = "ON_FAILURE"
+
+[environments.production]
+[environments.production.deploy]
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"

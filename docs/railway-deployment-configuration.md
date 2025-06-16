@@ -145,7 +145,7 @@ FREE_TIER_DAILY_LIMIT=50
 ### 1. Development Deployment
 
 1. Set environment variables in Railway development environment
-2. Deploy from `railway-deployment` branch
+2. Deploy from `dev` branch
 3. Verify URLs point to development domain
 4. Test authentication and payment flows
 

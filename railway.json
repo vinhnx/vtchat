@@ -8,5 +8,19 @@
         "healthcheckPath": "/api/health",
         "healthcheckTimeout": 300,
         "restartPolicyType": "ON_FAILURE"
+    },
+    "environments": {
+        "development": {
+            "deploy": {
+                "healthcheckTimeout": 180,
+                "restartPolicyType": "ON_FAILURE"
+            }
+        },
+        "production": {
+            "deploy": {
+                "healthcheckTimeout": 300,
+                "restartPolicyType": "ON_FAILURE"
+            }
+        }
     }
 }
