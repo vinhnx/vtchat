@@ -9,6 +9,9 @@ const getBaseURL = () => {
     if (process.env.NEXT_PUBLIC_BASE_URL) {
         return process.env.NEXT_PUBLIC_BASE_URL;
     }
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+        return process.env.NEXT_PUBLIC_APP_URL;
+    }
 
     // In development, use localhost
     if (typeof window !== 'undefined') {

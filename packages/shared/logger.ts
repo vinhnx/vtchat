@@ -1,4 +1,4 @@
-import { EnvironmentType } from "./types/environment";
+import { EnvironmentType } from './types/environment';
 
 type LogContext = Record<string, any>;
 
@@ -22,7 +22,7 @@ export const logger = {
     debug: (message: string, context: LogContext = {}) => {
         if (
             process.env.LOG_LEVEL === 'debug' ||
-            process.env.NODE_ENV === EnvironmentType.DEVELOPMENT
+            process.env.CREEM_ENVIRONMENT === EnvironmentType.DEVELOPMENT
         ) {
             console.debug(`[DEBUG] ${message}`, context);
         }
