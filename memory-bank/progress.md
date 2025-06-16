@@ -2,6 +2,38 @@
 
 ## Latest Session - June 16, 2025
 
+### OAuth Avatar Scope Implementation ✅
+
+**ISSUE**: OAuth login not requesting user avatar in scope, missing profile pictures
+
+**COMPLETED FIXES**:
+
+1. **Better Auth OAuth Configuration**:
+   - Updated GitHub provider to properly map `avatar_url` from user profile
+   - Updated Google provider to properly map `picture` from user profile
+   - Added `mapProfileToUser` functions for both providers to extract avatar URLs
+   - GitHub scopes already included `read:user` which provides avatar access
+   - Google scopes already included `profile` which provides picture access
+
+2. **Database Integration**:
+   - Confirmed existing `users` table has `image` field for avatar storage
+   - Avatar URLs automatically saved to database during OAuth flow
+   - Profile API already returns `user.image` for frontend consumption
+
+3. **UI Components Ready**:
+   - `UserButton` component already displays user avatars when available
+   - Sidebar component already shows user profile pictures
+   - Avatar fallback to initials when no image available
+   - Seamless integration with existing user interface
+
+4. **Documentation Created**:
+   - Created comprehensive guide: `docs/oauth-avatar-implementation.md`
+   - Documented GitHub and Google OAuth scope requirements
+   - Explained profile mapping implementation
+   - Added testing verification steps
+
+**RESULT**: User avatars now automatically retrieved and displayed during OAuth login flows
+
 ### Environment Variables Consolidation ✅
 
 **ISSUE**: Multiple conflicting environment files causing confusion and potential conflicts

@@ -1,12 +1,5 @@
 # TODO List
 
-1. check my dockerfile deployment config to make sure it use proper config
-1. note that for deployment railway for development env the base url should be <https://vtchat-web-development.up.railway.app>
-1. deployment railway for production env the base url should be <https://vtchat-web-production.up.railway.app>
-1. local dev is localhost:3000.
-use context7
-
-
 --
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
