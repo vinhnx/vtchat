@@ -84,8 +84,8 @@ ARG CREEM_WEBHOOK_SECRET
 ARG CREEM_PRODUCT_ID
 ARG CREEM_ENVIRONMENT
 
-# Set environment variables for build (critical for Next.js)
-ENV NODE_ENV=${NODE_ENV}
+# Remove NODE_ENV override - let Next.js manage it automatically
+# ENV NODE_ENV=${NODE_ENV}
 ENV BASE_URL=${BASE_URL}
 ENV BETTER_AUTH_URL=${BETTER_AUTH_URL}
 ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
@@ -134,8 +134,9 @@ ENV CREEM_ENVIRONMENT=${CREEM_ENVIRONMENT}
 # Build the application with environment variables
 RUN cd apps/web && \
     echo "=== BUILD ENVIRONMENT DEBUG ===" && \
-    echo "NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL" && \
     echo "BASE_URL: $BASE_URL" && \
+    echo "NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL" && \
+    echo "CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT" && \
     echo "NODE_ENV will be automatically set by Next.js build process" && \
     echo "==============================" && \
     bun run build
@@ -158,10 +159,8 @@ USER nextjs
 
 # Expose port
 EXPOSE 3000
-
-# Set environment variables (PORT will be overridden by Railway)
-# NODE_ENV is automatically managed by Next.js - don't override it
 ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Start the application
 CMD ["node", "apps/web/server.js"]
