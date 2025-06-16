@@ -5,8 +5,9 @@ import { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { createContext, ReactNode, useCallback, useContext, useMemo } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { useApiKeysStore, useAppStore, useChatStore, useMcpToolsStore } from '../store';
+import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 
 export type AgentContextType = {
     runAgent: (body: any) => Promise<void>;
@@ -29,6 +30,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const user = session?.user;
+    
+    const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+    const [modalChatMode, setModalChatMode] = useState<ChatMode>(ChatMode.GPT_4o_Mini);
 
     const {
         updateThreadItem,
@@ -404,6 +408,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     apiKeys: apiKeys(),
                 });
             } else {
+                // Show API key modal if user is signed in but missing required API key
+                if (isSignedIn) {
+                    setModalChatMode(mode);
+                    setShowApiKeyModal(true);
+                    setIsGenerating(false);
+                    return;
+                }
+                
                 runAgent({
                     mode: newChatMode || chatMode,
                     prompt: query,
@@ -462,7 +474,24 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         [runAgent, handleSubmit, updateContext]
     );
 
-    return <AgentContext.Provider value={contextValue}>{children}</AgentContext.Provider>;
+    const handleApiKeyComplete = useCallback(() => {
+        setShowApiKeyModal(false);
+        // Retry the submission after API key is set
+        // The form data would need to be preserved, but for now we'll just close the modal
+        // In a real implementation, you might want to store the form data and retry automatically
+    }, []);
+
+    return (
+        <AgentContext.Provider value={contextValue}>
+            {children}
+            <ApiKeyPromptModal
+                isOpen={showApiKeyModal}
+                onClose={() => setShowApiKeyModal(false)}
+                chatMode={modalChatMode}
+                onComplete={handleApiKeyComplete}
+            />
+        </AgentContext.Provider>
+    );
 };
 
 export const useAgentStream = (): AgentContextType => {

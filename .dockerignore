@@ -1,0 +1,33 @@
+# Docker ignore for optimized build
+node_modules
+.next
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+.env*
+!.env.example
+!.env.build
+.vercel
+.DS_Store
+*.log
+.turbo
+# Build outputs
+apps/web/.next
+packages/*/.next
+packages/*/node_modules
+.railway
+dist
+build
+coverage
+.nyc_output
+*.tgz
+*.tar.gz
+# Development files
+docs/
+memory-bank/
+scripts/
+terminal
+*.md
+!README.md

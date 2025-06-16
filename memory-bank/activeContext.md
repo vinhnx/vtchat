@@ -2,12 +2,19 @@
 
 ## Current Work Focus
 
-The immediate focus is on improving user feedback and UI consistency related to subscriptions on the `/plus` page. Specifically:
-1.  **Subscription Error Handling:** Ensure toast notifications are used for errors during the subscription checkout process.
-2.  **Plus Page UI Update:** Update subscription and CTA buttons on the `/plus` page to dynamically reflect the user's current subscription status (e.g., show "Manage Subscription" with a badge if subscribed, "Continue" if on free tier).
+The immediate focus is on completing UI enhancements and ensuring consistency across components.
 
 ## Recent Changes
 
+*   **Example Prompts - Complete Content Refresh & Revamp:** Updated `packages/common/components/example-prompts.tsx`:
+    *   **Styling:**
+        *   Applied category-specific colors to icons within the example prompt buttons.
+        *   Changed button variant to `outlined` for consistency with `shadcn/ui`.
+        *   Removed `rounded="full"` for default `shadcn/ui` button rounding.
+        *   Added a hover ring effect for better visual feedback.
+    *   **Content:**
+        *   All example prompts across all categories (`howTo`, `explainConcepts`, `creative`, `advice`, `analysis`) have been completely replaced with new, fresh, and current topics. Each category has been expanded to contain 7 prompts.
+        *   The new prompts focus on recent developments, AI, technology trends, and contemporary societal questions, offering a wider variety of starting points for users. One prompt was specifically updated to "Explain how Large Language Models work."
 *   **`TODO.md` Cleanup and Refinement:** Organized and categorized tasks in `TODO.md` for better clarity and actionability. Removed non-actionable items and notes better suited for other documentation.
 *   **Dynamic CTA Buttons on Plus Page:** Updated `apps/web/app/plus/page.tsx` to make the Call to Action (CTA) buttons more dynamic:
     *   The "Free" plan button now shows "Continue" (and links to `/chat`) if the user is signed in and on the free tier.

@@ -1,6 +1,6 @@
 import { runWorkflow } from '@repo/ai/workflow';
 import { logger } from '@repo/shared/logger';
-import { EnvironmentType } from '@repo/shared/types/environment';
+import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import { Geo } from '@vercel/functions';
 import { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
@@ -97,7 +97,7 @@ export async function executeStream({
             });
         });
 
-        if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
+        if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
             logger.debug('Starting workflow', { threadId: data.threadId });
         }
 
@@ -105,7 +105,7 @@ export async function executeStream({
             question: data.prompt,
         });
 
-        if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
+        if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
             logger.debug('Workflow completed', { threadId: data.threadId });
         }
 
@@ -121,7 +121,7 @@ export async function executeStream({
     } catch (error) {
         if (abortController.signal.aborted) {
             // Aborts are normal user actions, not errors
-            if (process.env.NODE_ENV === EnvironmentType.DEVELOPMENT) {
+            if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
                 logger.debug('Workflow aborted', { threadId: data.threadId });
             }
 

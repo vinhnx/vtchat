@@ -41,6 +41,10 @@ export const PRICING_CONFIG = {
                     name: 'Advanced AI Capabilities',
                     description: 'Access to the latest AI features and models',
                 },
+                {
+                    name: 'More features coming soon',
+                    description: 'Continuous improvements and new additions',
+                },
             ],
         },
     },

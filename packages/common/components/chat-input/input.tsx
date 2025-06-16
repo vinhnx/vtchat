@@ -14,6 +14,7 @@ import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
+import { ShineText } from '../shine-text';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -250,7 +251,7 @@ export const ChatInput = ({
                             transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="mb-4 flex w-full flex-col items-center gap-1"
                         >
-                            <AnimatedTitles />
+                            <PersonalizedGreeting session={session} />
                         </motion.div>
                     )}
 
@@ -272,23 +273,25 @@ export const ChatInput = ({
     );
 };
 
-type AnimatedTitlesProps = {
-    titles?: string[];
+type PersonalizedGreetingProps = {
+    session?: any;
 };
 
-const AnimatedTitles = ({ titles = [] }: AnimatedTitlesProps) => {
+const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
     const [greeting, setGreeting] = React.useState<string>('');
 
     React.useEffect(() => {
         const getTimeBasedGreeting = () => {
             const hour = new Date().getHours();
+            const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
+            const userNamePart = userName ? `, ${userName}!` : '';
 
             if (hour >= 5 && hour < 12) {
-                return 'Good morning';
+                return `Good morning${userNamePart}`;
             } else if (hour >= 12 && hour < 18) {
-                return 'Good afternoon';
+                return `Good afternoon${userNamePart}`;
             } else {
-                return 'Good evening';
+                return `Good evening${userNamePart}`;
             }
         };
 
@@ -303,15 +306,15 @@ const AnimatedTitles = ({ titles = [] }: AnimatedTitlesProps) => {
         }, 60000); // Check every minute
 
         return () => clearInterval(interval);
-    }, [greeting]);
+    }, [greeting, session]);
 
     return (
         <Flex
             direction="col"
-            className="relative h-[60px] w-full items-center justify-center overflow-hidden"
+            className="relative h-[100px] w-full items-center justify-center overflow-hidden"
         >
             <AnimatePresence mode="wait">
-                <motion.h1
+                <motion.div
                     key={greeting}
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -320,10 +323,12 @@ const AnimatedTitles = ({ titles = [] }: AnimatedTitlesProps) => {
                         duration: 0.8,
                         ease: 'easeInOut',
                     }}
-                    className="from-muted-foreground/50 via-muted-foreground/40 to-muted-foreground/20 bg-gradient-to-r bg-clip-text text-center text-[32px] font-semibold tracking-tight text-transparent"
+                    className="text-center"
                 >
-                    {greeting}
-                </motion.h1>
+                    <ShineText className="text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl">
+                        {greeting}
+                    </ShineText>
+                </motion.div>
             </AnimatePresence>
         </Flex>
     );

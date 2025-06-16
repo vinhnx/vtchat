@@ -123,10 +123,6 @@ export default function PlusPage() {
 
     return (
         <div className="relative min-h-screen w-full">
-            {/* Fixed Grid Background */}
-            <div className="fixed inset-0 h-full w-full bg-slate-950">
-                <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-            </div>
             <div className="container relative z-10 mx-auto px-4 py-8 pt-16">
                 {/* Hero Section */}
                 <div className="mb-8 space-y-3 pt-8 text-center">
@@ -137,8 +133,8 @@ export default function PlusPage() {
                         </AnimatedBadge>
 
                         <div>
-                            <ShineText className="text-2xl sm:text-3xl">
-                                Plans that grow with you
+                            <ShineText className="text-5xl font-bold leading-loose tracking-tight sm:text-6xl">
+                                Choose your perfect plan
                             </ShineText>
                         </div>
                     </div>
@@ -146,7 +142,7 @@ export default function PlusPage() {
 
                 {/* Pricing Section */}
                 <div id="pricing" className="relative px-6 py-4 sm:py-6 lg:px-8">
-                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-3 lg:max-w-4xl lg:grid-cols-2">
+                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-1 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
                             className={`rounded-3xl rounded-t-3xl bg-white p-8 ring-1 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
@@ -157,7 +153,7 @@ export default function PlusPage() {
                                 <div className="flex items-center justify-between">
                                     <h3
                                         id="tier-free"
-                                        className="text-base/7 font-semibold text-[#BFB38F]"
+                                        className="text-lg font-bold text-[#BFB38F]"
                                     >
                                         Free
                                     </h3>
@@ -204,16 +200,18 @@ export default function PlusPage() {
                         </CardSpotlightPricing>
 
                         {/* VT+ Plan Card */}
-                        <CardSpotlightPricing
-                            className={`rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
-                                isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
-                            }`}
-                        >
-                            <div>
+                        <div className="relative inline-block overflow-hidden rounded-3xl p-[1px]">
+                            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#BFB38F_0%,#262626_50%,#BFB38F_100%)]" />
+                            <CardSpotlightPricing
+                                className={`rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 relative ${
+                                    isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                                }`}
+                            >
+                                <div>
                                 <div className="flex items-center justify-between">
                                     <h3
                                         id="tier-vt-plus"
-                                        className="text-base/7 font-semibold text-[#BFB38F]"
+                                        className="text-lg font-bold text-[#BFB38F]"
                                     >
                                         {PRICING_CONFIG.product.name}
                                     </h3>
@@ -235,8 +233,7 @@ export default function PlusPage() {
                                     </span>
                                 </p>
                                 <p className="mt-6 text-base/7 text-gray-300">
-                                    {PRICING_CONFIG.product.description} and enhanced AI
-                                    capabilities.
+                                    {PRICING_CONFIG.product.description.split(':')[0]}
                                 </p>
                                 <ul
                                     role="list"
@@ -263,18 +260,19 @@ export default function PlusPage() {
                                         {getSubscribeButtonText()}
                                     </ButtonAnimatedGradient>
                                 </div>
-                            </div>
-                        </CardSpotlightPricing>
+                                </div>
+                            </CardSpotlightPricing>
+                        </div>
                     </div>
                 </div>
 
                 {/* Features Section - Moved below pricing table */}
                 <div className="mb-8 mt-8">
                     <div className="mb-6 text-center">
-                        <h2 className="mb-4 text-white text-lg font-semibold">
+                        <ShineText className="text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl">
                             Powerful Features
-                        </h2>
-                        <p className="mx-auto max-w-2xl text-white text-sm text-muted-foreground">
+                        </ShineText>
+                        <p className="mt-6 text-base/7 text-gray-600">
                             Discover what makes {PRICING_CONFIG.product.name} the perfect choice for
                             your productivity needs
                         </p>
@@ -284,7 +282,7 @@ export default function PlusPage() {
 
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
-                    <h2 className="text-white text-lg font-semibold">Ready to get started?</h2>
+                    <h2 className="text-lg font-semibold text-white">Ready to get started?</h2>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
                             onClick={() => {

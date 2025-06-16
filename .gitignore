@@ -31,9 +31,10 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# railway env files
+# Railway environment files (keep templates)
 .env.railway
-.env.railway.*
+.env.railway.development
+.env.railway.production
 
 # turbo
 .turbo
@@ -44,3 +45,4 @@ yarn-error.log*
 
 better-auth-mcp.log
 .roo/mcp.json
+.env.prod.backup

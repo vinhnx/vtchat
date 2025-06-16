@@ -1,9 +1,10 @@
 // Force dynamic rendering for this webhook route
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // Log webhook environment on startup
 console.log('[Creem Webhook] Environment:', {
-    nodeEnv: process.env.NODE_ENV,
+    creemEnvironment: process.env.CREEM_ENVIRONMENT || 'development',
     hasWebhookSecret: !!process.env.CREEM_WEBHOOK_SECRET,
     webhookUrl: process.env.NEXT_PUBLIC_APP_URL
         ? `${process.env.NEXT_PUBLIC_APP_URL}/api/webhook/creem`
@@ -14,7 +15,7 @@ import { db } from '@/lib/database';
 import { sessions, users, userSubscriptions } from '@/lib/database/schema';
 import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
 import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
-import { EnvironmentType } from '@repo/shared/types/environment';
+import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import crypto from 'crypto';
@@ -407,7 +408,7 @@ export async function POST(request: NextRequest) {
         const webhookSecret = process.env.CREEM_WEBHOOK_SECRET;
 
         // In development, we might not have webhook secret configured
-        const isDevelopment = process.env.NODE_ENV === EnvironmentType.DEVELOPMENT;
+        const isDevelopment = getCurrentEnvironment() === EnvironmentType.DEVELOPMENT;
 
         if (!webhookSecret && !isDevelopment) {
             console.error('[Creem Webhook] CREEM_WEBHOOK_SECRET not configured');

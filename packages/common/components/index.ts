@@ -32,6 +32,7 @@ export * from './portal-return-indicator';
 export * from './recent-threads';
 export * from './search-results';
 export * from './settings-modal';
+export * from './api-key-prompt-modal';
 export * from './side-bar';
 export * from './sources-stack';
 export * from './ssr-error-boundary';
