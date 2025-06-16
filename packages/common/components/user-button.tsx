@@ -36,7 +36,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
                             width={24}
                             height={24}
                             className="rounded-full"
-                            alt={user.name || user.email}
+                            alt=""
                         />
                     ) : (
                         <Avatar name={user.name || user.email} size="sm" />

@@ -11,12 +11,12 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    'bg-foreground shadow-subtle-xs border-sky-600 text-background font-semibold hover:opacity-90 [&>svg]:text-background',
+                    'bg-foreground shadow-subtle-xs border border-border text-background font-semibold hover:opacity-90 [&>svg]:text-background',
                 brand: 'bg-brand text-background font-semibold hover:opacity-90 [&>svg]:text-background',
                 'brand-secondary':
                     'bg-brand-secondary text-brand-secondary-foreground font-semibold hover:opacity-90',
                 accent: 'text-brand bg-yellow-100 hover:bg-yellow-200 font-semibold',
-                outlined: 'bg-background text-foreground outline outline-border hover:bg-secondary',
+                outlined: 'bg-background text-foreground border border-border hover:bg-secondary',
                 destructive: 'bg-destructive text-destructive-foreground hover:opacity-90',
                 bordered:
                     'bg-background dark:border dark:border-border shadow-subtle-xs text-foreground opacity-100 hover:opacity-80 [&>svg]:text-foreground font-semibold',
