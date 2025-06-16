@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# VTChat Railway Deployment Script
+# VT Railway Deployment Script
 
-echo "🚀 Starting VTChat deployment to Railway..."
+echo "🚀 Starting VT deployment to Railway..."
 
 # Check if railway CLI is available
 if ! command -v railway &> /dev/null; then

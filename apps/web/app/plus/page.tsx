@@ -247,30 +247,34 @@ export default function PlusPage() {
                                     ))}
                                 </ul>
                                 <div className="mt-8 sm:mt-10">
-                                <ButtonAnimatedGradient
-                                onClick={() => {
-                                if (!(isPortalLoading || isPaymentLoading)) {
-                                handleSubscribe();
-                                }
-                                }}
-                                className="flex w-full items-center justify-center"
-                                >
-                                {getSubscribeButtonText()}
-                                </ButtonAnimatedGradient>
+                                    <ButtonAnimatedGradient
+                                        onClick={() => {
+                                            if (!(isPortalLoading || isPaymentLoading)) {
+                                                handleSubscribe();
+                                            }
+                                        }}
+                                        className="flex w-full items-center justify-center"
+                                    >
+                                        {getSubscribeButtonText()}
+                                    </ButtonAnimatedGradient>
                                 </div>
 
-                                 {/* Terms and Privacy Links */}
-                                 <div className="mt-4 flex justify-center space-x-4 text-sm text-gray-400">
-                                     <span className="text-gray-500">Please review our</span>
-                                     <a href="/terms" className="hover:text-[#BFB38F] transition-colors underline">
-                                         Terms of Service
-                                     </a>
-                                     <span>and</span>
-                                     <a href="/privacy" className="hover:text-[#BFB38F] transition-colors underline">
-                                         Privacy Policy
-                                     </a>
-                                     <span className="text-gray-500">before subscribing</span>
-                                 </div>
+                                {/* Terms and Privacy Links */}
+                                <div className="mt-4 text-center text-sm text-gray-400">
+                                    <span className="text-gray-500">Please review our</span>
+                                    {' '}
+                                    <a href="/terms" className="hover:text-[#BFB38F] transition-colors underline">
+                                        Terms of Service
+                                    </a>
+                                    {' '}
+                                    <span>and</span>
+                                    {' '}
+                                    <a href="/privacy" className="hover:text-[#BFB38F] transition-colors underline">
+                                        Privacy Policy
+                                    </a>
+                                    {' '}
+                                    <span className="text-gray-500">before subscribing</span>
+                                </div>
                                 </div>
                             </CardSpotlightPricing>
                         </div>

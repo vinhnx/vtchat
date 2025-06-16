@@ -2,7 +2,7 @@
 applyTo: '**'
 ---
 
-# VTChat AI Assistant Guidelines
+# VT AI Assistant Guidelines
 
 ## Package Management
 

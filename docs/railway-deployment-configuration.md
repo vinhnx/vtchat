@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to properly configure VTChat for Railway deployment with environment-specific URLs and settings.
+This guide explains how to properly configure VT for Railway deployment with environment-specific URLs and settings.
 
 ## Environment URLs
 

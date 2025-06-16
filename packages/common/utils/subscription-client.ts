@@ -44,6 +44,56 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
 }
 
 /**
+ * Clear all subscription-related cache and data on logout
+ * Used by logout process to ensure clean state for next user
+ */
+export async function clearSubscriptionDataOnLogout(): Promise<void> {
+    try {
+        console.log('[Subscription Utils] Clearing subscription data on logout...');
+
+        // Clear client-side localStorage cache
+        if (typeof window !== 'undefined') {
+            const subscriptionKeys = Object.keys(localStorage).filter(
+                key =>
+                    key.startsWith('subscription_status_') ||
+                    key.startsWith('creem_') ||
+                    key.startsWith('vt_plus_') ||
+                    key.includes('subscription')
+            );
+
+            subscriptionKeys.forEach(key => {
+                localStorage.removeItem(key);
+            });
+
+            console.log(
+                `[Subscription Utils] Cleared ${subscriptionKeys.length} subscription cache entries`
+            );
+        }
+
+        // Invalidate server-side cache (best effort)
+        try {
+            await fetch('/api/subscription/invalidate-cache', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+            console.log('[Subscription Utils] Successfully invalidated server-side cache');
+        } catch (serverError) {
+            console.warn(
+                '[Subscription Utils] Failed to invalidate server-side cache:',
+                serverError
+            );
+            // Non-critical for logout flow
+        }
+    } catch (error) {
+        console.error('[Subscription Utils] Error clearing subscription data:', error);
+        throw error; // Re-throw so logout can handle gracefully
+    }
+}
+
+/**
  * Check if user just returned from payment
  * Useful for triggering subscription refreshes
  */
@@ -103,4 +153,5 @@ export default {
     invalidateSubscriptionCacheAfterPayment,
     isReturningFromPayment,
     setupPaymentReturnDetection,
+    clearSubscriptionDataOnLogout,
 };

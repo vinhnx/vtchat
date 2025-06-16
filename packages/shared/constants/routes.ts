@@ -13,6 +13,7 @@ export enum PublicRoutes {
     API_AUTH = '/api/auth',
     PRIVACY = '/privacy',
     TERMS = '/terms',
+    FAQ = '/faq',
 }
 
 /**

@@ -1,4 +1,4 @@
-# Production Dockerfile for VTChat - Railway deployment
+# Production Dockerfile for VT - Railway deployment
 # Use multi-stage build for better optimization
 
 # Stage 1: Base image with dependencies

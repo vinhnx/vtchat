@@ -3,7 +3,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { safeJsonParse } from '../utils/storage-cleanup';
 
 // User-specific storage key management for per-account MCP tools isolation
 let currentStorageKey = 'mcp-tools-storage-anonymous';
@@ -90,11 +89,11 @@ export const useMcpToolsStore = create<McpState & McpActions>()(
                     currentUserId = newUserId;
                     currentStorageKey = getStorageKey(newUserId);
 
-                    // Load MCP tools for the new user from localStorage with safe JSON parsing
+                    // Load MCP tools for the new user from localStorage
                     const storedData = localStorage.getItem(currentStorageKey);
-                    const userData = safeJsonParse(storedData, {
-                        state: { mcpConfig: {}, selectedMCP: [] },
-                    });
+                    const userData = storedData
+                        ? JSON.parse(storedData)
+                        : { state: { mcpConfig: {}, selectedMCP: [] } };
 
                     set({
                         mcpConfig: userData.state?.mcpConfig || {},

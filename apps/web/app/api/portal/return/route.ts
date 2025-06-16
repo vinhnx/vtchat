@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 <body>
     <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: system-ui;">
         <div style="text-align: center;">
-            <h2>Returning to VTChat...</h2>
+            <h2>Returning to VT...</h2>
             <p>Please wait while we redirect you back to the app.</p>
         </div>
     </div>

@@ -22,6 +22,7 @@ import {
     Command,
     ExternalLink,
     FileText,
+    HelpCircle,
     LogOut,
     PanelLeftClose,
     PanelRightClose,
@@ -404,6 +405,10 @@ export const Sidebar = () => {
                                 <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                                     <Settings size={16} strokeWidth={2} />
                                     Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => push('/faq')}>
+                                    <HelpCircle size={16} strokeWidth={2} />
+                                    FAQ
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => push('/privacy')}>
                                     <Shield size={16} strokeWidth={2} />

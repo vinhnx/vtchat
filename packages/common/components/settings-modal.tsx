@@ -541,7 +541,7 @@ export const ApiKeySettings = () => {
                     <p>• Each API key is stored securely in your browser's local storage</p>
                     <p>• You only need to configure keys for the AI providers you want to use</p>
                     <p>
-                        • API keys are never shared with VTChat servers - they go directly to the AI
+                        • API keys are never shared with VT servers - they go directly to the AI
                         providers
                     </p>
                     <p>• You can update or remove keys at any time</p>
@@ -581,8 +581,8 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                 <div className="flex flex-col gap-2">
                     <h3 className="text-base font-semibold">Visual Theme</h3>
                     <p className="text-muted-foreground text-sm">
-                        Choose how you want VTChat to look. Your preference will be saved and
-                        applied across all your devices.
+                        Choose how you want VT to look. Your preference will be saved and applied
+                        across all your devices.
                     </p>
                 </div>
                 <div className="bg-muted/30 flex items-center justify-between rounded-lg p-3">

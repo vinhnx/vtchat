@@ -2,7 +2,7 @@
 
 ## 🎯 Quick Start for Development
 
-This guide helps you set up VTChat for local development with all the necessary environment variables and services.
+This guide helps you set up VT for local development with all the necessary environment variables and services.
 
 ## 📋 Prerequisites
 
@@ -432,6 +432,6 @@ railway connect postgres  # Opens direct connection
 
 ---
 
-**🎉 Success!** Your local development environment is now set up and ready for VTChat development!
+**🎉 Success!** Your local development environment is now set up and ready for VT development!
 
 **Next**: Start building features, test locally, then deploy to Railway following the deployment guide.

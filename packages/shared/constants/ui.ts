@@ -1,5 +1,5 @@
 /**
- * UI-related constants for the VTChat application
+ * UI-related constants for the VT application
  * Contains button text, tooltips, and other UI string constants
  */
 

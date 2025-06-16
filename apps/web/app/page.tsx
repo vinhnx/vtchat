@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col">
             <header className="flex items-center justify-between border-b p-4">
-                <h1 className="text-xl font-semibold">VTChat</h1>
+                <h1 className="text-xl font-semibold">VT</h1>
                 {session ? (
                     <Link href="/chat">
                         {/* @ts-ignore - Type compatibility issue between React versions */}
@@ -29,9 +29,9 @@ export default function Home() {
             </header>
             <div className="flex flex-1 items-center justify-center p-8">
                 <div className="max-w-2xl space-y-6 text-center">
-                    <h1 className="text-4xl font-bold">VTChat</h1>
+                    <h1 className="text-4xl font-bold">VT</h1>
                     <p className="text-lg text-gray-600 dark:text-gray-400">
-                        Welcome to VTChat - Your intelligent conversation companion.
+                        Welcome to VT - Your intelligent conversation companion.
                     </p>
                 </div>
             </div>

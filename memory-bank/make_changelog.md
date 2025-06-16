@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Generate comprehensive changelogs for VTChat releases based on git commits, pull requests, and development changes.
+Generate comprehensive changelogs for VT releases based on git commits, pull requests, and development changes.
 
 ## Usage
 
@@ -11,12 +11,12 @@ Use this prompt to create detailed changelogs that follow conventional commit st
 ## Prompt Template
 
 ```markdown
-# Changelog Generator for VTChat
+# Changelog Generator for VT
 
-You are a technical writer specializing in creating comprehensive changelogs for software releases. Generate a changelog for VTChat based on the provided information.
+You are a technical writer specializing in creating comprehensive changelogs for software releases. Generate a changelog for VT based on the provided information.
 
 ## Context
-- **Project**: VTChat - Privacy-focused AI chat application
+- **Project**: VT - Privacy-focused AI chat application
 - **Tech Stack**: Next.js 14, TypeScript, Tailwind CSS, Better Auth, Creem.io payments
 - **Architecture**: Turborepo monorepo with subscription tiers (VT_BASE, VT_PLUS)
 
@@ -119,7 +119,7 @@ When you want to generate a changelog:
 4. Review and edit the generated changelog
 5. Add to project CHANGELOG.md file
 
-## VTChat-Specific Categories
+## VT-Specific Categories
 
 ### Subscription Features
 
@@ -161,4 +161,4 @@ git diff --name-only v1.1.0..HEAD
 git rev-list --count v1.1.0..HEAD
 ```
 
-This prompt template ensures consistent, comprehensive changelogs that serve both technical and non-technical audiences while highlighting VTChat's unique features and subscription model.
+This prompt template ensures consistent, comprehensive changelogs that serve both technical and non-technical audiences while highlighting VT's unique features and subscription model.

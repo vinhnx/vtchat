@@ -7,14 +7,17 @@ import Dexie, { Table } from 'dexie';
 import { nanoid } from 'nanoid';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { safeJsonParse } from '../utils/storage-cleanup';
 import { useAppStore } from './app.store';
 
 class ThreadDatabase extends Dexie {
     threads!: Table<Thread>;
     threadItems!: Table<ThreadItem>;
 
-    constructor() {
-        super('ThreadDatabase');
+    constructor(userId?: string) {
+        // Create user-specific database name for per-account isolation
+        const dbName = userId ? `ThreadDatabase_${userId}` : 'ThreadDatabase_anonymous';
+        super(dbName);
         this.version(1).stores({
             threads: 'id, createdAt, pinned, pinnedAt',
             threadItems: 'id, threadId, parentId, createdAt',
@@ -22,25 +25,93 @@ class ThreadDatabase extends Dexie {
     }
 }
 
-let db: ThreadDatabase;
+let db: ThreadDatabase | null = null;
 let CONFIG_KEY = 'chat-config';
+let currentUserId: string | null = null;
+
+/**
+ * Get the current database instance, ensuring it's initialized
+ */
+function getDatabase(): ThreadDatabase | null {
+    if (typeof window === 'undefined') {
+        return null;
+    }
+
+    if (!db) {
+        // Auto-initialize if not already done
+        initializeUserDatabase(null);
+    }
+
+    return db;
+}
+
+/**
+ * Initialize or switch to a user-specific database
+ */
+function initializeUserDatabase(userId: string | null) {
+    // Only initialize on client side
+    if (typeof window === 'undefined') {
+        console.warn('[ThreadDB] Database initialization skipped on server side');
+        return null;
+    }
+
+    const newUserId = userId || null;
+
+    // Only create new database if user changed
+    if (currentUserId !== newUserId) {
+        currentUserId = newUserId;
+        db = new ThreadDatabase(newUserId || undefined);
+
+        // Update config key to be user-specific for better isolation
+        CONFIG_KEY = newUserId ? `chat-config-${newUserId}` : 'chat-config-anonymous';
+
+        console.log(`[ThreadDB] Initialized database for user: ${newUserId || 'anonymous'}`);
+    }
+
+    return db;
+}
+
 if (typeof window !== 'undefined') {
-    db = new ThreadDatabase();
-    CONFIG_KEY = 'chat-config';
+    // Initialize with anonymous database by default
+    initializeUserDatabase(null);
+    CONFIG_KEY = 'chat-config-anonymous';
 }
 
 const loadInitialData = async () => {
-    const threads = await db.threads.toArray();
+    // Ensure database is initialized (client-side only)
+    const database = getDatabase();
+    if (!database) {
+        // Return default state for SSR or when db is not initialized
+        return {
+            threads: [],
+            currentThreadId: null,
+            config: {
+                customInstructions: undefined,
+                model: models[0].id,
+                useWebSearch: false,
+                showSuggestions: true,
+                chatMode: ChatMode.GEMINI_2_0_FLASH,
+            },
+            useWebSearch: false,
+            chatMode: ChatMode.GEMINI_2_0_FLASH,
+            customInstructions: '',
+            showSuggestions: false,
+        };
+    }
+
+    const threads = await database.threads.toArray();
+
+    // Safe JSON parsing for config data
     const configStr = localStorage.getItem(CONFIG_KEY);
-    const config = configStr
-        ? JSON.parse(configStr)
-        : {
-              customInstructions: undefined,
-              model: models[0].id,
-              useWebSearch: false,
-              showSuggestions: true,
-              chatMode: ChatMode.GEMINI_2_0_FLASH,
-          };
+    const config = safeJsonParse(configStr, {
+        customInstructions: undefined,
+        model: models[0].id,
+        useWebSearch: false,
+        showSuggestions: true,
+        chatMode: ChatMode.GEMINI_2_0_FLASH,
+        currentThreadId: null,
+    });
+
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
     const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
     const customInstructions = config.customInstructions || '';
@@ -114,6 +185,8 @@ type Actions = {
     setCurrentSources: (sources: string[]) => void;
     setUseWebSearch: (useWebSearch: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
+    // Add user-specific database management
+    switchUserDatabase: (userId: string | null) => Promise<void>;
 };
 
 // Add these utility functions at the top level
@@ -178,7 +251,10 @@ const processBatchUpdate = async () => {
     batchUpdateQueue.items.clear();
 
     try {
-        await db.threadItems.bulkPut(itemsToUpdate);
+        await withDatabaseAsync(async database => {
+            await database.threadItems.bulkPut(itemsToUpdate);
+            return true;
+        });
         // Update last update times for all processed items
         itemsToUpdate.forEach(item => {
             lastItemUpdateTime[item.id] = Date.now();
@@ -188,7 +264,10 @@ const processBatchUpdate = async () => {
         // If bulk update fails, try individual updates to salvage what we can
         for (const item of itemsToUpdate) {
             try {
-                await db.threadItems.put(item);
+                await withDatabaseAsync(async database => {
+                    await database.threadItems.put(item);
+                    return true;
+                });
                 lastItemUpdateTime[item.id] = Date.now();
             } catch (innerError) {
                 console.error(`Failed to update item ${item.id}:`, innerError);
@@ -265,12 +344,16 @@ const initializeWorker = () => {
                     case 'thread-update':
                         // Refresh threads list with better error handling
                         try {
-                            const threads = await db.threads.toArray();
-                            useChatStore.setState({
-                                threads: threads.sort(
-                                    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-                                ),
+                            const threads = await withDatabaseAsync(async database => {
+                                return await database.threads.toArray();
                             });
+                            if (threads) {
+                                useChatStore.setState({
+                                    threads: threads.sort(
+                                        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+                                    ),
+                                });
+                            }
                         } catch (error) {
                             console.error('[ChatStore] Failed to refresh threads:', error);
                         }
@@ -387,19 +470,24 @@ const initializeTabSync = () => {
         if (event.key !== SYNC_EVENT_KEY) return;
 
         try {
-            const syncData = JSON.parse(localStorage.getItem(SYNC_DATA_KEY) || '{}');
+            const syncData = safeJsonParse(localStorage.getItem(SYNC_DATA_KEY), {
+                type: null,
+                data: { threadId: null, id: null },
+            }) as any;
 
             if (!syncData || !syncData.type) return;
 
             switch (syncData.type) {
                 case 'thread-update':
                     // Refresh threads list
-                    db.threads.toArray().then(threads => {
+                    withDatabaseAsync(async database => {
+                        const threads = await database.threads.toArray();
                         useChatStore.setState({
                             threads: threads.sort(
                                 (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
                             ),
                         });
+                        return true;
                     });
                     break;
 
@@ -554,6 +642,37 @@ const performWorkerDatabaseOperation = async (
     }
 };
 
+/**
+ * Helper function to safely execute database operations
+ */
+function withDatabase<T>(operation: (db: ThreadDatabase) => T): T | null {
+    const database = getDatabase();
+    if (!database) {
+        console.warn('[ThreadDB] Database not available, skipping operation');
+        return null;
+    }
+    return operation(database);
+}
+
+/**
+ * Async version of withDatabase for async operations
+ */
+async function withDatabaseAsync<T>(
+    operation: (db: ThreadDatabase) => Promise<T>
+): Promise<T | null> {
+    const database = getDatabase();
+    if (!database) {
+        console.warn('[ThreadDB] Database not available, skipping async operation');
+        return null;
+    }
+    try {
+        return await operation(database);
+    } catch (error) {
+        console.error('[ThreadDB] Database operation failed:', error);
+        return null;
+    }
+}
+
 // Create a debounced version of the notification function
 const debouncedNotify = debounce(notifyWorker, 300);
 
@@ -581,7 +700,7 @@ export const useChatStore = create(
         showSuggestions: false, // Always disabled
 
         setCustomInstructions: (customInstructions: string) => {
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, customInstructions })
@@ -622,7 +741,7 @@ export const useChatStore = create(
         },
 
         setUseWebSearch: (useWebSearch: boolean) => {
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set(state => {
                 state.useWebSearch = useWebSearch;
@@ -637,7 +756,10 @@ export const useChatStore = create(
         },
 
         pinThread: async (threadId: string) => {
-            await db.threads.update(threadId, { pinned: true, pinnedAt: new Date() });
+            await withDatabaseAsync(async database => {
+                await database.threads.update(threadId, { pinned: true, pinnedAt: new Date() });
+                return true;
+            });
             set(state => {
                 state.threads = state.threads.map(thread =>
                     thread.id === threadId
@@ -648,7 +770,10 @@ export const useChatStore = create(
         },
 
         unpinThread: async (threadId: string) => {
-            await db.threads.update(threadId, { pinned: false, pinnedAt: new Date() });
+            await withDatabaseAsync(async database => {
+                await database.threads.update(threadId, { pinned: false, pinnedAt: new Date() });
+                return true;
+            });
             set(state => {
                 state.threads = state.threads.map(thread =>
                     thread.id === threadId
@@ -659,38 +784,50 @@ export const useChatStore = create(
         },
 
         getPinnedThreads: async () => {
-            const threads = await db.threads.where('pinned').equals('true').toArray();
-            return threads.sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime());
+            return (
+                (await withDatabaseAsync(async database => {
+                    const threads = await database.threads.where('pinned').equals('true').toArray();
+                    return threads.sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime());
+                })) || []
+            );
         },
 
         removeFollowupThreadItems: async (threadItemId: string) => {
-            const threadItem = await db.threadItems.get(threadItemId);
-            if (!threadItem) return;
-            const threadItems = await db.threadItems
-                .where('createdAt')
-                .above(threadItem.createdAt)
-                .and(item => item.threadId === threadItem.threadId)
-                .toArray();
-            for (const threadItem of threadItems) {
-                await db.threadItems.delete(threadItem.id);
-            }
+            const result = await withDatabaseAsync(async database => {
+                const threadItem = await database.threadItems.get(threadItemId);
+                if (!threadItem) return null;
+                const threadItems = await database.threadItems
+                    .where('createdAt')
+                    .above(threadItem.createdAt)
+                    .and(item => item.threadId === threadItem.threadId)
+                    .toArray();
+                for (const threadItem of threadItems) {
+                    await database.threadItems.delete(threadItem.id);
+                }
+                return threadItem;
+            });
+
+            if (!result) return;
+
             set(state => {
                 state.threadItems = state.threadItems.filter(
-                    t => t.createdAt <= threadItem.createdAt || t.threadId !== threadItem.threadId
+                    t => t.createdAt <= result.createdAt || t.threadId !== result.threadId
                 );
             });
 
             // Notify other tabs
             debouncedNotify('thread-item-delete', {
-                threadId: threadItem.threadId,
+                threadId: result.threadId,
                 id: threadItemId,
                 isFollowupRemoval: true,
             });
         },
 
         getThreadItems: async (threadId: string) => {
-            const threadItems = await db.threadItems.where('threadId').equals(threadId).toArray();
-            return threadItems;
+            const threadItems = await withDatabaseAsync(async database => {
+                return await database.threadItems.where('threadId').equals(threadId).toArray();
+            });
+            return threadItems || [];
         },
 
         setCurrentSources: (sources: string[]) => {
@@ -734,15 +871,20 @@ export const useChatStore = create(
             }),
 
         loadThreadItems: async (threadId: string) => {
-            const threadItems = await db.threadItems.where('threadId').equals(threadId).toArray();
+            const threadItems = await withDatabaseAsync(async database => {
+                return await database.threadItems.where('threadId').equals(threadId).toArray();
+            });
             set(state => {
-                state.threadItems = threadItems;
+                state.threadItems = threadItems || [];
             });
         },
 
         clearAllThreads: async () => {
-            await db.threads.clear();
-            await db.threadItems.clear();
+            await withDatabaseAsync(async database => {
+                await database.threads.clear();
+                await database.threadItems.clear();
+                return true;
+            });
             set(state => {
                 state.threads = [];
                 state.threadItems = [];
@@ -750,8 +892,10 @@ export const useChatStore = create(
         },
 
         getThread: async (threadId: string) => {
-            const thread = await db.threads.get(threadId);
-            return thread || null;
+            return await withDatabaseAsync(async database => {
+                const thread = await database.threads.get(threadId);
+                return thread || null;
+            });
         },
 
         createThread: async (optimisticId: string, thread?: Pick<Thread, 'title'>) => {
@@ -764,7 +908,10 @@ export const useChatStore = create(
                 pinned: false,
                 pinnedAt: new Date(),
             };
-            db.threads.add(newThread);
+            await withDatabaseAsync(async database => {
+                await database.threads.add(newThread);
+                return true;
+            });
             set(state => {
                 state.threads.push(newThread);
                 state.currentThreadId = newThread.id;
@@ -805,7 +952,10 @@ export const useChatStore = create(
             });
 
             try {
-                await db.threads.put(updatedThread);
+                await withDatabaseAsync(async database => {
+                    await database.threads.put(updatedThread);
+                    return true;
+                });
 
                 // Notify other tabs about the update
                 debouncedNotify('thread-update', { threadId: thread.id });
@@ -818,7 +968,11 @@ export const useChatStore = create(
             const threadId = get().currentThreadId;
             if (!threadId) return;
             try {
-                db.threadItems.put(threadItem);
+                withDatabase(database => {
+                    if (database) {
+                        database.threadItems.put(threadItem);
+                    }
+                });
                 set(state => {
                     if (state.threadItems.find(t => t.id === threadItem.id)) {
                         state.threadItems = state.threadItems.map(t =>
@@ -922,7 +1076,10 @@ export const useChatStore = create(
                         ...threadItem,
                         error: threadItem.error || `Something went wrong`,
                     };
-                    await db.threadItems.put(fallbackItem);
+                    await withDatabaseAsync(async database => {
+                        await database.threadItems.put(fallbackItem);
+                        return true;
+                    });
                 } catch (fallbackError) {
                     console.error(
                         'Critical: Failed even fallback thread item update:',
@@ -952,7 +1109,11 @@ export const useChatStore = create(
             const threadId = get().currentThreadId;
             if (!threadId) return;
 
-            await db.threadItems.delete(threadItemId);
+            await withDatabaseAsync(async database => {
+                await database.threadItems.delete(threadItemId);
+                return true;
+            });
+
             set(state => {
                 state.threadItems = state.threadItems.filter(
                     (t: ThreadItem) => t.id !== threadItemId
@@ -963,11 +1124,16 @@ export const useChatStore = create(
             debouncedNotify('thread-item-delete', { id: threadItemId, threadId });
 
             // Check if there are any thread items left for this thread
-            const remainingItems = await db.threadItems.where('threadId').equals(threadId).count();
+            const remainingItems = await withDatabaseAsync(async database => {
+                return await database.threadItems.where('threadId').equals(threadId).count();
+            });
 
             // If no items remain, delete the thread and redirect
             if (remainingItems === 0) {
-                await db.threads.delete(threadId);
+                await withDatabaseAsync(async database => {
+                    await database.threads.delete(threadId);
+                    return true;
+                });
                 set(state => {
                     state.threads = state.threads.filter((t: Thread) => t.id !== threadId);
                     state.currentThreadId = state.threads[0]?.id;
@@ -982,8 +1148,11 @@ export const useChatStore = create(
         },
 
         deleteThread: async threadId => {
-            await db.threads.delete(threadId);
-            await db.threadItems.where('threadId').equals(threadId).delete();
+            await withDatabaseAsync(async database => {
+                await database.threads.delete(threadId);
+                await database.threadItems.where('threadId').equals(threadId).delete();
+                return true;
+            });
             set(state => {
                 state.threads = state.threads.filter((t: Thread) => t.id !== threadId);
                 state.currentThreadId = state.threads[0]?.id;
@@ -1024,6 +1193,47 @@ export const useChatStore = create(
         getCurrentThread: () => {
             const state = get();
             return state.threads.find(t => t.id === state.currentThreadId) || null;
+        },
+
+        // User-specific database management for per-account thread isolation
+        switchUserDatabase: async (userId: string | null) => {
+            try {
+                console.log(`[ThreadDB] Switching to database for user: ${userId || 'anonymous'}`);
+
+                // Initialize the new user-specific database
+                initializeUserDatabase(userId);
+
+                // Load data from the new database
+                const newData = await loadInitialData();
+
+                // Update the store with data from the new user's database
+                set({
+                    threads: newData.threads,
+                    threadItems: [],
+                    currentThreadId: newData.currentThreadId,
+                    currentThread:
+                        newData.threads.find(t => t.id === newData.currentThreadId) ||
+                        newData.threads?.[0] ||
+                        null,
+                    chatMode: newData.chatMode,
+                    useWebSearch: newData.useWebSearch,
+                    showSuggestions: newData.showSuggestions,
+                    customInstructions: newData.customInstructions,
+                });
+
+                console.log(
+                    `[ThreadDB] Successfully switched to user database with ${newData.threads.length} threads`
+                );
+            } catch (error) {
+                console.error('[ThreadDB] Error switching user database:', error);
+                // On error, ensure we have a clean state
+                set({
+                    threads: [],
+                    threadItems: [],
+                    currentThreadId: null,
+                    currentThread: null,
+                });
+            }
         },
     }))
 );

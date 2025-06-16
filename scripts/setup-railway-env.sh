@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Railway Environment Setup Helper for VTChat
+# Railway Environment Setup Helper for VT
 # This script helps set up environment variables for Railway deployment
 
 set -e
 
-echo "🚄 VTChat Railway Environment Setup Helper"
+echo "🚄 VT Railway Environment Setup Helper"
 echo "=========================================="
 
 # Check if Railway CLI is installed
