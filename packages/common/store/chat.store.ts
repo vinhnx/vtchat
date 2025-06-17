@@ -116,6 +116,11 @@ const loadInitialData = async () => {
     const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
     const customInstructions = config.customInstructions || '';
 
+    // Load and validate the persisted model
+    const persistedModelId = config.model;
+    const persistedModel = persistedModelId ? models.find(m => m.id === persistedModelId) : null;
+    const model = persistedModel || models[0];
+
     const initialThreads = threads.length ? threads : [];
 
     return {
@@ -124,6 +129,7 @@ const loadInitialData = async () => {
         config,
         useWebSearch,
         chatMode,
+        model,
         customInstructions,
         showSuggestions: false, // Always disable suggestions
     };
@@ -759,7 +765,7 @@ export const useChatStore = create(
 
                 // Verify the save was successful - warn only, don't throw
                 const verification = localStorage.getItem(CONFIG_KEY);
-                const verifiedConfig = safeJsonParse(verification, {});
+                const verifiedConfig = safeJsonParse(verification, {}) as any;
                 if (verifiedConfig.chatMode !== chatMode) {
                     console.warn(
                         '[ChatStore] Chat mode persistence verification failed, but continuing'
@@ -954,10 +960,38 @@ export const useChatStore = create(
         },
 
         setModel: async (model: Model) => {
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ model: model.id }));
-            set(state => {
-                state.model = model;
-            });
+            try {
+                // Get existing config and merge with new model
+                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {}) as any;
+                const updatedConfig = { ...existingConfig, model: model.id };
+
+                // Immediately save to localStorage
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+
+                // Verify the save was successful - warn only, don't throw
+                const verification = localStorage.getItem(CONFIG_KEY);
+                const verifiedConfig = safeJsonParse(verification, {}) as any;
+                if (verifiedConfig.model !== model.id) {
+                    console.warn(
+                        '[ChatStore] Model persistence verification failed, but continuing'
+                    );
+                }
+
+                console.log(
+                    `[ChatStore] Successfully persisted model: ${model.id} to ${CONFIG_KEY}`
+                );
+
+                // Update state
+                set(state => {
+                    state.model = model;
+                });
+            } catch (error) {
+                console.error('[ChatStore] Failed to persist model:', error);
+                // Still update state even if persistence fails
+                set(state => {
+                    state.model = model;
+                });
+            }
         },
 
         updateThread: async thread => {
@@ -1120,13 +1154,28 @@ export const useChatStore = create(
 
         switchThread: async (threadId: string) => {
             const thread = get().threads.find(t => t.id === threadId);
-            localStorage.setItem(
-                CONFIG_KEY,
-                JSON.stringify({
-                    model: get().model.id,
+
+            // Safely get existing config to preserve other settings
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const currentModel = get().model;
+
+            // Only update config if model is available
+            if (currentModel?.id) {
+                const updatedConfig = {
+                    ...existingConfig,
+                    model: currentModel.id,
                     currentThreadId: threadId,
-                })
-            );
+                };
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+            } else {
+                // If model is not available yet, just update thread ID
+                const updatedConfig = {
+                    ...existingConfig,
+                    currentThreadId: threadId,
+                };
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+            }
+
             set(state => {
                 state.currentThreadId = threadId;
                 state.currentThread = thread || null;
@@ -1294,6 +1343,7 @@ if (typeof window !== 'undefined') {
             threads,
             currentThreadId,
             chatMode,
+            model,
             useWebSearch,
             showSuggestions,
             customInstructions,
@@ -1303,6 +1353,7 @@ if (typeof window !== 'undefined') {
                 currentThreadId,
                 currentThread: threads.find(t => t.id === currentThreadId) || threads?.[0],
                 chatMode,
+                model,
                 useWebSearch,
                 showSuggestions,
                 customInstructions,

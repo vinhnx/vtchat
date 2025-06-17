@@ -1,6 +1,61 @@
 # Progress Log
 
-## Latest Session - January 16, 2025
+## Latest Session - January 17, 2025
+
+### Critical Bug Fixes and MCP Store Cleanup ✅
+
+**ISSUES RESOLVED**:
+
+1. **switchThread Model Undefined Error** ✅:
+   - **Error**: `get().model is undefined` in `switchThread` function at line 1160
+   - **Root Cause**: `switchThread` was called during initial page load when store hadn't fully initialized yet
+   - **Solution**: Added null safety checks and graceful handling for undefined model
+
+2. **MCP Tools Store Removal** ✅:
+   - **Request**: Remove unnecessary MCP tools store from codebase
+   - **Actions Taken**: Complete cleanup of MCP-related code
+
+**TECHNICAL CHANGES**:
+
+1. **Fixed switchThread Function** (`chat.store.ts`):
+
+   ```typescript
+   // Before: Direct access causing undefined error
+   model: get().model.id,
+
+   // After: Safe handling with fallback
+   const currentModel = get().model;
+   if (currentModel?.id) {
+     // Save model ID safely
+   } else {
+     // Just update thread ID if model not ready
+   }
+   ```
+
+2. **Removed MCP Tools Store**:
+   - ✅ Deleted `/packages/common/store/mcp-tools.store.ts`
+   - ✅ Updated `/packages/common/store/index.ts` exports
+   - ✅ Cleaned up `use-logout.ts` hook (removed MCP references)
+   - ✅ Cleaned up `use-thread-auth.ts` hook (removed MCP references)
+   - ✅ All MCP-related imports and function calls removed
+
+**VERIFICATION**:
+
+- ✅ Development server starts without errors
+- ✅ Build dry-run passes without compilation errors
+- ✅ No more `get().model is undefined` errors
+- ✅ No remaining MCP store references in codebase
+- ✅ Chat thread switching works safely during initialization
+
+**PERSISTENCE STATUS**:
+
+- ✅ Chat mode and model persistence remains fully functional
+- ✅ Per-user isolation working correctly
+- ✅ Store initialization handles missing model gracefully
+
+---
+
+## Previous Session - January 16, 2025
 
 ### Database Safety Refactor - Complete Thread Database Isolation ✅
 

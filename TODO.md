@@ -1,61 +1,112 @@
 # TODO List
 
+---
 
+<https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
+error: terminating connection due to administrator command
+    at s.parseErrorMessage (.next/server/chunks/5126.js:20:14096)
+    at s.handlePacket (.next/server/chunks/5126.js:20:10751)
+    at s.parse (.next/server/chunks/5126.js:20:9402)
+    at e.<anonymous> (.next/server/chunks/5126.js:20:14786)
+    at e.emit (.next/server/chunks/5126.js:15:6513)
+    at WebSocket.<anonymous> (.next/server/chunks/5126.js:15:13492) {
+  length: 116,
+  severity: 'FATAL',
+  code: '57P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postgres.c',
+  line: '3318',
+  routine: 'ProcessInterrupts',
+  client: [NeonClient]
+}
+ ⨯ uncaughtException:  error: terminating connection due to administrator command
+    at s.parseErrorMessage (.next/server/chunks/5126.js:20:14096)
+    at s.handlePacket (.next/server/chunks/5126.js:20:10751)
+    at s.parse (.next/server/chunks/5126.js:20:9402)
+    at e.<anonymous> (.next/server/chunks/5126.js:20:14786)
+    at e.emit (.next/server/chunks/5126.js:15:6513)
+    at WebSocket.<anonymous> (.next/server/chunks/5126.js:15:13492) {
+  length: 116,
+  severity: 'FATAL',
+  code: '57P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postgres.c',
+  line: '3318',
+  routine: 'ProcessInterrupts',
+  client: [NeonClient]
+}
 
-[] add more actions to MessageActions?
 --
 
-https://docs.railway.com/reference/production-readiness-checklist
---
-
-1. review x.ai provider integration in #changes
-1. implement openrouter provider, use context7 or fetch <https://ai-sdk.dev/providers/community-providers/openrouter>
-1. add some open router models:
-
-DeepSeek: DeepSeek V3 0324 (free)
-`deepseek/deepseek-chat-v3-0324:free` model id
-163,840 context
---
-
-DeepSeek: DeepSeek V3 0324
-`deepseek/deepseek-chat-v3-0324`
-163,840 context
+⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "<http://localhost:8080>";. See <https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase>
 
 --
 
-DeepSeek: R1 (free)
-`deepseek/deepseek-r1:free`
-163,840 context
+[] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 --
 
-DeepSeek: R1 0528 (free)
-`deepseek/deepseek-r1-0528:free`
-163,840 context
---
-
-Qwen: Qwen3 235B A22B
-`qwen/qwen3-235b-a22b`
-40,960 context
---
-
-Qwen: Qwen3 32B
-`qwen/qwen3-32b`
-40,960
+<https://ai-sdk.dev/cookbook/next/render-visual-interface-in-chat>
 
 --
 
-Mistral: Mistral Nemo
-`mistralai/mistral-nemo`
-131,072 context
+[pro] <https://ai-sdk.dev/cookbook/next/chat-with-pdf>
 
 --
 
-Qwen: Qwen3 14B (free)
-`qwen/qwen3-14b:free`
-40,960 context
+✅ IMPORTANT: check why byok keys are not saved to storage, lost after full browser refresh
+✅ IMPORTANT: REMEBER CHAT INPUT BYOK SETTINGS -> SAVE TO STORAGE
+✅ IMPORTANT: REMEMBER LAST SELECTED CHAT-ACTION MODELS OR MODE FOR LATER USE
+
+**COMPLETED - Chat Mode & Model Persistence Enhancement:**
+
+- Enhanced `setChatMode` and `setModel` in chat.store.ts to persist selections via localStorage
+- Updated `loadInitialData` to restore both chat mode and model from persisted config
+- Added proper config merging to prevent overwrites when setting mode or model
+- Implemented per-user isolation via user-specific config keys
+- Created comprehensive test coverage:
+  - Manual test UI at `/test-persistence`
+  - Standalone browser test (`chat-mode-persistence-test.html`)
+  - Script verification (`test-chat-persistence.js`)
+- Verified persistence works across browser refreshes and user switching
+- All requirements for "Remember last selected model and mode to cache, and auto selected that for chat-action on next session" are now complete
+-
+
+[support local models] [monet] => create new creem product features
+
+<https://ai-sdk.dev/providers/openai-compatible-providers/lmstudio>
+
+<https://ai-sdk.dev/providers/community-providers/ollama>
+
+[] add config for server on settings page
+
 --
 
-[] https://docs.creem.io/faq/account-reviews
+<https://docs.railway.com/reference/production-readiness-checklist>
+--
+
+--
+
+[] <https://docs.creem.io/faq/account-reviews>
 
 --
 [] review packages and deps, suggest lightweight and review big dependencies and suggest improvement
@@ -63,9 +114,6 @@ Qwen: Qwen3 14B (free)
 --
 [] speed up build and deployment
 --
---
-you can use context7
-
 
 --
 NOTE: add new feature for VT+
@@ -84,27 +132,32 @@ NOTE: add new feature for VT+
 --
 [] <https://scira.ai/pricing>
 --
+
 []
 remember to publish Google Auth
 <https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5>
 
 --
-[] https://scira.ai/settings?tab=profile
---
-https://github.com/zaidmukaddam/scira/tree/main/app/settings
+[] <https://scira.ai/settings?tab=profile>
 --
 
-[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/reverify
+<https://github.com/zaidmukaddam/scira/blob/main/app/settings/page.tsx> -> clone ProfileSection
 --
-[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/profile-image
+
+[] <https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/reverify>
 --
-[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/legal-consent
+
+[] <https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/profile-image>
 --
-[] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/app-invite
+
+[] <https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/legal-consent>
+--
+
+[] <https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/app-invite>
 
 --
 [] build waitlist ?
-https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitlist
+<https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitlist>
 
 --
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
@@ -215,7 +268,7 @@ https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitl
 
 ## AI & Providers
 
-- [] add https://ai-sdk.dev/providers/community-providers/openrouter
+- [] add <https://ai-sdk.dev/providers/community-providers/openrouter>
 
 - [ ] Expand support for more AI providers using the AI SDK: [https://ai-sdk.dev/providers/ai-sdk-providers](https://ai-sdk.dev/providers/ai-sdk-providers)
 - [ ] Review Gemini AI SDK Cheatsheet for potential optimizations/features: [https://patloeber.com/gemini-ai-sdk-cheatsheet/](https://patloeber.com/gemini-ai-sdk-cheatsheet/)
