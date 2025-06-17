@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Dialog, DialogContent } from '@repo/ui';
-import { IconKey } from '@tabler/icons-react';
+import { KeyRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -55,7 +55,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
     onClose,
     title = 'Login Required',
     description = 'Please sign in to access this feature.',
-    icon: Icon = IconKey,
+    icon: Icon = KeyRound,
     redirectUrl,
     cancelText = 'Cancel',
     loginText = 'Sign In',

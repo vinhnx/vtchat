@@ -12,17 +12,16 @@ import {
     Flex,
     Input,
 } from '@repo/ui';
-import { IconTrash } from '@tabler/icons-react';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-// Create a wrapper component for IconTrash to match expected icon prop type
+// Create a wrapper component for Trash2 to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconTrash size={size} className={className} />;
+}) => <Trash2 size={size} className={className} />;
 
 export const HistoryItem = ({
     thread,

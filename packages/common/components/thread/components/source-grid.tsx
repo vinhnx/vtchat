@@ -1,7 +1,8 @@
-import { LinkFavicon, SourceList } from '@repo/common/components';
+import { SourceList } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
+import { LinkFavicon } from '@repo/ui';
 
 type SourceGridProps = {
     sources: Source[];
@@ -14,12 +15,13 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
     }
 
     // Filter out invalid sources and ensure they have required properties
-    const validSources = sources.filter(source => 
-        source && 
-        typeof source.title === 'string' && 
-        typeof source.link === 'string' && 
-        source.link.trim() !== '' &&
-        typeof source.index === 'number'
+    const validSources = sources.filter(
+        source =>
+            source &&
+            typeof source.title === 'string' &&
+            typeof source.link === 'string' &&
+            source.link.trim() !== '' &&
+            typeof source.index === 'number'
     );
 
     if (validSources.length === 0) {

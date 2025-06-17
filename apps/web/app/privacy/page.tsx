@@ -1,7 +1,7 @@
 import { Footer, MarkdownContent } from '@repo/common/components';
 import { privacyPolicy } from '@repo/shared/config';
 import { Button } from '@repo/ui';
-import { IconArrowLeft } from '@tabler/icons-react';
+import { ArrowLeft } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
                 <div className="mx-auto flex max-w-screen-lg items-center justify-between px-4 py-4">
                     <Link href="/">
                         <Button variant="ghost" size="sm" className="gap-2">
-                            <IconArrowLeft size={16} />
+                            <ArrowLeft size={16} />
                             Back to VT
                         </Button>
                     </Link>

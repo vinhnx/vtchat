@@ -11,7 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { IconFileText, IconLogout, IconShield, IconUser } from '@tabler/icons-react';
+import { FileText, LogOut, Shield, User } from 'lucide-react';
 import Link from 'next/link';
 
 interface UserButtonProps {
@@ -54,25 +54,25 @@ export function UserButton({ showName = false }: UserButtonProps) {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <IconUser className="mr-2 h-4 w-4" />
+                    <User className="mr-2 h-4 w-4" />
                     Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <Link href="/terms" className="w-full">
                     <DropdownMenuItem>
-                        <IconFileText className="mr-2 h-4 w-4" />
+                        <FileText className="mr-2 h-4 w-4" />
                         Terms of Service
                     </DropdownMenuItem>
                 </Link>
                 <Link href="/privacy" className="w-full">
                     <DropdownMenuItem>
-                        <IconShield className="mr-2 h-4 w-4" />
+                        <Shield className="mr-2 h-4 w-4" />
                         Privacy Policy
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout()}>
-                    <IconLogout className="mr-2 h-4 w-4" />
+                    <LogOut className="mr-2 h-4 w-4" />
                     Sign out
                 </DropdownMenuItem>
             </DropdownMenuContent>

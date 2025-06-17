@@ -3,7 +3,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { Button, Dialog, DialogContent } from '@repo/ui';
-import { IconStar } from '@tabler/icons-react';
+import { Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useVtPlusAccess } from '../hooks/use-subscription-access';
@@ -82,7 +82,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     const hasAccess = React.useMemo(() => {
         // VT+ exclusive features
         if (
-            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
             requiredPlan === PlanSlug.VT_PLUS
@@ -176,7 +176,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                 <DialogContent ariaTitle={title} className="max-w-md rounded-xl">
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <IconStar size={24} className="text-purple-600 dark:text-purple-400" />
+                            <Star size={24} className="text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">{title}</h3>
@@ -208,7 +208,7 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
 
         // VT+ exclusive features
         if (
-            requiredFeature === FeatureSlug.DARK_THEME || 
+            requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
             requiredPlan === PlanSlug.VT_PLUS

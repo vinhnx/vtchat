@@ -2,13 +2,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import {
-    IconAlertCircle,
-    IconCreditCard,
-    IconKey,
-    IconSettings2,
-    IconTrash,
-} from '@tabler/icons-react';
+import { AlertCircle, Key, Settings2, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -36,7 +30,7 @@ export const SettingsModal = () => {
     // If not signed in, show login prompt instead of settings
     if (!isSignedIn) {
         const KeyIcon = ({ size, className }: { size?: number; className?: string }) => (
-            <IconKey size={size} className={className} />
+            <Key size={size} className={className} />
         );
 
         return (
@@ -52,7 +46,7 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            icon: <IconSettings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Customize',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
@@ -64,7 +58,7 @@ export const SettingsModal = () => {
             component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <IconKey size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
@@ -190,14 +184,14 @@ export const ApiKeySettings = () => {
             {/* Header Section */}
             <div className="flex flex-col gap-3">
                 <h2 className="flex items-center gap-2 text-base font-semibold">
-                    <IconKey size={20} className="text-blue-500" />
+                    <Key size={20} className="text-blue-500" />
                     API Key Management
                     <BYOKIcon />
                 </h2>
                 <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
                     <div className="flex items-start gap-3">
                         <div className="mt-0.5 rounded-full bg-blue-100 p-1 dark:bg-blue-900/40">
-                            <IconKey size={14} className="text-blue-600 dark:text-blue-400" />
+                            <Key size={14} className="text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1 space-y-2">
                             <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
@@ -254,7 +248,7 @@ export const ApiKeySettings = () => {
                                     />
                                     {validationErrors[apiKey.key] && (
                                         <Alert variant="destructive">
-                                            <IconAlertCircle className="h-4 w-4" />
+                                            <AlertCircle className="h-4 w-4" />
                                             <AlertDescription>
                                                 {validationErrors[apiKey.key]}
                                             </AlertDescription>
@@ -312,7 +306,7 @@ export const ApiKeySettings = () => {
                                             }}
                                             className="text-red-600 hover:text-red-700"
                                         >
-                                            <IconTrash size={14} />
+                                            <Trash size={14} />
                                         </Button>
                                     )}
                                 </div>

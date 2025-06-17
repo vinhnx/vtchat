@@ -2,8 +2,8 @@
 
 import { LOADING_MESSAGES } from '@repo/shared/constants';
 import { Card } from '@repo/ui';
-import { IconExternalLink, IconLoader2 } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ExternalLink, Loader2 } from 'lucide-react';
 
 interface PortalLoadingIndicatorProps {
     isVisible: boolean;
@@ -24,8 +24,8 @@ export function PortalLoadingIndicator({ isVisible }: PortalLoadingIndicatorProp
                 >
                     <Card className="flex items-center gap-4 p-6 shadow-xl">
                         <div className="relative">
-                            <IconLoader2 size={24} className="animate-spin text-blue-500" />
-                            <IconExternalLink
+                            <Loader2 size={24} className="animate-spin text-blue-500" />
+                            <ExternalLink
                                 size={12}
                                 className="text-muted-foreground absolute -right-1 -top-1"
                             />

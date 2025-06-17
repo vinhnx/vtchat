@@ -1,8 +1,8 @@
 import { useRootContext } from '@repo/common/context';
 import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';
+import { formatDistanceToNow } from 'date-fns';
 import { ArrowRight, MessageCircle } from 'lucide-react';
-import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -32,7 +32,7 @@ export const RecentThreads = () => {
                     className="text-muted-foreground"
                     onClick={() => setIsCommandSearchOpen(true)}
                 >
-                    View all <ArrowRight strokeWidth={1.5} size={14}  />
+                    View all <ArrowRight strokeWidth={1.5} size={14} />
                 </Button>
             </div>
             <div className="grid grid-cols-4 gap-2">
@@ -48,13 +48,15 @@ export const RecentThreads = () => {
                                 size={16}
                                 strokeWidth={2}
                                 className="text-muted-foreground/50"
-                             />
+                            />
                             <div className="min-h-2 flex-1" />
                             <p className="line-clamp-2 text-sm font-medium leading-tight">
                                 {thread.title}
                             </p>
                             <p className="text-muted-foreground text-xs">
-                                {moment(thread.createdAt).fromNow(true)} ago
+                                {formatDistanceToNow(new Date(thread.createdAt), {
+                                    addSuffix: true,
+                                })}
                             </p>
                         </div>
                     ))}

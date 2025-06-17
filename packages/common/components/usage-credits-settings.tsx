@@ -5,14 +5,7 @@ import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT } from '@repo/shared/constants';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { Button, Card } from '@repo/ui';
-import {
-    IconCheck,
-    IconCreditCard,
-    IconCrown,
-    IconExternalLink,
-    IconSparkles,
-    IconStar,
-} from '@tabler/icons-react';
+import { Check, CreditCard, Crown, ExternalLink, Sparkles, Star } from 'lucide-react';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
 
@@ -66,9 +59,9 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                             <div className="flex items-start gap-4">
                                 <div className="border-border rounded-full border p-3">
                                     {isVtPlus ? (
-                                        <IconCrown size={24} className="text-foreground" />
+                                        <Crown size={24} className="text-foreground" />
                                     ) : (
-                                        <IconStar size={24} className="text-foreground" />
+                                        <Star size={24} className="text-foreground" />
                                     )}
                                 </div>
                                 <div className="space-y-1">
@@ -93,11 +86,11 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                             disabled={isPortalLoading}
                                             className="gap-2"
                                         >
-                                            <IconCreditCard size={16} />
+                                            <CreditCard size={16} />
                                             {isPortalLoading
                                                 ? BUTTON_TEXT.LOADING
                                                 : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
-                                            <IconExternalLink size={14} />
+                                            <ExternalLink size={14} />
                                         </Button>
                                     ) : (
                                         <Button
@@ -105,7 +98,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                             onClick={handleUpgradeToPlus}
                                             className="gap-2"
                                         >
-                                            <IconSparkles size={16} />
+                                            <Sparkles size={16} />
                                             Upgrade to Plus
                                         </Button>
                                     )}
@@ -128,7 +121,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     className="flex items-start gap-3 rounded-lg border bg-transparent p-3"
                                 >
                                     <div className="border-border mt-0.5 rounded-full border p-1.5">
-                                        <IconCheck size={14} className="text-foreground" />
+                                        <Check size={14} className="text-foreground" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <h4 className="text-foreground text-sm font-medium">
@@ -144,7 +137,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                             // Free Plan Features
                             <div className="flex items-start gap-3 rounded-lg border bg-transparent p-3">
                                 <div className="border-border mt-0.5 rounded-full border p-1.5">
-                                    <IconCheck size={14} className="text-foreground" />
+                                    <Check size={14} className="text-foreground" />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                     <h4 className="text-foreground text-sm font-medium">
@@ -165,7 +158,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                     <Card className="border-primary/30 border bg-transparent p-6">
                         <div className="flex items-start gap-4">
                             <div className="border-primary/30 mt-1 rounded-full border p-2">
-                                <IconSparkles size={16} className="text-foreground" />
+                                <Sparkles size={16} className="text-foreground" />
                             </div>
                             <div className="flex-1 space-y-3">
                                 <div>
@@ -173,7 +166,8 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         Unlock VT+ Features
                                     </h4>
                                     <p className="text-muted-foreground mt-1 text-sm">
-                                        Get access to advanced features including dark mode and premium AI models.
+                                        Get access to advanced features including dark mode and
+                                        premium AI models.
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4">
@@ -185,7 +179,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         onClick={handleUpgradeToPlus}
                                         className="gap-2"
                                     >
-                                        <IconSparkles size={16} />
+                                        <Sparkles size={16} />
                                         Upgrade Now
                                     </Button>
                                 </div>
@@ -216,11 +210,11 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     disabled={isPortalLoading}
                                     className="gap-2"
                                 >
-                                    <IconCreditCard size={16} />
+                                    <CreditCard size={16} />
                                     {isPortalLoading
                                         ? BUTTON_TEXT.LOADING
                                         : BUTTON_TEXT.MANAGE_BILLING}
-                                    <IconExternalLink size={14} />
+                                    <ExternalLink size={14} />
                                 </Button>
                             </div>
                         </Card>
