@@ -139,7 +139,7 @@ function FAQs() {
                                     You'll see only the threads belonging to your current account
                                 </li>
                                 <li className="text-muted-foreground">
-                                    API keys and MCP tool settings are also switched to your account
+                                    API keys are switched to your account
                                 </li>
                                 <li className="text-muted-foreground">
                                     This ensures complete data isolation between users
@@ -158,7 +158,7 @@ function FAQs() {
                                     All API keys are cleared (BYOK security)
                                 </li>
                                 <li className="text-muted-foreground">
-                                    MCP tool configurations are reset
+                                    All cached data is cleared
                                 </li>
                                 <li className="text-muted-foreground">
                                     Thread database switches back to anonymous mode
@@ -192,8 +192,8 @@ function FAQs() {
                                     different use cases
                                 </li>
                                 <li className="text-muted-foreground">
-                                    <strong>MCP Integration:</strong> External tool connectivity for
-                                    enhanced capabilities
+                                    <strong>Tool Integration:</strong> Framework ready for external
+                                    tool connectivity (temporarily optimized)
                                 </li>
                             </ul>
                         </div>
@@ -295,25 +295,26 @@ function FAQs() {
                             </ul>
                         </div>
 
-                        {/* MCP Integration */}
+                        {/* Tool Integration */}
                         <div className="py-6">
-                            <h3 className="font-medium">What is MCP integration?</h3>
+                            <h3 className="font-medium">What about external tool integration?</h3>
                             <p className="text-muted-foreground mt-4">
-                                MCP (Model Context Protocol) extends VT's capabilities with external
-                                tools:
+                                VT's tool integration features are temporarily optimized to improve
+                                app performance:
                             </p>
                             <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                 <li className="text-muted-foreground">
-                                    Connect to external services and databases
+                                    External tool connectivity framework is preserved for future
+                                    restoration
                                 </li>
                                 <li className="text-muted-foreground">
-                                    Execute actions beyond basic chat functionality
+                                    Core chat, research, and AI capabilities remain fully functional
                                 </li>
                                 <li className="text-muted-foreground">
-                                    Access real-time data and APIs through AI conversations
+                                    Tool features will be re-enabled based on user demand
                                 </li>
                                 <li className="text-muted-foreground">
-                                    Configurable per-user with secure settings isolation
+                                    The app is now lighter and faster without external dependencies
                                 </li>
                             </ul>
                         </div>

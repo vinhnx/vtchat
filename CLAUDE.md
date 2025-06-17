@@ -50,7 +50,7 @@ Referenced from `AGENT.MD`:
     - `packages/common/providers/subscription-provider.tsx`: Central provider for subscription state.
   - `packages/ai/`: AI agent system ("Agentic Graph System").
     - `README.md` in this folder has a good overview.
-    - Core: `workflow/flow.ts`, `worker/worker.ts`, `tools/mcp.ts`.
+    - Core: `workflow/flow.ts`, `worker/worker.ts` (MCP tools integration removed for optimization).
     - Supports OpenAI, Anthropic, Google, Groq, Together AI. Config via `packages/ai/.env.example`.
   - `packages/shared/`: Core types (e.g., `PlanSlug` from `packages/shared/types.ts`), configs, logger, utilities.
   - `packages/typescript-config/`: Shared TypeScript configurations.
