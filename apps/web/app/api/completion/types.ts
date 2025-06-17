@@ -10,6 +10,7 @@ export const completionRequestSchema = z.object({
     mode: z.nativeEnum(ChatMode),
     maxIterations: z.number().optional(),
     webSearch: z.boolean().optional(),
+    mathCalculator: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
     apiKeys: z

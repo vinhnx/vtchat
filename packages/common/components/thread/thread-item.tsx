@@ -1,6 +1,7 @@
 import {
     CitationProvider,
     MarkdownContent,
+    MathCalculatorIndicator,
     Message,
     MessageActions,
     MotionSkeleton,
@@ -10,6 +11,7 @@ import {
 } from '@repo/common/components';
 import { useAnimatedText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
+import { useMathCalculator } from '@repo/common/hooks';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
 import { AlertCircle, Book } from 'lucide-react';
@@ -33,6 +35,7 @@ export const ThreadItem = memo(
         );
         const setCurrentSources = useChatStore(state => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
+        const { mathCalculatorEnabled } = useMathCalculator();
 
         const { ref: inViewRef, inView } = useInView({});
 
@@ -106,6 +109,10 @@ export const ThreadItem = memo(
                                 steps={steps}
                                 threadItem={threadItem}
                             />
+                        )}
+
+                        {isLast && isGenerating && mathCalculatorEnabled && (
+                            <MathCalculatorIndicator isCalculating={true} />
                         )}
 
                         {!hasResponse && (

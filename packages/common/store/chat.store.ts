@@ -89,10 +89,12 @@ const loadInitialData = async () => {
                 customInstructions: undefined,
                 model: models[0].id,
                 useWebSearch: false,
+                useMathCalculator: false,
                 showSuggestions: true,
                 chatMode: ChatMode.GEMINI_2_0_FLASH,
             },
             useWebSearch: false,
+            useMathCalculator: false,
             chatMode: ChatMode.GEMINI_2_0_FLASH,
             customInstructions: '',
             showSuggestions: false,
@@ -107,6 +109,7 @@ const loadInitialData = async () => {
         customInstructions: undefined,
         model: models[0].id,
         useWebSearch: false,
+        useMathCalculator: false,
         showSuggestions: true,
         chatMode: ChatMode.GEMINI_2_0_FLASH,
         currentThreadId: null,
@@ -114,6 +117,7 @@ const loadInitialData = async () => {
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
     const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
+    const useMathCalculator = typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
     const customInstructions = config.customInstructions || '';
 
     // Load and validate the persisted model
@@ -128,6 +132,7 @@ const loadInitialData = async () => {
         currentThreadId: config.currentThreadId || initialThreads[0]?.id,
         config,
         useWebSearch,
+        useMathCalculator,
         chatMode,
         model,
         customInstructions,
@@ -139,6 +144,7 @@ type State = {
     model: Model;
     isGenerating: boolean;
     useWebSearch: boolean;
+    useMathCalculator: boolean;
     customInstructions: string;
     showSuggestions: boolean;
     editor: any;
@@ -190,6 +196,7 @@ type Actions = {
     clearAllThreads: () => void;
     setCurrentSources: (sources: string[]) => void;
     setUseWebSearch: (useWebSearch: boolean) => void;
+    setUseMathCalculator: (useMathCalculator: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
     // Add user-specific database management
     switchUserDatabase: (userId: string | null) => Promise<void>;
@@ -692,6 +699,7 @@ export const useChatStore = create(
         chatMode: ChatMode.GEMINI_2_0_FLASH,
         threadItems: [],
         useWebSearch: false,
+        useMathCalculator: false,
         customInstructions: '',
         currentThreadId: null,
         activeThreadItemView: null,
@@ -751,6 +759,14 @@ export const useChatStore = create(
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set(state => {
                 state.useWebSearch = useWebSearch;
+            });
+        },
+
+        setUseMathCalculator: (useMathCalculator: boolean) => {
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useMathCalculator }));
+            set(state => {
+                state.useMathCalculator = useMathCalculator;
             });
         },
 
@@ -1345,6 +1361,7 @@ if (typeof window !== 'undefined') {
             chatMode,
             model,
             useWebSearch,
+            useMathCalculator,
             showSuggestions,
             customInstructions,
         }) => {
@@ -1355,6 +1372,7 @@ if (typeof window !== 'undefined') {
                 chatMode,
                 model,
                 useWebSearch,
+                useMathCalculator,
                 showSuggestions,
                 customInstructions,
             });

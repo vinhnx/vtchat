@@ -72,6 +72,7 @@ export async function executeStream({
             messages: data.messages,
             customInstructions: data.customInstructions,
             webSearch: data.webSearch || false,
+            mathCalculator: data.mathCalculator || false,
             config: {
                 maxIterations: data.maxIterations || 3,
                 signal,

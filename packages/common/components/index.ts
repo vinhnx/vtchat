@@ -20,6 +20,7 @@ export * from './layout/ssr-safe-root';
 export * from './link-preview';
 export * from './login-required-dialog';
 export * from './logo';
+export * from './math-calculator-indicator';
 export * from './mdx';
 export * from './mode-toggle';
 export * from './motion-skeleton';

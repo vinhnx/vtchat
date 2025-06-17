@@ -3,14 +3,15 @@ import { CoreMessage } from 'ai';
 import { ProviderEnumType } from './providers';
 
 export enum ModelEnum {
-    CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
-    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1-0528',
+    CLAUDE_4_SONNET = 'claude-4-sonnet-20250514',
+    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     GEMINI_2_5_FLASH_PREVIEW = 'gemini-2.5-flash-preview-05-20',
+    GEMINI_2_5_FLASH = 'gemini-2.5-flash',
     GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
     GEMINI_2_5_PRO_PREVIEW = 'gemini-2.5-pro-preview-06-05',
-    CLAUDE_4_OPUS = 'claude-opus-4-20250514',
+    CLAUDE_4_OPUS = 'claude-4-opus-20250514',
     GPT_4o_Mini = 'gpt-4o-mini',
     GPT_4o = 'gpt-4o',
     GPT_4_1_Mini = 'gpt-4.1-mini',

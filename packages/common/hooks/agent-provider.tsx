@@ -18,7 +18,8 @@ export type AgentContextType = {
         newChatMode?: string;
         messages?: ThreadItem[];
         useWebSearch?: boolean;
-        showSuggestions?: boolean;
+        useMathCalculator?: boolean;
+    showSuggestions?: boolean;
     }) => Promise<void>;
     updateContext: (threadId: string, data: any) => void;
 };
@@ -327,6 +328,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             newChatMode,
             messages,
             useWebSearch,
+            useMathCalculator,
             showSuggestions,
         }: {
             formData: FormData;
@@ -401,6 +403,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     parentThreadItemId: '',
                     customInstructions,
                     webSearch: useWebSearch,
+                    mathCalculator: useMathCalculator,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: apiKeys(),
                 });
@@ -422,6 +425,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     customInstructions,
                     parentThreadItemId: '',
                     webSearch: useWebSearch,
+                    mathCalculator: useMathCalculator,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: useWebSearch ? apiKeys() : undefined,
                 });
