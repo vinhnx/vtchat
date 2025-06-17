@@ -5,7 +5,6 @@ import { useTheme } from 'next-themes';
 import { useCallback } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
-import { useMcpToolsStore } from '../store/mcp-tools.store';
 
 /**
  * Custom hook for logout functionality that ensures all gated features
@@ -17,8 +16,6 @@ import { useMcpToolsStore } from '../store/mcp-tools.store';
 export const useLogout = () => {
     const { setTheme } = useTheme();
     const clearAllKeys = useApiKeysStore(state => state.clearAllKeys);
-    const setMcpConfig = useMcpToolsStore(state => state.setMcpConfig);
-    const updateSelectedMCP = useMcpToolsStore(state => state.updateSelectedMCP);
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
 
     const logout = useCallback(async () => {
@@ -33,12 +30,7 @@ export const useLogout = () => {
             clearAllKeys();
             console.log('[Logout] ✅ Cleared all API keys');
 
-            // 3. Clear MCP configurations (user-specific tools)
-            setMcpConfig({});
-            updateSelectedMCP(() => []);
-            console.log('[Logout] ✅ Cleared MCP configurations');
-
-            // 4. Clear all threads (user-specific conversation data)
+            // 3. Clear all threads (user-specific conversation data)
             await clearAllThreads();
             console.log('[Logout] ✅ Cleared all threads from local storage');
 
@@ -98,15 +90,13 @@ export const useLogout = () => {
             try {
                 setTheme('light');
                 clearAllKeys();
-                setMcpConfig({});
-                updateSelectedMCP(() => []);
                 await clearAllThreads();
                 console.log('[Logout] ✅ Emergency cleanup completed');
             } catch (cleanupError) {
                 console.error('[Logout] ❌ Emergency cleanup failed:', cleanupError);
             }
         }
-    }, [setTheme, clearAllKeys, setMcpConfig, updateSelectedMCP, clearAllThreads]);
+    }, [setTheme, clearAllKeys, clearAllThreads]);
 
     return { logout };
 };

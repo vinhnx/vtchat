@@ -77,7 +77,6 @@ export async function executeStream({
                 signal,
             },
             gl,
-            mcpConfig: data.mcpConfig || {},
             showSuggestions: data.showSuggestions || false,
             onFinish: onFinish,
             apiKeys: data.apiKeys,

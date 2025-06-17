@@ -9,20 +9,21 @@ export const completionRequestSchema = z.object({
     messages: z.any(),
     mode: z.nativeEnum(ChatMode),
     maxIterations: z.number().optional(),
-    mcpConfig: z.record(z.string(), z.string()).optional(),
     webSearch: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
-    apiKeys: z.object({
-        OPENAI_API_KEY: z.string().optional(),
-        ANTHROPIC_API_KEY: z.string().optional(),
-        GEMINI_API_KEY: z.string().optional(),
-        JINA_API_KEY: z.string().optional(),
-        FIREWORKS_API_KEY: z.string().optional(),
+    apiKeys: z
+        .object({
+            OPENAI_API_KEY: z.string().optional(),
+            ANTHROPIC_API_KEY: z.string().optional(),
+            GEMINI_API_KEY: z.string().optional(),
+            JINA_API_KEY: z.string().optional(),
+            FIREWORKS_API_KEY: z.string().optional(),
 
-        OPENROUTER_API_KEY: z.string().optional(),
-        TOGETHER_API_KEY: z.string().optional(),
-    }).optional(),
+            OPENROUTER_API_KEY: z.string().optional(),
+            TOGETHER_API_KEY: z.string().optional(),
+        })
+        .optional(),
 });
 
 export type CompletionRequestType = z.infer<typeof completionRequestSchema>;

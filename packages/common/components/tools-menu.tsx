@@ -1,31 +1,18 @@
-import { IconPlus } from '@tabler/icons-react';
-
-import { useAppStore, useMcpToolsStore } from '@repo/common/store';
+import { useAppStore } from '@repo/common/store';
 import { Button } from '@repo/ui/src/components/button';
 
-import {
-    Badge,
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@repo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@repo/ui';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { IconCheck, IconTools } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
+import { IconTools } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
-import { ToolIcon } from './icons';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { data: session } = useSession();
-    const router = useRouter();
     const isSignedIn = !!session;
-    const { mcpConfig, updateSelectedMCP, selectedMCP } = useMcpToolsStore();
     const apiKeys = useApiKeysStore();
     const chatMode = useChatStore(state => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
@@ -35,92 +22,29 @@ export const ToolsMenu = () => {
         [chatMode, hasApiKeyForChatMode, apiKeys, isSignedIn]
     );
 
-    const selectedMCPTools = useMemo(() => {
-        return Object.keys(mcpConfig).filter(key => mcpConfig[key]);
-    }, [mcpConfig]);
-
     return (
         <>
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        size={selectedMCP.length > 0 ? 'sm' : 'icon'}
-                        tooltip={isToolsAvailable ? 'Tools' : 'Only available with BYOK'}
+                        size="icon"
+                        tooltip="Tools (Coming Soon)"
                         variant={isOpen ? 'secondary' : 'ghost'}
                         className="gap-2"
                         rounded="full"
-                        disabled={!isToolsAvailable}
+                        disabled={true} // Disabled since MCP is temporarily removed
                     >
                         <IconTools size={18} strokeWidth={2} className="text-muted-foreground" />
-                        {selectedMCPTools?.length > 0 && (
-                            <Badge
-                                variant="secondary"
-                                className="bor flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs"
-                            >
-                                {selectedMCPTools.length}
-                            </Badge>
-                        )}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" side="bottom" className="w-[320px]">
-                    {Object.keys(mcpConfig).map(key => (
-                        <DropdownMenuItem
-                            key={key}
-                            onClick={() =>
-                                updateSelectedMCP(prev => {
-                                    if (prev.includes(key)) {
-                                        return prev.filter(mcp => mcp !== key);
-                                    }
-                                    return [...prev, key];
-                                })
-                            }
-                        >
-                            <div className="flex w-full items-center justify-between gap-2">
-                                <ToolIcon />
-                                <span>{key}</span>
-                                <div className="flex-1" />
-                                {selectedMCP.includes(key) && (
-                                    <IconCheck size={16} className="text-foreground" />
-                                )}
-                            </div>
-                        </DropdownMenuItem>
-                    ))}
-                    {mcpConfig && Object.keys(mcpConfig).length === 0 && (
-                        <div className="flex h-[150px] flex-col items-center justify-center gap-2">
-                            <IconTools
-                                size={16}
-                                strokeWidth={2}
-                                className="text-muted-foreground"
-                            />
-                            <p className="text-muted-foreground text-sm">No tools found</p>
-                            <Button
-                                rounded="full"
-                                variant="bordered"
-                                className="text-muted-foreground text-xs"
-                                onClick={() => {
-                                    setIsSettingsOpen(true);
-                                }}
-                            >
-                                <IconPlus
-                                    size={14}
-                                    strokeWidth={2}
-                                    className="text-muted-foreground"
-                                />
-                                Add Tool
-                            </Button>
-                        </div>
-                    )}
-                    {mcpConfig && Object.keys(mcpConfig).length > 0 && <DropdownMenuSeparator />}
-                    {mcpConfig && Object.keys(mcpConfig).length > 0 && (
-                        <DropdownMenuItem
-                            onClick={() => {
-                                setIsSettingsOpen(true);
-                            }}
-                        >
-                            <IconPlus size={14} strokeWidth={2} className="text-muted-foreground" />
-                            Add Tool
-                        </DropdownMenuItem>
-                    )}
+                    <div className="flex h-[150px] flex-col items-center justify-center gap-2">
+                        <IconTools size={16} strokeWidth={2} className="text-muted-foreground" />
+                        <p className="text-muted-foreground text-sm">Tools Coming Soon</p>
+                        <p className="text-muted-foreground px-4 text-center text-xs">
+                            External tools integration is temporarily disabled for app optimization.
+                        </p>
+                    </div>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

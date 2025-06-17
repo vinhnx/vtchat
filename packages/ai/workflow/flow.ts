@@ -65,7 +65,6 @@ export type WorkflowEventSchema = {
 
 // Define the context schema type
 export type WorkflowContextSchema = {
-    mcpConfig: Record<string, string>;
     question: string;
     search_queries: string[];
     messages: CoreMessage[];
@@ -105,7 +104,6 @@ export type WorkflowContextSchema = {
 };
 
 export const runWorkflow = ({
-    mcpConfig = {},
     mode,
     question,
     threadId,
@@ -120,7 +118,6 @@ export const runWorkflow = ({
     gl,
     apiKeys,
 }: {
-    mcpConfig: Record<string, string>;
     mode: ChatMode;
     question: string;
     threadId: string;
@@ -163,7 +160,6 @@ export const runWorkflow = ({
     });
 
     const context = createContext<WorkflowContextSchema>({
-        mcpConfig,
         question,
         mode,
         webSearch,

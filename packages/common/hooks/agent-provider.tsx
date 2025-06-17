@@ -6,8 +6,8 @@ import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
-import { useApiKeysStore, useAppStore, useChatStore, useMcpToolsStore } from '../store';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
+import { useApiKeysStore, useAppStore, useChatStore } from '../store';
 
 export type AgentContextType = {
     runAgent: (body: any) => Promise<void>;
@@ -30,7 +30,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const user = session?.user;
-    
+
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [modalChatMode, setModalChatMode] = useState<ChatMode>(ChatMode.GPT_4o_Mini);
 
@@ -57,7 +57,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     }));
     const { push } = useRouter();
 
-    const getSelectedMCP = useMcpToolsStore(state => state.getSelectedMCP);
     const apiKeys = useApiKeysStore(state => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const setShowSignInModal = useAppStore(state => state.setShowSignInModal);
@@ -374,7 +373,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsGenerating(true);
             setCurrentSources([]);
 
-
             // Build core messages array
             const coreMessages = buildCoreMessagesFromThreadItems({
                 messages: messages || [],
@@ -399,7 +397,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     question: query,
                     threadId,
                     messages: coreMessages,
-                    mcpConfig: getSelectedMCP(),
                     threadItemId: optimisticAiThreadItemId,
                     parentThreadItemId: '',
                     customInstructions,
@@ -415,13 +412,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     setIsGenerating(false);
                     return;
                 }
-                
+
                 runAgent({
                     mode: newChatMode || chatMode,
                     prompt: query,
                     threadId,
                     messages: coreMessages,
-                    mcpConfig: getSelectedMCP(),
                     threadItemId: optimisticAiThreadItemId,
                     customInstructions,
                     parentThreadItemId: '',
@@ -444,7 +440,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             abortWorkflow,
             startWorkflow,
             customInstructions,
-            getSelectedMCP,
             apiKeys,
             hasApiKeyForChatMode,
             updateThreadItem,

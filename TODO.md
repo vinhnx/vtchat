@@ -1,17 +1,5 @@
 # TODO List
 
-[] check neon workflow github action
-
-
--
-[] https://platform.openai.com/docs/mcp
-
---
-
-make sure threads, byok keys and preferences are kept per account
-make sure switching don't clear those data
-you can use mcp tools context7
-
 --
 
 [] https://docs.creem.io/faq/account-reviews
@@ -40,9 +28,6 @@ NOTE: add new feature for VT+
 1. check for threads manage for per account, can you do that with current local threads management. make sure only threads belong a user can see and others can see.
 1. when logout -> no threads
 use mcp or context7 or neon mcp, or search if needd. we use dixie and zustand or indexdb for threads maangement for now. local only for now
-
---
-[] check neon workflow github action
 
 --
 
