@@ -4,15 +4,17 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
+import { useMcpToolsStore } from '../store/mcp-tools.store';
 
 /**
  * Hook to manage thread database switching based on user authentication
- * Ensures threads and API keys are isolated per user account
+ * Ensures threads, API keys, and MCP tools are isolated per user account
  */
 export const useThreadAuth = () => {
     const { data: session } = useSession();
     const switchUserDatabase = useChatStore(state => state.switchUserDatabase);
     const switchUserStorage = useApiKeysStore(state => state.switchUserStorage);
+    const switchMcpUserStorage = useMcpToolsStore(state => state.switchUserStorage);
     const previousUserIdRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -39,10 +41,13 @@ export const useThreadAuth = () => {
             // Switch to the appropriate user storage for API keys
             switchUserStorage(currentUserId);
 
+            // Switch to the appropriate user storage for MCP tools
+            switchMcpUserStorage(currentUserId);
+
             // Update the ref to track the current user
             previousUserIdRef.current = currentUserId;
         }
-    }, [session?.user?.id, switchUserDatabase, switchUserStorage]);
+    }, [session?.user?.id, switchUserDatabase, switchUserStorage, switchMcpUserStorage]);
 
     return {
         currentUserId: session?.user?.id || null,

@@ -26,6 +26,7 @@ import { ArrowUp, Atom, ChevronDown, Gift, Globe, Paperclip, Square, Star } from
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 // Create a wrapper component for Globe to match expected icon prop type
 const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -460,6 +461,7 @@ export const BYOKSetupModal = ({
     onApiKeySaved: () => void;
 }) => {
     const setApiKey = useApiKeysStore(state => state.setKey);
+    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const [apiKeyValue, setApiKeyValue] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
@@ -505,12 +507,28 @@ export const BYOKSetupModal = ({
 
         setIsSaving(true);
         try {
+            console.log(`[BYOK Modal] Saving API key for ${requiredApiKey}...`);
+
+            // Save the API key
             setApiKey(requiredApiKey, apiKeyValue.trim());
+
+            // Verify the key was saved by checking storage immediately
+            setTimeout(() => {
+                const savedKeys = getAllKeys();
+                if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
+                    console.log(`[BYOK Modal] API key for ${requiredApiKey} verified as saved`);
+                } else {
+                    console.error(`[BYOK Modal] API key verification failed for ${requiredApiKey}`);
+                }
+            }, 100);
+
             setApiKeyValue('');
             onApiKeySaved();
             onClose();
         } catch (error) {
             console.error('Failed to save API key:', error);
+            // Show error to user
+            alert('Failed to save API key. Please try again.');
         } finally {
             setIsSaving(false);
         }
@@ -603,6 +621,9 @@ export const ChatModeOptions = ({
     const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
 
+    // Login prompt state
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
     // BYOK modal state
     const [byokModalOpen, setBYOKModalOpen] = useState(false);
     const [pendingMode, setPendingMode] = useState<{
@@ -621,10 +642,7 @@ export const ChatModeOptions = ({
 
         // Check if user is signed in for any model selection
         if (!isSignedIn) {
-            onGatedFeature({
-                title: 'Login Required',
-                message: 'Please log in to select and use different AI models.',
-            });
+            setShowLoginPrompt(true);
             return;
         }
 
@@ -821,6 +839,14 @@ export const ChatModeOptions = ({
                     onApiKeySaved={handleBYOKSaved}
                 />
             )}
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to select and use different AI models."
+            />
         </>
     );
 };
