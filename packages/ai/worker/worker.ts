@@ -38,6 +38,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 config,
                 apiKeys: newApiKeys,
                 webSearch,
+                mathCalculator,
                 showSuggestions,
             } = payload;
 
@@ -69,6 +70,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 config,
                 apiKeys: newApiKeys,
                 webSearch,
+                mathCalculator,
                 showSuggestions,
                 onFinish: (_data: any) => {},
             });

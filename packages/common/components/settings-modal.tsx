@@ -2,7 +2,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, Key, Settings2, Trash } from 'lucide-react';
+import { AlertCircle, CreditCard, Key, Settings2, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
@@ -52,7 +52,7 @@ export const SettingsModal = () => {
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <IconCreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
+            icon: <CreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Plan',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,

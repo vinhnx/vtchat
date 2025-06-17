@@ -1,6 +1,10 @@
 'use client';
 import { DotSpinner } from '@repo/common/components';
-import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
+import {
+    useMathCalculator,
+    useSubscriptionAccess,
+    useWebSearch as useWebSearchHook,
+} from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -22,7 +26,17 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Atom, ChevronDown, Gift, Globe, Paperclip, Square, Star } from 'lucide-react';
+import {
+    ArrowUp,
+    Atom,
+    ChevronDown,
+    Gift,
+    Globe,
+    Paperclip,
+    Sigma,
+    Square,
+    Star,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
@@ -420,6 +434,38 @@ export const WebSearchButton = () => {
                               : 'Web Search'}
                     </p>
                 )}
+            </Button>
+        </>
+    );
+};
+
+export const MathCalculatorButton = () => {
+    const { useMathCalculator: mathCalculatorEnabled, setUseMathCalculator } = useMathCalculator();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+
+    // Always show math calculator for all users (including free users)
+    const handleMathCalculatorToggle = () => {
+        setUseMathCalculator(!mathCalculatorEnabled);
+    };
+
+    return (
+        <>
+            <Button
+                size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
+                tooltip={mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'}
+                variant={mathCalculatorEnabled ? 'secondary' : 'ghost'}
+                className={cn('gap-2', mathCalculatorEnabled && 'bg-green-500/10 text-green-500')}
+                onClick={handleMathCalculatorToggle}
+            >
+                <Sigma
+                    size={16}
+                    strokeWidth={2}
+                    className={cn(
+                        mathCalculatorEnabled ? '!text-green-500' : 'text-muted-foreground'
+                    )}
+                />
+                {mathCalculatorEnabled && <p className="text-xs">Math Calculator</p>}
             </Button>
         </>
     );

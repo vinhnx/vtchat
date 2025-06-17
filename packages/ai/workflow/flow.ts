@@ -86,6 +86,7 @@ export type WorkflowContextSchema = {
         }[];
     }[];
     webSearch: boolean;
+    mathCalculator: boolean;
     queries: string[];
     summaries: string[];
     gl?: Geo;
@@ -112,6 +113,7 @@ export const runWorkflow = ({
     config = {},
     signal,
     webSearch = false,
+    mathCalculator = false,
     showSuggestions = false,
     onFinish,
     customInstructions,
@@ -126,6 +128,7 @@ export const runWorkflow = ({
     config?: WorkflowConfig;
     signal?: AbortSignal;
     webSearch?: boolean;
+    mathCalculator?: boolean;
     showSuggestions?: boolean;
     onFinish?: (data: any) => void;
     gl?: Geo;
@@ -163,6 +166,7 @@ export const runWorkflow = ({
         question,
         mode,
         webSearch,
+        mathCalculator,
         search_queries: [],
         messages: messages as any,
         goals: [],

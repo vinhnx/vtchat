@@ -15,7 +15,7 @@ import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { ShineText } from '../shine-text';
-import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
+import { ChatModeButton, GeneratingStatus, MathCalculatorButton, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
 
@@ -58,6 +58,7 @@ export const ChatInput = ({
     const { handleSubmit } = useAgentStream();
     const createThread = useChatStore(state => state.createThread);
     const useWebSearch = useChatStore(state => state.useWebSearch);
+    const useMathCalculator = useChatStore(state => state.useMathCalculator);
     const isGenerating = useChatStore(state => state.isGenerating);
     const isChatPage = usePathname().startsWith('/chat');
     const imageAttachment = useChatStore(state => state.imageAttachment);
@@ -112,6 +113,7 @@ export const ChatInput = ({
                 (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
             ),
             useWebSearch,
+            useMathCalculator,
         });
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
@@ -169,6 +171,7 @@ export const ChatInput = ({
                                                 <ChatModeButton />
                                                 {/* <AttachmentButton /> */}
                                                 <WebSearchButton />
+                                                <MathCalculatorButton />
                                                 {/* <ToolsMenu /> */}
                                                 <ImageUpload
                                                     id="image-attachment"

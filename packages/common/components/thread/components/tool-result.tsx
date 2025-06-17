@@ -1,7 +1,7 @@
 import { CodeBlock, ToolResultIcon } from '@repo/common/components';
 import { ToolResult as ToolResultType } from '@repo/shared/types';
 import { Badge, cn } from '@repo/ui';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CheckCircle } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
 export type ToolResultProps = {
@@ -12,6 +12,9 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = useCallback(() => setIsOpen(prev => !prev), []);
 
+    // Check if this is a math calculator tool result
+    const isMathTool = toolResult.toolName && ['add', 'subtract', 'multiply', 'divide', 'exponentiate', 'factorial', 'isPrime', 'squareRoot', 'sin', 'cos', 'tan', 'sqrt', 'log', 'exp'].includes(toolResult.toolName);
+
     return (
         <div className="overflow-hidde flex w-full flex-col items-start">
             <div
@@ -19,9 +22,13 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                 onClick={toggleOpen}
             >
                 <div className="flex flex-row items-center gap-2.5">
-                    <ToolResultIcon />
-                    <Badge>Result</Badge>
-                    <Badge>{toolResult.toolName}</Badge>
+                    {isMathTool ? <CheckCircle size={16} className="text-green-600" /> : <ToolResultIcon />}
+                    <Badge className={isMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
+                        {isMathTool ? '✅ Result' : 'Result'}
+                    </Badge>
+                    <Badge className={isMathTool ? 'bg-green-50 text-green-700 border-green-200' : ''}>
+                        {isMathTool ? `🧮 ${toolResult.toolName}` : toolResult.toolName}
+                    </Badge>
                 </div>
                 <div className="pr-2">
                     <ChevronDown

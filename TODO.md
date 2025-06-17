@@ -1,5 +1,16 @@
 # TODO List
 
+
+-
+[] explore full Anthropic capablity
+https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
+[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-use
+[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#bash-tool
+[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#text-editor-tool
+[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-tool
+[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support
+
+--
 tools (add icons in input chat bar, consider monet each)
 [] [free] basic https://ai-sdk-agents.vercel.app/?item=math
 [] [monet] https://ai-sdk-agents.vercel.app/?item=postgres
@@ -22,12 +33,6 @@ tools (add icons in input chat bar, consider monet each)
 [] lint and fix some critical errors and warnings
 [] rebuild, analyize make sure no build error
 
---
-can you build and lint the app make sure no errors and build failure
-
-
-=
-review large dep package like image asset, use knip or any tool to scan for large file and suggest fix. the goal is lightweight but functional app. speed up compile build time and deploy time
 ---
 
 <https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
@@ -258,3 +263,7 @@ remember to publish Google Auth
   - Whois VN: [https://whois.inet.vn/whois?domain=vtchat.io.vn](https://whois.inet.vn/whois?domain=vtchat.io.vn)
   - VinaHost: [https://secure.vinahost.vn/ac/cart.php?a=confdomains](https://secure.vinahost.vn/ac/cart.php?a=confdomains)
   - <https://www.matbao.net/ten-mien/ket-qua-kiem-tra-ten-mien.html?tenmien=vtchat.io.vn#top_search>
+
+--
+
+[] grand final showcase https://github.com/vercel/ai/discussions/1914
