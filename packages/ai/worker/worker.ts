@@ -37,7 +37,6 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 messages,
                 config,
                 apiKeys: newApiKeys,
-                mcpConfig,
                 webSearch,
                 showSuggestions,
             } = payload;
@@ -52,6 +51,8 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                     fireworks: apiKeys.FIREWORKS_API_KEY,
                     google: apiKeys.GEMINI_API_KEY,
                     together: apiKeys.TOGETHER_API_KEY,
+                    xai: apiKeys.XAI_API_KEY,
+                    openrouter: apiKeys.OPENROUTER_API_KEY,
                 };
 
                 self.JINA_API_KEY = apiKeys.JINA_API_KEY;
@@ -66,11 +67,10 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 threadItemId,
                 messages,
                 config,
-                mcpConfig,
                 apiKeys: newApiKeys,
                 webSearch,
                 showSuggestions,
-                onFinish: (data: any) => {},
+                onFinish: (_data: any) => {},
             });
 
             // Forward workflow events to the main thread

@@ -4,6 +4,8 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
 import { LanguageModelV1 } from '@ai-sdk/provider';
 import { createTogetherAI } from '@ai-sdk/togetherai';
+import { createXai } from '@ai-sdk/xai';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
 import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { ModelEnum, models } from './models';
@@ -14,6 +16,8 @@ export const Providers = {
     TOGETHER: 'together',
     GOOGLE: 'google',
     FIREWORKS: 'fireworks',
+    XAI: 'xai',
+    OPENROUTER: 'openrouter',
 } as const;
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
@@ -39,6 +43,8 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
             [Providers.TOGETHER]: 'TOGETHER_API_KEY',
             [Providers.GOOGLE]: 'GEMINI_API_KEY',
             [Providers.FIREWORKS]: 'FIREWORKS_API_KEY',
+            [Providers.XAI]: 'XAI_API_KEY',
+            [Providers.OPENROUTER]: 'OPENROUTER_API_KEY',
         };
 
         const byokKey = byokKeys[keyMapping[provider]];
@@ -55,7 +61,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
         // For browser environments (self is also defined in browser)
         try {
             if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
-            return (window as any).AI_API_KEYS[provider] || '';
+                return (window as any).AI_API_KEYS[provider] || '';
             }
         } catch (error) {
             // window is not available in this environment
@@ -68,7 +74,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
 export const getProviderInstance = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>
-) => {
+): any => {
     const apiKey = getApiKey(provider, byokKeys);
 
     switch (provider) {
@@ -118,6 +124,24 @@ export const getProviderInstance = (
                 );
             }
             return createFireworks({
+                apiKey: apiKey,
+            });
+        case 'xai':
+            if (!apiKey) {
+                throw new Error(
+                    'xAI Grok API key required. Please add your API key in Settings → API Keys → xAI. Get a key at https://x.ai/api'
+                );
+            }
+            return createXai({
+                apiKey: apiKey,
+            });
+        case 'openrouter':
+            if (!apiKey) {
+                throw new Error(
+                    'OpenRouter API key required. Please add your API key in Settings → API Keys → OpenRouter. Get a key at https://openrouter.ai/keys'
+                );
+            }
+            return createOpenRouter({
                 apiKey: apiKey,
             });
         default:

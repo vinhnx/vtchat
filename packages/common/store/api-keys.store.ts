@@ -9,6 +9,7 @@ export type ApiKeys = {
     GEMINI_API_KEY?: string;
     JINA_API_KEY?: string;
     FIREWORKS_API_KEY?: string;
+    XAI_API_KEY?: string;
 
     OPENROUTER_API_KEY?: string;
     TOGETHER_API_KEY?: string;
@@ -110,6 +111,19 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return !!apiKeys['ANTHROPIC_API_KEY'];
                     case ChatMode.DEEPSEEK_R1:
                         return !!apiKeys['FIREWORKS_API_KEY'];
+                    case ChatMode.GROK_3:
+                    case ChatMode.GROK_3_MINI:
+                        return !!apiKeys['XAI_API_KEY'];
+                    // OpenRouter models
+                    case ChatMode.DEEPSEEK_V3_0324_FREE:
+                    case ChatMode.DEEPSEEK_V3_0324:
+                    case ChatMode.DEEPSEEK_R1_FREE:
+                    case ChatMode.DEEPSEEK_R1_0528_FREE:
+                    case ChatMode.QWEN3_235B_A22B:
+                    case ChatMode.QWEN3_32B:
+                    case ChatMode.MISTRAL_NEMO:
+                    case ChatMode.QWEN3_14B_FREE:
+                        return !!apiKeys['OPENROUTER_API_KEY'];
                     default:
                         return false;
                 }
