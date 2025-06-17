@@ -1,5 +1,8 @@
 # TODO List
 
+
+[]https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
+
 ---
 
 <https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
@@ -72,23 +75,6 @@ error: terminating connection due to administrator command
 [pro] <https://ai-sdk.dev/cookbook/next/chat-with-pdf>
 
 --
-
-✅ IMPORTANT: check why byok keys are not saved to storage, lost after full browser refresh
-✅ IMPORTANT: REMEBER CHAT INPUT BYOK SETTINGS -> SAVE TO STORAGE
-✅ IMPORTANT: REMEMBER LAST SELECTED CHAT-ACTION MODELS OR MODE FOR LATER USE
-
-**COMPLETED - Chat Mode & Model Persistence Enhancement:**
-
-- Enhanced `setChatMode` and `setModel` in chat.store.ts to persist selections via localStorage
-- Updated `loadInitialData` to restore both chat mode and model from persisted config
-- Added proper config merging to prevent overwrites when setting mode or model
-- Implemented per-user isolation via user-specific config keys
-- Created comprehensive test coverage:
-  - Manual test UI at `/test-persistence`
-  - Standalone browser test (`chat-mode-persistence-test.html`)
-  - Script verification (`test-chat-persistence.js`)
-- Verified persistence works across browser refreshes and user switching
-- All requirements for "Remember last selected model and mode to cache, and auto selected that for chat-action on next session" are now complete
 -
 
 [support local models] [monet] => create new creem product features
@@ -174,17 +160,7 @@ remember to publish Google Auth
 --
 [][monet] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 --
-
-[ ] <https://ai-sdk.dev/cookbook/node/web-search-agent#perplexity>
-
---
-
 [] <https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
---
-
-[] check all provided models and features in dropdown
-[] check for gated feature selection on models
-[] check for llm api repsonse
 
 --
 [] support openai full
@@ -206,13 +182,8 @@ remember to publish Google Auth
 
 --
 
-## High ority / Immediate Focus
-
-[] check MCP Tools in settings
-
 - [] <https://resend.com/docs/introduction>
 
-- (Review and populate based on current sprint/goals)
 
 ## Authentication (Better Auth Integration & Enhancements)
 
@@ -267,8 +238,6 @@ remember to publish Google Auth
 - [ ] Review `package.json` files across the monorepo and remove redundant or unused dependencies. Consider using a tool like Knip ([https://knip.dev/](https://knip.dev/)) for assistance.
 
 ## AI & Providers
-
-- [] add <https://ai-sdk.dev/providers/community-providers/openrouter>
 
 - [ ] Expand support for more AI providers using the AI SDK: [https://ai-sdk.dev/providers/ai-sdk-providers](https://ai-sdk.dev/providers/ai-sdk-providers)
 - [ ] Review Gemini AI SDK Cheatsheet for potential optimizations/features: [https://patloeber.com/gemini-ai-sdk-cheatsheet/](https://patloeber.com/gemini-ai-sdk-cheatsheet/)
