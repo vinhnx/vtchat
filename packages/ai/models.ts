@@ -17,6 +17,17 @@ export enum ModelEnum {
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4_1 = 'gpt-4.1',
     O4_Mini = 'o4-mini',
+    GROK_3 = 'grok-3',
+    GROK_3_MINI = 'grok-3-mini',
+    // OpenRouter models
+    DEEPSEEK_V3_0324_FREE = 'deepseek/deepseek-chat-v3-0324:free',
+    DEEPSEEK_V3_0324 = 'deepseek/deepseek-chat-v3-0324',
+    DEEPSEEK_R1_FREE = 'deepseek/deepseek-r1:free',
+    DEEPSEEK_R1_0528_FREE = 'deepseek/deepseek-r1-0528:free',
+    QWEN3_235B_A22B = 'qwen/qwen3-235b-a22b',
+    QWEN3_32B = 'qwen/qwen3-32b',
+    MISTRAL_NEMO = 'mistralai/mistral-nemo',
+    QWEN3_14B_FREE = 'qwen/qwen3-14b:free',
 }
 
 export type Model = {
@@ -25,6 +36,7 @@ export type Model = {
     provider: ProviderEnumType;
     maxTokens: number;
     contextWindow: number;
+    isFree?: boolean; // Add flag for free models
 };
 
 export const models: Model[] = [
@@ -126,6 +138,81 @@ export const models: Model[] = [
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
+    {
+        id: ModelEnum.GROK_3,
+        name: 'Grok 3',
+        provider: 'xai',
+        maxTokens: 131_072,
+        contextWindow: 131_072,
+    },
+    {
+        id: ModelEnum.GROK_3_MINI,
+        name: 'Grok 3 Mini',
+        provider: 'xai',
+        maxTokens: 131_072,
+        contextWindow: 131_072,
+    },
+    // OpenRouter models
+    {
+        id: ModelEnum.DEEPSEEK_V3_0324_FREE,
+        name: 'DeepSeek V3 0324',
+        provider: 'openrouter',
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.DEEPSEEK_V3_0324,
+        name: 'DeepSeek V3 0324',
+        provider: 'openrouter',
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+    },
+    {
+        id: ModelEnum.DEEPSEEK_R1_FREE,
+        name: 'DeepSeek R1',
+        provider: 'openrouter',
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.DEEPSEEK_R1_0528_FREE,
+        name: 'DeepSeek R1 0528',
+        provider: 'openrouter',
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.QWEN3_235B_A22B,
+        name: 'Qwen3 235B A22B',
+        provider: 'openrouter',
+        maxTokens: 8_192,
+        contextWindow: 40_960,
+    },
+    {
+        id: ModelEnum.QWEN3_32B,
+        name: 'Qwen3 32B',
+        provider: 'openrouter',
+        maxTokens: 8_192,
+        contextWindow: 40_960,
+    },
+    {
+        id: ModelEnum.MISTRAL_NEMO,
+        name: 'Mistral Nemo',
+        provider: 'openrouter',
+        maxTokens: 32_768,
+        contextWindow: 131_072,
+    },
+    {
+        id: ModelEnum.QWEN3_14B_FREE,
+        name: 'Qwen3 14B',
+        provider: 'openrouter',
+        maxTokens: 8_192,
+        contextWindow: 40_960,
+        isFree: true,
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -162,6 +249,27 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GPT_4_1_Nano;
         case ChatMode.O4_Mini:
             return ModelEnum.O4_Mini;
+        case ChatMode.GROK_3:
+            return ModelEnum.GROK_3;
+        case ChatMode.GROK_3_MINI:
+            return ModelEnum.GROK_3_MINI;
+        // OpenRouter models
+        case ChatMode.DEEPSEEK_V3_0324_FREE:
+            return ModelEnum.DEEPSEEK_V3_0324_FREE;
+        case ChatMode.DEEPSEEK_V3_0324:
+            return ModelEnum.DEEPSEEK_V3_0324;
+        case ChatMode.DEEPSEEK_R1_FREE:
+            return ModelEnum.DEEPSEEK_R1_FREE;
+        case ChatMode.DEEPSEEK_R1_0528_FREE:
+            return ModelEnum.DEEPSEEK_R1_0528_FREE;
+        case ChatMode.QWEN3_235B_A22B:
+            return ModelEnum.QWEN3_235B_A22B;
+        case ChatMode.QWEN3_32B:
+            return ModelEnum.QWEN3_32B;
+        case ChatMode.MISTRAL_NEMO:
+            return ModelEnum.MISTRAL_NEMO;
+        case ChatMode.QWEN3_14B_FREE:
+            return ModelEnum.QWEN3_14B_FREE;
         default:
             return ModelEnum.GEMINI_2_0_FLASH;
     }
@@ -190,8 +298,21 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GPT_4_1_Mini:
         case ChatMode.GPT_4_1:
             return 1_047_576;
-        case ChatMode.Deep:
-            return 100_000;
+        case ChatMode.GROK_3:
+        case ChatMode.GROK_3_MINI:
+            return 131_072;
+        // OpenRouter models
+        case ChatMode.DEEPSEEK_V3_0324_FREE:
+        case ChatMode.DEEPSEEK_V3_0324:
+        case ChatMode.DEEPSEEK_R1_FREE:
+        case ChatMode.DEEPSEEK_R1_0528_FREE:
+            return 163_840;
+        case ChatMode.QWEN3_235B_A22B:
+        case ChatMode.QWEN3_32B:
+        case ChatMode.QWEN3_14B_FREE:
+            return 40_960;
+        case ChatMode.MISTRAL_NEMO:
+            return 131_072;
         default:
             return 100_000;
     }

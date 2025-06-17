@@ -22,7 +22,7 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Atom, ChevronDown, Globe, Paperclip, Square, Star } from 'lucide-react';
+import { ArrowUp, Atom, ChevronDown, Gift, Globe, Paperclip, Square, Star } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
@@ -48,107 +48,192 @@ export const chatOptions = [
     },
 ];
 
-// BYOK-only models - all models require API keys
-export const modelOptions = [
-    {
-        label: 'GPT 4o Mini',
-        value: ChatMode.GPT_4o_Mini,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'GPT 4.1 Nano',
-        value: ChatMode.GPT_4_1_Nano,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'GPT 4.1 Mini',
-        value: ChatMode.GPT_4_1_Mini,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'GPT 4.1',
-        value: ChatMode.GPT_4_1,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'GPT 4o',
-        value: ChatMode.GPT_4o,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'o4 mini',
-        value: ChatMode.O4_Mini,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Gemini 2.0 Flash',
-        value: ChatMode.GEMINI_2_0_FLASH,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Gemini 2.0 Flash Lite',
-        value: ChatMode.GEMINI_2_0_FLASH_LITE,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Gemini 2.5 Flash Preview',
-        value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Gemini 2.5 Pro',
-        value: ChatMode.GEMINI_2_5_PRO,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Gemini 2.5 Pro Preview',
-        value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Claude 4 Sonnet',
-        value: ChatMode.CLAUDE_4_SONNET,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'Claude 4 Opus',
-        value: ChatMode.CLAUDE_4_OPUS,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-    },
-    {
-        label: 'DeepSeek R1',
-        value: ChatMode.DEEPSEEK_R1,
-        webSearch: true,
-        icon: undefined,
-        requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
-    },
-];
+// BYOK-only models - all models require API keys, grouped by provider
+export const modelOptionsByProvider = {
+    OpenAI: [
+        {
+            label: 'GPT 4o Mini',
+            value: ChatMode.GPT_4o_Mini,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'GPT 4.1 Nano',
+            value: ChatMode.GPT_4_1_Nano,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'GPT 4.1 Mini',
+            value: ChatMode.GPT_4_1_Mini,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'GPT 4.1',
+            value: ChatMode.GPT_4_1,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'GPT 4o',
+            value: ChatMode.GPT_4o,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'o4 mini',
+            value: ChatMode.O4_Mini,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    Google: [
+        {
+            label: 'Gemini 2.0 Flash',
+            value: ChatMode.GEMINI_2_0_FLASH,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.0 Flash Lite',
+            value: ChatMode.GEMINI_2_0_FLASH_LITE,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.5 Flash Preview',
+            value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.5 Pro',
+            value: ChatMode.GEMINI_2_5_PRO,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.5 Pro Preview',
+            value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    Anthropic: [
+        {
+            label: 'Claude 4 Sonnet',
+            value: ChatMode.CLAUDE_4_SONNET,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Claude 4 Opus',
+            value: ChatMode.CLAUDE_4_OPUS,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    Fireworks: [
+        {
+            label: 'DeepSeek R1',
+            value: ChatMode.DEEPSEEK_R1,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    xAI: [
+        {
+            label: 'Grok 3',
+            value: ChatMode.GROK_3,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Grok 3 Mini',
+            value: ChatMode.GROK_3_MINI,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    OpenRouter: [
+        {
+            label: 'DeepSeek V3 0324',
+            value: ChatMode.DEEPSEEK_V3_0324_FREE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'DeepSeek V3 0324 Pro',
+            value: ChatMode.DEEPSEEK_V3_0324,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'DeepSeek R1',
+            value: ChatMode.DEEPSEEK_R1_FREE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'DeepSeek R1 0528',
+            value: ChatMode.DEEPSEEK_R1_0528_FREE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Qwen3 235B A22B',
+            value: ChatMode.QWEN3_235B_A22B,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Qwen3 32B',
+            value: ChatMode.QWEN3_32B,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Mistral Nemo',
+            value: ChatMode.MISTRAL_NEMO,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Qwen3 14B',
+            value: ChatMode.QWEN3_14B_FREE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+    ],
+};
+
+// Flatten array for backward compatibility
+export const modelOptions = Object.values(modelOptionsByProvider).flat();
 
 export const AttachmentButton = () => {
     return (
@@ -447,7 +532,7 @@ export const BYOKSetupModal = ({
                 </DialogHeader>
                 <div className="space-y-4 p-6">
                     <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                             To use <span className="font-medium">{modelName}</span>, you need to
                             provide your own {provider.name} API key.
                         </p>
@@ -459,9 +544,7 @@ export const BYOKSetupModal = ({
                     </div>
                     <div className="space-y-3">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">
-                                {provider.name} API Key
-                            </label>
+                            <label className="text-sm font-medium">{provider.name} API Key</label>
                             <Input
                                 type="password"
                                 placeholder={provider.placeholder}
@@ -554,7 +637,7 @@ export const ChatModeOptions = ({
         // BYOK Check: For model options, check if required API key exists
         if (modelOption?.requiredApiKey) {
             const hasRequiredApiKey = !!apiKeys[modelOption.requiredApiKey];
-            
+
             if (!hasRequiredApiKey) {
                 // Store the pending mode selection and open BYOK modal
                 setPendingMode({
@@ -683,37 +766,51 @@ export const ChatModeOptions = ({
                 </DropdownMenuGroup>
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Models</DropdownMenuLabel>
-                    {modelOptions.map(option => {
-                        const isGated = isModeGated(option.value);
-                        const config = ChatModeConfig[option.value];
+                    {Object.entries(modelOptionsByProvider).map(([providerName, options]) => (
+                        <div key={providerName}>
+                            <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
+                                {providerName}
+                            </DropdownMenuLabel>
+                            {options.map(option => {
+                                const isGated = isModeGated(option.value);
+                                const config = ChatModeConfig[option.value];
 
-                        return (
-                            <DropdownMenuItem
-                                key={`model-${option.value}`}
-                                onSelect={() => handleModeSelect(option.value)}
-                                className={cn('h-auto', isGated && 'opacity-80')}
-                            >
-                                <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
-                                    <div className="flex flex-col gap-0">
-                                        <p className="text-sm font-medium">
-                                            {option.label}
-                                            {isGated && (
-                                                <span className="ml-1 text-xs text-blue-600">
-                                                    (VT+)
-                                                </span>
+                                return (
+                                    <DropdownMenuItem
+                                        key={`model-${option.value}`}
+                                        onSelect={() => handleModeSelect(option.value)}
+                                        className={cn('h-auto pl-4', isGated && 'opacity-80')}
+                                    >
+                                        <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                            <div className="flex flex-col gap-0">
+                                                <p className="text-sm font-medium">
+                                                    {option.label}
+                                                    {isGated && (
+                                                        <span className="ml-1 text-xs text-blue-600">
+                                                            (VT+)
+                                                        </span>
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <div className="flex-1" />
+                                            {option.icon && (
+                                                <div className="flex items-center">
+                                                    {option.icon}
+                                                </div>
                                             )}
-                                        </p>
-                                    </div>
-                                    <div className="flex-1" />
-                                    {config?.isNew && <NewIcon />}
-                                    {hasApiKeyForChatMode(option.value, isSignedIn) && <BYOKIcon />}
-                                </div>
-                            </DropdownMenuItem>
-                        );
-                    })}
+                                            {config?.isNew && <NewIcon />}
+                                            {hasApiKeyForChatMode(option.value, isSignedIn) && (
+                                                <BYOKIcon />
+                                            )}
+                                        </div>
+                                    </DropdownMenuItem>
+                                );
+                            })}
+                        </div>
+                    ))}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
-            
+
             {/* BYOK Setup Modal */}
             {pendingMode && (
                 <BYOKSetupModal

@@ -1,5 +1,58 @@
 # TODO List
 
+
+
+[] add more actions to MessageActions?
+--
+
+https://docs.railway.com/reference/production-readiness-checklist
+--
+
+1. review x.ai provider integration in #changes
+1. implement openrouter provider, use context7 or fetch <https://ai-sdk.dev/providers/community-providers/openrouter>
+1. add some open router models:
+
+DeepSeek: DeepSeek V3 0324 (free)
+`deepseek/deepseek-chat-v3-0324:free` model id
+163,840 context
+--
+
+DeepSeek: DeepSeek V3 0324
+`deepseek/deepseek-chat-v3-0324`
+163,840 context
+
+--
+
+DeepSeek: R1 (free)
+`deepseek/deepseek-r1:free`
+163,840 context
+--
+
+DeepSeek: R1 0528 (free)
+`deepseek/deepseek-r1-0528:free`
+163,840 context
+--
+
+Qwen: Qwen3 235B A22B
+`qwen/qwen3-235b-a22b`
+40,960 context
+--
+
+Qwen: Qwen3 32B
+`qwen/qwen3-32b`
+40,960
+
+--
+
+Mistral: Mistral Nemo
+`mistralai/mistral-nemo`
+131,072 context
+
+--
+
+Qwen: Qwen3 14B (free)
+`qwen/qwen3-14b:free`
+40,960 context
 --
 
 [] https://docs.creem.io/faq/account-reviews
@@ -10,12 +63,6 @@
 --
 [] speed up build and deployment
 --
-
-[] [monet]
-mcp
-<https://ai-sdk.dev/cookbook/next/mcp-tools>
-<https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools>
-review #codebase and implement mcp
 --
 you can use context7
 
@@ -24,35 +71,22 @@ you can use context7
 NOTE: add new feature for VT+
 
 --
-1. also update sidebar button -> manage sub -> upgrade plus
-1. check for threads manage for per account, can you do that with current local threads management. make sure only threads belong a user can see and others can see.
-1. when logout -> no threads
-use mcp or context7 or neon mcp, or search if needd. we use dixie and zustand or indexdb for threads maangement for now. local only for now
 
---
-
-[] review #codebase and documents to make sure all gated features are cleared on user log out
 --
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
 [] plus: if use pre-defined key: 30 per day
 [] -> if has gemini in byok -> unlimited
 [] implement credit tracking (FREE_TIER_DAILY_LIMIT)
+
 --
 
 --
 [] <https://scira.ai/pricing>
-
---
-[] wow https://tailark.com/
 --
 []
 remember to publish Google Auth
 <https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5>
-
---
-
-[] check FREE_TIER_DAILY_LIMIT env -> login 100 per day -> plus: unlimited
 
 --
 [] https://scira.ai/settings?tab=profile
@@ -60,9 +94,6 @@ remember to publish Google Auth
 https://github.com/zaidmukaddam/scira/tree/main/app/settings
 --
 
-[] <https://vercel.com/ai-accelerator>
-
---
 [] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/reverify
 --
 [] https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/profile-image
@@ -83,7 +114,6 @@ https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitl
 [][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
 -
 
-[] <https://ai-sdk.dev/cookbook/node/mcp-tools>
 --
 
 [] <https://ai-sdk.dev/cookbook/node/local-caching-middleware>
@@ -185,16 +215,13 @@ https://github.com/ping-maxwell/better-auth-kit/tree/main/packages/plugins/waitl
 
 ## AI & Providers
 
+- [] add https://ai-sdk.dev/providers/community-providers/openrouter
+
 - [ ] Expand support for more AI providers using the AI SDK: [https://ai-sdk.dev/providers/ai-sdk-providers](https://ai-sdk.dev/providers/ai-sdk-providers)
 - [ ] Review Gemini AI SDK Cheatsheet for potential optimizations/features: [https://patloeber.com/gemini-ai-sdk-cheatsheet/](https://patloeber.com/gemini-ai-sdk-cheatsheet/)
-- [ ] Explore OpenAI Agents JS examples for advanced AI interactions: [https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk](https://github.com/openai/openai-agents-js/tree/main/examples/ai-sdk)
 
 ## Research & Exploration
 
-- [ ] Explore Tailark: [https://tailark.com/](https://tailark.com/)
-- [ ] UI Inspiration - ibelick.com: [https://ui.ibelick.com/](https://ui.ibelick.com/)
-- [ ] Prompt Kit by ibelick: [https://github.com/ibelick/prompt-kit](https://github.com/ibelick/prompt-kit)
-- [ ] Monetization Exploration - Lingo.dev: [https://github.com/lingodotdev/lingo.dev](https://github.com/lingodotdev/lingo.dev)
 - [ ] Desktop Application - Electron: [https://github.com/electron/electron](https://github.com/electron/electron)
 - [ ] Domain Name Research (vtai.io.vn, vtchat.io.vn) - *Consider moving detailed notes to a separate research document.*
   - Whois VN: [https://whois.inet.vn/whois?domain=vtchat.io.vn](https://whois.inet.vn/whois?domain=vtchat.io.vn)

@@ -159,6 +159,14 @@ export const ApiKeySettings = () => {
             description: 'Fast inference for open-source and proprietary models',
             placeholder: 'fw-...',
         },
+        {
+            name: 'xAI Grok',
+            key: 'XAI_API_KEY' as keyof ApiKeys,
+            value: apiKeys.XAI_API_KEY,
+            url: 'https://x.ai/api',
+            description: 'Access Grok models with real-time knowledge',
+            placeholder: 'xai-...',
+        },
     ];
 
     const handleSave = (keyName: keyof ApiKeys, value: string, provider: string) => {

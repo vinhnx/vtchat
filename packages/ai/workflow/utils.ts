@@ -907,23 +907,23 @@ export const selectAvailableModel = (
     byokKeys?: Record<string, string>
 ): ModelEnum => {
     console.log('=== selectAvailableModel START ===');
-    
+
     // Safe window/self checks for debugging
     let hasSelfApiKeys = false;
     let hasWindowApiKeys = false;
-    
+
     try {
         hasSelfApiKeys = typeof self !== 'undefined' && !!(self as any).AI_API_KEYS;
     } catch (error) {
         // self not available
     }
-    
+
     try {
         hasWindowApiKeys = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS;
     } catch (error) {
         // window not available
     }
-    
+
     console.log('Input:', {
         preferredModel,
         availableKeys: byokKeys ? Object.keys(byokKeys).filter(key => byokKeys[key]) : [],
@@ -961,6 +961,18 @@ export const selectAvailableModel = (
             [ModelEnum.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
             // Fireworks models
             [ModelEnum.Deepseek_R1]: 'FIREWORKS_API_KEY',
+            // xAI models
+            [ModelEnum.GROK_3]: 'XAI_API_KEY',
+            [ModelEnum.GROK_3_MINI]: 'XAI_API_KEY',
+            // OpenRouter models
+            [ModelEnum.DEEPSEEK_V3_0324_FREE]: 'OPENROUTER_API_KEY',
+            [ModelEnum.DEEPSEEK_V3_0324]: 'OPENROUTER_API_KEY',
+            [ModelEnum.DEEPSEEK_R1_FREE]: 'OPENROUTER_API_KEY',
+            [ModelEnum.DEEPSEEK_R1_0528_FREE]: 'OPENROUTER_API_KEY',
+            [ModelEnum.QWEN3_235B_A22B]: 'OPENROUTER_API_KEY',
+            [ModelEnum.QWEN3_32B]: 'OPENROUTER_API_KEY',
+            [ModelEnum.MISTRAL_NEMO]: 'OPENROUTER_API_KEY',
+            [ModelEnum.QWEN3_14B_FREE]: 'OPENROUTER_API_KEY',
         };
 
         const requiredKey = providers[model];
@@ -977,13 +989,15 @@ export const selectAvailableModel = (
             if (typeof self !== 'undefined' && (self as any).AI_API_KEYS) {
                 // Map API key names to provider names
                 const providerMap: Record<string, string> = {
-                    'GEMINI_API_KEY': 'google',
-                    'OPENAI_API_KEY': 'openai',
-                    'ANTHROPIC_API_KEY': 'anthropic',
-                    'FIREWORKS_API_KEY': 'fireworks',
-                    'TOGETHER_API_KEY': 'together',
+                    GEMINI_API_KEY: 'google',
+                    OPENAI_API_KEY: 'openai',
+                    ANTHROPIC_API_KEY: 'anthropic',
+                    FIREWORKS_API_KEY: 'fireworks',
+                    TOGETHER_API_KEY: 'together',
+                    XAI_API_KEY: 'xai',
+                    OPENROUTER_API_KEY: 'openrouter',
                 };
-                
+
                 const providerName = providerMap[requiredKey];
                 if (providerName && (self as any).AI_API_KEYS[providerName]) {
                     return true;
@@ -996,15 +1010,17 @@ export const selectAvailableModel = (
         // Check window (browser environment)
         try {
             if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
-                // Map API key names to provider names  
+                // Map API key names to provider names
                 const providerMap: Record<string, string> = {
-                    'GEMINI_API_KEY': 'google',
-                    'OPENAI_API_KEY': 'openai',
-                    'ANTHROPIC_API_KEY': 'anthropic',
-                    'FIREWORKS_API_KEY': 'fireworks',
-                    'TOGETHER_API_KEY': 'together',
+                    GEMINI_API_KEY: 'google',
+                    OPENAI_API_KEY: 'openai',
+                    ANTHROPIC_API_KEY: 'anthropic',
+                    FIREWORKS_API_KEY: 'fireworks',
+                    TOGETHER_API_KEY: 'together',
+                    XAI_API_KEY: 'xai',
+                    OPENROUTER_API_KEY: 'openrouter',
                 };
-                
+
                 const providerName = providerMap[requiredKey];
                 if (providerName && ((window as any).AI_API_KEYS as any)[providerName]) {
                     return true;
