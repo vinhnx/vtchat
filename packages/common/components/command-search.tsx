@@ -17,17 +17,8 @@ import {
     DialogContent,
     Kbd,
 } from '@repo/ui';
-import {
-    Command,
-    Key,
-    MessageCircle,
-    Moon,
-    Plus,
-    Settings,
-    Sun,
-    Trash,
-} from 'lucide-react';
-import moment from 'moment';
+import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
+import { Command, Key, MessageCircle, Moon, Plus, Settings, Sun, Trash } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -80,15 +71,14 @@ export const CommandSearch = () => {
     };
 
     threads.forEach(thread => {
-        const createdAt = moment(thread.createdAt);
-        const now = moment();
-        if (createdAt.isSame(now, 'day')) {
+        const createdAt = new Date(thread.createdAt);
+        if (isToday(createdAt)) {
             groupedThreads.today.push(thread);
-        } else if (createdAt.isSame(now.clone().subtract(1, 'day'), 'day')) {
+        } else if (isYesterday(createdAt)) {
             groupedThreads.yesterday.push(thread);
-        } else if (createdAt.isAfter(now.clone().subtract(7, 'days'))) {
+        } else if (isAfter(createdAt, subDays(new Date(), 7))) {
             groupedThreads.last7Days.push(thread);
-        } else if (createdAt.isAfter(now.clone().subtract(30, 'days'))) {
+        } else if (isAfter(createdAt, subDays(new Date(), 30))) {
             groupedThreads.last30Days.push(thread);
         } else {
             groupedThreads.previousMonths.push(thread);
@@ -282,12 +272,12 @@ export const CommandSearch = () => {
                                             size={16}
                                             strokeWidth={2}
                                             className="text-muted-foreground/50"
-                                         />
+                                        />
                                         <span className="w-full truncate font-normal">
                                             {thread.title}
                                         </span>
                                         {/* <span className="text-muted-foreground flex-shrink-0 pl-4 text-xs !font-normal">
-                                            {moment(thread.createdAt).fromNow(true)}
+                                            {formatDistanceToNow(new Date(thread.createdAt), { addSuffix: false })}
                                         </span> */}
                                     </CommandItem>
                                 ))}

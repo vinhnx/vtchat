@@ -1,8 +1,8 @@
 'use client';
-import { LinkFavicon, LinkPreviewPopover } from '@repo/common/components';
+import { LinkPreviewPopover } from '@repo/common/components';
 import { Source } from '@repo/shared/types';
 import { getHost, getHostname } from '@repo/shared/utils';
-import { Badge, Flex } from '@repo/ui';
+import { Badge, Flex, LinkFavicon } from '@repo/ui';
 
 export type SearchResultsType = {
     sources: Source[];

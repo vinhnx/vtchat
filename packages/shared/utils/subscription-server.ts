@@ -5,8 +5,8 @@
  * Works with Better Auth's server-side authentication.
  */
 
-import { auth } from '@/lib/auth';
-import { getUserWithSubscription } from '@/lib/database/queries';
+import { auth } from '@repo/shared/lib/auth';
+import { getUserWithSubscription } from '@repo/shared/lib/database-queries';
 import { NextRequest, NextResponse } from 'next/server';
 import { AccessCheckOptions, FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
@@ -19,7 +19,7 @@ export async function serverHasAccess(
     options: AccessCheckOptions,
     headers?: Headers
 ): Promise<boolean> {
-    const session = await auth.api.getSession({ headers });
+    const session = await auth.api.getSession({ headers: headers || new Headers() });
 
     if (!session?.user?.id) {
         return false;
@@ -29,7 +29,8 @@ export async function serverHasAccess(
     if (!userWithSub) return false;
 
     // Mock has function similar to Better Auth's format for compatibility
-    const has = (options: AccessCheckOptions) => { // Used AccessCheckOptions type
+    const has = (options: AccessCheckOptions) => {
+        // Used AccessCheckOptions type
         const subscription = userWithSub.user_subscriptions;
         if (!subscription) return false;
 
@@ -64,7 +65,7 @@ export async function serverHasPlan(plan: PlanSlug, headers?: Headers): Promise<
  */
 export async function getServerUserSubscription(headers?: Headers) {
     try {
-        const session = await auth.api.getSession({ headers });
+        const session = await auth.api.getSession({ headers: headers || new Headers() });
         if (!session?.user?.id) return null;
 
         const userWithSub = await getUserWithSubscription(session.user.id);
@@ -84,14 +85,19 @@ export function withSubscriptionAuth(
 ) {
     return async (req: NextRequest): Promise<NextResponse> => {
         try {
-            const { userId, has } = await auth(); // Corrected: await auth()
+            const session = await auth.api.getSession({
+                headers: req.headers,
+            });
 
-            if (!userId) {
+            if (!session?.user?.id) {
                 return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
             }
 
             // Check permission using unified subscription access
-            const hasPermission = checkSubscriptionAccess(has, options);
+            const userWithSub = await getUserWithSubscription(session.user.id);
+            const hasPermission = userWithSub
+                ? checkSubscriptionAccess(userWithSub, options)
+                : false;
 
             if (!hasPermission) {
                 const user = await currentUser(); // Fetch user for details in error response
@@ -182,15 +188,17 @@ export function protectWithPlan<T extends any[], R>(
  */
 export async function getServerAuthInfo() {
     try {
-        const { userId } = await auth();
-        const user = await currentUser();
-        const subscription = getUserSubscription(user);
+        const session = await auth.api.getSession({
+            headers: new Headers(),
+        });
+        const user = session?.user || null;
+        const subscription = user ? getUserSubscription(user) : null;
 
         return {
-            userId,
+            userId: user?.id || null,
             user,
             subscription,
-            isAuthenticated: !!userId,
+            isAuthenticated: !!user?.id,
             isSignedIn: !!user,
         };
     } catch (error) {

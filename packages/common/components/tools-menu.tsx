@@ -4,7 +4,7 @@ import { Button } from '@repo/ui/src/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@repo/ui';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { IconTools } from '@tabler/icons-react';
+import { Wrench } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
@@ -34,12 +34,12 @@ export const ToolsMenu = () => {
                         rounded="full"
                         disabled={true} // Disabled since MCP is temporarily removed
                     >
-                        <IconTools size={18} strokeWidth={2} className="text-muted-foreground" />
+                        <Wrench size={18} strokeWidth={2} className="text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" side="bottom" className="w-[320px]">
                     <div className="flex h-[150px] flex-col items-center justify-center gap-2">
-                        <IconTools size={16} strokeWidth={2} className="text-muted-foreground" />
+                        <Wrench size={16} strokeWidth={2} className="text-muted-foreground" />
                         <p className="text-muted-foreground text-sm">Tools Coming Soon</p>
                         <p className="text-muted-foreground px-4 text-center text-xs">
                             External tools integration is temporarily disabled for app optimization.

@@ -12,21 +12,20 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
     TypographyH3,
-    TypographyP,
     TypographyMuted,
+    TypographyP,
 } from '@repo/ui';
-import { IconClock, IconPlus, IconTrash } from '@tabler/icons-react';
 import { CommandItem } from 'cmdk';
-import { MoreHorizontal } from 'lucide-react';
-import moment from 'moment';
+import { formatDistanceToNow } from 'date-fns';
+import { Clock, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-// Create a wrapper component for IconTrash to match expected icon prop type
+// Create a wrapper component for Trash2 to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <IconTrash size={size} className={className} />;
+}) => <Trash2 size={size} className={className} />;
 
 export default function ThreadsPage() {
     const threads = useChatStore(state => state.threads);
@@ -126,13 +125,16 @@ export default function ThreadsPage() {
                                                         onClick={e => e.stopPropagation()}
                                                     />
                                                 ) : (
-                                                    <TypographyP className="line-clamp-2 w-full text-sm font-medium !mt-0">
-                                                    {thread.title}
+                                                    <TypographyP className="!mt-0 line-clamp-2 w-full text-sm font-medium">
+                                                        {thread.title}
                                                     </TypographyP>
                                                 )}
-                                                <TypographyMuted className="opacity-50 flex flex-row items-center gap-1 !mt-0">
-                                                    <IconClock size={12} strokeWidth="2" />
-                                                    {moment(thread.createdAt).fromNow()}
+                                                <TypographyMuted className="!mt-0 flex flex-row items-center gap-1 opacity-50">
+                                                    <Clock size={12} strokeWidth={2} />
+                                                    {formatDistanceToNow(
+                                                        new Date(thread.createdAt),
+                                                        { addSuffix: true }
+                                                    )}
                                                 </TypographyMuted>
                                             </div>
 
@@ -182,12 +184,12 @@ export default function ThreadsPage() {
                                     <TypographyMuted className="!mt-0">
                                         No threads found
                                     </TypographyMuted>
-                                    <TypographyMuted className="opacity-70 !mt-1 text-xs">
+                                    <TypographyMuted className="!mt-1 text-xs opacity-70">
                                         Start a new conversation to create a thread
                                     </TypographyMuted>
                                 </div>
                                 <Button variant="default" size="sm" onClick={() => push('/chat')}>
-                                    <IconPlus size={14} strokeWidth="2" />
+                                    <Plus size={14} strokeWidth={2} />
                                     New Thread
                                 </Button>
                             </div>

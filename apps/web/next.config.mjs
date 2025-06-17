@@ -4,6 +4,15 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Bundle analyzer configuration
+const withBundleAnalyzer =
+    process.env.ANALYZE === 'true'
+        ? (await import('@next/bundle-analyzer')).default({
+              enabled: true,
+              openAnalyzer: true,
+          })
+        : config => config;
+
 const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
     images: {
@@ -12,6 +21,20 @@ const nextConfig = {
 
     experimental: {
         externalDir: true,
+        optimizePackageImports: [
+            'lucide-react',
+            '@radix-ui/react-icons',
+            'date-fns',
+            'lodash-es',
+            'recharts',
+            'framer-motion',
+            '@tanstack/react-query',
+            'react-hook-form',
+            'zod',
+            'react-markdown',
+            'remark-gfm',
+            'react-syntax-highlighter',
+        ],
     },
 
     // Moved from experimental to root level (Next.js 15+)
@@ -66,4 +89,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

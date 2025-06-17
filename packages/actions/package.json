@@ -6,7 +6,9 @@
     "exports": {
         ".": "./index.ts"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@repo/shared": "*"
+    },
     "devDependencies": {
         "@repo/typescript-config": "*",
         "eslint": "^8.56.0",

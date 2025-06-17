@@ -219,15 +219,14 @@ export class PaymentService {
 
             if (userId && typeof require !== 'undefined') {
                 try {
-                    const { db } = require('@/lib/database');
-                    const { users, userSubscriptions } = require('@/lib/database/schema');
+                    const { db, schema } = require('@repo/shared/lib/database');
                     const { eq } = require('drizzle-orm');
 
                     // First, check users table for creem_customer_id
                     const userResults = await db
                         .select()
-                        .from(users)
-                        .where(eq(users.id, userId))
+                        .from(schema.users)
+                        .where(eq(schema.users.id, userId))
                         .limit(1);
 
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
@@ -241,8 +240,8 @@ export class PaymentService {
                         // Fallback: check user_subscriptions table for creem_customer_id
                         const subscriptionResults = await db
                             .select()
-                            .from(userSubscriptions)
-                            .where(eq(userSubscriptions.userId, userId))
+                            .from(schema.userSubscriptions)
+                            .where(eq(schema.userSubscriptions.userId, userId))
                             .limit(1);
 
                         if (

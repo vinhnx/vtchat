@@ -1,11 +1,11 @@
-import moment from 'moment';
+import { differenceInDays, format, startOfDay } from 'date-fns';
 import { customAlphabet } from 'nanoid';
 
 export const getRelativeDate = (date: string | Date) => {
-    const today = moment().startOf('day');
-    const inputDate = moment(date).startOf('day');
+    const today = startOfDay(new Date());
+    const inputDate = startOfDay(new Date(date));
 
-    const diffDays = today.diff(inputDate, 'days');
+    const diffDays = differenceInDays(today, inputDate);
 
     if (diffDays === 0) {
         return 'Today';
@@ -13,7 +13,7 @@ export const getRelativeDate = (date: string | Date) => {
     if (diffDays === 1) {
         return 'Yesterday';
     }
-    return inputDate.format('DD/MM/YYYY');
+    return format(inputDate, 'dd/MM/yyyy');
 };
 
 export function formatNumber(number: number) {

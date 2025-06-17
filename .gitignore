@@ -39,6 +39,10 @@ yarn-error.log*
 # turbo
 .turbo
 
+# Bundle analysis and tracking
+bundle-history.json
+.next/analyze/
+
 # github prompts
 .github/prompts/*
 *.tsbuildinfo

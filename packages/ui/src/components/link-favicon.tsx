@@ -1,7 +1,7 @@
 'use client';
-import { cn } from '@repo/ui';
 import { Globe } from 'lucide-react';
 import { FC, useState } from 'react';
+import { cn } from '../lib/utils';
 
 export type LinkFaviconType = {
     link?: string;
@@ -19,13 +19,16 @@ const FallbackIcon = ({ size, className }: { size: 'sm' | 'md' | 'lg'; className
 
 const extractDomain = (url?: string): string | null => {
     if (!url) return null;
-    
+
     try {
         // Handle grounding API redirects or other redirect URLs
-        if (url.includes('vertexaisearch.cloud.google.com') || url.includes('grounding-api-redirect')) {
+        if (
+            url.includes('vertexaisearch.cloud.google.com') ||
+            url.includes('grounding-api-redirect')
+        ) {
             return null; // Return null for redirect URLs to use fallback
         }
-        
+
         const urlObj = new URL(url);
         return urlObj.hostname;
     } catch {

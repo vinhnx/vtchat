@@ -3,7 +3,7 @@
 import { signIn } from '@/lib/auth-client';
 import { InlineLoader } from '@repo/common/components';
 import { Alert, AlertDescription, Button, cn } from '@repo/ui';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -65,7 +65,7 @@ function LoginFormContent({
 
             {error && (
                 <Alert variant="destructive">
-                    <IconAlertCircle className="h-4 w-4" />
+                    <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{error}</AlertDescription>
                 </Alert>
             )}

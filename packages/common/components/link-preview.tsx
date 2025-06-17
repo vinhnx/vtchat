@@ -2,10 +2,9 @@
 
 import { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@repo/ui';
+import { HoverCard, HoverCardContent, HoverCardTrigger, LinkFavicon } from '@repo/ui';
 import { ExternalLink } from 'lucide-react';
 import React, { memo, useState } from 'react';
-import { LinkFavicon } from './link-favicon';
 const ogCache = new Map<string, any>();
 
 export type LinkPreviewType = {
@@ -32,7 +31,7 @@ export const LinkPreviewPopover = memo(({ source, children }: LinkPreviewType) =
                 <ExternalLink
                     className="text-muted-foreground group-hover:text-brand absolute right-3 top-3"
                     size={14}
-                 />
+                />
                 <LinkPreview source={source} />
             </HoverCardContent>
         </HoverCard>

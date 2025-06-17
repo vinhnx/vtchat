@@ -16,6 +16,7 @@ import {
     DropdownMenuTrigger,
     Flex,
 } from '@repo/ui';
+import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
     ChevronsUpDown,
@@ -35,7 +36,6 @@ import {
     Sparkles,
     User,
 } from 'lucide-react';
-import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { UserTierBadge } from './user-tier-badge';
@@ -49,7 +49,7 @@ export const Sidebar = () => {
     const pinThread = useChatStore(state => state.pinThread);
     const unpinThread = useChatStore(state => state.unpinThread);
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
-        return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
+        return [...threads].sort((a, b) => compareDesc(new Date(a[sortBy]), new Date(b[sortBy])));
     };
 
     const { data: session } = useSession();
@@ -72,16 +72,16 @@ export const Sidebar = () => {
     };
 
     sortThreads(threads, 'createdAt')?.forEach(thread => {
-        const createdAt = moment(thread.createdAt);
-        const now = moment();
+        const createdAt = new Date(thread.createdAt);
+        const now = new Date();
 
-        if (createdAt.isSame(now, 'day')) {
+        if (isToday(createdAt)) {
             groupedThreads.today.push(thread);
-        } else if (createdAt.isSame(now.clone().subtract(1, 'day'), 'day')) {
+        } else if (isYesterday(createdAt)) {
             groupedThreads.yesterday.push(thread);
-        } else if (createdAt.isAfter(now.clone().subtract(7, 'days'))) {
+        } else if (isAfter(createdAt, subDays(now, 7))) {
             groupedThreads.last7Days.push(thread);
-        } else if (createdAt.isAfter(now.clone().subtract(30, 'days'))) {
+        } else if (isAfter(createdAt, subDays(now, 30))) {
             groupedThreads.last30Days.push(thread);
         } else {
             groupedThreads.previousMonths.push(thread);
