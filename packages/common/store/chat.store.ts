@@ -749,10 +749,39 @@ export const useChatStore = create(
         },
 
         setChatMode: (chatMode: ChatMode) => {
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ chatMode }));
-            set(state => {
-                state.chatMode = chatMode;
-            });
+            try {
+                // Get existing config and merge with new chat mode
+                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                const updatedConfig = { ...existingConfig, chatMode };
+
+                // Immediately save to localStorage
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+
+                // Verify the save was successful - warn only, don't throw
+                const verification = localStorage.getItem(CONFIG_KEY);
+                const verifiedConfig = safeJsonParse(verification, {});
+                if (verifiedConfig.chatMode !== chatMode) {
+                    console.warn(
+                        '[ChatStore] Chat mode persistence verification failed, but continuing'
+                    );
+                }
+
+                console.log(
+                    `[ChatStore] Successfully persisted chat mode: ${chatMode} to ${CONFIG_KEY}`
+                );
+
+                // Update state
+                set(state => {
+                    state.chatMode = chatMode;
+                });
+            } catch (error) {
+                console.error('[ChatStore] Failed to persist chat mode:', error);
+                // Still update state even if persistence fails
+                set(state => {
+                    state.chatMode = chatMode;
+                });
+                throw error; // Propagate error for handling by caller
+            }
         },
 
         pinThread: async (threadId: string) => {
@@ -1220,6 +1249,26 @@ export const useChatStore = create(
                     showSuggestions: newData.showSuggestions,
                     customInstructions: newData.customInstructions,
                 });
+
+                // Ensure the new config is immediately persisted
+                try {
+                    const configToSave = {
+                        chatMode: newData.chatMode,
+                        useWebSearch: newData.useWebSearch,
+                        showSuggestions: newData.showSuggestions,
+                        customInstructions: newData.customInstructions,
+                        currentThreadId: newData.currentThreadId,
+                    };
+                    localStorage.setItem(CONFIG_KEY, JSON.stringify(configToSave));
+                    console.log(
+                        `[ThreadDB] Persisted config for user ${userId || 'anonymous'} to ${CONFIG_KEY}`
+                    );
+                } catch (configError) {
+                    console.error(
+                        '[ThreadDB] Failed to persist config after user switch:',
+                        configError
+                    );
+                }
 
                 console.log(
                     `[ThreadDB] Successfully switched to user database with ${newData.threads.length} threads`
