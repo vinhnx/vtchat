@@ -1,8 +1,33 @@
 # TODO List
 
+tools (add icons in input chat bar, consider monet each)
+[] [free] basic https://ai-sdk-agents.vercel.app/?item=math
+[] [monet] https://ai-sdk-agents.vercel.app/?item=postgres
+[] [monet][img] https://ai-sdk-agents.vercel.app/?item=fal
+[] [monet][img] https://ai-sdk-agents.vercel.app/?item=replicate
+[] [monet][img] https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools
+[] [monet] https://ai-sdk-agents.vercel.app/?item=github
+[] [monet] useful for work https://ai-sdk-agents.vercel.app/?item=slack
 
-[]https://ai-sdk.dev/cookbook/next/markdown-chatbot-with-memoization
+=
+[] revamp sidebar arrangements
+[] revamp settings arranges and layout and ui
+[] add clear thread options to user button's dropdown popup
+[] group user's popup by functions
+-
+[] migrate eslint to oxlint
+[] setup config lint and rule
+[] use context7
+[] guide https://oxc.rs/docs/guide/usage/linter.html
+[] lint and fix some critical errors and warnings
+[] rebuild, analyize make sure no build error
 
+--
+can you build and lint the app make sure no errors and build failure
+
+
+=
+review large dep package like image asset, use knip or any tool to scan for large file and suggest fix. the goal is lightweight but functional app. speed up compile build time and deploy time
 ---
 
 <https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
@@ -106,6 +131,8 @@ NOTE: add new feature for VT+
 
 --
 
+[] remove FREE_TIER_DAILY_LIMIT and KV Redis Upstash depedeny completly
+
 --
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
@@ -149,16 +176,10 @@ remember to publish Google Auth
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
 --
-
-[][monet] <https://ai-sdk.dev/cookbook/node/generate-object-reasoning>
--
-
+[][monet] https://ai-sdk.dev/docs/guides/multi-modal-chatbot
 --
+[][monet] RAG https://ai-sdk.dev/docs/guides/rag-chatbot
 
-[] <https://ai-sdk.dev/cookbook/node/local-caching-middleware>
-
---
-[][monet] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 --
 [] <https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
 
@@ -193,7 +214,6 @@ remember to publish Google Auth
 - [ ] Implement Username Plugin: [https://www.better-auth.com/docs/plugins/username](https://www.better-auth.com/docs/plugins/username)
 - [ ] Implement Email OTP: [https://www.better-auth.com/docs/plugins/email-otp](https://www.better-auth.com/docs/plugins/email-otp)
 - [ ] Implement Magic Link: [https://www.better-auth.com/docs/plugins/magic-link](https://www.better-auth.com/docs/plugins/magic-link)
-- [ ] Implement Captcha (especially for Admin Portal): [https://www.better-auth.com/docs/plugins/captcha](https://www.better-auth.com/docs/plugins/captcha)
 - [ ] Optimize Better Auth for performance (Database, General): [https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations](https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations), [https://www.better-auth.com/docs/guides/optimizing-for-performance](https://www.better-auth.com/docs/guides/optimizing-for-performance)
 - [ ] Build user profile concept: [https://www.better-auth.com/docs/concepts/users-accounts](https://www.better-auth.com/docs/concepts/users-accounts)
 - [ ] Refactor auth client:
@@ -216,11 +236,6 @@ remember to publish Google Auth
 
 ## Thread Management (Account-based & Neon Sync)
 
-- [] Ensure threads are per-account
-- [] Ensure API keys are per-account
-- [] when user log out -> clear all threads and api keys
-- [ ] On login (to existing or new account), fetch threads from the appropriate store (e.g., remote DB via API, then update local IndexedDB/Zustand).
-- [ ] Design and implement an account-based thread management system using Neon/Postgres, leveraging existing thread schema and store logic. Review codebase for current implementation details.
 - [ ] Free tier: Continue using local IndexedDB for threads.
 - [ ] [PLUS TIER ONLY] Implement full remote thread synchronization with Neon DB.
 - [ ] [PLUS TIER ONLY] Sync threads to Neon DB.
@@ -231,15 +246,9 @@ remember to publish Google Auth
 - [ ] Clean up old `@repo/ui` code to unify the UI and remove redundancies.
 - [ ] Leverage Context7 for Shadcn components and migrate components in `packages/common/components` to use Shadcn/Tailwind components.
 - [ ] General UI/UX improvements across the application.
-- [ ] Implement cookie consent mechanism.
-
-## Dependencies & Code Health
-
-- [ ] Review `package.json` files across the monorepo and remove redundant or unused dependencies. Consider using a tool like Knip ([https://knip.dev/](https://knip.dev/)) for assistance.
 
 ## AI & Providers
 
-- [ ] Expand support for more AI providers using the AI SDK: [https://ai-sdk.dev/providers/ai-sdk-providers](https://ai-sdk.dev/providers/ai-sdk-providers)
 - [ ] Review Gemini AI SDK Cheatsheet for potential optimizations/features: [https://patloeber.com/gemini-ai-sdk-cheatsheet/](https://patloeber.com/gemini-ai-sdk-cheatsheet/)
 
 ## Research & Exploration
