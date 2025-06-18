@@ -158,6 +158,7 @@ type State = {
         type?: string;
         fileName?: string;
         extractedAt?: string;
+        confidence?: number;
     } | null;
     abortController: AbortController | null;
     threads: Thread[];
@@ -190,6 +191,7 @@ type Actions = {
         type?: string;
         fileName?: string;
         extractedAt?: string;
+        confidence?: number;
     }) => void;
     clearStructuredData: () => void;
     setIsGenerating: (isGenerating: boolean) => void;

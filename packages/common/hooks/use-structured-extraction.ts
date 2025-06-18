@@ -117,35 +117,143 @@ const GenericDocumentSchema = z.object({
     }),
 });
 
-// Helper to detect document type and select appropriate schema
-function getSchemaForDocument(text: string): { schema: z.ZodSchema; type: string } {
+// Custom schema builder for user-defined extraction
+export const createCustomSchema = (
+    fields: Array<{
+        name: string;
+        type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+        description?: string;
+        optional?: boolean;
+    }>
+) => {
+    const schemaFields: Record<string, any> = {};
+
+    fields.forEach(field => {
+        let zodType;
+        switch (field.type) {
+            case 'string':
+                zodType = z.string();
+                break;
+            case 'number':
+                zodType = z.number();
+                break;
+            case 'boolean':
+                zodType = z.boolean();
+                break;
+            case 'array':
+                zodType = z.array(z.string());
+                break;
+            case 'object':
+                zodType = z.record(z.any());
+                break;
+            default:
+                zodType = z.string();
+        }
+
+        if (field.description) {
+            zodType = zodType.describe(field.description);
+        }
+
+        if (field.optional) {
+            zodType = zodType.optional();
+        }
+
+        schemaFields[field.name] = zodType;
+    });
+
+    return z.object(schemaFields);
+};
+
+// Enhanced document type detection with confidence scoring
+function getSchemaForDocument(
+    text: string,
+    customSchema?: { schema: z.ZodSchema; type: string }
+): { schema: z.ZodSchema; type: string; confidence: number } {
+    // If custom schema is provided, use it
+    if (customSchema) {
+        return { ...customSchema, confidence: 1.0 };
+    }
+
     const lowerText = text.toLowerCase();
+    const documentTypes = [
+        {
+            type: 'invoice',
+            schema: InvoiceSchema as z.ZodSchema,
+            keywords: [
+                'invoice',
+                'bill',
+                'receipt',
+                'payment',
+                'due date',
+                'amount due',
+                'tax',
+                'subtotal',
+            ],
+            weight: [3, 3, 2, 1, 2, 2, 1, 1],
+        },
+        {
+            type: 'resume',
+            schema: ResumeSchema as z.ZodSchema,
+            keywords: [
+                'resume',
+                'cv',
+                'curriculum vitae',
+                'experience',
+                'education',
+                'skills',
+                'employment',
+                'qualifications',
+            ],
+            weight: [3, 3, 3, 2, 2, 2, 1, 1],
+        },
+        {
+            type: 'contract',
+            schema: ContractSchema as z.ZodSchema,
+            keywords: [
+                'contract',
+                'agreement',
+                'terms',
+                'conditions',
+                'parties',
+                'effective date',
+                'termination',
+                'obligations',
+            ],
+            weight: [3, 3, 2, 2, 1, 2, 1, 1],
+        },
+    ];
 
-    if (
-        lowerText.includes('invoice') ||
-        lowerText.includes('bill') ||
-        lowerText.includes('receipt')
-    ) {
-        return { schema: InvoiceSchema, type: 'invoice' };
+    let bestMatch = {
+        type: 'document',
+        schema: GenericDocumentSchema as z.ZodSchema,
+        confidence: 0,
+    };
+
+    for (const docType of documentTypes) {
+        let score = 0;
+        let maxScore = 0;
+
+        docType.keywords.forEach((keyword, index) => {
+            const weight = docType.weight[index] || 1;
+            maxScore += weight;
+            if (lowerText.includes(keyword)) {
+                score += weight;
+            }
+        });
+
+        const confidence = maxScore > 0 ? score / maxScore : 0;
+
+        if (confidence > bestMatch.confidence && confidence > 0.3) {
+            // Minimum confidence threshold
+            bestMatch = {
+                type: docType.type,
+                schema: docType.schema,
+                confidence,
+            };
+        }
     }
 
-    if (
-        lowerText.includes('resume') ||
-        lowerText.includes('cv') ||
-        lowerText.includes('curriculum vitae')
-    ) {
-        return { schema: ResumeSchema, type: 'resume' };
-    }
-
-    if (
-        lowerText.includes('contract') ||
-        lowerText.includes('agreement') ||
-        lowerText.includes('terms')
-    ) {
-        return { schema: ContractSchema, type: 'contract' };
-    }
-
-    return { schema: GenericDocumentSchema, type: 'document' };
+    return bestMatch;
 }
 
 export const useStructuredExtraction = () => {
@@ -184,89 +292,105 @@ export const useStructuredExtraction = () => {
         }
     };
 
-    const extractStructuredOutput = useCallback(async () => {
-        if (!isGeminiModel(chatMode)) {
-            toast({
-                title: 'Not Available',
-                description: 'Structured output extraction is only available for Gemini models.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        if (!documentAttachment?.file) {
-            toast({
-                title: 'No Document',
-                description: 'Please upload a document first.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        // Only support PDFs for now
-        if (documentAttachment.file.type !== 'application/pdf') {
-            toast({
-                title: 'Unsupported Format',
-                description: 'Structured extraction currently only supports PDF files.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        try {
-            // Show loading toast
-            toast({
-                title: 'Extracting Data',
-                description: `Analyzing ${documentAttachment.fileName} for structured content...`,
-            });
-
-            // Extract text from PDF
-            const documentText = await extractTextFromPDF(documentAttachment.file);
-
-            if (!documentText.trim()) {
-                throw new Error('No text found in the PDF document');
+    const extractStructuredOutput = useCallback(
+        async (customSchema?: { schema: z.ZodSchema; type: string }) => {
+            if (!isGeminiModel(chatMode)) {
+                toast({
+                    title: 'Not Available',
+                    description:
+                        'Structured output extraction is only available for Gemini models.',
+                    variant: 'destructive',
+                });
+                return;
             }
 
-            // Detect document type and get appropriate schema
-            const { schema, type } = getSchemaForDocument(documentText);
+            if (!documentAttachment?.file) {
+                toast({
+                    title: 'No Document',
+                    description: 'Please upload a document first.',
+                    variant: 'destructive',
+                });
+                return;
+            }
 
-            // Use AI SDK generateObject for structured extraction
-            const { object } = await generateObject({
-                model: google(chatMode),
-                schema,
-                prompt: `Please extract structured data from the following ${type} document.
+            // Only support PDFs for now
+            if (documentAttachment.file.type !== 'application/pdf') {
+                toast({
+                    title: 'Unsupported Format',
+                    description: 'Structured extraction currently only supports PDF files.',
+                    variant: 'destructive',
+                });
+                return;
+            }
+
+            try {
+                // Show loading toast
+                toast({
+                    title: 'Extracting Data',
+                    description: `Analyzing ${documentAttachment.fileName} for structured content...`,
+                });
+
+                // Extract text from PDF
+                const documentText = await extractTextFromPDF(documentAttachment.file);
+
+                if (!documentText.trim()) {
+                    throw new Error('No text found in the PDF document');
+                }
+
+                // Detect document type and get appropriate schema
+                const { schema, type, confidence } = getSchemaForDocument(
+                    documentText,
+                    customSchema
+                );
+
+                // Use AI SDK generateObject for structured extraction
+                const { object } = await generateObject({
+                    model: google(chatMode),
+                    schema,
+                    prompt: `Please extract structured data from the following ${type} document.
                 Be thorough and accurate, extracting all relevant information.
                 If any field is not present in the document, omit it or mark it as optional.
+                ${customSchema ? 'Follow the provided custom schema structure exactly.' : ''}
 
                 Document content:
                 ${documentText}`,
-            });
+                });
 
-            setStructuredData({
-                data: object,
-                type,
-                fileName: documentAttachment.fileName,
-                extractedAt: new Date().toISOString(),
-            });
+                setStructuredData({
+                    data: object,
+                    type,
+                    fileName: documentAttachment.fileName,
+                    extractedAt: new Date().toISOString(),
+                    confidence: customSchema ? 1.0 : confidence,
+                });
 
-            toast({
-                title: 'Extraction Complete',
-                description: `Successfully extracted ${type} data from ${documentAttachment.fileName}`,
-            });
-        } catch (error) {
-            console.error('Structured extraction failed:', error);
-            toast({
-                title: 'Extraction Failed',
-                description:
-                    error instanceof Error ? error.message : 'Failed to extract structured data',
-                variant: 'destructive',
-            });
-        }
-    }, [chatMode, documentAttachment, setStructuredData, toast]);
+                toast({
+                    title: 'Extraction Complete',
+                    description: `Successfully extracted ${type} data from ${documentAttachment.fileName}${
+                        !customSchema && confidence < 0.8
+                            ? ' (low confidence - manual review recommended)'
+                            : ''
+                    }`,
+                });
+            } catch (error) {
+                console.error('Structured extraction failed:', error);
+                toast({
+                    title: 'Extraction Failed',
+                    description:
+                        error instanceof Error
+                            ? error.message
+                            : 'Failed to extract structured data',
+                    variant: 'destructive',
+                });
+            }
+        },
+        [chatMode, documentAttachment, setStructuredData, toast]
+    );
 
     return {
         extractStructuredOutput,
         clearStructuredData,
+        createCustomSchema,
         isGeminiModel: isGeminiModel(chatMode),
         hasDocument: !!documentAttachment?.file,
         isPDF: documentAttachment?.file?.type === 'application/pdf',
