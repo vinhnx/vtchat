@@ -83,7 +83,12 @@ export const VT_BASE_PRODUCT_INFO = {
     id: 'FREE_TIER', // Placeholder ID, as free tier might not have a Creem product ID
     name: 'VT Base',
     slug: PlanSlug.VT_BASE,
-    features: [],
+    features: [
+        'Access to Free Models',
+        'Mathematical calculation tools providing essential mathematical operations including trigonometric functions, logarithms, exponentials, and basic arithmetic calculations',
+        'Access to base features',
+        'Perfect for getting started with VT',
+    ],
     prices: [], // Free tier has no prices in the same way paid tiers do
 };
 

@@ -1,6 +1,151 @@
 # Progress Log
 
-## Latest Session - January 2025
+## Latest Session - June 18, 2025
+
+### 🎯 Free Models Enhancement - Token Config & Preview Models Update - COMPLETE ✅
+
+**PROJECT**: Enhanced VT Free Tier - Token Limits & All Preview Models Free
+**STATUS**: ✅ **MISSION ACCOMPLISHED**
+
+## 🔥 MAJOR FREE TIER ENHANCEMENT - PHASE 2 ✅
+
+**Updated Token Configuration**:
+
+- **GEMINI_2_5_FLASH_LITE**: Updated to 1M input/64K output tokens (industry-standard limits)
+- **Optimized Performance**: Proper token allocation for better model performance
+
+**All Preview Models Made Free**:
+
+- **GEMINI_2_5_PRO**: Now free (was `gemini-2.5-pro-preview-05-06`)
+- **Complete Preview Collection**: All 5 Gemini preview models now free
+- **Visual Consistency**: Gift icons added to all free models
+- **Total Free Models**: 9 models (5 Gemini + 4 OpenRouter)
+
+**Enhanced Benefit Descriptions**:
+
+- **Free Tier**: Updated to include all 5 free Gemini models
+- **Plus Tier**: Added "All Benefits from Base Plan" for clear hierarchy
+- **Comprehensive Documentation**: Updated README and docs
+
+---
+
+**MAJOR ACHIEVEMENTS**:
+
+1. **GEMINI_2_5_FLASH_LITE Model Integration** ✅:
+   - **UI Addition**: Added to Google provider section in chat-actions.tsx
+   - **Visual Indicator**: Gift icon displays for free model identification
+   - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
+   - **Web Search Support**: Native web search capabilities enabled
+
+2. **Free Models Visual Enhancement** ✅:
+   - **Gift Icons Added**: All free Gemini models now show 🎁 icon
+     - GEMINI_2_0_FLASH_LITE ✅
+     - GEMINI_2_5_FLASH_LITE ✅ (newly added)
+     - GEMINI_2_5_FLASH_PREVIEW ✅
+     - GEMINI_2_5_PRO_PREVIEW ✅
+   - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
+   - **Consistent UX**: Unified free model identification across providers
+
+3. **Subscription Benefits Update** ✅:
+   - **Enhanced Description**: Updated "Access to Free Models" benefit
+   - **Complete Model List**: Includes all Gemini + OpenRouter free models
+   - **Mathematical Tools**: Detailed description of calculator capabilities
+   - **Perfect for Getting Started**: Clear value proposition for free tier
+
+4. **Technical Configuration** ✅:
+   - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
+   - **Web Search Support**: Updated supportsNativeWebSearch function
+   - **Fallback Mechanism**: Proper model selection with available API keys
+   - **Type Safety**: All TypeScript types properly configured
+
+5. **Documentation Excellence** ✅:
+   - **README Update**: Added comprehensive free models section
+   - **Implementation Guide**: Complete technical documentation
+   - **User Benefits**: Clear explanation of free tier capabilities
+   - **Verification Steps**: Testing instructions for quality assurance
+
+### 🆓 Free Tier Now Includes
+
+**Google Gemini Models (Free)**:
+
+- **Gemini 2.0 Flash Lite** - Fast, efficient general-purpose model
+- **Gemini 2.5 Flash Lite** - Enhanced capabilities ✨ NEW
+- **Gemini 2.5 Flash Preview** - Latest preview features
+- **Gemini 2.5 Pro Preview** - Pro-level preview access
+
+**OpenRouter Models (Free)**:
+
+- **DeepSeek V3 0324** - Advanced reasoning
+- **DeepSeek R1** + **R1 0528** - Research models
+- **Qwen3 14B** - Multilingual capabilities
+
+**Mathematical Tools (Free)**:
+
+- Trigonometric functions (sin, cos, tan, etc.)
+- Logarithmic and exponential operations
+- Basic arithmetic calculations
+- Essential mathematical operations
+
+**Base Features (Free)**:
+
+- Local storage privacy
+- Basic AI interactions
+- Core functionality
+- Perfect introduction to VT capabilities
+
+### 🎨 User Experience Improvements
+
+**Visual Enhancements**:
+
+- ✅ Gift icons (🎁) for all free models in dropdown
+- ✅ Provider grouping maintained (Google, OpenRouter, etc.)
+- ✅ Consistent labeling and clear model identification
+- ✅ Professional UI with clear value indicators
+
+**Technical Quality**:
+
+- ✅ Proper fallback mechanism for model selection
+- ✅ API key validation prevents runtime errors
+- ✅ Clear error messages guide proper configuration
+- ✅ Web search support for all applicable Gemini models
+
+### 📁 Files Modified
+
+**Core Model Configuration**:
+
+- `packages/ai/models.ts` - Web search support for new models
+- `packages/ai/workflow/utils.ts` - API key mapping updates
+- `packages/shared/config/chat-mode.ts` - Already properly configured
+
+**User Interface**:
+
+- `packages/common/components/chat-input/chat-actions.tsx` - Added GEMINI_2_5_FLASH_LITE + gift icons
+- `apps/web/lib/config/pricing.ts` - Enhanced free tier benefit descriptions
+
+**Documentation**:
+
+- `README.md` - Added comprehensive free models section
+- `docs/free-models-update.md` - Complete implementation documentation
+
+### 💡 Impact & Value
+
+**For Users**:
+
+- **Expanded Access**: 8 total free models (4 Gemini + 4 OpenRouter)
+- **Better Discovery**: Clear visual indicators for free options
+- **Enhanced Capabilities**: Mathematical tools + web search in free tier
+- **Smooth Onboarding**: Comprehensive free experience before upgrading
+
+**For Development**:
+
+- **Maintainable Code**: Centralized configuration for easy updates
+- **Type Safety**: Proper TypeScript throughout the implementation
+- **Documentation**: Clear patterns for future model additions
+- **Quality Assurance**: Comprehensive testing and verification steps
+
+---
+
+## Previous Session - January 2025
 
 ### 🎯 ESLint to oxlint Migration & React Ref Composition Audit - COMPLETE ✅
 
@@ -10,8 +155,9 @@
 ## 🔥 CRITICAL INFINITE LOOP ISSUE RESOLVED ✅
 
 **Fixed: "Maximum update depth exceeded" React Error**
+
 - **Root Cause**: HoverCard component had infinite re-render loop due to unstable dependencies in useMemo
-- **Location**: `/packages/ui/src/components/hover-card.tsx` 
+- **Location**: `/packages/ui/src/components/hover-card.tsx`
 - **Problem**: `refs` and `floatingStyles` from useFloating were included in useMemo deps, causing infinite invalidation
 - **Solution**: Removed useMemo wrapper that was causing the infinite dependency cycle
 - **Impact**: App now runs cleanly without any runtime errors or infinite loops
@@ -761,7 +907,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 - ✅ **Fixed 'free' → PlanSlug.VT_BASE**: Standardized free tier to use proper enum value
 - ✅ **Updated 9 Files**: Frontend hooks, database schema, API routes, server utils, tests, scripts
 - ✅ **Added Proper Imports**: PlanSlug imported in all relevant files
-- ✅ **Type Safety Achieved**: No more hardcoded plan strings, full enum usage
+- ✅ **Type Safety**: No more hardcoded plan strings, full enum usage
 - ✅ **Build Verification**: TypeScript compilation passes without errors
 
 ### Group 3: Environment and Configuration Cleanup
@@ -815,7 +961,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 - ✅ Removed plausible-tracker dependency from package.json
 - ✅ Deleted packages/shared/utils/plausible.ts utility file
 - ✅ Removed plausible export from packages/shared/utils/index.ts
-- ✅ Removed plausible import and usage from packages/common/components/layout/root.tsx
+- ✅ Removed plausible import and trackEvent call from packages/common/components/layout/root.tsx
 - ✅ Removed plausible import and trackEvent call from packages/common/hooks/agent-provider.tsx
 - ✅ Updated package-lock.json to reflect dependency removal
 
@@ -1400,11 +1546,3 @@ oxlint --rules
 - ✅ **Solution**: Replaced ref forwarding with direct element prop passing
 - 🚀 **Result**: Application now runs without runtime errors
 - 📚 **Documentation**: Created detailed fix analysis in `docs/react-infinite-loop-fix.md`
-
-**Final Verification**:
-
-- ✅ Development server starts successfully
-- ✅ Application runs without runtime errors
-- ✅ Copy functionality works as expected
-- ✅ Build passes with clean TypeScript compilation
-- ✅ oxlint reports only minor unused variable warnings (non-critical)

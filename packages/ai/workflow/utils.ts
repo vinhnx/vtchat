@@ -946,6 +946,8 @@ export const selectAvailableModel = (
             // Gemini models
             [ModelEnum.GEMINI_2_0_FLASH]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_0_FLASH_LITE]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_FLASH_PREVIEW]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_PRO_PREVIEW]: 'GEMINI_API_KEY',

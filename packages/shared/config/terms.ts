@@ -20,6 +20,9 @@ VT is a privacy-focused AI platform featuring advanced research capabilities tha
 - **BYOK Support**: Use your own API keys for unlimited access
 - **MCP Integration**: Connect with Model Context Protocol servers and external tools
 - **VT+ Premium Features**: Enhanced capabilities through subscription
+- **Free Models Access**: Access to free AI models including DeepSeek and Qwen models via OpenRouter
+- **Mathematical Tools**: Built-in calculator with trigonometric functions, logarithms, exponentials, and arithmetic operations
+- **Base Features**: Essential AI functionality perfect for getting started with VT
 
 ---
 

@@ -11,6 +11,10 @@ The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) m
 * **Advanced Research Modes**:
   * **Grounding Web Search**: Enhanced search with web integration and comprehensive analysis.
 * **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
+* **Free Models Access**: Access to free AI models including:
+  * **Google Gemini**: Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite (1M input/64K output), Gemini 2.5 Flash Preview, Gemini 2.5 Pro, Gemini 2.5 Pro Preview
+  * **OpenRouter Models**: DeepSeek V3, DeepSeek R1, Qwen3 14B
+  * Mathematical calculator tools with trigonometric functions, logarithms, exponentials, and arithmetic operations
 * **Privacy-Focused**:
   * **Local Storage**: All user chat data stored in the browser's IndexedDB via Dexie.js.
   * **No Server-Side Chat Storage**: Chat history does not leave the user's device.

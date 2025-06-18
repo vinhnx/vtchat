@@ -1,32 +1,32 @@
 # TODO List
 
-
-[] Gemini 2.5 GA https://blog.google/products/gemini/gemini-2-5-model-family-expands/
 --
-[] sql chart https://ai-sdk.dev/docs/guides/natural-language-postgres#natural-language-postgres-guide
+[] <https://www.creem.io/dashboard/discounts> for launch?
+--
+
+[] sql chart <https://ai-sdk.dev/docs/guides/natural-language-postgres#natural-language-postgres-guide>
 
 -
+
 [] explore full Anthropic capablity
-https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
-[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-use
-[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#bash-tool
-[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#text-editor-tool
-[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-tool
-[] https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support
+<https://ai-sdk.dev/providers/ai-sdk-providers/anthropic>
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-use>
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#bash-tool>
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#text-editor-tool>
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-tool>
+[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support>
 
 --
 tools (add icons in input chat bar, consider monet each)
-[] [free] basic https://ai-sdk-agents.vercel.app/?item=math
-[] [monet] https://ai-sdk-agents.vercel.app/?item=postgres
-[] [monet][img] https://ai-sdk-agents.vercel.app/?item=fal
-[] [monet][img] https://ai-sdk-agents.vercel.app/?item=replicate
-[] [monet][img] https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools
-[] [monet] https://ai-sdk-agents.vercel.app/?item=github
-[] [monet] useful for work https://ai-sdk-agents.vercel.app/?item=slack
+[] [free] basic <https://ai-sdk-agents.vercel.app/?item=math>
+[] [monet] <https://ai-sdk-agents.vercel.app/?item=postgres>
+[] [monet][img] <https://ai-sdk-agents.vercel.app/?item=fal>
+[] [monet][img] <https://ai-sdk-agents.vercel.app/?item=replicate>
+[] [monet][img] <https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools>
+[] [monet] <https://ai-sdk-agents.vercel.app/?item=github>
+[] [monet] useful for work <https://ai-sdk-agents.vercel.app/?item=slack>
 
 --
-
----
 
 <https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
 error: terminating connection due to administrator command
@@ -174,9 +174,10 @@ remember to publish Google Auth
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
 --
-[][monet] https://ai-sdk.dev/docs/guides/multi-modal-chatbot
+[][monet] <https://ai-sdk.dev/docs/guides/multi-modal-chatbot>
 --
-[][monet] RAG https://ai-sdk.dev/docs/guides/rag-chatbot
+
+[][monet] RAG <https://ai-sdk.dev/docs/guides/rag-chatbot>
 
 --
 [] <https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
@@ -197,12 +198,9 @@ remember to publish Google Auth
 [] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#cached-content>
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs>
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching>
-[][monet] dynamicRetrievalConfig <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#dynamic-retrieval>
-
 --
 
 - [] <https://resend.com/docs/introduction>
-
 
 ## Authentication (Better Auth Integration & Enhancements)
 
@@ -259,4 +257,4 @@ remember to publish Google Auth
 
 --
 
-[] grand final showcase https://github.com/vercel/ai/discussions/1914
+[] grand final showcase <https://github.com/vercel/ai/discussions/1914>

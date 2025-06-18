@@ -221,6 +221,9 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
             requiredFeature &&
             (requiredFeature === FeatureSlug.ACCESS_CHAT ||
                 requiredFeature === FeatureSlug.BASE_MODELS ||
+                requiredFeature === FeatureSlug.FREE_MODELS ||
+                requiredFeature === FeatureSlug.MATH_CALCULATOR ||
+                requiredFeature === FeatureSlug.BASE_FEATURES ||
                 requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
         ) {
             return true;
