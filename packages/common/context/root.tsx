@@ -44,9 +44,19 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
-    // During SSR, don't render children that depend on client-side context
+    // During SSR, provide a consistent initial state
     if (typeof window === 'undefined') {
-        return <>{children}</>;
+        const ssrContextValue: RootContextType = {
+            isSidebarOpen: true,
+            setIsSidebarOpen: () => {},
+            isCommandSearchOpen: false,
+            setIsCommandSearchOpen: () => {},
+            isMobileSidebarOpen: false,
+            setIsMobileSidebarOpen: () => {},
+            isClient: false,
+        };
+
+        return <RootContext.Provider value={ssrContextValue}>{children}</RootContext.Provider>;
     }
 
     return (

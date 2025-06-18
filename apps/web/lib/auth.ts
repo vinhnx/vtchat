@@ -1,3 +1,4 @@
+import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
@@ -46,11 +47,15 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
         updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+        cookieCache: {
+            enabled: true,
+            maxAge: 60 * 5, // 5 minutes cache
+        },
     },
     rateLimit: {
         enabled: true,
         window: 10, // time window in seconds
-        max: 100, // max requests in the window
+        max: 200, // Increased from 100 to handle more requests
     },
     trustedOrigins: [
         'https://vtchat-web-development.up.railway.app',
@@ -59,12 +64,24 @@ export const auth = betterAuth({
         'http://127.0.0.1:3000',
     ],
     fetchOptions: {
+        timeout: 10000, // 10 second timeout
         onError: async (context: { response: Response; request: Request }) => {
             const { response } = context;
             if (response.status === 429) {
                 const retryAfter = response.headers.get('X-Retry-After');
                 console.log(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
             }
+        },
+    },
+    // Add performance optimizations
+    advanced: {
+        useSecureCookies: process.env.NODE_ENV === EnvironmentType.PRODUCTION,
+        crossSubDomainCookies: {
+            enabled: false, // Disable if not needed
+        },
+        generateId: () => {
+            // Use faster ID generation for sessions
+            return crypto.randomUUID();
         },
     },
 });

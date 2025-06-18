@@ -97,12 +97,25 @@ export async function GET(request: NextRequest) {
             'page_refresh';
         const forceRefresh = url.searchParams.get('force') === 'true';
 
-        // Try to get session - handle both logged-in and non-logged-in users
-        const session = await auth.api.getSession({
-            headers: request.headers,
-        });
+        // Try to get session with timeout - handle both logged-in and non-logged-in users
+        let session;
+        try {
+            const sessionPromise = auth.api.getSession({
+                headers: request.headers,
+            });
 
-        const userId = session?.user?.id || null;
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Session check timeout')), 3000)
+            );
+
+            session = await Promise.race([sessionPromise, timeoutPromise]);
+        } catch (error) {
+            console.warn('[Subscription Status API] Session check failed or timed out:', error);
+            // For session failures, treat as anonymous user
+            session = null;
+        }
+
+        const userId = (session as any)?.user?.id || null;
         const isLoggedIn = !!userId;
 
         console.log(

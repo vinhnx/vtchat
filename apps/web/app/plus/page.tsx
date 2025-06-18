@@ -151,10 +151,7 @@ export default function PlusPage() {
                         >
                             <div>
                                 <div className="flex items-center justify-between">
-                                    <h3
-                                        id="tier-free"
-                                        className="text-lg font-bold text-[#BFB38F]"
-                                    >
+                                    <h3 id="tier-free" className="text-lg font-bold text-[#BFB38F]">
                                         Free
                                     </h3>
                                     {isFreeTier && (
@@ -184,7 +181,7 @@ export default function PlusPage() {
                                     {PRICING_CONFIG.pricing.free.features.map((feature, index) => (
                                         <li key={index} className="flex gap-x-3">
                                             <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                            {feature}
+                                            {typeof feature === 'string' ? feature : feature.name}
                                         </li>
                                     ))}
                                 </ul>
@@ -203,78 +200,86 @@ export default function PlusPage() {
                         <div className="relative inline-block overflow-hidden rounded-3xl p-[1px]">
                             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#BFB38F_0%,#262626_50%,#BFB38F_100%)]" />
                             <CardSpotlightPricing
-                                className={`rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 relative ${
-                                    isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                                className={`relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
+                                    isCurrentlySubscribed
+                                        ? 'ring-2 ring-[#BFB38F]'
+                                        : 'ring-gray-900/10'
                                 }`}
                             >
                                 <div>
-                                <div className="flex items-center justify-between">
-                                    <h3
-                                        id="tier-vt-plus"
-                                        className="text-lg font-bold text-[#BFB38F]"
+                                    <div className="flex items-center justify-between">
+                                        <h3
+                                            id="tier-vt-plus"
+                                            className="text-lg font-bold text-[#BFB38F]"
+                                        >
+                                            {PRICING_CONFIG.product.name}
+                                        </h3>
+                                        {isCurrentlySubscribed && (
+                                            <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1">
+                                                <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
+                                                <span className="text-sm font-medium text-[#BFB38F]">
+                                                    Current Plan
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="mt-4 flex items-baseline gap-x-2">
+                                        <span className="text-5xl font-semibold tracking-tight text-white">
+                                            ${PRICING_CONFIG.pricing.plus.price}
+                                        </span>
+                                        <span className="text-base text-gray-400">
+                                            /{PRICING_CONFIG.pricing.plus.interval}
+                                        </span>
+                                    </p>
+                                    <p className="mt-6 text-base/7 text-gray-300">
+                                        {PRICING_CONFIG.product.description.split(':')[0]}
+                                    </p>
+                                    <ul
+                                        role="list"
+                                        className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"
                                     >
-                                        {PRICING_CONFIG.product.name}
-                                    </h3>
-                                    {isCurrentlySubscribed && (
-                                        <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1">
-                                            <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
-                                            <span className="text-sm font-medium text-[#BFB38F]">
-                                                Current Plan
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                                <p className="mt-4 flex items-baseline gap-x-2">
-                                    <span className="text-5xl font-semibold tracking-tight text-white">
-                                        ${PRICING_CONFIG.pricing.plus.price}
-                                    </span>
-                                    <span className="text-base text-gray-400">
-                                        /{PRICING_CONFIG.pricing.plus.interval}
-                                    </span>
-                                </p>
-                                <p className="mt-6 text-base/7 text-gray-300">
-                                    {PRICING_CONFIG.product.description.split(':')[0]}
-                                </p>
-                                <ul
-                                    role="list"
-                                    className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"
-                                >
-                                    {PRICING_CONFIG.pricing.plus.features.map((feature, index) => (
-                                        <li key={index} className="flex gap-x-3">
-                                            <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                            {typeof feature === 'string' ? feature : feature.name}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div className="mt-8 sm:mt-10">
-                                    <ButtonAnimatedGradient
-                                        onClick={() => {
-                                            if (!(isPortalLoading || isPaymentLoading)) {
-                                                handleSubscribe();
-                                            }
-                                        }}
-                                        className="flex w-full items-center justify-center"
-                                    >
-                                        {getSubscribeButtonText()}
-                                    </ButtonAnimatedGradient>
-                                </div>
+                                        {PRICING_CONFIG.pricing.plus.features.map(
+                                            (feature, index) => (
+                                                <li key={index} className="flex gap-x-3">
+                                                    <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
+                                                    {typeof feature === 'string'
+                                                        ? feature
+                                                        : feature.name}
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                    <div className="mt-8 sm:mt-10">
+                                        <ButtonAnimatedGradient
+                                            onClick={() => {
+                                                if (!(isPortalLoading || isPaymentLoading)) {
+                                                    handleSubscribe();
+                                                }
+                                            }}
+                                            className="flex w-full items-center justify-center"
+                                        >
+                                            {getSubscribeButtonText()}
+                                        </ButtonAnimatedGradient>
+                                    </div>
 
-                                {/* Terms and Privacy Links */}
-                                <div className="mt-4 text-center text-sm text-gray-400">
-                                    <span className="text-gray-500">Please review our</span>
-                                    {' '}
-                                    <a href="/terms" className="hover:text-[#BFB38F] transition-colors underline">
-                                        Terms of Service
-                                    </a>
-                                    {' '}
-                                    <span>and</span>
-                                    {' '}
-                                    <a href="/privacy" className="hover:text-[#BFB38F] transition-colors underline">
-                                        Privacy Policy
-                                    </a>
-                                    {' '}
-                                    <span className="text-gray-500">before subscribing</span>
-                                </div>
+                                    {/* Terms and Privacy Links */}
+                                    <div className="mt-4 text-center text-sm text-gray-400">
+                                        <span className="text-gray-500">Please review our</span>{' '}
+                                        <a
+                                            href="/terms"
+                                            className="underline transition-colors hover:text-[#BFB38F]"
+                                        >
+                                            Terms of Service
+                                        </a>{' '}
+                                        <span>and</span>{' '}
+                                        <a
+                                            href="/privacy"
+                                            className="underline transition-colors hover:text-[#BFB38F]"
+                                        >
+                                            Privacy Policy
+                                        </a>{' '}
+                                        <span className="text-gray-500">before subscribing</span>
+                                    </div>
                                 </div>
                             </CardSpotlightPricing>
                         </div>
@@ -318,7 +323,7 @@ export default function PlusPage() {
                         Have questions? Get in touch:{' '}
                         <a
                             href="mailto:vtchat.io@gmail.com"
-                            className="text-[#BFB38F] hover:text-[#BFB38F]/80 transition-colors font-medium"
+                            className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
                         >
                             vtchat.io@gmail.com
                         </a>

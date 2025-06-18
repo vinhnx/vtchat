@@ -23,7 +23,11 @@
         "./utils/subscription-verification": "./utils/subscription-verification.ts",
         "./utils/subscription-server": "./utils/subscription-server.ts",
         "./utils/chat-credits": "./utils/chat-credits.ts",
-        "./utils/dev-test-mode": "./utils/dev-test-mode.ts"
+        "./utils/dev-test-mode": "./utils/dev-test-mode.ts",
+        "./utils/performance-monitor": "./utils/performance-monitor.ts",
+        "./utils/request-deduplication": "./utils/request-deduplication.ts",
+        "./utils/session-cache": "./utils/session-cache.ts",
+        "./utils/ssr-session": "./utils/ssr-session.ts"
     },
     "scripts": {
         "lint": "oxlint",

@@ -10,6 +10,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Corrected import
+import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
@@ -83,6 +84,33 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             const userId = session?.user?.id || null;
             const userDescription = userId ? `user ${userId}` : 'anonymous user';
 
+            // For anonymous users, immediately return default free tier without API calls
+            if (!userId) {
+                console.log(
+                    `[Subscription Provider] Returning default free tier for anonymous user`
+                );
+                const anonymousStatus: SubscriptionStatus = {
+                    plan: PlanSlug.VT_BASE,
+                    status: SubscriptionStatusEnum.ACTIVE,
+                    isPlusSubscriber: false,
+                    hasSubscription: false,
+                    productInfo: VT_BASE_PRODUCT_INFO,
+                    isAnonymous: true,
+                    fromCache: false,
+                    cachedAt: new Date(),
+                    fetchCount: 1,
+                    lastRefreshTrigger: trigger,
+                };
+
+                globalSubscriptionStatus = anonymousStatus;
+                globalIsLoading = false;
+                globalError = null;
+                setSubscriptionStatus(anonymousStatus);
+                setIsLoading(false);
+                setError(null);
+                return anonymousStatus;
+            }
+
             // If there's already a global fetch in progress and not forcing refresh, wait for it
             if (globalFetchPromise && !forceRefresh) {
                 console.log(
@@ -105,39 +133,62 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     `[Subscription Provider] Starting global fetch for ${userDescription} (trigger: ${trigger})`
                 );
 
-                // Create the global fetch promise
-                globalFetchPromise = (async (): Promise<SubscriptionStatus> => {
+                // Create the global fetch promise with deduplication
+                const requestKey = `subscription-${userId}-${trigger}`;
+                globalFetchPromise = requestDeduplicator.deduplicate(requestKey, async () => {
                     // Build API URL with trigger and force refresh parameters
                     const params = new URLSearchParams({
                         trigger,
                         ...(forceRefresh && { force: 'true' }),
                     });
 
-                    const response = await fetch(`/api/subscription/status?${params}`);
+                    // Create AbortController for timeout (reduced from 8s to 5s for better UX)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => {
+                        controller.abort();
+                    }, 5000); // 5 second timeout
 
-                    if (!response.ok) {
-                        throw new Error(
-                            `Failed to fetch subscription status: ${response.statusText}`
-                        );
+                    try {
+                        const response = await fetch(`/api/subscription/status?${params}`, {
+                            signal: controller.signal,
+                            headers: {
+                                'Cache-Control': 'no-cache',
+                            },
+                        });
+
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) {
+                            throw new Error(
+                                `Failed to fetch subscription status: ${response.statusText}`
+                            );
+                        }
+
+                        const status = await response.json();
+
+                        // Convert date strings back to Date objects
+                        if (status.currentPeriodEnd) {
+                            status.currentPeriodEnd = new Date(status.currentPeriodEnd);
+                        }
+                        if (status.cachedAt) {
+                            status.cachedAt = new Date(status.cachedAt);
+                        }
+
+                        // Add product info for display purposes
+                        if (status.plan === PlanSlug.VT_BASE) {
+                            status.productInfo = VT_BASE_PRODUCT_INFO;
+                        }
+
+                        return status;
+                    } catch (error) {
+                        clearTimeout(timeoutId);
+
+                        if (error instanceof Error && error.name === 'AbortError') {
+                            throw new Error('Subscription fetch timeout (5s)');
+                        }
+                        throw error;
                     }
-
-                    const status = await response.json();
-
-                    // Convert date strings back to Date objects
-                    if (status.currentPeriodEnd) {
-                        status.currentPeriodEnd = new Date(status.currentPeriodEnd);
-                    }
-                    if (status.cachedAt) {
-                        status.cachedAt = new Date(status.cachedAt);
-                    }
-
-                    // Add product info for display purposes
-                    if (status.plan === PlanSlug.VT_BASE) {
-                        status.productInfo = VT_BASE_PRODUCT_INFO;
-                    }
-
-                    return status;
-                })();
+                });
 
                 // Wait for the result
                 const result = await globalFetchPromise;
@@ -150,13 +201,15 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 console.log(
                     `[Subscription Provider] Global fetch completed for ${userDescription}:`,
-                    {
-                        plan: result.plan,
-                        isPlusSubscriber: result.isPlusSubscriber,
-                        fromCache: result.fromCache,
-                        fetchCount: result.fetchCount,
-                        trigger: result.lastRefreshTrigger,
-                    }
+                    result
+                        ? {
+                              plan: result.plan,
+                              isPlusSubscriber: result.isPlusSubscriber,
+                              fromCache: result.fromCache,
+                              fetchCount: result.fetchCount,
+                              trigger: result.lastRefreshTrigger,
+                          }
+                        : 'null result'
                 );
 
                 // Clear the global promise after a short delay to allow other components to use it
@@ -216,7 +269,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             console.log('[Subscription Provider] Session detected, refreshing subscription status');
             fetchSubscriptionStatus('initial', false);
         }
-    }, [session?.user?.id, fetchSubscriptionStatus]);
+    }, [session?.user, fetchSubscriptionStatus]);
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(

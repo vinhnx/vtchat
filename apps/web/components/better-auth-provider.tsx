@@ -1,30 +1,18 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode } from 'react';
+import { AuthErrorBoundary } from './auth-error-boundary';
 
-export function BetterAuthProvider({ children }: { children: ReactNode }) {
-    const [isMounted, setIsMounted] = useState(false);
+interface BetterAuthProviderProps {
+    children: ReactNode;
+    initialSession?: {
+        user: any;
+        session: any;
+    } | null;
+}
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    // During SSR, render children directly to prevent null returns that can cause hydration issues
-    if (typeof window === 'undefined') {
-        return <>{children}</>;
-    }
-
-    // Prevent hydration mismatch by not rendering auth-dependent content until mounted
-    if (!isMounted) {
-        return <>{children}</>;
-    }
-
-    // Ensure children is a valid React node
-    if (!children) {
-        return <div>Loading...</div>;
-    }
-
-    // For now, just pass through children without session provider
-    // Better Auth handles sessions differently
-    return <>{children}</>;
+export function BetterAuthProvider({ children }: BetterAuthProviderProps) {
+    // Simply wrap in error boundary for auth-related errors
+    // No hydration-sensitive logic here
+    return <AuthErrorBoundary>{children}</AuthErrorBoundary>;
 }
