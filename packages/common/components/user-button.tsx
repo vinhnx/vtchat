@@ -8,10 +8,11 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { FileText, LogOut, Shield, User } from 'lucide-react';
+import { FileText, HelpCircle, LogOut, Settings, Shield, User } from 'lucide-react';
 import Link from 'next/link';
 
 interface UserButtonProps {
@@ -47,17 +48,34 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-56">
+                {/* User Info Section */}
                 <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">{user.name || 'User'}</p>
                     <p className="text-muted-foreground text-xs">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
+
+                {/* Account Management */}
+                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                <DropdownMenuItem>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
                     Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+
+                {/* Support & Legal */}
+                <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
+                <Link href="/faq" className="w-full">
+                    <DropdownMenuItem>
+                        <HelpCircle className="mr-2 h-4 w-4" />
+                        FAQ & Help
+                    </DropdownMenuItem>
+                </Link>
                 <Link href="/terms" className="w-full">
                     <DropdownMenuItem>
                         <FileText className="mr-2 h-4 w-4" />
@@ -71,6 +89,8 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
+
+                {/* Sign Out */}
                 <DropdownMenuItem onClick={() => logout()}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign out
