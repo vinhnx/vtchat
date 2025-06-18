@@ -1,5 +1,5 @@
 'use client';
-import { FullPageLoader, HistoryItem, Logo } from '@repo/common/components';
+import { HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { useCreemSubscription, useLogout } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
@@ -13,6 +13,8 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
     Flex,
 } from '@repo/ui';
@@ -55,10 +57,8 @@ export const Sidebar = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const user = session?.user;
-    const clearAllThreads = useChatStore(state => state.clearAllThreads);
     const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
     const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
-    const sidebarAnimationDisabled = useAppStore(state => state.sidebarAnimationDisabled);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
@@ -121,7 +121,7 @@ export const Sidebar = () => {
                                 isPinned={thread.pinned}
                                 key={thread.id}
                                 dismiss={() => {
-                                    setIsSidebarOpen(prev => false);
+                                    setIsSidebarOpen(() => false);
                                 }}
                                 isActive={thread.id === currentThreadId}
                             />
@@ -186,33 +186,28 @@ export const Sidebar = () => {
                         isSidebarOpen ? 'flex-col' : 'flex-col'
                     )}>
                         {/* New Chat Button */}
-                        {!isChatPage ? (
-                            <Link href="/chat" className={isSidebarOpen ? 'w-full' : ''}>
-                                <Button
-                                    size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                                    variant="default"
-                                    rounded="lg"
-                                    tooltip={isSidebarOpen ? undefined : 'New Chat'}
-                                    tooltipSide="right"
-                                    className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
-                                >
-                                    <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                                    {isSidebarOpen && 'New Chat'}
-                                </Button>
-                            </Link>
-                        ) : (
-                            <Button
-                                size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                                variant="default"
-                                rounded="lg"
-                                tooltip={isSidebarOpen ? undefined : 'New Chat'}
-                                tooltipSide="right"
-                                className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
-                            >
-                                <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                                {isSidebarOpen && 'New Chat'}
-                            </Button>
-                        )}
+                        <Button
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant="bordered"
+                            rounded="lg"
+                            tooltip={isSidebarOpen ? undefined : 'New Chat'}
+                            tooltipSide="right"
+                            className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
+                            onClick={async () => {
+                                const optimisticId = `thread-${Date.now()}`;
+                                await useChatStore.getState().createThread(optimisticId);
+                                if (isChatPage) {
+                                    // Force refresh the current page to reflect the new thread
+                                    window.location.href = `/chat/${optimisticId}`;
+                                } else {
+                                    // Navigate to the new thread
+                                    push(`/chat/${optimisticId}`);
+                                }
+                            }}
+                        >
+                            <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen && 'mr-2')} />
+                            {isSidebarOpen && 'New Chat'}
+                        </Button>
 
                         {/* Search Button */}
                         <Button
@@ -227,7 +222,7 @@ export const Sidebar = () => {
                             )}
                             onClick={() => setIsCommandSearchOpen(true)}
                         >
-                            <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                            <Search size={14} strokeWidth={2} className={cn(isSidebarOpen && 'mr-2')} />
                             {isSidebarOpen && 'Search'}
                             {isSidebarOpen && <div className="flex-1" />}
                             {isSidebarOpen && (
@@ -315,49 +310,59 @@ export const Sidebar = () => {
                     {/* Thread history will be displayed below when sidebar is open */}
                 </Flex>
 
-                {false ? (
-                    <FullPageLoader />
-                ) : (
-                    <Flex
-                        direction="col"
-                        gap="lg"
-                        className={cn(
-                            'no-scrollbar w-full flex-1 overflow-y-auto px-3 pb-[100px]',
-                            isSidebarOpen ? 'flex' : 'hidden'
-                        )}
-                    >
-                        {/* Pinned Conversations */}
-                        {renderGroup({
-                            title: 'Pinned',
-                            threads: threads
-                                .filter(thread => thread.pinned)
-                                .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
-                            groupIcon: <Pin size={14} strokeWidth={2} />,
-                            renderEmptyState: () => (
-                                <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                    <Pin
-                                        size={16}
-                                        strokeWidth={1.5}
-                                        className="text-muted-foreground/50"
-                                    />
-                                    <p className="text-muted-foreground text-center text-xs">
-                                        Pin important conversations to keep them at the top
-                                    </p>
-                                </div>
-                            ),
-                        })}
+                <Flex
+                    direction="col"
+                    gap="lg"
+                    className={cn(
+                        'no-scrollbar w-full flex-1 overflow-y-auto px-3 pb-[100px]',
+                        isSidebarOpen ? 'flex' : 'hidden'
+                    )}
+                >
+                    {threads.length === 0 ? (
+                        <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
+                            <div className="text-muted-foreground/50 text-center">
+                                <FileText size={24} strokeWidth={1.5} />
+                            </div>
+                            <div className="text-center">
+                                <p className="text-muted-foreground text-sm font-medium">No conversations yet</p>
+                                <p className="text-muted-foreground/70 text-xs">Start a new chat to begin</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Pinned Conversations */}
+                            {renderGroup({
+                                title: 'Pinned',
+                                threads: threads
+                                    .filter(thread => thread.pinned)
+                                    .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
+                                groupIcon: <Pin size={14} strokeWidth={2} />,
+                                renderEmptyState: () => (
+                                    <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                        <Pin
+                                            size={16}
+                                            strokeWidth={1.5}
+                                            className="text-muted-foreground/50"
+                                        />
+                                        <p className="text-muted-foreground text-center text-xs">
+                                            Pin important conversations to keep them at the top
+                                        </p>
+                                    </div>
+                                ),
+                            })}
 
-                        {/* Recent Conversations */}
-                        {renderGroup({ title: 'Today', threads: groupedThreads.today })}
-                        {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
-                        {renderGroup({ title: 'Last 7 Days', threads: groupedThreads.last7Days })}
-                        {renderGroup({ title: 'Last 30 Days', threads: groupedThreads.last30Days })}
-                        {renderGroup({
-                            title: 'Older',
-                            threads: groupedThreads.previousMonths,
-                        })}
-                    </Flex>
-                )}
+                            {/* Recent Conversations */}
+                            {renderGroup({ title: 'Today', threads: groupedThreads.today })}
+                            {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
+                            {renderGroup({ title: 'Last 7 Days', threads: groupedThreads.last7Days })}
+                            {renderGroup({ title: 'Last 30 Days', threads: groupedThreads.last30Days })}
+                            {renderGroup({
+                                title: 'Older',
+                                threads: groupedThreads.previousMonths,
+                            })}
+                        </>
+                    )}
+                </Flex>
 
                 <Flex
                     className={cn(
@@ -423,11 +428,17 @@ export const Sidebar = () => {
                                     )}
                                 </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent align="start" className="w-56 pl-2">
+                                {/* Account Management */}
+                                <DropdownMenuLabel>Account</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                                     <Settings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+
+                                {/* Support & Legal */}
+                                <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => push('/faq')}>
                                     <HelpCircle size={16} strokeWidth={2} />
                                     FAQ
@@ -440,6 +451,9 @@ export const Sidebar = () => {
                                     <FileText size={16} strokeWidth={2} />
                                     Terms of Service
                                 </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+
+                                {/* Authentication */}
                                 {!isSignedIn && (
                                     <DropdownMenuItem onClick={() => push('/login')}>
                                         <User size={16} strokeWidth={2} />
@@ -447,10 +461,13 @@ export const Sidebar = () => {
                                     </DropdownMenuItem>
                                 )}
                                 {isSignedIn && (
-                                    <DropdownMenuItem onClick={() => logout()}>
-                                        <LogOut size={16} strokeWidth={2} />
-                                        Sign out
-                                    </DropdownMenuItem>
+                                    <>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={() => logout()}>
+                                            <LogOut size={16} strokeWidth={2} />
+                                            Sign out
+                                        </DropdownMenuItem>
+                                    </>
                                 )}
                             </DropdownMenuContent>
                         </DropdownMenu>

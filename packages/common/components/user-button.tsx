@@ -14,6 +14,7 @@ import {
 } from '@repo/ui';
 import { FileText, HelpCircle, LogOut, Settings, Shield, User } from 'lucide-react';
 import Link from 'next/link';
+import { useAppStore } from '../store/app.store';
 
 interface UserButtonProps {
     showName?: boolean;
@@ -23,6 +24,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout } = useLogout();
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
 
     if (!session?.user) return null;
 
@@ -48,7 +50,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 pl-2">
                 {/* User Info Section */}
                 <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">{user.name || 'User'}</p>
@@ -58,7 +60,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Account Management */}
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
                 </DropdownMenuItem>
