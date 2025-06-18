@@ -15,6 +15,7 @@ import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { ShineText } from '../shine-text';
+import { StructuredDataDisplay } from '../structured-data-display';
 import {
     ChatModeButton,
     GeneratingStatus,
@@ -26,6 +27,7 @@ import { ChatEditor } from './chat-editor';
 import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
+import { StructuredOutputButton } from './structured-output-button';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -170,6 +172,7 @@ export const ChatInput = ({
                                     <div className="flex flex-col gap-2">
                                         <ImageAttachment />
                                         <DocumentAttachment />
+                                        <StructuredDataDisplay />
                                     </div>
                                     <Flex className="flex w-full flex-row items-end gap-0">
                                         <ChatEditor
@@ -195,6 +198,7 @@ export const ChatInput = ({
                                                 <MathCalculatorButton />
                                                 {/* <ToolsMenu /> */}
                                                 <DocumentUploadButton />
+                                                <StructuredOutputButton />
                                                 <ImageUpload
                                                     id="image-attachment"
                                                     label="Image"

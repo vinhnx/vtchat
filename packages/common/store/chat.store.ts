@@ -153,6 +153,12 @@ type State = {
     context: string;
     imageAttachment: { base64?: string; file?: File };
     documentAttachment: { base64?: string; file?: File; mimeType?: string; fileName?: string };
+    structuredData: {
+        data?: any;
+        type?: string;
+        fileName?: string;
+        extractedAt?: string;
+    } | null;
     abortController: AbortController | null;
     threads: Thread[];
     threadItems: ThreadItem[];
@@ -179,6 +185,13 @@ type Actions = {
         fileName?: string;
     }) => void;
     clearDocumentAttachment: () => void;
+    setStructuredData: (structuredData: {
+        data?: any;
+        type?: string;
+        fileName?: string;
+        extractedAt?: string;
+    }) => void;
+    clearStructuredData: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
     stopGeneration: () => void;
     setAbortController: (abortController: AbortController) => void;
@@ -721,6 +734,7 @@ export const useChatStore = create(
             mimeType: undefined,
             fileName: undefined,
         },
+        structuredData: null,
         messageGroups: [],
         abortController: null,
         isLoadingThreads: false,
@@ -770,6 +784,23 @@ export const useChatStore = create(
                     mimeType: undefined,
                     fileName: undefined,
                 };
+            });
+        },
+
+        setStructuredData: (structuredData: {
+            data?: any;
+            type?: string;
+            fileName?: string;
+            extractedAt?: string;
+        }) => {
+            set(state => {
+                state.structuredData = structuredData;
+            });
+        },
+
+        clearStructuredData: () => {
+            set(state => {
+                state.structuredData = null;
             });
         },
 

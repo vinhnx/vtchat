@@ -9,6 +9,7 @@ export * from './use-is-client';
 export * from './use-logout';
 export * from './use-math-calculator';
 export * from './use-payment-subscription';
+export * from './use-structured-extraction';
 export * from './use-subscription-access';
 export * from './use-text-selection';
 export * from './use-thread-auth';

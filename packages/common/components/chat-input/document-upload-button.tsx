@@ -8,7 +8,7 @@ import { useRef } from 'react';
 
 export const DocumentUploadButton = () => {
     const chatMode = useChatStore(state => state.chatMode);
-    const { handleDocumentAttachment } = useDocumentAttachment();
+    const { handleDocumentUpload } = useDocumentAttachment();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Only show for Gemini models
@@ -19,7 +19,7 @@ export const DocumentUploadButton = () => {
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        handleDocumentAttachment(event);
+        handleDocumentUpload(event);
         // Reset the input
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
