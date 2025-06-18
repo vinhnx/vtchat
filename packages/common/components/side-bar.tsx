@@ -180,12 +180,30 @@ export const Sidebar = () => {
                     )}
                     gap="xs"
                 >
-                    {/* Primary Actions */}
-                    {!isChatPage ? (
-                        <Link href="/chat" className={isSidebarOpen ? 'w-full' : ''}>
+                    {/* Primary Actions Section */}
+                    <div className={cn(
+                        'flex w-full gap-2',
+                        isSidebarOpen ? 'flex-col' : 'flex-col'
+                    )}>
+                        {/* New Chat Button */}
+                        {!isChatPage ? (
+                            <Link href="/chat" className={isSidebarOpen ? 'w-full' : ''}>
+                                <Button
+                                    size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                                    variant="default"
+                                    rounded="lg"
+                                    tooltip={isSidebarOpen ? undefined : 'New Chat'}
+                                    tooltipSide="right"
+                                    className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
+                                >
+                                    <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
+                                    {isSidebarOpen && 'New Chat'}
+                                </Button>
+                            </Link>
+                        ) : (
                             <Button
                                 size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                                variant="bordered"
+                                variant="default"
                                 rounded="lg"
                                 tooltip={isSidebarOpen ? undefined : 'New Chat'}
                                 tooltipSide="right"
@@ -194,91 +212,95 @@ export const Sidebar = () => {
                                 <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
                                 {isSidebarOpen && 'New Chat'}
                             </Button>
-                        </Link>
-                    ) : (
+                        )}
+
+                        {/* Search Button */}
                         <Button
                             size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="bordered"
+                            variant="ghost"
                             rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'New Chat'}
+                            tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
                             tooltipSide="right"
-                            className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
+                            className={cn(
+                                isSidebarOpen && 'relative w-full',
+                                'text-muted-foreground justify-center px-2'
+                            )}
+                            onClick={() => setIsCommandSearchOpen(true)}
                         >
-                            <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen)} />
-                            {isSidebarOpen && 'New Chat'}
+                            <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
+                            {isSidebarOpen && 'Search'}
+                            {isSidebarOpen && <div className="flex-1" />}
+                            {isSidebarOpen && (
+                                <div className="flex flex-row items-center gap-1">
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
+                                    >
+                                        <Command size={12} strokeWidth={2} className="shrink-0" />
+                                    </Badge>
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
+                                    >
+                                        K
+                                    </Badge>
+                                </div>
+                            )}
                         </Button>
-                    )}
-
-                    <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="bordered"
-                        rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
-                        tooltipSide="right"
-                        className={cn(
-                            isSidebarOpen && 'relative w-full',
-                            'text-muted-foreground justify-center px-2'
-                        )}
-                        onClick={() => setIsCommandSearchOpen(true)}
-                    >
-                        <Search size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
-                        {isSidebarOpen && 'Search'}
-                        {isSidebarOpen && <div className="flex-1" />}
-                        {isSidebarOpen && (
-                            <div className="flex flex-row items-center gap-1">
-                                <Badge
-                                    variant="secondary"
-                                    className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
-                                >
-                                    <Command size={12} strokeWidth={2} className="shrink-0" />
-                                </Badge>
-                                <Badge
-                                    variant="secondary"
-                                    className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
-                                >
-                                    K
-                                </Badge>
-                            </div>
-                        )}
-                    </Button>
+                    </div>
 
                     {/* Subscription Section */}
-                    <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="bordered"
-                        rounded="lg"
-                        disabled={isPortalLoading}
-                        tooltip={
-                            isSidebarOpen
-                                ? undefined
-                                : isPlusSubscriber
-                                  ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
-                                  : TOOLTIP_TEXT.UPGRADE_TO_PLUS
-                        }
-                        tooltipSide="right"
-                        className={cn(
-                            isSidebarOpen && 'relative w-full',
-                            'text-muted-foreground justify-center px-2'
-                        )}
-                        onClick={() => {
-                            if (isPlusSubscriber) {
-                                // Open Creem customer portal for subscribers
-                                openCustomerPortal();
-                            } else {
-                                // For non-subscribers, go to /plus page
-                                push('/plus');
+                    {isSidebarOpen && (
+                        <div className="border-border w-full border-t border-dashed pt-2 mt-2">
+                            <Button
+                                size="sm"
+                                variant={isPlusSubscriber ? "secondary" : "bordered"}
+                                rounded="lg"
+                                disabled={isPortalLoading}
+                                className="relative w-full justify-center px-2"
+                                onClick={() => {
+                                    if (isPlusSubscriber) {
+                                        openCustomerPortal();
+                                    } else {
+                                        push('/plus');
+                                    }
+                                }}
+                            >
+                                <Sparkles size={14} strokeWidth={2} />
+                                {isPortalLoading
+                                    ? BUTTON_TEXT.LOADING
+                                    : isPlusSubscriber
+                                      ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
+                                      : BUTTON_TEXT.UPGRADE_TO_PLUS}
+                                {isPlusSubscriber && <ExternalLink size={12} />}
+                            </Button>
+                        </div>
+                    )}
+
+                    {!isSidebarOpen && (
+                        <Button
+                            size="icon-sm"
+                            variant="ghost"
+                            rounded="lg"
+                            disabled={isPortalLoading}
+                            tooltip={
+                                isPlusSubscriber
+                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
+                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS
                             }
-                        }}
-                    >
-                        <Sparkles size={14} strokeWidth={2} className={cn(isSidebarOpen)} />
-                        {isSidebarOpen &&
-                            (isPortalLoading
-                                ? BUTTON_TEXT.LOADING
-                                : isPlusSubscriber
-                                  ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
-                                  : BUTTON_TEXT.UPGRADE_TO_PLUS)}
-                        {isSidebarOpen && isPlusSubscriber && <ExternalLink size={12} />}
-                    </Button>
+                            tooltipSide="right"
+                            className="text-muted-foreground justify-center px-2"
+                            onClick={() => {
+                                if (isPlusSubscriber) {
+                                    openCustomerPortal();
+                                } else {
+                                    push('/plus');
+                                }
+                            }}
+                        >
+                            <Sparkles size={14} strokeWidth={2} />
+                        </Button>
+                    )}
                 </Flex>
 
                 {/* Thread History Section */}

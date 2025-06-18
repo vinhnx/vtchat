@@ -1,4 +1,5 @@
 import { CodeBlock, ToolIcon } from '@repo/common/components';
+import { isMathTool } from '@repo/common/constants/math-tools';
 import { ToolCall as ToolCallType } from '@repo/shared/types';
 import { Badge, cn } from '@repo/ui';
 import { ChevronDown, Sigma } from 'lucide-react';
@@ -13,7 +14,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     const toggleOpen = useCallback(() => setIsOpen(prev => !prev), []);
 
     // Check if this is a math calculator tool
-    const isMathTool = toolCall.toolName && ['add', 'subtract', 'multiply', 'divide', 'exponentiate', 'factorial', 'isPrime', 'squareRoot', 'sin', 'cos', 'tan', 'sqrt', 'log', 'exp'].includes(toolCall.toolName);
+    const isToolMathTool = isMathTool(toolCall.toolName);
 
     return (
         <div className="flex w-full flex-col items-start overflow-hidden">
@@ -22,9 +23,9 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                 onClick={toggleOpen}
             >
                 <div className="flex flex-row items-center gap-2.5">
-                    {isMathTool ? <Sigma size={16} className="text-green-600" /> : <ToolIcon />}
-                    <Badge className={isMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
-                        {isMathTool ? `🧮 ${toolCall.toolName}` : toolCall.toolName}
+                    {isToolMathTool ? <Sigma size={16} className="text-green-600" /> : <ToolIcon />}
+                    <Badge className={isToolMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
+                        {isToolMathTool ? `🧮 ${toolCall.toolName}` : toolCall.toolName}
                     </Badge>
                 </div>
                 <div className="pr-2">

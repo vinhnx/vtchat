@@ -13,10 +13,11 @@
         "./components/dev-test-mode-banner": "./components/dev-test-mode-banner.tsx",
         "./providers": "./providers/index.ts",
         "./providers/subscription-provider": "./providers/subscription-provider.tsx",
-        "./utils": "./utils/index.ts"
+        "./utils": "./utils/index.ts",
+        "./constants/math-tools": "./constants/math-tools.ts"
     },
     "scripts": {
-        "lint": "eslint . --max-warnings 0",
+        "lint": "oxlint",
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
@@ -53,7 +54,6 @@
         "@types/react": "^18.3.0",
         "@types/react-dom": "^18.3.0",
         "autoprefixer": "^10.4.21",
-        "eslint": "^8.56.0",
         "postcss": "^8.5.3",
         "postcss-cli": "^11.0.1",
         "tailwindcss": "^3.4.1",

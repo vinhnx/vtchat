@@ -1,4 +1,5 @@
 import { CodeBlock, ToolResultIcon } from '@repo/common/components';
+import { isMathTool } from '@repo/common/constants/math-tools';
 import { ToolResult as ToolResultType } from '@repo/shared/types';
 import { Badge, cn } from '@repo/ui';
 import { ChevronDown, CheckCircle } from 'lucide-react';
@@ -13,7 +14,7 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
     const toggleOpen = useCallback(() => setIsOpen(prev => !prev), []);
 
     // Check if this is a math calculator tool result
-    const isMathTool = toolResult.toolName && ['add', 'subtract', 'multiply', 'divide', 'exponentiate', 'factorial', 'isPrime', 'squareRoot', 'sin', 'cos', 'tan', 'sqrt', 'log', 'exp'].includes(toolResult.toolName);
+    const isResultMathTool = isMathTool(toolResult.toolName);
 
     return (
         <div className="overflow-hidde flex w-full flex-col items-start">
@@ -22,12 +23,12 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                 onClick={toggleOpen}
             >
                 <div className="flex flex-row items-center gap-2.5">
-                    {isMathTool ? <CheckCircle size={16} className="text-green-600" /> : <ToolResultIcon />}
-                    <Badge className={isMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
-                        {isMathTool ? '✅ Result' : 'Result'}
+                    {isResultMathTool ? <CheckCircle size={16} className="text-green-600" /> : <ToolResultIcon />}
+                    <Badge className={isResultMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
+                        {isResultMathTool ? '✅ Result' : 'Result'}
                     </Badge>
-                    <Badge className={isMathTool ? 'bg-green-50 text-green-700 border-green-200' : ''}>
-                        {isMathTool ? `🧮 ${toolResult.toolName}` : toolResult.toolName}
+                    <Badge className={isResultMathTool ? 'bg-green-50 text-green-700 border-green-200' : ''}>
+                        {isResultMathTool ? `🧮 ${toolResult.toolName}` : toolResult.toolName}
                     </Badge>
                 </div>
                 <div className="pr-2">

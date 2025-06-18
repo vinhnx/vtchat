@@ -110,6 +110,9 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                         {steps.map((step, index) => (
                             <StepRenderer key={index} step={step} />
                         ))}
+                        {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
+                            <ToolStep key={`tool-${index}`} toolCall={toolCall} toolResult={toolResult} />
+                        ))}
                     </div>
                 ),
                 badge: stepCounts,
@@ -129,9 +132,9 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                     {steps.map((step, index) => (
                         <StepRenderer key={index} step={step} />
                     ))}
-                    {/* {toolCallAndResults.map(({ toolCall, toolResult }) => (
-                        <ToolStep toolCall={toolCall} toolResult={toolResult} />
-                    ))} */}
+                    {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
+                        <ToolStep key={`tool-${index}`} toolCall={toolCall} toolResult={toolResult} />
+                    ))}
                 </div>
             ),
         });

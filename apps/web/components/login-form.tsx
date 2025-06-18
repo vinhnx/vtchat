@@ -51,6 +51,7 @@ function LoginFormContent({
         } catch (err) {
             setLoading(false);
             setError('An unexpected error occurred');
+            console.error('Login error:', err);
         }
     };
 

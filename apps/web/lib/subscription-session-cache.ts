@@ -290,7 +290,6 @@ export function getAnonymousSubscriptionStatus(): Omit<
  * Clean up expired session caches
  */
 export function cleanupExpiredSessionCaches(): void {
-    const now = new Date();
     let cleanedCount = 0;
 
     // Convert to array to avoid iterator issues
@@ -311,7 +310,6 @@ export function cleanupExpiredSessionCaches(): void {
  * Get session cache statistics
  */
 export function getSessionCacheStats() {
-    const now = new Date();
     let validEntries = 0;
     let expiredEntries = 0;
     let anonymousEntries = 0;
@@ -319,7 +317,7 @@ export function getSessionCacheStats() {
 
     // Convert to array to avoid iterator issues
     const entries = Array.from(sessionSubscriptionCache.entries());
-    for (const [key, cached] of entries) {
+    for (const [_key, cached] of entries) {
         if (isSessionCacheValid(cached, undefined)) {
             validEntries++;
             if (cached.userId) {

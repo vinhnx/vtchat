@@ -4,6 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 export default function GlobalError({ error }: { error: Error }) {
+    console.error('Global error:', error);
     return (
         <html>
             <body>

@@ -7,6 +7,7 @@
         "build": "next build",
         "analyze": "ANALYZE=true next build",
         "start": "next start",
+        "lint": "oxlint",
         "prepare": "husky",
         "generate": "bunx drizzle-kit generate"
     },
