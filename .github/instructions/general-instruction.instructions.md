@@ -44,6 +44,8 @@ applyTo: '**'
 
 - Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
 - Every implemented feature should have a test case to maintain quality
+- Every unit test should cover critical paths and edge cases
+- Use `vitest` for testing, with `@testing-library/react` for React components.
 
 ## Bun
 

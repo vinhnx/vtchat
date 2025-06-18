@@ -117,7 +117,8 @@ const loadInitialData = async () => {
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
     const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
-    const useMathCalculator = typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
+    const useMathCalculator =
+        typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
     const customInstructions = config.customInstructions || '';
 
     // Load and validate the persisted model
@@ -151,6 +152,7 @@ type State = {
     chatMode: ChatMode;
     context: string;
     imageAttachment: { base64?: string; file?: File };
+    documentAttachment: { base64?: string; file?: File; mimeType?: string; fileName?: string };
     abortController: AbortController | null;
     threads: Thread[];
     threadItems: ThreadItem[];
@@ -170,6 +172,13 @@ type Actions = {
     setContext: (context: string) => void;
     setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => void;
     clearImageAttachment: () => void;
+    setDocumentAttachment: (documentAttachment: {
+        base64?: string;
+        file?: File;
+        mimeType?: string;
+        fileName?: string;
+    }) => void;
+    clearDocumentAttachment: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
     stopGeneration: () => void;
     setAbortController: (abortController: AbortController) => void;
@@ -706,6 +715,12 @@ export const useChatStore = create(
         currentThread: null,
         currentThreadItem: null,
         imageAttachment: { base64: undefined, file: undefined },
+        documentAttachment: {
+            base64: undefined,
+            file: undefined,
+            mimeType: undefined,
+            fileName: undefined,
+        },
         messageGroups: [],
         abortController: null,
         isLoadingThreads: false,
@@ -733,6 +748,28 @@ export const useChatStore = create(
         clearImageAttachment: () => {
             set(state => {
                 state.imageAttachment = { base64: undefined, file: undefined };
+            });
+        },
+
+        setDocumentAttachment: (documentAttachment: {
+            base64?: string;
+            file?: File;
+            mimeType?: string;
+            fileName?: string;
+        }) => {
+            set(state => {
+                state.documentAttachment = documentAttachment;
+            });
+        },
+
+        clearDocumentAttachment: () => {
+            set(state => {
+                state.documentAttachment = {
+                    base64: undefined,
+                    file: undefined,
+                    mimeType: undefined,
+                    fileName: undefined,
+                };
             });
         },
 
@@ -764,7 +801,10 @@ export const useChatStore = create(
 
         setUseMathCalculator: (useMathCalculator: boolean) => {
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useMathCalculator }));
+            localStorage.setItem(
+                CONFIG_KEY,
+                JSON.stringify({ ...existingConfig, useMathCalculator })
+            );
             set(state => {
                 state.useMathCalculator = useMathCalculator;
             });

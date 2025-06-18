@@ -6,6 +6,7 @@ import { Button, cn } from '@repo/ui';
 import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';
 type MessageProps = {
     message: string;
@@ -38,6 +39,9 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
     return (
         <div className="flex w-full flex-col items-end gap-2 pt-4">
             {imageAttachment && <ImageMessage imageAttachment={imageAttachment} />}
+            {threadItem.documentAttachment && (
+                <DocumentDisplay documentAttachment={threadItem.documentAttachment} />
+            )}
             <div
                 className={cn(
                     'text-foreground bg-tertiary group relative max-w-[80%] overflow-hidden rounded-lg',
@@ -84,9 +88,9 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                     tooltip={status === 'copied' ? 'Copied' : 'Copy'}
                                 >
                                     {status === 'copied' ? (
-                                        <Check size={14} strokeWidth={2}  />
+                                        <Check size={14} strokeWidth={2} />
                                     ) : (
-                                        <Copy size={14} strokeWidth={2}  />
+                                        <Copy size={14} strokeWidth={2} />
                                     )}
                                 </Button>
                                 <Button
@@ -100,7 +104,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                     tooltip="Edit"
                                     onClick={() => setIsEditing(true)}
                                 >
-                                    <Pencil size={14} strokeWidth={2}  />
+                                    <Pencil size={14} strokeWidth={2} />
                                 </Button>
                             </div>
                         </div>

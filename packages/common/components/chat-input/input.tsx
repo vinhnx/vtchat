@@ -1,6 +1,6 @@
 'use client';
 import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
-import { useImageAttachment } from '@repo/common/hooks';
+import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
@@ -15,8 +15,16 @@ import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { ShineText } from '../shine-text';
-import { ChatModeButton, GeneratingStatus, MathCalculatorButton, SendStopButton, WebSearchButton } from './chat-actions';
+import {
+    ChatModeButton,
+    GeneratingStatus,
+    MathCalculatorButton,
+    SendStopButton,
+    WebSearchButton,
+} from './chat-actions';
 import { ChatEditor } from './chat-editor';
+import { DocumentAttachment } from './document-attachment';
+import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
 
 export const ChatInput = ({
@@ -62,10 +70,13 @@ export const ChatInput = ({
     const isGenerating = useChatStore(state => state.isGenerating);
     const isChatPage = usePathname().startsWith('/chat');
     const imageAttachment = useChatStore(state => state.imageAttachment);
+    const documentAttachment = useChatStore(state => state.documentAttachment);
     const clearImageAttachment = useChatStore(state => state.clearImageAttachment);
+    const clearDocumentAttachment = useChatStore(state => state.clearDocumentAttachment);
     const stopGeneration = useChatStore(state => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
+    const { dropzoneProps: docDropzoneProps } = useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const sendMessage = async () => {
@@ -102,6 +113,12 @@ export const ChatInput = ({
         const formData = new FormData();
         formData.append('query', editor.getText());
         imageAttachment?.base64 && formData.append('imageAttachment', imageAttachment?.base64);
+        documentAttachment?.base64 &&
+            formData.append('documentAttachment', documentAttachment?.base64);
+        documentAttachment?.mimeType &&
+            formData.append('documentMimeType', documentAttachment?.mimeType);
+        documentAttachment?.fileName &&
+            formData.append('documentFileName', documentAttachment?.fileName);
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
         console.log('threadItems', threadItems);
@@ -118,6 +135,7 @@ export const ChatInput = ({
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
         clearImageAttachment();
+        clearDocumentAttachment();
     };
 
     const renderChatInput = () => (
@@ -149,7 +167,10 @@ export const ChatInput = ({
                                     transition={{ duration: 0.15, ease: 'easeOut' }}
                                     className="w-full"
                                 >
-                                    <ImageAttachment />
+                                    <div className="flex flex-col gap-2">
+                                        <ImageAttachment />
+                                        <DocumentAttachment />
+                                    </div>
                                     <Flex className="flex w-full flex-row items-end gap-0">
                                         <ChatEditor
                                             sendMessage={sendMessage}
@@ -173,6 +194,7 @@ export const ChatInput = ({
                                                 <WebSearchButton />
                                                 <MathCalculatorButton />
                                                 {/* <ToolsMenu /> */}
+                                                <DocumentUploadButton />
                                                 <ImageUpload
                                                     id="image-attachment"
                                                     label="Image"

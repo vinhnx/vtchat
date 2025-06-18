@@ -6,6 +6,25 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+*   **Background Fix for Legal Pages:** Fixed background consistency issues on FAQ, Terms, and Privacy pages:
+    *   Changed header background from `bg-background/80` to `bg-background` for better consistency
+    *   Added explicit `bg-background` to main content areas to ensure proper background coverage
+    *   Changed footer background from `bg-muted/20` to `bg-background` for unified appearance
+    *   All three pages (/faq, /terms, /privacy) now have consistent, solid background styling
+    *   Improved visual cohesion across all legal/informational pages
+    *   **Unified Footer Navigation:** Added FAQ link to Footer component to complete the navigation triad:
+        - Terms of Service | Privacy Policy | FAQs
+        - All three legal pages now have consistent footer navigation between each other
+        - Footer component provides unified navigation across the entire application
+    *   **Full-Width Layout Implementation:** Updated all three pages to use full-width layout:
+        - Changed max width from `max-w-screen-lg` to `max-w-7xl` for wider content area
+        - Updated header, main content, and footer containers to use full width
+        - Improved content presentation and better use of screen real estate
+    *   **FAQ Accordion UI Jump Fix:** Improved FAQ page layout to prevent UI jumping:
+        - Restructured layout with centered header and better spacing
+        - Improved accordion container sizing and spacing for smoother animations
+        - Enhanced user experience when expanding/collapsing FAQ sections
+
 *   **Database Connection Error Fix:** Resolved Neon database connection termination errors (error code 57P01):
     *   Updated connection pool configuration in `apps/web/lib/database/index.ts` with improved settings:
         - Increased max connections from 1 to 3 for better concurrency
