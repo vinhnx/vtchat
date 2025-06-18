@@ -1,8 +1,6 @@
 # TODO List
 
 --
-[] <https://www.creem.io/dashboard/discounts> for launch?
---
 
 [] sql chart <https://ai-sdk.dev/docs/guides/natural-language-postgres#natural-language-postgres-guide>
 
@@ -18,7 +16,6 @@
 
 --
 tools (add icons in input chat bar, consider monet each)
-[] [free] basic <https://ai-sdk-agents.vercel.app/?item=math>
 [] [monet] <https://ai-sdk-agents.vercel.app/?item=postgres>
 [] [monet][img] <https://ai-sdk-agents.vercel.app/?item=fal>
 [] [monet][img] <https://ai-sdk-agents.vercel.app/?item=replicate>
@@ -26,72 +23,9 @@ tools (add icons in input chat bar, consider monet each)
 [] [monet] <https://ai-sdk-agents.vercel.app/?item=github>
 [] [monet] useful for work <https://ai-sdk-agents.vercel.app/?item=slack>
 
---
-
-<https://railway.com/project/53e4c95c-c373-40af-ae40-7ab20e87b85e/service/17977a04-2b32-4395-a735-d9f14f071155?environmentId=d65896ba-27df-4fc4-a418-8ed04ea8b028&id=1ffa5933-18ab-40f6-8697-e327f651fdb6#deploy>
-error: terminating connection due to administrator command
-    at s.parseErrorMessage (.next/server/chunks/5126.js:20:14096)
-    at s.handlePacket (.next/server/chunks/5126.js:20:10751)
-    at s.parse (.next/server/chunks/5126.js:20:9402)
-    at e.<anonymous> (.next/server/chunks/5126.js:20:14786)
-    at e.emit (.next/server/chunks/5126.js:15:6513)
-    at WebSocket.<anonymous> (.next/server/chunks/5126.js:15:13492) {
-  length: 116,
-  severity: 'FATAL',
-  code: '57P01',
-  detail: undefined,
-  hint: undefined,
-  position: undefined,
-  internalPosition: undefined,
-  internalQuery: undefined,
-  where: undefined,
-  schema: undefined,
-  table: undefined,
-  column: undefined,
-  dataType: undefined,
-  constraint: undefined,
-  file: 'postgres.c',
-  line: '3318',
-  routine: 'ProcessInterrupts',
-  client: [NeonClient]
-}
- ⨯ uncaughtException:  error: terminating connection due to administrator command
-    at s.parseErrorMessage (.next/server/chunks/5126.js:20:14096)
-    at s.handlePacket (.next/server/chunks/5126.js:20:10751)
-    at s.parse (.next/server/chunks/5126.js:20:9402)
-    at e.<anonymous> (.next/server/chunks/5126.js:20:14786)
-    at e.emit (.next/server/chunks/5126.js:15:6513)
-    at WebSocket.<anonymous> (.next/server/chunks/5126.js:15:13492) {
-  length: 116,
-  severity: 'FATAL',
-  code: '57P01',
-  detail: undefined,
-  hint: undefined,
-  position: undefined,
-  internalPosition: undefined,
-  internalQuery: undefined,
-  where: undefined,
-  schema: undefined,
-  table: undefined,
-  column: undefined,
-  dataType: undefined,
-  constraint: undefined,
-  file: 'postgres.c',
-  line: '3318',
-  routine: 'ProcessInterrupts',
-  client: [NeonClient]
-}
-
---
-
-⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "<http://localhost:8080>";. See <https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase>
-
---
 
 [] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 --
-
-<https://ai-sdk.dev/cookbook/next/render-visual-interface-in-chat>
 
 --
 
