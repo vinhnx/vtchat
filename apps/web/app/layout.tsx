@@ -6,6 +6,7 @@ import {
     ThemeProvider,
 } from '@repo/common/components';
 import { RootProvider } from '@repo/common/context';
+import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
 import { cn, TooltipProvider } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
@@ -112,24 +113,26 @@ export default function ParentLayout({
                     disableTransitionOnChange
                 >
                     <TooltipProvider>
-                        <BetterAuthProvider>
-                            <SubscriptionProvider>
-                                <RootProvider>
-                                    <SSRErrorBoundary>
-                                        <NoSSR
-                                            fallback={
-                                                <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                                                    <FullPageLoader label="Loading..." />
-                                                </div>
-                                            }
-                                        >
-                                            {/* @ts-ignore - Type compatibility issue between React versions */}
-                                            <RootLayout>{children}</RootLayout>
-                                        </NoSSR>
-                                    </SSRErrorBoundary>
-                                </RootProvider>
-                            </SubscriptionProvider>
-                        </BetterAuthProvider>
+                        <SSRErrorBoundary>
+                            <BetterAuthProvider>
+                                <NoSSR
+                                    fallback={
+                                        <div className="z-20 flex min-h-[90vh] w-full flex-1 flex-col items-center justify-center gap-4">
+                                            <FullPageLoader label="Loading..." />
+                                        </div>
+                                    }
+                                >
+                                    <OptimizedAuthProvider>
+                                        <SubscriptionProvider>
+                                            <RootProvider>
+                                                {/* @ts-ignore - Type compatibility issue between React versions */}
+                                                <RootLayout>{children}</RootLayout>
+                                            </RootProvider>
+                                        </SubscriptionProvider>
+                                    </OptimizedAuthProvider>
+                                </NoSSR>
+                            </BetterAuthProvider>
+                        </SSRErrorBoundary>
                     </TooltipProvider>
                 </ThemeProvider>
             </body>

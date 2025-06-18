@@ -22,25 +22,47 @@ export async function OPTIONS(_request: Request) {
 // Use Better Auth's recommended Next.js handler
 const { GET: originalGET, POST: originalPOST } = toNextJsHandler(auth);
 
-// Wrap the handlers to add CORS headers
+// Wrap the handlers to add CORS headers and error handling
 export async function GET(request: Request) {
-    const response = await originalGET(request);
+    try {
+        const response = await originalGET(request);
 
-    // Add CORS headers to the response
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-        response.headers.set(key, value);
-    });
+        // Add CORS headers to the response
+        Object.entries(corsHeaders).forEach(([key, value]) => {
+            response.headers.set(key, value);
+        });
 
-    return response;
+        return response;
+    } catch (error) {
+        console.error('[Auth API] GET error:', error);
+        return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
+            status: 503,
+            headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+            },
+        });
+    }
 }
 
 export async function POST(request: Request) {
-    const response = await originalPOST(request);
+    try {
+        const response = await originalPOST(request);
 
-    // Add CORS headers to the response
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-        response.headers.set(key, value);
-    });
+        // Add CORS headers to the response
+        Object.entries(corsHeaders).forEach(([key, value]) => {
+            response.headers.set(key, value);
+        });
 
-    return response;
+        return response;
+    } catch (error) {
+        console.error('[Auth API] POST error:', error);
+        return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
+            status: 503,
+            headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+            },
+        });
+    }
 }

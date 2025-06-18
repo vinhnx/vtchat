@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
+import { monitorAuth } from '@repo/shared/utils/performance-monitor';
 import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
@@ -25,9 +26,11 @@ export const useThreadAuth = () => {
                 `[ThreadAuth] User changed from ${previousUserId || 'anonymous'} to ${currentUserId || 'anonymous'}`
             );
 
-            // Switch to the appropriate user database for threads
-            switchUserDatabase(currentUserId)
-                .then(() => {
+            // Monitor the database switching performance
+            monitorAuth
+                .sessionCheck(async () => {
+                    // Switch to the appropriate user database for threads
+                    await switchUserDatabase(currentUserId);
                     console.log(
                         `[ThreadAuth] Successfully switched to database for user: ${currentUserId || 'anonymous'}`
                     );

@@ -43,6 +43,7 @@ applyTo: '**'
 ## Testing
 
 - Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
+- Every implemented feature should have a test case to maintain quality
 
 ## Bun
 

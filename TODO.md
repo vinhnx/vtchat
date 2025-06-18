@@ -1,7 +1,5 @@
 # TODO List
 
---
-
 [] sql chart <https://ai-sdk.dev/docs/guides/natural-language-postgres#natural-language-postgres-guide>
 
 -
@@ -22,7 +20,6 @@ tools (add icons in input chat bar, consider monet each)
 [] [monet][img] <https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools>
 [] [monet] <https://ai-sdk-agents.vercel.app/?item=github>
 [] [monet] useful for work <https://ai-sdk-agents.vercel.app/?item=slack>
-
 
 [] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 --
@@ -144,7 +141,6 @@ remember to publish Google Auth
 - [ ] Implement Username Plugin: [https://www.better-auth.com/docs/plugins/username](https://www.better-auth.com/docs/plugins/username)
 - [ ] Implement Email OTP: [https://www.better-auth.com/docs/plugins/email-otp](https://www.better-auth.com/docs/plugins/email-otp)
 - [ ] Implement Magic Link: [https://www.better-auth.com/docs/plugins/magic-link](https://www.better-auth.com/docs/plugins/magic-link)
-- [ ] Optimize Better Auth for performance (Database, General): [https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations](https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations), [https://www.better-auth.com/docs/guides/optimizing-for-performance](https://www.better-auth.com/docs/guides/optimizing-for-performance)
 - [ ] Build user profile concept: [https://www.better-auth.com/docs/concepts/users-accounts](https://www.better-auth.com/docs/concepts/users-accounts)
 - [ ] Refactor auth client:
   - [ ] Use one shared `auth-client.ts`.

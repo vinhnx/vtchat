@@ -39,14 +39,12 @@ import {
     User,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { UserTierBadge } from './user-tier-badge';
 
 export const Sidebar = () => {
     const { threadId: currentThreadId } = useParams();
-    const pathname = usePathname();
     const { setIsCommandSearchOpen } = useRootContext();
-    const isChatPage = pathname === '/chat';
     const threads = useChatStore(state => state.threads);
     const pinThread = useChatStore(state => state.pinThread);
     const unpinThread = useChatStore(state => state.unpinThread);
@@ -181,10 +179,9 @@ export const Sidebar = () => {
                     gap="xs"
                 >
                     {/* Primary Actions Section */}
-                    <div className={cn(
-                        'flex w-full gap-2',
-                        isSidebarOpen ? 'flex-col' : 'flex-col'
-                    )}>
+                    <div
+                        className={cn('flex w-full gap-2', isSidebarOpen ? 'flex-col' : 'flex-col')}
+                    >
                         {/* New Chat Button */}
                         <Button
                             size={isSidebarOpen ? 'sm' : 'icon-sm'}
@@ -193,19 +190,16 @@ export const Sidebar = () => {
                             tooltip={isSidebarOpen ? undefined : 'New Chat'}
                             tooltipSide="right"
                             className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
-                            onClick={async () => {
-                                const optimisticId = `thread-${Date.now()}`;
-                                await useChatStore.getState().createThread(optimisticId);
-                                if (isChatPage) {
-                                    // Force refresh the current page to reflect the new thread
-                                    window.location.href = `/chat/${optimisticId}`;
-                                } else {
-                                    // Navigate to the new thread
-                                    push(`/chat/${optimisticId}`);
-                                }
+                            onClick={() => {
+                                // Navigate to /chat to start a new conversation
+                                push('/chat');
                             }}
                         >
-                            <Plus size={16} strokeWidth={2} className={cn(isSidebarOpen && 'mr-2')} />
+                            <Plus
+                                size={16}
+                                strokeWidth={2}
+                                className={cn(isSidebarOpen && 'mr-2')}
+                            />
                             {isSidebarOpen && 'New Chat'}
                         </Button>
 
@@ -222,7 +216,11 @@ export const Sidebar = () => {
                             )}
                             onClick={() => setIsCommandSearchOpen(true)}
                         >
-                            <Search size={14} strokeWidth={2} className={cn(isSidebarOpen && 'mr-2')} />
+                            <Search
+                                size={14}
+                                strokeWidth={2}
+                                className={cn(isSidebarOpen && 'mr-2')}
+                            />
                             {isSidebarOpen && 'Search'}
                             {isSidebarOpen && <div className="flex-1" />}
                             {isSidebarOpen && (
@@ -246,10 +244,10 @@ export const Sidebar = () => {
 
                     {/* Subscription Section */}
                     {isSidebarOpen && (
-                        <div className="border-border w-full border-t border-dashed pt-2 mt-2">
+                        <div className="border-border mt-2 w-full border-t border-dashed pt-2">
                             <Button
                                 size="sm"
-                                variant={isPlusSubscriber ? "secondary" : "bordered"}
+                                variant={isPlusSubscriber ? 'secondary' : 'bordered'}
                                 rounded="lg"
                                 disabled={isPortalLoading}
                                 className="relative w-full justify-center px-2"
@@ -324,8 +322,12 @@ export const Sidebar = () => {
                                 <FileText size={24} strokeWidth={1.5} />
                             </div>
                             <div className="text-center">
-                                <p className="text-muted-foreground text-sm font-medium">No conversations yet</p>
-                                <p className="text-muted-foreground/70 text-xs">Start a new chat to begin</p>
+                                <p className="text-muted-foreground text-sm font-medium">
+                                    No conversations yet
+                                </p>
+                                <p className="text-muted-foreground/70 text-xs">
+                                    Start a new chat to begin
+                                </p>
                             </div>
                         </div>
                     ) : (
@@ -354,8 +356,14 @@ export const Sidebar = () => {
                             {/* Recent Conversations */}
                             {renderGroup({ title: 'Today', threads: groupedThreads.today })}
                             {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
-                            {renderGroup({ title: 'Last 7 Days', threads: groupedThreads.last7Days })}
-                            {renderGroup({ title: 'Last 30 Days', threads: groupedThreads.last30Days })}
+                            {renderGroup({
+                                title: 'Last 7 Days',
+                                threads: groupedThreads.last7Days,
+                            })}
+                            {renderGroup({
+                                title: 'Last 30 Days',
+                                threads: groupedThreads.last30Days,
+                            })}
                             {renderGroup({
                                 title: 'Older',
                                 threads: groupedThreads.previousMonths,

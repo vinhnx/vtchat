@@ -4,8 +4,8 @@ import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { Badge, Button, Flex, Toaster } from '@repo/ui';
-import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import React, { FC } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
@@ -27,11 +27,28 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== '/plus';
 
-    // Don't render complex UI until client is ready to prevent hydration mismatch
+    // Render consistent structure during SSR and client hydration
+    // Only show complex interactive elements after client is ready
     if (!isClient) {
         return (
             <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
-                <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
+                {/* Simplified structure during SSR to match client structure */}
+                <div className="bg-tertiary item-center fixed inset-0 z-[99999] flex justify-center md:hidden">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        <span className="text-muted-foreground text-center text-sm">
+                            Loading...
+                        </span>
+                    </div>
+                </div>
+                <div className="hidden lg:flex">
+                    {/* Placeholder for sidebar during SSR */}
+                    {isSidebarOpen && (
+                        <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
+                    )}
+                </div>
+                <div className={containerClass}>
+                    <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
+                </div>
             </div>
         );
     }
@@ -188,7 +205,7 @@ export const SideDrawer = () => {
                                 onClick={() => dismissSideDrawer()}
                                 tooltip="Close"
                             >
-                                <X size={14} strokeWidth={2}  />
+                                <X size={14} strokeWidth={2} />
                             </Button>
                         </div>
                         <div
