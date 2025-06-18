@@ -6,6 +6,19 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+*   **Database Connection Error Fix:** Resolved Neon database connection termination errors (error code 57P01):
+    *   Updated connection pool configuration in `apps/web/lib/database/index.ts` with improved settings:
+        - Increased max connections from 1 to 3 for better concurrency
+        - Set appropriate timeout values (30s idle, 10s connection, 60s statement/query)
+        - Added proper connection pool event handling for error monitoring
+        - Implemented `withDatabaseErrorHandling` utility for graceful error handling
+    *   Updated subscription access control functions to use the new error handling wrapper
+    *   Added specific error code handling for common database connection issues:
+        - `57P01`: Connection terminated by administrator
+        - `ECONNRESET`/`ETIMEDOUT`: Connection timeout errors
+        - `53300`: Too many connections error
+    *   Tested the fix successfully - database connections now handle errors gracefully and provide user-friendly error messages
+
 *   **User Button Functional Grouping Enhancement:** Improved the user popover by connecting the Settings menu item to the actual settings modal:
     *   Connected the "Settings" item in the user dropdown to open the settings modal using `setIsSettingsOpen(true)`
     *   Maintained the existing functional grouping structure:
