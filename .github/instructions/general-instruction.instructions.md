@@ -46,6 +46,13 @@ applyTo: '**'
 - Every implemented feature should have a test case to maintain quality
 - Every unit test should cover critical paths and edge cases
 - Use `vitest` for testing, with `@testing-library/react` for React components.
+- Run tests regularly to ensure code quality
+- Use `@testing-library/jest-dom/vitest` for custom matchers
+- Use `@testing-library/user-event` for simulating user interactions
+- Use `@testing-library/react` for rendering components in tests
+- Use `@testing-library/jest-dom` for custom matchers in tests
+- Use `@testing-library/react-hooks` for testing custom hooks
+- Use `@testing-library/dom` for DOM-related utilities in tests
 
 ## Bun
 
