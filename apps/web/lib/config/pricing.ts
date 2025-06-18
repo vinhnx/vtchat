@@ -13,13 +13,39 @@ export const PRICING_CONFIG = {
             price: 0,
             currency: 'USD',
             interval: 'month',
-            features: [],
+            features: [
+                {
+                    name: 'Access to Free Models',
+                    description:
+                        'Access to free AI models including Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite, Gemini 2.5 Flash Preview, Gemini 2.5 Pro, Gemini 2.5 Pro Preview, DeepSeek V3, DeepSeek R1, and Qwen3 14B',
+                },
+                {
+                    name: 'Mathematical Calculator Tools',
+                    description:
+                        'Mathematical calculation tools providing essential mathematical operations including trigonometric functions, logarithms, exponentials, and basic arithmetic calculations',
+                },
+                {
+                    name: 'Access to Base Features',
+                    description:
+                        'Access to base features including local storage privacy, basic AI interactions, and core functionality',
+                },
+                {
+                    name: 'Perfect for Getting Started',
+                    description:
+                        'Perfect for getting started with VT and exploring AI capabilities',
+                },
+            ],
         },
         plus: {
             price: parseFloat(process.env.VT_PLUS_PRICE || '9.99'),
             currency: process.env.PRICING_CURRENCY || 'USD',
             interval: process.env.PRICING_INTERVAL || 'month',
             features: [
+                {
+                    name: 'All Benefits from Base Plan',
+                    description:
+                        'Includes all free model access, mathematical calculator tools, and base features',
+                },
                 {
                     name: 'Grounding Web Search',
                     description:

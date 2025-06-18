@@ -42,12 +42,6 @@ import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
-// Create a wrapper component for Globe to match expected icon prop type
-const WorldIcon: React.ComponentType<{ size?: number; className?: string }> = ({
-    size,
-    className,
-}) => <Globe size={size} className={className} />;
-
 export const chatOptions = [
     {
         label: 'Deep Research',
@@ -121,28 +115,35 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.0 Flash Lite',
             value: ChatMode.GEMINI_2_0_FLASH_LITE,
             webSearch: true,
-            icon: undefined,
+            icon: <Gift size={16} className="text-green-500" />,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.5 Flash Lite',
+            value: ChatMode.GEMINI_2_5_FLASH_LITE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Flash Preview',
             value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
             webSearch: true,
-            icon: undefined,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
-            icon: undefined,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Pro Preview',
             value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
             webSearch: true,
-            icon: undefined,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
     ],

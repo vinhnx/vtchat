@@ -7,6 +7,7 @@ import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { ModelEnum, models } from './models';
 
@@ -63,7 +64,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
             if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
                 return (window as any).AI_API_KEYS[provider] || '';
             }
-        } catch (error) {
+        } catch {
             // window is not available in this environment
         }
     }
@@ -216,7 +217,7 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error: any) {
-                console.error('Error creating Gemini model with grounding:', error);
+                console.error('Error creating Gemini model with enhanced search:', error);
                 console.error('Error stack:', error.stack);
                 throw error;
             }

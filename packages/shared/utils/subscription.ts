@@ -113,6 +113,19 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
         return status.isVtPlus; // isActive check is already done
     }
 
+    // Base features available to all users with active accounts
+    if (
+        [
+            FeatureSlug.ACCESS_CHAT,
+            FeatureSlug.BASE_MODELS,
+            FeatureSlug.FREE_MODELS,
+            FeatureSlug.MATH_CALCULATOR,
+            FeatureSlug.BASE_FEATURES,
+        ].includes(feature)
+    ) {
+        return true; // Always available to active users
+    }
+
     // Fall back to checking if user's plan includes this feature
     const planConfig = PLANS[status.currentPlanSlug];
     return planConfig.features.includes(feature);

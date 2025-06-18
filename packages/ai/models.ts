@@ -7,6 +7,7 @@ export enum ModelEnum {
     Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
+    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
     GEMINI_2_5_FLASH_PREVIEW = 'gemini-2.5-flash-preview-05-20',
     GEMINI_2_5_FLASH = 'gemini-2.5-flash',
     GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
@@ -117,6 +118,15 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
+        name: 'Gemini 2.5 Flash Lite',
+        provider: 'google',
+        maxTokens: 64_000,
+        contextWindow: 1_000_000,
+        isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
@@ -124,6 +134,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
+        isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO,
@@ -131,6 +142,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
+        isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO_PREVIEW,
@@ -138,6 +150,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
+        isFree: true,
     },
     {
         id: ModelEnum.GROK_3,
@@ -226,6 +239,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_0_FLASH;
         case ChatMode.GEMINI_2_0_FLASH_LITE:
             return ModelEnum.GEMINI_2_0_FLASH_LITE;
+        case ChatMode.GEMINI_2_5_FLASH_LITE:
+            return ModelEnum.GEMINI_2_5_FLASH_LITE;
         case ChatMode.GEMINI_2_5_FLASH_PREVIEW:
             return ModelEnum.GEMINI_2_5_FLASH_PREVIEW;
         case ChatMode.GEMINI_2_5_PRO:
@@ -282,6 +297,7 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.Deep:
         case ChatMode.GEMINI_2_0_FLASH:
         case ChatMode.GEMINI_2_0_FLASH_LITE:
+        case ChatMode.GEMINI_2_5_FLASH_LITE:
         case ChatMode.GEMINI_2_5_FLASH_PREVIEW:
         case ChatMode.GEMINI_2_5_PRO:
         case ChatMode.GEMINI_2_5_PRO_PREVIEW:
@@ -351,6 +367,8 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     const googleModels = [
         ModelEnum.GEMINI_2_0_FLASH,
         ModelEnum.GEMINI_2_0_FLASH_LITE,
+        ModelEnum.GEMINI_2_5_FLASH,
+        ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_PRO_PREVIEW,
