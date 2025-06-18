@@ -37,6 +37,7 @@ export * from './settings-modal';
 export * from './side-bar';
 export * from './sources-stack';
 export * from './ssr-error-boundary';
+export * from './structured-data-display';
 export * from './table-of-messages';
 export * from './text-shimmer';
 export * from './theme-provider';
