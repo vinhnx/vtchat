@@ -9,9 +9,9 @@ import {
     SourceGrid,
     Steps,
 } from '@repo/common/components';
-import { useAnimatedText } from '@repo/common/hooks';
+import { isMathTool } from '@repo/common/constants/math-tools';
+import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { useMathCalculator } from '@repo/common/hooks';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
 import { AlertCircle, Book } from 'lucide-react';
@@ -35,7 +35,19 @@ export const ThreadItem = memo(
         );
         const setCurrentSources = useChatStore(state => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
-        const { mathCalculatorEnabled } = useMathCalculator();
+        const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
+        
+        // Check if there are active math tool calls
+        const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some(toolCall => 
+            isMathTool(toolCall.toolName)
+        );
+        
+        // Only show calculating indicator if generating AND there are no completed math results yet
+        const hasCompletedMathResults = Object.values(threadItem?.toolResults || {}).some(result =>
+            isMathTool(result.toolName)
+        );
+        
+        const isCalculatingMath = isLast && isGenerating && mathCalculatorEnabled && hasMathToolCalls && !hasCompletedMathResults;
 
         const { ref: inViewRef, inView } = useInView({});
 
@@ -50,12 +62,12 @@ export const ThreadItem = memo(
                 Object.values(threadItem.steps || {})
                     ?.filter(
                         step =>
-                            step.steps && 'read' in step?.steps && !!step.steps?.read?.data?.length
+                            step.steps && 'read' in step.steps && !!step.steps?.read?.data?.length
                     )
                     .flatMap(step => step.steps?.read?.data?.map((result: any) => result.link))
                     .filter((link): link is string => link !== undefined) || [];
             return setCurrentSources(sources);
-        }, [threadItem]);
+        }, [threadItem, setCurrentSources]);
 
         const hasAnswer = useMemo(() => {
             return threadItem.answer?.text && threadItem.answer?.text.length > 0;
@@ -79,12 +91,13 @@ export const ThreadItem = memo(
 
         const validSources = useMemo(() => {
             const sources = threadItem.sources || [];
-            return sources.filter(source => 
-                source && 
-                typeof source.title === 'string' && 
-                typeof source.link === 'string' && 
-                source.link.trim() !== '' &&
-                typeof source.index === 'number'
+            return sources.filter(
+                source =>
+                    source &&
+                    typeof source.title === 'string' &&
+                    typeof source.link === 'string' &&
+                    source.link.trim() !== '' &&
+                    typeof source.index === 'number'
             );
         }, [threadItem.sources]);
         return (
@@ -100,18 +113,13 @@ export const ThreadItem = memo(
                         )}
 
                         <div className="text-muted-foreground flex flex-row items-center gap-1.5 text-xs font-medium">
-                            <Book size={16} strokeWidth={2}  />
+                            <Book size={16} strokeWidth={2} />
                             Answer
                         </div>
 
-                        {threadItem.steps && (
-                            <Steps
-                                steps={steps}
-                                threadItem={threadItem}
-                            />
-                        )}
+                        {threadItem.steps && <Steps steps={steps} threadItem={threadItem} />}
 
-                        {isLast && isGenerating && mathCalculatorEnabled && (
+                        {isCalculatingMath && (
                             <MathCalculatorIndicator isCalculating={true} />
                         )}
 
@@ -149,7 +157,7 @@ export const ThreadItem = memo(
                         {threadItem.error && (
                             <Alert variant="destructive">
                                 <AlertDescription>
-                                    <AlertCircle className="mt-0.5 size-3.5"  />
+                                    <AlertCircle className="mt-0.5 size-3.5" />
                                     {typeof threadItem.error === 'string'
                                         ? threadItem.error
                                         : 'Something went wrong while processing your request. Please try again.'}
@@ -160,7 +168,7 @@ export const ThreadItem = memo(
                         {threadItem.status === 'ABORTED' && (
                             <Alert variant="warning">
                                 <AlertDescription>
-                                    <AlertCircle className="mt-0.5 size-3.5"  />
+                                    <AlertCircle className="mt-0.5 size-3.5" />
                                     {threadItem.error ?? 'Generation stopped'}
                                 </AlertDescription>
                             </Alert>

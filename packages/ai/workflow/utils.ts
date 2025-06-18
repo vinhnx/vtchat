@@ -842,7 +842,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
                                     ? [...(prev?.[stepId]?.steps?.[key]?.data || []), ...value.data]
                                     : typeof value?.data === 'object'
                                       ? {
-                                            ...(prev?.[stepId]?.steps?.[key]?.data || {}),
+                                            ...prev?.[stepId]?.steps?.[key]?.data,
                                             ...value.data,
                                         }
                                       : !!value?.data

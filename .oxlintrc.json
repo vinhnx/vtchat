@@ -1,0 +1,19 @@
+{
+    "rules": {
+        "no-unused-vars": "error",
+        "no-empty-pattern": "error",
+        "no-constant-condition": "error",
+        "no-extra-boolean-cast": "error",
+        "no-unsafe-optional-chaining": "error",
+        "unicorn/no-empty-file": "warn",
+        "unicorn/no-invalid-remove-event-listener": "error",
+        "unicorn/no-useless-fallback-in-spread": "warn"
+    },
+    "plugins": ["unicorn", "typescript", "react", "import"],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es2022": true
+    },
+    "ignore": ["node_modules", ".next", "dist", "build", "coverage", "*.min.js", "*.d.ts"]
+}

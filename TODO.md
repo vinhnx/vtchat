@@ -1,6 +1,10 @@
 # TODO List
 
 
+[] Gemini 2.5 GA https://blog.google/products/gemini/gemini-2-5-model-family-expands/
+--
+[] sql chart https://ai-sdk.dev/docs/guides/natural-language-postgres#natural-language-postgres-guide
+
 -
 [] explore full Anthropic capablity
 https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
@@ -20,18 +24,7 @@ tools (add icons in input chat bar, consider monet each)
 [] [monet] https://ai-sdk-agents.vercel.app/?item=github
 [] [monet] useful for work https://ai-sdk-agents.vercel.app/?item=slack
 
-=
-[] revamp sidebar arrangements
-[] revamp settings arranges and layout and ui
-[] add clear thread options to user button's dropdown popup
-[] group user's popup by functions
--
-[] migrate eslint to oxlint
-[] setup config lint and rule
-[] use context7
-[] guide https://oxc.rs/docs/guide/usage/linter.html
-[] lint and fix some critical errors and warnings
-[] rebuild, analyize make sure no build error
+--
 
 ---
 

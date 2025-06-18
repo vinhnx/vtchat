@@ -3,9 +3,8 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
 import { AlertCircle, CreditCard, Key, Settings2, Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
-import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
+import { Badge, Dialog, DialogContent, Input, cn } from '@repo/ui';
 
 import { useChatEditor } from '@repo/common/hooks';
 import { useState } from 'react';
@@ -24,7 +23,6 @@ export const SettingsModal = () => {
     const settingTab = useAppStore(state => state.settingTab);
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
-    const router = useRouter();
     const isSignedIn = !!session;
 
     // If not signed in, show login prompt instead of settings
@@ -47,19 +45,22 @@ export const SettingsModal = () => {
     const settingMenu = [
         {
             icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
-            title: 'Customize',
+            title: 'Preferences',
+            description: 'Customize your VT experience',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
             icon: <CreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
-            title: 'Plan',
+            title: 'Subscription',
+            description: 'Manage your plan and usage',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
             icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
+            description: 'Connect your own AI providers',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
         },
@@ -69,27 +70,57 @@ export const SettingsModal = () => {
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
                 ariaTitle="Settings"
-                className="h-full max-h-[600px] !max-w-[760px] overflow-x-hidden rounded-xl p-0"
+                className="h-full max-h-[700px] !max-w-[900px] overflow-x-hidden rounded-xl p-0"
             >
                 <div className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden">
-                    <h3 className="border-border mx-5 border-b py-4 text-lg font-bold">Settings</h3>
-                    <div className="flex flex-row gap-6 p-4">
-                        <div className="flex w-[160px] shrink-0 flex-col gap-1">
-                            {settingMenu.map(setting => (
-                                <Button
-                                    key={setting.key}
-                                    rounded="full"
-                                    className="justify-start"
-                                    variant={settingTab === setting.key ? 'secondary' : 'ghost'}
-                                    onClick={() => setSettingTab(setting.key)}
-                                >
-                                    {setting.icon}
-                                    {setting.title}
-                                </Button>
-                            ))}
+                    {/* Header */}
+                    <div className="border-border sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
+                        <div className="flex items-center justify-between px-6 py-4">
+                            <div>
+                                <h2 className="text-xl font-semibold">Settings</h2>
+                                <p className="text-muted-foreground text-sm">
+                                    Customize your VT experience and manage your account
+                                </p>
+                            </div>
                         </div>
-                        <div className="flex flex-1 flex-col overflow-hidden px-4">
-                            {settingMenu.find(setting => setting.key === settingTab)?.component}
+                        <div className="border-border border-b" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex flex-row">
+                        {/* Sidebar Navigation */}
+                        <div className="border-border w-[280px] shrink-0 border-r bg-muted/30 p-4">
+                            <nav className="space-y-2">
+                                {settingMenu.map(setting => (
+                                    <button
+                                        key={setting.key}
+                                        onClick={() => setSettingTab(setting.key)}
+                                        className={cn(
+                                            'flex w-full items-start gap-3 rounded-lg p-3 text-left transition-colors',
+                                            settingTab === setting.key
+                                                ? 'bg-background text-foreground shadow-sm'
+                                                : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+                                        )}
+                                    >
+                                        <div className="mt-0.5 shrink-0">
+                                            {setting.icon}
+                                        </div>
+                                        <div className="flex-1 space-y-1">
+                                            <div className="font-medium">{setting.title}</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {setting.description}
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+
+                        {/* Main Content Area */}
+                        <div className="flex-1 p-6">
+                            <div className="max-w-2xl">
+                                {settingMenu.find(setting => setting.key === settingTab)?.component}
+                            </div>
                         </div>
                     </div>
                 </div>

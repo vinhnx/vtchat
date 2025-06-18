@@ -1,9 +1,8 @@
 import { SearchResultsList, StepStatus } from '@repo/common/components';
-import { Label } from '@repo/ui';
 import { Step } from '@repo/shared/types';
-import { Badge } from '@repo/ui';
-import { Search } from 'lucide-react';
+import { Badge, Label } from '@repo/ui';
 import { motion } from 'framer-motion';
+import { Search } from 'lucide-react';
 
 export type StepRendererType = {
     step: Step;
@@ -27,7 +26,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
     };
 
     const renderSearchStep = () => {
-        if (step?.steps && 'search' in step?.steps) {
+        if (step?.steps && 'search' in step.steps) {
             return (
                 <motion.div
                     className="flex flex-col gap-1"
@@ -37,9 +36,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                 >
                     <div className="flex flex-col gap-2">
                         <div className="w-[100px]">
-                            <Label className="text-xs">
-                                Searching
-                            </Label>
+                            <Label className="text-xs">Searching</Label>
                         </div>
 
                         <div className="flex flex-row flex-wrap gap-1">
@@ -52,7 +49,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                                         transition={{ duration: 0.2, delay: 0.1 + index * 0.05 }}
                                     >
                                         <Badge>
-                                            <Search size={12} className="opacity-50"  />
+                                            <Search size={12} className="opacity-50" />
                                             {query}
                                         </Badge>
                                     </motion.div>
@@ -74,9 +71,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.3 }}
                 >
                     <div className="w-[100px]">
-                        <Label className="text-xs">
-                            Reading
-                        </Label>
+                        <Label className="text-xs">Reading</Label>
                     </div>
                     <SearchResultsList
                         sources={Array.isArray(step.steps?.read?.data) ? step.steps.read.data : []}
@@ -100,9 +95,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.4 }}
                 >
                     <div className="w-[100px]">
-                        <Label className="text-xs">
-                            Analyzing
-                        </Label>
+                        <Label className="text-xs">Analyzing</Label>
                     </div>
                     <div className="text-muted-foreground text-sm">
                         {reasoningData.split('\n\n').map((line: string, index: number) => (
@@ -127,9 +120,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{ duration: 0.3, delay: 0.5 }}
                 >
                     <div className="w-[100px]">
-                        <Label className="text-xs">
-                            Wrapping up
-                        </Label>
+                        <Label className="text-xs">Wrapping up</Label>
                     </div>
                     <p>{step.steps?.wrapup?.data || ''}</p>
                 </motion.div>
