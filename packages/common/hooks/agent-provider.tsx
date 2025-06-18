@@ -19,7 +19,7 @@ export type AgentContextType = {
         messages?: ThreadItem[];
         useWebSearch?: boolean;
         useMathCalculator?: boolean;
-    showSuggestions?: boolean;
+        showSuggestions?: boolean;
     }) => Promise<void>;
     updateContext: (threadId: string, data: any) => void;
 };
@@ -358,6 +358,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             const optimisticAiThreadItemId = existingThreadItemId || nanoid();
             const query = formData.get('query') as string;
             const imageAttachment = formData.get('imageAttachment') as string;
+            const documentAttachment = formData.get('documentAttachment') as string;
+            const documentMimeType = formData.get('documentMimeType') as string;
+            const documentFileName = formData.get('documentFileName') as string;
 
             const aiThreadItem: ThreadItem = {
                 id: optimisticAiThreadItemId,
@@ -367,6 +370,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 threadId,
                 query,
                 imageAttachment,
+                documentAttachment: documentAttachment
+                    ? {
+                          base64: documentAttachment,
+                          mimeType: documentMimeType,
+                          fileName: documentFileName,
+                      }
+                    : undefined,
                 mode,
             };
 
@@ -380,6 +390,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 messages: messages || [],
                 query,
                 imageAttachment,
+                documentAttachment: documentAttachment
+                    ? {
+                          base64: documentAttachment,
+                          mimeType: documentMimeType,
+                          fileName: documentFileName,
+                      }
+                    : undefined,
             });
 
             if (hasApiKeyForChatMode(mode, isSignedIn)) {

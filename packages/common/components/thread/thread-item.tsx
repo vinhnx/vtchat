@@ -1,5 +1,6 @@
 import {
     CitationProvider,
+    DocumentSidePanel,
     MarkdownContent,
     MathCalculatorIndicator,
     Message,
@@ -36,18 +37,23 @@ export const ThreadItem = memo(
         const setCurrentSources = useChatStore(state => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
-        
+
         // Check if there are active math tool calls
-        const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some(toolCall => 
+        const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some(toolCall =>
             isMathTool(toolCall.toolName)
         );
-        
+
         // Only show calculating indicator if generating AND there are no completed math results yet
         const hasCompletedMathResults = Object.values(threadItem?.toolResults || {}).some(result =>
             isMathTool(result.toolName)
         );
-        
-        const isCalculatingMath = isLast && isGenerating && mathCalculatorEnabled && hasMathToolCalls && !hasCompletedMathResults;
+
+        const isCalculatingMath =
+            isLast &&
+            isGenerating &&
+            mathCalculatorEnabled &&
+            hasMathToolCalls &&
+            !hasCompletedMathResults;
 
         const { ref: inViewRef, inView } = useInView({});
 
@@ -119,9 +125,7 @@ export const ThreadItem = memo(
 
                         {threadItem.steps && <Steps steps={steps} threadItem={threadItem} />}
 
-                        {isCalculatingMath && (
-                            <MathCalculatorIndicator isCalculating={true} />
-                        )}
+                        {isCalculatingMath && <MathCalculatorIndicator isCalculating={true} />}
 
                         {!hasResponse && (
                             <div className="flex w-full flex-col items-start gap-2 opacity-10">
@@ -179,11 +183,21 @@ export const ThreadItem = memo(
                                 threadItem.status === 'ABORTED' ||
                                 threadItem.status === 'ERROR' ||
                                 !isGenerating) && (
-                                <MessageActions
-                                    threadItem={threadItem}
-                                    ref={messageRef}
-                                    isLast={isLast}
-                                />
+                                <div className="flex flex-col gap-3">
+                                    <MessageActions
+                                        threadItem={threadItem}
+                                        ref={messageRef}
+                                        isLast={isLast}
+                                    />
+
+                                    {threadItem.documentAttachment && (
+                                        <div className="flex justify-start">
+                                            <DocumentSidePanel
+                                                documentAttachment={threadItem.documentAttachment}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             )}
                         {/* Follow-up suggestions are disabled entirely */}
                     </div>

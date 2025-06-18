@@ -8,6 +8,7 @@
         "./config/vt-plus-features": "./config/vt-plus-features.ts",
         "./constants": "./constants/index.ts",
         "./constants/routes": "./constants/routes.ts",
+        "./constants/document-upload": "./constants/document-upload.ts",
         "./db": "./db/index.ts",
         "./utils": "./utils/index.ts",
         "./types": "./types.ts",

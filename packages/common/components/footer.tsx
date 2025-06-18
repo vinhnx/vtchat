@@ -11,6 +11,10 @@ export const Footer = () => {
             href: '/privacy',
             label: 'Privacy Policy',
         },
+        {
+            href: '/faq',
+            label: 'FAQs',
+        },
     ];
 
     return (

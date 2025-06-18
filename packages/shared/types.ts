@@ -59,6 +59,12 @@ export type ToolResult = {
     result: any;
 };
 
+export type DocumentAttachment = {
+    base64: string;
+    mimeType: string;
+    fileName: string;
+};
+
 export type ThreadItem = {
     query: string;
     toolCalls?: Record<string, ToolCall>;
@@ -79,6 +85,7 @@ export type ThreadItem = {
     sources?: Source[];
     object?: Record<string, any>;
     imageAttachment?: string;
+    documentAttachment?: DocumentAttachment;
 };
 
 export type MessageGroup = {

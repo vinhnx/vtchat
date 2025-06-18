@@ -1,3 +1,4 @@
+export * from './document-display';
 export * from './followup-suggestion';
 export * from './goals';
 export * from './markdown-content';

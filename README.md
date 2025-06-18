@@ -10,6 +10,7 @@ The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) m
 
 * **Advanced Research Modes**:
   * **Grounding Web Search**: Enhanced search with web integration and comprehensive analysis.
+  * **Document Upload**: Upload and analyze PDF, DOC, DOCX, TXT, and MD files (Gemini models only).
 * **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
 * **Free Models Access**: Access to free AI models including:
   * **Google Gemini**: Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite (1M input/64K output), Gemini 2.5 Flash Preview, Gemini 2.5 Pro, Gemini 2.5 Pro Preview

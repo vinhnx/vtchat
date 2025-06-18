@@ -25,8 +25,8 @@ export default function PrivacyPage() {
     return (
         <div className="bg-background min-h-screen">
             {/* Header */}
-            <header className="border-border/50 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-sm">
-                <div className="mx-auto flex max-w-screen-lg items-center justify-between px-4 py-4">
+            <header className="border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm">
+                <div className="mx-auto flex w-full items-center justify-between px-4 py-4 max-w-7xl">
                     <Link href="/">
                         <Button variant="ghost" size="sm" className="gap-2">
                             <ArrowLeft size={16} />
@@ -38,15 +38,17 @@ export default function PrivacyPage() {
             </header>
 
             {/* Main Content */}
-            <main className="mx-auto max-w-screen-lg px-4 py-12">
-                <div className="prose prose-neutral dark:prose-invert max-w-none">
-                    <MarkdownContent content={privacyPolicy} />
+            <main className="bg-background w-full px-4 py-12">
+                <div className="mx-auto w-[60%] px-12 md:px-20 lg:px-24 xl:px-32">
+                    <div className="prose prose-neutral dark:prose-invert max-w-none">
+                        <MarkdownContent content={privacyPolicy} />
+                    </div>
                 </div>
             </main>
 
             {/* Footer */}
-            <footer className="border-border/50 bg-muted/20 border-t">
-                <div className="mx-auto max-w-screen-lg">
+            <footer className="border-border/50 bg-background border-t">
+                <div className="mx-auto w-full max-w-7xl">
                     <Footer />
                 </div>
             </footer>
