@@ -6,6 +6,29 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+*   **User Button Functional Grouping Enhancement:** Improved the user popover by connecting the Settings menu item to the actual settings modal:
+    *   Connected the "Settings" item in the user dropdown to open the settings modal using `setIsSettingsOpen(true)`
+    *   Maintained the existing functional grouping structure:
+        - **Account Management:** Settings (now functional), Profile
+        - **Support & Legal:** FAQ & Help, Terms of Service, Privacy Policy
+        - **Sign Out:** Logout action
+    *   Added proper integration between user button and settings modal for better UX
+
+*   **Sidebar Blocking Indicator Fix:** Resolved the issue where a full-page loader blocked the sidebar during logout:
+    *   Replaced `FullPageLoader` with a non-blocking empty state message when no threads are present
+    *   Sidebar remains functional during logout process and thread clearing
+    *   Improved user experience by preventing interface blocking during authentication state changes
+    *   Removed unused `FullPageLoader` import to clean up linting warnings
+
+*   **Sidebar User Dropdown Functional Grouping:** Added proper functional grouping to the sidebar's user dropdown menu:
+    *   Added `DropdownMenuLabel` and `DropdownMenuSeparator` components for clear section organization
+    *   Organized menu items into logical groups:
+        - **Account Management:** Settings
+        - **Support & Legal:** FAQ, Privacy Policy, Terms of Service
+        - **Authentication:** Log in/Sign out
+    *   Enhanced consistency between user button and sidebar user dropdown interfaces
+    *   Improved menu width and alignment for better visual presentation
+
 *   **Example Prompts - Complete Content Refresh & Revamp:** Updated `packages/common/components/example-prompts.tsx`:
     *   **Styling:**
         *   Applied category-specific colors to icons within the example prompt buttons.
@@ -47,6 +70,13 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     *   Separated subscription section with visual divider for better organization
     *   Enhanced responsive design for collapsed sidebar state
     *   Maintained consistent styling with shadcn/ui components
+
+*   **New Chat Button Fix Complete:** Fixed the "New Chat" button functionality:
+    *   Added proper onClick handler that creates new threads using `useChatStore.getState().createThread()`
+    *   Fixed navigation logic for both chat page and non-chat page contexts
+    *   Improved button behavior in collapsed sidebar state
+    *   Removed conditional rendering that was causing different behaviors
+    *   Enhanced icon spacing with proper margin classes
 
 *   **User Button Enhancement Complete:** Added clear thread functionality and grouped popup by functions:
     *   Added "Clear all threads" option with confirmation dialog
