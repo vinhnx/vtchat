@@ -19,17 +19,17 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 ### 2. Made All Preview Models Free
 
-#### GEMINI_2_5_PRO Made Free (packages/ai/models.ts)
+#### GEMINI_2_5_PRO Corrected to Premium (packages/ai/models.ts)
 
-- **GEMINI_2_5_PRO** (`gemini-2.5-pro-preview-05-06`) - marked as `isFree: true`
-- **Added Gift Icon** in chat-actions.tsx for visual consistency
+- **GEMINI_2_5_PRO** (`gemini-2.5-pro-preview-05-06`) - corrected to `isFree: false` (is NOT a free model)
+- **Removed Gift Icon** in chat-actions.tsx for accurate pricing representation
 
-#### All Preview Models Now Free
+#### All Preview Models Now Free (except GEMINI_2_5_PRO)
 
 - GEMINI_2_0_FLASH_LITE ✅
 - GEMINI_2_5_FLASH_LITE ✅ (1M input/64K output)
 - GEMINI_2_5_FLASH_PREVIEW ✅
-- GEMINI_2_5_PRO ✅ (newly made free)
+- GEMINI_2_5_PRO ❌ (NOT free - premium model)
 - GEMINI_2_5_PRO_PREVIEW ✅
 
 #### Chat Actions UI (packages/common/components/chat-input/chat-actions.tsx)
@@ -74,13 +74,12 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 #### Updated Free Tier Benefits (apps/web/lib/config/pricing.ts)
 
-- **Updated "Access to Free Models" description** to include all 5 free Gemini models
+- **Updated "Access to Free Models" description** to include all 4 free Gemini models
 - **Enhanced model list** now includes:
   - Gemini 2.0 Flash Lite
   - Gemini 2.5 Flash Lite (1M input/64K output tokens)
   - Gemini 2.5 Flash Preview
-  - Gemini 2.5 Pro (newly added)
-  - Gemini 2.5 Pro Preview
+  - Gemini 2.5 Pro Preview (NOT Gemini 2.5 Pro which is premium)
   - DeepSeek V3, DeepSeek R1, Qwen3 14B (OpenRouter models)
 
 #### Enhanced Plus Tier Benefits (apps/web/lib/config/pricing.ts)
@@ -121,7 +120,7 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 - **Gemini 2.0 Flash Lite** - Fast, efficient model for general tasks
 - **Gemini 2.5 Flash Lite** - Enhanced version with improved capabilities ✨ NEW
 - **Gemini 2.5 Flash Preview** - Preview access to latest features
-- **Gemini 2.5 Pro Preview** - Preview access to Pro-level capabilities
+- **Gemini 2.5 Pro Preview** - Preview access to Pro-level capabilities (Note: Gemini 2.5 Pro is premium only)
 
 ### OpenRouter Models (Free Tier)
 

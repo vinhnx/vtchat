@@ -3,7 +3,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { Button, Dialog, DialogContent } from '@repo/ui';
-import { Star } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useVtPlusAccess } from '../hooks/use-subscription-access';
@@ -61,7 +61,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     requiredFeature,
     requiredPlan,
     message,
-    title = 'Upgrade Required',
+    title = 'Unlock Premium Features',
     onGatedClick,
     upgradeUrl = '/plus',
     children,
@@ -116,14 +116,14 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
             const featureName = requiredFeature
                 .replace(/_/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());
-            return `${featureName} is a VT+ feature. Please upgrade your plan to use this feature.`;
+            return `Unlock ${featureName} with VT+! Upgrade now to enjoy enhanced AI capabilities and unlock your potential.`;
         }
 
         if (requiredPlan === PlanSlug.VT_PLUS) {
-            return 'This feature requires VT+ plan. Please upgrade to access this feature.';
+            return 'Ready for more? This amazing feature is available with VT+. Join our community of power users today!';
         }
 
-        return 'This feature requires a higher plan. Please upgrade to continue.';
+        return 'Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.';
     }, [message, requiredFeature, requiredPlan]);
 
     const handleUpgrade = () => {
@@ -176,7 +176,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                 <DialogContent ariaTitle={title} className="max-w-md rounded-xl">
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <Star size={24} className="text-purple-600 dark:text-purple-400" />
+                            <Sparkles size={24} className="text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">{title}</h3>

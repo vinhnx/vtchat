@@ -46,6 +46,12 @@ export type WorkflowEventSchema = {
             text: string;
             final: boolean;
             status?: 'PENDING' | 'COMPLETED' | 'FAILED';
+            details?: Array<{
+                type: 'text' | 'redacted';
+                text?: string;
+                data?: string;
+                signature?: string;
+            }>;
         };
         answer: {
             text: string;
@@ -113,6 +119,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         webSearch,
         mathCalculator,
         showSuggestions,
+        thinkingMode,
     }: {
         mode: ChatMode;
         question: string;
@@ -127,6 +134,11 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         webSearch?: boolean;
         mathCalculator?: boolean;
         showSuggestions?: boolean;
+        thinkingMode?: {
+            enabled: boolean;
+            budget: number;
+            includeThoughts: boolean;
+        };
     }) => {
         // Reset state
         setError(null);
@@ -169,6 +181,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                     webSearch,
                     mathCalculator,
                     showSuggestions,
+                    thinkingMode,
                 },
             });
 

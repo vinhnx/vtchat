@@ -4,16 +4,16 @@ import { ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Tooltip } from '@repo/ui';
-import { Paperclip } from 'lucide-react';
+import { Image } from 'lucide-react';
 import { FC, useState } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
-// Create a wrapper component for Paperclip to match expected icon prop type
-const PaperclipIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+// Create a wrapper component for Image to match expected icon prop type
+const ImageIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <Paperclip size={size} className={className} />;
+}) => <Image size={size} className={className} />;
 
 export type TImageUpload = {
     id: string;
@@ -31,10 +31,14 @@ export const ImageUpload: FC<TImageUpload> = ({
     handleImageUpload,
 }) => {
     const chatMode = useChatStore(state => state.chatMode);
+    const imageAttachment = useChatStore(state => state.imageAttachment);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const { canAccess } = useSubscriptionAccess();
+
+    // Check if an image is attached
+    const hasImageAttached = imageAttachment?.file || imageAttachment?.base64;
 
     const chatModeConfig = ChatModeConfig[chatMode];
     const requiresVTPlusForImageUpload =
@@ -69,13 +73,32 @@ export const ImageUpload: FC<TImageUpload> = ({
     const imageUploadButton = (
         <>
             <input type="file" id={id} className="hidden" onChange={handleImageUpload} />
-            <Tooltip content={tooltip}>
+            <Tooltip
+                content={
+                    hasImageAttached
+                        ? `Image attached: ${imageAttachment?.file?.name || 'Unknown'}`
+                        : tooltip
+                }
+            >
                 {showIcon ? (
-                    <Button variant="ghost" size="icon-sm" onClick={handleFileSelect}>
-                        <Paperclip size={16} strokeWidth={2}  />
+                    <Button
+                        variant={hasImageAttached ? 'default' : 'ghost'}
+                        size="icon-sm"
+                        onClick={handleFileSelect}
+                        className={
+                            hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
+                        }
+                    >
+                        <Image size={16} strokeWidth={2} />
                     </Button>
                 ) : (
-                    <Button variant="bordered" onClick={handleFileSelect}>
+                    <Button
+                        variant={hasImageAttached ? 'default' : 'bordered'}
+                        onClick={handleFileSelect}
+                        className={
+                            hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
+                        }
+                    >
                         {label}
                     </Button>
                 )}
@@ -87,7 +110,7 @@ export const ImageUpload: FC<TImageUpload> = ({
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
                 description="Please log in to upload and attach files to your messages."
-                icon={PaperclipIcon}
+                icon={ImageIcon}
             />
         </>
     );

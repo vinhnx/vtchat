@@ -61,6 +61,7 @@ Please include:
                 prompt,
                 byokKeys: context?.get('apiKeys'),
                 signal,
+                thinkingMode: context?.get('thinkingMode'),
             });
 
             console.log('generateTextWithGeminiSearch result:', {

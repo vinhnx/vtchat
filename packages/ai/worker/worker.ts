@@ -40,6 +40,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 webSearch,
                 mathCalculator,
                 showSuggestions,
+                thinkingMode,
             } = payload;
 
             // Set API keys if provided
@@ -72,6 +73,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 webSearch,
                 mathCalculator,
                 showSuggestions,
+                thinkingMode,
                 onFinish: (_data: any) => {},
             });
 

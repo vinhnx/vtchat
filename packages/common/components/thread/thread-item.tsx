@@ -9,6 +9,7 @@ import {
     QuestionPrompt,
     SourceGrid,
     Steps,
+    ThinkingLog,
 } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
@@ -140,6 +141,11 @@ export const ThreadItem = memo(
                             {hasAnswer && threadItem.answer?.text && (
                                 <div className="flex flex-col">
                                     <SourceGrid sources={validSources} />
+
+                                    {/* Show thinking log if reasoning data is available */}
+                                    {threadItem.reasoning && (
+                                        <ThinkingLog threadItem={threadItem} />
+                                    )}
 
                                     <MarkdownContent
                                         content={animatedText || ''}

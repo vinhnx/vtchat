@@ -86,6 +86,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             byokKeys: context?.get('apiKeys'),
             messages: messages as any,
             signal,
+            thinkingMode: context?.get('thinkingMode'),
         });
 
         context?.update('queries', current => [...(current ?? []), ...(object?.queries || [])]);

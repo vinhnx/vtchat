@@ -8,10 +8,8 @@ export enum ModelEnum {
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_5_FLASH_PREVIEW = 'gemini-2.5-flash-preview-05-20',
     GEMINI_2_5_FLASH = 'gemini-2.5-flash',
-    GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
-    GEMINI_2_5_PRO_PREVIEW = 'gemini-2.5-pro-preview-06-05',
+    GEMINI_2_5_PRO = 'gemini-2.5-pro',
     CLAUDE_4_OPUS = 'claude-4-opus-20250514',
     GPT_4o_Mini = 'gpt-4o-mini',
     GPT_4o = 'gpt-4o',
@@ -142,7 +140,7 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
-        isFree: true,
+        isFree: false,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO_PREVIEW,
@@ -429,4 +427,93 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
     trimmedMessages.push(latestMessage);
 
     return { trimmedMessages, tokenCount: totalTokens };
+};
+
+/**
+ * Detects if a model supports reasoning tokens/thinking capabilities
+ */
+export const supportsReasoning = (model: ModelEnum): boolean => {
+    // DeepSeek reasoning models (via Fireworks, OpenRouter)
+    const deepseekReasoningModels = [
+        ModelEnum.Deepseek_R1, // Fireworks
+        ModelEnum.DEEPSEEK_R1_FREE, // OpenRouter
+        ModelEnum.DEEPSEEK_R1_0528_FREE, // OpenRouter
+    ];
+
+    // Anthropic reasoning models
+    const anthropicReasoningModels = [
+        ModelEnum.CLAUDE_4_SONNET, // claude-4-sonnet-20250514
+        ModelEnum.CLAUDE_4_OPUS, // claude-4-opus-20250514
+    ];
+
+    // Gemini thinking models (existing functionality)
+    const geminiThinkingModels = [
+        ModelEnum.GEMINI_2_5_FLASH,
+        ModelEnum.GEMINI_2_5_PRO,
+        ModelEnum.GEMINI_2_5_FLASH_LITE,
+        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
+        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
+    ];
+
+    return [
+        ...deepseekReasoningModels,
+        ...anthropicReasoningModels,
+        ...geminiThinkingModels,
+    ].includes(model);
+};
+
+/**
+ * Determines the reasoning implementation type for a model
+ */
+export const getReasoningType = (
+    model: ModelEnum
+): 'gemini-thinking' | 'deepseek-reasoning' | 'anthropic-reasoning' | 'none' => {
+    // Gemini models use thinking config
+    const geminiThinkingModels = [
+        ModelEnum.GEMINI_2_5_FLASH,
+        ModelEnum.GEMINI_2_5_PRO,
+        ModelEnum.GEMINI_2_5_FLASH_LITE,
+        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
+        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
+    ];
+
+    if (geminiThinkingModels.includes(model)) {
+        return 'gemini-thinking';
+    }
+
+    // DeepSeek models use reasoning middleware with <think> tags
+    const deepseekReasoningModels = [
+        ModelEnum.Deepseek_R1,
+        ModelEnum.DEEPSEEK_R1_FREE,
+        ModelEnum.DEEPSEEK_R1_0528_FREE,
+    ];
+
+    if (deepseekReasoningModels.includes(model)) {
+        return 'deepseek-reasoning';
+    }
+
+    // Anthropic models support reasoning with providerOptions
+    const anthropicReasoningModels = [ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
+
+    if (anthropicReasoningModels.includes(model)) {
+        return 'anthropic-reasoning';
+    }
+
+    return 'none';
+};
+
+/**
+ * Gets the appropriate middleware tag for reasoning extraction
+ */
+export const getReasoningTagName = (model: ModelEnum): string | null => {
+    const reasoningType = getReasoningType(model);
+
+    switch (reasoningType) {
+        case 'deepseek-reasoning':
+            return 'think'; // DeepSeek uses <think> tags
+        case 'anthropic-reasoning':
+            return 'thinking'; // Anthropic models may use different tags
+        default:
+            return null; // Gemini uses built-in thinking config, no middleware needed
+    }
 };

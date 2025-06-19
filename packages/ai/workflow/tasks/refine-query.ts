@@ -68,6 +68,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             messages: messages as any,
             signal,
             byokKeys,
+            thinkingMode: context?.get('thinkingMode'),
         });
 
         if (object?.needsClarification) {
