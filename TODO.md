@@ -1,6 +1,9 @@
 # TODO List
 
 
+allow access to all gemini models for free users, only that thinking mode is not available for free users
+
+--
 'deepseek-reasoning'
 'anthropic-reasoning'
 'gemini-thinking'

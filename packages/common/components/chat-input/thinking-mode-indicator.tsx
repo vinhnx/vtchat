@@ -2,15 +2,19 @@
 
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
+import { SETTING_TABS, useAppStore } from '@repo/common/store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Badge } from '@repo/ui';
-import { Brain, Zap } from 'lucide-react';
+import { Brain, Zap, Settings } from 'lucide-react';
 import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 
 export const ThinkingModeIndicator = () => {
     const thinkingMode = useChatStore(state => state.thinkingMode);
     const chatMode = useChatStore(state => state.chatMode);
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore(state => state.setSettingTab);
 
     // Check if current model supports thinking mode (specific Gemini 2.5 models only)
     const isThinkingCapableModel = useMemo(() => {
@@ -32,14 +36,25 @@ export const ThinkingModeIndicator = () => {
         return null;
     }
 
+    const handleClick = () => {
+        setSettingTab(SETTING_TABS.REASONING_MODE);
+        setIsSettingsOpen(true);
+    };
+
     return (
-        <Badge
-            variant="secondary"
-            className="flex items-center gap-1 bg-purple-100 text-xs text-purple-700 hover:bg-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30"
+        <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
         >
-            <Brain size={12} className="animate-pulse" />
-            <span>Thinking Mode</span>
-            <Zap size={10} className="text-purple-500" />
-        </Badge>
+            <Badge
+                variant="secondary"
+                onClick={handleClick}
+                className="flex cursor-pointer items-center gap-1 bg-gradient-to-r from-[#262626] to-[#262626]/95 border border-[#D99A4E]/30 text-xs text-[#D99A4E] transition-all duration-300 hover:border-[#BFB38F]/50 hover:shadow-[0_0_10px_rgba(217,154,78,0.1)] dark:hover:shadow-[0_0_15px_rgba(217,154,78,0.1)]"
+            >
+                <Brain size={12} className="animate-pulse" />
+                <span className="font-medium">Reasoning Mode</span>
+                <Settings size={10} className="text-[#BFB38F]" />
+            </Badge>
+        </motion.div>
     );
 };

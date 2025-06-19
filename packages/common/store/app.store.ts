@@ -9,6 +9,7 @@ export const SETTING_TABS = {
     PERSONALIZATION: 'personalization',
     USAGE_CREDITS: 'usage-credits',
     PLUS: 'plus',
+    REASONING_MODE: 'reasoning-mode',
     TERMS: 'terms',
     PRIVACY: 'privacy',
 } as const;
