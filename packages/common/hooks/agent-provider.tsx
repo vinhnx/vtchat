@@ -7,7 +7,20 @@ import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
-import { useApiKeysStore, useAppStore, useChatStore } from '../store';
+import { useApiKeysStore, useChatStore } from '../store';
+
+// Define common event types to reduce repetition
+const EVENT_TYPES = [
+    'steps',
+    'sources',
+    'answer',
+    'error',
+    'status',
+    'suggestions',
+    'toolCalls',
+    'toolResults',
+    'object',
+];
 
 export type AgentContextType = {
     runAgent: (body: any) => Promise<void>;
@@ -30,7 +43,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const { threadId: currentThreadId } = useParams();
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const user = session?.user;
 
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [modalChatMode, setModalChatMode] = useState<ChatMode>(ChatMode.GPT_4o_Mini);
@@ -45,6 +57,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         updateThread,
         chatMode,
         customInstructions,
+        thinkingMode,
     } = useChatStore(state => ({
         updateThreadItem: state.updateThreadItem,
         setIsGenerating: state.setIsGenerating,
@@ -55,28 +68,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         updateThread: state.updateThread,
         chatMode: state.chatMode,
         customInstructions: state.customInstructions,
+        thinkingMode: state.thinkingMode,
     }));
     const { push } = useRouter();
 
     const apiKeys = useApiKeysStore(state => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
-    const setShowSignInModal = useAppStore(state => state.setShowSignInModal);
 
     // In-memory store for thread items
     const threadItemMap = useMemo(() => new Map<string, ThreadItem>(), []);
-
-    // Define common event types to reduce repetition
-    const EVENT_TYPES = [
-        'steps',
-        'sources',
-        'answer',
-        'error',
-        'status',
-        'suggestions',
-        'toolCalls',
-        'toolResults',
-        'object',
-    ];
 
     // Helper: Update in-memory and store thread item
     const handleThreadItemUpdate = useCallback(
@@ -86,9 +86,31 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             eventType: string,
             eventData: any,
             parentThreadItemId?: string,
-            shouldPersistToDB: boolean = true
+            _shouldPersistToDB: boolean = true
         ) => {
             const prevItem = threadItemMap.get(threadItemId) || ({} as ThreadItem);
+
+            // Extract reasoning from steps if present
+            let reasoning = prevItem.reasoning;
+            let reasoningDetails = prevItem.reasoningDetails;
+            
+            if (eventType === 'steps' && eventData?.steps) {
+                // Look for reasoning in the steps structure
+                const stepsData = eventData.steps;
+                if (stepsData[0]?.steps?.reasoning?.data) {
+                    reasoning = stepsData[0].steps.reasoning.data;
+                }
+                // Look for structured reasoning details
+                if (stepsData[0]?.steps?.reasoningDetails?.data) {
+                    reasoningDetails = stepsData[0].steps.reasoningDetails.data;
+                }
+            }
+            
+            // Handle reasoning details from answer events if present
+            if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
+                reasoningDetails = eventData.answer.reasoningDetails;
+            }
+
             const updatedItem: ThreadItem = {
                 ...prevItem,
                 query: eventData?.query || prevItem.query || '',
@@ -97,6 +119,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 parentId: parentThreadItemId || prevItem.parentId,
                 id: threadItemId,
                 object: eventData?.object || prevItem.object,
+                reasoning,
+                reasoningDetails,
                 createdAt: prevItem.createdAt || new Date(),
                 updatedAt: new Date(),
                 ...(eventType === 'answer'
@@ -139,7 +163,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     // The threadItemMap serves as a cache and should retain completed items
                 }
             },
-            [handleThreadItemUpdate, setIsGenerating, threadItemMap]
+            [handleThreadItemUpdate, setIsGenerating]
         )
     );
 
@@ -315,7 +339,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsGenerating,
             updateThreadItem,
             handleThreadItemUpdate,
-            EVENT_TYPES,
+            isSignedIn,
             threadItemMap,
         ]
     );
@@ -337,6 +361,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             newChatMode?: string;
             messages?: ThreadItem[];
             useWebSearch?: boolean;
+            useMathCalculator?: boolean;
             showSuggestions?: boolean;
         }) => {
             const mode = (newChatMode || chatMode) as ChatMode;
@@ -423,6 +448,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: apiKeys(),
+                    thinkingMode,
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
@@ -452,7 +478,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             isSignedIn,
             currentThreadId,
             chatMode,
-            setShowSignInModal,
+            push,
             updateThread,
             createThreadItem,
             setCurrentThreadItem,
@@ -465,6 +491,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             hasApiKeyForChatMode,
             updateThreadItem,
             runAgent,
+            setAbortController,
+            thinkingMode,
         ]
     );
 

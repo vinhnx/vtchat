@@ -111,6 +111,7 @@ Current date: ${getHumanizedDate()}
             byokKeys,
             messages: messages as any,
             signal,
+            thinkingMode: context?.get('thinkingMode'),
         });
 
         const newStepId = stepId + 1;

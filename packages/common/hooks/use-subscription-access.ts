@@ -76,6 +76,7 @@ export function useSubscriptionAccess() {
                     FeatureSlug.DEEP_RESEARCH,
                     FeatureSlug.PRO_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
+                    FeatureSlug.STRUCTURED_OUTPUT,
                 ];
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;

@@ -86,6 +86,15 @@ export type ThreadItem = {
     object?: Record<string, any>;
     imageAttachment?: string;
     documentAttachment?: DocumentAttachment;
+    // Thinking mode data (VT+ feature) - contains AI reasoning/thoughts
+    reasoning?: string;
+    // Structured reasoning details from AI SDK (includes text and redacted content)
+    reasoningDetails?: Array<{
+        type: 'text' | 'redacted';
+        text?: string;
+        data?: string;
+        signature?: string;
+    }>;
 };
 
 export type MessageGroup = {

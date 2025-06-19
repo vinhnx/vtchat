@@ -2,17 +2,20 @@ import { useDocumentAttachment } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
 import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
-import { Button } from '@repo/ui';
+import { Button, cn } from '@repo/ui';
 import { FileText } from 'lucide-react';
 import { useRef } from 'react';
 
 export const DocumentUploadButton = () => {
     const chatMode = useChatStore(state => state.chatMode);
+    const documentAttachment = useChatStore(state => state.documentAttachment);
     const { handleDocumentUpload } = useDocumentAttachment();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Only show for Gemini models
     if (!isGeminiModel(chatMode)) return null;
+
+    const hasDocument = !!documentAttachment?.file;
 
     const handleClick = () => {
         fileInputRef.current?.click();
@@ -32,10 +35,17 @@ export const DocumentUploadButton = () => {
         <>
             <Button
                 size="icon-sm"
-                variant="ghost"
+                variant={hasDocument ? 'secondary' : 'ghost'}
                 onClick={handleClick}
-                tooltip="Document Upload (PDF, DOC, TXT)"
-                className="text-muted-foreground hover:text-foreground"
+                tooltip={
+                    hasDocument
+                        ? `Document uploaded: ${documentAttachment?.fileName}`
+                        : 'Document Upload (PDF, DOC, TXT)'
+                }
+                className={cn(
+                    'text-muted-foreground hover:text-foreground',
+                    hasDocument && 'bg-blue-500/10 text-blue-500 hover:text-blue-600'
+                )}
             >
                 <FileText size={16} strokeWidth={2} />
             </Button>

@@ -1,9 +1,10 @@
-import { google } from '@ai-sdk/google';
+import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { useToast } from '@repo/ui';
 import { generateObject } from 'ai';
 import { useCallback } from 'react';
 import { z } from 'zod';
 import { useChatStore } from '../store';
+import { useApiKeysStore } from '../store/api-keys.store';
 import { isGeminiModel } from '../utils';
 
 // Dynamic import for pdfjs-dist to handle browser environment
@@ -165,15 +166,11 @@ export const createCustomSchema = (
 };
 
 // Enhanced document type detection with confidence scoring
-function getSchemaForDocument(
-    text: string,
-    customSchema?: { schema: z.ZodSchema; type: string }
-): { schema: z.ZodSchema; type: string; confidence: number } {
-    // If custom schema is provided, use it
-    if (customSchema) {
-        return { ...customSchema, confidence: 1.0 };
-    }
-
+function getSchemaForDocument(text: string): {
+    schema: z.ZodSchema;
+    type: string;
+    confidence: number;
+} {
     const lowerText = text.toLowerCase();
     const documentTypes = [
         {
@@ -261,6 +258,7 @@ export const useStructuredExtraction = () => {
     const documentAttachment = useChatStore(state => state.documentAttachment);
     const setStructuredData = useChatStore(state => state.setStructuredData);
     const clearStructuredData = useChatStore(state => state.clearStructuredData);
+    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const { toast } = useToast();
 
     const extractTextFromPDF = async (file: File): Promise<string> => {
@@ -293,7 +291,7 @@ export const useStructuredExtraction = () => {
     };
 
     const extractStructuredOutput = useCallback(
-        async (customSchema?: { schema: z.ZodSchema; type: string }) => {
+        async (customSchema?: z.ZodSchema) => {
             if (!isGeminiModel(chatMode)) {
                 toast({
                     title: 'Not Available',
@@ -337,23 +335,45 @@ export const useStructuredExtraction = () => {
                     throw new Error('No text found in the PDF document');
                 }
 
-                // Detect document type and get appropriate schema
-                const { schema, type, confidence } = getSchemaForDocument(
-                    documentText,
-                    customSchema
-                );
+                // Use custom schema if provided, otherwise detect document type
+                let schema: z.ZodSchema;
+                let type: string;
+                let confidence: number;
+
+                if (customSchema) {
+                    schema = customSchema;
+                    type = 'custom';
+                    confidence = 1.0;
+                } else {
+                    const detectedResult = getSchemaForDocument(documentText);
+                    schema = detectedResult.schema;
+                    type = detectedResult.type;
+                    confidence = detectedResult.confidence;
+                }
+
+                // Use the predefined prompt for structured output extraction
+                const basePrompt =
+                    'Extract structured data from the document and return it in JSON format';
+
+                // Get BYOK keys for API authentication
+                const byokKeys = getAllKeys();
+
+                // Get the correct Google provider instance with BYOK keys
+                const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);
 
                 // Use AI SDK generateObject for structured extraction
                 const { object } = await generateObject({
-                    model: google(chatMode),
+                    model: googleProvider(chatMode),
                     schema,
-                    prompt: `Please extract structured data from the following ${type} document.
-                Be thorough and accurate, extracting all relevant information.
-                If any field is not present in the document, omit it or mark it as optional.
-                ${customSchema ? 'Follow the provided custom schema structure exactly.' : ''}
+                    prompt: `${basePrompt}
 
-                Document content:
-                ${documentText}`,
+Please extract structured data from the following ${type} document.
+Be thorough and accurate, extracting all relevant information.
+If any field is not present in the document, omit it or mark it as optional.
+${customSchema ? 'Follow the provided custom schema structure exactly.' : ''}
+
+Document content:
+${documentText}`,
                 });
 
                 setStructuredData({
@@ -361,7 +381,7 @@ export const useStructuredExtraction = () => {
                     type,
                     fileName: documentAttachment.fileName,
                     extractedAt: new Date().toISOString(),
-                    confidence: customSchema ? 1.0 : confidence,
+                    confidence,
                 });
 
                 toast({
@@ -384,7 +404,7 @@ export const useStructuredExtraction = () => {
                 });
             }
         },
-        [chatMode, documentAttachment, setStructuredData, toast]
+        [chatMode, documentAttachment, setStructuredData, toast, getAllKeys]
     );
 
     return {

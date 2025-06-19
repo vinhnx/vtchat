@@ -29,11 +29,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowUp,
     Atom,
+    Calculator,
     ChevronDown,
     Gift,
     Globe,
     Paperclip,
-    Sigma,
     Square,
     Star,
 } from 'lucide-react';
@@ -136,7 +136,7 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: undefined,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
@@ -376,9 +376,9 @@ export const ChatModeButton = () => {
 };
 
 export const WebSearchButton = () => {
-    const { useWebSearch, setUseWebSearch, webSearchType, supportsNativeSearch } =
-        useWebSearchHook();
+    const { useWebSearch, webSearchType } = useWebSearchHook();
     const chatMode = useChatStore(state => state.chatMode);
+    const setActiveButton = useChatStore(state => state.setActiveButton);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -400,8 +400,7 @@ export const WebSearchButton = () => {
     }
 
     const handleWebSearchToggle = () => {
-        // Since we already filtered out non-subscribers, simply toggle web search
-        setUseWebSearch(!useWebSearch);
+        setActiveButton('webSearch');
     };
 
     return (
@@ -441,13 +440,12 @@ export const WebSearchButton = () => {
 };
 
 export const MathCalculatorButton = () => {
-    const { useMathCalculator: mathCalculatorEnabled, setUseMathCalculator } = useMathCalculator();
-    const { data: session } = useSession();
-    const isSignedIn = !!session;
+    const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
+    const setActiveButton = useChatStore(state => state.setActiveButton);
 
     // Always show math calculator for all users (including free users)
     const handleMathCalculatorToggle = () => {
-        setUseMathCalculator(!mathCalculatorEnabled);
+        setActiveButton('mathCalculator');
     };
 
     return (
@@ -459,7 +457,7 @@ export const MathCalculatorButton = () => {
                 className={cn('gap-2', mathCalculatorEnabled && 'bg-green-500/10 text-green-500')}
                 onClick={handleMathCalculatorToggle}
             >
-                <Sigma
+                <Calculator
                     size={16}
                     strokeWidth={2}
                     className={cn(
@@ -739,7 +737,7 @@ export const ChatModeOptions = ({
                 onGatedFeature({
                     feature: config.requiredFeature,
                     plan: config.requiredPlan,
-                    title: `${option?.label} requires upgrade`,
+                    title: `${option?.label}`,
                     message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
                 });
                 return;

@@ -97,8 +97,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             lg: 16,
         } as const;
 
-        const ToolTipWrapper = tooltip ? Tooltip : React.Fragment;
-
         // When using asChild with icons, we need to avoid React.Children.only error
         // by ensuring the Slot component receives exactly one child
         const hasIcons = Boolean(PrefixIcon || SuffixIcon || Icon);
@@ -156,9 +154,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         if (tooltip) {
             return (
-                <ToolTipWrapper content={tooltip} side={tooltipSide}>
+                <Tooltip content={tooltip} side={tooltipSide}>
                     {buttonComp}
-                </ToolTipWrapper>
+                </Tooltip>
             );
         }
 

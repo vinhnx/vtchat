@@ -26,6 +26,8 @@ export enum FeatureSlug {
     PRO_SEARCH = 'pro_search',
     GROUNDING_WEB_SEARCH = 'grounding_web_search',
     ADVANCED_CHAT_MODES = 'advanced_chat_modes',
+    STRUCTURED_OUTPUT = 'structured_output',
+    THINKING_MODE = 'thinking_mode',
 }
 
 // Plan configuration interface
@@ -78,6 +80,8 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.PRO_SEARCH,
             FeatureSlug.GROUNDING_WEB_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
+            FeatureSlug.STRUCTURED_OUTPUT,
+            FeatureSlug.THINKING_MODE,
         ],
     },
 };
@@ -136,6 +140,18 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         slug: FeatureSlug.ADVANCED_CHAT_MODES,
         name: 'Advanced Chat Modes',
         description: 'Access to specialized chat modes and advanced AI capabilities',
+    },
+    [FeatureSlug.STRUCTURED_OUTPUT]: {
+        slug: FeatureSlug.STRUCTURED_OUTPUT,
+        name: 'Structured Data Extraction',
+        description:
+            'AI-powered extraction of structured data from PDF documents using Gemini models',
+    },
+    [FeatureSlug.THINKING_MODE]: {
+        slug: FeatureSlug.THINKING_MODE,
+        name: 'Thinking Mode',
+        description:
+            'Enhanced AI reasoning with visible thought processes for Gemini models (VT+ exclusive)',
     },
 };
 

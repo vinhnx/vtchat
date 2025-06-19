@@ -4,6 +4,6 @@
         "baseUrl": ".",
         "module": "esnext"
     },
-    "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx"],
+    "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx", "types/**/*.d.ts"],
     "exclude": ["node_modules"]
 }

@@ -98,8 +98,26 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             maxSteps: 2,
             tools,
             byokKeys: context?.get('apiKeys'),
+            thinkingMode: context?.get('thinkingMode'),
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
+            },
+            onReasoningDetails: (details) => {
+                events?.update('steps', prev => ({
+                    ...prev,
+                    0: {
+                        ...prev?.[0],
+                        id: 0,
+                        status: 'COMPLETED',
+                        steps: {
+                            ...prev?.[0]?.steps,
+                            reasoningDetails: {
+                                data: details,
+                                status: 'COMPLETED',
+                            },
+                        },
+                    },
+                }));
             },
             onChunk: (chunk, _fullText) => {
                 chunkBuffer.add(chunk);

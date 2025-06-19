@@ -211,7 +211,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **All Preview Models Made Free**:
 
-- **GEMINI_2_5_PRO**: Now free (was `gemini-2.5-pro-preview-05-06`)
+- **GEMINI_2_5_PRO**: Now correctly marked as premium (is NOT free)
 - **Complete Preview Collection**: All 5 Gemini preview models now free
 - **Visual Consistency**: Gift icons added to all free models
 - **Total Free Models**: 9 models (5 Gemini + 4 OpenRouter)

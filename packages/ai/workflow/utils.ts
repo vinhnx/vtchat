@@ -10,6 +10,11 @@ import { format } from 'date-fns';
 import { ZodSchema } from 'zod';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
+import { 
+    ReasoningDetail, 
+    GenerateTextWithReasoningResult, 
+    ThinkingModeConfig
+} from '../types/reasoning';
 import { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
 
@@ -65,6 +70,7 @@ export const generateTextWithGeminiSearch = async ({
     messages,
     signal,
     byokKeys,
+    thinkingMode,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -72,7 +78,8 @@ export const generateTextWithGeminiSearch = async ({
     messages?: CoreMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
-}) => {
+    thinkingMode?: ThinkingModeConfig;
+}): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
     console.log('=== generateTextWithGeminiSearch START ===');
     console.log('Input parameters:', {
@@ -170,25 +177,61 @@ export const generateTextWithGeminiSearch = async ({
         let streamResult;
 
         try {
-            const streamTextConfig = !!filteredMessages?.length
+            // Import reasoning utilities
+            const { supportsReasoning, getReasoningType } = await import('../models');
+
+            // Set up provider options based on model's reasoning type
+            const providerOptions: any = {};
+            const reasoningType = getReasoningType(model);
+
+            if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
+                switch (reasoningType) {
+                    case 'gemini-thinking':
+                        // Gemini models use thinkingConfig
+                        providerOptions.google = {
+                            thinkingConfig: {
+                                includeThoughts: thinkingMode.includeThoughts ?? true,
+                                maxOutputTokens: thinkingMode.budget,
+                            },
+                        };
+                        break;
+
+                    case 'anthropic-reasoning':
+                        // Anthropic Claude 4 models support reasoning through beta features
+                        providerOptions.anthropic = {
+                            reasoning: true,
+                        };
+                        break;
+
+                    case 'deepseek-reasoning':
+                        // DeepSeek reasoning models work through middleware extraction
+                        // No special provider options needed as middleware handles <think> tags
+                        break;
+                }
+            }
+
+            const streamTextConfig = filteredMessages?.length
                 ? {
                       system: prompt,
                       model: selectedModel,
                       messages: filteredMessages,
                       abortSignal: signal,
+                      ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                   }
                 : {
                       prompt,
                       model: selectedModel,
                       abortSignal: signal,
+                      ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                   };
 
             console.log('StreamText config:', {
-                configType: !!filteredMessages?.length ? 'with-messages' : 'prompt-only',
+                configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
                 hasSystem: !!(streamTextConfig as any).system,
                 hasPrompt: !!(streamTextConfig as any).prompt,
                 hasModel: !!streamTextConfig.model,
                 hasAbortSignal: !!streamTextConfig.abortSignal,
+                hasProviderOptions: Object.keys(providerOptions).length > 0,
             });
 
             streamResult = streamText(streamTextConfig as any);
@@ -290,10 +333,34 @@ export const generateTextWithGeminiSearch = async ({
             groundingMetadata = null;
         }
 
+        // Extract reasoning details if available
+        let reasoning: string = '';
+        let reasoningDetails: any[] = [];
+
+        try {
+            if (streamResult?.reasoning) {
+                reasoning = (await streamResult.reasoning) || '';
+                console.log('Reasoning extracted:', reasoning.length);
+            }
+        } catch (error) {
+            console.warn('Failed to resolve reasoning:', error);
+        }
+
+        try {
+            if (streamResult?.reasoningDetails) {
+                reasoningDetails = (await streamResult.reasoningDetails) || [];
+                console.log('ReasoningDetails extracted:', reasoningDetails.length);
+            }
+        } catch (error) {
+            console.warn('Failed to resolve reasoningDetails:', error);
+        }
+
         const result = {
             text: fullText,
             sources: resolvedSources,
             groundingMetadata,
+            reasoning,
+            reasoningDetails,
         };
 
         console.log('=== generateTextWithGeminiSearch END ===');
@@ -301,6 +368,8 @@ export const generateTextWithGeminiSearch = async ({
             textLength: result.text.length,
             sourcesCount: result.sources.length,
             hasGroundingMetadata: !!result.groundingMetadata,
+            hasReasoning: !!result.reasoning,
+            reasoningDetailsCount: result.reasoningDetails.length,
         });
 
         return result;
@@ -330,6 +399,7 @@ export const generateText = async ({
     onChunk,
     messages,
     onReasoning,
+    onReasoningDetails,
     tools,
     onToolCall,
     onToolResult,
@@ -338,12 +408,14 @@ export const generateText = async ({
     maxSteps = 2,
     byokKeys,
     useSearchGrounding = false,
+    thinkingMode,
 }: {
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
     messages?: CoreMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
+    onReasoningDetails?: (details: ReasoningDetail[]) => void;
     tools?: ToolSet;
     onToolCall?: (toolCall: any) => void;
     onToolResult?: (toolResult: any) => void;
@@ -352,6 +424,7 @@ export const generateText = async ({
     maxSteps?: number;
     byokKeys?: Record<string, string>;
     useSearchGrounding?: boolean;
+    thinkingMode?: ThinkingModeConfig;
 }) => {
     try {
         if (signal?.aborted) {
@@ -373,14 +446,56 @@ export const generateText = async ({
             });
         }
 
-        const middleware = extractReasoningMiddleware({
-            tagName: 'think',
-            separator: '\n',
-        });
+        // Import reasoning utilities
+        const { supportsReasoning, getReasoningType, getReasoningTagName } = await import(
+            '../models'
+        );
+
+        // Set up middleware based on model's reasoning capabilities
+        let middleware: any = undefined;
+        const reasoningTagName = getReasoningTagName(model);
+
+        if (reasoningTagName && supportsReasoning(model)) {
+            middleware = extractReasoningMiddleware({
+                tagName: reasoningTagName,
+                separator: '\n',
+            });
+        }
 
         const selectedModel = getLanguageModel(model, middleware, byokKeys, useSearchGrounding);
-        const { fullStream } = !!filteredMessages?.length
-            ? streamText({
+
+        // Set up provider options based on model's reasoning type
+        const providerOptions: any = {};
+        const reasoningType = getReasoningType(model);
+
+        if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
+            switch (reasoningType) {
+                case 'gemini-thinking':
+                    // Gemini models use thinkingConfig
+                    providerOptions.google = {
+                        thinkingConfig: {
+                            includeThoughts: thinkingMode.includeThoughts ?? true,
+                            maxOutputTokens: thinkingMode.budget,
+                        },
+                    };
+                    break;
+
+                case 'anthropic-reasoning':
+                    // Anthropic Claude 4 models support reasoning through beta features
+                    providerOptions.anthropic = {
+                        reasoning: true,
+                    };
+                    break;
+
+                case 'deepseek-reasoning':
+                    // DeepSeek reasoning models work through middleware extraction
+                    // No special provider options needed as middleware handles <think> tags
+                    break;
+            }
+        }
+
+        const streamConfig = filteredMessages?.length
+            ? {
                   system: prompt,
                   model: selectedModel,
                   messages: filteredMessages,
@@ -388,15 +503,20 @@ export const generateText = async ({
                   maxSteps,
                   toolChoice: toolChoice as any,
                   abortSignal: signal,
-              })
-            : streamText({
+                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+              }
+            : {
                   prompt,
                   model: selectedModel,
                   tools,
                   maxSteps,
                   toolChoice: toolChoice as any,
                   abortSignal: signal,
-              });
+                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+              };
+
+        const streamResult = streamText(streamConfig);
+        const { fullStream } = streamResult;
         let fullText = '';
         let reasoning = '';
 
@@ -425,6 +545,19 @@ export const generateText = async ({
                 return Promise.reject(chunk.error);
             }
         }
+
+        // Extract reasoning details if available
+        try {
+            if (streamResult?.reasoningDetails) {
+                const reasoningDetails = (await streamResult.reasoningDetails) || [];
+                if (reasoningDetails.length > 0) {
+                    onReasoningDetails?.(reasoningDetails);
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to resolve reasoningDetails:', error);
+        }
+
         return Promise.resolve(fullText);
     } catch (error) {
         console.error(error);
@@ -439,6 +572,7 @@ export const generateObject = async ({
     messages,
     signal,
     byokKeys,
+    thinkingMode,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -446,6 +580,7 @@ export const generateObject = async ({
     messages?: CoreMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
+    thinkingMode?: ThinkingModeConfig;
 }) => {
     try {
         if (signal?.aborted) {
@@ -496,33 +631,71 @@ export const generateObject = async ({
             });
         }
 
+        // Import reasoning utilities
+        const { supportsReasoning, getReasoningType } = await import('../models');
+
         const selectedModel = getLanguageModel(model, undefined, byokKeys);
         console.log('Selected model for generateObject:', {
             hasModel: !!selectedModel,
             modelType: typeof selectedModel,
         });
 
+        // Set up provider options based on model's reasoning type
+        const providerOptions: any = {};
+        const reasoningType = getReasoningType(model);
+
+        if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
+            switch (reasoningType) {
+                case 'gemini-thinking':
+                    // Gemini models use thinkingConfig
+                    providerOptions.google = {
+                        thinkingConfig: {
+                            includeThoughts: thinkingMode.includeThoughts ?? true,
+                            maxOutputTokens: thinkingMode.budget,
+                        },
+                    };
+                    break;
+
+                case 'anthropic-reasoning':
+                    // Anthropic Claude 4 models support reasoning through beta features
+                    providerOptions.anthropic = {
+                        reasoning: true,
+                    };
+                    break;
+
+                case 'deepseek-reasoning':
+                    // DeepSeek reasoning models work through middleware extraction
+                    // No special provider options needed as middleware handles <think> tags
+                    break;
+            }
+        }
+
         console.log('Calling generateObjectAi with:', {
-            configType: !!filteredMessages?.length ? 'with-messages' : 'prompt-only',
+            configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
             hasPrompt: !!prompt,
             hasSchema: !!schema,
             messagesCount: filteredMessages?.length,
+            hasProviderOptions: Object.keys(providerOptions).length > 0,
         });
 
-        const { object } = !!filteredMessages?.length
-            ? await generateObjectAi({
+        const generateConfig = filteredMessages?.length
+            ? {
                   system: prompt,
                   model: selectedModel,
                   schema,
                   messages: filteredMessages,
                   abortSignal: signal,
-              })
-            : await generateObjectAi({
+                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+              }
+            : {
                   prompt,
                   model: selectedModel,
                   schema,
                   abortSignal: signal,
-              });
+                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+              };
+
+        const { object } = await generateObjectAi(generateConfig);
 
         console.log('generateObjectAi successful, result:', {
             hasObject: !!object,

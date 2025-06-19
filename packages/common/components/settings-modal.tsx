@@ -1,8 +1,9 @@
 'use client';
+import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, CreditCard, Key, Settings2, Trash } from 'lucide-react';
+import { AlertCircle, CreditCard, Crown, Key, Settings2, Trash } from 'lucide-react';
 
 import { Badge, Dialog, DialogContent, Input, cn } from '@repo/ui';
 
@@ -10,11 +11,11 @@ import { useChatEditor } from '@repo/common/hooks';
 import { useState } from 'react';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { SETTING_TABS, useAppStore } from '../store/app.store';
-import { useChatStore } from '../store/chat.store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon } from './icons';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
+import { PlusSettings } from './plus-settings';
 import { UsageCreditsSettings } from './usage-credits-settings';
 
 export const SettingsModal = () => {
@@ -58,6 +59,13 @@ export const SettingsModal = () => {
             component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
+            icon: <Crown size={16} strokeWidth={2} className="text-amber-500" />,
+            title: 'VT+ Features',
+            description: 'Premium AI capabilities',
+            key: SETTING_TABS.PLUS,
+            component: <PlusSettings />,
+        },
+        {
             icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
             description: 'Connect your own AI providers',
@@ -74,7 +82,7 @@ export const SettingsModal = () => {
             >
                 <div className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden">
                     {/* Header */}
-                    <div className="border-border sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
+                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
                         <div className="flex items-center justify-between px-6 py-4">
                             <div>
                                 <h2 className="text-xl font-semibold">Settings</h2>
@@ -89,8 +97,9 @@ export const SettingsModal = () => {
                     {/* Content */}
                     <div className="flex flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border w-[280px] shrink-0 border-r bg-muted/30 p-4">
-                            <nav className="space-y-2">
+                        <div className="border-border bg-muted/30 min-h-full w-[280px] shrink-0 border-r">
+                            {/* Make sidebar full height */}
+                            <nav className="space-y-2 p-4">
                                 {settingMenu.map(setting => (
                                     <button
                                         key={setting.key}
@@ -102,12 +111,10 @@ export const SettingsModal = () => {
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                     >
-                                        <div className="mt-0.5 shrink-0">
-                                            {setting.icon}
-                                        </div>
+                                        <div className="mt-0.5 shrink-0">{setting.icon}</div>
                                         <div className="flex-1 space-y-1">
                                             <div className="font-medium">{setting.title}</div>
-                                            <div className="text-xs text-muted-foreground">
+                                            <div className="text-muted-foreground text-xs">
                                                 {setting.description}
                                             </div>
                                         </div>
@@ -194,7 +201,7 @@ export const ApiKeySettings = () => {
         },
     ];
 
-    const handleSave = (keyName: keyof ApiKeys, value: string, provider: string) => {
+    const handleSave = (keyName: keyof ApiKeys, value: string, _provider: string) => {
         setValidationErrors(prev => ({ ...prev, [keyName]: '' }));
         setApiKey(keyName, value);
         setIsEditing(null);

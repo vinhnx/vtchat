@@ -6,4 +6,5 @@
 export * from './creem';
 export * from './routes';
 export * from './storage';
+export * from './thinking-mode';
 export * from './ui';

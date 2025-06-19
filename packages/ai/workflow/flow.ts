@@ -102,6 +102,11 @@ export type WorkflowContextSchema = {
     customInstructions?: string;
     onFinish: (data: any) => void;
     apiKeys?: Record<string, string>;
+    thinkingMode?: {
+        enabled: boolean;
+        budget: number;
+        includeThoughts: boolean;
+    };
 };
 
 export const runWorkflow = ({
@@ -119,6 +124,7 @@ export const runWorkflow = ({
     customInstructions,
     gl,
     apiKeys,
+    thinkingMode,
 }: {
     mode: ChatMode;
     question: string;
@@ -134,6 +140,11 @@ export const runWorkflow = ({
     gl?: Geo;
     customInstructions?: string;
     apiKeys?: Record<string, string>;
+    thinkingMode?: {
+        enabled: boolean;
+        budget: number;
+        includeThoughts: boolean;
+    };
 }) => {
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
@@ -182,6 +193,7 @@ export const runWorkflow = ({
         showSuggestions,
         onFinish: onFinish as any,
         apiKeys,
+        thinkingMode,
     });
 
     // Use the typed builder

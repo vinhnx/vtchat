@@ -9,6 +9,7 @@
     "exports": {
         "./main": "./main.ts",
         "./models": "./models.ts",
+        "./providers": "./providers.ts",
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
         "./worker": "./worker/index.ts"

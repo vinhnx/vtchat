@@ -302,6 +302,45 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Thinking Mode */}
+                        <AccordionItem value="thinking-mode">
+                            <AccordionTrigger className="font-medium">
+                                What is Thinking Mode and how does it work?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    Thinking Mode is a VT+ exclusive feature that shows you the AI's
+                                    reasoning process for more transparent and thoughtful responses:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Gemini Models Only:</strong> Currently available
+                                        only with Google Gemini models that support reasoning
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>VT+ Feature:</strong> Exclusive to VT+ subscribers
+                                        with adjustable thinking budget in settings
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Reasoning Display:</strong> See the AI's
+                                        step-by-step thought process before the final answer
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Thoughtful Responses:</strong> More deliberate and
+                                        well-reasoned answers for complex questions
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Transparency:</strong> Understand how the AI arrived
+                                        at its conclusions
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Look for the thinking indicator in your chat input when using
+                                    Gemini models with VT+ and thinking mode enabled.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* BYOK Feature */}
                         <AccordionItem value="byok-feature">
                             <AccordionTrigger className="font-medium">

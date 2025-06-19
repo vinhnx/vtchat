@@ -1,7 +1,7 @@
 'use client';
 import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
-import { ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
+import { ChatMode, ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -28,6 +28,7 @@ import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
 import { StructuredOutputButton } from './structured-output-button';
+import { ThinkingModeIndicator } from './thinking-mode-indicator';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -69,6 +70,7 @@ export const ChatInput = ({
     const createThread = useChatStore(state => state.createThread);
     const useWebSearch = useChatStore(state => state.useWebSearch);
     const useMathCalculator = useChatStore(state => state.useMathCalculator);
+    const thinkingMode = useChatStore(state => state.thinkingMode);
     const isGenerating = useChatStore(state => state.isGenerating);
     const isChatPage = usePathname().startsWith('/chat');
     const imageAttachment = useChatStore(state => state.imageAttachment);
@@ -193,23 +195,30 @@ export const ChatInput = ({
                                         ) : (
                                             <Flex gap="xs" items="center" className="shrink-0">
                                                 <ChatModeButton />
-                                                {/* <AttachmentButton /> */}
-                                                <WebSearchButton />
-                                                <MathCalculatorButton />
-                                                {/* <ToolsMenu /> */}
-                                                <DocumentUploadButton />
-                                                <StructuredOutputButton />
-                                                <ImageUpload
-                                                    id="image-attachment"
-                                                    label="Image"
-                                                    tooltip="Image Attachment"
-                                                    showIcon={true}
-                                                    handleImageUpload={handleImageUpload}
-                                                />
+                                                {/* Hide accessory tool buttons when advanced modes are active */}
+                                                {chatMode !== ChatMode.Deep &&
+                                                    chatMode !== ChatMode.Pro && (
+                                                        <>
+                                                            <WebSearchButton />
+                                                            <MathCalculatorButton />
+                                                            <DocumentUploadButton />
+                                                            <StructuredOutputButton />
+                                                            <ImageUpload
+                                                                id="image-attachment"
+                                                                label="Image"
+                                                                tooltip="Image Attachment"
+                                                                showIcon={true}
+                                                                handleImageUpload={
+                                                                    handleImageUpload
+                                                                }
+                                                            />
+                                                        </>
+                                                    )}
                                             </Flex>
                                         )}
 
-                                        <Flex gap="md" items="center">
+                                        <Flex gap="sm" items="center">
+                                            <ThinkingModeIndicator />
                                             <SendStopButton
                                                 isGenerating={isGenerating}
                                                 isChatPage={isChatPage}

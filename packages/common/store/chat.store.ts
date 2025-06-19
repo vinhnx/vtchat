@@ -2,6 +2,7 @@
 
 import { Model, models } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
+import { THINKING_MODE } from '@repo/shared/constants';
 import { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
 import Dexie, { Table } from 'dexie';
 import { nanoid } from 'nanoid';
@@ -113,6 +114,11 @@ const loadInitialData = async () => {
         showSuggestions: true,
         chatMode: ChatMode.GEMINI_2_0_FLASH,
         currentThreadId: null,
+        thinkingMode: {
+            enabled: THINKING_MODE.DEFAULT_ENABLED,
+            budget: THINKING_MODE.DEFAULT_BUDGET,
+            includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
+        },
     });
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
@@ -120,6 +126,11 @@ const loadInitialData = async () => {
     const useMathCalculator =
         typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
     const customInstructions = config.customInstructions || '';
+    const thinkingMode = config.thinkingMode || {
+        enabled: THINKING_MODE.DEFAULT_ENABLED,
+        budget: THINKING_MODE.DEFAULT_BUDGET,
+        includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
+    };
 
     // Load and validate the persisted model
     const persistedModelId = config.model;
@@ -137,9 +148,12 @@ const loadInitialData = async () => {
         chatMode,
         model,
         customInstructions,
+        thinkingMode,
         showSuggestions: false, // Always disable suggestions
     };
 };
+
+type ActiveButtonType = 'webSearch' | 'mathCalculator' | 'structuredOutput' | null;
 
 type State = {
     model: Model;
@@ -171,6 +185,13 @@ type State = {
     isLoadingThreads: boolean;
     isLoadingThreadItems: boolean;
     currentSources: string[];
+    activeButton: ActiveButtonType;
+    // Thinking mode settings (VT+ feature)
+    thinkingMode: {
+        enabled: boolean;
+        budget: number; // 0-24576 for Gemini 2.5 Flash
+        includeThoughts: boolean;
+    };
 };
 
 type Actions = {
@@ -222,6 +243,14 @@ type Actions = {
     setUseWebSearch: (useWebSearch: boolean) => void;
     setUseMathCalculator: (useMathCalculator: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
+    // Button selection management
+    setActiveButton: (button: ActiveButtonType) => void;
+    // Thinking mode management (VT+ feature)
+    setThinkingMode: (config: {
+        enabled: boolean;
+        budget?: number;
+        includeThoughts?: boolean;
+    }) => void;
     // Add user-specific database management
     switchUserDatabase: (userId: string | null) => Promise<void>;
 };
@@ -742,7 +771,14 @@ export const useChatStore = create(
         isLoadingThreads: false,
         isLoadingThreadItems: false,
         currentSources: [],
+        activeButton: null,
         showSuggestions: false, // Always disabled
+        // Thinking mode defaults (VT+ feature)
+        thinkingMode: {
+            enabled: THINKING_MODE.DEFAULT_ENABLED,
+            budget: THINKING_MODE.DEFAULT_BUDGET,
+            includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
+        },
 
         setCustomInstructions: (customInstructions: string) => {
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
@@ -843,6 +879,47 @@ export const useChatStore = create(
             });
         },
 
+        setActiveButton: (button: ActiveButtonType) => {
+            set(state => {
+                // When setting a new active button, deactivate other buttons
+                if (button === 'webSearch') {
+                    state.activeButton = state.useWebSearch ? null : 'webSearch';
+                    state.useWebSearch = !state.useWebSearch;
+                    if (state.useWebSearch) {
+                        state.useMathCalculator = false;
+                    }
+                } else if (button === 'mathCalculator') {
+                    state.activeButton = state.useMathCalculator ? null : 'mathCalculator';
+                    state.useMathCalculator = !state.useMathCalculator;
+                    if (state.useMathCalculator) {
+                        state.useWebSearch = false;
+                    }
+                } else if (button === 'structuredOutput') {
+                    // For structured output, we'll just set it as active
+                    // The actual logic is handled in the StructuredOutputButton component
+                    state.activeButton =
+                        state.activeButton === 'structuredOutput' ? null : 'structuredOutput';
+                    if (state.activeButton === 'structuredOutput') {
+                        state.useWebSearch = false;
+                        state.useMathCalculator = false;
+                    }
+                } else {
+                    state.activeButton = button;
+                }
+
+                // Update localStorage for persistent states
+                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                localStorage.setItem(
+                    CONFIG_KEY,
+                    JSON.stringify({
+                        ...existingConfig,
+                        useWebSearch: state.useWebSearch,
+                        useMathCalculator: state.useMathCalculator,
+                    })
+                );
+            });
+        },
+
         setChatMode: (chatMode: ChatMode) => {
             try {
                 // Get existing config and merge with new chat mode
@@ -865,18 +942,44 @@ export const useChatStore = create(
                     `[ChatStore] Successfully persisted chat mode: ${chatMode} to ${CONFIG_KEY}`
                 );
 
-                // Update state
+                // Update state and reset button selections when chat mode changes
                 set(state => {
                     state.chatMode = chatMode;
+                    // Reset button states when changing chat mode
+                    state.activeButton = null;
+                    state.useWebSearch = false;
+                    state.useMathCalculator = false;
                 });
             } catch (error) {
                 console.error('[ChatStore] Failed to persist chat mode:', error);
                 // Still update state even if persistence fails
                 set(state => {
                     state.chatMode = chatMode;
+                    state.activeButton = null;
+                    state.useWebSearch = false;
+                    state.useMathCalculator = false;
                 });
                 throw error; // Propagate error for handling by caller
             }
+        },
+
+        setThinkingMode: (config: {
+            enabled: boolean;
+            budget?: number;
+            includeThoughts?: boolean;
+        }) => {
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const thinkingMode = {
+                enabled: config.enabled,
+                budget: config.budget ?? 2048, // Default budget
+                includeThoughts: config.includeThoughts ?? true,
+            };
+
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, thinkingMode }));
+
+            set(state => {
+                state.thinkingMode = thinkingMode;
+            });
         },
 
         pinThread: async (threadId: string) => {

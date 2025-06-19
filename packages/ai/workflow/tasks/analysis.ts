@@ -85,8 +85,21 @@ ${s}
             messages: messages as any,
             signal,
             byokKeys: context?.get('apiKeys'),
+            thinkingMode: context?.get('thinkingMode'),
             onReasoning: reasoning => {
                 chunkBuffer.add(reasoning);
+            },
+            onReasoningDetails: (details) => {
+                updateStep({
+                    stepId,
+                    stepStatus: 'COMPLETED',
+                    subSteps: {
+                        reasoningDetails: { 
+                            status: 'COMPLETED',
+                            data: details
+                        },
+                    },
+                });
             },
         });
 
