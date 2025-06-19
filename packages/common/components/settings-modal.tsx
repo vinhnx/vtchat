@@ -3,19 +3,20 @@ import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, CreditCard, Crown, Key, Settings2, Trash } from 'lucide-react';
+import { AlertCircle, CreditCard, Crown, Key, Settings2, Trash, Brain } from 'lucide-react';
 
 import { Badge, Dialog, DialogContent, Input, cn } from '@repo/ui';
 
 import { useChatEditor } from '@repo/common/hooks';
 import { useState } from 'react';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
-import { SETTING_TABS, useAppStore } from '../store/app.store';
+import { SETTING_TABS, useAppStore } from '../store';
 import { ChatEditor } from './chat-input';
 import { BYOKIcon } from './icons';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
 import { PlusSettings } from './plus-settings';
+import { ReasoningModeSettings } from './reasoning-mode-settings';
 import { UsageCreditsSettings } from './usage-credits-settings';
 
 export const SettingsModal = () => {
@@ -64,6 +65,13 @@ export const SettingsModal = () => {
             description: 'Premium AI capabilities',
             key: SETTING_TABS.PLUS,
             component: <PlusSettings />,
+        },
+        {
+            icon: <Brain size={16} strokeWidth={2} className="text-[#D99A4E]" />,
+            title: 'Reasoning Mode',
+            description: 'AI reasoning and thinking',
+            key: SETTING_TABS.REASONING_MODE,
+            component: <ReasoningModeSettings />,
         },
         {
             icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,

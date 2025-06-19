@@ -95,6 +95,15 @@ export type ThreadItem = {
         data?: string;
         signature?: string;
     }>;
+    // Message parts for AI SDK reasoning support
+    parts?: Array<{
+        type: 'text' | 'reasoning';
+        text?: string;
+        details?: Array<{
+            type: 'text' | 'redacted';
+            text?: string;
+        }>;
+    }>;
 };
 
 export type MessageGroup = {
