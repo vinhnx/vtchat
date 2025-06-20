@@ -7,6 +7,7 @@ import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
+    Avatar,
     Badge,
     Button,
     cn,

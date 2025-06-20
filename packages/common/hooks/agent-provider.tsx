@@ -9,7 +9,7 @@ import { createContext, ReactNode, useCallback, useContext, useMemo, useState } 
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
 
-// Define common event types to reduce repetition
+// Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
     'steps',
     'sources',
@@ -20,7 +20,7 @@ const EVENT_TYPES = [
     'toolCalls',
     'toolResults',
     'object',
-];
+] as const;
 
 export type AgentContextType = {
     runAgent: (body: any) => Promise<void>;

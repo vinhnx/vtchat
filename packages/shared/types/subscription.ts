@@ -28,6 +28,9 @@ export enum FeatureSlug {
     ADVANCED_CHAT_MODES = 'advanced_chat_modes',
     STRUCTURED_OUTPUT = 'structured_output',
     THINKING_MODE = 'thinking_mode',
+    DOCUMENT_PARSING = 'document_parsing',
+    THINKING_MODE_TOGGLE = 'thinking_mode_toggle',
+    REASONING_CHAIN = 'reasoning_chain',
 }
 
 // Plan configuration interface
@@ -65,7 +68,8 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
     [PlanSlug.VT_PLUS]: {
         slug: PlanSlug.VT_PLUS,
         name: 'VT+',
-        description: 'Enhanced experience with advanced features and capabilities',
+        description:
+            'Enhanced experience with advanced features and capabilities including document parsing, structured outputs, thinking mode controls, and reasoning chains',
         features: [
             // All Base plan features
             FeatureSlug.ACCESS_CHAT,
@@ -82,6 +86,9 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.ADVANCED_CHAT_MODES,
             FeatureSlug.STRUCTURED_OUTPUT,
             FeatureSlug.THINKING_MODE,
+            FeatureSlug.DOCUMENT_PARSING,
+            FeatureSlug.THINKING_MODE_TOGGLE,
+            FeatureSlug.REASONING_CHAIN,
         ],
     },
 };
@@ -152,6 +159,24 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: 'Thinking Mode',
         description:
             'Enhanced AI reasoning with visible thought processes for Gemini models (VT+ exclusive)',
+    },
+    [FeatureSlug.DOCUMENT_PARSING]: {
+        slug: FeatureSlug.DOCUMENT_PARSING,
+        name: 'Document Parsing',
+        description:
+            'AI-powered parsing and analysis of various document formats including PDFs, Word documents, and more',
+    },
+    [FeatureSlug.THINKING_MODE_TOGGLE]: {
+        slug: FeatureSlug.THINKING_MODE_TOGGLE,
+        name: 'Thinking Mode Toggle',
+        description:
+            'Ability to toggle thinking mode on/off for customized AI reasoning experience',
+    },
+    [FeatureSlug.REASONING_CHAIN]: {
+        slug: FeatureSlug.REASONING_CHAIN,
+        name: 'Reasoning Chain',
+        description:
+            'Advanced chain-of-thought reasoning capabilities for complex problem solving and analysis',
     },
 };
 

@@ -42,9 +42,11 @@ export async function verifyExistingCreemSubscription(
     const { db, userSubscriptions, users, eq } = deps;
 
     try {
-        console.log(
-            `[Subscription Verification] Checking existing subscription for user: ${userId}, target plan: ${targetPlan}`
-        );
+        if (process.env.NODE_ENV === 'development') {
+            console.log(
+                `[Subscription Verification] Checking existing subscription for user: ${userId}, target plan: ${targetPlan}`
+            );
+        }
 
         // Step 1: Check user_subscriptions table for formal subscription records
         const subscription = await db
@@ -71,11 +73,13 @@ export async function verifyExistingCreemSubscription(
             .limit(1);
 
         const userPlanSlug = user.length > 0 ? user[0].planSlug : null;
-        const userCreemCustomerId = user.length > 0 ? user[0].creemCustomerId : null;
+        const _userCreemCustomerId = user.length > 0 ? user[0].creemCustomerId : null;
 
-        console.log(
-            `[Subscription Verification] Found subscription records: ${subscription.length}, user plan_slug: ${userPlanSlug}`
-        );
+        if (process.env.NODE_ENV === 'development') {
+            console.log(
+                `[Subscription Verification] Found subscription records: ${subscription.length}, user plan_slug: ${userPlanSlug}`
+            );
+        }
 
         // Step 3: Evaluate subscription status
         if (subscription.length > 0) {
@@ -85,15 +89,17 @@ export async function verifyExistingCreemSubscription(
             const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
             const hasActiveSubscription = isTargetPlan && isActiveStatus && isNotExpired;
 
-            console.log(`[Subscription Verification] Subscription analysis:`, {
-                plan: sub.plan,
-                status: sub.status,
-                isTargetPlan,
-                isActiveStatus,
-                isNotExpired,
-                hasActiveSubscription,
-                currentPeriodEnd: sub.currentPeriodEnd,
-            });
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`[Subscription Verification] Subscription analysis:`, {
+                    plan: sub.plan,
+                    status: sub.status,
+                    isTargetPlan,
+                    isActiveStatus,
+                    isNotExpired,
+                    hasActiveSubscription,
+                    currentPeriodEnd: sub.currentPeriodEnd,
+                });
+            }
 
             if (hasActiveSubscription) {
                 return {
@@ -130,9 +136,11 @@ export async function verifyExistingCreemSubscription(
 
         // Step 4: Fallback to users.plan_slug check
         if (userPlanSlug === targetPlan) {
-            console.log(
-                `[Subscription Verification] Found ${targetPlan} in user.plan_slug but no subscription record`
-            );
+            if (process.env.NODE_ENV === 'development') {
+                console.log(
+                    `[Subscription Verification] Found ${targetPlan} in user.plan_slug but no subscription record`
+                );
+            }
 
             return {
                 hasActiveSubscription: true,
@@ -143,7 +151,9 @@ export async function verifyExistingCreemSubscription(
         }
 
         // Step 5: No active subscription found
-        console.log(`[Subscription Verification] No active ${targetPlan} subscription found`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[Subscription Verification] No active ${targetPlan} subscription found`);
+        }
         return {
             hasActiveSubscription: false,
             userPlanSlug,

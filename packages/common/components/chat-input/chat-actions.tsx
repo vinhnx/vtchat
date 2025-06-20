@@ -29,6 +29,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowUp,
     Atom,
+    Brain,
     Calculator,
     ChevronDown,
     Gift,
@@ -535,6 +536,18 @@ export const BYOKSetupModal = ({
                     name: 'Fireworks AI',
                     url: 'https://app.fireworks.ai/settings/users/api-keys',
                     placeholder: 'fw-...',
+                };
+            case 'XAI_API_KEY':
+                return {
+                    name: 'xAI Grok',
+                    url: 'https://x.ai/api',
+                    placeholder: 'xai-...',
+                };
+            case 'OPENROUTER_API_KEY':
+                return {
+                    name: 'OpenRouter',
+                    url: 'https://openrouter.ai/keys',
+                    placeholder: 'sk-or-...',
                 };
             default:
                 return {

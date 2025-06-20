@@ -12,7 +12,7 @@ import {
     DialogTitle,
     useToast,
 } from '@repo/ui';
-import { FileText, Info, Scan, Sparkles, Upload } from 'lucide-react';
+import { FileText, FileUp, Info, ScanText, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CustomSchemaBuilder } from '../custom-schema-builder';
@@ -26,11 +26,14 @@ export const StructuredOutputButton = () => {
     const { toast } = useToast();
     const router = useRouter();
 
-    const structuredData = useChatStore(state => state.structuredData);
+    // Use a single selector to get all needed state
+    const { structuredData, useStructuredOutput, setUseStructuredOutput } = useChatStore(state => ({
+        structuredData: state.structuredData,
+        useStructuredOutput: state.useStructuredOutput,
+        setUseStructuredOutput: state.setUseStructuredOutput,
+    }));
 
     const isProcessed = !!structuredData;
-
-    const setActiveButton = useChatStore(state => state.setActiveButton);
 
     const handleClick = () => {
         // Check subscription access first
@@ -62,9 +65,17 @@ export const StructuredOutputButton = () => {
             return;
         }
 
-        // All checks passed, set as active button and extract structured output
-        setActiveButton('structuredOutput');
-        extractStructuredOutput();
+        // All checks passed, toggle structured output mode and extract if enabling
+        if (useStructuredOutput) {
+            setUseStructuredOutput(false);
+            toast({
+                title: 'Structured Output Disabled',
+                description: 'Structured output parsing has been turned off.',
+            });
+        } else {
+            setUseStructuredOutput(true);
+            extractStructuredOutput();
+        }
     };
 
     const handleCustomSchemaCreate = (schemaData: { schema: any; type: string }) => {
@@ -102,7 +113,7 @@ export const StructuredOutputButton = () => {
                 title: 'Upload a Document First',
                 description:
                     'To use structured output extraction, please upload a PDF document first. This feature uses AI to extract organized data from your documents.',
-                icon: <Upload className="h-6 w-6 text-blue-500" />,
+                icon: <FileUp className="h-6 w-6 text-blue-500" />,
                 showUpgrade: false,
             };
         }
@@ -148,17 +159,19 @@ export const StructuredOutputButton = () => {
                                 : 'Extract structured data from PDF (Gemini only)'
                 }
                 className={`text-muted-foreground hover:text-foreground ${
-                    isProcessed ? 'text-green-600 hover:text-green-700' : ''
-                } ${!hasStructuredOutputAccess ? 'opacity-50' : ''}`}
+                    useStructuredOutput ? 'bg-primary/10 text-primary hover:text-primary' : ''
+                } ${isProcessed ? 'text-green-600 hover:text-green-700' : ''} ${
+                    !hasStructuredOutputAccess ? 'opacity-50' : ''
+                }`}
             >
                 {!hasStructuredOutputAccess ? (
                     <Sparkles size={16} strokeWidth={2} />
                 ) : !hasDocument ? (
-                    <Upload size={16} strokeWidth={2} />
+                    <FileUp size={16} strokeWidth={2} />
                 ) : !isGeminiModel ? (
                     <Info size={16} strokeWidth={2} />
                 ) : (
-                    <Scan
+                    <ScanText
                         size={16}
                         strokeWidth={2}
                         className={isProcessed ? 'text-green-600' : ''}

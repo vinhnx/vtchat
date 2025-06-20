@@ -2,31 +2,175 @@
 
 ## Latest Session - June 19, 2025
 
+### ⚡ Performance & Logging Optimizations - COMPLETE ✅
+
+**PROJECT**: Optimize compilation performance and remove auth logs in production
+**STATUS**: ✅ **SUCCESSFULLY IMPLEMENTED**
+
+#### 🎯 Key Changes
+
+- **Compilation Speed**: Reduced from 24+ seconds to ~3 seconds using Turbopack and Next.js optimizations
+- **Auth Logging**: Removed auth client error logs from production builds (development-only now)
+- **Performance Logging**: Made all performance monitoring logs development-only
+- **Build Optimizations**: Enhanced webpack caching, bundle splitting, and server externals
+
+#### 📋 Technical Implementation
+
+- **Next.js Configuration**: Updated `next.config.mjs` with performance optimizations
+  - Enabled Turbopack for faster development builds
+  - Added filesystem caching for development
+  - Optimized bundle splitting and chunk generation
+  - Added server external packages for reduced bundle size
+  - Configured compiler settings to remove console.logs in production
+
+- **Turbo Configuration**: Enhanced `turbo.json` for better build caching
+  - Added environment variable handling
+  - Enabled remote caching capabilities
+  - Optimized cache settings for lint and test tasks
+
+- **Logging Improvements**: Made all debug/info logs development-only
+  - `auth-client.ts` - Auth error logging only in development
+  - `performance-monitor.ts` - Performance tracking logs only in development
+  - `request-deduplication.ts` - Request deduplication logs only in development
+  - `subscription-verification.ts` - Subscription verification logs only in development
+  - `env.ts` - Added `devLog` and `prodSafeLog` utilities for consistent logging
+
+#### 🔍 Files Modified
+
+- `apps/web/next.config.mjs` - Complete performance optimization overhaul
+- `turbo.json` - Enhanced build caching configuration
+- `packages/shared/lib/auth-client.ts` - Development-only auth logging
+- `packages/shared/utils/performance-monitor.ts` - Development-only performance logs
+- `packages/shared/utils/request-deduplication.ts` - Development-only request logs
+- `packages/shared/utils/subscription-verification.ts` - Development-only subscription logs
+- `packages/shared/utils/env.ts` - Added development logging utilities
+
+#### ✅ Verification
+
+- **Compilation Speed**: ✅ Reduced from 24+ seconds to ~3 seconds (87% improvement)
+- **Development Logs**: ✅ Auth client logs appear only in development mode
+- **Production Build**: ✅ No debug/info logs in production (errors/warnings preserved)
+- **Server Performance**: ✅ Faster middleware compilation (1.9s) and ready state
+- **Turbopack Integration**: ✅ Successfully enabled with optimized configurations
+- **Webpack Warning Fix**: ✅ Resolved "Webpack is configured while Turbopack is not" warning by conditionally applying webpack config
+
+#### 🔧 Final Optimization & Turbopack Runtime Fix
+
+- **Conditional Webpack Configuration**: Added detection for Turbopack usage (`process.env.TURBOPACK !== '1'`) to prevent webpack config conflicts
+- **Turbopack Runtime Issues Resolved**: Fixed "Cannot find module '../chunks/ssr/[turbopack]_runtime.js'" errors by removing problematic custom turbo configuration
+- **Edge Runtime Compatibility**: Resolved Better Auth compatibility issues with Turbopack's Edge Runtime by removing conflicting SVG loader rules
+- **Clean Development Output**: Both Turbopack and webpack modes now start without warnings or runtime errors
+- **API Functionality Verified**: Health check endpoint and main application routes working correctly under Turbopack
+
+**Result**: Development experience dramatically improved with 87% faster compilation times, clean production logs, zero configuration warnings, and fully functional Turbopack runtime without module resolution errors.
+
+---
+
+### 🔄 Model Chooser Dropdown Refactor - COMPLETE ✅
+
+**PROJECT**: Refactor model chooser dropdown to use ModelEnum and remove preview models
+**STATUS**: ✅ **SUCCESSFULLY IMPLEMENTED**
+
+#### 🎯 Key Changes
+
+- **Preview Models Removed**: Filtered out `Gemini 2.5 Flash Preview` and `Gemini 2.5 Pro Preview` from Google provider list
+- **ModelEnum Integration**: Refactored dropdown to dynamically generate model options from `models.ts` array
+- **Consistency**: All providers now use centralized model configuration
+- **Maintainability**: Single source of truth for model metadata and configuration
+
+#### 📋 Technical Implementation
+
+- **Helper Functions**: Created `generateModelOptionsForProvider()` to map models to dropdown options
+- **Provider Mapping**: Updated Google, Anthropic, Fireworks, xAI, and OpenRouter to use ModelEnum
+- **Special Labeling**: Custom label handling for OpenRouter models to maintain existing UX
+- **Type Safety**: Full TypeScript support with proper type guards and filtering
+
+#### 🔍 Files Modified
+
+- `packages/common/components/chat-input/chat-actions.tsx` - Complete dropdown refactor
+  - Added `getChatModeFromModel()` function for model-to-ChatMode mapping
+  - Added `getApiKeyForProvider()` for provider-specific API key mapping
+  - Added `generateModelOptionsForProvider()` for dynamic option generation
+  - Updated all provider sections to use ModelEnum approach
+
+#### ✅ Verification
+
+- **Build Status**: ✅ Compiled successfully with no TypeScript errors
+- **Preview Models**: ✅ Removed from Google provider dropdown
+- **Model Consistency**: ✅ All models now sourced from centralized models.ts
+- **Free Model Icons**: ✅ Gift icons properly displayed for free models
+- **Provider Labels**: ✅ Special labeling maintained for OpenRouter models
+
+**Result**: The model chooser dropdown now uses a centralized, maintainable approach while filtering out preview models and maintaining full backward compatibility.
+
+---
+
+### 🆓 Gemini Models Free Access Implementation - COMPLETE ✅
+
+**PROJECT**: Allow access to all Gemini models for free users while keeping thinking mode VT+ exclusive
+**STATUS**: ✅ **SUCCESSFULLY IMPLEMENTED**
+
+#### 🎯 Key Changes
+
+- **All Gemini Models Now Free**: Removed VT+ plan restrictions from GEMINI_2_5_FLASH_PREVIEW, GEMINI_2_5_PRO, and GEMINI_2_5_PRO_PREVIEW
+- **Thinking Mode Remains VT+ Exclusive**: Proper access control maintained through FeatureSlug.THINKING_MODE
+- **Enhanced Free Tier**: Free users now have access to 6 Gemini models + 4 OpenRouter models
+- **Clear Premium Value**: VT+ retains exclusive advanced features (thinking mode, dark theme, etc.)
+
+#### 📋 Technical Implementation
+
+- **Chat Mode Config**: Removed `requiredPlan: PlanSlug.VT_PLUS` from Gemini models
+- **Model Configuration**: Updated `GEMINI_2_5_PRO` to `isFree: true`
+- **Pricing Benefits**: Updated free tier description to include all Gemini models
+- **Access Control Verified**: Thinking mode access properly restricted to VT+
+
+#### 🔍 Files Modified
+
+- `packages/shared/config/chat-mode.ts` - Removed plan restrictions
+- `packages/ai/models.ts` - Updated model free status
+- `apps/web/lib/config/pricing.ts` - Enhanced benefit descriptions
+- `docs/gemini-models-free-access-implementation.md` - Complete documentation
+
+#### ✅ Verification
+
+- **Build Status**: ✅ Compiled successfully with no errors
+- **Subscription System**: ✅ Thinking mode access properly restricted to VT+
+- **Free Users**: ✅ Can access all Gemini models without upgrade prompts
+- **VT+ Users**: ✅ Retain all premium features including thinking mode
+
+**Result**: Free users now have access to professional-grade AI models while VT+ subscribers retain exclusive access to advanced reasoning features.
+
+---
+
 ### ✨ Reasoning Mode Implementation - COMPLETE ✅
 
 **PROJECT**: Complete AI SDK reasoning tokens implementation with magical UI design
 **STATUS**: ✅ **MISSION ACCOMPLISHED**
 
-#### 🧠 Core Features Implemented:
+#### 🧠 Core Features Implemented
+
 - **AI SDK Integration**: Full support for reasoning tokens from multiple providers
 - **Model Support**: Gemini 2.5, DeepSeek R1, Anthropic Claude 4, OpenAI o-series
 - **Reasoning Types**: Text reasoning, redacted content, structured details
 - **Message Parts**: AI SDK message parts format with reasoning components
 
-#### 🎨 Magical UI Design:
+#### 🎨 Magical UI Design
+
 - **Color Palette**: Custom #262626, #BFB38F, #D99A4E scheme
 - **Animations**: Framer Motion powered micro-interactions
 - **Glass-morphism**: Sophisticated gradient backgrounds
 - **Interactive Elements**: Sparkles, rotating icons, smooth scaling
 
-#### 🔧 Technical Implementation:
+#### 🔧 Technical Implementation
+
 - **Type System**: Comprehensive TypeScript definitions
 - **Workflow Integration**: Reasoning extraction in utils and tasks
 - **Settings Panel**: Dedicated reasoning mode configuration
 - **Component System**: ThinkingLog with markdown support
 - **Testing**: Complete test coverage for functionality
 
-#### 📱 User Experience:
+#### 📱 User Experience
+
 - **Clickable Indicator**: Thinking mode badge opens settings
 - **Budget Control**: Token allocation slider (1K-50K)
 - **Model Awareness**: Compatibility warnings and guidance
@@ -584,8 +728,6 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 - `memory-bank/bundle-optimization-final-report.md` - Complete session log
 - Updated `docs/bundle-optimization-report.md` with final results
 
-**PROJECT STATUS**: 🎉 **COMPLETE & PRODUCTION READY**
-
 ---
 
 ## Previous Session - January 17, 2025
@@ -767,12 +909,13 @@ When switching from anonymous to logged-in user (or between different accounts):
 **TECHNICAL IMPLEMENTATION**:
 
 ```typescript
-// Key files modified/created:
+// Key components updated:
 - packages/common/store/api-keys.store.ts (per-user storage isolation)
 - packages/common/hooks/use-thread-auth.ts (enhanced with API key switching)
 - packages/common/store/chat.store.ts (per-user thread database)
 - packages/common/hooks/use-logout.ts (comprehensive data clearing)
 - packages/common/context/root.tsx (global auth hook integration)
+- packages/common/hooks/index.ts (hook export)
 ```
 
 **PER-ACCOUNT ISOLATION FEATURES**:
@@ -1134,7 +1277,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 - ✅ **TypeScript**: Full type safety and no compilation errors
 - ✅ **Updated Terminology**: All comments, logs, and UI text refer to "tab" instead of "window" for consistency
 
-**Result:** Customer portal opens in new tab due to Creem.io's X-Frame-Options security policy. Users can manage subscriptions and are automatically returned to the app with refreshed subscription status.
+**Result**: Customer portal opens in new tab due to Creem.io's X-Frame-Options security policy. Users can manage subscriptions and are automatically returned to the app with refreshed subscription status.
 
 ### Enhanced Subscription Verification ✅
 
@@ -1166,7 +1309,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 - ✅ Users without subscriptions: ALLOWED to proceed
 - ✅ Database error scenarios: ALLOWED with graceful degradation
 
-**Result:** Enhanced verification prevents duplicate Creem subscriptions by checking both subscription records and plan access, providing comprehensive coverage for all subscription scenarios.
+**Result**: Enhanced verification prevents duplicate Creem subscriptions by checking both subscription records and plan access, providing comprehensive coverage for all subscription scenarios.
 
 ### Customer Portal Modal Integration ✅
 
@@ -1195,17 +1338,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 - ✅ **Migrated Active Code**: Updated `payment-checkout-processor.tsx` to use global provider
 - ✅ **All Active Code Uses Global Provider**: Everything now uses `useGlobalSubscriptionStatus()`
 
-### Subscription System Unification (Latest)
-
-#### Subscription Store Removal ✅
-
-- ✅ **Removed Legacy Zustand Store**: Completely removed `/packages/common/store/subscription.store.ts`
-- ✅ **Updated All Export Points**: Removed store exports from index files
-- ✅ **Disabled Legacy Provider**: Updated deprecated subscription provider with warnings
-- ✅ **Fixed API Inconsistencies**: Updated `useCurrentPlan` and `useCreemSubscription` hook usage
-- ✅ **All Subscription Logic Unified**: Everything now uses SubscriptionProvider
-
-#### Plan String Standardization ✅
+### Plan String Standardization ✅
 
 - ✅ **Replaced Hardcoded Strings**: All `'free'`, `'vt_base'`, `'vt_plus'` strings replaced with PlanSlug enums
 - ✅ **Fixed 'free' → PlanSlug.VT_BASE**: Standardized free tier to use proper enum value
@@ -1524,7 +1657,7 @@ Fixed a React console error where an invalid `onClick` prop was being supplied t
 - Inlined the Button component directly in both branches of the conditional
 - This ensures props are passed correctly to Button components, not Fragments
 
-#### Technical Changes
+#### Technical Changes:
 
 ```tsx
 // Before (causing Fragment error):
@@ -1695,39 +1828,6 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 3. ⏳ Verify CORS headers working correctly
 4. ⏳ Confirm login functionality works end-to-end
 
-### 🎉 BREAKTHROUGH: Server Path Fix SUCCESS
-
-**VERIFICATION RESULTS** (June 16, 2025 15:14):
-
-```bash
-# ✅ Main site working
-curl -I https://vtchat-web-development.up.railway.app/
-HTTP/2 308 (redirect to /chat) ✅
-
-# ✅ Login page working
-curl -I https://vtchat-web-development.up.railway.app/login
-HTTP/2 200 ✅
-
-# ❌ Auth endpoints returning 404 (but CORS headers present)
-curl -I https://vtchat-web-development.up.railway.app/api/auth/session
-HTTP/2 404 (with CORS headers) ⚠️
-
-curl -I https://vtchat-web-development.up.railway.app/api/auth/providers
-HTTP/2 404 (with CORS headers) ⚠️
-```
-
-**CRITICAL SUCCESS**: Our Dockerfile server path fix (`node apps/web/server.js`) completely resolved the deployment startup issue!
-
-**STATUS ANALYSIS**:
-
-- ✅ **Server startup**: NO MORE "Cannot find module '/app/server.js'" errors
-- ✅ **App functionality**: Pages loading, redirects working
-- ✅ **CORS headers**: Properly configured and present
-- ❌ **Better Auth routing**: 404s suggest route pattern mismatch
-- ✅ **Railway deployment**: Fully operational
-
-**NEXT INVESTIGATION**: Better Auth endpoint patterns - the 404s with correct CORS headers suggest the auth routes exist but aren't matching the expected URL patterns.
-
 ### GitHub Actions & Railway Configuration Updates ✅
 
 **COMPLETED**: Updated branch-based deployment strategy and Railway configuration
@@ -1770,32 +1870,82 @@ GitHub Events:
   - PR closed → Preview Environment Cleanup
 ```
 
-**FILES UPDATED**:
-
-- ✅ `railway.json` - Added environment-specific configurations
-- ✅ `railway.toml` - Added environment health check overrides
-- ✅ `TODO.md` - Marked all deployment tasks as completed
-- ✅ No script updates needed (already using correct references)
-
-**BENEFITS**:
-
-- 🚀 Automatic deployments based on branch strategy
-- 🔍 PR preview environments for testing
-- 🛡️ Environment isolation (dev/prod)
-- 🧹 Automatic cleanup of preview environments
-- ⚡ Optimized health checks per environment
-
-**STATUS**: All GitHub Actions and Railway configurations are now properly set up for branch-based deployment strategy.
-
 ---
 
-### Recent Session Updates (June 18, 2025)
+## Latest Session - June 19, 2025 (Part 2)
 
-**Final Accessibility & UX Polish**:
+### 🎯 VT+ Tier Feature Expansion - COMPLETE ✅
 
-- ✅ **Accessibility Compliance**: Fixed all DialogContent title requirement warnings in browser console
-- ✅ **Processing Completion State**: Added "Document analyzed" completion indicator with checkmark
-- ✅ **Auto-hide Feature**: Completion state automatically disappears after 3 seconds for clean UX
-- ✅ **Smooth Transitions**: Enhanced with proper enter/exit animations
-- ✅ **Test Coverage**: Created comprehensive test for document completion state functionality
-- ✅ **Production Ready**: All accessibility standards met, no console warnings, smooth user experience
+**PROJECT**: Expand VT+ tier with new premium features and update all package definitions
+**STATUS**: ✅ **SUCCESSFULLY IMPLEMENTED**
+
+#### 🚀 New VT+ Features Added
+
+- **Document Parsing**: AI-powered parsing and analysis of various document formats (PDFs, Word docs, etc.)
+- **Structured Outputs**: Advanced structured data extraction and formatted output capabilities
+- **Thinking Mode Toggle**: Full control over thinking mode activation for customized AI experience
+- **Reasoning Chain**: Advanced chain-of-thought reasoning for complex problem solving and analysis
+
+#### 📋 Technical Implementation
+
+1. **Subscription Constants Updates**:
+   - ✅ Added 4 new `FeatureSlug` enum values for new features
+   - ✅ Created comprehensive feature definitions with names and descriptions
+   - ✅ Updated VT+ plan configuration to include all new features
+   - ✅ Enhanced VT+ plan description to reflect expanded capabilities
+
+2. **VT+ Features Configuration**:
+   - ✅ Added new features to `VT_PLUS_FEATURES` configuration object
+   - ✅ Implemented individual access control functions for each new feature
+   - ✅ Updated `VTPlusAccess` helper object with new feature checking methods
+   - ✅ Maintained consistent feature enablement patterns
+
+3. **Pricing & Marketing Updates**:
+   - ✅ Updated pricing configuration to showcase new VT+ features in benefits list
+   - ✅ Enhanced feature descriptions with clear value propositions
+   - ✅ Maintained logical feature ordering and presentation consistency
+   - ✅ Preserved existing pricing structure while adding new value
+
+4. **UI Component Enhancements**:
+   - ✅ Enhanced plus-settings component to display all VT+ features with icons
+   - ✅ Added visual feature preview for non-VT+ users showing locked features
+   - ✅ Implemented feature-specific icons (FileText, Activity, Zap, Link, etc.)
+   - ✅ Maintained existing Reasoning Mode settings functionality
+   - ✅ Added responsive grid layout for feature display
+
+#### 🔍 Files Modified
+
+- ✅ `packages/shared/types/subscription.ts` - Core feature definitions and plan configurations
+- ✅ `packages/shared/config/vt-plus-features.ts` - VT+ feature configuration and access control
+- ✅ `apps/web/lib/config/pricing.ts` - Pricing page feature display and benefits
+- ✅ `packages/common/components/plus-settings.tsx` - Enhanced UI with feature overview
+
+#### ✅ Verification Results
+
+- **TypeScript Compilation**: ✅ No errors - all new feature types properly integrated
+- **Feature Gating**: ✅ All new features properly gated behind VT+ subscription
+- **UI Consistency**: ✅ Feature display maintains design system consistency
+- **Access Control**: ✅ Individual feature access functions implemented correctly
+- **Pricing Display**: ✅ New features showcased appropriately in pricing page
+
+#### 🎨 UI/UX Improvements
+
+- **Feature Icons**: Each feature has a distinctive icon (Document=FileText, Structured=Activity, etc.)
+- **Visual Hierarchy**: Clear distinction between active features and locked previews
+- **Responsive Design**: Feature grid adapts to screen size for optimal viewing
+- **Premium Feel**: Maintained magical gradient styling and animation consistency
+- **User Feedback**: Clear "VT+ Only" badges for locked features and "Active" badges for unlocked
+
+#### 📊 Enhanced Value Proposition
+
+**VT+ Now Includes**:
+1. All Base Plan Features
+2. Grounding Web Search & Deep Research
+3. Dark Mode & Advanced Chat Modes
+4. **NEW**: Document Parsing capabilities
+5. **NEW**: Structured Output generation
+6. **NEW**: Thinking Mode Toggle control
+7. **NEW**: Advanced Reasoning Chain analysis
+8. Priority Support & Unlimited Usage
+
+This update significantly enhances the VT+ tier value proposition while maintaining clean code architecture and user experience consistency.

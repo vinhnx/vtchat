@@ -1,5 +1,6 @@
 import { ChatMode } from '@repo/shared/config';
 import { CoreMessage } from 'ai';
+import { ReasoningTagName, ReasoningType } from './constants/reasoning';
 import { ProviderEnumType } from './providers';
 
 export enum ModelEnum {
@@ -106,6 +107,13 @@ export const models: Model[] = [
     {
         id: ModelEnum.GEMINI_2_0_FLASH,
         name: 'Gemini 2.0 Flash',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
+    },
+    {
+        id: ModelEnum.GEMINI_2_5_FLASH,
+        name: 'Gemini 2.5 Flash',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
@@ -465,9 +473,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 /**
  * Determines the reasoning implementation type for a model
  */
-export const getReasoningType = (
-    model: ModelEnum
-): 'gemini-thinking' | 'deepseek-reasoning' | 'anthropic-reasoning' | 'none' => {
+export const getReasoningType = (model: ModelEnum): ReasoningType => {
     // Gemini models use thinking config
     const geminiThinkingModels = [
         ModelEnum.GEMINI_2_5_FLASH,
@@ -478,7 +484,7 @@ export const getReasoningType = (
     ];
 
     if (geminiThinkingModels.includes(model)) {
-        return 'gemini-thinking';
+        return ReasoningType.GEMINI_THINKING;
     }
 
     // DeepSeek models use reasoning middleware with <think> tags
@@ -489,17 +495,17 @@ export const getReasoningType = (
     ];
 
     if (deepseekReasoningModels.includes(model)) {
-        return 'deepseek-reasoning';
+        return ReasoningType.DEEPSEEK_REASONING;
     }
 
     // Anthropic models support reasoning with providerOptions
     const anthropicReasoningModels = [ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
 
     if (anthropicReasoningModels.includes(model)) {
-        return 'anthropic-reasoning';
+        return ReasoningType.ANTHROPIC_REASONING;
     }
 
-    return 'none';
+    return ReasoningType.NONE;
 };
 
 /**
@@ -509,10 +515,10 @@ export const getReasoningTagName = (model: ModelEnum): string | null => {
     const reasoningType = getReasoningType(model);
 
     switch (reasoningType) {
-        case 'deepseek-reasoning':
-            return 'think'; // DeepSeek uses <think> tags
-        case 'anthropic-reasoning':
-            return 'thinking'; // Anthropic models may use different tags
+        case ReasoningType.DEEPSEEK_REASONING:
+            return ReasoningTagName.THINK; // DeepSeek uses <think> tags
+        case ReasoningType.ANTHROPIC_REASONING:
+            return ReasoningTagName.THINKING; // Anthropic models may use different tags
         default:
             return null; // Gemini uses built-in thinking config, no middleware needed
     }

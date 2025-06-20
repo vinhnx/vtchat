@@ -36,6 +36,41 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'Grounding Web Search: Comprehensive analysis of complex topics with in-depth exploration.',
         enabled: true,
     },
+    [FeatureSlug.STRUCTURED_OUTPUT]: {
+        id: FeatureSlug.STRUCTURED_OUTPUT,
+        name: 'Structured Outputs',
+        description:
+            'AI-powered extraction of structured data from documents and advanced output formatting.',
+        enabled: true,
+    },
+    [FeatureSlug.THINKING_MODE]: {
+        id: FeatureSlug.THINKING_MODE,
+        name: 'Thinking Mode',
+        description:
+            'Enhanced AI reasoning with visible thought processes for complex problem solving.',
+        enabled: true,
+    },
+    [FeatureSlug.DOCUMENT_PARSING]: {
+        id: FeatureSlug.DOCUMENT_PARSING,
+        name: 'Document Parsing',
+        description:
+            'Advanced document parsing and analysis for PDFs, Word documents, and various file formats.',
+        enabled: true,
+    },
+    [FeatureSlug.THINKING_MODE_TOGGLE]: {
+        id: FeatureSlug.THINKING_MODE_TOGGLE,
+        name: 'Thinking Mode Toggle',
+        description:
+            'Full control over thinking mode activation for customized AI reasoning experience.',
+        enabled: true,
+    },
+    [FeatureSlug.REASONING_CHAIN]: {
+        id: FeatureSlug.REASONING_CHAIN,
+        name: 'Reasoning Chain',
+        description:
+            'Advanced chain-of-thought reasoning capabilities for complex analysis and problem solving.',
+        enabled: true,
+    },
 } as const;
 
 /**
@@ -94,6 +129,41 @@ export const VTPlusAccess = {
      */
     hasDeepResearch: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DEEP_RESEARCH);
+    },
+
+    /**
+     * Check if user has access to Structured Outputs
+     */
+    hasStructuredOutput: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.STRUCTURED_OUTPUT);
+    },
+
+    /**
+     * Check if user has access to Thinking Mode
+     */
+    hasThinkingMode: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.THINKING_MODE);
+    },
+
+    /**
+     * Check if user has access to Document Parsing
+     */
+    hasDocumentParsing: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DOCUMENT_PARSING);
+    },
+
+    /**
+     * Check if user has access to Thinking Mode Toggle
+     */
+    hasThinkingModeToggle: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.THINKING_MODE_TOGGLE);
+    },
+
+    /**
+     * Check if user has access to Reasoning Chain
+     */
+    hasReasoningChain: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.REASONING_CHAIN);
     },
 
     /**
