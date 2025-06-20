@@ -111,9 +111,7 @@ BASE_URL=https://vtchat-development.up.railway.app
 # Database
 DATABASE_URL=your-dev-database-url
 
-# Redis (can share with prod or use separate)
-KV_REST_API_URL=your-redis-url
-KV_REST_API_TOKEN=your-redis-token
+# Redis - removed (no longer needed)
 
 # Payment (sandbox mode)
 CREEM_API_KEY=creem_test_your-sandbox-key

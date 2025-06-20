@@ -115,9 +115,7 @@ CREEM_PRODUCT_ID=your-product-id
 #### 5. Additional Services (Optional)
 
 ```bash
-# Redis for caching
-UPSTASH_REDIS_REST_URL=your-redis-url
-UPSTASH_REDIS_REST_TOKEN=your-redis-token
+# Redis - removed (no longer needed)
 
 # Email service
 RESEND_API_KEY=your-resend-key

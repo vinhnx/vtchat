@@ -1823,10 +1823,10 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
   1. Primary: subscription-sync module import
   2. Secondary: Direct database queries
   3. Tertiary: Safe defaults (free tier)
-- ✅ **Enhanced Rate Limiting**: Integrated Redis-based rate limiting for free tier users
-  - Uses Upstash Redis with automatic daily reset
-  - Supports both `KV_REST_API_*` and `UPSTASH_REDIS_REST_*` variables
-  - Fallback to in-memory when Redis unavailable
+- ❌ **Rate Limiting Removed**: Eliminated Redis-based rate limiting system
+  - Removed FREE_TIER_DAILY_LIMIT environment variable
+  - Removed all KV/Redis dependencies and configurations
+  - No more usage restrictions for free tier users
 - ✅ **Improved Error Handling**: Comprehensive error logging with graceful degradation
 - ✅ **Subscription Status Logic**: Proper handling of multiple data sources (subscription table vs user plan_slug)
 - ✅ **Production Ready**: No more temporary implementations, fully functional access control

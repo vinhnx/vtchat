@@ -100,14 +100,11 @@ export const PRICING_CONFIG = {
         },
     },
 
-    // Rate limiting
-    limits: {
-        freeDaily: parseInt(process.env.FREE_TIER_DAILY_LIMIT || '10', 10),
-    },
+    // Rate limiting - removed FREE_TIER_DAILY_LIMIT
 } as const;
 
 // Export individual values for convenience
 export const PRODUCT_NAME = PRICING_CONFIG.product.name;
 export const PRODUCT_ID = PRICING_CONFIG.product.id;
 export const VT_PLUS_PRICE = PRICING_CONFIG.pricing.plus.price;
-export const FREE_TIER_LIMIT = PRICING_CONFIG.limits.freeDaily;
+// FREE_TIER_LIMIT removed

@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import { ChatModeConfig } from '@repo/shared/config';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
-import { checkRateLimit, checkVTPlusAccess } from '../subscription/access-control';
+import { checkVTPlusAccess } from '../subscription/access-control';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -92,18 +92,7 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Rate limiting for free tier users
-        const rateLimitResult = await checkRateLimit({ userId, ip });
-        if (!rateLimitResult.allowed) {
-            return new Response(
-                JSON.stringify({
-                    error: 'Rate limit exceeded',
-                    remaining: rateLimitResult.remaining || 0,
-                    resetTime: rateLimitResult.resetTime?.toISOString(),
-                }),
-                { status: 429, headers: { 'Content-Type': 'application/json' } }
-            );
-        }
+        // Rate limiting removed - no longer needed
 
         const enhancedHeaders = {
             ...SSE_HEADERS,

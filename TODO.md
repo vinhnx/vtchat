@@ -28,12 +28,16 @@
 
 --
 
-[] remove FREE_TIER_DAILY_LIMIT and KV Redis Upstash depedeny completly
+[] remove FREE_TIER_DAILY_LIMIT key and KV Redis Upstash depedeny completly
+[] remove credit tracking (FREE_TIER_DAILY_LIMIT)
+[] check if any impact?
+use context7
+--
+
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
 [] plus: if use pre-defined key: 30 per day
 [] -> if has gemini in byok -> unlimited
-[] implement credit tracking (FREE_TIER_DAILY_LIMIT)
 
 --
 
@@ -88,7 +92,6 @@ remember to publish Google Auth
 --
 
 [] Gemini
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#cached-content>
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs>
 [][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching>
 --
@@ -97,7 +100,6 @@ remember to publish Google Auth
 
 ## Authentication (Better Auth Integration & Enhancements)
 
-- [ ] Handle current free -> anonymous flow: [https://www.better-auth.com/docs/plugins/anonymous](https://www.better-auth.com/docs/plugins/anonymous)
 - [ ] Implement Email Verification: [https://www.better-auth.com/docs/authentication/email-password#email-verification](https://www.better-auth.com/docs/authentication/email-password#email-verification)
 - [ ] Implement 2FA: [https://www.better-auth.com/docs/plugins/2fa](https://www.better-auth.com/docs/plugins/2fa)
 - [ ] Implement Username Plugin: [https://www.better-auth.com/docs/plugins/username](https://www.better-auth.com/docs/plugins/username)
@@ -108,11 +110,6 @@ remember to publish Google Auth
   - [ ] Use one shared `auth-client.ts`.
   - [ ] Move `auth-client.ts` to `packages/shared/lib/` (or a more appropriate shared location).
   - [ ] Rename `apps/web/lib/auth.ts` to `auth-server.ts` (if it's purely server-side).
-- [ ] Update Better Auth config for `/error` and `/welcome` routes: [https://www.better-auth.com/docs/basic-usage#sign-in-with-social-providers](https://www.better-auth.com/docs/basic-usage#sign-in-with-social-providers)
-- [ ] Implement request user avatar when login/signup from OAuth provider like Google and gitHub and sync to Neon DB.
-- [ ] Handle account verification to protect against bots: [https://www.better-auth.com/docs/concepts/email](https://www.better-auth.com/docs/concepts/email)
-- [ ] Ensure API keys are removed from client-side/session on logout or account switch.
-- [ ] Review Better Auth general options: [https://www.better-auth.com/docs/reference/options](https://www.better-auth.com/docs/reference/options)
 
 ## Thread Management (Account-based & Neon Sync)
 
@@ -130,6 +127,13 @@ remember to publish Google Auth
 --
 
 - [ ] Desktop Application - Electron: [https://github.com/electron/electron](https://github.com/electron/electron)
+
+--
+
+Domain:
+
+-> vtchat.io.vn
+
 - [ ] Domain Name Research (vtai.io.vn, vtchat.io.vn) - _Consider moving detailed notes to a separate research document._
   - Whois VN: [https://whois.inet.vn/whois?domain=vtchat.io.vn](https://whois.inet.vn/whois?domain=vtchat.io.vn)
   - VinaHost: [https://secure.vinahost.vn/ac/cart.php?a=confdomains](https://secure.vinahost.vn/ac/cart.php?a=confdomains)
@@ -139,6 +143,29 @@ remember to publish Google Auth
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
 
-[] grand final showcase <https://github.com/vercel/ai/discussions/1914>
-[] grand final showcase <https://github.com/vercel/ai/discussions/1914>
-[] grand final showcase <https://github.com/vercel/ai/discussions/1914>
+--
+
+Before final production deployment, ensure all environment variables are set correctly for production, including API keys, database URLs, and any other sensitive information.
+- [ ] Finalize production environment configuration:
+- [ ] Ensure all environment variables are set correctly for production, including API keys, database URLs, and any other sensitive information.
+- [ ] Test the production deployment thoroughly to ensure all features work as expected.
+- [ ] Set up monitoring and logging for the production environment to catch any issues early
+- [ ] Document the production deployment process for future reference.
+- [ ] Create a final checklist for production deployment, including:
+  - [ ] Environment variable verification
+  - [ ] Database connection checks
+  - [ ] API key validation
+  - [ ] Feature testing
+  - [ ] Monitoring setup
+- [ ] Review and finalize the production deployment documentation, ensuring it is clear and comprehensive for future deployments.
+- [ ] Conduct a final review of the codebase to ensure all changes are committed and pushed to the main branch.
+- [ ] Prepare a final release note summarizing the changes, features, and fixes included in the production deployment.
+- [ ] Schedule a final deployment date and time, ensuring all team members are aware and available for any last-minute issues that may arise.
+
+--
+
+Write a final report and update readme, documentation, and any other relevant materials to reflect the current state of the project.
+
+--
+
+Good luck!
