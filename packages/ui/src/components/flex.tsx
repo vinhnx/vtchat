@@ -58,7 +58,7 @@ export interface FlexProps
 }
 
 export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, direction, gap, justify, items, asChild = false, ...props }, ref) => {
+  ({ className, direction, gap, justify, items, asChild: _asChild = false, ...props }, ref) => {
     return (
       <div
         className={cn(flexVariants({ direction, gap, justify, items, className }))}

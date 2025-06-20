@@ -11,7 +11,7 @@ module.exports = {
     ],
     theme: {
         extend: {
-            typography: ({ theme }) => ({
+            typography: ({ theme: _theme }) => ({
                 prosetheme: {
                     css: {
                         '--tw-prose-body': 'hsl(var(--foreground))',
