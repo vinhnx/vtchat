@@ -38,7 +38,7 @@ export interface TypographyProps
 }
 
 const Typography = React.forwardRef<HTMLElement, TypographyProps>(
-    ({ className, variant, affects, asChild = false, as, children, ...props }, ref) => {
+    ({ className, variant, affects, asChild: _asChild = false, as, children, ...props }, ref) => {
         const elementMap = {
             h1: 'h1',
             h2: 'h2',

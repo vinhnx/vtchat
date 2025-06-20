@@ -3,7 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { X } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
