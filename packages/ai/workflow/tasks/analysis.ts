@@ -74,9 +74,7 @@ ${s}
         const mode = context?.get('mode') || '';
         // For Deep Research workflow, select available model with fallback mechanism
         const baseModel =
-            mode === ChatMode.Deep
-                ? ModelEnum.GEMINI_2_5_FLASH_PREVIEW
-                : getModelFromChatMode(mode);
+            mode === ChatMode.Deep ? ModelEnum.GEMINI_2_5_PRO : getModelFromChatMode(mode);
         const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
         const text = await generateText({
@@ -89,14 +87,14 @@ ${s}
             onReasoning: reasoning => {
                 chunkBuffer.add(reasoning);
             },
-            onReasoningDetails: (details) => {
+            onReasoningDetails: details => {
                 updateStep({
                     stepId,
                     stepStatus: 'COMPLETED',
                     subSteps: {
-                        reasoningDetails: { 
+                        reasoningDetails: {
                             status: 'COMPLETED',
-                            data: details
+                            data: details,
                         },
                     },
                 });

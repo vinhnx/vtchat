@@ -8,8 +8,7 @@ describe('Reasoning Support', () => {
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_FLASH)).toBe(true);
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO)).toBe(true);
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_FLASH_LITE)).toBe(true);
-            expect(supportsReasoning(ModelEnum.GEMINI_2_5_FLASH_PREVIEW)).toBe(true);
-            expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO_PREVIEW)).toBe(true);
+            expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO)).toBe(true);
         });
 
         it('should return true for DeepSeek reasoning models', () => {

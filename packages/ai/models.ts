@@ -135,28 +135,12 @@ export const models: Model[] = [
         isFree: true,
     },
     {
-        id: ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
-        name: 'Gemini 2.5 Flash Preview',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-        isFree: true,
-    },
-    {
         id: ModelEnum.GEMINI_2_5_PRO,
         name: 'Gemini 2.5 Pro',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
         isFree: false,
-    },
-    {
-        id: ModelEnum.GEMINI_2_5_PRO_PREVIEW,
-        name: 'Gemini 2.5 Pro Preview',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-        isFree: true,
     },
     {
         id: ModelEnum.GROK_3,
@@ -238,21 +222,17 @@ export const models: Model[] = [
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
         case ChatMode.Deep:
-            return ModelEnum.GEMINI_2_5_FLASH_PREVIEW;
+            return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.Pro:
-            return ModelEnum.GEMINI_2_0_FLASH;
+            return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.GEMINI_2_0_FLASH:
             return ModelEnum.GEMINI_2_0_FLASH;
         case ChatMode.GEMINI_2_0_FLASH_LITE:
             return ModelEnum.GEMINI_2_0_FLASH_LITE;
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
-        case ChatMode.GEMINI_2_5_FLASH_PREVIEW:
-            return ModelEnum.GEMINI_2_5_FLASH_PREVIEW;
         case ChatMode.GEMINI_2_5_PRO:
             return ModelEnum.GEMINI_2_5_PRO;
-        case ChatMode.GEMINI_2_5_PRO_PREVIEW:
-            return ModelEnum.GEMINI_2_5_PRO_PREVIEW;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.Deepseek_R1;
         case ChatMode.CLAUDE_4_SONNET:
@@ -304,9 +284,8 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_0_FLASH:
         case ChatMode.GEMINI_2_0_FLASH_LITE:
         case ChatMode.GEMINI_2_5_FLASH_LITE:
-        case ChatMode.GEMINI_2_5_FLASH_PREVIEW:
         case ChatMode.GEMINI_2_5_PRO:
-        case ChatMode.GEMINI_2_5_PRO_PREVIEW:
+        case ChatMode.GEMINI_2_5_FLASH:
             return 1_048_576;
         case ChatMode.DEEPSEEK_R1:
             return 128_000;
@@ -375,9 +354,7 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_0_FLASH_LITE,
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
-        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
         ModelEnum.GEMINI_2_5_PRO,
-        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
     ];
 
     return googleModels.includes(model);
@@ -459,8 +436,6 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
-        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
-        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
     ];
 
     return [
@@ -479,8 +454,6 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
-        ModelEnum.GEMINI_2_5_FLASH_PREVIEW,
-        ModelEnum.GEMINI_2_5_PRO_PREVIEW,
     ];
 
     if (geminiThinkingModels.includes(model)) {
