@@ -13,9 +13,9 @@ export const DOCUMENT_UPLOAD_CONFIG = {
 } as const;
 
 export const GEMINI_MODELS = [
+    ChatMode.GEMINI_2_5_PRO,
+    ChatMode.GEMINI_2_5_FLASH,
+    ChatMode.GEMINI_2_5_FLASH_LITE,
     ChatMode.GEMINI_2_0_FLASH,
     ChatMode.GEMINI_2_0_FLASH_LITE,
-    ChatMode.GEMINI_2_5_FLASH_LITE,
-    ChatMode.GEMINI_2_5_FLASH,
-    ChatMode.GEMINI_2_5_PRO,
 ] as const;

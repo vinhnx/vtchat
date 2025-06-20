@@ -224,7 +224,7 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         case ChatMode.Deep:
             return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.Pro:
-            return ModelEnum.GEMINI_2_5_PRO;
+            return ModelEnum.GEMINI_2_5_FLASH;
         case ChatMode.GEMINI_2_0_FLASH:
             return ModelEnum.GEMINI_2_0_FLASH;
         case ChatMode.GEMINI_2_0_FLASH_LITE:

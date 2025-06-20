@@ -28,7 +28,7 @@ import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
 import { StructuredOutputButton } from './structured-output-button';
-import { ThinkingModeIndicator } from './thinking-mode-indicator';
+
 
 export const ChatInput = ({
     showGreeting = true,
@@ -70,7 +70,7 @@ export const ChatInput = ({
     const createThread = useChatStore(state => state.createThread);
     const useWebSearch = useChatStore(state => state.useWebSearch);
     const useMathCalculator = useChatStore(state => state.useMathCalculator);
-    const thinkingMode = useChatStore(state => state.thinkingMode);
+
     const isGenerating = useChatStore(state => state.isGenerating);
     const isChatPage = usePathname().startsWith('/chat');
     const imageAttachment = useChatStore(state => state.imageAttachment);
@@ -218,7 +218,6 @@ export const ChatInput = ({
                                         )}
 
                                         <Flex gap="sm" items="center">
-                                            <ThinkingModeIndicator />
                                             <SendStopButton
                                                 isGenerating={isGenerating}
                                                 isChatPage={isChatPage}
