@@ -14,7 +14,13 @@ A flexible and powerful system for building AI agent workflows using a graph-bas
 - Support for multiple LLM providers:
   - OpenAI
   - Anthropic
+  - Google (Gemini)
   - Together AI
+  - Fireworks
+  - xAI
+- Specialized research workflows:
+  - Deep Research: Comprehensive analysis using Gemini 2.5 Pro
+  - Pro Search: Fast web search using Gemini 2.5 Flash
 
 ## Getting Started
 

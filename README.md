@@ -9,7 +9,8 @@ The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) m
 ## Key Features
 
 * **Advanced Research Modes**:
-  * **Grounding Web Search**: Enhanced search with web integration and comprehensive analysis.
+  * **Deep Research (VT+ exclusive)**: Comprehensive multi-step research using Gemini 2.5 Pro for in-depth analysis of complex topics.
+  * **Pro Search (VT+ exclusive)**: Fast grounding web search using Gemini 2.5 Flash for quick information retrieval.
   * **Document Upload**: Upload and analyze PDF, DOC, DOCX, TXT, and MD files (Gemini models only).
 * **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
 * **Free Models Access**: Access to free AI models including:

@@ -1,5 +1,6 @@
 # TODO
 
+==
 on update user profile -> trigger update sidebar user profile
 --
 [Logout] ✅ Reset theme to light mode use-logout.ts:29:20
@@ -22,9 +23,6 @@ fix :Mobile version is coming soon.
 Please use a desktop browser."
 --
 remove hover border at example prompt buttons
-
---
-merge VT+ and Subscription section into 1 section in settings page
 --
 add loading indicator when loading subscription data from api
 use skeleton if needed
