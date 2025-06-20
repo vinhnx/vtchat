@@ -1,6 +1,6 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button } from '@repo/ui';
+import { ButtonWithIcon } from '@repo/ui';
 import { Editor } from '@tiptap/react';
 import { BarChart, Book, HelpCircle, Lightbulb, Pencil } from 'lucide-react';
 import { useState } from 'react';
@@ -111,16 +111,16 @@ export const ExamplePrompts = () => {
         <>
             <div className="animate-fade-in mb-8 flex w-full flex-wrap justify-center gap-2 p-6 transition-all duration-1000">
                 {Object.entries(categoryIcons).map(([category, value], index) => (
-                    <Button
+                    <ButtonWithIcon
                         key={index}
                         variant="outlined"
                         size="sm"
                         onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
                         className="dark:hover:ring-offset-background transition-all hover:ring-2 hover:ring-offset-2"
+                        icon={<value.icon size={16} className={value.color} />}
                     >
-                        <value.icon size={16} className={value.color} />
-                        <span className="ml-2">{value.name}</span>
-                    </Button>
+                        {value.name}
+                    </ButtonWithIcon>
                 ))}
             </div>
 

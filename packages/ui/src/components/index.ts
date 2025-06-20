@@ -6,6 +6,7 @@ export * from './badge';
 export * from './beta-tag';
 export * from './breadcrumb';
 export * from './button';
+export * from './button-with-icon';
 export * from './card';
 export * from './carousel';
 export * from './checkbox';
