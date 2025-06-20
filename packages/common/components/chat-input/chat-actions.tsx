@@ -29,7 +29,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowUp,
     Atom,
-    Brain,
     Calculator,
     ChevronDown,
     Gift,
@@ -120,15 +119,15 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Flash Lite',
+            label: 'Gemini 2.5 Flash Lite Preview',
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
             icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Flash Preview',
-            value: ChatMode.GEMINI_2_5_FLASH_PREVIEW,
+            label: 'Gemini 2.5 Flash',
+            value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
             icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
@@ -141,8 +140,8 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Pro Preview',
-            value: ChatMode.GEMINI_2_5_PRO_PREVIEW,
+            label: 'Gemini 2.5 Pro',
+            value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
             icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,

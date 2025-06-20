@@ -99,7 +99,7 @@ Current date: ${getHumanizedDate()}
         const byokKeys = context?.get('apiKeys');
 
         // Select an appropriate model based on available API keys
-        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_FLASH_PREVIEW, byokKeys);
+        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_PRO, byokKeys);
 
         const object = await generateObject({
             prompt,

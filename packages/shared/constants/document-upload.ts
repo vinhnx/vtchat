@@ -16,7 +16,6 @@ export const GEMINI_MODELS = [
     ChatMode.GEMINI_2_0_FLASH,
     ChatMode.GEMINI_2_0_FLASH_LITE,
     ChatMode.GEMINI_2_5_FLASH_LITE,
-    ChatMode.GEMINI_2_5_FLASH_PREVIEW,
+    ChatMode.GEMINI_2_5_FLASH,
     ChatMode.GEMINI_2_5_PRO,
-    ChatMode.GEMINI_2_5_PRO_PREVIEW,
 ] as const;

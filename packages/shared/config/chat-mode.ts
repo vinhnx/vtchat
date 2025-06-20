@@ -14,9 +14,7 @@ export enum ChatMode {
     GEMINI_2_5_FLASH = 'gemini-2.5-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_5_FLASH_PREVIEW = 'gemini-2.5-flash-preview-05-20',
-    GEMINI_2_5_PRO = 'gemini-2.5-pro-preview-05-06',
-    GEMINI_2_5_PRO_PREVIEW = 'gemini-2.5-pro-preview-06-05',
+    GEMINI_2_5_PRO = 'gemini-2.5-pro',
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',
     DEEPSEEK_R1 = 'deepseek-r1-0528',
@@ -144,24 +142,10 @@ export const ChatModeConfig: Record<
         isNew: true,
         isAuthRequired: true,
     },
-    [ChatMode.GEMINI_2_5_FLASH_PREVIEW]: {
-        webSearch: true,
-        imageUpload: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
     [ChatMode.GEMINI_2_5_PRO]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GEMINI_2_5_PRO_PREVIEW]: {
-        webSearch: true,
-        imageUpload: true,
-        retry: true,
-        isNew: true,
         isAuthRequired: true,
     },
     [ChatMode.DEEPSEEK_R1]: {
@@ -360,13 +344,9 @@ export const getChatModeName = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_FLASH:
             return 'Google Gemini 2.5 Flash';
         case ChatMode.GEMINI_2_5_FLASH_LITE:
-            return 'Google Gemini 2.5 Flash Lite';
-        case ChatMode.GEMINI_2_5_FLASH_PREVIEW:
-            return 'Google Gemini 2.5 Flash Preview';
+            return 'Google Gemini 2.5 Flash Lite Preview';
         case ChatMode.GEMINI_2_5_PRO:
             return 'Google Gemini 2.5 Pro';
-        case ChatMode.GEMINI_2_5_PRO_PREVIEW:
-            return 'Google Gemini 2.5 Pro Preview';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:

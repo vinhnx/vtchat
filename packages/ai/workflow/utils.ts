@@ -8,14 +8,14 @@ import {
 } from 'ai';
 import { format } from 'date-fns';
 import { ZodSchema } from 'zod';
+import { ReasoningType } from '../constants/reasoning';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
-import { 
-    ReasoningDetail, 
-    GenerateTextWithReasoningResult, 
-    ThinkingModeConfig
+import {
+    GenerateTextWithReasoningResult,
+    ReasoningDetail,
+    ThinkingModeConfig,
 } from '../types/reasoning';
-import { ReasoningType } from '../constants/reasoning';
 import { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
 
@@ -1122,9 +1122,7 @@ export const selectAvailableModel = (
             [ModelEnum.GEMINI_2_0_FLASH_LITE]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_5_FLASH_PREVIEW]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_5_PRO_PREVIEW]: 'GEMINI_API_KEY',
             // OpenAI models
             [ModelEnum.GPT_4o_Mini]: 'OPENAI_API_KEY',
             [ModelEnum.GPT_4o]: 'OPENAI_API_KEY',
@@ -1221,7 +1219,7 @@ export const selectAvailableModel = (
         ModelEnum.GEMINI_2_0_FLASH, // Free/cheap Gemini model
         ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
         ModelEnum.GPT_4o, // More expensive but reliable
-        ModelEnum.GEMINI_2_5_FLASH_PREVIEW, // Newer Gemini
+        ModelEnum.GEMINI_2_5_FLASH, // Newer Gemini
     ];
 
     for (const model of fallbackModels) {
