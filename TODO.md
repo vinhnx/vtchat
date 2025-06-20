@@ -1,5 +1,34 @@
 # TODO
 
+on update user profile -> trigger update sidebar user profile
+--
+[Logout] ✅ Reset theme to light mode use-logout.ts:29:20
+[ApiKeys] Storage setItem: api-keys-storage-x9UOfXF0I2Bqifg4ge7bbapb6osrDeUv -> saved api-keys.store.ts:220:32
+[Logout] ✅ Cleared all API keys use-logout.ts:33:20
+[Logout] ✅ Cleared all threads from local storage use-logout.ts:37:20
+[Logout] ✅ Reset app store user state use-logout.ts:41:20
+[Logout] ✅ Cleared 0 subscription cache entries use-logout.ts:55:24
+[Logout] ✅ Cleared theme storage use-logout.ts:75:24
+[Logout] ✅ Completed authentication sign out use-logout.ts:117:20
+[Logout] 🔒 Secure logout completed successfully
+
+
+onlogout -> also refresh the whole page to ensure all state is reset
+--
+--
+implement mobile version
+
+fix :Mobile version is coming soon.
+Please use a desktop browser."
+--
+remove hover border at example prompt buttons
+
+--
+merge VT+ and Subscription section into 1 section in settings page
+--
+add loading indicator when loading subscription data from api
+use skeleton if needed
+--
 packages/common/components/settings-modal.tsx
 auto scroll to top section when a panel is selected
 default selected is first most panel
@@ -8,25 +37,21 @@ when a panel is selected, scroll to top of the panel
 --
 fix packages/common/components/chat-input/chat-config.ts
 -
-make sure fetching subscription API and logic is working properly
 
+make sure fetching subscription API and logic is working properly
 make sure authorization and subscription logic is working properly
+ensure fetching subscription API and logic is working properly and effectively and fast to avoid any performance and ui/ux issues
 
 use context7 mcp
 
 --
-
-make sure when user log out, authorize -> remove all premium cache (dark mode, gated features...)
 --
 
 when reasoning -> open steps side panel and render realtime markdown
 --
-remove icons in VT+ Features and Subscription  section in settings page
-
 --
 fix https://ui.shadcn.com/docs/components/switch
 in settings vt+ page switch
-
 
 --
 https://ui.shadcn.com/blocks#sidebar-07
@@ -899,20 +924,6 @@ build waitlist landing page
 
 ---
 
-update all existing button component with
-https://ui.shadcn.com/docs/components/button
-
---
-
-update ui of VT+ Features page in settings
-
-make it simpler and cleaner
-
-more readable minimalistic design but still modern
-
-have enough information to understand what each feature does
-
-have enough benefits to understand why it is useful
 
 --
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>

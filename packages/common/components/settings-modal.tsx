@@ -3,20 +3,28 @@ import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, Key, Trash, Settings, Info } from 'lucide-react';
+import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
 
-import { Badge, Dialog, DialogContent, Input, cn, TypographyH2, TypographyH3, TypographyMuted } from '@repo/ui';
+import {
+    Badge,
+    cn,
+    Dialog,
+    DialogContent,
+    Input,
+    TypographyH2,
+    TypographyH3,
+    TypographyMuted,
+} from '@repo/ui';
 
 import { useChatEditor } from '@repo/common/hooks';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SETTING_TABS, useAppStore } from '../store';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { ChatEditor } from './chat-input';
 
+import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
-import { PlusSettings } from './plus-settings';
-import { UsageCreditsSettings } from './usage-credits-settings';
 import { UserProfileSettings } from './user-profile-settings';
 
 export const SettingsModal = () => {
@@ -81,16 +89,10 @@ export const SettingsModal = () => {
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            title: 'Subscription',
-            description: 'Manage your plan and usage',
+            title: 'VT+',
+            description: 'Premium features and usage management',
             key: SETTING_TABS.USAGE_CREDITS,
-            component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
-        },
-        {
-            title: 'VT+ Features',
-            description: 'Premium AI capabilities and reasoning',
-            key: SETTING_TABS.PLUS,
-            component: <PlusSettings />,
+            component: <CombinedSubscriptionSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
             title: 'API Keys',
@@ -106,12 +108,17 @@ export const SettingsModal = () => {
                 ariaTitle="Settings"
                 className="h-full max-h-[700px] !max-w-[900px] overflow-x-hidden rounded-xl p-0"
             >
-                <div ref={scrollRef} className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden">
+                <div
+                    ref={scrollRef}
+                    className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden"
+                >
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
                         <div className="flex items-center justify-between px-6 py-4">
                             <div>
-                                <TypographyH2 className="text-xl font-semibold">Settings</TypographyH2>
+                                <TypographyH2 className="text-xl font-semibold">
+                                    Settings
+                                </TypographyH2>
                                 <p className="text-muted-foreground text-sm">
                                     Customize your VT experience and manage your account
                                 </p>
@@ -149,7 +156,11 @@ export const SettingsModal = () => {
                         </div>
 
                         {/* Main Content Area */}
-                        <div className="flex-1 p-6 bg-background" ref={panelContentRef} style={{ overflowY: 'auto', maxHeight: '700px' }}>
+                        <div
+                            className="bg-background flex-1 p-6"
+                            ref={panelContentRef}
+                            style={{ overflowY: 'auto', maxHeight: '700px' }}
+                        >
                             <div className="max-w-2xl">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
                             </div>
@@ -246,32 +257,34 @@ export const ApiKeySettings = () => {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <TypographyH3>
-                    API Keys
-                </TypographyH3>
+                <TypographyH3>API Keys</TypographyH3>
                 <TypographyMuted>Manage your AI provider API keys securely</TypographyMuted>
             </div>
 
             {/* Security Info Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
                     <TypographyH3 className="text-lg font-semibold">
                         Secure Local Storage
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Your API keys are protected and never leave your device
                     </p>
                 </div>
                 <div className="p-6">
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-start gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
                                 <Key className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div className="flex-1">
-                                <div className="text-sm font-medium text-foreground">Privacy First</div>
-                                <div className="mt-1 text-xs text-muted-foreground">
-                                    API keys are stored locally in your browser and never sent to our servers. They're used only for direct requests to AI providers.
+                                <div className="text-foreground text-sm font-medium">
+                                    Privacy First
+                                </div>
+                                <div className="text-muted-foreground mt-1 text-xs">
+                                    API keys are stored locally in your browser and never sent to
+                                    our servers. They're used only for direct requests to AI
+                                    providers.
                                 </div>
                             </div>
                         </div>
@@ -280,37 +293,45 @@ export const ApiKeySettings = () => {
             </div>
 
             {/* API Keys Management */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
-                    <TypographyH3 className="text-lg font-semibold flex items-center gap-2">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
+                    <TypographyH3 className="flex items-center gap-2 text-lg font-semibold">
                         <Settings className="h-5 w-5" />
                         Configure Providers
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Add API keys for the AI providers you want to use
                     </p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="space-y-4 p-6">
                     {apiKeyList.map(apiKey => (
-                        <div key={apiKey.key} className="rounded-lg border border-border/50 bg-muted/20 p-4 space-y-3">
+                        <div
+                            key={apiKey.key}
+                            className="border-border/50 bg-muted/20 space-y-3 rounded-lg border p-4"
+                        >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <div className="text-sm font-medium text-foreground">{apiKey.name}</div>
+                                    <div className="mb-1 flex items-center gap-2">
+                                        <div className="text-foreground text-sm font-medium">
+                                            {apiKey.name}
+                                        </div>
                                         {apiKey.value && (
-                                            <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 text-xs">
+                                            <Badge
+                                                variant="secondary"
+                                                className="bg-green-100 text-xs text-green-800 dark:bg-green-900/30 dark:text-green-200"
+                                            >
                                                 Configured
                                             </Badge>
                                         )}
                                     </div>
-                                    <div className="text-xs text-muted-foreground mb-2">
+                                    <div className="text-muted-foreground mb-2 text-xs">
                                         {apiKey.description}
                                     </div>
                                     <a
                                         href={apiKey.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline"
+                                        className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-xs underline-offset-2 hover:underline"
                                     >
                                         Get API key →
                                     </a>
@@ -361,7 +382,7 @@ export const ApiKeySettings = () => {
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-3">
-                                        <div className="flex-1 rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm">
+                                        <div className="border-border bg-background flex-1 rounded-lg border px-3 py-2 font-mono text-sm">
                                             {apiKey.value ? (
                                                 <span className="text-muted-foreground">
                                                     {getMaskedKey(apiKey.value)}
@@ -373,20 +394,20 @@ export const ApiKeySettings = () => {
                                             )}
                                         </div>
                                         <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleEdit(apiKey.key)}
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleEdit(apiKey.key)}
                                         >
                                             {apiKey.value ? 'Update' : 'Add Key'}
                                         </Button>
                                         {apiKey.value && (
                                             <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => {
-                                            setApiKey(apiKey.key, '');
-                                            }}
-                                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 dark:border-red-800 dark:hover:border-red-700"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setApiKey(apiKey.key, '');
+                                                }}
+                                                className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
                                             >
                                                 <Trash size={14} />
                                             </Button>
@@ -400,13 +421,13 @@ export const ApiKeySettings = () => {
             </div>
 
             {/* Help Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
-                    <TypographyH3 className="text-lg font-semibold flex items-center gap-2">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
+                    <TypographyH3 className="flex items-center gap-2 text-lg font-semibold">
                         <Info className="h-5 w-5 text-blue-500" />
                         Quick Guide
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Everything you need to know about API key management
                     </p>
                 </div>
@@ -414,15 +435,15 @@ export const ApiKeySettings = () => {
                     <div className="space-y-3">
                         {[
                             "API keys are stored securely in your browser's local storage",
-                            "You only need to configure keys for the AI providers you want to use",
-                            "Keys are never shared with VT servers - they go directly to AI providers",
-                            "You can update or remove keys at any time"
+                            'You only need to configure keys for the AI providers you want to use',
+                            'Keys are never shared with VT servers - they go directly to AI providers',
+                            'You can update or remove keys at any time',
                         ].map((tip, index) => (
                             <div key={index} className="flex items-start gap-3">
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
                                     <div className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"></div>
                                 </div>
-                                <div className="text-sm text-muted-foreground">{tip}</div>
+                                <div className="text-muted-foreground text-sm">{tip}</div>
                             </div>
                         ))}
                     </div>
@@ -464,21 +485,24 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             </div>
 
             {/* Theme Preferences Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
-                    <TypographyH3 className="text-lg font-semibold">
-                        Visual Theme
-                    </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
-                        Choose how you want VT to look. Your preference will be saved and applied across all your devices.
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
+                    <TypographyH3 className="text-lg font-semibold">Visual Theme</TypographyH3>
+                    <p className="text-muted-foreground text-sm">
+                        Choose how you want VT to look. Your preference will be saved and applied
+                        across all your devices.
                     </p>
                 </div>
                 <div className="p-6">
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <div className="text-sm font-medium text-foreground">Appearance</div>
-                                <div className="text-xs text-muted-foreground">Light, dark, or match your system setting</div>
+                                <div className="text-foreground text-sm font-medium">
+                                    Appearance
+                                </div>
+                                <div className="text-muted-foreground text-xs">
+                                    Light, dark, or match your system setting
+                                </div>
                             </div>
                             <ModeToggle onClose={onClose} />
                         </div>
@@ -487,21 +511,26 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             </div>
 
             {/* Interface Preferences Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
                     <TypographyH3 className="text-lg font-semibold">
                         Interface Preferences
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Customize your chat interface to match your workflow and preferences.
                     </p>
                 </div>
                 <div className="p-6">
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <div className="text-sm font-medium text-foreground">Example Prompts</div>
-                                <div className="text-xs text-muted-foreground">Show suggested prompts on the home screen to help you get started</div>
+                                <div className="text-foreground text-sm font-medium">
+                                    Example Prompts
+                                </div>
+                                <div className="text-muted-foreground text-xs">
+                                    Show suggested prompts on the home screen to help you get
+                                    started
+                                </div>
                             </div>
                             <Button
                                 variant={showExamplePrompts ? 'default' : 'outline'}
@@ -517,29 +546,33 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             </div>
 
             {/* Custom Instructions Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
                     <TypographyH3 className="text-lg font-semibold">
                         Custom Instructions
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
-                        Add personalized instructions that will be applied to every conversation. This helps the AI understand your preferences and communication style.
+                    <p className="text-muted-foreground text-sm">
+                        Add personalized instructions that will be applied to every conversation.
+                        This helps the AI understand your preferences and communication style.
                     </p>
-                    <div className="text-muted-foreground flex items-center gap-1 text-xs mt-2">
+                    <div className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
                         <span>
-                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/{MAX_CHAR_LIMIT}
+                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/
+                            {MAX_CHAR_LIMIT}
                         </span>
                     </div>
                 </div>
-                <div className="p-6 space-y-4">
-                    <div className="rounded-lg border border-border p-4">
+                <div className="space-y-4 p-6">
+                    <div className="border-border rounded-lg border p-4">
                         <ChatEditor editor={editor} />
                     </div>
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="space-y-2">
-                            <div className="text-sm font-medium text-foreground">Pro Tips</div>
-                            <div className="text-xs text-muted-foreground">
-                                Be specific about your preferences. Examples: "I'm a software developer working with React", "Always provide code examples when explaining concepts", or "I prefer step-by-step explanations".
+                            <div className="text-foreground text-sm font-medium">Pro Tips</div>
+                            <div className="text-muted-foreground text-xs">
+                                Be specific about your preferences. Examples: "I'm a software
+                                developer working with React", "Always provide code examples when
+                                explaining concepts", or "I prefer step-by-step explanations".
                             </div>
                         </div>
                     </div>
