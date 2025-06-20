@@ -1,5 +1,6 @@
 'use client';
-import { useSession, getSessionFresh, linkSocial, unlinkAccount, listAccounts } from '@repo/shared/lib/auth-client';
+import { useSession, getSessionFresh, linkSocial, unlinkAccount } from '@repo/shared/lib/auth-client';
+import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
 import { 
     Alert, 
     AlertDescription, 
@@ -30,7 +31,7 @@ export const UserProfileSettings = () => {
     const [justLinked, setJustLinked] = useState<string | null>(null);
     const [justUnlinked, setJustUnlinked] = useState<string | null>(null);
 
-    // Function to fetch linked accounts
+    // Function to fetch linked accounts from database
     const fetchLinkedAccounts = useCallback(async () => {
         if (!session?.user) {
             setLinkedAccounts([]);
@@ -39,18 +40,19 @@ export const UserProfileSettings = () => {
         
         setIsLoadingAccounts(true);
         try {
-            // Try to get accounts from session first (more reliable)
+            // Always fetch from database for most accurate information
+            const accounts = await getLinkedAccountsFromDB(session.user.id);
+            setLinkedAccounts(accounts);
+            console.log(`[Account Linking] Fetched ${accounts.length} linked accounts from database`);
+        } catch (err) {
+            console.error('Error fetching linked accounts from database:', err);
+            // Fallback to session data if database query fails
             if (session.user.accounts && session.user.accounts.length >= 0) {
                 setLinkedAccounts(session.user.accounts);
+                console.log('[Account Linking] Using session data as fallback');
             } else {
-                // Fallback to listAccounts API call
-                const accounts = await listAccounts();
-                setLinkedAccounts(accounts.accounts || []);
+                setLinkedAccounts([]);
             }
-        } catch (err) {
-            console.error('Error fetching linked accounts:', err);
-            // Final fallback to empty array if everything fails
-            setLinkedAccounts([]);
         } finally {
             setIsLoadingAccounts(false);
         }
@@ -60,6 +62,53 @@ export const UserProfileSettings = () => {
     useEffect(() => {
         fetchLinkedAccounts();
     }, [fetchLinkedAccounts]);
+
+    // Check for OAuth callback completion and show success feedback
+    useEffect(() => {
+        const checkOAuthCallback = async () => {
+            const linkingProvider = localStorage.getItem('linking_provider');
+            
+            if (linkingProvider && session?.user) {
+                // Small delay to ensure OAuth callback is processed
+                setTimeout(async () => {
+                    try {
+                        // Refresh session and fetch accounts to get latest data
+                        await getSessionFresh();
+                        const accounts = await getLinkedAccountsFromDB(session.user.id);
+                        
+                        // Check if the provider was successfully linked
+                        const isNowLinked = accounts.some(acc => acc.providerId === linkingProvider);
+                        
+                        if (isNowLinked) {
+                            // Show success feedback
+                            setJustLinked(linkingProvider);
+                            setSuccess(`${linkingProvider.charAt(0).toUpperCase() + linkingProvider.slice(1)} account linked successfully`);
+                            setTimeout(() => {
+                                setSuccess('');
+                                setJustLinked(null);
+                            }, 3000);
+                            
+                            // Update the accounts list
+                            setLinkedAccounts(accounts);
+                            console.log(`[Account Linking] Successfully linked ${linkingProvider} account`);
+                        } else {
+                            console.log(`[Account Linking] ${linkingProvider} account linking was not completed`);
+                        }
+                        
+                        // Clear the linking state and provider
+                        setIsLinking(null);
+                        localStorage.removeItem('linking_provider');
+                    } catch (err) {
+                        console.error('Error checking OAuth callback result:', err);
+                        setIsLinking(null);
+                        localStorage.removeItem('linking_provider');
+                    }
+                }, 1000); // 1 second delay to ensure OAuth processing is complete
+            }
+        };
+
+        checkOAuthCallback();
+    }, [session?.user]);
 
     const handleSave = async () => {
         if (!session?.user) return;
@@ -124,28 +173,23 @@ export const UserProfileSettings = () => {
         setError('');
         
         try {
+            // Store the provider we're trying to link in localStorage for callback detection
+            localStorage.setItem('linking_provider', provider);
+            
             await linkSocial({
                 provider: provider as 'google' | 'github',
                 callbackURL: window.location.href, // Stay on the same page
             });
             
-            // Show immediate success feedback
-            setJustLinked(provider);
-            setSuccess(`${provider.charAt(0).toUpperCase() + provider.slice(1)} account linked successfully`);
-            setTimeout(() => {
-                setSuccess('');
-                setJustLinked(null);
-            }, 3000);
-            
-            // Refresh session and accounts data
-            await getSessionFresh();
-            await fetchLinkedAccounts();
+            // Note: Success feedback will be shown after OAuth callback completion
+            console.log(`[Account Linking] Initiated ${provider} linking process`);
         } catch (err) {
             console.error(`Error linking ${provider} account:`, err);
             setError(`Failed to link ${provider} account. Please try again.`);
-        } finally {
+            localStorage.removeItem('linking_provider');
             setIsLinking(null);
         }
+        // Don't set isLinking to null here - it will be handled after OAuth callback
     };
 
     const handleUnlinkAccount = async (provider: string) => {

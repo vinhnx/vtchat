@@ -13,7 +13,16 @@ export async function POST(request: NextRequest) {
         }
 
         const userId = session.user.id;
-        const { targetUserId } = await request.json();
+        
+        // Parse JSON body, but handle empty body gracefully
+        let targetUserId;
+        try {
+            const body = await request.json();
+            targetUserId = body.targetUserId;
+        } catch {
+            // Empty body or invalid JSON - use current user ID
+            targetUserId = undefined;
+        }
 
         // For now, users can only invalidate their own cache
         // In production, you might want admin users to invalidate any cache
