@@ -1,6 +1,7 @@
 'use client';
 import { useSession, getSessionFresh, linkSocial, unlinkAccount } from '@repo/shared/lib/auth-client';
 import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
+import { useOptimizedAuth } from '../providers/optimized-auth-provider';
 import { 
     Alert, 
     AlertDescription, 
@@ -16,6 +17,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
+    const { refreshSession } = useOptimizedAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: session?.user?.name || '',
@@ -133,6 +135,8 @@ export const UserProfileSettings = () => {
 
             // Refresh session data
             await getSessionFresh();
+            // Trigger global session refresh to update sidebar and other components
+            await refreshSession();
             setSuccess('Profile updated successfully');
             setIsEditing(false);
             

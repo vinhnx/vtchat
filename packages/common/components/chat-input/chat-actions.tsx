@@ -166,7 +166,7 @@ export function WebSearchButton() {
     const isSignedIn = !!session;
     const { canAccess } = useSubscriptionAccess();
 
-    // Hide web search button if chat mode doesn't support it (like Deep Research and Pro Search)
+    // Hide web search button if chat mode doesn't support it
     if (!ChatModeConfig[chatMode]?.webSearch) {
         return null;
     }
@@ -191,12 +191,12 @@ export function WebSearchButton() {
                 size={useWebSearch ? 'sm' : 'icon-sm'}
                 tooltip={
                     useWebSearch
-                    ? webSearchType === 'native'
-                    ? 'Web Search - by Gemini (Native)'
-                    : webSearchType === 'unsupported'
-                    ? 'Web Search - by Gemini (models only)'
-                    : 'Web Search - by Gemini'
-                    : 'Web Search - by Gemini'
+                        ? webSearchType === 'native'
+                            ? 'Web Search - by Gemini (Native)'
+                            : webSearchType === 'unsupported'
+                              ? 'Web Search - by Gemini (models only)'
+                              : 'Web Search - by Gemini'
+                        : 'Web Search - by Gemini'
                 }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
@@ -490,15 +490,16 @@ export function ChatModeOptions({
             return;
         }
 
-        // BYOK Check: For model options, check if required API key exists
-        if (modelOption?.requiredApiKey) {
-            const hasRequiredApiKey = !!apiKeys[modelOption.requiredApiKey];
+        // BYOK Check: For both chat options and model options, check if required API key exists
+        const requiredApiKey = modelOption?.requiredApiKey || (option as any)?.requiredApiKey;
+        if (requiredApiKey) {
+            const hasRequiredApiKey = !!apiKeys[requiredApiKey];
 
             if (!hasRequiredApiKey) {
                 // Store the pending mode selection and open BYOK modal
                 setPendingMode({
                     mode,
-                    requiredApiKey: modelOption.requiredApiKey,
+                    requiredApiKey,
                     modelName: option?.label || 'this model',
                 });
                 setBYOKModalOpen(true);
@@ -513,27 +514,35 @@ export function ChatModeOptions({
                 return; // Don't allow selection while loading
             }
 
-            let hasRequiredAccess = true;
+            // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
+            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+            const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
+            
+            if (isByokEligibleMode && hasByokGeminiKey) {
+                // Bypass subscription check for BYOK Gemini users
+            } else {
+                let hasRequiredAccess = true;
 
-            // Check feature access
-            if (config.requiredFeature) {
-                hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
-            }
+                // Check feature access
+                if (config.requiredFeature) {
+                    hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+                }
 
-            // Check plan access
-            if (config.requiredPlan && hasRequiredAccess) {
-                hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
-            }
+                // Check plan access
+                if (config.requiredPlan && hasRequiredAccess) {
+                    hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+                }
 
-            // If user doesn't have access, show gated feature dialog
-            if (!hasRequiredAccess) {
-                onGatedFeature({
-                    feature: config.requiredFeature,
-                    plan: config.requiredPlan,
-                    title: `${option?.label}`,
-                    message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
-                });
-                return;
+                // If user doesn't have access, show gated feature dialog
+                if (!hasRequiredAccess) {
+                    onGatedFeature({
+                        feature: config.requiredFeature,
+                        plan: config.requiredPlan,
+                        title: `${option?.label}`,
+                        message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+                    });
+                    return;
+                }
             }
         }
 

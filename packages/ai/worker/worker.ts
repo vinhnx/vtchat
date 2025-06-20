@@ -1,5 +1,6 @@
 import { ChatMode } from '@repo/shared/config';
 import { runWorkflow } from '../workflow/flow';
+import { REASONING_BUDGETS } from '../constants/reasoning';
 // Create context for the worker
 const ctx: Worker = self as any;
 
@@ -11,6 +12,39 @@ if (typeof process === 'undefined') {
 // Store for API keys and active workflow
 let apiKeys: Record<string, string> = {};
 let activeWorkflow: ReturnType<typeof runWorkflow> | null = null;
+
+/**
+ * Get thinking mode configuration for specific chat modes
+ * Automatically enables high-effort reasoning for research modes
+ */
+function getThinkingModeForChatMode(
+    mode: ChatMode,
+    userThinkingMode?: { enabled: boolean; budget: number; includeThoughts: boolean }
+) {
+    // Auto-enable reasoning for research modes with high budgets
+    if (mode === ChatMode.Deep) {
+        return {
+            enabled: true,
+            budget: REASONING_BUDGETS.DEEP, // 50K tokens - highest effort
+            includeThoughts: userThinkingMode?.includeThoughts ?? true,
+        };
+    }
+    
+    if (mode === ChatMode.Pro) {
+        return {
+            enabled: true,
+            budget: REASONING_BUDGETS.BALANCED, // 25K tokens - high effort
+            includeThoughts: userThinkingMode?.includeThoughts ?? true,
+        };
+    }
+    
+    // For other modes, use user settings or defaults
+    return userThinkingMode || {
+        enabled: false,
+        budget: 0,
+        includeThoughts: false,
+    };
+}
 
 // Handle messages from the main thread
 ctx.addEventListener('message', async (event: MessageEvent) => {
@@ -73,7 +107,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 webSearch,
                 mathCalculator,
                 showSuggestions,
-                thinkingMode,
+                thinkingMode: getThinkingModeForChatMode(mode, thinkingMode),
                 onFinish: (_data: any) => {},
             });
 

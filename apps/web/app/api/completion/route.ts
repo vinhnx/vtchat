@@ -57,20 +57,26 @@ export async function POST(request: NextRequest) {
         // Check VT+ access for gated features
         const modeConfig = ChatModeConfig[data.mode];
         if (modeConfig?.requiredFeature || modeConfig?.requiredPlan) {
-            const accessResult = await checkVTPlusAccess({ userId, ip });
-            if (!accessResult.hasAccess) {
-                return new Response(
-                    JSON.stringify({
-                        error: 'VT+ subscription required',
-                        reason: accessResult.reason,
-                        requiredPlan: modeConfig.requiredPlan,
-                        requiredFeature: modeConfig.requiredFeature,
-                    }),
-                    {
-                        status: 403,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
+            // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
+            const hasByokGeminiKey = !!data.apiKeys?.['GEMINI_API_KEY'];
+            const isByokEligibleMode = data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
+            
+            if (!(isByokEligibleMode && hasByokGeminiKey)) {
+                const accessResult = await checkVTPlusAccess({ userId, ip });
+                if (!accessResult.hasAccess) {
+                    return new Response(
+                        JSON.stringify({
+                            error: 'VT+ subscription required',
+                            reason: accessResult.reason,
+                            requiredPlan: modeConfig.requiredPlan,
+                            requiredFeature: modeConfig.requiredFeature,
+                        }),
+                        {
+                            status: 403,
+                            headers: { 'Content-Type': 'application/json' },
+                        }
+                    );
+                }
             }
         }
 

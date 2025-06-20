@@ -1,36 +1,29 @@
 # TODO
 
-==
-on update user profile -> trigger update sidebar user profile
---
-[Logout] ✅ Reset theme to light mode use-logout.ts:29:20
-[ApiKeys] Storage setItem: api-keys-storage-x9UOfXF0I2Bqifg4ge7bbapb6osrDeUv -> saved api-keys.store.ts:220:32
-[Logout] ✅ Cleared all API keys use-logout.ts:33:20
-[Logout] ✅ Cleared all threads from local storage use-logout.ts:37:20
-[Logout] ✅ Reset app store user state use-logout.ts:41:20
-[Logout] ✅ Cleared 0 subscription cache entries use-logout.ts:55:24
-[Logout] ✅ Cleared theme storage use-logout.ts:75:24
-[Logout] ✅ Completed authentication sign out use-logout.ts:117:20
-[Logout] 🔒 Secure logout completed successfully
+1. make sure pro search and deep research mode works the same way as model selection mode that is check and use byok settings
+1. make sure pro search and deep research mode works, write test if needed
+1. make sure pro search and deep research mode works no error
+1. change example prompt hover outline ring offset effect to button alpha or background hover css
+1. add loading indicator when loading subscription data from api
+use skeleton if needed
+1. check and fix packages/common/components/chat-input/chat-config.ts
+1.
+make sure fetching subscription API and logic is working properly
+make sure authorization and subscription logic is working properly
+ensure fetching subscription API and logic is working properly and effectively and fast to avoid any performance and ui/ux issues
 
+use context7 mcp
 
-onlogout -> also refresh the whole page to ensure all state is reset
 --
+1. currently deep research and pro search doesn't trigger?
+1. deep research and pro search asks for Google Gemini API Key even though user has BYO gemini key setup. make sure it uses BYO key if available
+
 --
 implement mobile version
 
 fix :Mobile version is coming soon.
 Please use a desktop browser."
 --
-remove hover border at example prompt buttons
---
-add loading indicator when loading subscription data from api
-use skeleton if needed
---
-packages/common/components/settings-modal.tsx
-auto scroll to top section when a panel is selected
-default selected is first most panel
-when a panel is selected, scroll to top of the panel
 
 --
 fix packages/common/components/chat-input/chat-config.ts
