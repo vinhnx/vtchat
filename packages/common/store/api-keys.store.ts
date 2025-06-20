@@ -148,14 +148,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.GPT_4_1:
                         return !!apiKeys['OPENAI_API_KEY'];
                     case ChatMode.Deep:
-                        // Deep Research mode can use any available API key (fallback logic)
-                        return !!(
-                            apiKeys['GEMINI_API_KEY'] ||
-                            apiKeys['OPENAI_API_KEY'] ||
-                            apiKeys['ANTHROPIC_API_KEY'] ||
-                            apiKeys['FIREWORKS_API_KEY'] ||
-                            apiKeys['TOGETHER_API_KEY']
-                        );
+                    // Deep Research mode requires Gemini API key (uses Gemini 2.5 Pro)
+                    return !!apiKeys['GEMINI_API_KEY'];
                     case ChatMode.Pro:
                     case ChatMode.GEMINI_2_0_FLASH:
                     case ChatMode.GEMINI_2_5_PRO:

@@ -115,6 +115,11 @@ export const useLogout = () => {
             // 7. Finally perform the authentication logout
             await signOut();
             console.log('[Logout] ✅ Completed authentication sign out');
+            
+            // 8. Refresh the page to ensure all state is reset
+            if (typeof window !== 'undefined') {
+                window.location.reload();
+            }
             console.log('[Logout] 🔒 Secure logout completed successfully');
         } catch (error) {
             console.error('[Logout] ❌ Error during logout:', error);

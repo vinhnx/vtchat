@@ -1,9 +1,44 @@
 import { runWorkflow } from '@repo/ai/workflow';
+import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
 import { logger } from '@repo/shared/logger';
+import { ChatMode } from '@repo/shared/config';
 import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import { Geo } from '@vercel/functions';
 import { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
+
+/**
+ * Get thinking mode configuration for specific chat modes
+ * Automatically enables high-effort reasoning for research modes
+ */
+function getThinkingModeForChatMode(
+    mode: ChatMode,
+    userThinkingMode?: { enabled: boolean; budget: number; includeThoughts: boolean }
+) {
+    // Auto-enable reasoning for research modes with high budgets
+    if (mode === ChatMode.Deep) {
+        return {
+            enabled: true,
+            budget: REASONING_BUDGETS.DEEP, // 50K tokens - highest effort
+            includeThoughts: userThinkingMode?.includeThoughts ?? true,
+        };
+    }
+    
+    if (mode === ChatMode.Pro) {
+        return {
+            enabled: true,
+            budget: REASONING_BUDGETS.BALANCED, // 25K tokens - high effort
+            includeThoughts: userThinkingMode?.includeThoughts ?? true,
+        };
+    }
+    
+    // For other modes, use user settings or defaults
+    return userThinkingMode || {
+        enabled: false,
+        budget: 0,
+        includeThoughts: false,
+    };
+}
 
 export function sendMessage(
     controller: StreamController,
@@ -81,7 +116,7 @@ export async function executeStream({
             showSuggestions: data.showSuggestions || false,
             onFinish: onFinish,
             apiKeys: data.apiKeys,
-            thinkingMode: data.thinkingMode,
+            thinkingMode: getThinkingModeForChatMode(data.mode, data.thinkingMode),
         });
 
         workflow.onAll((event, payload) => {

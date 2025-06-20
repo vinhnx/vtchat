@@ -45,7 +45,7 @@ export const ChatModeConfig: Record<
     }
 > = {
     [ChatMode.Deep]: {
-        webSearch: false,
+        webSearch: true,
         imageUpload: false,
         retry: false,
         isAuthRequired: true,
@@ -53,7 +53,7 @@ export const ChatModeConfig: Record<
         requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.Pro]: {
-        webSearch: false,
+        webSearch: true,
         imageUpload: false,
         retry: false,
         isAuthRequired: true,

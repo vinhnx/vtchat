@@ -6,15 +6,17 @@ import { Atom, Brain, Gift, Star } from 'lucide-react';
 export const chatOptions = [
     {
         label: 'Deep Research',
-        description: 'In depth research on complex topic',
+        description: 'Comprehensive multi-step research (Gemini 2.5 Pro) - Takes several minutes',
         value: ChatMode.Deep,
         icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
     {
         label: 'Pro Search',
-        description: 'Enhanced web search with Gemini grounding',
+        description: 'Fast web search with grounding (Gemini 2.5 Flash)',
         value: ChatMode.Pro,
         icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
+        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
     },
 ];
 
