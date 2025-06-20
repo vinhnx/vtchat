@@ -35,12 +35,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex h-auto items-center gap-2 p-1">
                     {user.image ? (
-                        <img
-                            src={user.image}
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                        />
+                        <img src={user.image} width={24} height={24} className="rounded-full" />
                     ) : (
                         <Avatar name={user.name || user.email} size="sm" />
                     )}
