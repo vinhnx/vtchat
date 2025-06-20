@@ -81,6 +81,7 @@ export async function executeStream({
             showSuggestions: data.showSuggestions || false,
             onFinish: onFinish,
             apiKeys: data.apiKeys,
+            thinkingMode: data.thinkingMode,
         });
 
         workflow.onAll((event, payload) => {

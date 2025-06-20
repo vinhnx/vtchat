@@ -66,7 +66,7 @@ export const ReasoningModeSettings = () => {
         return (
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-gradient-to-r from-[#262626] to-[#262626]/95 p-3">
+                    <div className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 p-3">
                         <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                     </div>
                     <div>
@@ -80,7 +80,7 @@ export const ReasoningModeSettings = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-[#262626] via-[#262626]/95 to-[#262626]/90 p-6"
+                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
                 >
                     <div className="space-y-4 text-center">
                         <div className="mx-auto w-fit rounded-full bg-[#D99A4E]/10 p-4">
@@ -108,7 +108,7 @@ export const ReasoningModeSettings = () => {
             <div className="flex items-center gap-3">
                 <motion.div
                     whileHover={{ scale: 1.05 }}
-                    className="rounded-lg bg-gradient-to-r from-[#262626] to-[#262626]/95 p-3"
+                    className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 p-3"
                 >
                     <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                 </motion.div>
@@ -124,7 +124,7 @@ export const ReasoningModeSettings = () => {
                 {/* Enable Reasoning Mode */}
                 <motion.div
                     whileHover={{ scale: 1.01 }}
-                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-[#262626] via-[#262626]/95 to-[#262626]/90 p-6"
+                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
                 >
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -161,7 +161,7 @@ export const ReasoningModeSettings = () => {
                             {/* Include Reasoning Details */}
                             <motion.div
                                 whileHover={{ scale: 1.01 }}
-                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-[#262626] via-[#262626]/95 to-[#262626]/90 p-6"
+                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
@@ -187,7 +187,7 @@ export const ReasoningModeSettings = () => {
                             {/* Reasoning Budget */}
                             <motion.div
                                 whileHover={{ scale: 1.01 }}
-                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-[#262626] via-[#262626]/95 to-[#262626]/90 p-6"
+                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
                             >
                                 <div className="space-y-4">
                                     <div>

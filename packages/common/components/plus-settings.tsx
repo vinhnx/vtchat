@@ -134,7 +134,7 @@ export const PlusSettings = () => {
 
             {/* VT+ Features Overview */}
             <div className="space-y-4">
-                <h4 className="font-medium text-[#BFB38F]">Available Features</h4>
+                <h4 className="text-amber font-medium">Available Features</h4>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {Object.values(VT_PLUS_FEATURES).map(feature => {
                         const getFeatureIcon = (featureId: FeatureSlug) => {

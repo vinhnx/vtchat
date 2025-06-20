@@ -13,6 +13,13 @@ export const completionRequestSchema = z.object({
     mathCalculator: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
+    thinkingMode: z
+        .object({
+            enabled: z.boolean(),
+            budget: z.number(),
+            includeThoughts: z.boolean(),
+        })
+        .optional(),
     apiKeys: z
         .object({
             OPENAI_API_KEY: z.string().optional(),

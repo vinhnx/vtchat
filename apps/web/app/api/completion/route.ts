@@ -74,6 +74,24 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        // Backend enforcement: Thinking mode is restricted to VT+ users only
+        if (data.thinkingMode?.enabled) {
+            const accessResult = await checkVTPlusAccess({ userId, ip });
+            if (!accessResult.hasAccess) {
+                return new Response(
+                    JSON.stringify({
+                        error: 'VT+ subscription required for thinking mode',
+                        reason: 'Thinking mode is a VT+ exclusive feature',
+                        requiredFeature: 'THINKING_MODE',
+                    }),
+                    {
+                        status: 403,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
+            }
+        }
+
         // Rate limiting for free tier users
         const rateLimitResult = await checkRateLimit({ userId, ip });
         if (!rateLimitResult.allowed) {
