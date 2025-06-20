@@ -5,7 +5,7 @@
  * for VT+ features and capabilities
  */
 
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';

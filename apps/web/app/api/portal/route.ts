@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { PaymentService } from '@repo/shared/config/payment';
 import { NextRequest, NextResponse } from 'next/server';
 

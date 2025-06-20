@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { users, userSubscriptions } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';

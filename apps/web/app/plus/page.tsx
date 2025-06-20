@@ -15,7 +15,7 @@ import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
 import { ShineText } from '../../components/shine-text';
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
-import { useSession } from '../../lib/auth-client';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export default function PlusPage() {

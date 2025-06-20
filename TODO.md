@@ -106,10 +106,6 @@ remember to publish Google Auth
 - [ ] Implement Email OTP: [https://www.better-auth.com/docs/plugins/email-otp](https://www.better-auth.com/docs/plugins/email-otp)
 - [ ] Implement Magic Link: [https://www.better-auth.com/docs/plugins/magic-link](https://www.better-auth.com/docs/plugins/magic-link)
 - [ ] Build user profile concept: [https://www.better-auth.com/docs/concepts/users-accounts](https://www.better-auth.com/docs/concepts/users-accounts)
-- [ ] Refactor auth client:
-  - [ ] Use one shared `auth-client.ts`.
-  - [ ] Move `auth-client.ts` to `packages/shared/lib/` (or a more appropriate shared location).
-  - [ ] Rename `apps/web/lib/auth.ts` to `auth-server.ts` (if it's purely server-side).
 
 ## Thread Management (Account-based & Neon Sync)
 

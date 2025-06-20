@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from '@/lib/auth-client';
+import { signIn } from '@repo/shared/lib/auth-client';
 import { InlineLoader } from '@repo/common/components';
 import { Alert, AlertDescription, Button, cn } from '@repo/ui';
 import { AlertCircle } from 'lucide-react';

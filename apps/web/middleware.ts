@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { isPublicRoute } from '@repo/shared/constants';
 import { getCookieCache } from 'better-auth/cookies';
 import { NextRequest, NextResponse } from 'next/server';

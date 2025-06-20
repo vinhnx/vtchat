@@ -6,7 +6,7 @@
  */
 
 import { authClient, getSession, getSessionFresh } from '@repo/shared/lib/auth-client';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { headers } from 'next/headers';
 
 interface PerformanceTestResult {
