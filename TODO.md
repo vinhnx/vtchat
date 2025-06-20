@@ -11,31 +11,12 @@
 [] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support>
 
 --
-tools (add icons in input chat bar, consider monet each)
-[] [monet][img] <https://ai-sdk-agents.vercel.app/?item=fal>
-[] [monet][img] <https://ai-sdk-agents.vercel.app/?item=replicate>
-[] [monet][img] <https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#mcp-tools>
-[] [monet] <https://ai-sdk-agents.vercel.app/?item=github>
-[] [monet] useful for work <https://ai-sdk-agents.vercel.app/?item=slack>
 
 [] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
---
 
 --
 
 [pro] <https://ai-sdk.dev/cookbook/next/chat-with-pdf>
-
---
--
-
-[support local models] [monet] => create new creem product features
-
-<https://ai-sdk.dev/providers/openai-compatible-providers/lmstudio>
-
-<https://ai-sdk.dev/providers/community-providers/ollama>
-
-[] add config for server on settings page
-
 --
 
 <https://docs.railway.com/reference/production-readiness-checklist>
@@ -46,30 +27,14 @@ tools (add icons in input chat bar, consider monet each)
 [] <https://docs.creem.io/faq/account-reviews>
 
 --
-[] review packages and deps, suggest lightweight and review big dependencies and suggest improvement
-
---
-[] speed up build and deployment
---
-
---
-NOTE: add new feature for VT+
-
---
 
 [] remove FREE_TIER_DAILY_LIMIT and KV Redis Upstash depedeny completly
-
---
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
 [] plus: if use pre-defined key: 30 per day
 [] -> if has gemini in byok -> unlimited
 [] implement credit tracking (FREE_TIER_DAILY_LIMIT)
 
---
-
---
-[] <https://scira.ai/pricing>
 --
 
 []
