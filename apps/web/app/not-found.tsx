@@ -1,4 +1,4 @@
-import { Button } from '@repo/ui';
+import { Button, TypographyH1 } from '@repo/ui';
 import { Home } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,9 +10,9 @@ export default function NotFound() {
         <main className="bg-background grid min-h-screen place-items-center px-6 py-24 sm:py-32 lg:px-8">
             <div className="text-center">
                 <p className="text-brand text-base font-semibold">404</p>
-                <h1 className="text-foreground mt-4 text-balance text-5xl font-semibold tracking-tight sm:text-7xl">
+                <TypographyH1 className="text-foreground mt-4 text-balance text-5xl font-semibold tracking-tight sm:text-7xl">
                     Page not found
-                </h1>
+                </TypographyH1>
                 <p className="text-muted-foreground mt-6 text-pretty text-lg font-medium sm:text-xl/8">
                     Sorry, we couldn't find the page you're looking for.
                 </p>

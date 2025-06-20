@@ -1,4 +1,4 @@
-import { cn, Spinner, Type } from '@repo/ui';
+import { cn, LoadingSpinner, Type } from '@repo/ui';
 
 export type InlineLoaderProps = {
     label?: string;
@@ -36,7 +36,11 @@ export const InlineLoader = ({
                 className
             )}
         >
-            <Spinner />
+            <LoadingSpinner 
+                variant="primary" 
+                size={size === 'xs' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
+                className="text-primary"
+            />
             {label && (
                 <Type size={textSize[size]} textColor="secondary" className="whitespace-nowrap">
                     {label}

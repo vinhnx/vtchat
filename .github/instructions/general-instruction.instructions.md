@@ -61,6 +61,7 @@ applyTo: '**'
 
 ## UI components
 
+- when try to install components, navigatete to ~/Developer/learn-by-doing/vtchat/packages/ui first, then use bunx
 - To install shadcn components, check example command: `npx shadcn@latest add label`
 - Use shadcn/ui components for UI elements
 - Use `@repo/ui` for shared UI components

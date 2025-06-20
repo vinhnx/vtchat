@@ -3,20 +3,21 @@ import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
 import { Button } from '@repo/ui/src/components/button';
-import { AlertCircle, CreditCard, Crown, Key, Settings2, Trash } from 'lucide-react';
+import { AlertCircle, Key, Trash, Settings, Info } from 'lucide-react';
 
-import { Badge, Dialog, DialogContent, Input, cn } from '@repo/ui';
+import { Badge, Dialog, DialogContent, Input, cn, TypographyH2, TypographyH3, TypographyMuted } from '@repo/ui';
 
 import { useChatEditor } from '@repo/common/hooks';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SETTING_TABS, useAppStore } from '../store';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { ChatEditor } from './chat-input';
-import { BYOKIcon } from './icons';
+
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
 import { PlusSettings } from './plus-settings';
 import { UsageCreditsSettings } from './usage-credits-settings';
+import { UserProfileSettings } from './user-profile-settings';
 
 export const SettingsModal = () => {
     const isSettingsOpen = useAppStore(state => state.isSettingsOpen);
@@ -25,6 +26,29 @@ export const SettingsModal = () => {
     const setSettingTab = useAppStore(state => state.setSettingTab);
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const panelContentRef = useRef<HTMLDivElement>(null);
+
+    // Default to first panel if none selected
+    useEffect(() => {
+        if (isSettingsOpen && !settingTab) {
+            setSettingTab(SETTING_TABS.PROFILE);
+        }
+    }, [isSettingsOpen, settingTab, setSettingTab]);
+
+    // Auto-scroll to top when settings modal opens
+    useEffect(() => {
+        if (isSettingsOpen && scrollRef.current) {
+            scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [isSettingsOpen]);
+
+    // Scroll to top of panel content when panel changes
+    useEffect(() => {
+        if (panelContentRef.current) {
+            panelContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [settingTab]);
 
     // If not signed in, show login prompt instead of settings
     if (!isSignedIn) {
@@ -45,28 +69,30 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            icon: <Settings2 size={16} strokeWidth={2} className="text-muted-foreground" />,
+            title: 'Profile',
+            description: 'Manage your account details',
+            key: SETTING_TABS.PROFILE,
+            component: <UserProfileSettings />,
+        },
+        {
             title: 'Preferences',
             description: 'Customize your VT experience',
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <CreditCard size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'Subscription',
             description: 'Manage your plan and usage',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <UsageCreditsSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            icon: <Crown size={16} strokeWidth={2} className="text-amber-500" />,
             title: 'VT+ Features',
             description: 'Premium AI capabilities and reasoning',
             key: SETTING_TABS.PLUS,
             component: <PlusSettings />,
         },
         {
-            icon: <Key size={16} strokeWidth={2} className="text-muted-foreground" />,
             title: 'API Keys',
             description: 'Connect your own AI providers',
             key: SETTING_TABS.API_KEYS,
@@ -80,12 +106,12 @@ export const SettingsModal = () => {
                 ariaTitle="Settings"
                 className="h-full max-h-[700px] !max-w-[900px] overflow-x-hidden rounded-xl p-0"
             >
-                <div className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden">
+                <div ref={scrollRef} className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden">
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
                         <div className="flex items-center justify-between px-6 py-4">
                             <div>
-                                <h2 className="text-xl font-semibold">Settings</h2>
+                                <TypographyH2 className="text-xl font-semibold">Settings</TypographyH2>
                                 <p className="text-muted-foreground text-sm">
                                     Customize your VT experience and manage your account
                                 </p>
@@ -105,13 +131,12 @@ export const SettingsModal = () => {
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         className={cn(
-                                            'flex w-full items-start gap-3 rounded-lg p-3 text-left transition-colors',
+                                            'flex w-full items-start rounded-lg p-3 text-left transition-colors',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                     >
-                                        <div className="mt-0.5 shrink-0">{setting.icon}</div>
                                         <div className="flex-1 space-y-1">
                                             <div className="font-medium">{setting.title}</div>
                                             <div className="text-muted-foreground text-xs">
@@ -124,7 +149,7 @@ export const SettingsModal = () => {
                         </div>
 
                         {/* Main Content Area */}
-                        <div className="flex-1 p-6">
+                        <div className="flex-1 p-6 bg-background" ref={panelContentRef} style={{ overflowY: 'auto', maxHeight: '700px' }}>
                             <div className="max-w-2xl">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
                             </div>
@@ -218,153 +243,189 @@ export const ApiKeySettings = () => {
     };
 
     return (
-        <div className="flex flex-col gap-8">
-            {/* Header Section */}
-            <div className="flex flex-col gap-3">
-                <h2 className="flex items-center gap-2 text-base font-semibold">
-                    <Key size={20} className="text-blue-500" />
-                    API Key Management
-                    <BYOKIcon />
-                </h2>
-                <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
-                    <div className="flex items-start gap-3">
-                        <div className="mt-0.5 rounded-full bg-blue-100 p-1 dark:bg-blue-900/40">
-                            <Key size={14} className="text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div className="flex-1 space-y-2">
-                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                Secure Local Storage
-                            </p>
-                            <p className="text-xs text-blue-700 dark:text-blue-300">
-                                Your API keys are stored locally in your browser and never sent to
-                                our servers. They are only used to make direct requests to the
-                                respective AI providers.
-                            </p>
+        <div className="space-y-6">
+            {/* Header */}
+            <div>
+                <TypographyH3>
+                    API Keys
+                </TypographyH3>
+                <TypographyMuted>Manage your AI provider API keys securely</TypographyMuted>
+            </div>
+
+            {/* Security Info Section */}
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold">
+                        Secure Local Storage
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
+                        Your API keys are protected and never leave your device
+                    </p>
+                </div>
+                <div className="p-6">
+                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                        <div className="flex items-start gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+                                <Key className="h-4 w-4 text-green-600 dark:text-green-400" />
+                            </div>
+                            <div className="flex-1">
+                                <div className="text-sm font-medium text-foreground">Privacy First</div>
+                                <div className="mt-1 text-xs text-muted-foreground">
+                                    API keys are stored locally in your browser and never sent to our servers. They're used only for direct requests to AI providers.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* API Keys List */}
-            <div className="flex flex-col gap-6">
-                {apiKeyList.map(apiKey => (
-                    <div key={apiKey.key} className="border-border space-y-3 rounded-lg border p-4">
-                        <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                                <div className="mb-1 flex items-center gap-2">
-                                    <h3 className="text-sm font-semibold">{apiKey.name}</h3>
-                                    {apiKey.value && (
-                                        <Badge variant="secondary" className="text-xs">
-                                            Configured
-                                        </Badge>
-                                    )}
-                                </div>
-                                <p className="text-muted-foreground mb-2 text-xs">
-                                    {apiKey.description}
-                                </p>
-                                <a
-                                    href={apiKey.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs text-blue-500 underline-offset-2 hover:text-blue-600 hover:underline"
-                                >
-                                    Get API key →
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            {isEditing === apiKey.key ? (
-                                <div className="space-y-2">
-                                    <Input
-                                        value={apiKey.value || ''}
-                                        placeholder={apiKey.placeholder}
-                                        onChange={e => setApiKey(apiKey.key, e.target.value)}
-                                        className={
-                                            validationErrors[apiKey.key] ? 'border-red-500' : ''
-                                        }
-                                    />
-                                    {validationErrors[apiKey.key] && (
-                                        <Alert variant="destructive">
-                                            <AlertCircle className="h-4 w-4" />
-                                            <AlertDescription>
-                                                {validationErrors[apiKey.key]}
-                                            </AlertDescription>
-                                        </Alert>
-                                    )}
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="default"
-                                            size="sm"
-                                            onClick={() =>
-                                                handleSave(
-                                                    apiKey.key,
-                                                    apiKey.value || '',
-                                                    apiKey.name
-                                                )
-                                            }
-                                        >
-                                            Save
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            size="sm"
-                                            onClick={() => setIsEditing(null)}
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-muted/50 flex-1 rounded-md px-3 py-2 font-mono text-sm">
-                                        {apiKey.value ? (
-                                            <span className="text-muted-foreground">
-                                                {getMaskedKey(apiKey.value)}
-                                            </span>
-                                        ) : (
-                                            <span className="text-muted-foreground italic">
-                                                No API key configured
-                                            </span>
+            {/* API Keys Management */}
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold flex items-center gap-2">
+                        <Settings className="h-5 w-5" />
+                        Configure Providers
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
+                        Add API keys for the AI providers you want to use
+                    </p>
+                </div>
+                <div className="p-6 space-y-4">
+                    {apiKeyList.map(apiKey => (
+                        <div key={apiKey.key} className="rounded-lg border border-border/50 bg-muted/20 p-4 space-y-3">
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <div className="text-sm font-medium text-foreground">{apiKey.name}</div>
+                                        {apiKey.value && (
+                                            <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 text-xs">
+                                                Configured
+                                            </Badge>
                                         )}
                                     </div>
-                                    <Button
-                                        variant="outlined"
+                                    <div className="text-xs text-muted-foreground mb-2">
+                                        {apiKey.description}
+                                    </div>
+                                    <a
+                                        href={apiKey.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline"
+                                    >
+                                        Get API key →
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                {isEditing === apiKey.key ? (
+                                    <div className="space-y-3">
+                                        <Input
+                                            value={apiKey.value || ''}
+                                            placeholder={apiKey.placeholder}
+                                            onChange={e => setApiKey(apiKey.key, e.target.value)}
+                                            className={
+                                                validationErrors[apiKey.key] ? 'border-red-500' : ''
+                                            }
+                                        />
+                                        {validationErrors[apiKey.key] && (
+                                            <Alert variant="destructive">
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription>
+                                                    {validationErrors[apiKey.key]}
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="default"
+                                                size="sm"
+                                                onClick={() =>
+                                                    handleSave(
+                                                        apiKey.key,
+                                                        apiKey.value || '',
+                                                        apiKey.name
+                                                    )
+                                                }
+                                            >
+                                                Save
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => setIsEditing(null)}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex-1 rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm">
+                                            {apiKey.value ? (
+                                                <span className="text-muted-foreground">
+                                                    {getMaskedKey(apiKey.value)}
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground italic">
+                                                    No API key configured
+                                                </span>
+                                            )}
+                                        </div>
+                                        <Button
+                                        variant="outline"
                                         size="sm"
                                         onClick={() => handleEdit(apiKey.key)}
-                                    >
-                                        {apiKey.value ? 'Update' : 'Add Key'}
-                                    </Button>
-                                    {apiKey.value && (
-                                        <Button
-                                            variant="outlined"
+                                        >
+                                            {apiKey.value ? 'Update' : 'Add Key'}
+                                        </Button>
+                                        {apiKey.value && (
+                                            <Button
+                                            variant="outline"
                                             size="sm"
                                             onClick={() => {
-                                                setApiKey(apiKey.key, '');
+                                            setApiKey(apiKey.key, '');
                                             }}
-                                            className="text-red-600 hover:text-red-700"
-                                        >
-                                            <Trash size={14} />
-                                        </Button>
-                                    )}
-                                </div>
-                            )}
+                                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 dark:border-red-800 dark:hover:border-red-700"
+                                            >
+                                                <Trash size={14} />
+                                            </Button>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {/* Help Section */}
-            <div className="bg-muted/30 rounded-lg p-4">
-                <h4 className="mb-2 text-sm font-medium">Need Help?</h4>
-                <div className="text-muted-foreground space-y-1 text-xs">
-                    <p>• Each API key is stored securely in your browser's local storage</p>
-                    <p>• You only need to configure keys for the AI providers you want to use</p>
-                    <p>
-                        • API keys are never shared with VT servers - they go directly to the AI
-                        providers
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold flex items-center gap-2">
+                        <Info className="h-5 w-5 text-blue-500" />
+                        Quick Guide
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
+                        Everything you need to know about API key management
                     </p>
-                    <p>• You can update or remove keys at any time</p>
+                </div>
+                <div className="p-6">
+                    <div className="space-y-3">
+                        {[
+                            "API keys are stored securely in your browser's local storage",
+                            "You only need to configure keys for the AI providers you want to use",
+                            "Keys are never shared with VT servers - they go directly to AI providers",
+                            "You can update or remove keys at any time"
+                        ].map((tip, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
+                                    <div className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"></div>
+                                </div>
+                                <div className="text-sm text-muted-foreground">{tip}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
@@ -395,78 +456,93 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
     });
 
     return (
-        <div className="flex flex-col gap-8 pb-3">
+        <div className="space-y-6">
+            {/* Header */}
+            <div>
+                <TypographyH3>Preferences</TypographyH3>
+                <TypographyMuted>Customize your VTChat experience and interface</TypographyMuted>
+            </div>
+
             {/* Theme Preferences Section */}
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h3 className="text-base font-semibold">Visual Theme</h3>
-                    <p className="text-muted-foreground text-sm">
-                        Choose how you want VT to look. Your preference will be saved and applied
-                        across all your devices.
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold">
+                        Visual Theme
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
+                        Choose how you want VT to look. Your preference will be saved and applied across all your devices.
                     </p>
                 </div>
-                <div className="bg-muted/30 flex items-center justify-between rounded-lg p-3">
-                    <div className="flex flex-col gap-1">
-                        <span className="text-sm font-medium">Appearance</span>
-                        <span className="text-muted-foreground text-xs">
-                            Light, dark, or match your system setting
-                        </span>
+                <div className="p-6">
+                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                                <div className="text-sm font-medium text-foreground">Appearance</div>
+                                <div className="text-xs text-muted-foreground">Light, dark, or match your system setting</div>
+                            </div>
+                            <ModeToggle onClose={onClose} />
+                        </div>
                     </div>
-                    <ModeToggle onClose={onClose} />
                 </div>
             </div>
 
             {/* Interface Preferences Section */}
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h3 className="text-base font-semibold">Interface Preferences</h3>
-                    <p className="text-muted-foreground text-sm">
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold">
+                        Interface Preferences
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
                         Customize your chat interface to match your workflow and preferences.
                     </p>
                 </div>
-                <div className="bg-muted/30 flex items-center justify-between rounded-lg p-3">
-                    <div className="flex flex-col gap-1">
-                        <span className="text-sm font-medium">Example Prompts</span>
-                        <p className="text-muted-foreground text-xs">
-                            Show suggested prompts on the home screen to help you get started
-                        </p>
+                <div className="p-6">
+                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                                <div className="text-sm font-medium text-foreground">Example Prompts</div>
+                                <div className="text-xs text-muted-foreground">Show suggested prompts on the home screen to help you get started</div>
+                            </div>
+                            <Button
+                                variant={showExamplePrompts ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={() => setShowExamplePrompts(!showExamplePrompts)}
+                                className="min-w-[60px]"
+                            >
+                                {showExamplePrompts ? 'On' : 'Off'}
+                            </Button>
+                        </div>
                     </div>
-                    <Button
-                        variant={showExamplePrompts ? 'default' : 'outlined'}
-                        size="sm"
-                        onClick={() => setShowExamplePrompts(!showExamplePrompts)}
-                        className="min-w-[60px]"
-                    >
-                        {showExamplePrompts ? 'On' : 'Off'}
-                    </Button>
                 </div>
             </div>
 
             {/* Custom Instructions Section */}
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h3 className="text-base font-semibold">Custom Instructions</h3>
-                    <p className="text-muted-foreground text-sm">
-                        Add personalized instructions that will be applied to every conversation.
-                        This helps the AI understand your preferences, communication style, and
-                        specific needs without repeating them in each chat.
+            <div className="border border-border rounded-lg">
+                <div className="border-b border-border p-6">
+                    <TypographyH3 className="text-lg font-semibold">
+                        Custom Instructions
+                    </TypographyH3>
+                    <p className="text-sm text-muted-foreground">
+                        Add personalized instructions that will be applied to every conversation. This helps the AI understand your preferences and communication style.
                     </p>
-                    <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                    <div className="text-muted-foreground flex items-center gap-1 text-xs mt-2">
                         <span>
-                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/
-                            {MAX_CHAR_LIMIT}
+                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/{MAX_CHAR_LIMIT}
                         </span>
                     </div>
                 </div>
-                <div className="shadow-subtle-sm border-border rounded-lg border p-4">
-                    <ChatEditor editor={editor} />
-                </div>
-                <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-muted-foreground text-xs">
-                        💡 <strong>Tip:</strong> Be specific about your preferences. Examples: "I'm
-                        a software developer working with React", "Always provide code examples when
-                        explaining concepts", or "I prefer step-by-step explanations".
-                    </p>
+                <div className="p-6 space-y-4">
+                    <div className="rounded-lg border border-border p-4">
+                        <ChatEditor editor={editor} />
+                    </div>
+                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                        <div className="space-y-2">
+                            <div className="text-sm font-medium text-foreground">Pro Tips</div>
+                            <div className="text-xs text-muted-foreground">
+                                Be specific about your preferences. Examples: "I'm a software developer working with React", "Always provide code examples when explaining concepts", or "I prefer step-by-step explanations".
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

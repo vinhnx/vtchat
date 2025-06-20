@@ -24,6 +24,7 @@ const bricolage = Bricolage_Grotesque({
     variable: '--font-bricolage',
 });
 
+import '@repo/ui/src/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -105,7 +106,7 @@ export default function ParentLayout({
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
-            <body>
+            <body className="bg-background text-foreground antialiased">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"

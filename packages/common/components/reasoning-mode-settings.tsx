@@ -4,7 +4,7 @@ import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
-import { Button, Label, Slider, Switch } from '@repo/ui';
+import { Button, Label, Slider, Switch, TypographyH3, TypographyH4 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Brain, Sparkles, Zap } from 'lucide-react';
 import { useMemo } from 'react';
@@ -70,7 +70,7 @@ export const ReasoningModeSettings = () => {
                         <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</h3>
+                        <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</TypographyH3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Advanced AI reasoning and thinking capabilities
                         </p>
@@ -87,7 +87,7 @@ export const ReasoningModeSettings = () => {
                             <Brain className="h-8 w-8 text-[#D99A4E]" />
                         </div>
                         <div>
-                            <h4 className="mb-2 font-semibold text-[#BFB38F]">VT+ Required</h4>
+                            <TypographyH4 className="mb-2 font-semibold text-[#BFB38F]">VT+ Required</TypographyH4>
                             <p className="mb-4 text-sm text-[#BFB38F]/70">
                                 Reasoning Mode reveals the AI's step-by-step thinking process before
                                 generating responses. This advanced feature requires a VT+
@@ -113,7 +113,7 @@ export const ReasoningModeSettings = () => {
                     <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                 </motion.div>
                 <div>
-                    <h3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</h3>
+                    <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</TypographyH3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         Configure AI reasoning and thinking capabilities
                     </p>
@@ -234,9 +234,9 @@ export const ReasoningModeSettings = () => {
                                 <div className="flex items-start gap-3">
                                     <Brain className="mt-0.5 h-5 w-5 text-[#D99A4E]" />
                                     <div>
-                                        <h4 className="mb-2 font-medium text-[#BFB38F]">
+                                        <TypographyH4 className="mb-2 font-medium text-[#BFB38F]">
                                             Reasoning Mode Tips
-                                        </h4>
+                                        </TypographyH4>
                                         <ul className="space-y-1 text-sm text-[#BFB38F]/70">
                                             <li>
                                                 • Higher budgets allow more detailed reasoning but

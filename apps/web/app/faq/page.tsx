@@ -1,5 +1,5 @@
 import { Footer } from '@repo/common/components';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button } from '@repo/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, TypographyH2 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -58,9 +58,9 @@ function FAQs() {
         <section className="py-8 md:py-16">
             <div className="mx-auto w-[60%] px-12 md:px-20 lg:px-24 xl:px-32">
                 <div className="mb-12 text-center">
-                    <h2 className="mb-4 text-3xl font-semibold md:text-4xl">
+                    <TypographyH2 className="mb-4 text-3xl font-semibold md:text-4xl">
                         Frequently Asked Questions
-                    </h2>
+                    </TypographyH2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
                         Everything you need to know about VT's privacy-focused AI chat features,
                         account management, and advanced capabilities.

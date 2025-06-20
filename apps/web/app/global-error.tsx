@@ -1,5 +1,7 @@
 'use client';
 
+import { TypographyH3 } from '@repo/ui';
+
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
 
@@ -30,9 +32,9 @@ export default function GlobalError({ error }: { error: Error }) {
                             textAlign: 'center',
                         }}
                     >
-                        <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#374151' }}>
+                        <TypographyH3 style={{ margin: 0, fontSize: '1.25rem', color: '#374151' }}>
                             Something went wrong
-                        </h3>
+                        </TypographyH3>
                         <p
                             style={{
                                 margin: 0,
