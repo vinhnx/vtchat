@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { useCallback } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
+import { useAppStore } from '../store/app.store';
 
 /**
  * Custom hook for logout functionality that ensures all gated features
@@ -17,6 +18,7 @@ export const useLogout = () => {
     const { setTheme } = useTheme();
     const clearAllKeys = useApiKeysStore(state => state.clearAllKeys);
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
+    const resetUserState = useAppStore(state => state.resetUserState);
 
     const logout = useCallback(async () => {
         try {
@@ -34,7 +36,11 @@ export const useLogout = () => {
             await clearAllThreads();
             console.log('[Logout] ✅ Cleared all threads from local storage');
 
-            // 4. Clear subscription-related localStorage cache
+            // 4. Reset app store user state
+            resetUserState();
+            console.log('[Logout] ✅ Reset app store user state');
+
+            // 5. Clear subscription-related localStorage cache
             if (typeof window !== 'undefined') {
                 // Clear subscription status cache
                 const subscriptionKeys = Object.keys(localStorage).filter(
@@ -55,6 +61,7 @@ export const useLogout = () => {
                     'user-preferences',
                     'subscription-preferences',
                     'feature-access-cache',
+                    'vtchat-preferences', // App store preferences
                 ];
                 userDataKeys.forEach(key => {
                     if (localStorage.getItem(key)) {
@@ -62,20 +69,46 @@ export const useLogout = () => {
                         console.log(`[Logout] ✅ Cleared ${key}`);
                     }
                 });
+
+                // Clear next-themes storage (dark mode is a VT+ feature)
+                localStorage.removeItem('theme');
+                console.log('[Logout] ✅ Cleared theme storage');
+
+                // Clear any remaining VT+ or premium feature caches
+                const premiumKeys = Object.keys(localStorage).filter(
+                    key =>
+                        key.includes('premium') ||
+                        key.includes('plus') ||
+                        key.includes('dark') ||
+                        key.includes('theme') ||
+                        key.includes('vt+') ||
+                        key.includes('vtplus')
+                );
+                premiumKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                if (premiumKeys.length > 0) {
+                    console.log(`[Logout] ✅ Cleared ${premiumKeys.length} additional premium cache entries`);
+                }
             }
 
-            // 6. Invalidate server-side subscription cache
+            // 6. Invalidate server-side subscription cache (before sign out)
             try {
-                await fetch('/api/subscription/invalidate-cache', {
+                const cacheResponse = await fetch('/api/subscription/invalidate-cache', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({}),
                 });
-                console.log('[Logout] ✅ Invalidated server-side subscription cache');
+                
+                if (cacheResponse.ok) {
+                    console.log('[Logout] ✅ Invalidated server-side subscription cache');
+                } else {
+                    console.warn('[Logout] ⚠️ Server cache invalidation returned:', cacheResponse.status);
+                }
             } catch (cacheError) {
-                console.warn('[Logout] ⚠️ Failed to invalidate server cache:', cacheError);
+                console.warn('[Logout] ⚠️ Failed to invalidate server cache (non-critical):', cacheError);
                 // Non-critical, continue with logout
             }
 
@@ -91,12 +124,13 @@ export const useLogout = () => {
                 setTheme('light');
                 clearAllKeys();
                 await clearAllThreads();
+                resetUserState();
                 console.log('[Logout] ✅ Emergency cleanup completed');
             } catch (cleanupError) {
                 console.error('[Logout] ❌ Emergency cleanup failed:', cleanupError);
             }
         }
-    }, [setTheme, clearAllKeys, clearAllThreads]);
+    }, [setTheme, clearAllKeys, clearAllThreads, resetUserState]);
 
     return { logout };
 };

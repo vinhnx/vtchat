@@ -57,6 +57,8 @@ type Actions = {
     setPortalState: (state: { isOpen: boolean; url: string | null }) => void;
     openPortal: (url: string) => void;
     closePortal: () => void;
+    // Reset all user-specific state
+    resetUserState: () => void;
 };
 
 // Initialize sidebar state with auto-hide behavior as default
@@ -127,6 +129,27 @@ export const useAppStore = create(
                         badge: undefined,
                     },
                 }),
+            resetUserState: () => {
+                // Reset all user-specific preferences and state
+                set({
+                    showExamplePrompts: true, // Reset to default
+                    portalState: { isOpen: false, url: null },
+                    settingTab: 'api-keys',
+                    isSettingsOpen: false,
+                    showSignInModal: false,
+                    sideDrawer: { 
+                        open: false, 
+                        title: '', 
+                        renderContent: () => null, 
+                        badge: undefined 
+                    },
+                });
+
+                // Clear localStorage for user preferences
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem(STORAGE_KEYS.USER_PREFERENCES);
+                }
+            },
         };
     })
 );
