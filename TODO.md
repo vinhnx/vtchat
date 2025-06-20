@@ -113,13 +113,6 @@ remember to publish Google Auth
 - [ ] [PLUS TIER ONLY] Implement full remote thread synchronization with Neon DB.
 - [ ] [PLUS TIER ONLY] Sync threads to Neon DB.
 
-## UI/UX Improvements
-
-- [ ] Migrate `@repo/ui` to use Shadcn's `components/ui` as the base.
-- [ ] Clean up old `@repo/ui` code to unify the UI and remove redundancies.
-- [ ] Leverage Context7 for Shadcn components and migrate components in `packages/common/components` to use Shadcn/Tailwind components.
-- [ ] General UI/UX improvements across the application.
-
 --
 
 - [ ] Desktop Application - Electron: [https://github.com/electron/electron](https://github.com/electron/electron)
