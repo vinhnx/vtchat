@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { NextRequest, NextResponse } from 'next/server';

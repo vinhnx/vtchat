@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from '@/lib/auth-client';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
 import Link from 'next/link';
 

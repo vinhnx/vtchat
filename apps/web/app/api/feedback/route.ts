@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { feedback } from '@/lib/database/schema';
 import { geolocation } from '@vercel/functions';

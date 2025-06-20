@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { users } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
