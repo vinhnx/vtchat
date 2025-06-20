@@ -10,11 +10,11 @@ export enum ChatMode {
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4o = 'gpt-4o',
     GPT_4o_Mini = 'gpt-4o-mini',
-    GEMINI_2_0_FLASH = 'gemini-2.0-flash',
-    GEMINI_2_5_FLASH = 'gemini-2.5-flash',
-    GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
-    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
     GEMINI_2_5_PRO = 'gemini-2.5-pro',
+    GEMINI_2_5_FLASH = 'gemini-2.5-flash',
+    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
+    GEMINI_2_0_FLASH = 'gemini-2.0-flash',
+    GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',
     DEEPSEEK_R1 = 'deepseek-r1-0528',
@@ -116,13 +116,7 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         requiredPlan: PlanSlug.VT_PLUS,
     },
-    [ChatMode.GEMINI_2_0_FLASH]: {
-        webSearch: true,
-        imageUpload: true,
-        retry: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GEMINI_2_0_FLASH_LITE]: {
+    [ChatMode.GEMINI_2_5_PRO]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
@@ -142,7 +136,13 @@ export const ChatModeConfig: Record<
         isNew: true,
         isAuthRequired: true,
     },
-    [ChatMode.GEMINI_2_5_PRO]: {
+    [ChatMode.GEMINI_2_0_FLASH]: {
+        webSearch: true,
+        imageUpload: true,
+        retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GEMINI_2_0_FLASH_LITE]: {
         webSearch: true,
         imageUpload: true,
         retry: true,
