@@ -37,8 +37,63 @@ const nextConfig = {
         ],
     },
 
+    // Server-side optimizations
+    serverExternalPackages: ['@repo/ai', '@repo/shared', '@repo/common'],
+
     // Moved from experimental to root level (Next.js 15+)
     outputFileTracingRoot: path.join(__dirname, '../../'),
+
+    // Performance optimizations
+    compiler: {
+        // Remove console.logs in production
+        removeConsole:
+            process.env.NODE_ENV === 'production'
+                ? {
+                      exclude: ['error', 'warn'],
+                  }
+                : false,
+    },
+
+    // Webpack optimizations (only when not using Turbopack)
+    ...(process.env.TURBOPACK !== '1' && {
+        webpack: (config, { dev, isServer }) => {
+            // Optimize for development speed
+            if (dev) {
+                config.cache = {
+                    type: 'filesystem',
+                    buildDependencies: {
+                        config: [__filename],
+                    },
+                };
+
+                // Reduce module resolution overhead
+                config.resolve.symlinks = false;
+            }
+
+            // Optimize bundle splitting
+            if (!isServer) {
+                config.optimization.splitChunks = {
+                    chunks: 'all',
+                    cacheGroups: {
+                        vendor: {
+                            test: /[\\/]node_modules[\\/]/,
+                            name: 'vendors',
+                            priority: 10,
+                            reuseExistingChunk: true,
+                        },
+                        common: {
+                            name: 'common',
+                            minChunks: 2,
+                            priority: 5,
+                            reuseExistingChunk: true,
+                        },
+                    },
+                };
+            }
+
+            return config;
+        },
+    }),
 
     async headers() {
         return [

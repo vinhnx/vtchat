@@ -1,4 +1,5 @@
 'use client';
+
 import { DotSpinner } from '@repo/common/components';
 import {
     useMathCalculator,
@@ -26,232 +27,14 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-    ArrowUp,
-    Atom,
-    Calculator,
-    ChevronDown,
-    Gift,
-    Globe,
-    Paperclip,
-    Square,
-    Star,
-} from 'lucide-react';
+import { ArrowUp, Calculator, ChevronDown, Globe, Paperclip, Square } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
+import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config';
 
-export const chatOptions = [
-    {
-        label: 'Deep Research',
-        description: 'In depth research on complex topic',
-        value: ChatMode.Deep,
-        icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
-    },
-    {
-        label: 'Pro Search',
-        description: 'Enhanced web search with Gemini grounding',
-        value: ChatMode.Pro,
-        icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
-    },
-];
-
-// BYOK-only models - all models require API keys, grouped by provider
-export const modelOptionsByProvider = {
-    OpenAI: [
-        {
-            label: 'GPT 4o Mini',
-            value: ChatMode.GPT_4o_Mini,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'GPT 4.1 Nano',
-            value: ChatMode.GPT_4_1_Nano,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'GPT 4.1 Mini',
-            value: ChatMode.GPT_4_1_Mini,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'GPT 4.1',
-            value: ChatMode.GPT_4_1,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'GPT 4o',
-            value: ChatMode.GPT_4o,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'o4 mini',
-            value: ChatMode.O4_Mini,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    Google: [
-        {
-            label: 'Gemini 2.0 Flash',
-            value: ChatMode.GEMINI_2_0_FLASH,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.0 Flash Lite',
-            value: ChatMode.GEMINI_2_0_FLASH_LITE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.5 Flash Lite Preview',
-            value: ChatMode.GEMINI_2_5_FLASH_LITE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.5 Flash',
-            value: ChatMode.GEMINI_2_5_FLASH,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.5 Pro',
-            value: ChatMode.GEMINI_2_5_PRO,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.5 Pro',
-            value: ChatMode.GEMINI_2_5_PRO,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    Anthropic: [
-        {
-            label: 'Claude 4 Sonnet',
-            value: ChatMode.CLAUDE_4_SONNET,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Claude 4 Opus',
-            value: ChatMode.CLAUDE_4_OPUS,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    Fireworks: [
-        {
-            label: 'DeepSeek R1',
-            value: ChatMode.DEEPSEEK_R1,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    xAI: [
-        {
-            label: 'Grok 3',
-            value: ChatMode.GROK_3,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Grok 3 Mini',
-            value: ChatMode.GROK_3_MINI,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    OpenRouter: [
-        {
-            label: 'DeepSeek V3 0324',
-            value: ChatMode.DEEPSEEK_V3_0324_FREE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'DeepSeek V3 0324 Pro',
-            value: ChatMode.DEEPSEEK_V3_0324,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'DeepSeek R1',
-            value: ChatMode.DEEPSEEK_R1_FREE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'DeepSeek R1 0528',
-            value: ChatMode.DEEPSEEK_R1_0528_FREE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Qwen3 235B A22B',
-            value: ChatMode.QWEN3_235B_A22B,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Qwen3 32B',
-            value: ChatMode.QWEN3_32B,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Mistral Nemo',
-            value: ChatMode.MISTRAL_NEMO,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Qwen3 14B',
-            value: ChatMode.QWEN3_14B_FREE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-    ],
-};
-
-// Flatten array for backward compatibility
-export const modelOptions = Object.values(modelOptionsByProvider).flat();
-
-export const AttachmentButton = () => {
+export function AttachmentButton() {
     return (
         <Button
             size="icon"
@@ -264,13 +47,12 @@ export const AttachmentButton = () => {
             <Paperclip size={18} strokeWidth={2} className="text-muted-foreground" />
         </Button>
     );
-};
+}
 
-export const ChatModeButton = () => {
+export function ChatModeButton() {
     const chatMode = useChatStore(state => state.chatMode);
     const setChatMode = useChatStore(state => state.setChatMode);
     const [isChatModeOpen, setIsChatModeOpen] = useState(false);
-    const isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
     const [showGateAlert, setShowGateAlert] = useState<{
         feature?: string;
@@ -373,9 +155,9 @@ export const ChatModeButton = () => {
             </Dialog>
         </>
     );
-};
+}
 
-export const WebSearchButton = () => {
+export function WebSearchButton() {
     const { useWebSearch, webSearchType } = useWebSearchHook();
     const chatMode = useChatStore(state => state.chatMode);
     const setActiveButton = useChatStore(state => state.setActiveButton);
@@ -437,9 +219,9 @@ export const WebSearchButton = () => {
             </Button>
         </>
     );
-};
+}
 
-export const MathCalculatorButton = () => {
+export function MathCalculatorButton() {
     const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
     const setActiveButton = useChatStore(state => state.setActiveButton);
 
@@ -468,9 +250,9 @@ export const MathCalculatorButton = () => {
             </Button>
         </>
     );
-};
+}
 
-export const NewLineIndicator = () => {
+export function NewLineIndicator() {
     const editor = useChatStore(state => state.editor);
     const hasTextInput = !!editor?.getText();
 
@@ -481,18 +263,18 @@ export const NewLineIndicator = () => {
             use <Kbd>Shift</Kbd> <Kbd>Enter</Kbd> for new line
         </p>
     );
-};
+}
 
-export const GeneratingStatus = () => {
+export function GeneratingStatus() {
     return (
         <div className="text-muted-foreground flex flex-row items-center gap-1 px-2 text-xs">
             <DotSpinner /> Generating...
         </div>
     );
-};
+}
 
 // BYOK Setup Modal Component
-export const BYOKSetupModal = ({
+export function BYOKSetupModal({
     isOpen,
     onClose,
     requiredApiKey,
@@ -504,7 +286,7 @@ export const BYOKSetupModal = ({
     requiredApiKey: keyof ApiKeys;
     modelName: string;
     onApiKeySaved: () => void;
-}) => {
+}) {
     const setApiKey = useApiKeysStore(state => state.setKey);
     const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const [apiKeyValue, setApiKeyValue] = useState('');
@@ -653,13 +435,12 @@ export const BYOKSetupModal = ({
             </DialogContent>
         </Dialog>
     );
-};
+}
 
-export const ChatModeOptions = ({
-    chatMode,
+export function ChatModeOptions({
     setChatMode,
     onGatedFeature,
-    isRetry = false,
+    _isRetry = false,
 }: {
     chatMode: ChatMode;
     setChatMode: (chatMode: ChatMode) => void;
@@ -669,13 +450,13 @@ export const ChatModeOptions = ({
         title: string;
         message: string;
     }) => void;
-    isRetry?: boolean;
-}) => {
+    _isRetry?: boolean;
+}) {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const apiKeys = useApiKeysStore(state => state.getAllKeys());
-    const isChatPage = usePathname().startsWith('/chat');
+    const _isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
 
     // Login prompt state
@@ -906,9 +687,9 @@ export const ChatModeOptions = ({
             />
         </>
     );
-};
+}
 
-export const SendStopButton = ({
+export function SendStopButton({
     isGenerating,
     isChatPage,
     stopGeneration,
@@ -920,7 +701,7 @@ export const SendStopButton = ({
     stopGeneration: () => void;
     hasTextInput: boolean;
     sendMessage: () => void;
-}) => {
+}) {
     return (
         <div className="flex flex-row items-center gap-2">
             <AnimatePresence mode="wait" initial={false}>
@@ -965,4 +746,4 @@ export const SendStopButton = ({
             </AnimatePresence>
         </div>
     );
-};
+}

@@ -109,23 +109,6 @@ export const PlusSettings = () => {
                             );
                         })}
                     </div>
-
-                    <div className="border-muted-foreground/30 rounded-lg border border-dashed p-4 opacity-60">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <Brain size={20} className="text-purple-500" />
-                                <div>
-                                    <Label className="text-base font-medium">Reasoning Mode</Label>
-                                    <p className="text-muted-foreground text-sm">
-                                        See how AI models reason through problems
-                                    </p>
-                                </div>
-                            </div>
-                            <Badge variant="secondary" className="text-xs">
-                                VT+ Only
-                            </Badge>
-                        </div>
-                    </div>
                 </div>
             </div>
         );

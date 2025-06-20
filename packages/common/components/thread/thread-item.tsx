@@ -143,9 +143,11 @@ export const ThreadItem = memo(
                                     <SourceGrid sources={validSources} />
 
                                     {/* Show thinking log if reasoning data is available */}
-                                    {threadItem.reasoning && (
-                                        <ThinkingLog threadItem={threadItem} />
-                                    )}
+                                    {(threadItem.reasoning ||
+                                        threadItem.reasoningDetails?.length ||
+                                        threadItem.parts?.some(
+                                            part => part.type === 'reasoning'
+                                        )) && <ThinkingLog threadItem={threadItem} />}
 
                                     <MarkdownContent
                                         content={animatedText || ''}
