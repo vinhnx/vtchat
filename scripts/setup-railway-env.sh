@@ -98,7 +98,6 @@ set_variable "PRODUCT_DESCRIPTION"
 set_variable "VT_PLUS_PRICE"
 set_variable "PRICING_CURRENCY"
 set_variable "PRICING_INTERVAL"
-set_variable "FREE_TIER_DAILY_LIMIT"
 
 # External APIs
 set_variable "JINA_API_KEY"
@@ -114,12 +113,7 @@ set_variable "CREEM_API_KEY"
 set_variable "CREEM_WEBHOOK_SECRET"
 set_variable "CREEM_PRODUCT_ID"
 
-# Redis/KV
-set_variable "KV_URL"
-set_variable "KV_REST_API_URL"
-set_variable "KV_REST_API_TOKEN"
-set_variable "KV_REST_API_READ_ONLY_TOKEN"
-set_variable "REDIS_URL"
+# Redis/KV - removed
 
 # Database
 set_variable "DATABASE_URL"

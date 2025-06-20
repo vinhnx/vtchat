@@ -88,12 +88,7 @@ SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-app-password
 
-# Redis Configuration (Optional)
-# For rate limiting and caching
-UPSTASH_REDIS_REST_URL=your-redis-url
-UPSTASH_REDIS_REST_TOKEN=your-redis-token
-# Legacy Redis URL format
-REDIS_URL=redis://localhost:6379
+# Redis Configuration - removed (no longer needed)
 
 # Payment Integration (Optional for development)
 # Creem.io for subscription management
@@ -116,7 +111,7 @@ JINA_API_KEY=jina_your-jina-api-key
 # Development Configuration
 NODE_ENV=development
 LOG_LEVEL=debug
-FREE_TIER_DAILY_LIMIT=50
+# FREE_TIER_DAILY_LIMIT - removed (no longer needed)
 
 # Neon Configuration (if using Neon)
 NEON_PROJECT_ID=your-neon-project-id

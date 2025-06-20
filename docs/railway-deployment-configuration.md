@@ -115,13 +115,13 @@ NEXT_PUBLIC_BETTER_AUTH_URL=https://vtchat-web-production.up.railway.app
 BETTER_AUTH_ENV=development
 CREEM_ENVIRONMENT=sandbox
 LOG_LEVEL=debug
-FREE_TIER_DAILY_LIMIT=10
+# FREE_TIER_DAILY_LIMIT - removed (no longer needed)
 
 # Production
 BETTER_AUTH_ENV=production
 CREEM_ENVIRONMENT=production
 LOG_LEVEL=info
-FREE_TIER_DAILY_LIMIT=50
+# FREE_TIER_DAILY_LIMIT - removed (no longer needed)
 ```
 
 ## Security Considerations
