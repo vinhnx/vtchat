@@ -21,6 +21,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const pathname = usePathname();
 
+
     const containerClass =
         'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';
 
@@ -107,6 +108,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             </Flex>
 
             <Toaster />
+            
+
         </div>
     );
 };

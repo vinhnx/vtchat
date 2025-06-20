@@ -54,7 +54,7 @@ const createOptimizedSessionGetter = () => {
 
 // Export optimized methods
 export const getSession = createOptimizedSessionGetter();
-export const { useSession, signIn, signOut, signUp } = authClient;
+export const { useSession, signIn, signOut, signUp, linkSocial, unlinkAccount, listAccounts } = authClient;
 
 // Create compatibility aliases for Better Auth
 export const useSignOut = () => {

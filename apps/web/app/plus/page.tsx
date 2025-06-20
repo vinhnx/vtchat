@@ -5,6 +5,7 @@ import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { BUTTON_TEXT } from '@repo/shared/constants';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
+import { TypographyH2, TypographyH3 } from '@repo/ui';
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,7 +14,7 @@ import { ButtonAnimatedGradient } from '../../components/button-animated-gradien
 import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
 import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
-import { ShineText } from '../../components/shine-text';
+import { ShineText } from '@repo/common/components';
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
@@ -151,9 +152,9 @@ export default function PlusPage() {
                         >
                             <div>
                                 <div className="flex items-center justify-between">
-                                    <h3 id="tier-free" className="text-lg font-bold text-[#BFB38F]">
+                                    <TypographyH3 id="tier-free" className="text-lg font-bold text-[#BFB38F]">
                                         Free
-                                    </h3>
+                                    </TypographyH3>
                                     {isFreeTier && (
                                         <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/10 px-3 py-1">
                                             <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
@@ -208,12 +209,12 @@ export default function PlusPage() {
                             >
                                 <div>
                                     <div className="flex items-center justify-between">
-                                        <h3
+                                        <TypographyH3
                                             id="tier-vt-plus"
                                             className="text-lg font-bold text-[#BFB38F]"
                                         >
                                             {PRICING_CONFIG.product.name}
-                                        </h3>
+                                        </TypographyH3>
                                         {isCurrentlySubscribed && (
                                             <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1">
                                                 <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
@@ -302,7 +303,7 @@ export default function PlusPage() {
 
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
-                    <h2 className="text-lg font-semibold text-white">Ready to get started?</h2>
+                    <TypographyH2 className="text-lg font-semibold text-white">Ready to get started?</TypographyH2>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
                             onClick={() => {

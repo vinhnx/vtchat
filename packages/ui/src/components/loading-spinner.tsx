@@ -1,114 +1,224 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { cn } from '../lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
-const LoadingDot = {
-    display: 'block',
-    width: '4px',
-    height: '4px',
-    borderRadius: '50%',
-};
-
-const LoadingContainer = {
-    width: '24px',
-    height: '24px',
-    paddingTop: '6px',
-    display: 'flex',
-    justifyContent: 'space-around',
-};
-
-const ContainerVariants = {
-    initial: {
-        transition: {
-            staggerChildren: 0.2,
+// Loading spinner variants
+const spinnerVariants = cva(
+    'animate-spin rounded-full border-solid border-current',
+    {
+        variants: {
+            size: {
+                sm: 'h-4 w-4 border-2',
+                md: 'h-6 w-6 border-2',
+                lg: 'h-8 w-8 border-[3px]',
+                xl: 'h-12 w-12 border-4',
+                '2xl': 'h-16 w-16 border-4',
+            },
+            variant: {
+                default: 'border-border border-t-foreground',
+                primary: 'border-primary/20 border-t-primary',
+                secondary: 'border-secondary/20 border-t-secondary',
+                destructive: 'border-destructive/20 border-t-destructive',
+                ghost: 'border-muted border-t-muted-foreground',
+                outline: 'border-border border-t-foreground',
+            },
         },
-    },
-    animate: {
-        transition: {
-            staggerChildren: 0.2,
+        defaultVariants: {
+            size: 'md',
+            variant: 'default',
         },
-    },
-};
-
-const DotVariants = {
-    initial: {
-        y: '0%',
-        opacity: 1,
-    },
-    animate: {
-        y: '100%',
-        opacity: 0.5,
-    },
-};
-
-const DotTransition = {
-    duration: 1.5,
-    repeat: Infinity,
-    ease: 'easeInOut',
-};
-
-export function Spinner() {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return <div className="bg-muted-foreground/20 h-4 w-4 animate-pulse rounded-full" />;
     }
+);
 
-    return (
-        <svg
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            xmlns="http://www.w3.org/2000/svg"
-            className="stroke-brand h-4 w-4 animate-spin"
-        >
-            <path d="M12 3v3m6.366-.366-2.12 2.12M21 12h-3m.366 6.366-2.12-2.12M12 21v-3m-6.366.366 2.12-2.12M3 12h3m-.366-6.366 2.12 2.12"></path>
-        </svg>
-    );
+export interface LoadingSpinnerProps
+    extends React.HTMLAttributes<HTMLDivElement>,
+        VariantProps<typeof spinnerVariants> {
+    text?: string;
+    centered?: boolean;
 }
 
-export function LinearSpinner() {
-    return (
-        <div
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <motion.div
-                style={LoadingContainer}
-                variants={ContainerVariants}
-                initial="initial"
-                animate="animate"
+const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
+    ({ className, size, variant, text, centered = false, ...props }, ref) => {
+        const content = (
+            <>
+                <div
+                    className={cn(spinnerVariants({ size, variant, className }))}
+                    {...props}
+                    ref={ref}
+                />
+                {text && (
+                    <span className="ml-2 text-sm text-muted-foreground animate-pulse">
+                        {text}
+                    </span>
+                )}
+            </>
+        );
+
+        if (centered) {
+            return (
+                <div className="flex items-center justify-center min-h-[100px] w-full">
+                    <div className="flex items-center">
+                        {content}
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex items-center">
+                {content}
+            </div>
+        );
+    }
+);
+
+LoadingSpinner.displayName = 'LoadingSpinner';
+
+// Pulse loading component for skeleton states
+export interface PulseLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+    lines?: number;
+    height?: 'sm' | 'md' | 'lg';
+}
+
+const PulseLoader = React.forwardRef<HTMLDivElement, PulseLoaderProps>(
+    ({ className, lines = 3, height = 'md', ...props }, ref) => {
+        const heights = {
+            sm: 'h-3',
+            md: 'h-4',
+            lg: 'h-6',
+        };
+
+        return (
+            <div className={cn('space-y-2', className)} ref={ref} {...props}>
+                {Array.from({ length: lines }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={cn(
+                            'animate-pulse bg-muted rounded',
+                            heights[height],
+                            i === lines - 1 ? 'w-3/4' : 'w-full'
+                        )}
+                        style={{
+                            animationDelay: `${i * 0.1}s`,
+                        }}
+                    />
+                ))}
+            </div>
+        );
+    }
+);
+
+PulseLoader.displayName = 'PulseLoader';
+
+// Dots loading animation
+export interface DotsLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+    size?: 'sm' | 'md' | 'lg';
+    color?: 'default' | 'primary' | 'secondary';
+}
+
+const DotsLoader = React.forwardRef<HTMLDivElement, DotsLoaderProps>(
+    ({ className, size = 'md', color = 'default', ...props }, ref) => {
+        const sizeMap = {
+            sm: 'w-1 h-1',
+            md: 'w-2 h-2',
+            lg: 'w-3 h-3',
+        };
+
+        const colorMap = {
+            default: 'bg-foreground',
+            primary: 'bg-primary',
+            secondary: 'bg-secondary',
+        };
+
+        return (
+            <div
+                className={cn('flex items-center space-x-1', className)}
+                ref={ref}
+                {...props}
             >
-                <motion.span
-                    style={LoadingDot}
-                    className="bg-muted-foreground"
-                    variants={DotVariants}
-                    transition={DotTransition}
-                />
-                <motion.span
-                    style={LoadingDot}
-                    className="bg-muted-foreground"
-                    variants={DotVariants}
-                    transition={DotTransition}
-                />
-                <motion.span
-                    style={LoadingDot}
-                    className="bg-muted-foreground"
-                    variants={DotVariants}
-                    transition={DotTransition}
-                />
-            </motion.div>
-        </div>
-    );
+                {[0, 1, 2].map((i) => (
+                    <div
+                        key={i}
+                        className={cn(
+                            'rounded-full animate-bounce',
+                            sizeMap[size],
+                            colorMap[color]
+                        )}
+                        style={{
+                            animationDelay: `${i * 0.1}s`,
+                            animationDuration: '0.6s',
+                        }}
+                    />
+                ))}
+            </div>
+        );
+    }
+);
+
+DotsLoader.displayName = 'DotsLoader';
+
+// Modern circular progress with gradient
+export interface CircularProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+    progress?: number; // 0-100
+    size?: number;
+    strokeWidth?: number;
+    showPercentage?: boolean;
 }
+
+const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(
+    ({ className, progress = 0, size = 40, strokeWidth = 4, showPercentage = false, ...props }, ref) => {
+        const radius = (size - strokeWidth) / 2;
+        const circumference = radius * 2 * Math.PI;
+        const offset = circumference - (progress / 100) * circumference;
+
+        return (
+            <div
+                className={cn('relative inline-flex items-center justify-center', className)}
+                style={{ width: size, height: size }}
+                ref={ref}
+                {...props}
+            >
+                <svg
+                    className="transform -rotate-90"
+                    width={size}
+                    height={size}
+                >
+                    {/* Background circle */}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        stroke="currentColor"
+                        strokeWidth={strokeWidth}
+                        fill="none"
+                        className="text-muted"
+                    />
+                    {/* Progress circle */}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        stroke="currentColor"
+                        strokeWidth={strokeWidth}
+                        fill="none"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        className="text-primary transition-all duration-300 ease-in-out"
+                    />
+                </svg>
+                {showPercentage && (
+                    <span className="absolute text-xs font-medium">
+                        {Math.round(progress)}%
+                    </span>
+                )}
+            </div>
+        );
+    }
+);
+
+CircularProgress.displayName = 'CircularProgress';
+
+export { LoadingSpinner, PulseLoader, DotsLoader, CircularProgress, spinnerVariants };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button } from '@repo/ui';
+import { Button, TypographyH1 } from '@repo/ui';
 import Link from 'next/link';
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col">
             <header className="flex items-center justify-between border-b p-4">
-                <h1 className="text-xl font-semibold">VT</h1>
+                <TypographyH1 className="text-xl font-semibold">VT</TypographyH1>
                 {session ? (
                     <Link href="/chat">
                         {/* @ts-ignore - Type compatibility issue between React versions */}
@@ -29,7 +29,7 @@ export default function Home() {
             </header>
             <div className="flex flex-1 items-center justify-center p-8">
                 <div className="max-w-2xl space-y-6 text-center">
-                    <h1 className="text-4xl font-bold">VT</h1>
+                    <TypographyH1 className="text-4xl font-bold">VT</TypographyH1>
                     <p className="text-lg text-gray-600 dark:text-gray-400">
                         Welcome to VT - Your intelligent conversation companion.
                     </p>

@@ -22,6 +22,13 @@ export const auth = betterAuth({
         },
     }),
     plugins: [emailHarmony()],
+    account: {
+        accountLinking: {
+            enabled: true,
+            trustedProviders: ["google", "github"],
+            allowDifferentEmails: false, // More secure - require same email
+        },
+    },
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,

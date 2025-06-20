@@ -100,9 +100,8 @@ export function withSubscriptionAuth(
                 : false;
 
             if (!hasPermission) {
-                const user = await currentUser(); // Fetch user for details in error response
                 // getUserSubscription is used here to get current plan details for the error message.
-                const subscription = getUserSubscription(user);
+                const subscription = getUserSubscription(userWithSub?.users || null);
                 return NextResponse.json(
                     {
                         error: 'Subscription required',
@@ -114,10 +113,9 @@ export function withSubscriptionAuth(
                 );
             }
 
-            const user = await currentUser(); // Fetch user to pass to handler
             // getUserSubscription is used here to get subscription details to pass to the handler.
-            const subscriptionForHandler = getUserSubscription(user);
-            return handler(req, user, subscriptionForHandler);
+            const subscriptionForHandler = getUserSubscription(userWithSub?.users || null);
+            return handler(req, session.user, subscriptionForHandler);
         } catch (error) {
             console.error('Subscription auth middleware error:', error);
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

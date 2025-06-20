@@ -46,8 +46,8 @@ export const FormLabel = ({
                 {extra && extra()}
             </Flex>
             {children && (
-                <Type size="xs" textColor="secondary">
-                    {children}
+                <Type size="xs" textColor="secondary" asChild>
+                    <div>{children}</div>
                 </Type>
             )}
         </Flex>

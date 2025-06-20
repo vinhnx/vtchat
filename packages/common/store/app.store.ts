@@ -7,6 +7,7 @@ export const SETTING_TABS = {
     API_KEYS: 'api-keys',
     MCP_TOOLS: 'mcp-tools',
     PERSONALIZATION: 'personalization',
+    PROFILE: 'profile',
     USAGE_CREDITS: 'usage-credits',
     PLUS: 'plus',
     REASONING_MODE: 'reasoning-mode',

@@ -323,3 +323,51 @@ export const modelOptionsByProvider = {
 
 // Flatten array for backward compatibility
 export const modelOptions = Object.values(modelOptionsByProvider).flat();
+
+/**
+ * Step-by-step access check for a chat mode.
+ * Returns an object describing which requirements are met and which are not.
+ */
+export function checkChatModeAccess(
+    context: SubscriptionContext | null,
+    mode: ChatMode
+): {
+    isAuthRequired: boolean;
+    hasAuth: boolean;
+    requiredPlan?: PlanSlug;
+    hasRequiredPlan: boolean;
+    requiredFeature?: FeatureSlug;
+    hasRequiredFeature: boolean;
+    canAccess: boolean;
+} {
+    const config = ChatModeConfig[mode];
+    // Step 1: Check if auth is required and present
+    const isAuthRequired = !!config.isAuthRequired;
+    const hasAuth = !!context && !!context.user;
+
+    // Step 2: Check plan requirement
+    const requiredPlan = config.requiredPlan;
+    const hasRequiredPlan = requiredPlan
+        ? checkSubscriptionAccess(context || {}, { plan: requiredPlan })
+        : true;
+
+    // Step 3: Check feature requirement
+    const requiredFeature = config.requiredFeature;
+    const hasRequiredFeature = requiredFeature
+        ? checkSubscriptionAccess(context || {}, { feature: requiredFeature })
+        : true;
+
+    // Step 4: Final access
+    const canAccess =
+        (!isAuthRequired || hasAuth) && hasRequiredPlan && hasRequiredFeature;
+
+    return {
+        isAuthRequired,
+        hasAuth,
+        requiredPlan,
+        hasRequiredPlan,
+        requiredFeature,
+        hasRequiredFeature,
+        canAccess,
+    };
+}

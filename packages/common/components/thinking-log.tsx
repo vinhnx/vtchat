@@ -15,9 +15,23 @@ type ThinkingLogProps = {
 };
 
 export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    // Auto-expand when reasoning is in progress
+    const isReasoningInProgress =
+        ('status' in threadItem && threadItem.status === 'IN_PROGRESS') ||
+        (threadItem.parts?.some(
+            part =>
+                part.type === 'reasoning' &&
+                'status' in part &&
+                (part as any).status === 'IN_PROGRESS'
+        ));
+    const [isExpanded, setIsExpanded] = useState(true);
+
+    // Always expand when reasoning is in progress
+    if (isReasoningInProgress && !isExpanded) setIsExpanded(true);
+
     const thinkingMode = useChatStore(state => state.thinkingMode);
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
+    const currentModel = useChatStore(state => state.model);
 
     // Check if we have any reasoning data to show (legacy reasoning, reasoningDetails, or parts)
     const hasReasoningData =
@@ -58,7 +72,7 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                         />
                     </motion.div>
                     <span className="text-sm font-medium text-[#BFB38F] drop-shadow-sm">
-                        AI Reasoning Process
+                        Thinking Steps ({currentModel?.name || currentModel?.id || 'AI'})
                     </span>
                     <motion.span
                         whileHover={{ scale: 1.05 }}
@@ -99,7 +113,7 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                                 >
                                     <Brain size={16} className="text-[#D99A4E] drop-shadow-sm" />
                                     <span className="text-sm font-medium text-[#BFB38F]">
-                                        Reasoning Process
+                                        Thinking Steps
                                     </span>
                                 </motion.div>
 

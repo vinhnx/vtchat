@@ -2,7 +2,7 @@
 
 import { signIn } from '@repo/shared/lib/auth-client';
 import { InlineLoader } from '@repo/common/components';
-import { Alert, AlertDescription, Button, cn } from '@repo/ui';
+import { Alert, AlertDescription, Button, cn, TypographyH1 } from '@repo/ui';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -58,7 +58,7 @@ function LoginFormContent({
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="scroll-m-20 text-2xl font-bold tracking-tight">Welcome back</h1>
+                <TypographyH1 className="scroll-m-20 text-2xl font-bold tracking-tight">Welcome back</TypographyH1>
                 <p className="text-muted-foreground text-balance text-sm">
                     Sign in to your account using your preferred method
                 </p>
@@ -73,7 +73,7 @@ function LoginFormContent({
 
             <div className="grid gap-4">
                 <Button
-                    variant="outlined"
+                    variant="outline"
                     className="w-full"
                     disabled={loading}
                     onClick={() => handleSocialSignIn('google')}
@@ -99,7 +99,7 @@ function LoginFormContent({
                     Continue with Google
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant="outline"
                     className="w-full"
                     disabled={loading}
                     onClick={() => handleSocialSignIn('github')}

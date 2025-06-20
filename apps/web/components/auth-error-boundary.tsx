@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, ReactNode } from 'react';
+import { TypographyH2 } from '@repo/ui';
 
 interface Props {
     children: ReactNode;
@@ -32,9 +33,9 @@ export class AuthErrorBoundary extends Component<Props, State> {
                 this.props.fallback || (
                     <div className="bg-background flex min-h-screen items-center justify-center">
                         <div className="text-center">
-                            <h2 className="text-foreground text-lg font-semibold">
+                            <TypographyH2 className="text-foreground text-lg font-semibold">
                                 Authentication Error
-                            </h2>
+                            </TypographyH2>
                             <p className="text-muted-foreground mt-2 text-sm">
                                 Please refresh the page or try again later
                             </p>

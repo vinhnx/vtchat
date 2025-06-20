@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Dialog, DialogContent } from '@repo/ui';
+import { Button, Dialog, DialogContent, TypographyH3 } from '@repo/ui';
 import { KeyRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -83,7 +83,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
                         <Icon size={24} className="text-blue-600 dark:text-blue-400" />
                     </div>
                     <div className="space-y-2">
-                        <h3 className="text-lg font-semibold">{title}</h3>
+                        <TypographyH3 className="text-lg font-semibold">{title}</TypographyH3>
                         <p className="text-muted-foreground text-sm">{description}</p>
                     </div>
                     <div className="flex gap-2">

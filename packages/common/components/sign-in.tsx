@@ -1,6 +1,6 @@
 import { useSignIn, useSignUp } from '@clerk/nextjs';
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
-import { Button, InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui';
+import { Button, InputOTP, InputOTPGroup, InputOTPSlot, TypographyH2 } from '@repo/ui';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -271,9 +271,9 @@ export const CustomSignIn = ({
         return (
             <div className="flex w-[300px] flex-col items-center gap-4">
                 <div className="flex flex-col items-center gap-1">
-                    <h2 className="font-clash text-foreground !text-brand text-center text-[24px] font-semibold leading-tight">
+                    <TypographyH2 className="font-clash text-foreground !text-brand text-center text-[24px] font-semibold leading-tight">
                         Check your email
-                    </h2>
+                    </TypographyH2>
                     <p className="text-muted-foreground text-center text-sm">
                         We've sent a code to your email. Please check your inbox and enter the code
                         to continue.
@@ -329,9 +329,9 @@ export const CustomSignIn = ({
                 <X className="h-4 w-4" />
             </Button>
             <div className="flex w-[320px] flex-col items-center gap-8">
-                <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                <TypographyH2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
                     Welcome to VT!
-                </h2>
+                </TypographyH2>
 
                 <div className="flex w-[300px] flex-col space-y-1.5">
                     <Button

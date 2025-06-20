@@ -14,48 +14,59 @@
 
 @layer base {
     :root {
+        /* Vaul (drawer) overlay variables */
         --vaul-overlay-background: 255, 255, 255;
         --vaul-overlay-background-start: transparent;
         --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
 
-        --background: 180 0% 100%;
-        --foreground: 180 0% 2%;
+        /* Official Shadcn UI theming variables - HSL format for Tailwind compatibility */
+        --radius: 0.625rem;
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --sidebar: 0 0% 98%;
+        --sidebar-foreground: 0 0% 3.9%;
+        --sidebar-primary: 0 0% 9%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 0 0% 96.1%;
+        --sidebar-accent-foreground: 0 0% 9%;
+        --sidebar-border: 0 0% 89.8%;
+        --sidebar-ring: 0 0% 3.9%;
 
-        --secondary: 180 0% 98%;
-        --secondary-foreground: 180 0% 4%;
+        /* Custom project variables (mapped to Shadcn variables for compatibility) */
+        --brand: 0 0% 9%;
+        --brand-foreground: 0 0% 98%;
+        --tertiary: var(--muted);
+        --tertiary-foreground: var(--muted-foreground);
+        --quaternary: var(--accent);
+        --quaternary-foreground: var(--accent-foreground);
+        --soft: var(--border);
+        --hard: var(--input);
+        --border-soft: var(--border);
+        --border-hard: var(--input);
 
-        --tertiary: 180 0% 94%;
-        --tertiary-foreground: 180 0% 6%;
-
-        --quaternary: 180 0% 90%;
-        --quaternary-foreground: 180 0% 10%;
-
-        --card: 40 30% 98%;
-        --card-foreground: 20 15% 10%;
-
-        --popover: 180 0% 99.5%;
-        --popover-foreground: 180 0% 2%;
-
-        --brand: 14 93% 63%;
-        --brand-foreground: 164 86% 66%;
-
-        --accent: 164 70% 33%;
-        --accent-foreground: 164 70% 96%;
-
-        --muted: 180 0% 90%;
-        --muted-foreground: 180 0% 10%;
-
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 40 30% 98%;
-
-        --border: 180 0% 84%;
-        --soft: 180 0% 92%;
-        --hard: 180 0% 78%;
-        --input: 180 0% 85%;
-        --ring: 20 15% 10%;
-
-        --radius: 0.5rem;
-
+        /* Custom shadow variables */
         --shadow-subtle-xs:
             rgba(0, 0, 0, 0.04) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px,
             rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -65,65 +76,67 @@
     }
 
     .dark {
-        --vaul-overlay-background: 255, 255, 255;
-        --vaul-overlay-background-start: transparent;
-        --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+        --sidebar: 0 0% 3.9%;
+        --sidebar-foreground: 0 0% 98%;
+        --sidebar-primary: 0 0% 98%;
+        --sidebar-primary-foreground: 0 0% 9%;
+        --sidebar-accent: 0 0% 14.9%;
+        --sidebar-accent-foreground: 0 0% 98%;
+        --sidebar-border: 0 0% 14.9%;
+        --sidebar-ring: 0 0% 83.1%;
 
-        --background: 0 0% 15%; /* #262626 */
-        --foreground: 180 0% 98%;
+        /* Custom project variables (mapped to Shadcn variables for compatibility) */
+        --brand: 0 0% 98%;
+        --brand-foreground: 0 0% 9%;
+        --tertiary: var(--muted);
+        --tertiary-foreground: var(--muted-foreground);
+        --quaternary: var(--accent);
+        --quaternary-foreground: var(--accent-foreground);
+        --soft: var(--border);
+        --hard: var(--input);
+        --border-soft: var(--border);
+        --border-hard: var(--input);
 
-        --secondary: 180 0% 8%;
-        --secondary-foreground: 180 0% 98%;
-
-        --tertiary: 180 0% 6%;
-        --tertiary-foreground: 180 0% 98%;
-
-        --quaternary: 180 0% 2%;
-        --quaternary-foreground: 180 0% 98%;
-
-        --card: 40 30% 98%;
-        --card-foreground: 20 15% 10%;
-
-        --popover: 180 0% 4%;
-        --popover-foreground: 180 0% 96%;
-
-        --brand: 14 93% 63%;
-        --brand-foreground: 164 86% 66%;
-
-        --accent: 164 70% 33%;
-        --accent-foreground: 164 70% 96%;
-
-        --muted: 180 0% 20%;
-        --muted-foreground: 180 0% 70%;
-
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 40 30% 98%;
-
-        --border: 180 0% 16%;
-        --border-accent-dark: 45 27% 65%; /* #BFB38F */
-        --soft: 180 0% 8%;
-        --hard: 180 0% 22%;
-        --input: 180 0% 16%;
-        --ring: 20 15% 10%;
-
-        --radius: 0.5rem;
-
+        /* Custom shadow variables for dark mode */
         --shadow-subtle-xs:
-            rgba(0, 0, 0, 0.04) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px,
-            rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+            rgba(0, 0, 0, 0.2) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.3) 0px 2px 2px -1px,
+            rgba(0, 0, 0, 0.3) 0px 0px 0px 1px;
         --shadow-subtle-sm:
-            rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 1px 1px -0.5px,
-            rgba(0, 0, 0, 0.06) 0px 2px 2px -1px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
+            rgba(0, 0, 0, 0.15) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.25) 0px 1px 1px -0.5px,
+            rgba(0, 0, 0, 0.25) 0px 2px 2px -1px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px;
     }
-}
 
-@layer base {
     * {
         @apply border-border;
     }
 
     body {
-        @apply bg-background text-foreground font-sans font-normal;
+        @apply bg-background text-foreground;
+        font-family: system-ui, sans-serif;
     }
 
     strong {
