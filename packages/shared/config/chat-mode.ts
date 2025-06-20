@@ -316,9 +316,9 @@ export function getChatModeUpgradeRequirements(mode: ChatMode): {
 export const getChatModeName = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Deep:
-            return 'Grounding Web Search';
+            return 'Deep Research - Gemini 2.5 Pro';
         case ChatMode.Pro:
-            return 'Grounding Web Search';
+            return 'Pro Search - Gemini 2.5 Flash';
         case ChatMode.GPT_4_1:
             return 'OpenAI GPT 4.1';
         case ChatMode.GPT_4_1_Mini:
