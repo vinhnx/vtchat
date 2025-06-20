@@ -17,7 +17,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'Access to Free Models',
                     description:
-                        'Access to free AI models including Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite, Gemini 2.5 Flash Preview, Gemini 2.5 Pro Preview, DeepSeek V3, DeepSeek R1, and Qwen3 14B',
+                        'Access to free AI models including Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite, Gemini 2.5 Flash Preview, Gemini 2.5 Pro, Gemini 2.5 Pro Preview, DeepSeek V3, DeepSeek R1, and Qwen3 14B',
                 },
                 {
                     name: 'Mathematical Calculator Tools',
@@ -59,6 +59,26 @@ export const PRICING_CONFIG = {
                     name: 'Thinking Mode',
                     description:
                         'Enhanced AI reasoning with visible thought processes for Gemini models',
+                },
+                {
+                    name: 'Document Parsing',
+                    description:
+                        'AI-powered parsing and analysis of PDFs, Word documents, and various file formats',
+                },
+                {
+                    name: 'Structured Outputs',
+                    description:
+                        'Advanced structured data extraction and formatted output capabilities',
+                },
+                {
+                    name: 'Thinking Mode Toggle',
+                    description:
+                        'Full control over thinking mode activation for customized AI experience',
+                },
+                {
+                    name: 'Reasoning Chain',
+                    description:
+                        'Advanced chain-of-thought reasoning for complex problem solving and analysis',
                 },
                 {
                     name: 'Priority Support',

@@ -7,7 +7,7 @@ import { FeatureSlug } from '@repo/shared/types/subscription';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Brain, ChevronDown, Sparkles } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { MarkdownContent } from './thread/components/markdown-content';
 
 type ThinkingLogProps = {
@@ -19,12 +19,11 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
     const thinkingMode = useChatStore(state => state.thinkingMode);
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
 
-
-
     // Check if we have any reasoning data to show (legacy reasoning, reasoningDetails, or parts)
-    const hasReasoningData = threadItem.reasoning || 
-                             threadItem.reasoningDetails?.length || 
-                             threadItem.parts?.some(part => part.type === 'reasoning');
+    const hasReasoningData =
+        threadItem.reasoning ||
+        threadItem.reasoningDetails?.length ||
+        threadItem.parts?.some(part => part.type === 'reasoning');
 
     // Only show thinking log if:
     // 1. User has access to thinking mode (VT+)
@@ -61,9 +60,9 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                     <span className="text-sm font-medium text-[#BFB38F] drop-shadow-sm">
                         AI Reasoning Process
                     </span>
-                    <motion.span 
+                    <motion.span
                         whileHover={{ scale: 1.05 }}
-                        className="rounded-full bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 border border-[#D99A4E]/30 px-3 py-1 text-xs font-medium text-[#D99A4E] backdrop-blur-sm"
+                        className="rounded-full border border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 px-3 py-1 text-xs font-medium text-[#D99A4E] backdrop-blur-sm"
                     >
                         ✨ VT+ Feature
                     </motion.span>
@@ -92,108 +91,120 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                     >
                         <div className="mt-3 rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-[#262626] via-[#262626]/95 to-[#262626]/90 p-6 shadow-2xl backdrop-blur-md">
                             <div className="space-y-4">
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.1, duration: 0.3 }}
                                     className="flex items-center gap-3 border-b border-[#BFB38F]/20 pb-3"
                                 >
-                                    <Brain
-                                        size={16}
-                                        className="text-[#D99A4E] drop-shadow-sm"
-                                    />
+                                    <Brain size={16} className="text-[#D99A4E] drop-shadow-sm" />
                                     <span className="text-sm font-medium text-[#BFB38F]">
                                         Reasoning Process
                                     </span>
                                 </motion.div>
-                                
-                                <div className="max-h-96 space-y-4 overflow-y-auto scrollbar-thin scrollbar-track-[#262626] scrollbar-thumb-[#BFB38F]/30">
+
+                                <div className="scrollbar-thin scrollbar-track-[#262626] scrollbar-thumb-[#BFB38F]/30 max-h-96 space-y-4 overflow-y-auto">
                                     {/* Display legacy reasoning text with markdown */}
                                     {threadItem.reasoning && (
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 0.2, duration: 0.3 }}
                                             className="rounded-lg border border-[#BFB38F]/10 bg-[#262626]/50 p-4"
                                         >
-                                            <MarkdownContent 
-                                                content={threadItem.reasoning} 
+                                            <MarkdownContent
+                                                content={threadItem.reasoning}
                                                 isCompleted={true}
-                                                className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:bg-[#262626] [&_pre]:border-[#BFB38F]/20"
+                                                className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_b]:font-semibold [&_b]:text-[#D99A4E] dark:[&_b]:text-[#D99A4E] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:border-[#BFB38F]/20 [&_pre]:bg-[#262626] [&_strong]:font-semibold [&_strong]:text-[#D99A4E] dark:[&_strong]:text-[#D99A4E]"
                                             />
                                         </motion.div>
                                     )}
-                                    
+
                                     {/* Display AI SDK reasoning parts */}
-                                    {threadItem.parts?.filter(part => part.type === 'reasoning').map((part, index) => (
-                                        <motion.div 
-                                            key={index}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.2 + (index * 0.1), duration: 0.3 }}
-                                            className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/5 to-[#BFB38F]/5 p-4"
-                                        >
-                                            {part.details?.map((detail, detailIndex) => (
-                                                <div key={detailIndex} className="space-y-2">
-                                                    {detail.type === 'text' && detail.text && (
-                                                        <MarkdownContent 
-                                                            content={detail.text} 
-                                                            isCompleted={true}
-                                                            className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:bg-[#262626] [&_pre]:border-[#BFB38F]/20"
-                                                        />
-                                                    )}
-                                                    {detail.type === 'redacted' && (
-                                                        <div className="rounded-md bg-[#D99A4E]/10 border border-[#D99A4E]/20 p-3">
-                                                            <span className="text-sm font-medium text-[#D99A4E]">🔒 Redacted reasoning content</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </motion.div>
-                                    ))}
-                                    
+                                    {threadItem.parts
+                                        ?.filter(part => part.type === 'reasoning')
+                                        .map((part, index) => (
+                                            <motion.div
+                                                key={index}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{
+                                                    delay: 0.2 + index * 0.1,
+                                                    duration: 0.3,
+                                                }}
+                                                className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/5 to-[#BFB38F]/5 p-4"
+                                            >
+                                                {part.details?.map((detail, detailIndex) => (
+                                                    <div key={detailIndex} className="space-y-2">
+                                                        {detail.type === 'text' && detail.text && (
+                                                            <MarkdownContent
+                                                                content={detail.text}
+                                                                isCompleted={true}
+                                                                className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_b]:font-semibold [&_b]:text-[#D99A4E] dark:[&_b]:text-[#D99A4E] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:border-[#BFB38F]/20 [&_pre]:bg-[#262626] [&_strong]:font-semibold [&_strong]:text-[#D99A4E] dark:[&_strong]:text-[#D99A4E]"
+                                                            />
+                                                        )}
+                                                        {detail.type === 'redacted' && (
+                                                            <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3">
+                                                                <span className="text-sm font-medium text-[#D99A4E]">
+                                                                    🔒 Redacted reasoning content
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </motion.div>
+                                        ))}
+
                                     {/* Display structured reasoning details */}
                                     {threadItem.reasoningDetails?.map((detail, index) => (
-                                        <motion.div 
+                                        <motion.div
                                             key={index}
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.3 + (index * 0.1), duration: 0.3 }}
+                                            transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
                                             className="border-l-2 border-[#D99A4E]/50 pl-4"
                                         >
                                             {detail.type === 'text' && detail.text && (
                                                 <div className="space-y-2">
-                                                    <MarkdownContent 
-                                                        content={detail.text} 
+                                                    <MarkdownContent
+                                                        content={detail.text}
                                                         isCompleted={true}
-                                                        className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:bg-[#262626] [&_pre]:border-[#BFB38F]/20"
+                                                        className="text-sm text-[#BFB38F] [&>*]:text-[#BFB38F] [&_b]:font-semibold [&_b]:text-[#D99A4E] dark:[&_b]:text-[#D99A4E] [&_code]:bg-[#D99A4E]/20 [&_code]:text-[#D99A4E] [&_pre]:border-[#BFB38F]/20 [&_pre]:bg-[#262626] [&_strong]:font-semibold [&_strong]:text-[#D99A4E] dark:[&_strong]:text-[#D99A4E]"
                                                     />
                                                     {detail.signature && (
                                                         <div className="text-xs text-[#BFB38F]/70">
-                                                            <span className="font-semibold">Signature:</span> {detail.signature}
+                                                            <span className="font-semibold">
+                                                                Signature:
+                                                            </span>{' '}
+                                                            {detail.signature}
                                                         </div>
                                                     )}
                                                 </div>
                                             )}
                                             {detail.type === 'redacted' && detail.data && (
-                                                <div className="rounded-md bg-[#D99A4E]/10 border border-[#D99A4E]/20 p-3">
-                                                    <span className="text-sm font-medium text-[#D99A4E]">🔒 Redacted:</span>
-                                                    <span className="text-sm text-[#BFB38F]/80 ml-2">{detail.data}</span>
+                                                <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3">
+                                                    <span className="text-sm font-medium text-[#D99A4E]">
+                                                        🔒 Redacted:
+                                                    </span>
+                                                    <span className="ml-2 text-sm text-[#BFB38F]/80">
+                                                        {detail.data}
+                                                    </span>
                                                 </div>
                                             )}
                                         </motion.div>
                                     ))}
                                 </div>
-                                
-                                <motion.div 
+
+                                <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.4, duration: 0.3 }}
                                     className="border-t border-[#BFB38F]/20 pt-3"
                                 >
-                                    <p className="text-xs text-[#BFB38F]/60 flex items-center gap-2">
+                                    <p className="flex items-center gap-2 text-xs text-[#BFB38F]/60">
                                         <Sparkles size={12} className="text-[#D99A4E]" />
-                                        This reveals the AI's step-by-step reasoning before generating the response
+                                        This reveals the AI's step-by-step reasoning before
+                                        generating the response
                                     </p>
                                 </motion.div>
                             </div>

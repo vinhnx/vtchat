@@ -31,13 +31,7 @@ const getBaseURL = () => {
 // Create the auth client that will be used across all packages
 export const authClient = createAuthClient({
     baseURL: getBaseURL(),
-    fetchOptions: {
-        timeout: 8000, // Reduced from 10s to 8s
-        onError: async (error: any) => {
-            console.warn('[Auth Client] Request failed:', error);
-            // Don't throw here to prevent app crashes
-        },
-    },
+    // Remove fetchOptions from client config - this is server-side only
 });
 
 // Create optimized session getter with deduplication
@@ -46,7 +40,7 @@ const createOptimizedSessionGetter = () => {
         return authClient.getSession.bind(authClient);
     }
 
-    return async (options?: { disableCookieCache?: boolean }) => {
+    return async (options?: { query?: { disableCookieCache?: boolean } }) => {
         if (!requestDeduplicator) {
             return authClient.getSession(options);
         }
@@ -77,5 +71,5 @@ export const useUser = () => {
 
 // Helper to disable cookie cache for fresh data
 export const getSessionFresh = async () => {
-    return getSession({ disableCookieCache: true });
+    return getSession({ query: { disableCookieCache: true } });
 };

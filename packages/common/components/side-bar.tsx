@@ -7,7 +7,6 @@ import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
-    Avatar,
     Badge,
     Button,
     cn,
@@ -409,7 +408,7 @@ export const Sidebar = () => {
                                                 width={0}
                                                 height={0}
                                                 className="size-full shrink-0 rounded-full"
-                                                alt={user.name || user.email}
+                                                alt=""
                                             />
                                         ) : (
                                             <User
