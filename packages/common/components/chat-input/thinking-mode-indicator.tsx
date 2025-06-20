@@ -1,13 +1,12 @@
 'use client';
 
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useChatStore } from '@repo/common/store';
-import { SETTING_TABS, useAppStore } from '@repo/common/store';
+import { SETTING_TABS, useAppStore, useChatStore } from '@repo/common/store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Badge } from '@repo/ui';
-import { Brain, Zap, Settings } from 'lucide-react';
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { Brain, Settings } from 'lucide-react';
+import { useMemo } from 'react';
 
 export const ThinkingModeIndicator = () => {
     const thinkingMode = useChatStore(state => state.thinkingMode);
@@ -42,14 +41,11 @@ export const ThinkingModeIndicator = () => {
     };
 
     return (
-        <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-        >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Badge
                 variant="secondary"
                 onClick={handleClick}
-                className="flex cursor-pointer items-center gap-1 bg-gradient-to-r from-[#262626] to-[#262626]/95 border border-[#D99A4E]/30 text-xs text-[#D99A4E] transition-all duration-300 hover:border-[#BFB38F]/50 hover:shadow-[0_0_10px_rgba(217,154,78,0.1)] dark:hover:shadow-[0_0_15px_rgba(217,154,78,0.1)]"
+                className="flex cursor-pointer items-center gap-1 border border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 text-xs text-[#D99A4E] backdrop-blur-sm transition-all duration-300 hover:border-[#BFB38F]/50 hover:shadow-[0_0_10px_rgba(217,154,78,0.1)] dark:hover:shadow-[0_0_15px_rgba(217,154,78,0.1)]"
             >
                 <Brain size={12} className="animate-pulse" />
                 <span className="font-medium">Reasoning Mode</span>
