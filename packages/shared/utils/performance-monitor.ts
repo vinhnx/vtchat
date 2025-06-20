@@ -15,23 +15,29 @@ export class PerformanceMonitor {
 
     startTimer(operation: string): void {
         this.timers.set(operation, performance.now());
-        console.log(`[Performance] Started: ${operation}`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[Performance] Started: ${operation}`);
+        }
     }
 
     endTimer(operation: string): number {
         const startTime = this.timers.get(operation);
         if (!startTime) {
-            console.warn(`[Performance] No start time found for: ${operation}`);
+            if (process.env.NODE_ENV === 'development') {
+                console.warn(`[Performance] No start time found for: ${operation}`);
+            }
             return 0;
         }
 
         const duration = performance.now() - startTime;
         this.timers.delete(operation);
 
-        console.log(`[Performance] Completed: ${operation} (${duration.toFixed(2)}ms)`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[Performance] Completed: ${operation} (${duration.toFixed(2)}ms)`);
+        }
 
         // Log slow operations
-        if (duration > 2000) {
+        if (duration > 2000 && process.env.NODE_ENV === 'development') {
             console.warn(
                 `[Performance] SLOW OPERATION: ${operation} took ${duration.toFixed(2)}ms`
             );
@@ -48,7 +54,9 @@ export class PerformanceMonitor {
             return result;
         } catch (error) {
             this.endTimer(operation);
-            console.error(`[Performance] Failed: ${operation}`, error);
+            if (process.env.NODE_ENV === 'development') {
+                console.error(`[Performance] Failed: ${operation}`, error);
+            }
             throw error;
         }
     }
