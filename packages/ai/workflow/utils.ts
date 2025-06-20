@@ -15,6 +15,7 @@ import {
     GenerateTextWithReasoningResult, 
     ThinkingModeConfig
 } from '../types/reasoning';
+import { ReasoningType } from '../constants/reasoning';
 import { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
 
@@ -186,7 +187,7 @@ export const generateTextWithGeminiSearch = async ({
 
             if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
                 switch (reasoningType) {
-                    case 'gemini-thinking':
+                    case ReasoningType.GEMINI_THINKING:
                         // Gemini models use thinkingConfig
                         providerOptions.google = {
                             thinkingConfig: {
@@ -196,14 +197,14 @@ export const generateTextWithGeminiSearch = async ({
                         };
                         break;
 
-                    case 'anthropic-reasoning':
+                    case ReasoningType.ANTHROPIC_REASONING:
                         // Anthropic Claude 4 models support reasoning through beta features
                         providerOptions.anthropic = {
                             reasoning: true,
                         };
                         break;
 
-                    case 'deepseek-reasoning':
+                    case ReasoningType.DEEPSEEK_REASONING:
                         // DeepSeek reasoning models work through middleware extraction
                         // No special provider options needed as middleware handles <think> tags
                         break;
@@ -646,7 +647,7 @@ export const generateObject = async ({
 
         if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
             switch (reasoningType) {
-                case 'gemini-thinking':
+                case ReasoningType.GEMINI_THINKING:
                     // Gemini models use thinkingConfig
                     providerOptions.google = {
                         thinkingConfig: {
@@ -656,14 +657,14 @@ export const generateObject = async ({
                     };
                     break;
 
-                case 'anthropic-reasoning':
+                case ReasoningType.ANTHROPIC_REASONING:
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
                         reasoning: true,
                     };
                     break;
 
-                case 'deepseek-reasoning':
+                case ReasoningType.DEEPSEEK_REASONING:
                     // DeepSeek reasoning models work through middleware extraction
                     // No special provider options needed as middleware handles <think> tags
                     break;

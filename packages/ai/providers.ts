@@ -7,7 +7,6 @@ import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { ModelEnum, models } from './models';
 
@@ -148,9 +147,10 @@ export const getProviderInstance = (
         default:
             if (!apiKey) {
                 throw new Error(
-                    'OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys'
+                    'API key required for this model. Please add your API key in Settings → API Keys. Check the model provider documentation for instructions.'
                 );
             }
+            // Default to OpenAI-compatible for unknown providers
             return createOpenAI({
                 apiKey: apiKey,
             });

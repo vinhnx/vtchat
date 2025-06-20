@@ -6,6 +6,41 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+*   **Chat Input Button Selection Logic - COMPLETE ✅**:
+    *   **Issue Resolved**: Implemented comprehensive button selection logic to ensure only one button and only one mode is selected at a time
+    *   **Key Features**:
+        - Only one button can be active at any given time (webSearch, mathCalculator, structuredOutput)
+        - When a user selects a button, it becomes active and all other buttons are deactivated
+        - Chat mode selection also clears all other button states
+        - Buttons can be toggled on/off by clicking them again
+        - State is properly persisted to localStorage
+        - All button states are reset when changing chat modes
+    *   **Files Modified**:
+        - `packages/common/store/chat.store.ts` - Enhanced `setActiveButton` and `setChatMode` functions
+        - `packages/common/components/chat-input/__tests__/button-selection.test.ts` - Comprehensive test suite
+    *   **Implementation Details**:
+        - Updated `setActiveButton` function to handle mutual exclusion between buttons
+        - Modified `setChatMode` to reset all button states when chat mode changes
+        - Added localStorage persistence for button states
+        - Ensured proper state management with immediate UI updates
+    *   **Testing**: Created comprehensive test suite with 7 test cases covering all button selection scenarios
+    *   **Result**: Users can now only have one input mode active at a time, providing a clear and consistent UX
+
+*   **Auth Client 404 Error Fix - COMPLETE ✅**:
+    *   **Issue Resolved**: Fixed 404 error on `/api/auth/fetch-options/method/to-upper-case` caused by incorrect auth client configuration
+    *   **Root Cause**: The `createAuthClient` from better-auth was receiving invalid `fetchOptions` configuration with `timeout` and `onError` properties that don't belong in the client config
+    *   **Solution**: Removed `fetchOptions` from the auth client configuration as these are server-side only options
+    *   **Files Modified**: `packages/shared/lib/auth-client.ts`
+    *   **Additional Fix**: Updated parameter structure for `getSession` calls to use proper better-auth API format with `query` wrapper
+    *   **Result**: Auth client now correctly communicates with server endpoints without malformed URLs
+
+*   **React Fragment Error Fix - COMPLETE ✅**:
+    *   **Issue Resolved**: Fixed React console error "Invalid prop `onClick` supplied to `React.Fragment`"
+    *   **Root Cause**: `GatedFeatureAlert` component was trying to clone React Fragment children and add `onClick` props
+    *   **Solution**: Removed unnecessary `<div>` wrapper in `image-upload.tsx` when passing children to `GatedFeatureAlert`
+    *   **Files Modified**: `packages/common/components/chat-input/image-upload.tsx`
+    *   **Result**: Clean console output with no React Fragment prop errors
+
 *   **🚀 Vitest Testing Framework Integration - COMPLETE ✅**:
     *   **Full Monorepo Testing Setup**: Successfully integrated Vitest across the entire VTChat monorepo
     *   **Dependencies Installed**: Added Vitest 3.2.4, Testing Library, Happy DOM, and coverage tools
@@ -118,6 +153,36 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     *   Set up GitHub Actions CI integration for automated testing
     *   Configure coverage thresholds and quality gates
     *   Add integration tests for key user workflows
+
+## Recent Code Cleanup - COMPLETE ✅
+
+*   **SmoothStream Utility Removal - COMPLETE ✅**:
+    *   **Removed**: All SmoothStream utility code and exports from the `@repo/ai` package
+    *   **Files Removed**:
+        - `packages/ai/utils/smooth-stream.ts` - Main utility implementation
+        - `packages/ai/utils/__tests__/smooth-stream.test.ts` - Test suite
+    *   **Package Cleanup**:
+        - Removed exports from `packages/ai/package.json`
+        - Removed re-exports from `packages/ai/main.ts`
+        - Cleaned up memory-bank documentation references
+    *   **Result**: Simplified codebase without the streaming utility
+
+*   **Chat Input Button Selection Logic Removal - COMPLETE ✅**:
+    *   **Changed**: Removed the restriction that only one chat input button/mode can be selected at a time
+    *   **Store Updates**:
+        - Removed `ActiveButtonType` and `activeButton` state
+        - Replaced `setActiveButton` with individual setters: `setUseStructuredOutput`, `setUseDocumentParsing`, `setUseThinkingModeToggle`, `setUseReasoningChain`
+        - Added individual boolean states for each feature
+        - Updated `setChatMode` to reset all button states independently
+    *   **Component Updates**:
+        - Updated `structured-output-button.tsx` to use `useStructuredOutput` state
+        - Updated `document-parsing-button.tsx` to use `useDocumentParsing` state
+        - Updated `thinking-mode-toggle-button.tsx` to use `useThinkingModeToggle` state
+        - Updated `reasoning-chain-button.tsx` to use `useReasoningChain` state
+        - Updated `chat-actions.tsx` for web search and math calculator buttons
+    *   **Tests Cleanup**:
+        - Removed `button-selection.test.ts` as the activeButton logic no longer exists
+    *   **Result**: Users can now enable multiple chat input features simultaneously (e.g., web search + document parsing + structured output)
 
 ## UI Improvements Completed
 

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { supportsReasoning, getReasoningType } from '../models';
-import { ModelEnum } from '../models';
+import { describe, expect, it } from 'vitest';
+import { ReasoningType } from '../constants/reasoning';
+import { getReasoningType, ModelEnum, supportsReasoning } from '../models';
 
 describe('Reasoning Support', () => {
     describe('supportsReasoning', () => {
@@ -31,23 +31,31 @@ describe('Reasoning Support', () => {
 
     describe('getReasoningType', () => {
         it('should return gemini-thinking for Gemini models', () => {
-            expect(getReasoningType(ModelEnum.GEMINI_2_5_FLASH)).toBe('gemini-thinking');
-            expect(getReasoningType(ModelEnum.GEMINI_2_5_PRO)).toBe('gemini-thinking');
+            expect(getReasoningType(ModelEnum.GEMINI_2_5_FLASH)).toBe(
+                ReasoningType.GEMINI_THINKING
+            );
+            expect(getReasoningType(ModelEnum.GEMINI_2_5_PRO)).toBe(ReasoningType.GEMINI_THINKING);
         });
 
         it('should return deepseek-reasoning for DeepSeek models', () => {
-            expect(getReasoningType(ModelEnum.Deepseek_R1)).toBe('deepseek-reasoning');
-            expect(getReasoningType(ModelEnum.DEEPSEEK_R1_FREE)).toBe('deepseek-reasoning');
+            expect(getReasoningType(ModelEnum.Deepseek_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
+            expect(getReasoningType(ModelEnum.DEEPSEEK_R1_FREE)).toBe(
+                ReasoningType.DEEPSEEK_REASONING
+            );
         });
 
         it('should return anthropic-reasoning for Anthropic models', () => {
-            expect(getReasoningType(ModelEnum.CLAUDE_4_SONNET)).toBe('anthropic-reasoning');
-            expect(getReasoningType(ModelEnum.CLAUDE_4_OPUS)).toBe('anthropic-reasoning');
+            expect(getReasoningType(ModelEnum.CLAUDE_4_SONNET)).toBe(
+                ReasoningType.ANTHROPIC_REASONING
+            );
+            expect(getReasoningType(ModelEnum.CLAUDE_4_OPUS)).toBe(
+                ReasoningType.ANTHROPIC_REASONING
+            );
         });
 
         it('should return none for non-reasoning models', () => {
-            expect(getReasoningType(ModelEnum.GEMINI_2_0_FLASH)).toBe('none');
-            expect(getReasoningType(ModelEnum.GPT_4o)).toBe('none');
+            expect(getReasoningType(ModelEnum.GEMINI_2_0_FLASH)).toBe(ReasoningType.NONE);
+            expect(getReasoningType(ModelEnum.GPT_4o)).toBe(ReasoningType.NONE);
         });
     });
 });
@@ -57,7 +65,7 @@ describe('Reasoning Details Types', () => {
         const textDetail = {
             type: 'text' as const,
             text: 'Let me think about this step by step...',
-            signature: 'reasoning-step-1'
+            signature: 'reasoning-step-1',
         };
 
         expect(textDetail.type).toBe('text');
@@ -68,7 +76,7 @@ describe('Reasoning Details Types', () => {
     it('should handle redacted reasoning details', () => {
         const redactedDetail = {
             type: 'redacted' as const,
-            data: 'sensitive reasoning content'
+            data: 'sensitive reasoning content',
         };
 
         expect(redactedDetail.type).toBe('redacted');
@@ -81,20 +89,20 @@ describe('Reasoning Parts', () => {
         const messageParts = [
             {
                 type: 'text' as const,
-                text: 'Here is my response:'
+                text: 'Here is my response:',
             },
             {
                 type: 'reasoning' as const,
                 details: [
                     {
                         type: 'text' as const,
-                        text: 'First, I need to analyze the question...'
+                        text: 'First, I need to analyze the question...',
                     },
                     {
-                        type: 'redacted' as const
-                    }
-                ]
-            }
+                        type: 'redacted' as const,
+                    },
+                ],
+            },
         ];
 
         const textPart = messageParts[0];

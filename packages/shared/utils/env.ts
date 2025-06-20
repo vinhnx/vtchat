@@ -52,3 +52,67 @@ export function getCurrentEnvironmentType(): EnvironmentType {
 
     return EnvironmentType.DEVELOPMENT;
 }
+
+/**
+ * Development environment detection utilities
+ */
+export const isDevelopment = process.env.NODE_ENV === 'development';
+export const isProduction = process.env.NODE_ENV === 'production';
+
+/**
+ * Development-only console logging utility
+ */
+export const devLog = {
+    log: (...args: any[]) => {
+        if (isDevelopment) {
+            console.log(...args);
+        }
+    },
+    warn: (...args: any[]) => {
+        if (isDevelopment) {
+            console.warn(...args);
+        }
+    },
+    error: (...args: any[]) => {
+        if (isDevelopment) {
+            console.error(...args);
+        }
+    },
+    info: (...args: any[]) => {
+        if (isDevelopment) {
+            console.info(...args);
+        }
+    },
+    debug: (...args: any[]) => {
+        if (isDevelopment) {
+            console.debug(...args);
+        }
+    },
+};
+
+/**
+ * Production-safe console logging that only shows errors and warnings
+ */
+export const prodSafeLog = {
+    log: (...args: any[]) => {
+        if (isDevelopment) {
+            console.log(...args);
+        }
+    },
+    warn: (...args: any[]) => {
+        console.warn(...args);
+    },
+    error: (...args: any[]) => {
+        console.error(...args);
+    },
+    info: (...args: any[]) => {
+        if (isDevelopment) {
+            console.info(...args);
+        }
+    },
+    debug: (...args: any[]) => {
+        if (isDevelopment) {
+            console.debug(...args);
+        }
+    },
+};

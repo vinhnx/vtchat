@@ -77,6 +77,10 @@ export function useSubscriptionAccess() {
                     FeatureSlug.PRO_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
                     FeatureSlug.STRUCTURED_OUTPUT,
+                    FeatureSlug.THINKING_MODE,
+                    FeatureSlug.DOCUMENT_PARSING,
+                    FeatureSlug.THINKING_MODE_TOGGLE,
+                    FeatureSlug.REASONING_CHAIN,
                 ];
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;
