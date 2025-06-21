@@ -1129,6 +1129,8 @@ export const selectAvailableModel = (
             [ModelEnum.GPT_4_1]: 'OPENAI_API_KEY',
             [ModelEnum.GPT_4_1_Mini]: 'OPENAI_API_KEY',
             [ModelEnum.GPT_4_1_Nano]: 'OPENAI_API_KEY',
+            [ModelEnum.O3]: 'OPENAI_API_KEY',
+            [ModelEnum.O3_Mini]: 'OPENAI_API_KEY',
             [ModelEnum.O4_Mini]: 'OPENAI_API_KEY',
             // Anthropic models
             [ModelEnum.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',

@@ -39,6 +39,8 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'GPT-4.1': ChatMode.GPT_4_1,
         'GPT-4.1 Mini': ChatMode.GPT_4_1_Mini,
         'GPT-4.1 Nano': ChatMode.GPT_4_1_Nano,
+        'o3': ChatMode.O3,
+        'o3 mini': ChatMode.O3_Mini,
         'o4 mini': ChatMode.O4_Mini,
         // xAI models
         'Grok 3': ChatMode.GROK_3,
@@ -73,6 +75,8 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
 // Helper function to check if a model has reasoning capability
 export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
     const reasoningModels = [
+        ChatMode.O3,
+        ChatMode.O3_Mini,
         ChatMode.O4_Mini,
         ChatMode.DEEPSEEK_R1,
         ChatMode.CLAUDE_4_SONNET,
@@ -179,6 +183,20 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4o,
             webSearch: true,
             icon: undefined,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'o3',
+            value: ChatMode.O3,
+            webSearch: true,
+            icon: <Brain size={16} className="text-purple-500" />,
+            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'o3 mini',
+            value: ChatMode.O3_Mini,
+            webSearch: true,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
         {

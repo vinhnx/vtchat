@@ -1,7 +1,8 @@
 import { createTask } from '@repo/orchestrator';
 import { calculatorTools } from '../../../../apps/web/lib/tools/math';
-import { getModelFromChatMode } from '../../models';
+import { getModelFromChatMode, supportsOpenAIWebSearch } from '../../models';
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
+import { getWebSearchTool } from '../../tools';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, getHumanizedDate, handleError } from '../utils';
 
@@ -41,12 +42,15 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             ];
         }
 
-        if (webSearch) {
-            redirectTo('quickSearch');
+        const model = getModelFromChatMode(mode);
+
+        // Check if model supports OpenAI web search when web search is enabled
+        const supportsOpenAISearch = supportsOpenAIWebSearch(model);
+        if (webSearch && !supportsOpenAISearch) {
+            // For non-OpenAI models with web search, redirect to planner (or handle appropriately)
+            redirectTo('planner');
             return;
         }
-
-        const model = getModelFromChatMode(mode);
 
         let prompt = `You are a helpful assistant that can answer questions and help with tasks.
         Today is ${getHumanizedDate()}.
@@ -87,7 +91,22 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             },
         });
 
-        const tools = mathCalculator ? calculatorTools() : undefined;
+        // Combine tools based on enabled features
+        let tools: any = {};
+        
+        if (mathCalculator) {
+            tools = { ...tools, ...calculatorTools() };
+        }
+        
+        if (webSearch && supportsOpenAISearch) {
+            const webSearchTools = getWebSearchTool(model);
+            if (webSearchTools) {
+                tools = { ...tools, ...webSearchTools };
+            }
+        }
+        
+        // Convert to undefined if no tools are enabled
+        const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
 
         const response = await generateText({
             model,
@@ -96,7 +115,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             signal,
             toolChoice: 'auto',
             maxSteps: 2,
-            tools,
+            tools: finalTools,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
             onReasoning: (chunk, _fullText) => {

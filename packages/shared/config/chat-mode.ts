@@ -4,6 +4,8 @@ import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscript
 export enum ChatMode {
     Pro = 'pro',
     Deep = 'deep',
+    O3 = 'o3',
+    O3_Mini = 'o3-mini',
     O4_Mini = 'o4-mini',
     GPT_4_1 = 'gpt-4.1',
     GPT_4_1_Mini = 'gpt-4.1-mini',
@@ -81,6 +83,22 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: true,
+    },
+    [ChatMode.O3]: {
+        webSearch: true,
+        imageUpload: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.O3_Mini]: {
+        webSearch: true,
+        imageUpload: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.O4_Mini]: {
         webSearch: true,
@@ -333,6 +351,10 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'Anthropic Claude 4 Sonnet';
         case ChatMode.CLAUDE_4_OPUS:
             return 'Anthropic Claude 4 Opus';
+        case ChatMode.O3:
+            return 'OpenAI o3';
+        case ChatMode.O3_Mini:
+            return 'OpenAI o3 mini';
         case ChatMode.O4_Mini:
             return 'OpenAI o4 mini';
         case ChatMode.DEEPSEEK_R1:

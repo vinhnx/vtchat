@@ -140,6 +140,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 if (!isSignedIn) return false;
                 const apiKeys = get().keys;
                 switch (chatMode) {
+                    case ChatMode.O3:
+                    case ChatMode.O3_Mini:
                     case ChatMode.O4_Mini:
                     case ChatMode.GPT_4o_Mini:
                     case ChatMode.GPT_4o:

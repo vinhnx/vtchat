@@ -1,6 +1,7 @@
 import {
     getModelFromChatMode,
     supportsNativeWebSearch,
+    supportsOpenAIWebSearch,
     trimMessageHistoryEstimated,
 } from '@repo/ai/models';
 import { createTask } from '@repo/orchestrator';
@@ -31,11 +32,14 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
         } else if (mode === ChatMode.Pro) {
             redirectTo('gemini-web-search');
         } else if (webSearch) {
-            // Only support web search for Gemini models to save costs
+            // Support web search for both Gemini and OpenAI models
             if (supportsNativeWebSearch(model)) {
                 redirectTo('planner');
+            } else if (supportsOpenAIWebSearch(model)) {
+                // For OpenAI models with web search, use completion with OpenAI web search tools
+                redirectTo('completion');
             } else {
-                // For non-Gemini models with web search, redirect to completion with a note
+                // For non-supported models with web search, redirect to completion with a note
                 redirectTo('completion');
             }
         } else {
