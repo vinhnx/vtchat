@@ -30,6 +30,7 @@ import { ChatEditor } from './chat-input';
 import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
+import { MultiSessionPanel } from './multi-session-panel';
 import { UserProfileSettings } from './user-profile-settings';
 
 export const SettingsModal = () => {
@@ -100,13 +101,19 @@ export const SettingsModal = () => {
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
         },
+        {
+            title: 'Active Sessions',
+            description: 'Manage your device sessions and security',
+            key: SETTING_TABS.ACTIVE_SESSIONS,
+            component: <MultiSessionPanel />,
+        },
     ];
 
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
                 ariaTitle="Settings"
-                className="h-full max-h-[700px] !max-w-[900px] md:max-w-[900px] max-w-[calc(100vw-2rem)] mx-4 md:mx-auto overflow-x-hidden rounded-xl p-0"
+                className="mx-4 h-full max-h-[700px] !max-w-[900px] max-w-[calc(100vw-2rem)] overflow-x-hidden rounded-xl p-0 md:mx-auto md:max-w-[900px]"
             >
                 <div
                     ref={scrollRef}
@@ -114,7 +121,7 @@ export const SettingsModal = () => {
                 >
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
-                        <div className="flex items-center justify-between px-4 md:px-6 py-4">
+                        <div className="flex items-center justify-between px-4 py-4 md:px-6">
                             <div>
                                 <TypographyH2 className="text-xl font-semibold">
                                     Settings
@@ -130,23 +137,25 @@ export const SettingsModal = () => {
                     {/* Content */}
                     <div className="flex flex-col md:flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 md:min-h-full w-full md:w-[280px] shrink-0 md:border-r border-b md:border-b-0">
+                        <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[280px] md:border-b-0 md:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="flex md:flex-col md:space-y-2 md:p-4 p-2 gap-2 md:gap-0 overflow-x-auto md:overflow-x-visible">
+                            <nav className="flex gap-2 overflow-x-auto p-2 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
                                 {settingMenu.map(setting => (
                                     <button
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         className={cn(
-                                            'flex w-full md:w-auto items-start rounded-lg p-2 md:p-3 text-left transition-colors whitespace-nowrap md:whitespace-normal',
+                                            'flex w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                     >
                                         <div className="flex-1 space-y-1">
-                                            <div className="font-medium text-sm md:text-base">{setting.title}</div>
-                                            <div className="text-muted-foreground text-xs hidden md:block">
+                                            <div className="text-sm font-medium md:text-base">
+                                                {setting.title}
+                                            </div>
+                                            <div className="text-muted-foreground hidden text-xs md:block">
                                                 {setting.description}
                                             </div>
                                         </div>

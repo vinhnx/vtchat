@@ -37,7 +37,9 @@ class AuthPerformanceTester {
                 success: true,
             });
 
-            console.log(`✅ ${operation}: ${duration.toFixed(2)}ms${expectCached ? ' (cached)' : ''}`);
+            console.log(
+                `✅ ${operation}: ${duration.toFixed(2)}ms${expectCached ? ' (cached)' : ''}`
+            );
             return result;
         } catch (error) {
             const duration = performance.now() - startTime;
@@ -59,18 +61,10 @@ class AuthPerformanceTester {
         console.log('\n🧪 Testing client-side session caching...');
 
         // First call (should hit database/cookie)
-        await this.measureOperation(
-            'Client session fetch (first call)',
-            () => getSession(),
-            false
-        );
+        await this.measureOperation('Client session fetch (first call)', () => getSession(), false);
 
         // Second call (should use cache/cookie)
-        await this.measureOperation(
-            'Client session fetch (second call)',
-            () => getSession(),
-            true
-        );
+        await this.measureOperation('Client session fetch (second call)', () => getSession(), true);
 
         // Fresh fetch (should bypass cache)
         await this.measureOperation(
@@ -152,7 +146,7 @@ class AuthPerformanceTester {
 
         // Test useSession hook (this would need to be called in a React component)
         console.log('📝 useSession hook should be tested in a React component');
-        console.log('   - Check that multiple useSession calls don\'t create duplicate requests');
+        console.log("   - Check that multiple useSession calls don't create duplicate requests");
         console.log('   - Verify that session updates propagate to all components');
         console.log('   - Ensure loading states are properly managed');
     }
@@ -160,7 +154,7 @@ class AuthPerformanceTester {
     // Generate performance report
     generateReport(): void {
         console.log('\n📊 Performance Test Report');
-        console.log('=' .repeat(50));
+        console.log('='.repeat(50));
 
         const successful = this.results.filter(r => r.success);
         const failed = this.results.filter(r => !r.success);
@@ -171,7 +165,8 @@ class AuthPerformanceTester {
         console.log(`🚀 Cached operations: ${cached.length}`);
 
         if (successful.length > 0) {
-            const avgDuration = successful.reduce((sum, r) => sum + r.duration, 0) / successful.length;
+            const avgDuration =
+                successful.reduce((sum, r) => sum + r.duration, 0) / successful.length;
             console.log(`⏱️  Average duration: ${avgDuration.toFixed(2)}ms`);
 
             const fastOps = successful.filter(r => r.duration < 100);
@@ -214,8 +209,8 @@ export function AuthPerformanceTestComponent() {
     const { data: session, isPending, error } = authClient.useSession();
 
     return (
-        <div className="p-4 border rounded">
-            <h3 className="font-bold mb-2">Auth Performance Test</h3>
+        <div className="rounded border p-4">
+            <h3 className="mb-2 font-bold">Auth Performance Test</h3>
             <div className="space-y-2 text-sm">
                 <div>Loading: {isPending ? 'Yes' : 'No'}</div>
                 <div>Session: {session ? 'Authenticated' : 'Not authenticated'}</div>
@@ -224,7 +219,7 @@ export function AuthPerformanceTestComponent() {
             </div>
             <button
                 onClick={() => authPerformanceTester.runAll()}
-                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm"
+                className="mt-2 rounded bg-blue-500 px-3 py-1 text-sm text-white"
             >
                 Run Performance Tests
             </button>

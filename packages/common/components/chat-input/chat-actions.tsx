@@ -132,7 +132,7 @@ export function ChatModeButton() {
             <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
                 <DialogContent
                     ariaTitle={showGateAlert?.title || 'Upgrade Required'}
-                    className="max-w-md mx-4 rounded-xl"
+                    className="mx-4 max-w-md rounded-xl"
                 >
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
@@ -380,7 +380,7 @@ export function BYOKSetupModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="max-w-md mx-4 rounded-xl" ariaTitle="Setup API Key Required">
+            <DialogContent className="mx-4 max-w-md rounded-xl" ariaTitle="Setup API Key Required">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <BYOKIcon />

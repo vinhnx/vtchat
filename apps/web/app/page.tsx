@@ -1,17 +1,19 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, TypographyH1 } from '@repo/ui';
+import { Button, TypographyH1, Skeleton } from '@repo/ui';
 import Link from 'next/link';
 
 export default function Home() {
-    const { data: session } = useSession();
+    const { data: session, isPending } = useSession();
 
     return (
         <div className="flex min-h-screen flex-col">
             <header className="flex items-center justify-between border-b p-4">
                 <TypographyH1 className="text-xl font-semibold">VT</TypographyH1>
-                {session ? (
+                {isPending ? (
+                    <Skeleton className="h-8 w-20" />
+                ) : session ? (
                     <Link href="/chat">
                         {/* @ts-ignore - Type compatibility issue between React versions */}
                         <Button variant="default" size="sm">

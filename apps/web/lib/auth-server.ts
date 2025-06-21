@@ -1,6 +1,7 @@
 import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
 import { emailHarmony } from 'better-auth-harmony';
+import { multiSession } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './database';
 import * as schema from './database/schema';
@@ -21,7 +22,12 @@ export const auth = betterAuth({
             subscription: schema.userSubscriptions,
         },
     }),
-    plugins: [emailHarmony()],
+    plugins: [
+        emailHarmony(),
+        multiSession({
+            maximumSessions: 5,
+        }),
+    ],
     account: {
         accountLinking: {
             enabled: true,

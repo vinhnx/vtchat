@@ -12,9 +12,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { FileText, HelpCircle, LogOut, Settings, Shield, User } from 'lucide-react';
+import { FileText, HelpCircle, LogOut, Settings, Shield, User, Palette } from 'lucide-react';
 import Link from 'next/link';
 import { useAppStore } from '../store/app.store';
+import { ThemeSwitcher } from './theme-switcher';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { GatedFeatureAlert } from './gated-feature-alert';
 
 interface UserButtonProps {
     showName?: boolean;
@@ -62,6 +65,26 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     <User className="mr-2 h-4 w-4" />
                     Profile
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
+                {/* Theme */}
+                <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+                <div className="flex items-center justify-between px-2 py-1.5">
+                    <div className="flex items-center">
+                        <Palette className="mr-2 h-4 w-4" />
+                        <span className="text-sm">Theme</span>
+                    </div>
+                    <GatedFeatureAlert
+                        requiredFeature={FeatureSlug.DARK_THEME}
+                        title="Dark Theme Available in VT+"
+                        message="Dark theme is a VT+ feature. Please upgrade your plan to use this feature."
+                        onGatedClick={() => {
+                            console.log('User attempted to use dark theme without VT+ subscription');
+                        }}
+                    >
+                        <ThemeSwitcher className="scale-75" />
+                    </GatedFeatureAlert>
+                </div>
                 <DropdownMenuSeparator />
 
                 {/* Support & Legal */}

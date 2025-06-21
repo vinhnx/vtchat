@@ -109,8 +109,8 @@ export default function ParentLayout({
             <body className="bg-background text-foreground antialiased">
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="light"
-                    enableSystem={false}
+                    defaultTheme="system"
+                    enableSystem={true}
                     disableTransitionOnChange
                 >
                     <TooltipProvider>

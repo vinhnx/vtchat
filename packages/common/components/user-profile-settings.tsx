@@ -24,6 +24,7 @@ import {
     TypographyMuted,
 } from '@repo/ui';
 import { Github, ExternalLink, Unlink, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { MultiSessionPanel } from './multi-session-panel';
 import { useState, useEffect, useCallback } from 'react';
 
 export const UserProfileSettings = () => {
@@ -309,12 +310,12 @@ export const UserProfileSettings = () => {
                         // View Mode
                         <div className="space-y-4">
                             {/* Profile Avatar Section */}
-                            <div className="flex items-center gap-4 pb-4 border-b border-border/50">
+                            <div className="border-border/50 flex items-center gap-4 border-b pb-4">
                                 <Avatar
                                     name={session.user.name || session.user.email || 'User'}
                                     src={session.user.image || undefined}
                                     size="lg"
-                                    className="border-2 border-border/20"
+                                    className="border-border/20 border-2"
                                 />
                                 <div>
                                     <div className="text-foreground font-semibold">
@@ -385,7 +386,7 @@ export const UserProfileSettings = () => {
                                         <div className="border-border bg-muted/30 text-foreground mt-1 flex min-h-[42px] items-center rounded-lg border px-3 py-2.5 text-sm">
                                             {session.user.email}
                                         </div>
-                                        <div className="text-muted-foreground text-xs mt-1">
+                                        <div className="text-muted-foreground mt-1 text-xs">
                                             Email address cannot be changed
                                         </div>
                                     </FormLabel>
@@ -463,6 +464,9 @@ export const UserProfileSettings = () => {
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Multi-Session Control Section */}
+            <MultiSessionPanel />
 
             {/* Connected Accounts Section */}
             <Card>
