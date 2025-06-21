@@ -7,6 +7,11 @@ import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
 
 import {
     Badge,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
     cn,
     Dialog,
     DialogContent,
@@ -60,10 +65,6 @@ export const SettingsModal = () => {
 
     // If not signed in, show login prompt instead of settings
     if (!isSignedIn) {
-        const KeyIcon = ({ size, className }: { size?: number; className?: string }) => (
-            <Key size={size} className={className} />
-        );
-
         return (
             <LoginRequiredDialog
                 isOpen={isSettingsOpen}
@@ -261,16 +262,16 @@ export const ApiKeySettings = () => {
             </div>
 
             {/* Security Info Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">
                         Secure Local Storage
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+                    </CardTitle>
+                    <CardDescription>
                         Your API keys are protected and never leave your device
-                    </p>
-                </div>
-                <div className="p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-start gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
@@ -288,21 +289,21 @@ export const ApiKeySettings = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* API Keys Management */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="flex items-center gap-2 text-lg font-semibold">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                         <Settings className="h-5 w-5" />
                         Configure Providers
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+                    </CardTitle>
+                    <CardDescription>
                         Add API keys for the AI providers you want to use
-                    </p>
-                </div>
-                <div className="space-y-4 p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                     {apiKeyList.map(apiKey => (
                         <div
                             key={apiKey.key}
@@ -416,21 +417,21 @@ export const ApiKeySettings = () => {
                             </div>
                         </div>
                     ))}
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Help Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="flex items-center gap-2 text-lg font-semibold">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                         <Info className="h-5 w-5 text-blue-500" />
                         Quick Guide
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+                    </CardTitle>
+                    <CardDescription>
                         Everything you need to know about API key management
-                    </p>
-                </div>
-                <div className="p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
                     <div className="space-y-3">
                         {[
                             "API keys are stored securely in your browser's local storage",
@@ -446,8 +447,8 @@ export const ApiKeySettings = () => {
                             </div>
                         ))}
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };
@@ -484,15 +485,15 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             </div>
 
             {/* Theme Preferences Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">Visual Theme</TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">Visual Theme</CardTitle>
+                    <CardDescription>
                         Choose how you want VT to look. Your preference will be saved and applied
                         across all your devices.
-                    </p>
-                </div>
-                <div className="p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
@@ -506,20 +507,20 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             <ModeToggle onClose={onClose} />
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Interface Preferences Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">
                         Interface Preferences
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+                    </CardTitle>
+                    <CardDescription>
                         Customize your chat interface to match your workflow and preferences.
-                    </p>
-                </div>
-                <div className="p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
@@ -541,27 +542,27 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             </Button>
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Custom Instructions Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">
                         Custom Instructions
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+                    </CardTitle>
+                    <CardDescription>
                         Add personalized instructions that will be applied to every conversation.
                         This helps the AI understand your preferences and communication style.
-                    </p>
-                    <div className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
-                        <span>
-                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/
-                            {MAX_CHAR_LIMIT}
-                        </span>
-                    </div>
-                </div>
-                <div className="space-y-4 p-6">
+                        <div className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
+                            <span>
+                                Character limit: {editor?.storage?.characterCount?.characters() || 0}/
+                                {MAX_CHAR_LIMIT}
+                            </span>
+                        </div>
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                     <div className="border-border rounded-lg border p-4">
                         <ChatEditor editor={editor} />
                     </div>
@@ -575,8 +576,8 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };
