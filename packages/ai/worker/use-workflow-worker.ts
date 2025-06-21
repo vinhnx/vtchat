@@ -118,6 +118,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         mcpConfig,
         webSearch,
         mathCalculator,
+        charts,
         showSuggestions,
         thinkingMode,
     }: {
@@ -133,6 +134,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         mcpConfig?: Record<string, string>;
         webSearch?: boolean;
         mathCalculator?: boolean;
+        charts?: boolean;
         showSuggestions?: boolean;
         thinkingMode?: {
             enabled: boolean;
@@ -180,6 +182,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                     mcpConfig,
                     webSearch,
                     mathCalculator,
+                    charts,
                     showSuggestions,
                     thinkingMode,
                 },

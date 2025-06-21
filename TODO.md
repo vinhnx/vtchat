@@ -1,7 +1,58 @@
 # TODO
 
 
-1. `check models-data.json add new models and providers
+add weather and stock component sample https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
+
+--
+add chart benefits to /plus page
+add chart benefits to plus tier benefits section
+add chart benefits to creem_io feature
+add chart benefits to faq
+--
+
+https://github.com/e2b-dev/fragments
+
+--
+check copy markdown from chat thread message doesn't work
+
+--
+
+seems like all settings preference is not persisted in local storage, so it resets to default on page reload. please fix this issue.
+
+theme settings is not persisted in local storage, so it resets to default on page reload. please fix this issue.
+
+click on theme change button, it should toggle the theme between light and dark mode, and persist the selected theme in local storage so that it remains consistent across page reloads.
+
+--
+add dot pattern background to /plus page
+"use client";
+
+import { cn } from "@/lib/utils";
+import { DotPattern } from "@/components/magicui/dot-pattern";
+
+export function DotPatternLinearGradient() {
+  return (
+    <div className="relative flex size-full items-center justify-center overflow-hidden rounded-lg border bg-background p-20">
+      <DotPattern
+        width={20}
+        height={20}
+        cx={1}
+        cy={1}
+        cr={1}
+        className={cn(
+          "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] ",
+        )}
+      />
+    </div>
+  );
+}
+
+--
+
+https://magicui.design/docs/components/confetti#fireworks
+
+--
+1. check models-data.json add new models and providers
 2. also implement BYOK support for those providers.
 --
 https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces

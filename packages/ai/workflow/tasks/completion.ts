@@ -1,5 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { calculatorTools } from '../../../../apps/web/lib/tools/math';
+import { chartTools } from '../../../../apps/web/lib/tools/charts';
 import { getModelFromChatMode, supportsOpenAIWebSearch } from '../../models';
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
@@ -19,6 +20,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         const mode = context.get('mode');
         const webSearch = context.get('webSearch') || false;
         const mathCalculator = context.get('mathCalculator') || false;
+        const charts = context.get('charts') || false;
 
         let messages =
             context
@@ -55,6 +57,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         let prompt = `You are a helpful assistant that can answer questions and help with tasks.
         Today is ${getHumanizedDate()}.
         ${mathCalculator ? MATH_CALCULATOR_PROMPT : ''}
+        ${charts ? 'You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart.' : ''}
         `;
 
         const reasoningBuffer = new ChunkBuffer({
@@ -98,6 +101,13 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             tools = { ...tools, ...calculatorTools() };
         }
         
+        if (charts) {
+            console.log('🎨 Charts enabled, adding chart tools...');
+            const chartToolsObj = chartTools();
+            console.log('📊 Available chart tools:', Object.keys(chartToolsObj));
+            tools = { ...tools, ...chartToolsObj };
+        }
+        
         if (webSearch && supportsOpenAISearch) {
             const webSearchTools = getWebSearchTool(model);
             if (webSearchTools) {
@@ -107,6 +117,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         
         // Convert to undefined if no tools are enabled
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
+        console.log('🔧 Final tools for AI:', finalTools ? Object.keys(finalTools) : 'none');
 
         const response = await generateText({
             model,
@@ -155,7 +166,9 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                                 data: {
                                     toolName: toolCall.toolName,
                                     args: toolCall.args,
-                                    type: 'math_calculator',
+                                    type: charts && Object.keys(chartTools()).includes(toolCall.toolName) 
+                                        ? 'charts' 
+                                        : mathCalculator ? 'math_calculator' : 'unknown',
                                 },
                                 status: 'COMPLETED',
                             },
@@ -186,7 +199,9 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                             toolResult: {
                                 data: {
                                     result: toolResult.result,
-                                    type: 'math_calculator',
+                                    type: charts && Object.keys(chartTools()).includes(toolResult.toolName || '') 
+                                        ? 'charts' 
+                                        : mathCalculator ? 'math_calculator' : 'unknown',
                                 },
                                 status: 'COMPLETED',
                             },

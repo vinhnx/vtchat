@@ -4,6 +4,7 @@ import {
     mdxComponents,
     useMdxChunker,
 } from '@repo/common/components';
+
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
 import { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
@@ -148,6 +149,8 @@ export const MarkdownContent = memo(
                 </div>
             );
         }
+
+
 
         return (
             <div className={cn('', markdownStyles, className)}>

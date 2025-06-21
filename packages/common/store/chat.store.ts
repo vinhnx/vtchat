@@ -91,11 +91,13 @@ const loadInitialData = async () => {
                 model: models[0].id,
                 useWebSearch: false,
                 useMathCalculator: false,
+                useCharts: false,
                 showSuggestions: true,
                 chatMode: ChatMode.GEMINI_2_0_FLASH,
             },
             useWebSearch: false,
             useMathCalculator: false,
+            useCharts: false,
             chatMode: ChatMode.GEMINI_2_0_FLASH,
             customInstructions: '',
             showSuggestions: false,
@@ -111,6 +113,7 @@ const loadInitialData = async () => {
         model: models[0].id,
         useWebSearch: false,
         useMathCalculator: false,
+        useCharts: false,
         showSuggestions: true,
         chatMode: ChatMode.GEMINI_2_0_FLASH,
         currentThreadId: null,
@@ -125,6 +128,7 @@ const loadInitialData = async () => {
     const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
     const useMathCalculator =
         typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
+    const useCharts = typeof config.useCharts === 'boolean' ? config.useCharts : false;
     const customInstructions = config.customInstructions || '';
     const thinkingMode = config.thinkingMode || {
         enabled: THINKING_MODE.DEFAULT_ENABLED,
@@ -151,6 +155,7 @@ const loadInitialData = async () => {
         config,
         useWebSearch,
         useMathCalculator,
+        useCharts,
         chatMode,
         model,
         customInstructions,
@@ -160,13 +165,14 @@ const loadInitialData = async () => {
     };
 };
 
-type ActiveButtonType = 'webSearch' | 'mathCalculator' | 'structuredOutput' | null;
+type ActiveButtonType = 'webSearch' | 'mathCalculator' | 'charts' | 'structuredOutput' | null;
 
 type State = {
     model: Model;
     isGenerating: boolean;
     useWebSearch: boolean;
     useMathCalculator: boolean;
+    useCharts: boolean;
     customInstructions: string;
     showSuggestions: boolean;
     editor: any;
@@ -255,6 +261,7 @@ type Actions = {
     setCurrentSources: (sources: string[]) => void;
     setUseWebSearch: (useWebSearch: boolean) => void;
     setUseMathCalculator: (useMathCalculator: boolean) => void;
+    setUseCharts: (useCharts: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
     // Button selection management
     setActiveButton: (button: ActiveButtonType) => void;
@@ -904,6 +911,14 @@ export const useChatStore = create(
             });
         },
 
+        setUseCharts: (useCharts: boolean) => {
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
+            set(state => {
+                state.useCharts = useCharts;
+            });
+        },
+
         setActiveButton: (button: ActiveButtonType) => {
             set(state => {
                 // When setting a new active button, deactivate other buttons
@@ -912,12 +927,28 @@ export const useChatStore = create(
                     state.useWebSearch = !state.useWebSearch;
                     if (state.useWebSearch) {
                         state.useMathCalculator = false;
+                        state.useCharts = false;
                     }
                 } else if (button === 'mathCalculator') {
                     state.activeButton = state.useMathCalculator ? null : 'mathCalculator';
                     state.useMathCalculator = !state.useMathCalculator;
                     if (state.useMathCalculator) {
                         state.useWebSearch = false;
+                        state.useCharts = false;
+                    }
+                } else if (button === 'charts') {
+                    // Ensure useCharts is properly initialized
+                    if (state.useCharts === undefined) {
+                        console.log('🔧 useCharts was undefined, initializing to false');
+                        state.useCharts = false;
+                    }
+                    console.log('🔧 Before toggle - useCharts:', state.useCharts);
+                    state.activeButton = state.useCharts ? null : 'charts';
+                    state.useCharts = !state.useCharts;
+                    console.log('🔧 After toggle - useCharts:', state.useCharts);
+                    if (state.useCharts) {
+                        state.useWebSearch = false;
+                        state.useMathCalculator = false;
                     }
                 } else if (button === 'structuredOutput') {
                     // For structured output, we'll just set it as active
@@ -927,6 +958,7 @@ export const useChatStore = create(
                     if (state.activeButton === 'structuredOutput') {
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
+                        state.useCharts = false;
                     }
                 } else {
                     state.activeButton = button;
@@ -940,6 +972,7 @@ export const useChatStore = create(
                         ...existingConfig,
                         useWebSearch: state.useWebSearch,
                         useMathCalculator: state.useMathCalculator,
+                        useCharts: state.useCharts,
                     })
                 );
             });

@@ -20,6 +20,7 @@ import { ShineText } from '../shine-text';
 import { StructuredDataDisplay } from '../structured-data-display';
 import {
     ChatModeButton,
+    ChartsButton,
     GeneratingStatus,
     MathCalculatorButton,
     SendStopButton,
@@ -73,6 +74,7 @@ export const ChatInput = ({
     const createThread = useChatStore(state => state.createThread);
     const useWebSearch = useChatStore(state => state.useWebSearch);
     const useMathCalculator = useChatStore(state => state.useMathCalculator);
+    const useCharts = useChatStore(state => state.useCharts);
 
     const isGenerating = useChatStore(state => state.isGenerating);
     const isChatPage = usePathname().startsWith('/chat');
@@ -154,6 +156,7 @@ export const ChatInput = ({
 
         console.log('threadItems', threadItems);
 
+        console.log('🚀 Sending to handleSubmit with flags:', { useWebSearch, useMathCalculator, useCharts });
         handleSubmit({
             formData,
             newThreadId: threadId,
@@ -162,6 +165,7 @@ export const ChatInput = ({
             ),
             useWebSearch,
             useMathCalculator,
+            useCharts,
         });
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
@@ -232,6 +236,7 @@ export const ChatInput = ({
                                                         <>
                                                             <WebSearchButton />
                                                             <MathCalculatorButton />
+                                                            <ChartsButton />
                                                             <DocumentUploadButton />
                                                             <StructuredOutputButton />
                                                             <ImageUpload
