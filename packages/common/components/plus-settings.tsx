@@ -1,7 +1,7 @@
 'use client';
 
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useChatStore } from '@repo/common/store';
+import { useAppStore } from '@repo/common/store';
 import { VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { FeatureSlug } from '@repo/shared/types/subscription';
@@ -40,21 +40,17 @@ import {
 
 export const PlusSettings = () => {
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
-    const thinkingMode = useChatStore(state => state.thinkingMode);
-    const setThinkingMode = useChatStore(state => state.setThinkingMode);
+    const thinkingMode = useAppStore(state => state.thinkingMode);
+    const setThinkingMode = useAppStore(state => state.setThinkingMode);
 
     const setThinkingModeEnabled = (enabled: boolean) => {
         setThinkingMode({
             enabled,
-            budget: thinkingMode.budget,
-            includeThoughts: thinkingMode.includeThoughts,
         });
     };
 
     const setThinkingModeIncludeThoughts = (includeThoughts: boolean) => {
         setThinkingMode({
-            enabled: thinkingMode.enabled,
-            budget: thinkingMode.budget,
             includeThoughts,
         });
     };
@@ -308,14 +304,12 @@ export const PlusSettings = () => {
                                             value={[thinkingMode.budget]}
                                             onValueChange={([value]) =>
                                                 setThinkingMode({
-                                                    enabled: thinkingMode.enabled,
                                                     budget: value,
-                                                    includeThoughts: thinkingMode.includeThoughts,
                                                 })
                                             }
                                             min={THINKING_MODE.MIN_BUDGET}
                                             max={THINKING_MODE.MAX_BUDGET}
-                                            step={THINKING_MODE.BUDGET_STEP}
+                                            step={1000}
                                             className="w-full"
                                         />
                                         <div className="text-muted-foreground flex justify-between text-xs">

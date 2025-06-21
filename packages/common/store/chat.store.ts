@@ -125,22 +125,15 @@ const loadInitialData = async () => {
     });
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
-    const useWebSearch = typeof config.useWebSearch === 'boolean' ? config.useWebSearch : false;
-    const useMathCalculator =
-        typeof config.useMathCalculator === 'boolean' ? config.useMathCalculator : false;
-    const useCharts = typeof config.useCharts === 'boolean' ? config.useCharts : false;
-    const customInstructions = config.customInstructions || '';
-    const thinkingMode = config.thinkingMode || {
-        enabled: THINKING_MODE.DEFAULT_ENABLED,
-        budget: THINKING_MODE.DEFAULT_BUDGET,
-        includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
-    };
     
-    const geminiCaching = config.geminiCaching || {
-        enabled: false, // Disabled by default, VT+ feature
-        ttlSeconds: 300, // 5 minutes default
-        maxCaches: 10, // Maximum 10 cached conversations
-    };
+    // Get settings from app store
+    const appStore = useAppStore.getState();
+    const useWebSearch = appStore.useWebSearch;
+    const useMathCalculator = appStore.useMathCalculator;
+    const useCharts = appStore.useCharts;
+    const customInstructions = appStore.customInstructions;
+    const thinkingMode = appStore.thinkingMode;
+    const geminiCaching = appStore.geminiCaching;
 
     // Load and validate the persisted model
     const persistedModelId = config.model;
@@ -211,6 +204,8 @@ type State = {
         ttlSeconds: number; // Cache time-to-live in seconds
         maxCaches: number; // Maximum number of cached conversations
     };
+    // Internal cache for selector results to prevent infinite loops
+    _cache?: Record<string, { result: any; length: number }>;
 };
 
 type Actions = {
@@ -813,11 +808,16 @@ export const useChatStore = create(
         },
 
         setCustomInstructions: (customInstructions: string) => {
+            // Save to simple settings
+            useAppStore.getState().setCustomInstructions(customInstructions);
+            
+            // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, customInstructions })
             );
+            
             set(state => {
                 state.customInstructions = customInstructions;
             });
@@ -883,9 +883,15 @@ export const useChatStore = create(
         setShowSuggestions: (showSuggestions: boolean) => {
             // Always disable suggestions regardless of input value
             const disabledSuggestions = false;
+            
+            // Save to simple settings
+            useAppStore.getState().setShowSuggestions(!disabledSuggestions);
+            
+            // Also maintain backwards compatibility with localStorage
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
-                JSON.stringify({ showSuggestions: disabledSuggestions })
+                JSON.stringify({ ...existingConfig, showSuggestions: disabledSuggestions })
             );
             set(state => {
                 state.showSuggestions = disabledSuggestions;
@@ -893,6 +899,10 @@ export const useChatStore = create(
         },
 
         setUseWebSearch: (useWebSearch: boolean) => {
+            // Save to simple settings
+            useAppStore.getState().setUseWebSearch(useWebSearch);
+            
+            // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set(state => {
@@ -901,6 +911,10 @@ export const useChatStore = create(
         },
 
         setUseMathCalculator: (useMathCalculator: boolean) => {
+            // Save to simple settings
+            useAppStore.getState().setUseMathCalculator(useMathCalculator);
+            
+            // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
@@ -912,6 +926,10 @@ export const useChatStore = create(
         },
 
         setUseCharts: (useCharts: boolean) => {
+            // Save to simple settings
+            useAppStore.getState().setUseCharts(useCharts);
+            
+            // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
             set(state => {
@@ -1026,13 +1044,17 @@ export const useChatStore = create(
             budget?: number;
             includeThoughts?: boolean;
         }) => {
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             const thinkingMode = {
                 enabled: config.enabled,
                 budget: config.budget ?? 2048, // Default budget
                 includeThoughts: config.includeThoughts ?? true,
             };
 
+            // Save to simple settings
+            useAppStore.getState().setThinkingMode(thinkingMode);
+
+            // Also maintain backwards compatibility with localStorage
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, thinkingMode }));
 
             set(state => {
@@ -1045,13 +1067,17 @@ export const useChatStore = create(
             ttlSeconds?: number;
             maxCaches?: number;
         }) => {
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             const geminiCaching = {
                 enabled: config.enabled,
                 ttlSeconds: config.ttlSeconds ?? 300, // 5 minutes default
                 maxCaches: config.maxCaches ?? 10,
             };
 
+            // Save to simple settings
+            useAppStore.getState().setGeminiCaching(geminiCaching);
+
+            // Also maintain backwards compatibility with localStorage
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, geminiCaching }));
 
             set(state => {
@@ -1306,6 +1332,9 @@ export const useChatStore = create(
                     }
                 });
                 set(state => {
+                    // Clear cache since we're modifying threadItems
+                    state._cache = {};
+                    
                     if (state.threadItems.find(t => t.id === threadItem.id)) {
                         state.threadItems = state.threadItems.map(t =>
                             t.id === threadItem.id ? threadItem : t
@@ -1354,6 +1383,9 @@ export const useChatStore = create(
 
                 // Update UI state immediately
                 set(state => {
+                    // Clear cache since we're modifying threadItems
+                    state._cache = {};
+                    
                     const index = state.threadItems.findIndex(t => t.id === threadItem.id);
                     if (index !== -1) {
                         state.threadItems[index] = updatedItem;
@@ -1512,6 +1544,17 @@ export const useChatStore = create(
 
         getPreviousThreadItems: threadId => {
             const state = get();
+            const cacheKey = `prev_${threadId}`;
+            
+            // Simple cache to prevent infinite loops
+            if (state._cache?.[cacheKey]) {
+                const cached = state._cache[cacheKey];
+                // Check if thread items for this thread have changed
+                const currentItems = state.threadItems.filter(item => item.threadId === threadId);
+                if (cached.length === currentItems.length) {
+                    return cached.result;
+                }
+            }
 
             const allThreadItems = state.threadItems
                 .filter(item => item.threadId === threadId)
@@ -1519,22 +1562,45 @@ export const useChatStore = create(
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
 
-            if (allThreadItems.length > 1) {
-                return allThreadItems.slice(0, -1);
-            }
+            const result = allThreadItems.length > 1 ? allThreadItems.slice(0, -1) : [];
+            
+            // Cache the result
+            set(state => {
+                if (!state._cache) state._cache = {};
+                state._cache[cacheKey] = { result, length: allThreadItems.length };
+            });
 
-            return [];
+            return result;
         },
 
         getCurrentThreadItem: () => {
             const state = get();
+            const cacheKey = `current_${state.currentThreadId}`;
+            
+            // Simple cache to prevent infinite loops
+            if (state._cache?.[cacheKey]) {
+                const cached = state._cache[cacheKey];
+                const currentItems = state.threadItems.filter(item => item.threadId === state.currentThreadId);
+                if (cached.length === currentItems.length) {
+                    return cached.result;
+                }
+            }
 
             const allThreadItems = state.threadItems
                 .filter(item => item.threadId === state.currentThreadId)
                 .sort((a, b) => {
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
-            return allThreadItems[allThreadItems.length - 1] || null;
+            
+            const result = allThreadItems[allThreadItems.length - 1] || null;
+            
+            // Cache the result
+            set(state => {
+                if (!state._cache) state._cache = {};
+                state._cache[cacheKey] = { result, length: allThreadItems.length };
+            });
+
+            return result;
         },
 
         getCurrentThread: () => {

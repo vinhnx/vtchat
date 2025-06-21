@@ -1,10 +1,11 @@
 'use client';
 
+import React from 'react';
 import { MotionSkeleton, GatedFeatureAlert } from '@repo/common/components';
 import {
-    useMathCalculator,
     useSubscriptionAccess,
     useWebSearch as useWebSearchHook,
+    useMathCalculator as useMathCalculatorHook,
 } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
@@ -27,7 +28,7 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Calculator, ChevronDown, Globe, Paperclip, Square, BarChart3 } from 'lucide-react';
+import { ArrowUp, ChevronDown, Globe, Paperclip, Square, BarChart3, Calculator } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
@@ -223,33 +224,52 @@ export function WebSearchButton() {
     );
 }
 
-export function MathCalculatorButton() {
-    const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
-    const setActiveButton = useChatStore(state => state.setActiveButton);
 
-    // Always show math calculator for all users (including free users)
+
+export function MathCalculatorButton() {
+    const { useMathCalculator: mathCalculatorEnabled } = useMathCalculatorHook();
+    const setActiveButton = useChatStore(state => state.setActiveButton);
+    const { canAccess } = useSubscriptionAccess();
+
+    // Check if user has access to math calculator feature
+    const hasMathCalculatorAccess = canAccess(FeatureSlug.MATH_CALCULATOR);
+
     const handleMathCalculatorToggle = () => {
+        if (!hasMathCalculatorAccess) {
+            // Show upgrade dialog if user doesn't have access
+            console.log('🧮 Math calculator feature requires VT+ subscription');
+            return;
+        }
+        console.log('🧮 Math calculator button clicked, current state:', mathCalculatorEnabled);
         setActiveButton('mathCalculator');
+        console.log('🧮 Math calculator button toggled');
     };
 
     return (
         <>
-            <Button
-                size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
-                tooltip={mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'}
-                variant={mathCalculatorEnabled ? 'secondary' : 'ghost'}
-                className={cn('gap-2', mathCalculatorEnabled && 'bg-green-500/10 text-green-500')}
-                onClick={handleMathCalculatorToggle}
+            <GatedFeatureAlert
+                requiredFeature={FeatureSlug.MATH_CALCULATOR}
+                message="Math calculator requires VT+ subscription"
             >
-                <Calculator
-                    size={16}
-                    strokeWidth={2}
-                    className={cn(
-                        mathCalculatorEnabled ? '!text-green-500' : 'text-muted-foreground'
-                    )}
-                />
-                {mathCalculatorEnabled && <p className="text-xs">Math Calculator</p>}
-            </Button>
+                <Button
+                    size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
+                    tooltip={mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'}
+                    variant={mathCalculatorEnabled ? 'secondary' : 'ghost'}
+                    className={cn('gap-2', mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500')}
+                    onClick={handleMathCalculatorToggle}
+                    disabled={!hasMathCalculatorAccess}
+                >
+                    <Calculator
+                        size={16}
+                        strokeWidth={2}
+                        className={cn(
+                            mathCalculatorEnabled ? '!text-orange-500' : 'text-muted-foreground',
+                            !hasMathCalculatorAccess && 'opacity-50'
+                        )}
+                    />
+                    {mathCalculatorEnabled && hasMathCalculatorAccess && <p className="text-xs">Calculator</p>}
+                </Button>
+            </GatedFeatureAlert>
         </>
     );
 }
@@ -403,7 +423,7 @@ export function BYOKSetupModal({
 
             // Verify the key was saved by checking storage immediately
             setTimeout(() => {
-                const savedKeys = getAllKeys();
+                const savedKeys = getAllKeys;
                 if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
                     console.log(`[BYOK Modal] API key for ${requiredApiKey} verified as saved`);
                 } else {

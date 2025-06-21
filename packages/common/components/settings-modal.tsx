@@ -1,5 +1,5 @@
 'use client';
-import { useChatStore } from '@repo/common/store';
+
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, Button } from '@repo/ui';
 import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
@@ -459,8 +459,8 @@ interface PersonalizationSettingsProps {
 }
 
 export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProps) => {
-    const customInstructions = useChatStore(state => state.customInstructions);
-    const setCustomInstructions = useChatStore(state => state.setCustomInstructions);
+    const customInstructions = useAppStore(state => state.customInstructions);
+    const setCustomInstructions = useAppStore(state => state.setCustomInstructions);
     const showExamplePrompts = useAppStore(state => state.showExamplePrompts);
     const setShowExamplePrompts = useAppStore(state => state.setShowExamplePrompts);
 

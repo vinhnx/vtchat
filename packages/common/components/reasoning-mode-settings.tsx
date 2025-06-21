@@ -2,7 +2,7 @@
 
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useChatStore } from '@repo/common/store';
+import { useChatStore, useAppStore } from '@repo/common/store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Label, Slider, Switch, TypographyH3, TypographyH4 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,8 +10,8 @@ import { Brain, Sparkles, Zap } from 'lucide-react';
 import { useMemo } from 'react';
 
 export const ReasoningModeSettings = () => {
-    const thinkingMode = useChatStore(state => state.thinkingMode);
-    const setThinkingMode = useChatStore(state => state.setThinkingMode);
+    const thinkingMode = useAppStore(state => state.thinkingMode);
+    const setThinkingMode = useAppStore(state => state.setThinkingMode);
     const chatMode = useChatStore(state => state.chatMode);
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
 
@@ -43,21 +43,18 @@ export const ReasoningModeSettings = () => {
 
     const handleToggleEnabled = (enabled: boolean) => {
         setThinkingMode({
-            ...thinkingMode,
             enabled,
         });
     };
 
     const handleToggleIncludeThoughts = (includeThoughts: boolean) => {
         setThinkingMode({
-            ...thinkingMode,
             includeThoughts,
         });
     };
 
     const handleBudgetChange = (budget: number[]) => {
         setThinkingMode({
-            ...thinkingMode,
             budget: budget[0],
         });
     };

@@ -1,11 +1,11 @@
 import { getModelFromChatMode, supportsNativeWebSearch, supportsOpenAIWebSearch } from '@repo/ai/models';
 import { useMemo } from 'react';
-import { useChatStore } from '../store';
+import { useChatStore, useAppStore } from '../store';
 
 export const useWebSearch = () => {
     const chatMode = useChatStore(state => state.chatMode);
-    const useWebSearch = useChatStore(state => state.useWebSearch);
-    const setUseWebSearch = useChatStore(state => state.setUseWebSearch);
+    const useWebSearch = useAppStore(state => state.useWebSearch);
+    const setUseWebSearch = useAppStore(state => state.setUseWebSearch);
 
     const currentModel = useMemo(() => getModelFromChatMode(chatMode), [chatMode]);
 

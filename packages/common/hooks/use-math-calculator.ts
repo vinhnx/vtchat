@@ -1,8 +1,8 @@
-import { useChatStore } from '../store';
+import { useAppStore } from '../store';
 
 export const useMathCalculator = () => {
-    const mathCalculatorEnabled = useChatStore(state => state.useMathCalculator);
-    const setMathCalculatorEnabled = useChatStore(state => state.setUseMathCalculator);
+    const mathCalculatorEnabled = useAppStore(state => state.useMathCalculator);
+    const setMathCalculatorEnabled = useAppStore(state => state.setUseMathCalculator);
 
     return {
         useMathCalculator: mathCalculatorEnabled,

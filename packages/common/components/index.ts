@@ -50,7 +50,7 @@ export * from './ssr-error-boundary';
 export * from './structured-data-display';
 export * from './table-of-messages';
 export * from './text-shimmer';
-export * from './theme-enforcer';
+
 export * from './theme-provider';
 export * from './theme-switcher';
 export * from './thinking-log';

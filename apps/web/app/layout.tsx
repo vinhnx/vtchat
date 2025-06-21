@@ -111,7 +111,9 @@ export default function ParentLayout({
                     attribute="class"
                     defaultTheme="system"
                     enableSystem={true}
-                    disableTransitionOnChange
+                    disableTransitionOnChange={false}
+                    storageKey="vt-theme"
+                    enableColorScheme={false}
                 >
                     <TooltipProvider>
                         <SSRErrorBoundary>

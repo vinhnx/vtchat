@@ -6,7 +6,7 @@ import {
     useFeatureAccess,
     useVtPlusAccess,
 } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
+import { useAppStore } from '@repo/common/store';
 import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT, THINKING_MODE } from '@repo/shared/constants';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
@@ -63,10 +63,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
 
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
     const hasGeminiCachingAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
-    const thinkingMode = useChatStore(state => state.thinkingMode);
-    const setThinkingMode = useChatStore(state => state.setThinkingMode);
-    const geminiCaching = useChatStore(state => state.geminiCaching);
-    const setGeminiCaching = useChatStore(state => state.setGeminiCaching);
+    const thinkingMode = useAppStore(state => state.thinkingMode);
+    const setThinkingMode = useAppStore(state => state.setThinkingMode);
+    const geminiCaching = useAppStore(state => state.geminiCaching);
+    const setGeminiCaching = useAppStore(state => state.setGeminiCaching);
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
@@ -74,15 +74,11 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const setThinkingModeEnabled = (enabled: boolean) => {
         setThinkingMode({
             enabled,
-            budget: thinkingMode.budget,
-            includeThoughts: thinkingMode.includeThoughts,
         });
     };
 
     const setThinkingModeIncludeThoughts = (includeThoughts: boolean) => {
         setThinkingMode({
-            enabled: thinkingMode.enabled,
-            budget: thinkingMode.budget,
             includeThoughts,
         });
     };
@@ -353,10 +349,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     value={[thinkingMode.budget]}
                                                     onValueChange={([value]) =>
                                                         setThinkingMode({
-                                                            enabled: thinkingMode.enabled,
                                                             budget: value,
-                                                            includeThoughts:
-                                                                thinkingMode.includeThoughts,
                                                         })
                                                     }
                                                     min={THINKING_MODE.MIN_BUDGET}
@@ -454,7 +447,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     value={[geminiCaching.ttlSeconds]}
                                                     onValueChange={([value]) =>
                                                         setGeminiCaching({
-                                                            enabled: geminiCaching.enabled,
                                                             ttlSeconds: value,
                                                         })
                                                     }
@@ -490,7 +482,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     value={[geminiCaching.maxCaches]}
                                                     onValueChange={([value]) =>
                                                         setGeminiCaching({
-                                                            enabled: geminiCaching.enabled,
                                                             maxCaches: value,
                                                         })
                                                     }

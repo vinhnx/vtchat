@@ -67,7 +67,7 @@ export const useLogout = () => {
                     'user-preferences',
                     'subscription-preferences',
                     'feature-access-cache',
-                    'vtchat-preferences', // App store preferences
+                    'vtchat-settings', // App store preferences
                 ];
                 userDataKeys.forEach(key => {
                     if (localStorage.getItem(key)) {

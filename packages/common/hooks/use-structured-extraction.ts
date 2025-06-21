@@ -258,7 +258,7 @@ export const useStructuredExtraction = () => {
     const documentAttachment = useChatStore(state => state.documentAttachment);
     const setStructuredData = useChatStore(state => state.setStructuredData);
     const clearStructuredData = useChatStore(state => state.clearStructuredData);
-    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
+    const getAllKeys = useApiKeysStore(state => state.getAllKeys());
     const { toast } = useToast();
 
     const extractTextFromPDF = async (file: File): Promise<string> => {
@@ -356,7 +356,7 @@ export const useStructuredExtraction = () => {
                     'Extract structured data from the document and return it in JSON format';
 
                 // Get BYOK keys for API authentication
-                const byokKeys = getAllKeys();
+                const byokKeys = getAllKeys;
 
                 // Get the correct Google provider instance with BYOK keys
                 const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);

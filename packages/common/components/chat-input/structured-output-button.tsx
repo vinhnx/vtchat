@@ -26,12 +26,10 @@ export const StructuredOutputButton = () => {
     const { toast } = useToast();
     const router = useRouter();
 
-    // Use a single selector to get all needed state
-    const { structuredData, useStructuredOutput, setUseStructuredOutput } = useChatStore(state => ({
-        structuredData: state.structuredData,
-        useStructuredOutput: state.useStructuredOutput,
-        setUseStructuredOutput: state.setUseStructuredOutput,
-    }));
+    // Use individual selectors to avoid infinite re-renders
+    const structuredData = useChatStore(state => state.structuredData);
+    const useStructuredOutput = useChatStore(state => state.useStructuredOutput);
+    const setUseStructuredOutput = useChatStore(state => state.setUseStructuredOutput);
 
     const isProcessed = !!structuredData;
 

@@ -3,7 +3,7 @@
  */
 
 import { useFeatureAccess } from './use-subscription-access';
-import { useChatStore } from '../store/chat.store';
+import { useAppStore } from '../store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 
 /**
@@ -11,8 +11,8 @@ import { FeatureSlug } from '@repo/shared/types/subscription';
  */
 export function useGeminiCaching() {
     const hasAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
-    const geminiCaching = useChatStore(state => state.geminiCaching);
-    const setGeminiCaching = useChatStore(state => state.setGeminiCaching);
+    const geminiCaching = useAppStore(state => state.geminiCaching);
+    const setGeminiCaching = useAppStore(state => state.setGeminiCaching);
 
     const isEnabled = hasAccess && geminiCaching.enabled;
 
@@ -27,9 +27,9 @@ export function useGeminiCaching() {
         }
 
         setGeminiCaching({
-            enabled: config.enabled ?? geminiCaching.enabled,
-            ttlSeconds: config.ttlSeconds ?? geminiCaching.ttlSeconds,
-            maxCaches: config.maxCaches ?? geminiCaching.maxCaches,
+            enabled: config.enabled,
+            ttlSeconds: config.ttlSeconds,
+            maxCaches: config.maxCaches,
         });
     };
 

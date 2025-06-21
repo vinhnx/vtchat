@@ -1,7 +1,8 @@
 'use client';
-import { STORAGE_KEYS } from '@repo/shared/config';
+
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
 
 export const SETTING_TABS = {
     API_KEYS: 'api-keys',
@@ -31,10 +32,23 @@ type State = {
     showSignInModal: boolean;
     settingTab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS];
     sideDrawer: SideDrawerProps;
-    openSideDrawer: (props: SideDrawerProps) => void;
-    dismissSideDrawer: () => void;
-    // User preferences
+    // Unified settings
     showExamplePrompts: boolean;
+    customInstructions: string;
+    useWebSearch: boolean;
+    useMathCalculator: boolean;
+    useCharts: boolean;
+    showSuggestions: boolean;
+    thinkingMode: {
+        enabled: boolean;
+        budget: number;
+        includeThoughts: boolean;
+    };
+    geminiCaching: {
+        enabled: boolean;
+        ttlSeconds: number;
+        maxCaches: number;
+    };
     // Customer portal state
     portalState: {
         isOpen: boolean;
@@ -43,114 +57,241 @@ type State = {
 };
 
 type Actions = {
-    setIsSidebarOpen: (prev: (prev: boolean) => boolean) => void;
+    // UI state actions
+    setIsSidebarOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setSidebarAnimationDisabled: (disabled: boolean) => void;
-    setIsSourcesOpen: (prev: (prev: boolean) => boolean) => void;
+    setIsSourcesOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setIsSettingsOpen: (open: boolean) => void;
     setSettingTab: (tab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS]) => void;
     setShowSignInModal: (show: boolean) => void;
-    openSideDrawer: (props: Omit<SideDrawerProps, 'open'>) => void;
+    // Side drawer actions
+    openSideDrawer: (props: SideDrawerProps) => void;
     updateSideDrawer: (props: Partial<SideDrawerProps>) => void;
     dismissSideDrawer: () => void;
-    // User preference actions
+    // Settings actions
     setShowExamplePrompts: (show: boolean) => void;
+    setCustomInstructions: (instructions: string) => void;
+    setUseWebSearch: (use: boolean) => void;
+    setUseMathCalculator: (use: boolean) => void;
+    setUseCharts: (use: boolean) => void;
+    setShowSuggestions: (show: boolean) => void;
+    setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
+    setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
     // Customer portal actions
     setPortalState: (state: { isOpen: boolean; url: string | null }) => void;
     openPortal: (url: string) => void;
     closePortal: () => void;
-    // Reset all user-specific state
-    resetUserState: () => void;
 };
 
-// Initialize sidebar state with auto-hide behavior as default
-const initializeSidebarState = () => {
-    // Always start with sidebar closed (auto-hide behavior)
-    return { isOpen: false, animationDisabled: false };
-};
+// Helper to initialize sidebar state
+function initializeSidebarState() {
+    if (typeof window === 'undefined') {
+        return { isOpen: true, animationDisabled: false };
+    }
 
-// Initialize user preferences - defer localStorage access to client-side hydration
-const initializePreferences = () => {
-    return { showExamplePrompts: true };
-};
+    try {
+        const stored = localStorage.getItem('sidebar-state');
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            return {
+                isOpen: parsed.isOpen ?? true,
+                animationDisabled: parsed.animationDisabled ?? false,
+            };
+        }
+    } catch {
+        // Invalid data, use defaults
+    }
 
-export const useAppStore = create(
-    immer<State & Actions>((set, get) => {
-        const { isOpen: initialSidebarOpen, animationDisabled } = initializeSidebarState();
-        const { showExamplePrompts } = initializePreferences();
+    return { isOpen: true, animationDisabled: false };
+}
 
-        return {
-            isSidebarOpen: initialSidebarOpen,
-            sidebarAnimationDisabled: animationDisabled,
-            isSourcesOpen: false,
-            isSettingsOpen: false,
-            settingTab: 'api-keys',
-            showSignInModal: false,
-            showExamplePrompts,
-            portalState: { isOpen: false, url: null },
-            setIsSidebarOpen: (prev: (prev: boolean) => boolean) => {
-                const newState = prev(get().isSidebarOpen);
-                set({ isSidebarOpen: newState });
-            },
-            setSidebarAnimationDisabled: (disabled: boolean) => {
-                set({ sidebarAnimationDisabled: disabled });
-            },
-            setIsSourcesOpen: (prev: (prev: boolean) => boolean) =>
-                set({ isSourcesOpen: prev(get().isSourcesOpen) }),
-            setIsSettingsOpen: (open: boolean) => set({ isSettingsOpen: open }),
-            setSettingTab: (tab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS]) =>
-                set({ settingTab: tab }),
-            setShowSignInModal: (show: boolean) => set({ showSignInModal: show }),
-            setShowExamplePrompts: (show: boolean) => {
-                set({ showExamplePrompts: show });
-                if (typeof window !== 'undefined') {
-                    localStorage.setItem(
-                        STORAGE_KEYS.USER_PREFERENCES,
-                        JSON.stringify({ showExamplePrompts: show })
-                    );
-                }
-            },
-            setPortalState: (state: { isOpen: boolean; url: string | null }) =>
-                set({ portalState: state }),
-            openPortal: (url: string) => set({ portalState: { isOpen: true, url } }),
-            closePortal: () => set({ portalState: { isOpen: false, url: null } }),
-            sideDrawer: { open: false, title: '', renderContent: () => null, badge: undefined },
-            openSideDrawer: (props: Omit<SideDrawerProps, 'open'>) => {
-                set({ sideDrawer: { ...props, open: true } });
-            },
-            updateSideDrawer: (props: Partial<SideDrawerProps>) =>
-                set(state => ({
-                    sideDrawer: { ...state.sideDrawer, ...props },
-                })),
-            dismissSideDrawer: () =>
-                set({
-                    sideDrawer: {
-                        open: false,
-                        title: '',
-                        renderContent: () => null,
-                        badge: undefined,
-                    },
-                }),
-            resetUserState: () => {
-                // Reset all user-specific preferences and state
-                set({
-                    showExamplePrompts: true, // Reset to default
-                    portalState: { isOpen: false, url: null },
-                    settingTab: 'api-keys',
-                    isSettingsOpen: false,
-                    showSignInModal: false,
-                    sideDrawer: {
-                        open: false,
-                        title: '',
-                        renderContent: () => null,
-                        badge: undefined,
-                    },
-                });
+export const useAppStore = create<State & Actions>()(
+    persist(
+        immer((set, get) => {
+            const { isOpen: initialSidebarOpen, animationDisabled } = initializeSidebarState();
 
-                // Clear localStorage for user preferences
-                if (typeof window !== 'undefined') {
-                    localStorage.removeItem(STORAGE_KEYS.USER_PREFERENCES);
-                }
-            },
-        };
-    })
+            return {
+                // Initial state
+                isSidebarOpen: initialSidebarOpen,
+                sidebarAnimationDisabled: animationDisabled,
+                isSourcesOpen: false,
+                isSettingsOpen: false,
+                settingTab: SETTING_TABS.PROFILE,
+                showSignInModal: false,
+                // Default settings
+                showExamplePrompts: true,
+                customInstructions: '',
+                useWebSearch: false,
+                useMathCalculator: false,
+                useCharts: false,
+                showSuggestions: false,
+                thinkingMode: {
+                    enabled: false,
+                    budget: 8192,
+                    includeThoughts: true,
+                },
+                geminiCaching: {
+                    enabled: false,
+                    ttlSeconds: 3600,
+                    maxCaches: 10,
+                },
+                sideDrawer: {
+                    open: false,
+                    badge: undefined,
+                    title: '',
+                    renderContent: () => null,
+                },
+                portalState: {
+                    isOpen: false,
+                    url: null,
+                },
+
+                // Actions
+                setIsSidebarOpen: open => {
+                    const newState = typeof open === 'function' ? open(get().isSidebarOpen) : open;
+                    set({ isSidebarOpen: newState });
+
+                    // Save to localStorage
+                    try {
+                        localStorage.setItem(
+                            'sidebar-state',
+                            JSON.stringify({
+                                isOpen: newState,
+                                animationDisabled: get().sidebarAnimationDisabled,
+                            })
+                        );
+                    } catch (error) {
+                        console.warn('Failed to save sidebar state:', error);
+                    }
+                },
+
+                setSidebarAnimationDisabled: disabled => {
+                    set({ sidebarAnimationDisabled: disabled });
+
+                    // Save to localStorage
+                    try {
+                        localStorage.setItem(
+                            'sidebar-state',
+                            JSON.stringify({
+                                isOpen: get().isSidebarOpen,
+                                animationDisabled: disabled,
+                            })
+                        );
+                    } catch (error) {
+                        console.warn('Failed to save sidebar state:', error);
+                    }
+                },
+
+                setIsSourcesOpen: open => {
+                    const newState = typeof open === 'function' ? open(get().isSourcesOpen) : open;
+                    set({ isSourcesOpen: newState });
+                },
+
+                setIsSettingsOpen: open => set({ isSettingsOpen: open }),
+
+                setSettingTab: tab => set({ settingTab: tab }),
+
+                setShowSignInModal: show => set({ showSignInModal: show }),
+
+                openSideDrawer: props => {
+                    set({
+                        sideDrawer: {
+                            open: true,
+                            badge: props.badge,
+                            title: props.title,
+                            renderContent: props.renderContent,
+                        },
+                    });
+                },
+
+                updateSideDrawer: props => {
+                    set(state => {
+                        Object.assign(state.sideDrawer, props);
+                    });
+                },
+
+                dismissSideDrawer: () => {
+                    set({
+                        sideDrawer: {
+                            open: false,
+                            badge: undefined,
+                            title: '',
+                            renderContent: () => null,
+                        },
+                    });
+                },
+
+                setShowExamplePrompts: show => {
+                    set({ showExamplePrompts: show });
+                },
+
+                setCustomInstructions: (instructions: string) => {
+                    set({ customInstructions: instructions });
+                },
+
+                setUseWebSearch: (use: boolean) => {
+                    set({ useWebSearch: use });
+                },
+
+                setUseMathCalculator: (use: boolean) => {
+                    set({ useMathCalculator: use });
+                },
+
+                setUseCharts: (use: boolean) => {
+                    set({ useCharts: use });
+                },
+
+                setShowSuggestions: (show: boolean) => {
+                    set({ showSuggestions: show });
+                },
+
+                setThinkingMode: (mode: Partial<State['thinkingMode']>) => {
+                    set(state => {
+                        state.thinkingMode = { ...state.thinkingMode, ...mode };
+                    });
+                },
+
+                setGeminiCaching: (caching: Partial<State['geminiCaching']>) => {
+                    set(state => {
+                        state.geminiCaching = { ...state.geminiCaching, ...caching };
+                    });
+                },
+
+                setPortalState: state => {
+                    set({ portalState: state });
+                },
+
+                openPortal: url => {
+                    set({
+                        portalState: {
+                            isOpen: true,
+                            url,
+                        },
+                    });
+                },
+
+                closePortal: () => {
+                    set({
+                        portalState: {
+                            isOpen: false,
+                            url: null,
+                        },
+                    });
+                },
+            };
+        }),
+        {
+            name: 'vtchat-settings',
+            partialize: state => ({
+                showExamplePrompts: state.showExamplePrompts,
+                customInstructions: state.customInstructions,
+                useWebSearch: state.useWebSearch,
+                useMathCalculator: state.useMathCalculator,
+                useCharts: state.useCharts,
+                showSuggestions: state.showSuggestions,
+                thinkingMode: state.thinkingMode,
+                geminiCaching: state.geminiCaching,
+            }),
+        }
+    )
 );
