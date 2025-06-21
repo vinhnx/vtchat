@@ -1,9 +1,6 @@
 # TODO
-
-
-https://www.better-auth.com/docs/plugins/one-tap
-
 --
+
 https://fly.io/docs/apps/going-to-production/
 
 --
@@ -19,10 +16,6 @@ migrate from railway to fly.io
 [] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#text-editor-tool>
 [] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-tool>
 [] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support>
-
---
-
-[] <https://ai-sdk.dev/cookbook/node/retrieval-augmented-generation>
 
 --
 
