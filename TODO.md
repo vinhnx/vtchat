@@ -18,36 +18,7 @@ https://fluid.tw/#installation
 https://page-speed.dev
 
 --
-can safely remove LoginBYOKManager and OnboardingManager?
-check for reduntdant charts components and package. should use recharts and shadcn/ui
---
-
---
-check searches with grok 3 mini and grok 2 vision models?
---
-[plus] voice input
---
-add weather and stock component sample https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
-reference chart tools implementation
---
-also,
-add weather and stock benefits to /plus page, to plus tier benefits section, to creem_io feature, to faq
-
-make sure weather and stock tools are available in plus tier, and not available in free tier.
-
-weather visualization slug: weather_visualization
-stock visualization slug: weather_visualization
-
-## all should be using modern shadcn and tailwind ui components, and should be responsive.
-
 https://github.com/e2b-dev/fragments
-
---
-
-1. check models-data.json add new models and providers
-2. ## also implement BYOK support for those providers.
-
-    https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
 
 --
 
