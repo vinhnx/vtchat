@@ -236,7 +236,7 @@ export const ChatInput = ({
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.15 }}
                                 >
-                                    <InlineLoader label="Loading editor..." />
+                                    <InlineLoader />
                                 </motion.div>
                             )}
                         </motion.div>

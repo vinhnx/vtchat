@@ -1,48 +1,32 @@
 # TODO
 
-1. make sure pro search and deep research mode works the same way as model selection mode that is check and use byok settings
-1. make sure pro search and deep research mode works, write test if needed
-1. make sure pro search and deep research mode works no error
+
+@vtchat/web:dev: Slow filesystem detected. If /Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/apps/web/.next is a network drive, consider moving it to a local folder. If you have an antivirus enabled, consider excluding your project directory.
+--
+Using npm as the preferred package manager. Found multiple lockfiles for /Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat. To resolve this issue, delete the lockfiles that don't match your preferred package manager or change the setting "npm.packageManager" to a value other than "auto".
+
+--
+replace all loading/spinner with skeleton loading
+--
 1. change example prompt hover outline ring offset effect to button alpha or background hover css
 1. add loading indicator when loading subscription data from api
 use skeleton if needed
 1. check and fix packages/common/components/chat-input/chat-config.ts
-1.
-make sure fetching subscription API and logic is working properly
+==
+1. make sure fetching subscription API and logic is working properly
 make sure authorization and subscription logic is working properly
 ensure fetching subscription API and logic is working properly and effectively and fast to avoid any performance and ui/ux issues
 
 use context7 mcp
-
---
-1. currently deep research and pro search doesn't trigger?
-1. deep research and pro search asks for Google Gemini API Key even though user has BYO gemini key setup. make sure it uses BYO key if available
-
 --
 implement mobile version
 
 fix :Mobile version is coming soon.
 Please use a desktop browser."
 --
-
---
-fix packages/common/components/chat-input/chat-config.ts
--
-
-make sure fetching subscription API and logic is working properly
-make sure authorization and subscription logic is working properly
-ensure fetching subscription API and logic is working properly and effectively and fast to avoid any performance and ui/ux issues
-
-use context7 mcp
-
---
---
-
-when reasoning -> open steps side panel and render realtime markdown
---
 --
 fix https://ui.shadcn.com/docs/components/switch
-in settings vt+ page switch
+in settings vt+ page switch component
 
 --
 https://ui.shadcn.com/blocks#sidebar-07

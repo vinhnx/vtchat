@@ -23,7 +23,7 @@ export function SSRErrorBoundary({ children, fallback }: SSRErrorBoundaryProps):
 
         return (
             <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
-                <FullPageLoader label="Loading application..." />
+                <FullPageLoader />
             </div>
         );
     }

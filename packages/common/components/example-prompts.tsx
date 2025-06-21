@@ -113,10 +113,10 @@ export const ExamplePrompts = () => {
                 {Object.entries(categoryIcons).map(([category, value], index) => (
                     <ButtonWithIcon
                         key={index}
-                        variant="outlined"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
-                        className="dark:hover:ring-offset-background transition-all hover:ring-2 hover:ring-offset-2"
+                        className="transition-all hover:bg-accent/80 hover:opacity-90"
                         icon={<value.icon size={16} className={value.color} />}
                     >
                         {value.name}
