@@ -13,21 +13,24 @@ jest.mock('next-themes', () => ({
 }));
 
 jest.mock('../store/api-keys.store', () => ({
-    useApiKeysStore: (selector: any) => selector({
-        clearAllKeys: jest.fn(),
-    }),
+    useApiKeysStore: (selector: any) =>
+        selector({
+            clearAllKeys: jest.fn(),
+        }),
 }));
 
 jest.mock('../store/chat.store', () => ({
-    useChatStore: (selector: any) => selector({
-        clearAllThreads: jest.fn(),
-    }),
+    useChatStore: (selector: any) =>
+        selector({
+            clearAllThreads: jest.fn(),
+        }),
 }));
 
 jest.mock('../store/app.store', () => ({
-    useAppStore: (selector: any) => selector({
-        resetUserState: jest.fn(),
-    }),
+    useAppStore: (selector: any) =>
+        selector({
+            resetUserState: jest.fn(),
+        }),
 }));
 
 jest.mock('@repo/shared/lib/auth-client', () => ({
@@ -42,7 +45,7 @@ describe('useLogout', () => {
         // Clear localStorage before each test
         localStorage.clear();
         jest.clearAllMocks();
-        
+
         // Mock successful API responses
         (global.fetch as jest.Mock).mockResolvedValue({
             ok: true,
@@ -141,7 +144,7 @@ describe('useLogout', () => {
         (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
 
         const { result } = renderHook(() => useLogout());
-        
+
         // Should not throw error even if server cache invalidation fails
         await expect(result.current.logout()).resolves.not.toThrow();
     });

@@ -1,16 +1,21 @@
 'use client';
-import { useSession, getSessionFresh, linkSocial, unlinkAccount } from '@repo/shared/lib/auth-client';
+import {
+    useSession,
+    getSessionFresh,
+    linkSocial,
+    unlinkAccount,
+} from '@repo/shared/lib/auth-client';
 import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
 import { useOptimizedAuth } from '../providers/optimized-auth-provider';
-import { 
-    Alert, 
-    AlertDescription, 
-    Badge, 
-    Button, 
+import {
+    Alert,
+    AlertDescription,
+    Badge,
+    Button,
     FormLabel,
     Input,
     TypographyH3,
-    TypographyMuted
+    TypographyMuted,
 } from '@repo/ui';
 import { Github, ExternalLink, Unlink, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
@@ -28,7 +33,9 @@ export const UserProfileSettings = () => {
     const [success, setSuccess] = useState('');
     const [isLinking, setIsLinking] = useState<string | null>(null);
     const [isUnlinking, setIsUnlinking] = useState<string | null>(null);
-    const [linkedAccounts, setLinkedAccounts] = useState<Array<{ providerId: string; accountId: string }>>([]);
+    const [linkedAccounts, setLinkedAccounts] = useState<
+        Array<{ providerId: string; accountId: string }>
+    >([]);
     const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
     const [justLinked, setJustLinked] = useState<string | null>(null);
     const [justUnlinked, setJustUnlinked] = useState<string | null>(null);
@@ -39,13 +46,15 @@ export const UserProfileSettings = () => {
             setLinkedAccounts([]);
             return;
         }
-        
+
         setIsLoadingAccounts(true);
         try {
             // Always fetch from database for most accurate information
             const accounts = await getLinkedAccountsFromDB(session.user.id);
             setLinkedAccounts(accounts);
-            console.log(`[Account Linking] Fetched ${accounts.length} linked accounts from database`);
+            console.log(
+                `[Account Linking] Fetched ${accounts.length} linked accounts from database`
+            );
         } catch (err) {
             console.error('Error fetching linked accounts from database:', err);
             // Fallback to session data if database query fails
@@ -69,7 +78,7 @@ export const UserProfileSettings = () => {
     useEffect(() => {
         const checkOAuthCallback = async () => {
             const linkingProvider = localStorage.getItem('linking_provider');
-            
+
             if (linkingProvider && session?.user) {
                 // Small delay to ensure OAuth callback is processed
                 setTimeout(async () => {
@@ -77,26 +86,34 @@ export const UserProfileSettings = () => {
                         // Refresh session and fetch accounts to get latest data
                         await getSessionFresh();
                         const accounts = await getLinkedAccountsFromDB(session.user.id);
-                        
+
                         // Check if the provider was successfully linked
-                        const isNowLinked = accounts.some(acc => acc.providerId === linkingProvider);
-                        
+                        const isNowLinked = accounts.some(
+                            acc => acc.providerId === linkingProvider
+                        );
+
                         if (isNowLinked) {
                             // Show success feedback
                             setJustLinked(linkingProvider);
-                            setSuccess(`${linkingProvider.charAt(0).toUpperCase() + linkingProvider.slice(1)} account linked successfully`);
+                            setSuccess(
+                                `${linkingProvider.charAt(0).toUpperCase() + linkingProvider.slice(1)} account linked successfully`
+                            );
                             setTimeout(() => {
                                 setSuccess('');
                                 setJustLinked(null);
                             }, 3000);
-                            
+
                             // Update the accounts list
                             setLinkedAccounts(accounts);
-                            console.log(`[Account Linking] Successfully linked ${linkingProvider} account`);
+                            console.log(
+                                `[Account Linking] Successfully linked ${linkingProvider} account`
+                            );
                         } else {
-                            console.log(`[Account Linking] ${linkingProvider} account linking was not completed`);
+                            console.log(
+                                `[Account Linking] ${linkingProvider} account linking was not completed`
+                            );
                         }
-                        
+
                         // Clear the linking state and provider
                         setIsLinking(null);
                         localStorage.removeItem('linking_provider');
@@ -114,7 +131,7 @@ export const UserProfileSettings = () => {
 
     const handleSave = async () => {
         if (!session?.user) return;
-        
+
         setIsUpdating(true);
         setError('');
         setSuccess('');
@@ -139,13 +156,13 @@ export const UserProfileSettings = () => {
             await refreshSession();
             setSuccess('Profile updated successfully');
             setIsEditing(false);
-            
+
             // Update local form data with new values
             setFormData({
                 name: formData.name,
                 email: formData.email,
             });
-            
+
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
             console.error('Error updating profile:', err);
@@ -168,23 +185,23 @@ export const UserProfileSettings = () => {
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
     };
 
     const handleLinkAccount = async (provider: string) => {
         setIsLinking(provider);
         setError('');
-        
+
         try {
             // Store the provider we're trying to link in localStorage for callback detection
             localStorage.setItem('linking_provider', provider);
-            
+
             await linkSocial({
                 provider: provider as 'google' | 'github',
                 callbackURL: window.location.href, // Stay on the same page
             });
-            
+
             // Note: Success feedback will be shown after OAuth callback completion
             console.log(`[Account Linking] Initiated ${provider} linking process`);
         } catch (err) {
@@ -199,20 +216,22 @@ export const UserProfileSettings = () => {
     const handleUnlinkAccount = async (provider: string) => {
         setIsUnlinking(provider);
         setError('');
-        
+
         try {
             await unlinkAccount({
                 providerId: provider,
             });
-            
+
             // Show immediate success feedback
             setJustUnlinked(provider);
-            setSuccess(`${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`);
+            setSuccess(
+                `${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`
+            );
             setTimeout(() => {
                 setSuccess('');
                 setJustUnlinked(null);
             }, 3000);
-            
+
             // Refresh session and accounts data
             await getSessionFresh();
             await fetchLinkedAccounts();
@@ -242,7 +261,10 @@ export const UserProfileSettings = () => {
 
             {/* Status Messages */}
             {error && (
-                <Alert variant="destructive" className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20">
+                <Alert
+                    variant="destructive"
+                    className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20"
+                >
                     <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
                     <AlertDescription className="text-red-800 dark:text-red-200">
                         {error}
@@ -260,37 +282,33 @@ export const UserProfileSettings = () => {
             )}
 
             {/* Main Profile Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
                     <div className="flex items-center justify-between">
                         <div>
                             <TypographyH3 className="text-lg font-semibold">
                                 Basic Information
                             </TypographyH3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                                 Update your personal details and account information
                             </p>
                         </div>
                         {!isEditing && (
-                            <Button 
-                                variant="outline" 
-                                onClick={() => setIsEditing(true)}
-                                size="sm"
-                            >
+                            <Button variant="outline" onClick={() => setIsEditing(true)} size="sm">
                                 Edit Profile
                             </Button>
                         )}
                     </div>
                 </div>
 
-                <div className="p-6 space-y-6">
+                <div className="space-y-6 p-6">
                     {!isEditing ? (
                         // View Mode
                         <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <FormLabel label="Display Name">
-                                        <div className="mt-1 rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-sm text-foreground min-h-[42px] flex items-center">
+                                        <div className="border-border bg-muted/30 text-foreground mt-1 flex min-h-[42px] items-center rounded-lg border px-3 py-2.5 text-sm">
                                             {session.user.name || 'Not set'}
                                         </div>
                                     </FormLabel>
@@ -298,22 +316,27 @@ export const UserProfileSettings = () => {
 
                                 <div className="space-y-2">
                                     <FormLabel label="Email Address">
-                                        <div className="mt-1 rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-sm text-foreground min-h-[42px] flex items-center">
+                                        <div className="border-border bg-muted/30 text-foreground mt-1 flex min-h-[42px] items-center rounded-lg border px-3 py-2.5 text-sm">
                                             {session.user.email}
                                         </div>
                                     </FormLabel>
                                 </div>
                             </div>
 
-                            <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                 <div className="space-y-2">
-                                    <div className="text-sm font-medium text-foreground">Account Status</div>
+                                    <div className="text-foreground text-sm font-medium">
+                                        Account Status
+                                    </div>
                                     <div className="flex items-center gap-2">
                                         <Badge variant="secondary" className="text-xs">
                                             Active
                                         </Badge>
-                                        <span className="text-xs text-muted-foreground">
-                                            Member since {new Date(session.user.createdAt || Date.now()).toLocaleDateString()}
+                                        <span className="text-muted-foreground text-xs">
+                                            Member since{' '}
+                                            {new Date(
+                                                session.user.createdAt || Date.now()
+                                            ).toLocaleDateString()}
                                         </span>
                                     </div>
                                 </div>
@@ -322,12 +345,14 @@ export const UserProfileSettings = () => {
                     ) : (
                         // Edit Mode
                         <div className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <FormLabel label="Display Name" isOptional>
                                         <Input
                                             value={formData.name}
-                                            onChange={(e) => handleInputChange('name', e.target.value)}
+                                            onChange={e =>
+                                                handleInputChange('name', e.target.value)
+                                            }
                                             placeholder="Enter your display name"
                                             className="mt-1 h-[42px]"
                                         />
@@ -338,7 +363,9 @@ export const UserProfileSettings = () => {
                                     <FormLabel label="Email Address">
                                         <Input
                                             value={formData.email}
-                                            onChange={(e) => handleInputChange('email', e.target.value)}
+                                            onChange={e =>
+                                                handleInputChange('email', e.target.value)
+                                            }
                                             placeholder="Enter your email"
                                             type="email"
                                             className="mt-1 h-[42px]"
@@ -348,16 +375,16 @@ export const UserProfileSettings = () => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-border/50">
-                                <Button 
-                                    variant="outline" 
+                            <div className="border-border/50 flex justify-end gap-3 border-t pt-4">
+                                <Button
+                                    variant="outline"
                                     onClick={handleCancel}
                                     disabled={isUpdating}
                                     size="sm"
                                 >
                                     Cancel
                                 </Button>
-                                <Button 
+                                <Button
                                     onClick={handleSave}
                                     disabled={isUpdating}
                                     size="sm"
@@ -372,28 +399,27 @@ export const UserProfileSettings = () => {
             </div>
 
             {/* Account Security Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
-                    <TypographyH3 className="text-lg font-semibold">
-                        Account Security
-                    </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
+                    <TypographyH3 className="text-lg font-semibold">Account Security</TypographyH3>
+                    <p className="text-muted-foreground text-sm">
                         Manage your authentication and security settings
                     </p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="space-y-4 p-6">
                     {/* Authentication Method */}
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <div className="text-sm font-medium text-foreground">
-                                    {session.user.image ? 'OAuth Authentication' : 'Password Protection'}
+                                <div className="text-foreground text-sm font-medium">
+                                    {session.user.image
+                                        ? 'OAuth Authentication'
+                                        : 'Password Protection'}
                                 </div>
-                                <div className="text-xs text-muted-foreground">
-                                    {session.user.image 
+                                <div className="text-muted-foreground text-xs">
+                                    {session.user.image
                                         ? 'Your account is secured via OAuth provider'
-                                        : 'Your account is secured with a password'
-                                    }
+                                        : 'Your account is secured with a password'}
                                 </div>
                             </div>
                             {!session.user.image && (
@@ -405,11 +431,15 @@ export const UserProfileSettings = () => {
                     </div>
 
                     {/* Additional Security Info */}
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="space-y-2">
-                            <div className="text-sm font-medium text-foreground">Account Security</div>
-                            <div className="text-xs text-muted-foreground">
-                                Your account uses secure authentication methods and encrypted data storage. All sessions are regularly monitored for suspicious activity.
+                            <div className="text-foreground text-sm font-medium">
+                                Account Security
+                            </div>
+                            <div className="text-muted-foreground text-xs">
+                                Your account uses secure authentication methods and encrypted data
+                                storage. All sessions are regularly monitored for suspicious
+                                activity.
                             </div>
                         </div>
                     </div>
@@ -417,72 +447,94 @@ export const UserProfileSettings = () => {
             </div>
 
             {/* Connected Accounts Section */}
-            <div className="border border-border rounded-lg">
-                <div className="border-b border-border p-6">
+            <div className="border-border rounded-lg border">
+                <div className="border-border border-b p-6">
                     <TypographyH3 className="text-lg font-semibold">
                         Connected Accounts
                     </TypographyH3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Link your social accounts for easier sign-in and enhanced security
                     </p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="space-y-4 p-6">
                     {isLoadingAccounts && (
-                        <div className="flex items-center justify-center p-4 bg-blue-50/50 dark:bg-blue-950/10 rounded-lg border border-blue-200/50 dark:border-blue-800/50">
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin text-blue-600 dark:text-blue-400" />
-                            <div className="text-sm text-blue-700 dark:text-blue-300">Loading account connections...</div>
+                        <div className="flex items-center justify-center rounded-lg border border-blue-200/50 bg-blue-50/50 p-4 dark:border-blue-800/50 dark:bg-blue-950/10">
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
+                            <div className="text-sm text-blue-700 dark:text-blue-300">
+                                Loading account connections...
+                            </div>
                         </div>
                     )}
                     {/* Google Account */}
-                    <div className={`rounded-lg border p-4 transition-all duration-200 ${
-                        linkedAccounts.some(acc => acc.providerId === 'google') 
-                            ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20' 
-                            : 'border-border/50 bg-muted/20'
-                    }`}>
+                    <div
+                        className={`rounded-lg border p-4 transition-all duration-200 ${
+                            linkedAccounts.some(acc => acc.providerId === 'google')
+                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
+                                : 'border-border/50 bg-muted/20'
+                        }`}
+                    >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                    linkedAccounts.some(acc => acc.providerId === 'google')
-                                        ? 'bg-white border-green-200 dark:border-green-700 shadow-green-100 shadow-md dark:shadow-green-900/50'
-                                        : 'bg-white border-border'
-                                }`}>
+                                <div
+                                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+                                        linkedAccounts.some(acc => acc.providerId === 'google')
+                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:shadow-green-900/50'
+                                            : 'border-border bg-white'
+                                    }`}
+                                >
                                     <svg viewBox="0 0 24 24" className="h-5 w-5">
-                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                        <path
+                                            fill="#4285F4"
+                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                        />
+                                        <path
+                                            fill="#34A853"
+                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                        />
+                                        <path
+                                            fill="#FBBC05"
+                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                        />
+                                        <path
+                                            fill="#EA4335"
+                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                        />
                                     </svg>
                                     {/* Connected overlay checkmark */}
                                     {linkedAccounts.some(acc => acc.providerId === 'google') && (
-                                        <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5 shadow-lg animate-in fade-in-50 zoom-in-75 duration-300">
+                                        <div className="animate-in fade-in-50 zoom-in-75 absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                     {/* Loading overlay */}
                                     {(isLinking === 'google' || isUnlinking === 'google') && (
-                                        <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 rounded-full flex items-center justify-center">
+                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
                                             <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                                         </div>
                                     )}
                                 </div>
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <div className="text-sm font-medium text-foreground">Google</div>
-                                        {linkedAccounts.some(acc => acc.providerId === 'google') && (
-                                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                        )}
+                                        <div className="text-foreground text-sm font-medium">
+                                            Google
+                                        </div>
+                                        {linkedAccounts.some(
+                                            acc => acc.providerId === 'google'
+                                        ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="text-muted-foreground text-xs">
                                         {justLinked === 'google' ? (
-                                            <span className="text-green-600 dark:text-green-400 font-medium animate-pulse">
+                                            <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
                                                 ✓ Connection successful!
                                             </span>
                                         ) : justUnlinked === 'google' ? (
-                                            <span className="text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                                            <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
                                                 Account disconnected
                                             </span>
-                                        ) : linkedAccounts.some(acc => acc.providerId === 'google') ? (
-                                            'Account successfully connected' 
+                                        ) : linkedAccounts.some(
+                                              acc => acc.providerId === 'google'
+                                          ) ? (
+                                            'Account successfully connected'
                                         ) : (
                                             'Connect your Google account for easy sign-in'
                                         )}
@@ -492,43 +544,52 @@ export const UserProfileSettings = () => {
                             <div className="flex items-center gap-2">
                                 {linkedAccounts.some(acc => acc.providerId === 'google') ? (
                                     <>
-                                        <Badge variant="secondary" className={`text-xs border-green-200 dark:border-green-800 transition-all duration-300 ${
-                                            justLinked === 'google' 
-                                                ? 'bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-100 animate-pulse shadow-md' 
-                                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
-                                        }`}>
-                                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                                            {justLinked === 'google' ? 'Just Connected!' : 'Connected'}
+                                        <Badge
+                                            variant="secondary"
+                                            className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
+                                                justLinked === 'google'
+                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
+                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                            }`}
+                                        >
+                                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                                            {justLinked === 'google'
+                                                ? 'Just Connected!'
+                                                : 'Connected'}
                                         </Badge>
-                                        <Button 
-                                            variant="outline" 
+                                        <Button
+                                            variant="outline"
                                             size="sm"
                                             onClick={() => handleUnlinkAccount('google')}
                                             disabled={isUnlinking === 'google' || isLoadingAccounts}
-                                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 dark:border-red-800 dark:hover:border-red-700"
+                                            className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
                                         >
                                             {isUnlinking === 'google' ? (
-                                                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                             ) : (
-                                                <Unlink className="h-3 w-3 mr-1" />
+                                                <Unlink className="mr-1 h-3 w-3" />
                                             )}
-                                            {isUnlinking === 'google' ? 'Disconnecting...' : 'Disconnect'}
+                                            {isUnlinking === 'google'
+                                                ? 'Disconnecting...'
+                                                : 'Disconnect'}
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button 
-                                        variant="outline" 
+                                    <Button
+                                        variant="outline"
                                         size="sm"
                                         onClick={() => handleLinkAccount('google')}
                                         disabled={isLinking === 'google' || isLoadingAccounts}
-                                        className="bg-blue-50 hover:bg-blue-100 border-blue-200 hover:border-blue-300 text-blue-700 hover:text-blue-800 dark:bg-blue-950/20 dark:hover:bg-blue-950/30 dark:border-blue-800 dark:hover:border-blue-700 dark:text-blue-300"
+                                        className="border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-300 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-700 dark:hover:bg-blue-950/30"
                                     >
                                         {isLinking === 'google' ? (
-                                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                         ) : (
-                                            <ExternalLink className="h-3 w-3 mr-1" />
+                                            <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
-                                        {isLinking === 'google' ? 'Connecting...' : 'Connect Account'}
+                                        {isLinking === 'google'
+                                            ? 'Connecting...'
+                                            : 'Connect Account'}
                                     </Button>
                                 )}
                             </div>
@@ -536,50 +597,58 @@ export const UserProfileSettings = () => {
                     </div>
 
                     {/* GitHub Account */}
-                    <div className={`rounded-lg border p-4 transition-all duration-200 ${
-                        linkedAccounts.some(acc => acc.providerId === 'github') 
-                            ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20' 
-                            : 'border-border/50 bg-muted/20'
-                    }`}>
+                    <div
+                        className={`rounded-lg border p-4 transition-all duration-200 ${
+                            linkedAccounts.some(acc => acc.providerId === 'github')
+                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
+                                : 'border-border/50 bg-muted/20'
+                        }`}
+                    >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                    linkedAccounts.some(acc => acc.providerId === 'github')
-                                        ? 'bg-white dark:bg-gray-900 border-green-200 dark:border-green-700 shadow-green-100 shadow-md dark:shadow-green-900/50'
-                                        : 'bg-white dark:bg-gray-900 border-border'
-                                }`}>
+                                <div
+                                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+                                        linkedAccounts.some(acc => acc.providerId === 'github')
+                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
+                                            : 'border-border bg-white dark:bg-gray-900'
+                                    }`}
+                                >
                                     <Github className="h-5 w-5 text-gray-900 dark:text-gray-100" />
                                     {/* Connected overlay checkmark */}
                                     {linkedAccounts.some(acc => acc.providerId === 'github') && (
-                                        <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5 shadow-lg animate-in fade-in-50 zoom-in-75 duration-300">
+                                        <div className="animate-in fade-in-50 zoom-in-75 absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                     {/* Loading overlay */}
                                     {(isLinking === 'github' || isUnlinking === 'github') && (
-                                        <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 rounded-full flex items-center justify-center">
+                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
                                             <Loader2 className="h-4 w-4 animate-spin text-gray-600 dark:text-gray-400" />
                                         </div>
                                     )}
                                 </div>
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <div className="text-sm font-medium text-foreground">GitHub</div>
-                                        {linkedAccounts.some(acc => acc.providerId === 'github') && (
-                                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                        )}
+                                        <div className="text-foreground text-sm font-medium">
+                                            GitHub
+                                        </div>
+                                        {linkedAccounts.some(
+                                            acc => acc.providerId === 'github'
+                                        ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="text-muted-foreground text-xs">
                                         {justLinked === 'github' ? (
-                                            <span className="text-green-600 dark:text-green-400 font-medium animate-pulse">
+                                            <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
                                                 ✓ Connection successful!
                                             </span>
                                         ) : justUnlinked === 'github' ? (
-                                            <span className="text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                                            <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
                                                 Account disconnected
                                             </span>
-                                        ) : linkedAccounts.some(acc => acc.providerId === 'github') ? (
-                                            'Account successfully connected' 
+                                        ) : linkedAccounts.some(
+                                              acc => acc.providerId === 'github'
+                                          ) ? (
+                                            'Account successfully connected'
                                         ) : (
                                             'Connect your GitHub account for easy sign-in'
                                         )}
@@ -589,43 +658,52 @@ export const UserProfileSettings = () => {
                             <div className="flex items-center gap-2">
                                 {linkedAccounts.some(acc => acc.providerId === 'github') ? (
                                     <>
-                                        <Badge variant="secondary" className={`text-xs border-green-200 dark:border-green-800 transition-all duration-300 ${
-                                            justLinked === 'github' 
-                                                ? 'bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-100 animate-pulse shadow-md' 
-                                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
-                                        }`}>
-                                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                                            {justLinked === 'github' ? 'Just Connected!' : 'Connected'}
+                                        <Badge
+                                            variant="secondary"
+                                            className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
+                                                justLinked === 'github'
+                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
+                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                            }`}
+                                        >
+                                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                                            {justLinked === 'github'
+                                                ? 'Just Connected!'
+                                                : 'Connected'}
                                         </Badge>
-                                        <Button 
-                                            variant="outline" 
+                                        <Button
+                                            variant="outline"
                                             size="sm"
                                             onClick={() => handleUnlinkAccount('github')}
                                             disabled={isUnlinking === 'github' || isLoadingAccounts}
-                                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 dark:border-red-800 dark:hover:border-red-700"
+                                            className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
                                         >
                                             {isUnlinking === 'github' ? (
-                                                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                             ) : (
-                                                <Unlink className="h-3 w-3 mr-1" />
+                                                <Unlink className="mr-1 h-3 w-3" />
                                             )}
-                                            {isUnlinking === 'github' ? 'Disconnecting...' : 'Disconnect'}
+                                            {isUnlinking === 'github'
+                                                ? 'Disconnecting...'
+                                                : 'Disconnect'}
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button 
-                                        variant="outline" 
+                                    <Button
+                                        variant="outline"
                                         size="sm"
                                         onClick={() => handleLinkAccount('github')}
                                         disabled={isLinking === 'github' || isLoadingAccounts}
-                                        className="bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-800 dark:bg-gray-950/20 dark:hover:bg-gray-950/30 dark:border-gray-800 dark:hover:border-gray-700 dark:text-gray-300"
+                                        className="border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:border-gray-800 dark:bg-gray-950/20 dark:text-gray-300 dark:hover:border-gray-700 dark:hover:bg-gray-950/30"
                                     >
                                         {isLinking === 'github' ? (
-                                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                         ) : (
-                                            <ExternalLink className="h-3 w-3 mr-1" />
+                                            <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
-                                        {isLinking === 'github' ? 'Connecting...' : 'Connect Account'}
+                                        {isLinking === 'github'
+                                            ? 'Connecting...'
+                                            : 'Connect Account'}
                                     </Button>
                                 )}
                             </div>
@@ -633,12 +711,16 @@ export const UserProfileSettings = () => {
                     </div>
 
                     {/* Info Section */}
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="space-y-2">
-                            <div className="text-sm font-medium text-foreground">Account Linking Benefits</div>
-                            <ul className="text-xs text-muted-foreground space-y-1">
+                            <div className="text-foreground text-sm font-medium">
+                                Account Linking Benefits
+                            </div>
+                            <ul className="text-muted-foreground space-y-1 text-xs">
                                 <li>• Faster sign-in with multiple authentication options</li>
-                                <li>• Enhanced account security with multiple verification methods</li>
+                                <li>
+                                    • Enhanced account security with multiple verification methods
+                                </li>
                                 <li>• Easy account recovery if you lose access to one provider</li>
                                 <li>• Seamless experience across different platforms</li>
                             </ul>

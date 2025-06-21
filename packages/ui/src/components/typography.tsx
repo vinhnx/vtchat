@@ -13,7 +13,8 @@ const typographyVariants = cva('', {
             p: 'leading-7 [&:not(:first-child)]:mt-6',
             blockquote: 'mt-6 border-l-2 pl-6 italic',
             list: 'my-6 ml-6 list-disc [&>li]:mt-2',
-            inlineCode: 'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
+            inlineCode:
+                'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
             lead: 'text-xl text-muted-foreground leading-7 [&:not(:first-child)]:mt-6',
             large: 'text-lg font-semibold',
             small: 'text-sm font-medium leading-none',
@@ -73,44 +74,39 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
 Typography.displayName = 'Typography';
 
 // Convenience components for common typography elements
-export const TypographyH1 = React.forwardRef<
-    HTMLHeadingElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="h1" className={className} {...props} />
-));
+export const TypographyH1 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="h1" className={className} {...props} />
+    )
+);
 TypographyH1.displayName = 'TypographyH1';
 
-export const TypographyH2 = React.forwardRef<
-    HTMLHeadingElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="h2" className={className} {...props} />
-));
+export const TypographyH2 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="h2" className={className} {...props} />
+    )
+);
 TypographyH2.displayName = 'TypographyH2';
 
-export const TypographyH3 = React.forwardRef<
-    HTMLHeadingElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="h3" className={className} {...props} />
-));
+export const TypographyH3 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="h3" className={className} {...props} />
+    )
+);
 TypographyH3.displayName = 'TypographyH3';
 
-export const TypographyH4 = React.forwardRef<
-    HTMLHeadingElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="h4" className={className} {...props} />
-));
+export const TypographyH4 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="h4" className={className} {...props} />
+    )
+);
 TypographyH4.displayName = 'TypographyH4';
 
-export const TypographyP = React.forwardRef<
-    HTMLParagraphElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="p" className={className} {...props} />
-));
+export const TypographyP = React.forwardRef<HTMLParagraphElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="p" className={className} {...props} />
+    )
+);
 TypographyP.displayName = 'TypographyP';
 
 export const TypographyBlockquote = React.forwardRef<
@@ -121,20 +117,18 @@ export const TypographyBlockquote = React.forwardRef<
 ));
 TypographyBlockquote.displayName = 'TypographyBlockquote';
 
-export const TypographyList = React.forwardRef<
-    HTMLUListElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="list" className={className} {...props} />
-));
+export const TypographyList = React.forwardRef<HTMLUListElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="list" className={className} {...props} />
+    )
+);
 TypographyList.displayName = 'TypographyList';
 
-export const TypographyInlineCode = React.forwardRef<
-    HTMLElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="inlineCode" className={className} {...props} />
-));
+export const TypographyInlineCode = React.forwardRef<HTMLElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="inlineCode" className={className} {...props} />
+    )
+);
 TypographyInlineCode.displayName = 'TypographyInlineCode';
 
 export const TypographyLead = React.forwardRef<
@@ -145,20 +139,18 @@ export const TypographyLead = React.forwardRef<
 ));
 TypographyLead.displayName = 'TypographyLead';
 
-export const TypographyLarge = React.forwardRef<
-    HTMLDivElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="large" className={className} {...props} />
-));
+export const TypographyLarge = React.forwardRef<HTMLDivElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="large" className={className} {...props} />
+    )
+);
 TypographyLarge.displayName = 'TypographyLarge';
 
-export const TypographySmall = React.forwardRef<
-    HTMLElement,
-    Omit<TypographyProps, 'variant'>
->(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="small" className={className} {...props} />
-));
+export const TypographySmall = React.forwardRef<HTMLElement, Omit<TypographyProps, 'variant'>>(
+    ({ className, ...props }, ref) => (
+        <Typography ref={ref} variant="small" className={className} {...props} />
+    )
+);
 TypographySmall.displayName = 'TypographySmall';
 
 export const TypographyMuted = React.forwardRef<
@@ -177,9 +169,7 @@ export const TypographyTable = React.forwardRef<
     }
 >(({ children, ...props }, ref) => (
     <div className="my-6 w-full overflow-y-auto" ref={ref} {...props}>
-        <table className="w-full">
-            {children}
-        </table>
+        <table className="w-full">{children}</table>
     </div>
 ));
 TypographyTable.displayName = 'TypographyTable';
@@ -221,11 +211,7 @@ export const TypographyTableRow = React.forwardRef<
     HTMLTableRowElement,
     React.HTMLAttributes<HTMLTableRowElement>
 >(({ className, ...props }, ref) => (
-    <tr
-        ref={ref}
-        className={cn('m-0 border-t p-0 even:bg-muted', className)}
-        {...props}
-    />
+    <tr ref={ref} className={cn('even:bg-muted m-0 border-t p-0', className)} {...props} />
 ));
 TypographyTableRow.displayName = 'TypographyTableRow';
 

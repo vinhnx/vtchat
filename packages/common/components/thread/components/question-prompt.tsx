@@ -66,13 +66,13 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                         }}
                     >
                         {selectedOptions.includes(option) ? (
-                            <Check size={16} strokeWidth={2} className="text-brand"  />
+                            <Check size={16} strokeWidth={2} className="text-brand" />
                         ) : (
                             <Square
                                 size={16}
                                 strokeWidth={2}
                                 className="text-muted-foreground/20"
-                             />
+                            />
                         )}
                         <p className="text-sm">{option}</p>
                     </div>
@@ -85,7 +85,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
         return (
             <div className="border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4">
                 <span className="flex flex-row items-center gap-1 text-xs font-medium text-yellow-700">
-                    <Check size={14} strokeWidth={2}  /> Submitted
+                    <Check size={14} strokeWidth={2} /> Submitted
                 </span>
                 <div className="flex flex-col">
                     <p className="text-base">
@@ -103,7 +103,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     return (
         <div className="border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4">
             <div className="flex flex-row items-center gap-1">
-                <HelpCircle size={16} strokeWidth={2} className="text-brand"  />
+                <HelpCircle size={16} strokeWidth={2} className="text-brand" />
                 <p className="text-sm text-yellow-700">Follow-up Question</p>
             </div>
 

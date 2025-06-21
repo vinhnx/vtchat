@@ -17,7 +17,7 @@ export const ImageDropzone: FC<TImageDropzone> = ({ dropzonProps }) => {
                     justify="center"
                     gap="sm"
                 >
-                    <ImagePlus size={16} className="text-muted-foreground"  />
+                    <ImagePlus size={16} className="text-muted-foreground" />
                     <p className="text-muted-foreground text-sm">
                         Drag and drop an image here, or click to select an image
                     </p>

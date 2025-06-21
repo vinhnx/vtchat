@@ -70,7 +70,9 @@ export const ReasoningModeSettings = () => {
                         <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                     </div>
                     <div>
-                        <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</TypographyH3>
+                        <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">
+                            Reasoning Mode
+                        </TypographyH3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Advanced AI reasoning and thinking capabilities
                         </p>
@@ -87,7 +89,9 @@ export const ReasoningModeSettings = () => {
                             <Brain className="h-8 w-8 text-[#D99A4E]" />
                         </div>
                         <div>
-                            <TypographyH4 className="mb-2 font-semibold text-[#BFB38F]">VT+ Required</TypographyH4>
+                            <TypographyH4 className="mb-2 font-semibold text-[#BFB38F]">
+                                VT+ Required
+                            </TypographyH4>
                             <p className="mb-4 text-sm text-[#BFB38F]/70">
                                 Reasoning Mode reveals the AI's step-by-step thinking process before
                                 generating responses. This advanced feature requires a VT+
@@ -113,7 +117,9 @@ export const ReasoningModeSettings = () => {
                     <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                 </motion.div>
                 <div>
-                    <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">Reasoning Mode</TypographyH3>
+                    <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">
+                        Reasoning Mode
+                    </TypographyH3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         Configure AI reasoning and thinking capabilities
                     </p>

@@ -18,12 +18,12 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
     // Auto-expand when reasoning is in progress
     const isReasoningInProgress =
         ('status' in threadItem && threadItem.status === 'IN_PROGRESS') ||
-        (threadItem.parts?.some(
+        threadItem.parts?.some(
             part =>
                 part.type === 'reasoning' &&
                 'status' in part &&
                 (part as any).status === 'IN_PROGRESS'
-        ));
+        );
     const [isExpanded, setIsExpanded] = useState(true);
 
     // Always expand when reasoning is in progress

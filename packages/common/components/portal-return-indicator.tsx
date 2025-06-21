@@ -50,7 +50,7 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
                     <Card className="flex items-center gap-3 p-4 shadow-lg">
                         {stage === 'loading' ? (
                             <>
-                                <Loader2 size={20} className="animate-spin text-blue-500"  />
+                                <Loader2 size={20} className="animate-spin text-blue-500" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">
                                         {LOADING_MESSAGES.SYNCING_SUBSCRIPTION}
@@ -62,7 +62,7 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
                             </>
                         ) : (
                             <>
-                                <Check size={20} className="text-green-500"  />
+                                <Check size={20} className="text-green-500" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">
                                         {LOADING_MESSAGES.SUBSCRIPTION_UPDATED}

@@ -116,7 +116,7 @@ export const ExamplePrompts = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
-                        className="transition-all hover:bg-accent/80 hover:opacity-90"
+                        className="hover:bg-accent/80 transition-all hover:opacity-90"
                         icon={<value.icon size={16} className={value.color} />}
                     >
                         {value.name}

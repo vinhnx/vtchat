@@ -152,7 +152,10 @@ export default function PlusPage() {
                         >
                             <div>
                                 <div className="flex items-center justify-between">
-                                    <TypographyH3 id="tier-free" className="text-lg font-bold text-[#BFB38F]">
+                                    <TypographyH3
+                                        id="tier-free"
+                                        className="text-lg font-bold text-[#BFB38F]"
+                                    >
                                         Free
                                     </TypographyH3>
                                     {isFreeTier && (
@@ -303,7 +306,9 @@ export default function PlusPage() {
 
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
-                    <TypographyH2 className="text-lg font-semibold text-white">Ready to get started?</TypographyH2>
+                    <TypographyH2 className="text-lg font-semibold text-white">
+                        Ready to get started?
+                    </TypographyH2>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
                             onClick={() => {

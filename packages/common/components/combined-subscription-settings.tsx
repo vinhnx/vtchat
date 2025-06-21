@@ -89,49 +89,57 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 return {
                     icon: <FileText className="h-4 w-4" />,
                     benefit: 'Upload and analyze documents',
-                    description: 'Process PDFs, Word docs, spreadsheets, and other files directly in chat. Extract insights, summarize content, and ask questions about your documents.',
+                    description:
+                        'Process PDFs, Word docs, spreadsheets, and other files directly in chat. Extract insights, summarize content, and ask questions about your documents.',
                 };
             case FeatureSlug.STRUCTURED_OUTPUT:
                 return {
                     icon: <MessageSquare className="h-4 w-4" />,
                     benefit: 'Organized, structured responses',
-                    description: 'Get AI responses in clean tables, bullet points, numbered lists, and other organized formats for better readability and usability.',
+                    description:
+                        'Get AI responses in clean tables, bullet points, numbered lists, and other organized formats for better readability and usability.',
                 };
             case FeatureSlug.THINKING_MODE_TOGGLE:
                 return {
                     icon: <Brain className="h-4 w-4" />,
                     benefit: 'AI reasoning transparency',
-                    description: 'See exactly how the AI thinks through problems step-by-step. Understand the reasoning process for better learning and trust.',
+                    description:
+                        'See exactly how the AI thinks through problems step-by-step. Understand the reasoning process for better learning and trust.',
                 };
             case FeatureSlug.REASONING_CHAIN:
                 return {
                     icon: <Activity className="h-4 w-4" />,
                     benefit: 'Step-by-step problem solving',
-                    description: 'Watch AI break down complex problems into logical steps, showing the chain of reasoning for transparent decision making.',
+                    description:
+                        'Watch AI break down complex problems into logical steps, showing the chain of reasoning for transparent decision making.',
                 };
             case FeatureSlug.PRO_SEARCH:
                 return {
                     icon: <Search className="h-4 w-4" />,
                     benefit: 'Advanced web search integration',
-                    description: 'Get real-time information from the web with intelligent search capabilities that understand context and provide accurate results.',
+                    description:
+                        'Get real-time information from the web with intelligent search capabilities that understand context and provide accurate results.',
                 };
             case FeatureSlug.DEEP_RESEARCH:
                 return {
                     icon: <Shield className="h-4 w-4" />,
                     benefit: 'Comprehensive research tools',
-                    description: 'Conduct thorough research across multiple sources with AI-powered analysis, fact-checking, and synthesis of information.',
+                    description:
+                        'Conduct thorough research across multiple sources with AI-powered analysis, fact-checking, and synthesis of information.',
                 };
             case FeatureSlug.DARK_THEME:
                 return {
                     icon: <Palette className="h-4 w-4" />,
                     benefit: 'Comfortable dark mode',
-                    description: 'Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.',
+                    description:
+                        'Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.',
                 };
             default:
                 return {
                     icon: <Sparkles className="h-4 w-4" />,
                     benefit: 'Enhanced AI capabilities',
-                    description: 'Premium features that unlock the full potential of AI assistance.',
+                    description:
+                        'Premium features that unlock the full potential of AI assistance.',
                 };
         }
     };
@@ -151,9 +159,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
 
     return (
         <>
-            <PaymentRedirectLoader
-                isLoading={isPaymentLoading || isPortalLoading}
-            />
+            <PaymentRedirectLoader isLoading={isPaymentLoading || isPortalLoading} />
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center gap-3">
@@ -191,7 +197,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             <UserTierBadge />
                                         </div>
                                         <div className="text-muted-foreground text-sm">
-                                            {isVtPlus ? '$9.99/month • Renews automatically' : currentPlan.description}
+                                            {isVtPlus
+                                                ? '$9.99/month • Renews automatically'
+                                                : currentPlan.description}
                                         </div>
                                     </div>
                                 </div>
@@ -385,17 +393,17 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             className="border-border/50 bg-muted/20 rounded-lg border p-4"
                                         >
                                             <div className="flex items-start gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400">
                                                     {details.icon}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="flex items-center gap-2 mb-1">
+                                                    <div className="mb-1 flex items-center gap-2">
                                                         <div className="text-foreground font-medium">
                                                             {feature.name}
                                                         </div>
                                                         <Check className="h-4 w-4 text-green-500" />
                                                     </div>
-                                                    <div className="text-muted-foreground text-sm mb-2">
+                                                    <div className="text-muted-foreground mb-2 text-sm">
                                                         {details.benefit}
                                                     </div>
                                                     <div className="text-muted-foreground text-xs leading-relaxed">
@@ -412,21 +420,23 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     {/* Current free plan feature */}
                                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                         <div className="flex items-start gap-3">
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400">
                                                 <MessageSquare className="h-4 w-4" />
                                             </div>
                                             <div className="min-w-0 flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
+                                                <div className="mb-1 flex items-center gap-2">
                                                     <div className="text-foreground font-medium">
                                                         Basic Chat
                                                     </div>
                                                     <Check className="h-4 w-4 text-green-500" />
                                                 </div>
-                                                <div className="text-muted-foreground text-sm mb-2">
+                                                <div className="text-muted-foreground mb-2 text-sm">
                                                     Essential AI conversations
                                                 </div>
                                                 <div className="text-muted-foreground text-xs leading-relaxed">
-                                                    Access to basic AI conversation features with standard models for everyday assistance and support.
+                                                    Access to basic AI conversation features with
+                                                    standard models for everyday assistance and
+                                                    support.
                                                 </div>
                                             </div>
                                         </div>
@@ -446,14 +456,14 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 </div>
 
                                                 <div className="flex items-start gap-3 pr-12">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
                                                         {details.icon}
                                                     </div>
                                                     <div className="min-w-0 flex-1">
-                                                        <div className="text-foreground font-medium mb-1">
+                                                        <div className="text-foreground mb-1 font-medium">
                                                             {feature.name}
                                                         </div>
-                                                        <div className="text-muted-foreground text-sm mb-2">
+                                                        <div className="text-muted-foreground mb-2 text-sm">
                                                             {details.benefit}
                                                         </div>
                                                         <div className="text-muted-foreground text-xs leading-relaxed">
@@ -485,7 +495,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                         <Sparkles className="h-4 w-4 text-amber-600" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
-                            <strong>Ready to upgrade?</strong> Get VT+ for $9.99/month and unlock advanced AI reasoning, document parsing, and premium tools.
+                            <strong>Ready to upgrade?</strong> Get VT+ for $9.99/month and unlock
+                            advanced AI reasoning, document parsing, and premium tools.
                         </AlertDescription>
                     </Alert>
                 )}

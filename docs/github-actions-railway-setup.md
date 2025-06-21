@@ -65,8 +65,8 @@ Create GitHub environments for additional protection:
 
 1. Go to Settings → Environments
 2. Create environments:
-   - `development` (for dev branch deployments)
-   - `production` (for main branch deployments)
+    - `development` (for dev branch deployments)
+    - `production` (for main branch deployments)
 3. Add protection rules as needed (required reviewers, branch restrictions)
 
 ## Branch Strategy
@@ -110,12 +110,12 @@ git checkout -b release/v1.0.0
 
 ## Environment URLs
 
-| Environment | URL Pattern | Trigger |
-|-------------|-------------|---------|
-| **Development** | `https://vtchat-web-development.up.railway.app` | Push to `dev` |
-| **Production** | `https://vtchat-web-production.up.railway.app` | Push to `main` |
-| **PR Preview (Dev)** | `https://vtchat-web-pr-{number}-dev.up.railway.app` | PR to `dev` |
-| **PR Preview (Main)** | `https://vtchat-web-pr-{number}-main.up.railway.app` | PR to `main` |
+| Environment           | URL Pattern                                          | Trigger        |
+| --------------------- | ---------------------------------------------------- | -------------- |
+| **Development**       | `https://vtchat-web-development.up.railway.app`      | Push to `dev`  |
+| **Production**        | `https://vtchat-web-production.up.railway.app`       | Push to `main` |
+| **PR Preview (Dev)**  | `https://vtchat-web-pr-{number}-dev.up.railway.app`  | PR to `dev`    |
+| **PR Preview (Main)** | `https://vtchat-web-pr-{number}-main.up.railway.app` | PR to `main`   |
 
 ## Workflow Features
 
@@ -222,20 +222,23 @@ railway environment production
 ### Common Issues
 
 1. **Railway Token Invalid**
-   - Regenerate token in Railway dashboard
-   - Update GitHub secret
+
+    - Regenerate token in Railway dashboard
+    - Update GitHub secret
 
 2. **Project ID Wrong**
-   - Check Railway project URL or run `railway status`
-   - Update GitHub repository variable
+
+    - Check Railway project URL or run `railway status`
+    - Update GitHub repository variable
 
 3. **Environment Creation Fails**
-   - Check Railway project limits
-   - Verify token permissions
+
+    - Check Railway project limits
+    - Verify token permissions
 
 4. **Build Fails**
-   - Check build logs in GitHub Actions
-   - Verify all environment variables are set in Railway
+    - Check build logs in GitHub Actions
+    - Verify all environment variables are set in Railway
 
 ### Getting Help
 

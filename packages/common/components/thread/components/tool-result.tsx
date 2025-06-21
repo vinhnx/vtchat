@@ -23,11 +23,23 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                 onClick={toggleOpen}
             >
                 <div className="flex flex-row items-center gap-2.5">
-                    {isResultMathTool ? <CheckCircle size={16} className="text-green-600" /> : <ToolResultIcon />}
-                    <Badge className={isResultMathTool ? 'bg-green-100 text-green-800 border-green-300' : ''}>
+                    {isResultMathTool ? (
+                        <CheckCircle size={16} className="text-green-600" />
+                    ) : (
+                        <ToolResultIcon />
+                    )}
+                    <Badge
+                        className={
+                            isResultMathTool ? 'border-green-300 bg-green-100 text-green-800' : ''
+                        }
+                    >
                         {isResultMathTool ? '✅ Result' : 'Result'}
                     </Badge>
-                    <Badge className={isResultMathTool ? 'bg-green-50 text-green-700 border-green-200' : ''}>
+                    <Badge
+                        className={
+                            isResultMathTool ? 'border-green-200 bg-green-50 text-green-700' : ''
+                        }
+                    >
                         {isResultMathTool ? `🧮 ${toolResult.toolName}` : toolResult.toolName}
                     </Badge>
                 </div>
@@ -39,7 +51,7 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                             'text-muted-foreground transform transition-transform',
                             isOpen && 'rotate-180'
                         )}
-                     />
+                    />
                 </div>
             </div>
             {isOpen && (

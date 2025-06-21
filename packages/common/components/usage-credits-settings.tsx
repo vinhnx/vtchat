@@ -4,7 +4,17 @@ import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/com
 import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT } from '@repo/shared/constants';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, TypographyH3, TypographyMuted, Skeleton } from '@repo/ui';
+import {
+    Button,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    TypographyH3,
+    TypographyMuted,
+    Skeleton,
+} from '@repo/ui';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
 
@@ -40,9 +50,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
 
     return (
         <>
-            <PaymentRedirectLoader
-                isLoading={isPaymentLoading || isPortalLoading}
-            />
+            <PaymentRedirectLoader isLoading={isPaymentLoading || isPortalLoading} />
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center gap-3">
@@ -55,25 +63,23 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                 {/* Current Plan Card */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            Current Plan
-                        </CardTitle>
+                        <CardTitle className="flex items-center gap-2">Current Plan</CardTitle>
                         <CardDescription>
                             Your current subscription plan and features
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                        <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <div className="text-lg font-semibold text-foreground">
+                                            <div className="text-foreground text-lg font-semibold">
                                                 {currentPlan.name}
                                             </div>
                                             <UserTierBadge />
                                         </div>
-                                        <div className="text-sm text-muted-foreground max-w-md">
+                                        <div className="text-muted-foreground max-w-md text-sm">
                                             {currentPlan.description}
                                         </div>
                                     </div>
@@ -92,10 +98,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                                     : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
                                             </Button>
                                         ) : (
-                                            <Button
-                                                size="sm"
-                                                onClick={handleUpgradeToPlus}
-                                            >
+                                            <Button size="sm" onClick={handleUpgradeToPlus}>
                                                 Upgrade to Plus
                                             </Button>
                                         )}
@@ -113,9 +116,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                 {/* Features Card */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            Plan Features
-                        </CardTitle>
+                        <CardTitle className="flex items-center gap-2">Plan Features</CardTitle>
                         <CardDescription>
                             What's included in your {currentPlan.name} plan
                         </CardDescription>
@@ -127,13 +128,13 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                 vtPlusFeatures.map(feature => (
                                     <div
                                         key={feature.id}
-                                        className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/20 p-3"
+                                        className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
                                     >
                                         <div className="min-w-0 flex-1">
-                                            <div className="text-sm font-medium text-foreground">
+                                            <div className="text-foreground text-sm font-medium">
                                                 {feature.name}
                                             </div>
-                                            <div className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                                            <div className="text-muted-foreground mt-1 text-xs leading-relaxed">
                                                 {feature.description}
                                             </div>
                                         </div>
@@ -141,13 +142,14 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                 ))
                             ) : (
                                 // Free Plan Features
-                                <div className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/20 p-3">
+                                <div className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3">
                                     <div className="min-w-0 flex-1">
-                                        <div className="text-sm font-medium text-foreground">
+                                        <div className="text-foreground text-sm font-medium">
                                             Basic Chat
                                         </div>
-                                        <div className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                                            Access to basic AI conversation features and standard models.
+                                        <div className="text-muted-foreground mt-1 text-xs leading-relaxed">
+                                            Access to basic AI conversation features and standard
+                                            models.
                                         </div>
                                     </div>
                                 </div>
@@ -174,10 +176,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     <div className="text-foreground text-sm font-medium">
                                         $9.99/month • Cancel anytime
                                     </div>
-                                    <Button
-                                        size="sm"
-                                        onClick={handleUpgradeToPlus}
-                                    >
+                                    <Button size="sm" onClick={handleUpgradeToPlus}>
                                         Upgrade Now
                                     </Button>
                                 </div>

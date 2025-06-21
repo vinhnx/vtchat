@@ -39,10 +39,10 @@ The document upload button will only appear when one of these models is selected
 4. The document will appear as an attachment preview
 5. Type your message and send - the AI will analyze both your text and the document
 6. **Document Processing**: While Gemini processes the document, you'll see:
-   - A processing indicator with the document name
-   - A timer showing processing duration
-   - A warning if processing takes longer than 30 seconds
-   - Option to cancel processing if needed
+    - A processing indicator with the document name
+    - A timer showing processing duration
+    - A warning if processing takes longer than 30 seconds
+    - Option to cancel processing if needed
 
 ## User Interface Features
 

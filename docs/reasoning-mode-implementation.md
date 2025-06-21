@@ -80,7 +80,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.CLAUDE_4_SONNET,
         ModelEnum.CLAUDE_4_OPUS,
         // OpenAI o-series (future)
-        ModelEnum.O4_Mini
+        ModelEnum.O4_Mini,
     ];
     return supportedModels.includes(model);
 };
@@ -97,7 +97,7 @@ export const generateText = async ({
     onReasoningDetails?: (details: ReasoningDetail[]) => void;
 }) => {
     const streamResult = streamText(streamConfig);
-    
+
     // Extract reasoning details if available
     try {
         if (streamResult?.reasoningDetails) {
@@ -116,7 +116,7 @@ export const generateText = async ({
 // packages/ai/workflow/tasks/completion.ts
 const response = await generateText({
     // ... config
-    onReasoningDetails: (details) => {
+    onReasoningDetails: details => {
         events?.update('steps', prev => ({
             ...prev,
             0: {

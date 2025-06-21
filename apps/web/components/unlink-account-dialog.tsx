@@ -41,8 +41,8 @@ export function UnlinkAccountDialog({
                         {isLastAccount ? (
                             <>
                                 <p>
-                                    You cannot unlink your only connected account as it would prevent you from
-                                    signing in.
+                                    You cannot unlink your only connected account as it would
+                                    prevent you from signing in.
                                 </p>
                                 <p className="text-amber-600">
                                     Please link another account first before unlinking this one.
@@ -51,8 +51,8 @@ export function UnlinkAccountDialog({
                         ) : (
                             <>
                                 <p>
-                                    Are you sure you want to unlink your {providerName} account? This will
-                                    remove the ability to sign in using {providerName}.
+                                    Are you sure you want to unlink your {providerName} account?
+                                    This will remove the ability to sign in using {providerName}.
                                 </p>
                                 <p className="text-muted-foreground text-sm">
                                     You can always link it again later if needed.

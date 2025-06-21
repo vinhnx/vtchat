@@ -9,11 +9,11 @@ import { sql } from 'drizzle-orm';
 
 async function runMigration() {
     console.log('🚀 Starting user profile enhancement migration...');
-    
+
     try {
         // Read and execute the migration SQL
         console.log('📝 Adding enhanced user profile fields...');
-        
+
         await db.execute(sql`
             -- Add enhanced user profile fields
             ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
@@ -29,7 +29,7 @@ async function runMigration() {
         `);
 
         console.log('📊 Adding performance indexes...');
-        
+
         await db.execute(sql`
             -- Add indexes for performance
             CREATE INDEX IF NOT EXISTS idx_users_location ON users(location);
@@ -38,7 +38,7 @@ async function runMigration() {
         `);
 
         console.log('🔄 Updating timestamps...');
-        
+
         await db.execute(sql`
             -- Update the updated_at field for this migration
             UPDATE users SET updated_at = NOW() WHERE bio IS NULL;
@@ -53,7 +53,6 @@ async function runMigration() {
         console.log('   - Job Title (professional role)');
         console.log('   - Timezone, Language, Theme preferences');
         console.log('   - Notification preferences');
-        
     } catch (error) {
         console.error('❌ Migration failed:', error);
         process.exit(1);
@@ -66,7 +65,7 @@ runMigration()
         console.log('🏁 Migration script completed');
         process.exit(0);
     })
-    .catch((error) => {
+    .catch(error => {
         console.error('💥 Migration script failed:', error);
         process.exit(1);
     });

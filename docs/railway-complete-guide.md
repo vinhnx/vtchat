@@ -240,24 +240,24 @@ Your current Dockerfile is optimized for:
 
 1. **Copy environment template**:
 
-   ```bash
-   cp apps/web/.env.example apps/web/.env.local
-   ```
+    ```bash
+    cp apps/web/.env.example apps/web/.env.local
+    ```
 
 2. **Fill in local values**:
 
-   ```bash
-   # Development values
-   BETTER_AUTH_URL=http://localhost:3000
-   BETTER_AUTH_ENV=development
-   DATABASE_URL=your-local-or-dev-db
-   ```
+    ```bash
+    # Development values
+    BETTER_AUTH_URL=http://localhost:3000
+    BETTER_AUTH_ENV=development
+    DATABASE_URL=your-local-or-dev-db
+    ```
 
 3. **Start development server**:
 
-   ```bash
-   bun dev
-   ```
+    ```bash
+    bun dev
+    ```
 
 ### Testing Production Builds Locally
 

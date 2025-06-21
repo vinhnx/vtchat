@@ -17,10 +17,10 @@ const mockDocumentProcessingIndicator = (isProcessing, showCompletion, fileName)
         displayMessage: isProcessing
             ? `Analyzing ${fileName || 'document'}...`
             : showCompletion
-                ? `${fileName || 'Document'} analyzed`
-                : null,
+              ? `${fileName || 'Document'} analyzed`
+              : null,
         icon: isProcessing ? 'loader' : showCompletion ? 'checkmark' : null,
-        duration: showCompletion ? 3000 : null // Show completion for 3 seconds
+        duration: showCompletion ? 3000 : null, // Show completion for 3 seconds
     };
 };
 
@@ -30,20 +30,20 @@ const testScenarios = [
         name: 'Document processing in progress',
         isProcessing: true,
         showCompletion: false,
-        fileName: 'report.pdf'
+        fileName: 'report.pdf',
     },
     {
         name: 'Document processing completed',
         isProcessing: false,
         showCompletion: true,
-        fileName: 'report.pdf'
+        fileName: 'report.pdf',
     },
     {
         name: 'No processing or completion',
         isProcessing: false,
         showCompletion: false,
-        fileName: 'report.pdf'
-    }
+        fileName: 'report.pdf',
+    },
 ];
 
 console.log('✅ Document Processing State Tests:');
@@ -69,7 +69,7 @@ const features = [
     'Auto-hide: Completion state disappears after 3 seconds',
     'Smooth transitions: Animated enter/exit states',
     'Filename support: Displays specific document name',
-    'Accessibility: Proper labels and status indicators'
+    'Accessibility: Proper labels and status indicators',
 ];
 
 features.forEach(feature => {
@@ -82,7 +82,7 @@ const requirements = [
     'showCompletion: Controls completion state display',
     'fileName: Optional specific document name',
     'onCancel: Optional cancel functionality during processing',
-    'Auto-transition: Completion state auto-hides after 3 seconds'
+    'Auto-transition: Completion state auto-hides after 3 seconds',
 ];
 
 requirements.forEach(req => {

@@ -10,12 +10,12 @@ export const MathCalculatorIndicator = memo(({ isCalculating }: MathCalculatorIn
     if (!isCalculating) return null;
 
     return (
-        <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+        <div className="flex items-center gap-2 rounded-md border border-green-200 bg-green-50 p-2">
             <div className="flex items-center gap-1">
                 <Sigma size={16} className="text-green-600" />
                 <Loader2 size={14} className="animate-spin text-green-600" />
             </div>
-            <Badge className="bg-green-100 text-green-800 border-green-300">
+            <Badge className="border-green-300 bg-green-100 text-green-800">
                 🧮 Calculating...
             </Badge>
         </div>

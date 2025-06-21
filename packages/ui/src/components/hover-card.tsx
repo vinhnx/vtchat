@@ -1,6 +1,14 @@
 'use client';
 
-import { flip, offset, shift, useFloating, useHover, useInteractions, FloatingPortal } from '@floating-ui/react';
+import {
+    flip,
+    offset,
+    shift,
+    useFloating,
+    useHover,
+    useInteractions,
+    FloatingPortal,
+} from '@floating-ui/react';
 import * as React from 'react';
 import { cn } from '../lib/utils';
 

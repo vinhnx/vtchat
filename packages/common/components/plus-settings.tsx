@@ -5,21 +5,21 @@ import { useChatStore } from '@repo/common/store';
 import { VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { FeatureSlug } from '@repo/shared/types/subscription';
-import { 
-    Alert, 
-    AlertDescription, 
-    Badge, 
+import {
+    Alert,
+    AlertDescription,
+    Badge,
     Button,
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-    Label, 
-    Slider, 
+    Label,
+    Slider,
     Switch,
     TypographyH3,
-    TypographyMuted
+    TypographyMuted,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -35,7 +35,7 @@ import {
     Zap,
     ArrowRight,
     Check,
-    Lock
+    Lock,
 } from 'lucide-react';
 
 export const PlusSettings = () => {
@@ -82,21 +82,21 @@ export const PlusSettings = () => {
     const getFeatureBenefit = (featureId: FeatureSlug) => {
         switch (featureId) {
             case FeatureSlug.DOCUMENT_PARSING:
-                return "Upload and analyze PDFs, Word docs, and more";
+                return 'Upload and analyze PDFs, Word docs, and more';
             case FeatureSlug.STRUCTURED_OUTPUT:
-                return "Get organized responses in tables, lists, and structured formats";
+                return 'Get organized responses in tables, lists, and structured formats';
             case FeatureSlug.THINKING_MODE_TOGGLE:
-                return "See AI reasoning process for better understanding";
+                return 'See AI reasoning process for better understanding';
             case FeatureSlug.REASONING_CHAIN:
-                return "Follow step-by-step logical reasoning";
+                return 'Follow step-by-step logical reasoning';
             case FeatureSlug.PRO_SEARCH:
-                return "Advanced search capabilities with web integration";
+                return 'Advanced search capabilities with web integration';
             case FeatureSlug.DEEP_RESEARCH:
-                return "Comprehensive research with multiple sources";
+                return 'Comprehensive research with multiple sources';
             case FeatureSlug.DARK_THEME:
-                return "Elegant dark mode for comfortable viewing";
+                return 'Elegant dark mode for comfortable viewing';
             default:
-                return "Enhanced AI capabilities and premium features";
+                return 'Enhanced AI capabilities and premium features';
         }
     };
 
@@ -110,7 +110,9 @@ export const PlusSettings = () => {
                     </div>
                     <div>
                         <TypographyH3>VT+ Features</TypographyH3>
-                        <TypographyMuted>Premium AI capabilities and advanced tools</TypographyMuted>
+                        <TypographyMuted>
+                            Premium AI capabilities and advanced tools
+                        </TypographyMuted>
                     </div>
                 </div>
 
@@ -118,7 +120,8 @@ export const PlusSettings = () => {
                 <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                     <Sparkles className="h-4 w-4 text-amber-600" />
                     <AlertDescription className="text-amber-800 dark:text-amber-200">
-                        <strong>Unlock VT+ Features:</strong> Get access to advanced AI reasoning, document parsing, and premium tools with your VT+ subscription.
+                        <strong>Unlock VT+ Features:</strong> Get access to advanced AI reasoning,
+                        document parsing, and premium tools with your VT+ subscription.
                     </AlertDescription>
                 </Alert>
 
@@ -138,25 +141,29 @@ export const PlusSettings = () => {
                             {Object.values(VT_PLUS_FEATURES).map(feature => (
                                 <div
                                     key={feature.id}
-                                    className="group relative overflow-hidden rounded-lg border border-border/50 bg-muted/20 p-4 transition-all hover:bg-muted/30"
+                                    className="border-border/50 bg-muted/20 hover:bg-muted/30 group relative overflow-hidden rounded-lg border p-4 transition-all"
                                 >
                                     {/* Lock overlay */}
-                                    <div className="absolute right-3 top-3 rounded-full bg-background/80 p-1.5 backdrop-blur-sm">
-                                        <Lock className="h-3 w-3 text-muted-foreground" />
+                                    <div className="bg-background/80 absolute right-3 top-3 rounded-full p-1.5 backdrop-blur-sm">
+                                        <Lock className="text-muted-foreground h-3 w-3" />
                                     </div>
-                                    
+
                                     <div className="flex items-start gap-4">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background/50">
+                                        <div className="bg-background/50 flex h-10 w-10 items-center justify-center rounded-lg">
                                             {getFeatureIcon(feature.id)}
                                         </div>
                                         <div className="flex-1 space-y-2">
                                             <div>
-                                                <div className="font-medium text-foreground">{feature.name}</div>
-                                                <div className="text-sm text-muted-foreground">{feature.description}</div>
+                                                <div className="text-foreground font-medium">
+                                                    {feature.name}
+                                                </div>
+                                                <div className="text-muted-foreground text-sm">
+                                                    {feature.description}
+                                                </div>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="h-1 w-1 rounded-full bg-green-500"></div>
-                                                <span className="text-xs text-muted-foreground">
+                                                <span className="text-muted-foreground text-xs">
                                                     {getFeatureBenefit(feature.id)}
                                                 </span>
                                             </div>
@@ -165,11 +172,11 @@ export const PlusSettings = () => {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="mt-6 flex items-center justify-center">
-                            <Button 
-                                className="group gap-2" 
-                                onClick={() => window.location.href = '/plus'}
+                            <Button
+                                className="group gap-2"
+                                onClick={() => (window.location.href = '/plus')}
                             >
                                 <Crown className="h-4 w-4" />
                                 Upgrade to VT+
@@ -201,27 +208,34 @@ export const PlusSettings = () => {
                     <CardTitle className="flex items-center gap-2">
                         <Brain className="h-5 w-5 text-purple-500" />
                         Thinking Mode
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+                        <Badge
+                            variant="secondary"
+                            className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
+                        >
                             VT+ Active
                         </Badge>
                     </CardTitle>
                     <CardDescription>
-                        Advanced reasoning mode that shows AI thought process for better understanding
+                        Advanced reasoning mode that shows AI thought process for better
+                        understanding
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {/* Enable/Disable Toggle */}
-                    <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/20">
                                     <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                                 </div>
                                 <div>
-                                    <Label htmlFor="thinking-mode" className="text-sm font-medium cursor-pointer">
+                                    <Label
+                                        htmlFor="thinking-mode"
+                                        className="cursor-pointer text-sm font-medium"
+                                    >
                                         Enable Thinking Mode
                                     </Label>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="text-muted-foreground text-xs">
                                         Show detailed reasoning process in responses
                                     </div>
                                 </div>
@@ -244,17 +258,20 @@ export const PlusSettings = () => {
                                 className="space-y-4"
                             >
                                 {/* Include Thoughts Toggle */}
-                                <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                                <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
                                                 <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                             </div>
                                             <div>
-                                                <Label htmlFor="include-thoughts" className="text-sm font-medium cursor-pointer">
+                                                <Label
+                                                    htmlFor="include-thoughts"
+                                                    className="cursor-pointer text-sm font-medium"
+                                                >
                                                     Show Thought Process
                                                 </Label>
-                                                <div className="text-xs text-muted-foreground">
+                                                <div className="text-muted-foreground text-xs">
                                                     Display internal reasoning steps in chat
                                                 </div>
                                             </div>
@@ -268,7 +285,7 @@ export const PlusSettings = () => {
                                 </div>
 
                                 {/* Thinking Budget Slider */}
-                                <div className="rounded-lg border border-border/50 bg-muted/20 p-4">
+                                <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
@@ -278,7 +295,7 @@ export const PlusSettings = () => {
                                                 <Label className="text-sm font-medium">
                                                     Thinking Budget: {thinkingMode.budget}
                                                 </Label>
-                                                <div className="text-xs text-muted-foreground">
+                                                <div className="text-muted-foreground text-xs">
                                                     Higher values allow deeper reasoning
                                                 </div>
                                             </div>
@@ -297,7 +314,7 @@ export const PlusSettings = () => {
                                             step={THINKING_MODE.BUDGET_STEP}
                                             className="w-full"
                                         />
-                                        <div className="flex justify-between text-xs text-muted-foreground">
+                                        <div className="text-muted-foreground flex justify-between text-xs">
                                             <span>Quick ({THINKING_MODE.MIN_BUDGET})</span>
                                             <span>Deep ({THINKING_MODE.MAX_BUDGET})</span>
                                         </div>
@@ -325,16 +342,16 @@ export const PlusSettings = () => {
                         {Object.values(VT_PLUS_FEATURES).map(feature => (
                             <div
                                 key={feature.id}
-                                className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/20 p-3"
+                                className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
                             >
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
                                     <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <div className="text-sm font-medium text-foreground">
+                                    <div className="text-foreground text-sm font-medium">
                                         {feature.name}
                                     </div>
-                                    <div className="mt-1 text-xs text-muted-foreground">
+                                    <div className="text-muted-foreground mt-1 text-xs">
                                         {getFeatureBenefit(feature.id)}
                                     </div>
                                 </div>

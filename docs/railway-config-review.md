@@ -207,7 +207,7 @@ CMD ["bun", "run", "start"]
 Railway automatically sets the `PORT` environment variable. Your Next.js app should listen on:
 
 ```javascript
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 ```
 
 ## Monitoring & Logging
@@ -218,11 +218,14 @@ Your `/api/health` endpoint is properly configured:
 
 ```typescript
 export async function GET() {
-    return NextResponse.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        service: 'vtchat',
-    }, { status: 200 });
+    return NextResponse.json(
+        {
+            status: 'healthy',
+            timestamp: new Date().toISOString(),
+            service: 'vtchat',
+        },
+        { status: 200 }
+    );
 }
 ```
 

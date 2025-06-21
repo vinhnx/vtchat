@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         }
 
         const userId = session.user.id;
-        
+
         // Parse JSON body, but handle empty body gracefully
         let targetUserId;
         try {

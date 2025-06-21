@@ -30,7 +30,9 @@ export const Footer = () => {
                     </Link>
                 ))}
             </div>
-            <TypographySmall className="text-muted-foreground text-xs">© 2025 VT. All rights reserved.</TypographySmall>
+            <TypographySmall className="text-muted-foreground text-xs">
+                © 2025 VT. All rights reserved.
+            </TypographySmall>
         </div>
     );
 };

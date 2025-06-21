@@ -6,13 +6,11 @@ export type PaymentRedirectLoaderProps = {
     isLoading: boolean;
 };
 
-export const PaymentRedirectLoader = ({ 
-    isLoading
-}: PaymentRedirectLoaderProps) => {
+export const PaymentRedirectLoader = ({ isLoading }: PaymentRedirectLoaderProps) => {
     if (!isLoading) return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] bg-background/80 backdrop-blur-sm">
+        <div className="bg-background/80 fixed inset-0 z-[9999] backdrop-blur-sm">
             <FullPageLoader />
         </div>
     );

@@ -10,17 +10,17 @@ This document describes the complete Vitest testing setup for the VTChat monorep
 
 ```json
 {
-  "devDependencies": {
-    "vitest": "^3.2.4",
-    "@vitest/ui": "^3.2.4",
-    "@vitest/coverage-v8": "^3.2.4",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/user-event": "^14.6.1",
-    "@vitejs/plugin-react": "^4.5.2",
-    "jsdom": "^26.1.0",
-    "vite-tsconfig-paths": "^5.1.4"
-  }
+    "devDependencies": {
+        "vitest": "^3.2.4",
+        "@vitest/ui": "^3.2.4",
+        "@vitest/coverage-v8": "^3.2.4",
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/user-event": "^14.6.1",
+        "@vitejs/plugin-react": "^4.5.2",
+        "jsdom": "^26.1.0",
+        "vite-tsconfig-paths": "^5.1.4"
+    }
 }
 ```
 
@@ -29,105 +29,105 @@ This document describes the complete Vitest testing setup for the VTChat monorep
 #### `vitest.config.ts` (Root Level - Following Next.js Recommendations)
 
 ```typescript
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./vitest.setup.ts'],
-    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/.{idea,git,cache,output,temp}/**',
-      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
-      '**/apps/web/.next/**'
-    ],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'coverage/**',
-        'dist/**',
-        '**/node_modules/**',
-        '**/.next/**',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/apps/web/app/tests/**',
-        'vitest.setup.ts'
-      ]
-    }
-  }
-})
+    plugins: [tsconfigPaths(), react()],
+    test: {
+        environment: 'jsdom',
+        globals: true,
+        setupFiles: ['./vitest.setup.ts'],
+        include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+        exclude: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/.{idea,git,cache,output,temp}/**',
+            '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
+            '**/apps/web/.next/**',
+        ],
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+            exclude: [
+                'coverage/**',
+                'dist/**',
+                '**/node_modules/**',
+                '**/.next/**',
+                '**/*.d.ts',
+                '**/*.config.*',
+                '**/apps/web/app/tests/**',
+                'vitest.setup.ts',
+            ],
+        },
+    },
+});
 ```
 
 #### `vitest.setup.ts` (Test Setup)
 
 ```typescript
-import '@testing-library/jest-dom/vitest'
-import { afterEach, beforeAll, vi } from 'vitest'
-import { cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/vitest';
+import { afterEach, beforeAll, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
 
 // Mock IntersectionObserver for components that use it
 beforeAll(() => {
-  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }))
+    global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+    }));
 
-  // Mock ResizeObserver for components that use it
-  global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }))
+    // Mock ResizeObserver for components that use it
+    global.ResizeObserver = vi.fn().mockImplementation(() => ({
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+    }));
 
-  // Mock matchMedia for responsive components
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: vi.fn().mockImplementation(query => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }))
-  })
+    // Mock matchMedia for responsive components
+    Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: vi.fn().mockImplementation(query => ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        })),
+    });
 
-  // Mock localStorage and sessionStorage
-  const mockStorage = {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    clear: vi.fn(),
-    length: 0,
-    key: vi.fn(),
-  }
+    // Mock localStorage and sessionStorage
+    const mockStorage = {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+        length: 0,
+        key: vi.fn(),
+    };
 
-  Object.defineProperty(window, 'localStorage', {
-    writable: true,
-    value: mockStorage,
-  })
+    Object.defineProperty(window, 'localStorage', {
+        writable: true,
+        value: mockStorage,
+    });
 
-  Object.defineProperty(window, 'sessionStorage', {
-    writable: true,
-    value: mockStorage,
-  })
-})
+    Object.defineProperty(window, 'sessionStorage', {
+        writable: true,
+        value: mockStorage,
+    });
+});
 
 // Clean up after each test
 afterEach(() => {
-  cleanup()
-  vi.clearAllMocks()
-})
+    cleanup();
+    vi.clearAllMocks();
+});
 ```
 
 ## Scripts Available
@@ -136,13 +136,13 @@ afterEach(() => {
 
 ```json
 {
-  "scripts": {
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
-  }
+    "scripts": {
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:run": "vitest run",
+        "test:watch": "vitest --watch",
+        "test:coverage": "vitest run --coverage"
+    }
 }
 ```
 
@@ -152,11 +152,11 @@ Each package (`@repo/shared`, `@repo/common`) has:
 
 ```json
 {
-  "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
-  }
+    "scripts": {
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:coverage": "vitest run --coverage"
+    }
 }
 ```
 
@@ -166,20 +166,20 @@ Updated `turbo.json` includes test tasks:
 
 ```json
 {
-  "tasks": {
-    "test": {
-      "dependsOn": ["^test"],
-      "outputs": ["coverage/**"]
-    },
-    "test:run": {
-      "dependsOn": ["^test:run"],
-      "outputs": ["coverage/**"]
-    },
-    "test:coverage": {
-      "dependsOn": ["^test:coverage"],
-      "outputs": ["coverage/**"]
+    "tasks": {
+        "test": {
+            "dependsOn": ["^test"],
+            "outputs": ["coverage/**"]
+        },
+        "test:run": {
+            "dependsOn": ["^test:run"],
+            "outputs": ["coverage/**"]
+        },
+        "test:coverage": {
+            "dependsOn": ["^test:coverage"],
+            "outputs": ["coverage/**"]
+        }
     }
-  }
 }
 ```
 
@@ -189,24 +189,24 @@ Updated `turbo.json` includes test tasks:
 
 ```typescript
 // packages/shared/utils/__tests__/utils.test.ts
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest';
 
 describe('Utils', () => {
-  it('should be a placeholder test', () => {
-    expect(true).toBe(true)
-  })
+    it('should be a placeholder test', () => {
+        expect(true).toBe(true);
+    });
 
-  it('should format dates correctly', () => {
-    const testDate = new Date('2023-01-01T00:00:00.000Z')
-    expect(testDate.getFullYear()).toBe(2023)
-  })
+    it('should format dates correctly', () => {
+        const testDate = new Date('2023-01-01T00:00:00.000Z');
+        expect(testDate.getFullYear()).toBe(2023);
+    });
 
-  it('should handle string operations', () => {
-    const testString = 'Hello World'
-    expect(testString.toLowerCase()).toBe('hello world')
-    expect(testString.split(' ')).toEqual(['Hello', 'World'])
-  })
-})
+    it('should handle string operations', () => {
+        const testString = 'Hello World';
+        expect(testString.toLowerCase()).toBe('hello world');
+        expect(testString.split(' ')).toEqual(['Hello', 'World']);
+    });
+});
 ```
 
 ### React Component Test
@@ -286,26 +286,31 @@ Test Files  2 passed (2)
 ## Key Features
 
 ### 1. **Monorepo Support**
+
 - Configured with proper path aliases for all packages
 - Supports testing across package boundaries
 - Turborepo integration for caching
 
 ### 2. **React Testing**
+
 - Testing Library integration
 - Happy DOM environment for fast rendering
 - jest-dom matchers for enhanced assertions
 
 ### 3. **Comprehensive Mocking**
+
 - Browser APIs (IntersectionObserver, ResizeObserver, matchMedia)
 - Storage APIs (localStorage, sessionStorage)
 - Easy to extend for additional mocks
 
 ### 4. **Performance Optimized**
+
 - Fast test execution with Vite's transformation
 - Coverage reporting with v8
 - Watch mode for development
 
 ### 5. **TypeScript Support**
+
 - Full TypeScript support out of the box
 - Type-safe test writing
 - IntelliSense support in test files
@@ -313,6 +318,7 @@ Test Files  2 passed (2)
 ## Best Practices
 
 ### 1. **Test Organization**
+
 ```
 packages/
 ├── shared/
@@ -326,16 +332,19 @@ packages/
 ```
 
 ### 2. **Test Naming**
+
 - Use descriptive test names
 - Group related tests with `describe` blocks
 - Use `.test.ts` or `.spec.ts` extensions
 
 ### 3. **Mocking Strategy**
+
 - Mock external dependencies at the test file level
 - Use global mocks in setup file for common browser APIs
 - Mock network requests appropriately
 
 ### 4. **Component Testing**
+
 - Test user interactions, not implementation details
 - Use accessible queries (getByRole, getByLabelText)
 - Test component behavior, not internal state
