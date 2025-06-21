@@ -15,6 +15,10 @@ import {
     CommandList,
     Dialog,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
     Kbd,
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
@@ -24,17 +28,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
-
-// Create wrapper components for icons to match expected icon prop type
-const KeyIcon: React.ComponentType<{ size?: number; className?: string }> = ({
-    size,
-    className,
-}) => <Key size={size} className={className} />;
-
-const MoonIcon: React.ComponentType<{ size?: number; className?: string }> = ({
-    size,
-    className,
-}) => <Moon size={size} className={className} />;
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -291,40 +284,33 @@ export const CommandSearch = () => {
                 onClose={hideLoginPrompt}
                 title="Login Required"
                 description="Please sign in to access this feature."
-                icon={KeyIcon}
             />
 
             <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
-                <DialogContent ariaTitle="VT+ Required" className="max-w-md rounded-xl">
-                    <div className="flex flex-col items-center gap-4 p-6 text-center">
-                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <Moon size={24} className="text-purple-600 dark:text-purple-400" />
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-semibold">VT+ Required</h3>
-                            <p className="text-muted-foreground text-sm">
-                                Dark theme is a VT+ exclusive feature. Upgrade to enjoy a better
-                                viewing experience.
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button
-                                variant="outlined"
-                                onClick={() => setShowSubscriptionDialog(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    router.push('/plus');
-                                    setShowSubscriptionDialog(false);
-                                    onClose();
-                                }}
-                            >
-                                Upgrade to VT+
-                            </Button>
-                        </div>
-                    </div>
+                <DialogContent ariaTitle="VT+ Required" className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>VT+ Required</DialogTitle>
+                        <DialogDescription>
+                            Dark theme is a VT+ exclusive feature. Upgrade to enjoy a better viewing
+                            experience.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="gap-3">
+                        <Button variant="outline" onClick={() => setShowSubscriptionDialog(false)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                router.push('/plus');
+                                setShowSubscriptionDialog(false);
+                                onClose();
+                            }}
+                            className="gap-2"
+                        >
+                            <Plus size={16} />
+                            Upgrade to VT+
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </CommandDialog>

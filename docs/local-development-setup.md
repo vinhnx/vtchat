@@ -111,7 +111,6 @@ JINA_API_KEY=jina_your-jina-api-key
 # Development Configuration
 NODE_ENV=development
 LOG_LEVEL=debug
-# FREE_TIER_DAILY_LIMIT - removed (no longer needed)
 
 # Neon Configuration (if using Neon)
 NEON_PROJECT_ID=your-neon-project-id
