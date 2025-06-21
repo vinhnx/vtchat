@@ -4,7 +4,7 @@ import { useAgentStream, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ChatMode, getChatModeName } from '@repo/shared/config';
 import { ThreadItem } from '@repo/shared/types';
-import { Alert, AlertDescription, Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
+import { Alert, AlertDescription, AlertTitle, Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
 import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 type MessageActionsProps = {
@@ -134,9 +134,8 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                 {gatedFeatureAlert && (
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                            <strong>{gatedFeatureAlert.title}:</strong> {gatedFeatureAlert.message}
-                        </AlertDescription>
+                        <AlertTitle>{gatedFeatureAlert.title}</AlertTitle>
+                        <AlertDescription>{gatedFeatureAlert.message}</AlertDescription>
                     </Alert>
                 )}
             </div>

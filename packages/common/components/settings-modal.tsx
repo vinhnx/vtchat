@@ -1,8 +1,7 @@
 'use client';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Alert, AlertDescription } from '@repo/ui';
-import { Button } from '@repo/ui';
+import { Alert, AlertDescription, Button } from '@repo/ui';
 import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
 
 import {
@@ -30,7 +29,6 @@ import { ChatEditor } from './chat-input';
 import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
-import { MultiSessionPanel } from './multi-session-panel';
 import { UserProfileSettings } from './user-profile-settings';
 
 export const SettingsModal = () => {
@@ -100,12 +98,6 @@ export const SettingsModal = () => {
             description: 'Connect your own AI providers',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
-        },
-        {
-            title: 'Active Sessions',
-            description: 'Manage your device sessions and security',
-            key: SETTING_TABS.ACTIVE_SESSIONS,
-            component: <MultiSessionPanel />,
         },
     ];
 
