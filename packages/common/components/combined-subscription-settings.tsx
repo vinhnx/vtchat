@@ -31,6 +31,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     Activity,
     ArrowRight,
+    BarChart3,
     Brain,
     Check,
     Crown,
@@ -143,6 +144,13 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     benefit: 'Cost-effective Gemini caching',
                     description:
                         'Reduce API costs for Gemini 2.5 and 2.0 models by reusing conversation context across multiple queries.',
+                };
+            case FeatureSlug.CHART_VISUALIZATION:
+                return {
+                    icon: <BarChart3 className="h-4 w-4" />,
+                    benefit: 'Interactive chart generation',
+                    description:
+                        'Create beautiful interactive charts and graphs directly from AI conversations. Visualize data with bar charts, line charts, pie charts, and more.',
                 };
             default:
                 return {

@@ -94,6 +94,11 @@ export const PRICING_CONFIG = {
                     description: 'No daily limits on usage',
                 },
                 {
+                    name: 'Interactive Chart Generation',
+                    description:
+                        'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations',
+                },
+                {
                     name: 'Advanced AI Capabilities',
                     description: 'Access to the latest AI features and models',
                 },

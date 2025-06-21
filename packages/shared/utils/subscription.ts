@@ -108,6 +108,7 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
             FeatureSlug.DEEP_RESEARCH,
             FeatureSlug.PRO_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
+            FeatureSlug.CHART_VISUALIZATION,
         ].includes(feature)
     ) {
         return status.isVtPlus; // isActive check is already done

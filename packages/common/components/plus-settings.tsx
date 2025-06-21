@@ -24,10 +24,10 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Activity,
+    BarChart3,
     Brain,
     Crown,
     FileText,
-    Info,
     Link,
     Palette,
     Search,
@@ -74,6 +74,8 @@ export const PlusSettings = () => {
                 return <Search className="h-5 w-5 text-cyan-500" />;
             case FeatureSlug.DARK_THEME:
                 return <Palette className="h-5 w-5 text-indigo-500" />;
+            case FeatureSlug.CHART_VISUALIZATION:
+                return <BarChart3 className="h-5 w-5 text-purple-500" />;
             default:
                 return <Sparkles className="h-5 w-5 text-amber-500" />;
         }
@@ -95,6 +97,8 @@ export const PlusSettings = () => {
                 return 'Comprehensive research with multiple sources';
             case FeatureSlug.DARK_THEME:
                 return 'Elegant dark mode for comfortable viewing';
+            case FeatureSlug.CHART_VISUALIZATION:
+                return 'Create interactive charts and graphs from AI conversations';
             default:
                 return 'Enhanced AI capabilities and premium features';
         }

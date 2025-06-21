@@ -1,6 +1,6 @@
 'use client';
 
-import { MotionSkeleton } from '@repo/common/components';
+import { MotionSkeleton, GatedFeatureAlert } from '@repo/common/components';
 import {
     useMathCalculator,
     useSubscriptionAccess,
@@ -257,9 +257,17 @@ export function MathCalculatorButton() {
 export function ChartsButton() {
     const useCharts = useChatStore(state => state.useCharts);
     const setActiveButton = useChatStore(state => state.setActiveButton);
+    const { canAccess } = useSubscriptionAccess();
 
-    // Always show charts for all users (similar to math calculator)
+    // Check if user has access to chart visualization feature
+    const hasChartAccess = canAccess(FeatureSlug.CHART_VISUALIZATION);
+
     const handleChartsToggle = () => {
+        if (!hasChartAccess) {
+            // Show upgrade dialog if user doesn't have access
+            console.log('📊 Charts feature requires VT+ subscription');
+            return;
+        }
         console.log('📊 Charts button clicked, current state:', useCharts);
         setActiveButton('charts');
         console.log('📊 Charts button toggled');
@@ -267,22 +275,29 @@ export function ChartsButton() {
 
     return (
         <>
-            <Button
-                size={useCharts ? 'sm' : 'icon-sm'}
-                tooltip={useCharts ? 'Charts & Graphs - Enabled' : 'Charts & Graphs'}
-                variant={useCharts ? 'secondary' : 'ghost'}
-                className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
-                onClick={handleChartsToggle}
+            <GatedFeatureAlert
+                requiredFeature={FeatureSlug.CHART_VISUALIZATION}
+                message="Chart visualization requires VT+ subscription"
             >
-                <BarChart3
-                    size={16}
-                    strokeWidth={2}
-                    className={cn(
-                        useCharts ? '!text-purple-500' : 'text-muted-foreground'
-                    )}
-                />
-                {useCharts && <p className="text-xs">Charts</p>}
-            </Button>
+                <Button
+                    size={useCharts ? 'sm' : 'icon-sm'}
+                    tooltip={useCharts ? 'Charts & Graphs - Enabled' : 'Charts & Graphs'}
+                    variant={useCharts ? 'secondary' : 'ghost'}
+                    className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
+                    onClick={handleChartsToggle}
+                    disabled={!hasChartAccess}
+                >
+                    <BarChart3
+                        size={16}
+                        strokeWidth={2}
+                        className={cn(
+                            useCharts ? '!text-purple-500' : 'text-muted-foreground',
+                            !hasChartAccess && 'opacity-50'
+                        )}
+                    />
+                    {useCharts && hasChartAccess && <p className="text-xs">Charts</p>}
+                </Button>
+            </GatedFeatureAlert>
         </>
     );
 }

@@ -78,6 +78,13 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse.',
         enabled: true,
     },
+    [FeatureSlug.CHART_VISUALIZATION]: {
+        id: FeatureSlug.CHART_VISUALIZATION,
+        name: 'Interactive Chart Generation',
+        description:
+            'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations.',
+        enabled: true,
+    },
 } as const;
 
 /**
@@ -178,6 +185,13 @@ export const VTPlusAccess = {
      */
     hasGeminiExplicitCaching: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.GEMINI_EXPLICIT_CACHING);
+    },
+
+    /**
+     * Check if user has access to Chart Visualization
+     */
+    hasChartVisualization: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.CHART_VISUALIZATION);
     },
 
     /**
