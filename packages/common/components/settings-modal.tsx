@@ -2,7 +2,7 @@
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription } from '@repo/ui';
-import { Button } from '@repo/ui/src/components/button';
+import { Button } from '@repo/ui';
 import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
 
 import {
@@ -106,7 +106,7 @@ export const SettingsModal = () => {
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
                 ariaTitle="Settings"
-                className="h-full max-h-[700px] !max-w-[900px] overflow-x-hidden rounded-xl p-0"
+                className="h-full max-h-[700px] !max-w-[900px] md:max-w-[900px] max-w-[calc(100vw-2rem)] mx-4 md:mx-auto overflow-x-hidden rounded-xl p-0"
             >
                 <div
                     ref={scrollRef}
@@ -114,7 +114,7 @@ export const SettingsModal = () => {
                 >
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
-                        <div className="flex items-center justify-between px-6 py-4">
+                        <div className="flex items-center justify-between px-4 md:px-6 py-4">
                             <div>
                                 <TypographyH2 className="text-xl font-semibold">
                                     Settings
@@ -128,25 +128,25 @@ export const SettingsModal = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-row">
+                    <div className="flex flex-col md:flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 min-h-full w-[280px] shrink-0 border-r">
-                            {/* Make sidebar full height */}
-                            <nav className="space-y-2 p-4">
+                        <div className="border-border bg-muted/30 md:min-h-full w-full md:w-[280px] shrink-0 md:border-r border-b md:border-b-0">
+                            {/* Mobile horizontal scroll, desktop vertical nav */}
+                            <nav className="flex md:flex-col md:space-y-2 md:p-4 p-2 gap-2 md:gap-0 overflow-x-auto md:overflow-x-visible">
                                 {settingMenu.map(setting => (
                                     <button
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         className={cn(
-                                            'flex w-full items-start rounded-lg p-3 text-left transition-colors',
+                                            'flex w-full md:w-auto items-start rounded-lg p-2 md:p-3 text-left transition-colors whitespace-nowrap md:whitespace-normal',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                     >
                                         <div className="flex-1 space-y-1">
-                                            <div className="font-medium">{setting.title}</div>
-                                            <div className="text-muted-foreground text-xs">
+                                            <div className="font-medium text-sm md:text-base">{setting.title}</div>
+                                            <div className="text-muted-foreground text-xs hidden md:block">
                                                 {setting.description}
                                             </div>
                                         </div>
@@ -157,11 +157,11 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="bg-background flex-1 p-6"
+                            className="bg-background flex-1 p-4 md:p-6"
                             ref={panelContentRef}
                             style={{ overflowY: 'auto', maxHeight: '700px' }}
                         >
-                            <div className="max-w-2xl">
+                            <div className="max-w-full md:max-w-2xl">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
                             </div>
                         </div>
@@ -264,9 +264,7 @@ export const ApiKeySettings = () => {
             {/* Security Info Section */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                        Secure Local Storage
-                    </CardTitle>
+                    <CardTitle className="text-lg font-semibold">Secure Local Storage</CardTitle>
                     <CardDescription>
                         Your API keys are protected and never leave your device
                     </CardDescription>
@@ -513,9 +511,7 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             {/* Interface Preferences Section */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                        Interface Preferences
-                    </CardTitle>
+                    <CardTitle className="text-lg font-semibold">Interface Preferences</CardTitle>
                     <CardDescription>
                         Customize your chat interface to match your workflow and preferences.
                     </CardDescription>
@@ -548,19 +544,17 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
             {/* Custom Instructions Section */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                        Custom Instructions
-                    </CardTitle>
+                    <CardTitle className="text-lg font-semibold">Custom Instructions</CardTitle>
                     <CardDescription>
                         Add personalized instructions that will be applied to every conversation.
                         This helps the AI understand your preferences and communication style.
-                        <div className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
-                            <span>
-                                Character limit: {editor?.storage?.characterCount?.characters() || 0}/
-                                {MAX_CHAR_LIMIT}
-                            </span>
-                        </div>
                     </CardDescription>
+                    <div className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
+                        <span>
+                            Character limit: {editor?.storage?.characterCount?.characters() || 0}/
+                            {MAX_CHAR_LIMIT}
+                        </span>
+                    </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="border-border rounded-lg border p-4">

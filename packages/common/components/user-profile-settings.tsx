@@ -10,8 +10,14 @@ import { useOptimizedAuth } from '../providers/optimized-auth-provider';
 import {
     Alert,
     AlertDescription,
+    Avatar,
     Badge,
     Button,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
     FormLabel,
     Input,
     TypographyH3,
@@ -26,7 +32,6 @@ export const UserProfileSettings = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: session?.user?.name || '',
-        email: session?.user?.email || '',
     });
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState('');
@@ -160,7 +165,6 @@ export const UserProfileSettings = () => {
             // Update local form data with new values
             setFormData({
                 name: formData.name,
-                email: formData.email,
             });
 
             setTimeout(() => setSuccess(''), 3000);
@@ -175,7 +179,6 @@ export const UserProfileSettings = () => {
     const handleCancel = () => {
         setFormData({
             name: session?.user?.name || '',
-            email: session?.user?.email || '',
         });
         setIsEditing(false);
         setError('');
@@ -282,16 +285,16 @@ export const UserProfileSettings = () => {
             )}
 
             {/* Main Profile Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
+            <Card>
+                <CardHeader>
                     <div className="flex items-center justify-between">
                         <div>
-                            <TypographyH3 className="text-lg font-semibold">
+                            <CardTitle className="text-lg font-semibold">
                                 Basic Information
-                            </TypographyH3>
-                            <p className="text-muted-foreground text-sm">
+                            </CardTitle>
+                            <CardDescription>
                                 Update your personal details and account information
-                            </p>
+                            </CardDescription>
                         </div>
                         {!isEditing && (
                             <Button variant="outline" onClick={() => setIsEditing(true)} size="sm">
@@ -299,12 +302,30 @@ export const UserProfileSettings = () => {
                             </Button>
                         )}
                     </div>
-                </div>
+                </CardHeader>
 
-                <div className="space-y-6 p-6">
+                <CardContent className="space-y-6">
                     {!isEditing ? (
                         // View Mode
                         <div className="space-y-4">
+                            {/* Profile Avatar Section */}
+                            <div className="flex items-center gap-4 pb-4 border-b border-border/50">
+                                <Avatar
+                                    name={session.user.name || session.user.email || 'User'}
+                                    src={session.user.image || undefined}
+                                    size="lg"
+                                    className="border-2 border-border/20"
+                                />
+                                <div>
+                                    <div className="text-foreground font-semibold">
+                                        {session.user.name || 'User'}
+                                    </div>
+                                    <div className="text-muted-foreground text-sm">
+                                        Profile Avatar
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <FormLabel label="Display Name">
@@ -361,15 +382,12 @@ export const UserProfileSettings = () => {
 
                                 <div className="space-y-2">
                                     <FormLabel label="Email Address">
-                                        <Input
-                                            value={formData.email}
-                                            onChange={e =>
-                                                handleInputChange('email', e.target.value)
-                                            }
-                                            placeholder="Enter your email"
-                                            type="email"
-                                            className="mt-1 h-[42px]"
-                                        />
+                                        <div className="border-border bg-muted/30 text-foreground mt-1 flex min-h-[42px] items-center rounded-lg border px-3 py-2.5 text-sm">
+                                            {session.user.email}
+                                        </div>
+                                        <div className="text-muted-foreground text-xs mt-1">
+                                            Email address cannot be changed
+                                        </div>
                                     </FormLabel>
                                 </div>
                             </div>
@@ -395,18 +413,18 @@ export const UserProfileSettings = () => {
                             </div>
                         </div>
                     )}
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Account Security Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">Account Security</TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">Account Security</CardTitle>
+                    <CardDescription>
                         Manage your authentication and security settings
-                    </p>
-                </div>
-                <div className="space-y-4 p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                     {/* Authentication Method */}
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
@@ -443,20 +461,18 @@ export const UserProfileSettings = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Connected Accounts Section */}
-            <div className="border-border rounded-lg border">
-                <div className="border-border border-b p-6">
-                    <TypographyH3 className="text-lg font-semibold">
-                        Connected Accounts
-                    </TypographyH3>
-                    <p className="text-muted-foreground text-sm">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">Connected Accounts</CardTitle>
+                    <CardDescription>
                         Link your social accounts for easier sign-in and enhanced security
-                    </p>
-                </div>
-                <div className="space-y-4 p-6">
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                     {isLoadingAccounts && (
                         <div className="flex items-center justify-center rounded-lg border border-blue-200/50 bg-blue-50/50 p-4 dark:border-blue-800/50 dark:bg-blue-950/10">
                             <Loader2 className="mr-2 h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
@@ -726,8 +742,8 @@ export const UserProfileSettings = () => {
                             </ul>
                         </div>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };

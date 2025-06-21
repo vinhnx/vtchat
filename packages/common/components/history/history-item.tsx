@@ -9,23 +9,15 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    Flex,
-    Input,
 } from '@repo/ui';
-import { MoreHorizontal, Trash2 } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-
-// Create a wrapper component for Trash2 to match expected icon prop type
-const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
-    size,
-    className,
-}) => <Trash2 size={size} className={className} />;
+import { useState } from 'react';
 
 export const HistoryItem = ({
     thread,
-    dismiss,
+    dismiss: _dismiss,
     isActive,
     isPinned,
     pinThread,
@@ -43,53 +35,18 @@ export const HistoryItem = ({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
-    const updateThread = useChatStore(state => state.updateThread);
-    const [isEditing, setIsEditing] = useState(false);
-    const [title, setTitle] = useState(thread.title);
     const deleteThread = useChatStore(state => state.deleteThread);
-    const historyInputRef = useRef<HTMLInputElement>(null);
     const switchThread = useChatStore(state => state.switchThread);
     const [openOptions, setOpenOptions] = useState(false);
 
-    useEffect(() => {
-        if (isEditing) {
-            historyInputRef.current?.focus();
-        }
-    }, [isEditing]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
-    };
-
-    const handleInputBlur = () => {
-        setIsEditing(false);
-        updateThread({
-            id: thread.id,
-            title: title?.trim() || 'Untitled',
-        });
-    };
-
-    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            setIsEditing(false);
-            updateThread({
-                id: thread.id,
-                title: title?.trim() || 'Untitled',
-            });
-        }
-    };
-
     const containerClasses = cn(
-        'gap-2 w-full group w-full relative flex flex-row items-center h-7 py-0.5 pl-2 pr-1 rounded-sm hover:bg-quaternary',
-        isActive || isEditing ? 'bg-tertiary' : ''
+        'gap-2 w-full group relative flex flex-row items-center py-2 px-3 rounded-lg transition-all duration-200 hover:bg-accent/70',
+        // Removed border for borderless look
+        isActive ? 'bg-accent shadow-sm' : '',
+        isPinned && 'border-l-2 border-l-amber-400 dark:border-l-amber-500'
     );
 
-    const handleEditClick = () => {
-        setIsEditing(true);
-        setTimeout(() => {
-            historyInputRef.current?.focus();
-        }, 500);
-    };
+
 
     const handleDeleteConfirm = () => {
         if (!isSignedIn) {
@@ -105,40 +62,34 @@ export const HistoryItem = ({
 
     return (
         <div key={thread.id} className={containerClasses}>
-            {isEditing ? (
-                <Input
-                    variant="ghost"
-                    className="h-5 pl-0 text-xs"
-                    ref={historyInputRef}
-                    value={title || 'Untitled'}
-                    onChange={handleInputChange}
-                    onKeyDown={handleInputKeyDown}
-                    onBlur={handleInputBlur}
-                />
-            ) : (
-                <Link
-                    href={`/chat/${thread.id}`}
-                    className="flex flex-1 items-center"
-                    onClick={() => switchThread(thread.id)}
-                >
-                    <Flex
-                        direction="col"
-                        items="start"
-                        className="flex-1 overflow-hidden"
-                        gap="none"
+            <Link
+                href={`/chat/${thread.id}`}
+                className="flex min-w-0 flex-1 items-center"
+                onClick={() => switchThread(thread.id)}
+            >
+                <div className="flex-1 overflow-hidden">
+                    <p
+                        className={cn(
+                            'w-full truncate text-sm font-medium transition-colors leading-relaxed',
+                            isActive
+                                ? 'text-foreground font-semibold'
+                                : 'text-muted-foreground hover:text-foreground'
+                        )}
                     >
-                        <p className="hover:text-foreground line-clamp-1 w-full text-xs">
-                            {thread.title}
-                        </p>
-                    </Flex>
-                </Link>
-            )}
+                        {thread.title}
+                    </p>
+                </div>
+            </Link>
             <DropdownMenu open={openOptions} onOpenChange={setOpenOptions}>
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="ghost"
-                        size="icon-xs"
-                        className="bg-quaternary invisible absolute right-1 shrink-0 group-hover:visible group-hover:w-6"
+                        size="icon-sm" // fixed from icon-xs
+                        className={cn(
+                            'shrink-0 transition-all duration-200',
+                            'opacity-0 group-hover:opacity-100',
+                            'bg-background/80 hover:bg-accent border-border/30 absolute right-2 border'
+                        )}
                         onClick={e => {
                             e.stopPropagation();
                             setOpenOptions(!openOptions);
@@ -147,19 +98,11 @@ export const HistoryItem = ({
                         <MoreHorizontal
                             size={14}
                             strokeWidth="2"
-                            className="text-muted-foreground/50"
+                            className="text-muted-foreground hover:text-foreground"
                         />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" side="right">
-                    <DropdownMenuItem
-                        onClick={e => {
-                            e.stopPropagation();
-                            handleEditClick();
-                        }}
-                    >
-                        Rename
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={e => {
                             e.stopPropagation();
@@ -185,7 +128,6 @@ export const HistoryItem = ({
                 onClose={hideLoginPrompt}
                 title="Login Required"
                 description="Please sign in to delete chat threads."
-                icon={TrashIcon}
             />
         </div>
     );

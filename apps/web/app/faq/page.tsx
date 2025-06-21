@@ -63,7 +63,7 @@ export default function FAQPage() {
 function FAQs() {
     return (
         <section className="py-8 md:py-16">
-            <div className="mx-auto w-[60%] px-12 md:px-20 lg:px-24 xl:px-32">
+            <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
                     <TypographyH2 className="mb-4 text-3xl font-semibold md:text-4xl">
                         Frequently Asked Questions
