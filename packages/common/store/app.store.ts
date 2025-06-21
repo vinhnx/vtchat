@@ -77,6 +77,8 @@ type Actions = {
     setShowSuggestions: (show: boolean) => void;
     setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
     setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
+    // Reset actions
+    resetUserState: () => void;
     // Customer portal actions
     setPortalState: (state: { isOpen: boolean; url: string | null }) => void;
     openPortal: (url: string) => void;
@@ -254,6 +256,42 @@ export const useAppStore = create<State & Actions>()(
                 setGeminiCaching: (caching: Partial<State['geminiCaching']>) => {
                     set(state => {
                         state.geminiCaching = { ...state.geminiCaching, ...caching };
+                    });
+                },
+
+                resetUserState: () => {
+                    set(state => {
+                        // Reset all user preferences to defaults
+                        state.showExamplePrompts = true;
+                        state.customInstructions = '';
+                        state.useWebSearch = false;
+                        state.useMathCalculator = false;
+                        state.useCharts = false;
+                        state.showSuggestions = false;
+                        state.thinkingMode = {
+                            enabled: false,
+                            budget: 8192,
+                            includeThoughts: true,
+                        };
+                        state.geminiCaching = {
+                            enabled: false,
+                            ttlSeconds: 3600,
+                            maxCaches: 10,
+                        };
+                        // Reset UI state to defaults
+                        state.isSettingsOpen = false;
+                        state.settingTab = SETTING_TABS.PROFILE;
+                        state.showSignInModal = false;
+                        state.sideDrawer = {
+                            open: false,
+                            badge: undefined,
+                            title: '',
+                            renderContent: () => null,
+                        };
+                        state.portalState = {
+                            isOpen: false,
+                            url: null,
+                        };
                     });
                 },
 

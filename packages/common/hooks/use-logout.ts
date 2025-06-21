@@ -68,12 +68,30 @@ export const useLogout = () => {
                     'subscription-preferences',
                     'feature-access-cache',
                     'vtchat-settings', // App store preferences
+                    'vtchat-preferences', // Legacy user preferences
+                    'chat-config', // Chat store configuration
+                    'draft-message', // Draft message storage
+                    'linking_provider', // User profile linking provider
+                    'hasSeenIntro', // Intro dialog state
                 ];
                 userDataKeys.forEach(key => {
                     if (localStorage.getItem(key)) {
                         localStorage.removeItem(key);
                         console.log(`[Logout] ✅ Cleared ${key}`);
                     }
+                });
+
+                // Clear user-specific dynamic keys (like chat-config-{userId})
+                const dynamicKeys = Object.keys(localStorage).filter(key => 
+                    key.startsWith('chat-config-') ||
+                    key.startsWith('api-keys-') ||
+                    key.startsWith('mcp-tools-') ||
+                    key.includes('user-') ||
+                    key.includes('profile-')
+                );
+                dynamicKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    console.log(`[Logout] ✅ Cleared dynamic key: ${key}`);
                 });
 
                 // Clear next-themes storage (dark mode is a VT+ feature)
