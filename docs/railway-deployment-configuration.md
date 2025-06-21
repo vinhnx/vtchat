@@ -6,11 +6,11 @@ This guide explains how to properly configure VT for Railway deployment with env
 
 ## Environment URLs
 
-| Environment | URL |
-|-------------|-----|
-| **Local Development** | `http://localhost:3000` |
+| Environment             | URL                                             |
+| ----------------------- | ----------------------------------------------- |
+| **Local Development**   | `http://localhost:3000`                         |
 | **Railway Development** | `https://vtchat-web-development.up.railway.app` |
-| **Railway Production** | `https://vtchat-web-production.up.railway.app` |
+| **Railway Production**  | `https://vtchat-web-production.up.railway.app`  |
 
 ## Configuration Files
 

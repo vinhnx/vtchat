@@ -10,9 +10,9 @@
 
 - ✅ **Sparkle Icon**: Replaced lock icon with Star (⭐) icon for gated state
 - ✅ **Encouraging Wording**: Updated gated feature dialog to be more welcoming:
-  - Title: "Unlock Structured Output ✨"
-  - Enhanced value proposition description
-  - Friendly tooltip: "Unlock AI-powered structured data extraction with VT+"
+    - Title: "Unlock Structured Output ✨"
+    - Enhanced value proposition description
+    - Friendly tooltip: "Unlock AI-powered structured data extraction with VT+"
 
 ### Previous Updates - June 18, 2025
 
@@ -24,10 +24,10 @@
 - ✅ **Smart State Management**: Different icons and tooltips based on context
 - ✅ **VT+ Gating**: Properly gated for Plus users only (`FeatureSlug.STRUCTURED_OUTPUT`)
 - ✅ **Contextual Dialogs**: Informative dialogs for different scenarios:
-  - No subscription access → Upgrade prompt
-  - No document attached → Guide to upload PDF
-  - Non-Gemini model → Switch model prompt
-  - Unsupported document type → PDF-only message
+    - No subscription access → Upgrade prompt
+    - No document attached → Guide to upload PDF
+    - Non-Gemini model → Switch model prompt
+    - Unsupported document type → PDF-only message
 
 **Custom Schema Builder Integration:**
 
@@ -147,6 +147,6 @@ The structured output feature is **production-ready**. Future enhancements could
 
 ---
 
-*Date: June 18, 2025*
-*Status: Production Ready*
-*Browser Compatibility: ✅ Full Support*
+_Date: June 18, 2025_
+_Status: Production Ready_
+_Browser Compatibility: ✅ Full Support_

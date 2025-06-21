@@ -76,11 +76,17 @@ skills: { technical: [], soft: [], languages: [] }
 ### Invoice Schema
 
 ```typescript
-invoiceNumber, date, dueDate
-vendor: { name, address, email, phone }
-customer: { name, address, email }
-items: [{ description, quantity, unitPrice, total }]
-totals: { subtotal, tax, total, currency }
+invoiceNumber, date, dueDate;
+vendor: {
+    name, address, email, phone;
+}
+customer: {
+    name, address, email;
+}
+items: [{ description, quantity, unitPrice, total }];
+totals: {
+    subtotal, tax, total, currency;
+}
 ```
 
 ### Contract Schema

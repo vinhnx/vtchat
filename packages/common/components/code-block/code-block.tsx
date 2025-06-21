@@ -12,7 +12,7 @@ import 'prismjs/components/prism-yaml';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button, cn } from '@repo/ui';
-import { FileCode, Check, Copy, File, FileJson, FileText, Terminal,  } from 'lucide-react';
+import { FileCode, Check, Copy, File, FileJson, FileText, Terminal } from 'lucide-react';
 import './code-block.css';
 
 export type CodeBlockProps = {
@@ -45,11 +45,11 @@ export const CodeBlock = ({
     const getLangIcon = () => {
         switch (lang) {
             case 'bash':
-                return <Terminal size={14}  />;
+                return <Terminal size={14} />;
             case 'json':
-                return <FileJson size={14}  />;
+                return <FileJson size={14} />;
             case 'yaml':
-                return <FileJson size={14}  />;
+                return <FileJson size={14} />;
             case 'python':
                 return <FileCode size={14} />;
             case 'javascript':
@@ -59,11 +59,11 @@ export const CodeBlock = ({
             case 'jsx':
                 return <FileCode size={14} />;
             case 'markdown':
-                return <FileText size={14}  />;
+                return <FileText size={14} />;
             case 'plaintext':
-                return <File size={14}  />;
+                return <File size={14} />;
             default:
-                return <File size={14}  />;
+                return <File size={14} />;
         }
     };
 
@@ -89,9 +89,9 @@ export const CodeBlock = ({
                         onClick={() => code && copy(code)}
                     >
                         {showCopied ? (
-                            <Check size={14} strokeWidth="2"  />
+                            <Check size={14} strokeWidth="2" />
                         ) : (
-                            <Copy size={14} strokeWidth="2"  />
+                            <Copy size={14} strokeWidth="2" />
                         )}
                     </Button>
                 </div>

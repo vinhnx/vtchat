@@ -53,9 +53,9 @@ export const useThreadAuth = () => {
 
     useEffect(() => {
         if (currentUserId !== previousUserId) {
-            switchUserDatabase(currentUserId);      // Threads
-            switchUserStorage(currentUserId);       // API Keys
-            switchMcpUserStorage(currentUserId);    // MCP Tools
+            switchUserDatabase(currentUserId); // Threads
+            switchUserStorage(currentUserId); // API Keys
+            switchMcpUserStorage(currentUserId); // MCP Tools
         }
     }, [session?.user?.id]);
 };
@@ -63,12 +63,12 @@ export const useThreadAuth = () => {
 
 ### **Per-User Storage Patterns**
 
-| Data Type | Anonymous User | Authenticated User |
-|-----------|----------------|-------------------|
-| **Threads** | `ThreadDatabase_anonymous` | `ThreadDatabase_user-123` |
-| **API Keys** | `api-keys-storage-anonymous` | `api-keys-storage-user-123` |
-| **MCP Tools** | `mcp-tools-storage-anonymous` | `mcp-tools-storage-user-123` |
-| **Thread Config** | `chat-config-anonymous` | `chat-config-user-123` |
+| Data Type         | Anonymous User                | Authenticated User           |
+| ----------------- | ----------------------------- | ---------------------------- |
+| **Threads**       | `ThreadDatabase_anonymous`    | `ThreadDatabase_user-123`    |
+| **API Keys**      | `api-keys-storage-anonymous`  | `api-keys-storage-user-123`  |
+| **MCP Tools**     | `mcp-tools-storage-anonymous` | `mcp-tools-storage-user-123` |
+| **Thread Config** | `chat-config-anonymous`       | `chat-config-user-123`       |
 
 ### **Logout Security** (`useLogout`)
 
@@ -109,13 +109,13 @@ const logout = async () => {
 
 ### **Data Categories Protected**
 
-| Category | Sensitivity | Isolation Method |
-|----------|-------------|------------------|
-| **Conversation Threads** | 🔴 **HIGH** | Per-user IndexedDB databases |
-| **API Keys (BYOK)** | 🔴 **CRITICAL** | Per-user localStorage namespacing |
-| **MCP Tool Configs** | 🟡 **MEDIUM** | Per-user localStorage namespacing |
-| **Chat Settings** | 🟢 **LOW** | Per-user localStorage keys |
-| **Subscription Cache** | 🟡 **MEDIUM** | Cleared on logout |
+| Category                 | Sensitivity     | Isolation Method                  |
+| ------------------------ | --------------- | --------------------------------- |
+| **Conversation Threads** | 🔴 **HIGH**     | Per-user IndexedDB databases      |
+| **API Keys (BYOK)**      | 🔴 **CRITICAL** | Per-user localStorage namespacing |
+| **MCP Tool Configs**     | 🟡 **MEDIUM**   | Per-user localStorage namespacing |
+| **Chat Settings**        | 🟢 **LOW**      | Per-user localStorage keys        |
+| **Subscription Cache**   | 🟡 **MEDIUM**   | Cleared on logout                 |
 
 ### **Attack Vector Mitigation**
 
@@ -149,24 +149,27 @@ const logout = async () => {
 ### **Authentication Scenarios**
 
 1. **Anonymous → Login**:
-   - Switches from `*-anonymous` to `*-user-123` storage
-   - Previous anonymous data preserved separately
-   - User sees only their data
+
+    - Switches from `*-anonymous` to `*-user-123` storage
+    - Previous anonymous data preserved separately
+    - User sees only their data
 
 2. **User A → User B**:
-   - Switches from `*-user-A` to `*-user-B` storage
-   - Complete data isolation maintained
-   - No cross-contamination
+
+    - Switches from `*-user-A` to `*-user-B` storage
+    - Complete data isolation maintained
+    - No cross-contamination
 
 3. **Login → Logout**:
-   - All data cleared via `useLogout`
-   - Switches to `*-anonymous` storage
-   - Clean slate for next user
+
+    - All data cleared via `useLogout`
+    - Switches to `*-anonymous` storage
+    - Clean slate for next user
 
 4. **Logout → Re-login**:
-   - User data restored from `*-user-123` storage
-   - Seamless experience continuation
-   - No data loss
+    - User data restored from `*-user-123` storage
+    - Seamless experience continuation
+    - No data loss
 
 ## 🏆 Conclusion
 

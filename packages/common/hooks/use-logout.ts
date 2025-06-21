@@ -2,7 +2,7 @@
 
 import { signOut } from '@repo/shared/lib/auth-client';
 import { useTheme } from 'next-themes';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
 import { useAppStore } from '../store/app.store';
@@ -15,13 +15,17 @@ import { useAppStore } from '../store/app.store';
  * data to prevent access leakage on shared devices.
  */
 export const useLogout = () => {
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const { setTheme } = useTheme();
     const clearAllKeys = useApiKeysStore(state => state.clearAllKeys);
     const clearAllThreads = useChatStore(state => state.clearAllThreads);
     const resetUserState = useAppStore(state => state.resetUserState);
 
     const logout = useCallback(async () => {
+        if (isLoggingOut) return;
+
         try {
+            setIsLoggingOut(true);
             console.log('[Logout] Starting secure logout process...');
 
             // 1. First reset theme to light mode (VT+ Dark Theme feature)
@@ -88,7 +92,9 @@ export const useLogout = () => {
                     localStorage.removeItem(key);
                 });
                 if (premiumKeys.length > 0) {
-                    console.log(`[Logout] ✅ Cleared ${premiumKeys.length} additional premium cache entries`);
+                    console.log(
+                        `[Logout] ✅ Cleared ${premiumKeys.length} additional premium cache entries`
+                    );
                 }
             }
 
@@ -101,22 +107,50 @@ export const useLogout = () => {
                     },
                     body: JSON.stringify({}),
                 });
-                
+
                 if (cacheResponse.ok) {
                     console.log('[Logout] ✅ Invalidated server-side subscription cache');
                 } else {
-                    console.warn('[Logout] ⚠️ Server cache invalidation returned:', cacheResponse.status);
+                    console.warn(
+                        '[Logout] ⚠️ Server cache invalidation returned:',
+                        cacheResponse.status
+                    );
                 }
             } catch (cacheError) {
-                console.warn('[Logout] ⚠️ Failed to invalidate server cache (non-critical):', cacheError);
+                console.warn(
+                    '[Logout] ⚠️ Failed to invalidate server cache (non-critical):',
+                    cacheError
+                );
                 // Non-critical, continue with logout
             }
 
-            // 7. Finally perform the authentication logout
+            // 7. Clear session storage as well for extra security
+            if (typeof window !== 'undefined') {
+                try {
+                    sessionStorage.clear();
+                    console.log('[Logout] ✅ Cleared session storage');
+                } catch (sessionError) {
+                    console.warn('[Logout] ⚠️ Failed to clear session storage:', sessionError);
+                }
+
+                // Clear any auth-related cookies client-side
+                try {
+                    document.cookie.split(';').forEach(function (c) {
+                        document.cookie = c
+                            .replace(/^ +/, '')
+                            .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+                    });
+                    console.log('[Logout] ✅ Cleared cookies');
+                } catch (cookieError) {
+                    console.warn('[Logout] ⚠️ Failed to clear cookies:', cookieError);
+                }
+            }
+
+            // 8. Finally perform the authentication logout
             await signOut();
             console.log('[Logout] ✅ Completed authentication sign out');
-            
-            // 8. Refresh the page to ensure all state is reset
+
+            // 9. Refresh the page to ensure all state is reset
             if (typeof window !== 'undefined') {
                 window.location.reload();
             }
@@ -134,8 +168,10 @@ export const useLogout = () => {
             } catch (cleanupError) {
                 console.error('[Logout] ❌ Emergency cleanup failed:', cleanupError);
             }
+        } finally {
+            setIsLoggingOut(false);
         }
-    }, [setTheme, clearAllKeys, clearAllThreads, resetUserState]);
+    }, [setTheme, clearAllKeys, clearAllThreads, resetUserState, isLoggingOut]);
 
-    return { logout };
+    return { logout, isLoggingOut };
 };

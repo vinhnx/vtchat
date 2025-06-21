@@ -14,7 +14,7 @@ Invalid response format from Creem API - no URL found
 
 ```json
 {
-  "customer_portal_link": "https://creem.io/test/my-orders/login/JDJhJDE1JEVXenRUbTU5Lmp4Um1yTVhLV0lzdi4"
+    "customer_portal_link": "https://creem.io/test/my-orders/login/JDJhJDE1JEVXenRUbTU5Lmp4Um1yTVhLV0lzdi4"
 }
 ```
 

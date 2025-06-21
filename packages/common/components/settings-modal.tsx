@@ -70,7 +70,6 @@ export const SettingsModal = () => {
                 onClose={() => setIsSettingsOpen(false)}
                 title="Login Required"
                 description="Please sign in to access settings and manage your API keys."
-                icon={KeyIcon}
             />
         );
     }

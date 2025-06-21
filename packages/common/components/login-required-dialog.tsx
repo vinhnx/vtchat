@@ -1,7 +1,15 @@
 'use client';
 
-import { Button, Dialog, DialogContent, TypographyH3 } from '@repo/ui';
-import { KeyRound } from 'lucide-react';
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@repo/ui';
+import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -14,8 +22,7 @@ export interface LoginRequiredDialogProps {
     title?: string;
     /** Custom description for the dialog */
     description?: string;
-    /** Custom icon component */
-    icon?: React.ComponentType<{ size?: number; className?: string }>;
+
     /** Custom redirect URL after login */
     redirectUrl?: string;
     /** Custom cancel button text */
@@ -46,18 +53,16 @@ export interface LoginRequiredDialogProps {
  *   onClose={() => setShowLoginPrompt(false)}
  *   title="Upload Requires Login"
  *   description="Please log in to upload and attach files to your messages."
- *   icon={IconPaperclip}
  * />
  * ```
  */
 export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
     isOpen,
     onClose,
-    title = 'Login Required',
-    description = 'Please sign in to access this feature.',
-    icon: Icon = KeyRound,
+    title = 'Sign in to Continue',
+    description = 'Join VTChat to unlock all features and save your conversations. It only takes a moment!',
     redirectUrl,
-    cancelText = 'Cancel',
+    cancelText = 'Not Now',
     loginText = 'Sign In',
     showCancel = true,
 }) => {
@@ -77,24 +82,22 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent ariaTitle={title} className="max-w-md rounded-xl">
-                <div className="flex flex-col items-center gap-4 p-6 text-center">
-                    <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
-                        <Icon size={24} className="text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div className="space-y-2">
-                        <TypographyH3 className="text-lg font-semibold">{title}</TypographyH3>
-                        <p className="text-muted-foreground text-sm">{description}</p>
-                    </div>
-                    <div className="flex gap-2">
-                        {showCancel && (
-                            <Button variant="outlined" onClick={handleCancel}>
-                                {cancelText}
-                            </Button>
-                        )}
-                        <Button onClick={handleLogin}>{loginText}</Button>
-                    </div>
-                </div>
+            <DialogContent ariaTitle={title} className="max-w-md">
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="gap-3">
+                    {showCancel && (
+                        <Button variant="outline" onClick={handleCancel}>
+                            {cancelText}
+                        </Button>
+                    )}
+                    <Button onClick={handleLogin} className="gap-2">
+                        <LogIn size={16} />
+                        {loginText}
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
@@ -131,7 +134,6 @@ export const withLoginRequired = <T extends Record<string, any>>(
     options?: {
         title?: string;
         description?: string;
-        icon?: React.ComponentType<{ size?: number; className?: string }>;
     }
 ) => {
     const WithLoginRequired = (props: T & { isSignedIn: boolean }) => {
@@ -158,7 +160,6 @@ export const withLoginRequired = <T extends Record<string, any>>(
                         onClose={hideLoginPrompt}
                         title={options?.title}
                         description={options?.description}
-                        icon={options?.icon}
                     />
                 </>
             );

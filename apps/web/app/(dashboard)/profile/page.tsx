@@ -19,7 +19,9 @@ export default async function ProfilePage() {
         <div className="container mx-auto max-w-4xl py-8">
             <div className="mb-8">
                 <TypographyH1 className="mb-2">Profile Settings</TypographyH1>
-                <p className="text-muted-foreground">Manage your account information and connected services.</p>
+                <p className="text-muted-foreground">
+                    Manage your account information and connected services.
+                </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -46,7 +48,7 @@ export default async function ProfilePage() {
                                 <p className="text-muted-foreground text-sm">{user.email}</p>
                             </div>
                         </div>
-                        
+
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">User ID:</span>
@@ -54,7 +56,11 @@ export default async function ProfilePage() {
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Email Verified:</span>
-                                <span className={user.emailVerified ? 'text-green-600' : 'text-amber-600'}>
+                                <span
+                                    className={
+                                        user.emailVerified ? 'text-green-600' : 'text-amber-600'
+                                    }
+                                >
                                     {user.emailVerified ? 'Yes' : 'Pending'}
                                 </span>
                             </div>

@@ -1,6 +1,6 @@
 export const MATH_TOOL_NAMES = [
     'add',
-    'subtract', 
+    'subtract',
     'multiply',
     'divide',
     'exponentiate',
@@ -8,11 +8,11 @@ export const MATH_TOOL_NAMES = [
     'isPrime',
     'squareRoot',
     'sin',
-    'cos', 
+    'cos',
     'tan',
     'sqrt',
     'log',
-    'exp'
+    'exp',
 ] as const;
 
 export const isMathTool = (toolName: string | undefined): boolean => {

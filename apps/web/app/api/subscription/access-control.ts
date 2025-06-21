@@ -74,7 +74,8 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                     // Check if subscription is active and not expired
                     isActive =
                         subscription.status === SubscriptionStatusEnum.ACTIVE &&
-                        (!subscription.currentPeriodEnd || new Date() <= subscription.currentPeriodEnd);
+                        (!subscription.currentPeriodEnd ||
+                            new Date() <= subscription.currentPeriodEnd);
                     plan =
                         isActive && subscription.plan === PlanSlug.VT_PLUS
                             ? PlanSlug.VT_PLUS

@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         <div className="bg-background min-h-screen">
             {/* Header */}
             <header className="border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm">
-                <div className="mx-auto flex w-full items-center justify-between px-4 py-4 max-w-7xl">
+                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4">
                     <Link href="/">
                         <Button variant="ghost" size="sm" className="gap-2">
                             <ArrowLeft size={16} />

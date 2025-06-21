@@ -17,12 +17,14 @@
 #### 📋 Technical Implementation
 
 **Core Variable System**:
+
 - Replaced `:root` and `.dark` blocks with official Shadcn UI variables in both CSS files
 - Implemented complete semantic color system: background, foreground, primary, secondary, muted, accent, destructive, etc.
 - Added proper chart colors (chart-1 through chart-5) for data visualization
 - Maintained consistent color values using oklch color space
 
 **Legacy Variable Mapping**:
+
 - `--tertiary` → `var(--muted)` for component backgrounds
 - `--quaternary` → `var(--accent)` for subtle highlights
 - `--soft` → `var(--border)` for soft border styles
@@ -31,6 +33,7 @@
 - `--border-hard` → `var(--input)` for prominent border colors
 
 **Custom Variables Preserved**:
+
 - Brand colors (`--brand`, `--brand-foreground`) for identity consistency
 - Shadow variables for both light and dark modes
 - Sidebar-specific theming variables
@@ -38,12 +41,12 @@
 #### 🔍 Files Modified
 
 - `/apps/web/app/globals.css`
-  - Updated with complete Shadcn UI variable set for light and dark themes
-  - Added legacy variable mappings for backward compatibility
-  - Enhanced border variable support
+    - Updated with complete Shadcn UI variable set for light and dark themes
+    - Added legacy variable mappings for backward compatibility
+    - Enhanced border variable support
 - `/packages/ui/src/styles.css`
-  - Synchronized with same Shadcn UI variable structure
-  - Maintained consistent theming across package boundaries
+    - Synchronized with same Shadcn UI variable structure
+    - Maintained consistent theming across package boundaries
 
 #### ✅ Verification
 
@@ -69,6 +72,7 @@
 #### 📋 Technical Implementation
 
 **Button Component Refactoring**:
+
 - Replaced custom Button with official Shadcn Button as base
 - Preserved custom props: `tooltip`, `tooltipSide`, `rounded`
 - Maintained all existing variants and sizes
@@ -76,27 +80,29 @@
 - Uses Shadcn CSS variables for all colors and backgrounds
 
 **Tooltip Component Integration**:
+
 - Installed official Shadcn Tooltip component
 - Simple, clean API: `<Tooltip content="text">{children}</Tooltip>`
 - Integrated into Button component for seamless tooltip support
 - Exported from UI package for standalone usage
 
 **Global Setup**:
+
 - Added `<TooltipProvider>` to app layout for global tooltip support
 - All tooltips now work consistently across the application
 
 #### 🔍 Files Modified
 
 - `/packages/ui/src/components/button.tsx`
-  - Refactored to use Shadcn Button as base
-  - Integrated Shadcn Tooltip for tooltip prop
-  - Preserved all custom functionality
+    - Refactored to use Shadcn Button as base
+    - Integrated Shadcn Tooltip for tooltip prop
+    - Preserved all custom functionality
 - `/packages/ui/src/components/tooltip.tsx`
-  - Official Shadcn Tooltip component
+    - Official Shadcn Tooltip component
 - `/packages/ui/src/components/index.ts` & `/packages/ui/src/index.ts`
-  - Added exports for Tooltip and Button
+    - Added exports for Tooltip and Button
 - `/apps/web/app/layout.tsx` & `/apps/web/app/layout-working.tsx`
-  - Wrapped app in `<TooltipProvider>` for global tooltip support
+    - Wrapped app in `<TooltipProvider>` for global tooltip support
 
 #### ✅ Verification
 
@@ -109,6 +115,7 @@
 #### 🎉 Results
 
 The application now uses official Shadcn UI components with:
+
 - ✅ Proper theming support (no more transparent backgrounds)
 - ✅ Consistent styling across light and dark modes
 - ✅ Zero breaking changes to existing code
@@ -149,12 +156,14 @@ The application now uses official Shadcn UI components with:
 #### 📋 Technical Implementation
 
 **Bold Text Enhancement**:
+
 - Enhanced `MarkdownContent` styling in `ThinkingLog` component
 - Added specific styling for `<strong>` and `<b>` elements using amber color (#D99A4E)
 - Applied semibold font weight for better readability
 - Ensured consistent styling across all reasoning formats (legacy, reasoningDetails, parts)
 
 **Duplication Prevention**:
+
 - Updated rendering condition in `thread-item.tsx` to match `ThinkingLog` component logic
 - Now properly checks for all reasoning formats: `reasoning`, `reasoningDetails`, and `parts`
 - Prevents potential rendering inconsistencies between components
@@ -162,12 +171,12 @@ The application now uses official Shadcn UI components with:
 #### 🔍 Files Modified
 
 - `packages/common/components/thinking-log.tsx`
-  - Enhanced bold text styling with amber color (#D99A4E) and semibold weight
-  - Applied styling to all three MarkdownContent instances
-  - Removed unused `useMemo` import
+    - Enhanced bold text styling with amber color (#D99A4E) and semibold weight
+    - Applied styling to all three MarkdownContent instances
+    - Removed unused `useMemo` import
 - `packages/common/components/thread/thread-item.tsx`
-  - Updated reasoning data check condition to match ThinkingLog logic
-  - Supports all reasoning formats properly
+    - Updated reasoning data check condition to match ThinkingLog logic
+    - Supports all reasoning formats properly
 
 #### ✅ Verification
 
@@ -202,23 +211,25 @@ The application now uses official Shadcn UI components with:
 #### 📋 Technical Implementation
 
 - **Next.js Configuration**: Updated `next.config.mjs` with performance optimizations
-  - Enabled Turbopack for faster development builds
-  - Added filesystem caching for development
-  - Optimized bundle splitting and chunk generation
-  - Added server external packages for reduced bundle size
-  - Configured compiler settings to remove console.logs in production
+
+    - Enabled Turbopack for faster development builds
+    - Added filesystem caching for development
+    - Optimized bundle splitting and chunk generation
+    - Added server external packages for reduced bundle size
+    - Configured compiler settings to remove console.logs in production
 
 - **Turbo Configuration**: Enhanced `turbo.json` for better build caching
-  - Added environment variable handling
-  - Enabled remote caching capabilities
-  - Optimized cache settings for lint and test tasks
+
+    - Added environment variable handling
+    - Enabled remote caching capabilities
+    - Optimized cache settings for lint and test tasks
 
 - **Logging Improvements**: Made all debug/info logs development-only
-  - `auth-client.ts` - Auth error logging only in development
-  - `performance-monitor.ts` - Performance tracking logs only in development
-  - `request-deduplication.ts` - Request deduplication logs only in development
-  - `subscription-verification.ts` - Subscription verification logs only in development
-  - `env.ts` - Added `devLog` and `prodSafeLog` utilities for consistent logging
+    - `auth-client.ts` - Auth error logging only in development
+    - `performance-monitor.ts` - Performance tracking logs only in development
+    - `request-deduplication.ts` - Request deduplication logs only in development
+    - `subscription-verification.ts` - Subscription verification logs only in development
+    - `env.ts` - Added `devLog` and `prodSafeLog` utilities for consistent logging
 
 #### 🔍 Files Modified
 
@@ -242,7 +253,7 @@ The application now uses official Shadcn UI components with:
 #### 🔧 Final Optimization & Turbopack Runtime Fix
 
 - **Conditional Webpack Configuration**: Added detection for Turbopack usage (`process.env.TURBOPACK !== '1'`) to prevent webpack config conflicts
-- **Turbopack Runtime Issues Resolved**: Fixed "Cannot find module '../chunks/ssr/[turbopack]_runtime.js'" errors by removing problematic custom turbo configuration
+- **Turbopack Runtime Issues Resolved**: Fixed "Cannot find module '../chunks/ssr/[turbopack]\_runtime.js'" errors by removing problematic custom turbo configuration
 - **Edge Runtime Compatibility**: Resolved Better Auth compatibility issues with Turbopack's Edge Runtime by removing conflicting SVG loader rules
 - **Clean Development Output**: Both Turbopack and webpack modes now start without warnings or runtime errors
 - **API Functionality Verified**: Health check endpoint and main application routes working correctly under Turbopack
@@ -273,10 +284,10 @@ The application now uses official Shadcn UI components with:
 #### 🔍 Files Modified
 
 - `packages/common/components/chat-input/chat-actions.tsx` - Complete dropdown refactor
-  - Added `getChatModeFromModel()` function for model-to-ChatMode mapping
-  - Added `getApiKeyForProvider()` for provider-specific API key mapping
-  - Added `generateModelOptionsForProvider()` for dynamic option generation
-  - Updated all provider sections to use ModelEnum approach
+    - Added `getChatModeFromModel()` function for model-to-ChatMode mapping
+    - Added `getApiKeyForProvider()` for provider-specific API key mapping
+    - Added `generateModelOptionsForProvider()` for dynamic option generation
+    - Updated all provider sections to use ModelEnum approach
 
 #### ✅ Verification
 
@@ -486,12 +497,12 @@ The application now uses official Shadcn UI components with:
 
 ## 📊 Expected Performance Metrics
 
-| Operation | Before | After | Improvement |
-|-----------|--------|-------|-------------|
-| Middleware session check | 100-500ms | 10-50ms | **80-90% faster** |
-| Client session fetch | 200-800ms | 50-200ms | **60-75% faster** |
-| Database session query | 50-200ms | 10-50ms | **70-80% faster** |
-| Page load (authenticated) | 1-2s | 300-800ms | **60-70% faster** |
+| Operation                 | Before    | After     | Improvement       |
+| ------------------------- | --------- | --------- | ----------------- |
+| Middleware session check  | 100-500ms | 10-50ms   | **80-90% faster** |
+| Client session fetch      | 200-800ms | 50-200ms  | **60-75% faster** |
+| Database session query    | 50-200ms  | 10-50ms   | **70-80% faster** |
+| Page load (authenticated) | 1-2s      | 300-800ms | **60-70% faster** |
 
 ## 🛠️ Implementation Details
 
@@ -588,37 +599,41 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **MAJOR ACHIEVEMENTS**:
 
 1. **GEMINI_2_5_FLASH_LITE Model Integration** ✅:
-   - **UI Addition**: Added to Google provider section in chat-actions.tsx
-   - **Visual Indicator**: Gift icon displays for free model identification
-   - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
-   - **Web Search Support**: Native web search capabilities enabled
+
+    - **UI Addition**: Added to Google provider section in chat-actions.tsx
+    - **Visual Indicator**: Gift icon displays for free model identification
+    - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
+    - **Web Search Support**: Native web search capabilities enabled
 
 2. **Free Models Visual Enhancement** ✅:
-   - **Gift Icons Added**: All free Gemini models now show 🎁 icon
-     - GEMINI_2_0_FLASH_LITE ✅
-     - GEMINI_2_5_FLASH_LITE ✅ (newly added)
-     - GEMINI_2_5_FLASH_PREVIEW ✅
-     - GEMINI_2_5_PRO_PREVIEW ✅
-   - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
-   - **Consistent UX**: Unified free model identification across providers
+
+    - **Gift Icons Added**: All free Gemini models now show 🎁 icon
+        - GEMINI_2_0_FLASH_LITE ✅
+        - GEMINI_2_5_FLASH_LITE ✅ (newly added)
+        - GEMINI_2_5_FLASH_PREVIEW ✅
+        - GEMINI_2_5_PRO_PREVIEW ✅
+    - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
+    - **Consistent UX**: Unified free model identification across providers
 
 3. **Subscription Benefits Update** ✅:
-   - **Enhanced Description**: Updated "Access to Free Models" benefit
-   - **Complete Model List**: Includes all Gemini + OpenRouter free models
-   - **Mathematical Tools**: Detailed description of calculator capabilities
-   - **Perfect for Getting Started**: Clear value proposition for free tier
+
+    - **Enhanced Description**: Updated "Access to Free Models" benefit
+    - **Complete Model List**: Includes all Gemini + OpenRouter free models
+    - **Mathematical Tools**: Detailed description of calculator capabilities
+    - **Perfect for Getting Started**: Clear value proposition for free tier
 
 4. **Technical Configuration** ✅:
-   - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
-   - **Web Search Support**: Updated supportsNativeWebSearch function
-   - **Fallback Mechanism**: Proper model selection with available API keys
-   - **Type Safety**: All TypeScript types properly configured
+
+    - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
+    - **Web Search Support**: Updated supportsNativeWebSearch function
+    - **Fallback Mechanism**: Proper model selection with available API keys
+    - **Type Safety**: All TypeScript types properly configured
 
 5. **Documentation Excellence** ✅:
-   - **README Update**: Added comprehensive free models section
-   - **Implementation Guide**: Complete technical documentation
-   - **User Benefits**: Clear explanation of free tier capabilities
-   - **Verification Steps**: Testing instructions for quality assurance
+    - **README Update**: Added comprehensive free models section
+    - **Implementation Guide**: Complete technical documentation
+    - **User Benefits**: Clear explanation of free tier capabilities
+    - **Verification Steps**: Testing instructions for quality assurance
 
 ### 🆓 Free Tier Now Includes
 
@@ -719,47 +734,54 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **Major Optimizations Implemented**:
 
 1. **Middleware Performance** (`apps/web/middleware.ts`) ✅:
-   - **Static File Exclusion**: Skip auth checks for static files, API routes, Next.js internals
-   - **5-Second Timeout**: Prevent hanging auth checks
-   - **Graceful Error Handling**: Fallback to login redirect on failures
-   - **Optimized Path Matching**: Reduced unnecessary middleware processing
+
+    - **Static File Exclusion**: Skip auth checks for static files, API routes, Next.js internals
+    - **5-Second Timeout**: Prevent hanging auth checks
+    - **Graceful Error Handling**: Fallback to login redirect on failures
+    - **Optimized Path Matching**: Reduced unnecessary middleware processing
 
 2. **Better Auth Configuration** (`apps/web/lib/auth.ts`) ✅:
-   - **Session Cookie Cache**: 5-minute TTL for session caching
-   - **Increased Rate Limits**: 100 → 200 requests per window
-   - **10-Second Timeouts**: All auth operations timeout protection
-   - **Performance Optimizations**: Faster ID generation and secure cookies
+
+    - **Session Cookie Cache**: 5-minute TTL for session caching
+    - **Increased Rate Limits**: 100 → 200 requests per window
+    - **10-Second Timeouts**: All auth operations timeout protection
+    - **Performance Optimizations**: Faster ID generation and secure cookies
 
 3. **Subscription Provider Optimization** (`packages/common/providers/subscription-provider.tsx`) ✅:
-   - **8-Second Request Timeout**: AbortController implementation
-   - **Request Deduplication**: Prevent multiple identical subscription fetches
-   - **Enhanced Error Handling**: Graceful timeout and error recovery
-   - **Cache Control Headers**: Prevent stale subscription data
+
+    - **8-Second Request Timeout**: AbortController implementation
+    - **Request Deduplication**: Prevent multiple identical subscription fetches
+    - **Enhanced Error Handling**: Graceful timeout and error recovery
+    - **Cache Control Headers**: Prevent stale subscription data
 
 4. **Client-Side Auth Optimization** (`packages/shared/lib/auth-client.ts`) ✅:
-   - **10-Second Client Timeout**: Prevent hanging client requests
-   - **Non-Throwing Error Handler**: Prevent app crashes on auth failures
-   - **Improved URL Resolution**: Better baseURL detection logic
+
+    - **10-Second Client Timeout**: Prevent hanging client requests
+    - **Non-Throwing Error Handler**: Prevent app crashes on auth failures
+    - **Improved URL Resolution**: Better baseURL detection logic
 
 5. **New Performance Monitoring** (`packages/shared/utils/performance-monitor.ts`) ✅:
-   - **Operation Timing**: Track auth operation durations
-   - **Slow Operation Detection**: Log operations >2 seconds
-   - **Auth-Specific Monitors**: Dedicated session check and subscription monitoring
+
+    - **Operation Timing**: Track auth operation durations
+    - **Slow Operation Detection**: Log operations >2 seconds
+    - **Auth-Specific Monitors**: Dedicated session check and subscription monitoring
 
 6. **Request Deduplication System** (`packages/shared/utils/request-deduplication.ts`) ✅:
-   - **Duplicate Prevention**: Deduplicate identical API calls
-   - **Automatic Cleanup**: Remove expired pending requests
-   - **Performance Logging**: Track deduplication effectiveness
+
+    - **Duplicate Prevention**: Deduplicate identical API calls
+    - **Automatic Cleanup**: Remove expired pending requests
+    - **Performance Logging**: Track deduplication effectiveness
 
 7. **Session Caching Layer** (`packages/shared/utils/session-cache.ts`) ✅:
-   - **In-Memory Cache**: Reduce repetitive auth checks
-   - **TTL Management**: Configurable cache expiration
-   - **Auto Cleanup**: Background cache maintenance
+
+    - **In-Memory Cache**: Reduce repetitive auth checks
+    - **TTL Management**: Configurable cache expiration
+    - **Auto Cleanup**: Background cache maintenance
 
 8. **Enhanced Error Boundaries** (`apps/web/components/auth-error-boundary.tsx`) ✅:
-   - **Auth-Specific Error Recovery**: Dedicated auth error handling
-   - **User-Friendly Fallbacks**: Clean error states with recovery options
-   - **Refresh Functionality**: Allow users to recover from auth errors
+    - **Auth-Specific Error Recovery**: Dedicated auth error handling
+    - **User-Friendly Fallbacks**: Clean error states with recovery options
+    - **Refresh Functionality**: Allow users to recover from auth errors
 
 **Expected Performance Improvements**:
 
@@ -801,23 +823,25 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **MAJOR ACHIEVEMENTS**:
 
 1. **ESLint to oxlint Migration** ✅:
-   - **Complete removal**: All ESLint dependencies, configs, and scripts
-   - **oxlint setup**: Added as dev dependency with `.oxlintrc.json` config
-   - **Script updates**: All lint scripts now use oxlint
-   - **VS Code integration**: Updated settings for oxlint support
-   - **Build stability**: All TypeScript and lint errors resolved
+
+    - **Complete removal**: All ESLint dependencies, configs, and scripts
+    - **oxlint setup**: Added as dev dependency with `.oxlintrc.json` config
+    - **Script updates**: All lint scripts now use oxlint
+    - **VS Code integration**: Updated settings for oxlint support
+    - **Build stability**: All TypeScript and lint errors resolved
 
 2. **React Ref Composition Issues** ✅:
-   - **MessageActions fix**: Removed forwardRef, used direct prop passing
-   - **Button/Tooltip fix**: Internal tooltip handling to avoid asChild conflicts
-   - **Comprehensive audit**: All Radix UI trigger patterns verified safe
-   - **Pattern documentation**: Created detailed best practices guide
+
+    - **MessageActions fix**: Removed forwardRef, used direct prop passing
+    - **Button/Tooltip fix**: Internal tooltip handling to avoid asChild conflicts
+    - **Comprehensive audit**: All Radix UI trigger patterns verified safe
+    - **Pattern documentation**: Created detailed best practices guide
 
 3. **Code Quality** ✅:
-   - **Build status**: `bun run build` passes cleanly
-   - **Lint status**: `bun run lint` (oxlint) passes with minor warnings only
-   - **Runtime stability**: No React infinite update loop errors
-   - **Dev server**: Starts and runs without errors
+    - **Build status**: `bun run build` passes cleanly
+    - **Lint status**: `bun run lint` (oxlint) passes with minor warnings only
+    - **Runtime stability**: No React infinite update loop errors
+    - **Dev server**: Starts and runs without errors
 
 ### 🔍 Ref Composition Audit Results
 
@@ -854,50 +878,54 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **MAJOR ACHIEVEMENTS**:
 
 1. **Bundle Size Optimization** ✅:
-   - **Main page**: 456 kB → 436 kB (-20 kB, -4.4% reduction)
-   - **Chat pages**: 799 kB → 789 kB (-10 kB, -1.3% reduction)
-   - **Dependencies**: Removed 129+ unused packages
-   - **Icon libraries**: Consolidated from 4 libraries to 1 (lucide-react)
+
+    - **Main page**: 456 kB → 436 kB (-20 kB, -4.4% reduction)
+    - **Chat pages**: 799 kB → 789 kB (-10 kB, -1.3% reduction)
+    - **Dependencies**: Removed 129+ unused packages
+    - **Icon libraries**: Consolidated from 4 libraries to 1 (lucide-react)
 
 2. **Icon Library Migration** ✅:
-   - **@tabler/icons-react → lucide-react**: 8 files, 25+ icons migrated
-   - **Custom migration script**: Created automated tool for future migrations
-   - **Build warnings**: Eliminated all icon-related import warnings
-   - **Consistency**: Single icon library across entire codebase
+
+    - **@tabler/icons-react → lucide-react**: 8 files, 25+ icons migrated
+    - **Custom migration script**: Created automated tool for future migrations
+    - **Build warnings**: Eliminated all icon-related import warnings
+    - **Consistency**: Single icon library across entire codebase
 
 3. **CI/CD Infrastructure** ✅:
-   - **GitHub Actions workflow**: Bundle size monitoring on all PRs
-   - **Bundle tracking script**: Historical analysis and alerts
-   - **Automated PR comments**: Bundle size reports for every change
-   - **Package.json scripts**: Easy access to analysis tools
+
+    - **GitHub Actions workflow**: Bundle size monitoring on all PRs
+    - **Bundle tracking script**: Historical analysis and alerts
+    - **Automated PR comments**: Bundle size reports for every change
+    - **Package.json scripts**: Easy access to analysis tools
 
 4. **Next.js Optimizations** ✅:
-   - **optimizePackageImports**: Added for 12 major libraries
-   - **Better tree shaking**: Improved dead code elimination
-   - **Webpack bundle analyzer**: Integrated for detailed analysis
+    - **optimizePackageImports**: Added for 12 major libraries
+    - **Better tree shaking**: Improved dead code elimination
+    - **Webpack bundle analyzer**: Integrated for detailed analysis
 
 **TECHNICAL IMPLEMENTATIONS**:
 
 1. **Created Infrastructure**:
-   - `.github/workflows/bundle-size-monitor.yml` - CI monitoring
-   - `scripts/track-bundle-size.js` - Bundle analysis tool
-   - Updated `next.config.mjs` with optimizePackageImports
+
+    - `.github/workflows/bundle-size-monitor.yml` - CI monitoring
+    - `scripts/track-bundle-size.js` - Bundle analysis tool
+    - Updated `next.config.mjs` with optimizePackageImports
 
 2. **Icon Migration Results**:
 
-   ```
-   Before: @tabler/icons-react + @radix-ui/react-icons + react-icons + @phosphor-icons
-   After:  lucide-react only
-   Impact: Consistent styling, smaller bundle, better maintainability
-   ```
+    ```
+    Before: @tabler/icons-react + @radix-ui/react-icons + react-icons + @phosphor-icons
+    After:  lucide-react only
+    Impact: Consistent styling, smaller bundle, better maintainability
+    ```
 
 3. **New Package Scripts**:
 
-   ```bash
-   bun run bundle:analyze  # Generate webpack bundle analyzer
-   bun run bundle:track    # Track current bundle size
-   bun run bundle:history  # View historical trends
-   ```
+    ```bash
+    bun run bundle:analyze  # Generate webpack bundle analyzer
+    bun run bundle:track    # Track current bundle size
+    bun run bundle:history  # View historical trends
+    ```
 
 **VERIFICATION COMPLETE**:
 
@@ -922,37 +950,38 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **ISSUES RESOLVED**:
 
 1. **switchThread Model Undefined Error** ✅:
-   - **Error**: `get().model is undefined` in `switchThread` function at line 1160
-   - **Root Cause**: `switchThread` was called during initial page load when store hadn't fully initialized yet
-   - **Solution**: Added null safety checks and graceful handling for undefined model
+
+    - **Error**: `get().model is undefined` in `switchThread` function at line 1160
+    - **Root Cause**: `switchThread` was called during initial page load when store hadn't fully initialized yet
+    - **Solution**: Added null safety checks and graceful handling for undefined model
 
 2. **MCP Tools Store Removal** ✅:
-   - **Request**: Remove unnecessary MCP tools store from codebase
-   - **Actions Taken**: Complete cleanup of MCP-related code
+    - **Request**: Remove unnecessary MCP tools store from codebase
+    - **Actions Taken**: Complete cleanup of MCP-related code
 
 **TECHNICAL CHANGES**:
 
 1. **Fixed switchThread Function** (`chat.store.ts`):
 
-   ```typescript
-   // Before: Direct access causing undefined error
-   model: get().model.id,
+    ```typescript
+    // Before: Direct access causing undefined error
+    model: get().model.id,
 
-   // After: Safe handling with fallback
-   const currentModel = get().model;
-   if (currentModel?.id) {
-     // Save model ID safely
-   } else {
-     // Just update thread ID if model not ready
-   }
-   ```
+    // After: Safe handling with fallback
+    const currentModel = get().model;
+    if (currentModel?.id) {
+      // Save model ID safely
+    } else {
+      // Just update thread ID if model not ready
+    }
+    ```
 
 2. **Removed MCP Tools Store**:
-   - ✅ Deleted `/packages/common/store/mcp-tools.store.ts`
-   - ✅ Updated `/packages/common/store/index.ts` exports
-   - ✅ Cleaned up `use-logout.ts` hook (removed MCP references)
-   - ✅ Cleaned up `use-thread-auth.ts` hook (removed MCP references)
-   - ✅ All MCP-related imports and function calls removed
+    - ✅ Deleted `/packages/common/store/mcp-tools.store.ts`
+    - ✅ Updated `/packages/common/store/index.ts` exports
+    - ✅ Cleaned up `use-logout.ts` hook (removed MCP references)
+    - ✅ Cleaned up `use-thread-auth.ts` hook (removed MCP references)
+    - ✅ All MCP-related imports and function calls removed
 
 **VERIFICATION**:
 
@@ -981,28 +1010,30 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **SOLUTION IMPLEMENTED**:
 
 1. **Comprehensive Database Safety Refactor** ✅:
-   - Converted **ALL** remaining direct `db` usages to use `withDatabase()` and `withDatabaseAsync()` helpers
-   - Fixed **17+ database operations** including:
-     - `getPinnedThreads()` ✅
-     - `removeFollowupThreadItems()` ✅
-     - `deleteThreadItem()` ✅
-     - `deleteThread()` ✅
-     - `updateThread()` ✅
-     - `createThreadItem()` ✅
-     - Batch update operations ✅
-     - Worker database operations ✅
-     - Storage event handlers ✅
+
+    - Converted **ALL** remaining direct `db` usages to use `withDatabase()` and `withDatabaseAsync()` helpers
+    - Fixed **17+ database operations** including:
+        - `getPinnedThreads()` ✅
+        - `removeFollowupThreadItems()` ✅
+        - `deleteThreadItem()` ✅
+        - `deleteThread()` ✅
+        - `updateThread()` ✅
+        - `createThreadItem()` ✅
+        - Batch update operations ✅
+        - Worker database operations ✅
+        - Storage event handlers ✅
 
 2. **Enhanced Error Handling** ✅:
-   - All database operations now have null safety checks
-   - Graceful fallbacks when database is not available
-   - Proper error logging and recovery
+
+    - All database operations now have null safety checks
+    - Graceful fallbacks when database is not available
+    - Proper error logging and recovery
 
 3. **Per-Account Thread Isolation Clarification** ✅:
-   - **WORKING AS DESIGNED**: Threads disappearing when switching accounts is correct behavior
-   - Anonymous user threads: `ThreadDatabase_anonymous`
-   - Logged-in user threads: `ThreadDatabase_{userId}`
-   - Each user gets completely isolated thread storage
+    - **WORKING AS DESIGNED**: Threads disappearing when switching accounts is correct behavior
+    - Anonymous user threads: `ThreadDatabase_anonymous`
+    - Logged-in user threads: `ThreadDatabase_{userId}`
+    - Each user gets completely isolated thread storage
 
 **VERIFICATION**:
 
@@ -1031,21 +1062,23 @@ When switching from anonymous to logged-in user (or between different accounts):
 **SOLUTION IMPLEMENTED**:
 
 1. **Enhanced `safeJsonParse` utility** ✅:
-   - Added comprehensive edge case handling for malformed JSON
-   - Added validation for proper JSON structure (objects, arrays, strings)
-   - Added detailed logging with value truncation for debugging
-   - Handles `undefined`, `null`, empty strings, and malformed data gracefully
+
+    - Added comprehensive edge case handling for malformed JSON
+    - Added validation for proper JSON structure (objects, arrays, strings)
+    - Added detailed logging with value truncation for debugging
+    - Handles `undefined`, `null`, empty strings, and malformed data gracefully
 
 2. **Replaced all direct `JSON.parse()` calls** ✅:
-   - `chat.store.ts`: Fixed `loadInitialData()`, `setCustomInstructions()`, `setUseWebSearch()`, storage event listener
-   - `api-keys.store.ts`: Already using `safeJsonParse` in `switchUserStorage`
-   - `mcp-tools.store.ts`: Already using `safeJsonParse` in `switchUserStorage`
-   - All localStorage operations now use safe JSON parsing with fallbacks
+
+    - `chat.store.ts`: Fixed `loadInitialData()`, `setCustomInstructions()`, `setUseWebSearch()`, storage event listener
+    - `api-keys.store.ts`: Already using `safeJsonParse` in `switchUserStorage`
+    - `mcp-tools.store.ts`: Already using `safeJsonParse` in `switchUserStorage`
+    - All localStorage operations now use safe JSON parsing with fallbacks
 
 3. **Added `withDatabase` helpers** 🔄:
-   - Created `withDatabase()` and `withDatabaseAsync()` helpers for safe database operations
-   - Started refactoring direct `db` usages to use these helpers for full type safety
-   - Completed: `pinThread()` and `unpinThread()` operations
+    - Created `withDatabase()` and `withDatabaseAsync()` helpers for safe database operations
+    - Started refactoring direct `db` usages to use these helpers for full type safety
+    - Completed: `pinThread()` and `unpinThread()` operations
 
 **VERIFICATION**:
 
@@ -1067,29 +1100,32 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED**:
 
 1. **Thread Per-Account Isolation** ✅:
-   - Implemented user-specific IndexedDB database namespacing (`ThreadDatabase_{userId}`)
-   - Created automatic database switching via `useThreadAuth` hook
-   - Ensured threads are completely isolated between user accounts
-   - Added proper database switching on authentication changes
+
+    - Implemented user-specific IndexedDB database namespacing (`ThreadDatabase_{userId}`)
+    - Created automatic database switching via `useThreadAuth` hook
+    - Ensured threads are completely isolated between user accounts
+    - Added proper database switching on authentication changes
 
 2. **API Key Per-Account Isolation** ✅:
-   - **NEW**: Implemented user-specific localStorage namespacing for API keys
-   - **NEW**: Added `switchUserStorage(userId)` function to API keys store
-   - **NEW**: Modified Zustand persist middleware to use dynamic storage keys
-   - **NEW**: Integrated API key switching into `useThreadAuth` hook
-   - API keys now isolated per user account (`api-keys-storage-{userId}`)
+
+    - **NEW**: Implemented user-specific localStorage namespacing for API keys
+    - **NEW**: Added `switchUserStorage(userId)` function to API keys store
+    - **NEW**: Modified Zustand persist middleware to use dynamic storage keys
+    - **NEW**: Integrated API key switching into `useThreadAuth` hook
+    - API keys now isolated per user account (`api-keys-storage-{userId}`)
 
 3. **Logout & Data Clearing** ✅:
-   - Enhanced `useLogout` hook to clear both threads and API keys
-   - `clearAllThreads()` removes all thread data on logout
-   - `clearAllKeys()` removes all API key data on logout
-   - All subscription/feature access properly reset
+
+    - Enhanced `useLogout` hook to clear both threads and API keys
+    - `clearAllThreads()` removes all thread data on logout
+    - `clearAllKeys()` removes all API key data on logout
+    - All subscription/feature access properly reset
 
 4. **Comprehensive User Authentication Flow** ✅:
-   - **Global Integration**: `useThreadAuth` hook runs in `RootProvider`
-   - **Automatic Switching**: Both threads and API keys switch when user changes
-   - **Anonymous Support**: Anonymous users get isolated storage spaces
-   - **Security**: Complete data isolation prevents cross-user access
+    - **Global Integration**: `useThreadAuth` hook runs in `RootProvider`
+    - **Automatic Switching**: Both threads and API keys switch when user changes
+    - **Anonymous Support**: Anonymous users get isolated storage spaces
+    - **Security**: Complete data isolation prevents cross-user access
 
 **TECHNICAL IMPLEMENTATION**:
 
@@ -1106,22 +1142,24 @@ When switching from anonymous to logged-in user (or between different accounts):
 **PER-ACCOUNT ISOLATION FEATURES**:
 
 1. **Thread Management**:
-   - Database: `ThreadDatabase_{userId}` or `ThreadDatabase_anonymous`
-   - Automatic switching on authentication changes
-   - Complete isolation between users
-   - Cleared on logout
+
+    - Database: `ThreadDatabase_{userId}` or `ThreadDatabase_anonymous`
+    - Automatic switching on authentication changes
+    - Complete isolation between users
+    - Cleared on logout
 
 2. **API Key Management**:
-   - Storage: `api-keys-storage-{userId}` or `api-keys-storage-anonymous`
-   - Dynamic localStorage key switching
-   - Per-user API key isolation
-   - Cleared on logout
+
+    - Storage: `api-keys-storage-{userId}` or `api-keys-storage-anonymous`
+    - Dynamic localStorage key switching
+    - Per-user API key isolation
+    - Cleared on logout
 
 3. **Authentication Flow**:
-   - Login: Switches to user-specific thread DB and API key storage
-   - Logout: Clears all data, switches to anonymous storage
-   - User Switch: Seamlessly switches between user contexts
-   - Anonymous: Isolated storage for non-authenticated users
+    - Login: Switches to user-specific thread DB and API key storage
+    - Logout: Clears all data, switches to anonymous storage
+    - User Switch: Seamlessly switches between user contexts
+    - Anonymous: Isolated storage for non-authenticated users
 
 **TESTING & VALIDATION**:
 
@@ -1162,36 +1200,40 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED**:
 
 1. **Logout & Gated Access Management** ✅:
-   - Verified `useLogout` hook in `packages/common/hooks/use-logout.ts` properly clears all gated features
-   - Confirmed `clearSubscriptionDataOnLogout` clears API keys, MCP config, and subscription cache
-   - Added `clearAllThreads()` call to logout flow to ensure threads are cleared on logout
-   - All subscription/feature access is properly reset when user logs out
+
+    - Verified `useLogout` hook in `packages/common/hooks/use-logout.ts` properly clears all gated features
+    - Confirmed `clearSubscriptionDataOnLogout` clears API keys, MCP config, and subscription cache
+    - Added `clearAllThreads()` call to logout flow to ensure threads are cleared on logout
+    - All subscription/feature access is properly reset when user logs out
 
 2. **Sidebar Subscription Button** ✅:
-   - Verified sidebar logic in `packages/common/components/side-bar.tsx` already correct
-   - Shows "Manage Subscription" for VT+ users, "Upgrade to Plus" for non-subscribers
-   - Button behavior properly reflects current subscription state
+
+    - Verified sidebar logic in `packages/common/components/side-bar.tsx` already correct
+    - Shows "Manage Subscription" for VT+ users, "Upgrade to Plus" for non-subscribers
+    - Button behavior properly reflects current subscription state
 
 3. **Per-Account Thread Isolation** ✅:
-   - **Analysis**: Identified that local-only (Dexie/IndexedDB) implementation needed per-user isolation
-   - **Solution**: Implemented user-specific database namespacing in `packages/common/store/chat.store.ts`
-   - **Database Management**: Added `initializeUserDatabase()` and `switchUserDatabase()` functions
-   - **Authentication Hook**: Created `packages/common/hooks/use-thread-auth.ts` to handle database switching
-   - **Global Integration**: Added `useThreadAuth()` hook to `packages/common/context/root.tsx`
-   - **Result**: Threads are now isolated per user account, switching automatically on authentication changes
+
+    - **Analysis**: Identified that local-only (Dexie/IndexedDB) implementation needed per-user isolation
+    - **Solution**: Implemented user-specific database namespacing in `packages/common/store/chat.store.ts`
+    - **Database Management**: Added `initializeUserDatabase()` and `switchUserDatabase()` functions
+    - **Authentication Hook**: Created `packages/common/hooks/use-thread-auth.ts` to handle database switching
+    - **Global Integration**: Added `useThreadAuth()` hook to `packages/common/context/root.tsx`
+    - **Result**: Threads are now isolated per user account, switching automatically on authentication changes
 
 4. **Implementation Details**:
-   - **Database Namespacing**: IndexedDB databases now use format `threads-{userId}` or `threads-anonymous`
-   - **Automatic Switching**: Thread database switches automatically when user logs in/out or changes
-   - **Data Isolation**: Each user sees only their own threads, no cross-user contamination
-   - **Logout Cleanup**: All threads cleared on logout for security
-   - **Graceful Fallback**: Anonymous users get their own isolated database
+
+    - **Database Namespacing**: IndexedDB databases now use format `threads-{userId}` or `threads-anonymous`
+    - **Automatic Switching**: Thread database switches automatically when user logs in/out or changes
+    - **Data Isolation**: Each user sees only their own threads, no cross-user contamination
+    - **Logout Cleanup**: All threads cleared on logout for security
+    - **Graceful Fallback**: Anonymous users get their own isolated database
 
 5. **Testing & Validation**:
-   - Build test passed successfully with no compilation errors
-   - All TypeScript types properly maintained
-   - Hook integration verified in global provider context
-   - Console logging added for debugging thread database switches
+    - Build test passed successfully with no compilation errors
+    - All TypeScript types properly maintained
+    - Hook integration verified in global provider context
+    - Console logging added for debugging thread database switches
 
 **TECHNICAL IMPLEMENTATION**:
 
@@ -1223,35 +1265,39 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED**:
 
 1. **Railway Configuration Optimization**:
-   - Updated `railway.toml` with environment-specific build and deploy settings
-   - Updated `railway.json` with proper schema validation and environment configs
-   - Added dedicated build configurations for development and production environments
-   - Optimized healthcheck timeouts (180s for dev, 300s for production)
-   - Ensured consistent restart policies across environments
+
+    - Updated `railway.toml` with environment-specific build and deploy settings
+    - Updated `railway.json` with proper schema validation and environment configs
+    - Added dedicated build configurations for development and production environments
+    - Optimized healthcheck timeouts (180s for dev, 300s for production)
+    - Ensured consistent restart policies across environments
 
 2. **Environment-Specific Settings**:
-   - Development: Shorter healthcheck timeout for faster feedback (180s)
-   - Production: Standard timeout for stability (300s)
-   - Both environments use `ON_FAILURE` restart policy for reliability
-   - Proper Docker build configuration for both environments
+
+    - Development: Shorter healthcheck timeout for faster feedback (180s)
+    - Production: Standard timeout for stability (300s)
+    - Both environments use `ON_FAILURE` restart policy for reliability
+    - Proper Docker build configuration for both environments
 
 3. **Configuration Documentation**:
-   - Created comprehensive `docs/railway-config-review.md`
-   - Documented current resource settings (2 vCPU, 1GB RAM, serverless enabled)
-   - Provided environment variable configuration guide
-   - Added troubleshooting section and validation checklist
-   - Documented cost optimization strategies for development
+
+    - Created comprehensive `docs/railway-config-review.md`
+    - Documented current resource settings (2 vCPU, 1GB RAM, serverless enabled)
+    - Provided environment variable configuration guide
+    - Added troubleshooting section and validation checklist
+    - Documented cost optimization strategies for development
 
 4. **Security & Best Practices**:
-   - Confirmed all `.env.railway.*` files are properly gitignored
-   - Verified only template files are committed to repository
-   - Documented proper secrets management via Railway Dashboard/CLI
-   - Ensured no hardcoded credentials in codebase
+
+    - Confirmed all `.env.railway.*` files are properly gitignored
+    - Verified only template files are committed to repository
+    - Documented proper secrets management via Railway Dashboard/CLI
+    - Ensured no hardcoded credentials in codebase
 
 5. **Health Check Verification**:
-   - Confirmed `/api/health` endpoint exists and returns proper JSON response
-   - Verified endpoint returns 200 status with service metadata
-   - Healthcheck path properly configured in Railway settings
+    - Confirmed `/api/health` endpoint exists and returns proper JSON response
+    - Verified endpoint returns 200 status with service metadata
+    - Healthcheck path properly configured in Railway settings
 
 **CURRENT RAILWAY SETUP**:
 
@@ -1278,28 +1324,31 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED FIXES**:
 
 1. **Better Auth OAuth Configuration**:
-   - Updated GitHub provider to properly map `avatar_url` from user profile
-   - Updated Google provider to properly map `picture` from user profile
-   - Added `mapProfileToUser` functions for both providers to extract avatar URLs
-   - GitHub scopes already included `read:user` which provides avatar access
-   - Google scopes already included `profile` which provides picture access
+
+    - Updated GitHub provider to properly map `avatar_url` from user profile
+    - Updated Google provider to properly map `picture` from user profile
+    - Added `mapProfileToUser` functions for both providers to extract avatar URLs
+    - GitHub scopes already included `read:user` which provides avatar access
+    - Google scopes already included `profile` which provides picture access
 
 2. **Database Integration**:
-   - Confirmed existing `users` table has `image` field for avatar storage
-   - Avatar URLs automatically saved to database during OAuth flow
-   - Profile API already returns `user.image` for frontend consumption
+
+    - Confirmed existing `users` table has `image` field for avatar storage
+    - Avatar URLs automatically saved to database during OAuth flow
+    - Profile API already returns `user.image` for frontend consumption
 
 3. **UI Components Ready**:
-   - `UserButton` component already displays user avatars when available
-   - Sidebar component already shows user profile pictures
-   - Avatar fallback to initials when no image available
-   - Seamless integration with existing user interface
+
+    - `UserButton` component already displays user avatars when available
+    - Sidebar component already shows user profile pictures
+    - Avatar fallback to initials when no image available
+    - Seamless integration with existing user interface
 
 4. **Documentation Created**:
-   - Created comprehensive guide: `docs/oauth-avatar-implementation.md`
-   - Documented GitHub and Google OAuth scope requirements
-   - Explained profile mapping implementation
-   - Added testing verification steps
+    - Created comprehensive guide: `docs/oauth-avatar-implementation.md`
+    - Documented GitHub and Google OAuth scope requirements
+    - Explained profile mapping implementation
+    - Added testing verification steps
 
 **RESULT**: User avatars now automatically retrieved and displayed during OAuth login flows
 
@@ -1310,21 +1359,23 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED FIXES**:
 
 1. **File Consolidation**:
-   - Removed redundant `.env.local` from project root (was empty)
-   - Removed redundant `.env` from `apps/web/` directory
-   - Consolidated all environment variables into single `apps/web/.env.local`
-   - Created backups of all original files with `.backup` extension
+
+    - Removed redundant `.env.local` from project root (was empty)
+    - Removed redundant `.env` from `apps/web/` directory
+    - Consolidated all environment variables into single `apps/web/.env.local`
+    - Created backups of all original files with `.backup` extension
 
 2. **Documentation Updates**:
-   - Updated `apps/web/.env.example` with comprehensive template
-   - Created `docs/environment-consolidation.md` with detailed explanation
-   - Updated `CLAUDE.md` to reflect single environment file approach
-   - Added clear instructions for team setup
+
+    - Updated `apps/web/.env.example` with comprehensive template
+    - Created `docs/environment-consolidation.md` with detailed explanation
+    - Updated `CLAUDE.md` to reflect single environment file approach
+    - Added clear instructions for team setup
 
 3. **Verification**:
-   - Tested environment variable loading with Node.js
-   - Confirmed all required variables (DATABASE_URL, BETTER_AUTH_SECRET, CREEM_API_KEY) load correctly
-   - Verified Next.js environment loading hierarchy is maintained
+    - Tested environment variable loading with Node.js
+    - Confirmed all required variables (DATABASE_URL, BETTER_AUTH_SECRET, CREEM_API_KEY) load correctly
+    - Verified Next.js environment loading hierarchy is maintained
 
 **RESULT**: Single source of truth for local development environment variables at `apps/web/.env.local`
 
@@ -1335,20 +1386,22 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED FIXES**:
 
 1. **Dockerfile Updates for Railway Compatibility**:
-   - Removed NODE_ENV override (let Next.js manage automatically)
-   - Added HOSTNAME="0.0.0.0" for Railway port binding
-   - Enhanced debug logging with CREEM_ENVIRONMENT
-   - Fixed port configuration for Railway
+
+    - Removed NODE_ENV override (let Next.js manage automatically)
+    - Added HOSTNAME="0.0.0.0" for Railway port binding
+    - Enhanced debug logging with CREEM_ENVIRONMENT
+    - Fixed port configuration for Railway
 
 2. **Environment Variable Strategy**:
-   - Confirmed all NODE_ENV usage replaced with CREEM_ENVIRONMENT
-   - Updated codebase to use getCurrentEnvironment() function
-   - Proper separation between Node.js environment and application environment
+
+    - Confirmed all NODE_ENV usage replaced with CREEM_ENVIRONMENT
+    - Updated codebase to use getCurrentEnvironment() function
+    - Proper separation between Node.js environment and application environment
 
 3. **Railway Strategy Documentation**:
-   - **RECOMMENDATION**: Use 2 separate Railway projects (dev + prod) instead of 1 project with 2 environments
-   - Created comprehensive guide: `docs/railway-development-deployment-guide.md`
-   - Benefits: Complete isolation, independent scaling, separate billing, better security
+    - **RECOMMENDATION**: Use 2 separate Railway projects (dev + prod) instead of 1 project with 2 environments
+    - Created comprehensive guide: `docs/railway-development-deployment-guide.md`
+    - Benefits: Complete isolation, independent scaling, separate billing, better security
 
 **CURRENT STATUS**:
 
@@ -1370,31 +1423,34 @@ When switching from anonymous to logged-in user (or between different accounts):
 **COMPLETED FIXES**:
 
 1. **Environment-Specific Configuration**:
-   - Created `.env.railway.development` for Railway development environment
-   - Created `.env.railway.production` for Railway production environment
-   - Updated `.env.railway` to serve as template with clear instructions
-   - Configured proper URLs for each environment:
-     - Local: `http://localhost:3000`
-     - Development: `https://vtchat-web-development.up.railway.app`
-     - Production: `https://vtchat-web-production.up.railway.app`
+
+    - Created `.env.railway.development` for Railway development environment
+    - Created `.env.railway.production` for Railway production environment
+    - Updated `.env.railway` to serve as template with clear instructions
+    - Configured proper URLs for each environment:
+        - Local: `http://localhost:3000`
+        - Development: `https://vtchat-web-development.up.railway.app`
+        - Production: `https://vtchat-web-production.up.railway.app`
 
 2. **Railway Configuration**:
-   - Verified `Dockerfile` is properly configured for Railway deployment
-   - Updated `railway.toml` with proper health check and build settings
-   - Created `railway.json` as alternative configuration format
-   - Ensured proper environment variable handling in build process
+
+    - Verified `Dockerfile` is properly configured for Railway deployment
+    - Updated `railway.toml` with proper health check and build settings
+    - Created `railway.json` as alternative configuration format
+    - Ensured proper environment variable handling in build process
 
 3. **Documentation**:
-   - Created comprehensive `docs/railway-deployment-configuration.md`
-   - Documented deployment process for both environments
-   - Added security considerations and troubleshooting guide
-   - Included Railway CLI commands for environment setup
+
+    - Created comprehensive `docs/railway-deployment-configuration.md`
+    - Documented deployment process for both environments
+    - Added security considerations and troubleshooting guide
+    - Included Railway CLI commands for environment setup
 
 4. **Environment Variables Structure**:
-   - Environment-specific URLs properly configured
-   - Payment settings (sandbox vs production) properly separated
-   - Auth environment settings aligned with deployment environment
-   - Logging levels appropriate for each environment
+    - Environment-specific URLs properly configured
+    - Payment settings (sandbox vs production) properly separated
+    - Auth environment settings aligned with deployment environment
+    - Logging levels appropriate for each environment
 
 **RESULT**: Proper Railway deployment configuration with environment-specific URLs and settings
 
@@ -1406,20 +1462,20 @@ When switching from anonymous to logged-in user (or between different accounts):
 **Status:** ✅ COMPLETED
 
 - ✅ **Deep Research Workflow**: All key workflow tasks now default to Gemini models for Deep Research mode
-  - `refine-query.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
-  - `reflector.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
-  - `planner.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
-  - `analysis.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
-  - `writer.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
-  - `web-search.ts` - Already uses `ModelEnum.GEMINI_2_0_FLASH` for search summarization
+    - `refine-query.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
+    - `reflector.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW`
+    - `planner.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+    - `analysis.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+    - `writer.ts` - Uses `ModelEnum.GEMINI_2_5_FLASH_PREVIEW` when mode is `ChatMode.Deep`
+    - `web-search.ts` - Already uses `ModelEnum.GEMINI_2_0_FLASH` for search summarization
 - ✅ **Pro Search Workflow**: Routes to `gemini-web-search` task which uses Gemini models for web search capabilities
 - ✅ **Proper ChatMode Enum Usage**: Updated tasks to use `ChatMode.Deep` enum instead of string comparison
 - ✅ **Context7 Documentation Review**: Verified Gemini configuration best practices with Vercel AI SDK
 - ✅ **Model Selection Strategy**: Uses `GEMINI_2_5_FLASH_PREVIEW` as default for Deep Research tasks while preserving user choice for other workflows
 - ✅ **UI Bug Fixes**: Fixed React duplicate key warning and improved chat mode labels
-  - Fixed duplicate "Grounding Web Search" labels causing React key conflicts
-  - Updated labels to unique values: "Deep Research" and "Pro Search"
-  - Implemented unique React keys using ChatMode values instead of labels
+    - Fixed duplicate "Grounding Web Search" labels causing React key conflicts
+    - Updated labels to unique values: "Deep Research" and "Pro Search"
+    - Implemented unique React keys using ChatMode values instead of labels
 - ✅ **Import Standardization**: Fixed ChatMode enum imports across all workflow files to use `@repo/shared/config`
 - ✅ **Development Server Validation**: Confirmed changes work correctly in development environment
 - ✅ **TODO Items Marked Complete**: Updated TODO.md to reflect completion of all Gemini-related tasks
@@ -1515,10 +1571,10 @@ When switching from anonymous to logged-in user (or between different accounts):
 ### Deprecation Cleanup ✅
 
 - ✅ **Removed Deprecated Files**: Completely removed all deprecated subscription files
-  - Deleted `/packages/common/store/subscription.store.ts` (entire deprecated Zustand store)
-  - Deleted `/packages/common/hooks/use-subscription.ts` (deprecated hook)
-  - Deleted `/packages/common/hooks/use-subscription-status.ts` (deprecated hook)
-  - Deleted `/packages/common/components/subscription/provider.tsx` (legacy provider)
+    - Deleted `/packages/common/store/subscription.store.ts` (entire deprecated Zustand store)
+    - Deleted `/packages/common/hooks/use-subscription.ts` (deprecated hook)
+    - Deleted `/packages/common/hooks/use-subscription-status.ts` (deprecated hook)
+    - Deleted `/packages/common/components/subscription/provider.tsx` (legacy provider)
 - ✅ **Updated Exports**: Removed deprecated hook exports from index files
 - ✅ **Migrated Active Code**: Updated `payment-checkout-processor.tsx` to use global provider
 - ✅ **All Active Code Uses Global Provider**: Everything now uses `useGlobalSubscriptionStatus()`
@@ -1547,21 +1603,21 @@ When switching from anonymous to logged-in user (or between different accounts):
 ### Group 5: UI/UX Simplification & Component Updates
 
 - ✅ **Updated VT+ Plus Page Design**: Applied modern pricing page design to `apps/web/app/plus/page.tsx`
-  - ✅ Created missing components:
-    - `apps/web/components/card-spotlight-pricing.tsx` - Interactive spotlight effect cards
-    - `apps/web/components/ui/typography.tsx` - Typography components for consistent styling
-  - ✅ Fixed import paths and component references
-  - ✅ Applied new design features:
-    - Modern dark theme with slate-950 background
-    - Linear gradient grid pattern background effect
-    - Animated badge with sparkles icon
-    - ShineText animation for the main heading
-    - Two-column responsive pricing layout
-    - Interactive spotlight hover effects on pricing cards
-    - Modern gradient buttons
-    - Features accordion section
-    - Professional call-to-action section
-  - ✅ Fixed FeaturesAccordion component to import from correct `@repo/ui` package
+    - ✅ Created missing components:
+        - `apps/web/components/card-spotlight-pricing.tsx` - Interactive spotlight effect cards
+        - `apps/web/components/ui/typography.tsx` - Typography components for consistent styling
+    - ✅ Fixed import paths and component references
+    - ✅ Applied new design features:
+        - Modern dark theme with slate-950 background
+        - Linear gradient grid pattern background effect
+        - Animated badge with sparkles icon
+        - ShineText animation for the main heading
+        - Two-column responsive pricing layout
+        - Interactive spotlight hover effects on pricing cards
+        - Modern gradient buttons
+        - Features accordion section
+        - Professional call-to-action section
+    - ✅ Fixed FeaturesAccordion component to import from correct `@repo/ui` package
 - ✅ Updated UserTierBadge to display plan names from PlanSlug enum
 - ✅ Replaced TextShimmerComponent with simple Label component
 - ✅ Adopted shadcn/ui styles and components
@@ -1616,16 +1672,16 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 - ✅ **Dashboard Settings Route Cleanup**: Completely removed `/dashboard/settings` route and related files
 - ✅ **Navigation Unification**: All settings entry points now use modal system instead of page routes:
-  - ✅ **Sidebar**: Uses `setIsSettingsOpen(true)`
-  - ✅ **Command Search**: Uses `setIsSettingsOpen(true)`
-  - ✅ **Tools Menu**: Uses `setIsSettingsOpen(true)`
-  - ✅ **User Dropdown**: Fixed to use `setIsSettingsOpen(true)` instead of old route
+    - ✅ **Sidebar**: Uses `setIsSettingsOpen(true)`
+    - ✅ **Command Search**: Uses `setIsSettingsOpen(true)`
+    - ✅ **Tools Menu**: Uses `setIsSettingsOpen(true)`
+    - ✅ **User Dropdown**: Fixed to use `setIsSettingsOpen(true)` instead of old route
 - ✅ **ProvidersCard Styling**: Confirmed transparent background with adaptive text color already properly configured
 - ✅ **Badge Runtime Error Resolution**: Fixed "(intermediate value).trim is not a function" error by:
-  - ✅ **Variable Naming**: Fixed inconsistent naming (`isSettingOpen` vs `isSettingsOpen`) throughout codebase
-  - ✅ **LoginRequiredDialog Fix**: Updated to use correct `isSettingsOpen` variable
-  - ✅ **Explicit Variants**: Added explicit `variant="default"` to Badge components for type safety
-  - ✅ **CSS Ordering**: Improved className property ordering for better CSS handling
+    - ✅ **Variable Naming**: Fixed inconsistent naming (`isSettingOpen` vs `isSettingsOpen`) throughout codebase
+    - ✅ **LoginRequiredDialog Fix**: Updated to use correct `isSettingsOpen` variable
+    - ✅ **Explicit Variants**: Added explicit `variant="default"` to Badge components for type safety
+    - ✅ **CSS Ordering**: Improved className property ordering for better CSS handling
 - ✅ **Code Consistency**: Standardized all variable references to use `isSettingsOpen` and `setIsSettingsOpen`
 - ✅ **TypeScript Clean**: All compilation errors resolved, no runtime exceptions
 - ✅ **Testing Verified**: Development server running successfully without errors on `http://localhost:3001`
@@ -1846,18 +1902,22 @@ Fixed a React console error where an invalid `onClick` prop was being supplied t
 
 ```tsx
 // Before (causing Fragment error):
-{isCurrentModeGated ? (
-    <Button>...</Button>
-) : (
-    dropdownTrigger  // This variable could cause Fragment issues
-)}
+{
+    isCurrentModeGated ? (
+        <Button>...</Button>
+    ) : (
+        dropdownTrigger // This variable could cause Fragment issues
+    );
+}
 
 // After (fixed):
-{isCurrentModeGated ? (
-    <Button>...</Button>
-) : (
-    <Button>...</Button>  // Direct JSX prevents Fragment issues
-)}
+{
+    isCurrentModeGated ? (
+        <Button>...</Button>
+    ) : (
+        <Button>...</Button> // Direct JSX prevents Fragment issues
+    );
+}
 ```
 
 #### Impact
@@ -1877,19 +1937,21 @@ Fixed a React console error where an invalid `onClick` prop was being supplied t
 **Features Implemented:**
 
 1. **Deep Research ↔ Pro Search Mode Switching**
-   - When user switches from "Deep Research" to "Pro Search" mode (or vice versa)
-   - Automatically creates a new chat thread with proper thread title
-   - Preserves mode-specific workflow context separation
+
+    - When user switches from "Deep Research" to "Pro Search" mode (or vice versa)
+    - Automatically creates a new chat thread with proper thread title
+    - Preserves mode-specific workflow context separation
 
 2. **Research Mode to Custom Model Switching**
-   - When user switches from either "Deep Research" or "Pro Search" to any custom model
-   - Creates new thread to maintain clear separation between research workflows and regular chat
-   - Custom models include: GPT 4o Mini, GPT 4.1 series, Claude 4 series, Gemini models, etc.
+
+    - When user switches from either "Deep Research" or "Pro Search" to any custom model
+    - Creates new thread to maintain clear separation between research workflows and regular chat
+    - Custom models include: GPT 4o Mini, GPT 4.1 series, Claude 4 series, Gemini models, etc.
 
 3. **Web Search Button Hide Enhancement**
-   - Fixed WebSearchButton logic to properly hide when Deep Research or Pro Search modes are selected
-   - Improved conditional rendering with separate conditions instead of combined AND logic
-   - Button now correctly respects `webSearch: false` configuration for research modes
+    - Fixed WebSearchButton logic to properly hide when Deep Research or Pro Search modes are selected
+    - Improved conditional rendering with separate conditions instead of combined AND logic
+    - Button now correctly respects `webSearch: false` configuration for research modes
 
 **Technical Implementation:**
 
@@ -1953,13 +2015,13 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 - ✅ **Fixed Temporary Implementation**: Replaced disabled subscription status function with robust solution
 - ✅ **Dynamic Import System**: Added dynamic imports to avoid build-time drizzle dependency issues
 - ✅ **Multi-Layer Fallback**: Implemented 3-tier fallback system:
-  1. Primary: subscription-sync module import
-  2. Secondary: Direct database queries
-  3. Tertiary: Safe defaults (free tier)
+    1. Primary: subscription-sync module import
+    2. Secondary: Direct database queries
+    3. Tertiary: Safe defaults (free tier)
 - ❌ **Rate Limiting Removed**: Eliminated Redis-based rate limiting system
-  - Removed FREE_TIER_DAILY_LIMIT environment variable
-  - Removed all KV/Redis dependencies and configurations
-  - No more usage restrictions for free tier users
+    - Removed FREE_TIER_DAILY_LIMIT environment variable
+    - Removed all KV/Redis dependencies and configurations
+    - No more usage restrictions for free tier users
 - ✅ **Improved Error Handling**: Comprehensive error logging with graceful degradation
 - ✅ **Subscription Status Logic**: Proper handling of multiple data sources (subscription table vs user plan_slug)
 - ✅ **Production Ready**: No more temporary implementations, fully functional access control
@@ -2020,37 +2082,40 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 **IMPLEMENTATION**:
 
 1. **Branch Strategy Implementation**:
-   - ✅ `dev` branch → triggers Railway `development` environment deployment
-   - ✅ `main` branch → triggers Railway `production` environment deployment
-   - ✅ Updated all references from `railway-deployment` to `dev` branch
+
+    - ✅ `dev` branch → triggers Railway `development` environment deployment
+    - ✅ `main` branch → triggers Railway `production` environment deployment
+    - ✅ Updated all references from `railway-deployment` to `dev` branch
 
 2. **GitHub Actions Workflows**:
-   - ✅ **Railway Deploy Workflow** (`.github/workflows/railway-deploy.yml`):
-     - Automatic deployment to development on `dev` branch push
-     - Automatic deployment to production on `main` branch push
-     - Build validation for all PRs
-   - ✅ **PR Management Workflow** (`.github/workflows/pr-management.yml`):
-     - Creates preview environments for PRs targeting `main` or `dev`
-     - Automatic cleanup when PRs are closed
-     - Environment-specific commenting and URL generation
+
+    - ✅ **Railway Deploy Workflow** (`.github/workflows/railway-deploy.yml`):
+        - Automatic deployment to development on `dev` branch push
+        - Automatic deployment to production on `main` branch push
+        - Build validation for all PRs
+    - ✅ **PR Management Workflow** (`.github/workflows/pr-management.yml`):
+        - Creates preview environments for PRs targeting `main` or `dev`
+        - Automatic cleanup when PRs are closed
+        - Environment-specific commenting and URL generation
 
 3. **Railway Configuration Updates**:
-   - ✅ Updated `railway.json` with environment-specific configurations
-   - ✅ Updated `railway.toml` with environment-specific health check settings
-   - ✅ Development environment: 180s health check timeout
-   - ✅ Production environment: 300s health check timeout
+
+    - ✅ Updated `railway.json` with environment-specific configurations
+    - ✅ Updated `railway.toml` with environment-specific health check settings
+    - ✅ Development environment: 180s health check timeout
+    - ✅ Production environment: 300s health check timeout
 
 4. **Documentation Review**:
-   - ✅ Used Context7 to review Railway best practices
-   - ✅ Verified branch-based deployment patterns align with Railway recommendations
-   - ✅ Confirmed environment-specific configuration support
+    - ✅ Used Context7 to review Railway best practices
+    - ✅ Verified branch-based deployment patterns align with Railway recommendations
+    - ✅ Confirmed environment-specific configuration support
 
 **WORKFLOW STRUCTURE**:
 
 ```yaml
 GitHub Events:
-  - Push to `dev` → Railway Development Environment
-  - Push to `main` → Railway Production Environment
-  - PR to `dev/main` → Preview Environment + Build Validation
-  - PR closed → Preview Environment Cleanup
+    - Push to `dev` → Railway Development Environment
+    - Push to `main` → Railway Production Environment
+    - PR to `dev/main` → Preview Environment + Build Validation
+    - PR closed → Preview Environment Cleanup
 ```

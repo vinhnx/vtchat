@@ -1,5 +1,12 @@
 import { Footer } from '@repo/common/components';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, TypographyH2 } from '@repo/ui';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+    Button,
+    TypographyH2,
+} from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -199,12 +206,16 @@ function FAQs() {
                                         Fireworks, Together AI, and xAI
                                     </li>
                                     <li className="text-muted-foreground">
-                                         <strong>Deep Research:</strong> Comprehensive multi-step research using Gemini 2.5 Pro for in-depth analysis (VT+ exclusive)
+                                        <strong>Deep Research:</strong> Comprehensive multi-step
+                                        research using Gemini 2.5 Pro for in-depth analysis (VT+
+                                        exclusive)
                                     </li>
                                     <li className="text-muted-foreground">
-                                         <strong>Pro Search:</strong> Fast grounding web search using Gemini 2.5 Flash for quick information retrieval (VT+ exclusive)
+                                        <strong>Pro Search:</strong> Fast grounding web search using
+                                        Gemini 2.5 Flash for quick information retrieval (VT+
+                                        exclusive)
                                     </li>
-                                     <li className="text-muted-foreground">
+                                    <li className="text-muted-foreground">
                                         <strong>Document Processing:</strong> Upload and analyze
                                         PDFs, documents, and images with AI models
                                     </li>
@@ -311,24 +322,32 @@ function FAQs() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT offers two specialized research modes for different use cases:
+                                    VT offers two specialized research modes for different use
+                                    cases:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Deep Research (VT+ exclusive):</strong> Uses Gemini 2.5 Pro for comprehensive, multi-step research with detailed analysis and thorough investigation of complex topics
+                                        <strong>Deep Research (VT+ exclusive):</strong> Uses Gemini
+                                        2.5 Pro for comprehensive, multi-step research with detailed
+                                        analysis and thorough investigation of complex topics
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Pro Search (VT+ exclusive):</strong> Uses Gemini 2.5 Flash for fast, efficient web search and information retrieval with quick grounding capabilities
+                                        <strong>Pro Search (VT+ exclusive):</strong> Uses Gemini 2.5
+                                        Flash for fast, efficient web search and information
+                                        retrieval with quick grounding capabilities
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Both modes feature native Google search grounding for up-to-date information
+                                        Both modes feature native Google search grounding for
+                                        up-to-date information
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Choose Deep Research for in-depth analysis, Pro Search for quick information lookup
+                                        Choose Deep Research for in-depth analysis, Pro Search for
+                                        quick information lookup
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Both research modes require a VT+ subscription and the DEEP_RESEARCH or PRO_SEARCH features enabled.
+                                    Both research modes require a VT+ subscription and the
+                                    DEEP_RESEARCH or PRO_SEARCH features enabled.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>

@@ -112,7 +112,11 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                             <StepRenderer key={index} step={step} />
                         ))}
                         {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
-                            <ToolStep key={`tool-${index}`} toolCall={toolCall} toolResult={toolResult} />
+                            <ToolStep
+                                key={`tool-${index}`}
+                                toolCall={toolCall}
+                                toolResult={toolResult}
+                            />
                         ))}
                     </div>
                 ),
@@ -134,7 +138,11 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                         <StepRenderer key={index} step={step} />
                     ))}
                     {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
-                        <ToolStep key={`tool-${index}`} toolCall={toolCall} toolResult={toolResult} />
+                        <ToolStep
+                            key={`tool-${index}`}
+                            toolCall={toolCall}
+                            toolResult={toolResult}
+                        />
                     ))}
                 </div>
             ),

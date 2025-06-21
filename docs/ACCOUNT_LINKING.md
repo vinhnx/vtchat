@@ -56,6 +56,7 @@ CREATE TABLE accounts (
 ## API Endpoints
 
 ### List Linked Accounts
+
 ```
 GET /api/auth/list-accounts
 ```
@@ -64,18 +65,18 @@ Returns all linked OAuth accounts for the authenticated user:
 
 ```json
 {
-  "success": true,
-  "accounts": [
-    {
-      "id": "acc_123",
-      "accountId": "google_123456789",
-      "providerId": "google",
-      "userId": "user_456",
-      "createdAt": "2024-01-15T10:30:00Z",
-      "updatedAt": "2024-01-15T10:30:00Z"
-    }
-  ],
-  "userId": "user_456"
+    "success": true,
+    "accounts": [
+        {
+            "id": "acc_123",
+            "accountId": "google_123456789",
+            "providerId": "google",
+            "userId": "user_456",
+            "createdAt": "2024-01-15T10:30:00Z",
+            "updatedAt": "2024-01-15T10:30:00Z"
+        }
+    ],
+    "userId": "user_456"
 }
 ```
 
@@ -87,15 +88,15 @@ The system is prepared for Neon MCP integration for direct database queries:
 
 ```json
 {
-  "mcpServers": {
-    "neon": {
-      "command": "npx",
-      "args": ["-y", "@neondatabase/mcp-server"],
-      "env": {
-        "DATABASE_URL": "postgresql://username:password@host/database"
-      }
+    "mcpServers": {
+        "neon": {
+            "command": "npx",
+            "args": ["-y", "@neondatabase/mcp-server"],
+            "env": {
+                "DATABASE_URL": "postgresql://username:password@host/database"
+            }
+        }
     }
-  }
 }
 ```
 
@@ -103,20 +104,20 @@ The system is prepared for Neon MCP integration for direct database queries:
 
 ```sql
 -- Get all linked accounts for a user
-SELECT 
+SELECT
     id,
     account_id as "accountId",
-    provider_id as "providerId", 
+    provider_id as "providerId",
     user_id as "userId",
     created_at as "createdAt",
     updated_at as "updatedAt"
-FROM accounts 
+FROM accounts
 WHERE user_id = $1
 ORDER BY created_at DESC;
 
 -- Check if specific provider is linked
 SELECT EXISTS(
-    SELECT 1 FROM accounts 
+    SELECT 1 FROM accounts
     WHERE user_id = $1 AND provider_id = $2
 ) as "exists";
 ```
@@ -129,6 +130,7 @@ Main component for account linking UI located at:
 `packages/common/components/user-profile-settings.tsx`
 
 Key features:
+
 - Real-time database state checking
 - OAuth callback detection
 - Visual feedback for all states
@@ -140,6 +142,7 @@ Helper functions for account linking queries:
 `packages/common/utils/account-linking-db.ts`
 
 Functions:
+
 - `getLinkedAccountsFromDB()` - Fetch accounts via API
 - `isProviderLinked()` - Check specific provider status
 - `getLinkedAccountsFromNeonMCP()` - Neon MCP example

@@ -29,7 +29,6 @@ import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
 import { StructuredOutputButton } from './structured-output-button';
 
-
 export const ChatInput = ({
     showGreeting = true,
     showBottomBar = true,

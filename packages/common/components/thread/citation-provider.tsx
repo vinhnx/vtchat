@@ -32,7 +32,10 @@ const getFavIcon = (host?: string) => {
         return null;
     }
     // Skip favicon for grounding API redirects
-    if (host.includes('vertexaisearch.cloud.google.com') || host.includes('grounding-api-redirect')) {
+    if (
+        host.includes('vertexaisearch.cloud.google.com') ||
+        host.includes('grounding-api-redirect')
+    ) {
         return null;
     }
     try {

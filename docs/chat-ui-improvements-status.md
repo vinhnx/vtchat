@@ -39,7 +39,7 @@ Gift icons are already displayed for all free models in the chat model dropdown.
 **Implementation**:
 
 ```tsx
-icon: <Gift size={16} className="text-green-500" />
+icon: <Gift size={16} className="text-green-500" />;
 ```
 
 ## 3. ✅ Model Grouping by Provider

@@ -60,7 +60,7 @@ export const Sidebar = () => {
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
-    const { logout } = useLogout();
+    const { logout, isLoggingOut } = useLogout();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -471,9 +471,15 @@ export const Sidebar = () => {
                                 {isSignedIn && (
                                     <>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => logout()}>
+                                        <DropdownMenuItem
+                                            onClick={() => logout()}
+                                            disabled={isLoggingOut}
+                                            className={
+                                                isLoggingOut ? 'cursor-not-allowed opacity-50' : ''
+                                            }
+                                        >
                                             <LogOut size={16} strokeWidth={2} />
-                                            Sign out
+                                            {isLoggingOut ? 'Signing out...' : 'Sign out'}
                                         </DropdownMenuItem>
                                     </>
                                 )}

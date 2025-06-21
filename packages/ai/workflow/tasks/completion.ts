@@ -102,7 +102,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
             },
-            onReasoningDetails: (details) => {
+            onReasoningDetails: details => {
                 events?.update('steps', prev => ({
                     ...prev,
                     0: {

@@ -7,9 +7,9 @@
  */
 export enum ReasoningType {
     DEEPSEEK_REASONING = 'deepseek-reasoning',
-    ANTHROPIC_REASONING = 'anthropic-reasoning', 
+    ANTHROPIC_REASONING = 'anthropic-reasoning',
     GEMINI_THINKING = 'gemini-thinking',
-    NONE = 'none'
+    NONE = 'none',
 }
 
 /**
@@ -17,7 +17,7 @@ export enum ReasoningType {
  */
 export enum ReasoningTagName {
     THINK = 'think',
-    THINKING = 'thinking'
+    THINKING = 'thinking',
 }
 
 /**
@@ -25,7 +25,7 @@ export enum ReasoningTagName {
  */
 export enum StoreKeys {
     THINKING_MODE = 'thinkingMode',
-    API_KEYS = 'apiKeys'
+    API_KEYS = 'apiKeys',
 }
 
 /**
@@ -34,7 +34,7 @@ export enum StoreKeys {
 export const REASONING_CONFIG = {
     DEEPSEEK_TAG: ReasoningTagName.THINK,
     ANTHROPIC_TAG: ReasoningTagName.THINKING,
-    SEPARATOR: '\n'
+    SEPARATOR: '\n',
 } as const;
 
 /**
@@ -43,5 +43,5 @@ export const REASONING_CONFIG = {
 export const REASONING_BUDGETS = {
     QUICK: 1000,
     BALANCED: 25000,
-    DEEP: 50000
+    DEEP: 50000,
 } as const;

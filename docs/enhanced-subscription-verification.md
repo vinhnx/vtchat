@@ -23,7 +23,7 @@ export async function verifyExistingCreemSubscription(
     userId: string,
     deps: DatabaseDependencies,
     targetPlan: PlanSlug = PlanSlug.VT_PLUS
-): Promise<SubscriptionVerificationResult>
+): Promise<SubscriptionVerificationResult>;
 ```
 
 ### Verification Strategy
@@ -102,11 +102,11 @@ When an active subscription is detected:
 
 ## Verification Sources
 
-| Source | Description | Use Case |
-|--------|-------------|----------|
-| `database_subscription` | Found active subscription in `user_subscriptions` | Standard Creem subscriptions |
-| `user_plan_slug` | Found VT+ in `users.plan_slug` without subscription record | Admin-granted, legacy access |
-| `none` | No active subscription found | Proceed with checkout |
+| Source                  | Description                                                | Use Case                     |
+| ----------------------- | ---------------------------------------------------------- | ---------------------------- |
+| `database_subscription` | Found active subscription in `user_subscriptions`          | Standard Creem subscriptions |
+| `user_plan_slug`        | Found VT+ in `users.plan_slug` without subscription record | Admin-granted, legacy access |
+| `none`                  | No active subscription found                               | Proceed with checkout        |
 
 ## Testing Scenarios
 

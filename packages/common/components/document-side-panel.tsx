@@ -24,14 +24,18 @@ export const DocumentSidePanel = memo(
                 <SheetContent width="md" className="p-6" title="Document Attachment Details">
                     <div className="mb-6 flex items-center gap-2">
                         <FileText size={20} />
-                        <TypographyH2 className="text-lg font-semibold">Document Attachment</TypographyH2>
+                        <TypographyH2 className="text-lg font-semibold">
+                            Document Attachment
+                        </TypographyH2>
                     </div>
 
                     <div className="space-y-4">
                         <DocumentDisplay documentAttachment={documentAttachment} />
 
                         <div className="bg-muted/50 rounded-lg p-4">
-                            <TypographyH4 className="mb-2 text-sm font-medium">Document Details</TypographyH4>
+                            <TypographyH4 className="mb-2 text-sm font-medium">
+                                Document Details
+                            </TypographyH4>
                             <div className="text-muted-foreground space-y-1 text-sm">
                                 <p>
                                     <strong>File Name:</strong> {documentAttachment.fileName}

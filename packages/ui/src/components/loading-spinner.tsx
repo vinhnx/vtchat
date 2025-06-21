@@ -5,32 +5,29 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 // Loading spinner variants
-const spinnerVariants = cva(
-    'animate-spin rounded-full border-solid border-current',
-    {
-        variants: {
-            size: {
-                sm: 'h-4 w-4 border-2',
-                md: 'h-6 w-6 border-2',
-                lg: 'h-8 w-8 border-[3px]',
-                xl: 'h-12 w-12 border-4',
-                '2xl': 'h-16 w-16 border-4',
-            },
-            variant: {
-                default: 'border-border border-t-foreground',
-                primary: 'border-primary/20 border-t-primary',
-                secondary: 'border-secondary/20 border-t-secondary',
-                destructive: 'border-destructive/20 border-t-destructive',
-                ghost: 'border-muted border-t-muted-foreground',
-                outline: 'border-border border-t-foreground',
-            },
+const spinnerVariants = cva('animate-spin rounded-full border-solid border-current', {
+    variants: {
+        size: {
+            sm: 'h-4 w-4 border-2',
+            md: 'h-6 w-6 border-2',
+            lg: 'h-8 w-8 border-[3px]',
+            xl: 'h-12 w-12 border-4',
+            '2xl': 'h-16 w-16 border-4',
         },
-        defaultVariants: {
-            size: 'md',
-            variant: 'default',
+        variant: {
+            default: 'border-border border-t-foreground',
+            primary: 'border-primary/20 border-t-primary',
+            secondary: 'border-secondary/20 border-t-secondary',
+            destructive: 'border-destructive/20 border-t-destructive',
+            ghost: 'border-muted border-t-muted-foreground',
+            outline: 'border-border border-t-foreground',
         },
-    }
-);
+    },
+    defaultVariants: {
+        size: 'md',
+        variant: 'default',
+    },
+});
 
 export interface LoadingSpinnerProps
     extends React.HTMLAttributes<HTMLDivElement>,
@@ -49,28 +46,20 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
                     ref={ref}
                 />
                 {text && (
-                    <span className="ml-2 text-sm text-muted-foreground animate-pulse">
-                        {text}
-                    </span>
+                    <span className="text-muted-foreground ml-2 animate-pulse text-sm">{text}</span>
                 )}
             </>
         );
 
         if (centered) {
             return (
-                <div className="flex items-center justify-center min-h-[100px] w-full">
-                    <div className="flex items-center">
-                        {content}
-                    </div>
+                <div className="flex min-h-[100px] w-full items-center justify-center">
+                    <div className="flex items-center">{content}</div>
                 </div>
             );
         }
 
-        return (
-            <div className="flex items-center">
-                {content}
-            </div>
-        );
+        return <div className="flex items-center">{content}</div>;
     }
 );
 
@@ -96,7 +85,7 @@ const PulseLoader = React.forwardRef<HTMLDivElement, PulseLoaderProps>(
                     <div
                         key={i}
                         className={cn(
-                            'animate-pulse bg-muted rounded',
+                            'bg-muted animate-pulse rounded',
                             heights[height],
                             i === lines - 1 ? 'w-3/4' : 'w-full'
                         )}
@@ -133,16 +122,12 @@ const DotsLoader = React.forwardRef<HTMLDivElement, DotsLoaderProps>(
         };
 
         return (
-            <div
-                className={cn('flex items-center space-x-1', className)}
-                ref={ref}
-                {...props}
-            >
-                {[0, 1, 2].map((i) => (
+            <div className={cn('flex items-center space-x-1', className)} ref={ref} {...props}>
+                {[0, 1, 2].map(i => (
                     <div
                         key={i}
                         className={cn(
-                            'rounded-full animate-bounce',
+                            'animate-bounce rounded-full',
                             sizeMap[size],
                             colorMap[color]
                         )}
@@ -168,7 +153,10 @@ export interface CircularProgressProps extends React.HTMLAttributes<HTMLDivEleme
 }
 
 const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(
-    ({ className, progress = 0, size = 40, strokeWidth = 4, showPercentage = false, ...props }, ref) => {
+    (
+        { className, progress = 0, size = 40, strokeWidth = 4, showPercentage = false, ...props },
+        ref
+    ) => {
         const radius = (size - strokeWidth) / 2;
         const circumference = radius * 2 * Math.PI;
         const offset = circumference - (progress / 100) * circumference;
@@ -180,11 +168,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
                 ref={ref}
                 {...props}
             >
-                <svg
-                    className="transform -rotate-90"
-                    width={size}
-                    height={size}
-                >
+                <svg className="-rotate-90 transform" width={size} height={size}>
                     {/* Background circle */}
                     <circle
                         cx={size / 2}
@@ -210,9 +194,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
                     />
                 </svg>
                 {showPercentage && (
-                    <span className="absolute text-xs font-medium">
-                        {Math.round(progress)}%
-                    </span>
+                    <span className="absolute text-xs font-medium">{Math.round(progress)}%</span>
                 )}
             </div>
         );

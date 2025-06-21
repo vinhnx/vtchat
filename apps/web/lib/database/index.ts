@@ -38,7 +38,6 @@ try {
     pool.on('remove', () => {
         console.log('Database connection removed from pool');
     });
-
 } catch (error) {
     console.error('Failed to create database pool:', error);
     throw new Error('Database connection pool creation failed');
@@ -47,7 +46,7 @@ try {
 // Create drizzle instance with Neon serverless adapter and error handling
 export const db = drizzle(pool, {
     schema,
-    logger: process.env.NODE_ENV === 'development' ? true : false
+    logger: process.env.NODE_ENV === 'development' ? true : false,
 });
 
 // Helper function to handle database connection errors gracefully

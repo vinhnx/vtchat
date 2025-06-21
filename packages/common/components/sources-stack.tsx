@@ -21,7 +21,10 @@ const getFavIcon = (host?: string) => {
         return null;
     }
     // Skip favicon for grounding API redirects
-    if (host.includes('vertexaisearch.cloud.google.com') || host.includes('grounding-api-redirect')) {
+    if (
+        host.includes('vertexaisearch.cloud.google.com') ||
+        host.includes('grounding-api-redirect')
+    ) {
         return null;
     }
     try {
@@ -43,7 +46,10 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
                     const favIcon = getFavIcon(host ?? '');
                     if (isValidUrl(url) && favIcon) {
                         return (
-                            <div key={index} className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border">
+                            <div
+                                key={index}
+                                className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border"
+                            >
                                 <Image
                                     src={favIcon}
                                     alt={host ?? ''}

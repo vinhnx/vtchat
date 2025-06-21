@@ -517,7 +517,7 @@ export function ChatModeOptions({
             // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
             const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
             const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
-            
+
             if (isByokEligibleMode && hasByokGeminiKey) {
                 // Bypass subscription check for BYOK Gemini users
             } else {
@@ -525,7 +525,9 @@ export function ChatModeOptions({
 
                 // Check feature access
                 if (config.requiredFeature) {
-                    hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+                    hasRequiredAccess = hasAccess({
+                        feature: config.requiredFeature as FeatureSlug,
+                    });
                 }
 
                 // Check plan access

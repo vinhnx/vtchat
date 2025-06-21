@@ -79,17 +79,18 @@ railway variables set \
 
 1. **Check Railway Logs**:
 
-   ```bash
-   railway logs
-   ```
+    ```bash
+    railway logs
+    ```
 
 2. **Verify Port Binding**:
-   - Ensure app binds to `0.0.0.0:$PORT`
-   - Railway sets PORT automatically
+
+    - Ensure app binds to `0.0.0.0:$PORT`
+    - Railway sets PORT automatically
 
 3. **Check Application Startup**:
-   - Look for "Ready in" message in logs
-   - Verify no startup errors
+    - Look for "Ready in" message in logs
+    - Verify no startup errors
 
 ### Common 502 Causes
 

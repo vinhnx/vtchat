@@ -23,7 +23,7 @@ interface UserButtonProps {
 
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
-    const { logout } = useLogout();
+    const { logout, isLoggingOut } = useLogout();
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
 
     if (!session?.user) return null;
@@ -87,9 +87,13 @@ export function UserButton({ showName = false }: UserButtonProps) {
                 <DropdownMenuSeparator />
 
                 {/* Sign Out */}
-                <DropdownMenuItem onClick={() => logout()}>
+                <DropdownMenuItem
+                    onClick={() => logout()}
+                    disabled={isLoggingOut}
+                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
+                    {isLoggingOut ? 'Signing out...' : 'Sign out'}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

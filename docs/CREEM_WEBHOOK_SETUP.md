@@ -66,6 +66,7 @@ bun dev
 ```
 
 2. Check the console for webhook environment logging:
+
 ```
 [Creem Webhook] Environment: {
   nodeEnv: 'development',
@@ -101,20 +102,20 @@ To test the complete subscription flow:
 
 ```json
 {
-  "type": "checkout.completed",
-  "data": {
-    "id": "checkout_123",
-    "status": "completed",
-    "customer": {
-      "id": "customer_123",
-      "email": "user@example.com"
-    },
-    "product": {
-      "id": "prod_123",
-      "name": "VT+"
-    },
-    "subscription_id": "sub_123"
-  }
+    "type": "checkout.completed",
+    "data": {
+        "id": "checkout_123",
+        "status": "completed",
+        "customer": {
+            "id": "customer_123",
+            "email": "user@example.com"
+        },
+        "product": {
+            "id": "prod_123",
+            "name": "VT+"
+        },
+        "subscription_id": "sub_123"
+    }
 }
 ```
 
@@ -122,16 +123,16 @@ To test the complete subscription flow:
 
 ```json
 {
-  "type": "subscription.created",
-  "data": {
-    "id": "sub_123",
-    "status": "active",
-    "customer": {
-      "id": "customer_123",
-      "email": "user@example.com"
-    },
-    "current_period_end": "2024-02-15T10:00:00Z"
-  }
+    "type": "subscription.created",
+    "data": {
+        "id": "sub_123",
+        "status": "active",
+        "customer": {
+            "id": "customer_123",
+            "email": "user@example.com"
+        },
+        "current_period_end": "2024-02-15T10:00:00Z"
+    }
 }
 ```
 

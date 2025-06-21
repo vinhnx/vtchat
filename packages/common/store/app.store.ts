@@ -137,11 +137,11 @@ export const useAppStore = create(
                     settingTab: 'api-keys',
                     isSettingsOpen: false,
                     showSignInModal: false,
-                    sideDrawer: { 
-                        open: false, 
-                        title: '', 
-                        renderContent: () => null, 
-                        badge: undefined 
+                    sideDrawer: {
+                        open: false,
+                        title: '',
+                        renderContent: () => null,
+                        badge: undefined,
                     },
                 });
 

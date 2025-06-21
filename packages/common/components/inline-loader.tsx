@@ -6,11 +6,7 @@ export type InlineLoaderProps = {
     className?: string;
 };
 
-export const InlineLoader = ({
-    size = 'sm',
-    variant = 'normal',
-    className,
-}: InlineLoaderProps) => {
+export const InlineLoader = ({ size = 'sm', variant = 'normal', className }: InlineLoaderProps) => {
     const skeletonSizes = {
         xs: 'h-3 w-16',
         sm: 'h-4 w-20',

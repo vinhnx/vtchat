@@ -100,7 +100,10 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 };
 
 // Helper function to generate model options from models array
-export const generateModelOptionsForProvider = (provider: string, excludePreview: boolean = false) => {
+export const generateModelOptionsForProvider = (
+    provider: string,
+    excludePreview: boolean = false
+) => {
     return models
         .filter(model => model.provider === provider)
         .filter(model => !excludePreview || !model.name.toLowerCase().includes('preview'))
@@ -361,8 +364,7 @@ export function checkChatModeAccess(
         : true;
 
     // Step 4: Final access
-    const canAccess =
-        (!isAuthRequired || hasAuth) && hasRequiredPlan && hasRequiredFeature;
+    const canAccess = (!isAuthRequired || hasAuth) && hasRequiredPlan && hasRequiredFeature;
 
     return {
         isAuthRequired,

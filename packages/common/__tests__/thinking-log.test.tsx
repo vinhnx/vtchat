@@ -6,23 +6,25 @@ import { ChatMode } from '@repo/shared/config';
 
 // Mock the stores and hooks
 vi.mock('@repo/common/store', () => ({
-    useChatStore: vi.fn((selector) => {
+    useChatStore: vi.fn(selector => {
         return selector({
             thinkingMode: {
                 enabled: true,
                 includeThoughts: true,
-                budget: 10000
-            }
+                budget: 10000,
+            },
         });
-    })
+    }),
 }));
 
 vi.mock('@repo/common/hooks/use-subscription-access', () => ({
-    useFeatureAccess: vi.fn(() => true)
+    useFeatureAccess: vi.fn(() => true),
 }));
 
 vi.mock('../components/thread/components/markdown-content', () => ({
-    MarkdownContent: ({ content }: { content: string }) => <div data-testid="markdown-content">{content}</div>
+    MarkdownContent: ({ content }: { content: string }) => (
+        <div data-testid="markdown-content">{content}</div>
+    ),
 }));
 
 describe('ThinkingLog', () => {
@@ -36,12 +38,12 @@ describe('ThinkingLog', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         role: 'assistant',
-        ...overrides
+        ...overrides,
     });
 
     it('should render reasoning log when reasoning data is available', () => {
         const threadItem = createThreadItem({
-            reasoning: 'This is my reasoning process...'
+            reasoning: 'This is my reasoning process...',
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -52,7 +54,7 @@ describe('ThinkingLog', () => {
 
     it('should expand and show reasoning content when clicked', () => {
         const threadItem = createThreadItem({
-            reasoning: '# Step-by-step reasoning\n\n1. First, I analyze...\n2. Then, I consider...'
+            reasoning: '# Step-by-step reasoning\n\n1. First, I analyze...\n2. Then, I consider...',
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -70,13 +72,13 @@ describe('ThinkingLog', () => {
                 {
                     type: 'text',
                     text: 'Let me think about this...',
-                    signature: 'step-1'
+                    signature: 'step-1',
                 },
                 {
                     type: 'redacted',
-                    data: 'sensitive content'
-                }
-            ]
+                    data: 'sensitive content',
+                },
+            ],
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -93,18 +95,18 @@ describe('ThinkingLog', () => {
             parts: [
                 {
                     type: 'text',
-                    text: 'Here is my response'
+                    text: 'Here is my response',
                 },
                 {
                     type: 'reasoning',
                     details: [
                         {
                             type: 'text',
-                            text: 'My reasoning process...'
-                        }
-                    ]
-                }
-            ]
+                            text: 'My reasoning process...',
+                        },
+                    ],
+                },
+            ],
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -116,11 +118,14 @@ describe('ThinkingLog', () => {
     });
 
     it('should not render when user lacks access', () => {
-        const { rerender } = render(<ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />);
+        const { rerender } = render(
+            <ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />
+        );
 
         // Mock no access
-        vi.mocked(require('@repo/common/hooks/use-subscription-access').useFeatureAccess)
-            .mockReturnValue(false);
+        vi.mocked(
+            require('@repo/common/hooks/use-subscription-access').useFeatureAccess
+        ).mockReturnValue(false);
 
         rerender(<ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />);
 
@@ -129,13 +134,13 @@ describe('ThinkingLog', () => {
 
     it('should not render when thinking mode is disabled', () => {
         // Mock disabled thinking mode
-        vi.mocked(require('@repo/common/store').useChatStore).mockImplementation((selector) => {
+        vi.mocked(require('@repo/common/store').useChatStore).mockImplementation(selector => {
             return selector({
                 thinkingMode: {
                     enabled: false,
                     includeThoughts: true,
-                    budget: 10000
-                }
+                    budget: 10000,
+                },
             });
         });
 

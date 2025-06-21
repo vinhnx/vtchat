@@ -23,7 +23,7 @@ export async function getLinkedAccountsFromDB(userId: string): Promise<LinkedAcc
     try {
         // For now, we'll use the Better Auth API to get linked accounts
         // In production, this would use Neon MCP to query the accounts table directly
-        
+
         const response = await fetch('/api/auth/list-accounts', {
             method: 'GET',
             headers: {
@@ -60,7 +60,10 @@ export async function isProviderLinked(userId: string, providerId: string): Prom
 /**
  * Get the account ID for a specific provider (if linked)
  */
-export async function getAccountIdForProvider(userId: string, providerId: string): Promise<string | null> {
+export async function getAccountIdForProvider(
+    userId: string,
+    providerId: string
+): Promise<string | null> {
     try {
         const linkedAccounts = await getLinkedAccountsFromDB(userId);
         const account = linkedAccounts.find(acc => acc.providerId === providerId);
@@ -73,7 +76,7 @@ export async function getAccountIdForProvider(userId: string, providerId: string
 
 /**
  * Neon MCP Implementation Example
- * 
+ *
  * This shows how to use Neon MCP for direct database queries.
  * The MCP (Model Context Protocol) provides real-time database access.
  */
@@ -85,7 +88,7 @@ export async function getAccountIdForProvider(userId: string, providerId: string
 export async function getLinkedAccountsFromNeonMCP(userId: string): Promise<LinkedAccount[]> {
     // This is an example of how Neon MCP would be used
     // In practice, you would configure Neon MCP in your environment
-    
+
     const query = `
         SELECT 
             id,
@@ -98,15 +101,15 @@ export async function getLinkedAccountsFromNeonMCP(userId: string): Promise<Link
         WHERE user_id = $1
         ORDER BY created_at DESC;
     `;
-    
+
     try {
         // This would use the Neon MCP connection to execute the query
         // Example pseudo-code:
         // const result = await neonMCP.query(query, [userId]);
         // return result.rows;
-        
+
         console.log('[Neon MCP] Query would be executed:', query, 'with userId:', userId);
-        
+
         // Fallback to API call for now
         return await getLinkedAccountsFromDB(userId);
     } catch (error) {
@@ -125,11 +128,18 @@ export async function isProviderLinkedMCP(userId: string, providerId: string): P
             WHERE user_id = $1 AND provider_id = $2
         ) as "exists";
     `;
-    
+
     try {
         // This would use Neon MCP to execute the query
-        console.log('[Neon MCP] Existence check query:', query, 'userId:', userId, 'providerId:', providerId);
-        
+        console.log(
+            '[Neon MCP] Existence check query:',
+            query,
+            'userId:',
+            userId,
+            'providerId:',
+            providerId
+        );
+
         // Fallback to current implementation
         return await isProviderLinked(userId, providerId);
     } catch (error) {
@@ -141,7 +151,7 @@ export async function isProviderLinkedMCP(userId: string, providerId: string): P
 /**
  * Configuration example for Neon MCP in Claude Desktop or similar
  * This would go in claude_desktop_config.json:
- * 
+ *
  * {
  *   "mcpServers": {
  *     "neon": {

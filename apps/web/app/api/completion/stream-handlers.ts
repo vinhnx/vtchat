@@ -23,7 +23,7 @@ function getThinkingModeForChatMode(
             includeThoughts: userThinkingMode?.includeThoughts ?? true,
         };
     }
-    
+
     if (mode === ChatMode.Pro) {
         return {
             enabled: true,
@@ -31,13 +31,15 @@ function getThinkingModeForChatMode(
             includeThoughts: userThinkingMode?.includeThoughts ?? true,
         };
     }
-    
+
     // For other modes, use user settings or defaults
-    return userThinkingMode || {
-        enabled: false,
-        budget: 0,
-        includeThoughts: false,
-    };
+    return (
+        userThinkingMode || {
+            enabled: false,
+            budget: 0,
+            includeThoughts: false,
+        }
+    );
 }
 
 export function sendMessage(

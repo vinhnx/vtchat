@@ -93,7 +93,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             // Extract reasoning from steps if present
             let reasoning = prevItem.reasoning;
             let reasoningDetails = prevItem.reasoningDetails;
-            
+
             if (eventType === 'steps' && eventData?.steps) {
                 // Look for reasoning in the steps structure
                 const stepsData = eventData.steps;
@@ -105,7 +105,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     reasoningDetails = stepsData[0].steps.reasoningDetails.data;
                 }
             }
-            
+
             // Handle reasoning details from answer events if present
             if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
                 reasoningDetails = eventData.answer.reasoningDetails;

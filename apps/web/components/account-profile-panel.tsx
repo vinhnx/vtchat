@@ -1,8 +1,27 @@
 'use client';
 
 import { authClient } from '@repo/shared/lib/auth-client';
-import { Alert, AlertDescription, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Separator } from '@repo/ui';
-import { AlertCircle, CheckCircle, Github, Link as LinkIcon, Plus, Trash2, Users } from 'lucide-react';
+import {
+    Alert,
+    AlertDescription,
+    Badge,
+    Button,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Separator,
+} from '@repo/ui';
+import {
+    AlertCircle,
+    CheckCircle,
+    Github,
+    Link as LinkIcon,
+    Plus,
+    Trash2,
+    Users,
+} from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 import { UnlinkAccountDialog } from './unlink-account-dialog';
@@ -134,7 +153,7 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
 
             // Refresh accounts after unlinking
             await fetchAccounts();
-            
+
             // Close dialog
             setUnlinkDialog({
                 open: false,
@@ -170,7 +189,9 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                 </CardHeader>
                 <CardContent>
                     <div className="flex items-center justify-center py-8">
-                        <div className="animate-pulse text-muted-foreground">Loading accounts...</div>
+                        <div className="text-muted-foreground animate-pulse">
+                            Loading accounts...
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -214,7 +235,10 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                     ) : (
                         <div className="space-y-3">
                             {accounts.map(account => {
-                                const config = providerConfig[account.providerId as keyof typeof providerConfig];
+                                const config =
+                                    providerConfig[
+                                        account.providerId as keyof typeof providerConfig
+                                    ];
                                 if (!config) return null;
 
                                 const IconComponent = config.icon;
@@ -235,7 +259,10 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                                                 <p className="text-sm font-medium">{config.name}</p>
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-muted-foreground text-xs">
-                                                        Connected {new Date(account.createdAt).toLocaleDateString()}
+                                                        Connected{' '}
+                                                        {new Date(
+                                                            account.createdAt
+                                                        ).toLocaleDateString()}
                                                     </p>
                                                     <CheckCircle className="h-3 w-3 text-green-500" />
                                                 </div>
@@ -244,8 +271,12 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            disabled={actionLoading === account.id || isFirstAccount}
-                                            onClick={() => handleUnlinkAccount(account.providerId, account.id)}
+                                            disabled={
+                                                actionLoading === account.id || isFirstAccount
+                                            }
+                                            onClick={() =>
+                                                handleUnlinkAccount(account.providerId, account.id)
+                                            }
                                             className="text-destructive hover:text-destructive"
                                         >
                                             {actionLoading === account.id ? (
@@ -284,7 +315,9 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                                                     <IconComponent className="h-4 w-4" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-medium">{config.name}</p>
+                                                    <p className="text-sm font-medium">
+                                                        {config.name}
+                                                    </p>
                                                     <p className="text-muted-foreground text-xs">
                                                         Link your {config.name} account
                                                     </p>
@@ -318,7 +351,8 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                     <Alert>
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription className="text-xs">
-                            This is your only linked account. For security, it cannot be unlinked unless you add another account first.
+                            This is your only linked account. For security, it cannot be unlinked
+                            unless you add another account first.
                         </AlertDescription>
                     </Alert>
                 )}
@@ -326,9 +360,7 @@ export function AccountProfilePanel({ className }: AccountProfilePanelProps) {
                 {/* Unlink Confirmation Dialog */}
                 <UnlinkAccountDialog
                     open={unlinkDialog.open}
-                    onOpenChange={(open) =>
-                        setUnlinkDialog(prev => ({ ...prev, open }))
-                    }
+                    onOpenChange={open => setUnlinkDialog(prev => ({ ...prev, open }))}
                     onConfirm={confirmUnlinkAccount}
                     providerName={unlinkDialog.providerName}
                     isLastAccount={accounts.length === 1}

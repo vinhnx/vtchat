@@ -1,5 +1,5 @@
 // Workflow worker implementation
-self.onmessage = function(event) {
+self.onmessage = function (event) {
     const { type, data, payload } = event.data; // Added payload for START_WORKFLOW
 
     switch (type) {

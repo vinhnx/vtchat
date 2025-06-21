@@ -8,9 +8,9 @@ export const useWebSearch = () => {
     const setUseWebSearch = useChatStore(state => state.setUseWebSearch);
 
     const currentModel = useMemo(() => getModelFromChatMode(chatMode), [chatMode]);
-    
-    const supportsNativeSearch = useMemo(() => 
-        supportsNativeWebSearch(currentModel), 
+
+    const supportsNativeSearch = useMemo(
+        () => supportsNativeWebSearch(currentModel),
         [currentModel]
     );
 
