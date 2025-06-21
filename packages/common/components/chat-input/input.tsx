@@ -192,7 +192,11 @@ export const ChatInput = ({
                                         {isGenerating && !isChatPage ? (
                                             <GeneratingStatus />
                                         ) : (
-                                            <Flex gap="xs" items="center" className="shrink-0 flex-wrap">
+                                            <Flex
+                                                gap="xs"
+                                                items="center"
+                                                className="shrink-0 flex-wrap"
+                                            >
                                                 <ChatModeButton />
                                                 {/* Hide accessory tool buttons when advanced modes are active */}
                                                 {chatMode !== ChatMode.Deep &&

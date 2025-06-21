@@ -22,7 +22,7 @@ import {
     Kbd,
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
-import { Command, Key, MessageCircle, Moon, Plus, Settings, Sun, Trash } from 'lucide-react';
+import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -135,8 +135,8 @@ export const CommandSearch = () => {
             requiresAuth: true,
         },
         {
-            name: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`,
-            icon: theme === 'dark' ? Sun : Moon,
+            name: 'Change Theme',
+            icon: Palette,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
@@ -149,7 +149,9 @@ export const CommandSearch = () => {
                     return;
                 }
 
-                setTheme(theme === 'dark' ? 'light' : 'dark');
+                // Cycle through themes: light -> dark -> system
+                const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+                setTheme(nextTheme);
                 onClose();
             },
             requiresAuth: true,

@@ -1,24 +1,14 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-
 import { FeatureSlug } from '@repo/shared/types/subscription';
-import { Button } from '@repo/ui';
 import { GatedFeatureAlert } from './gated-feature-alert';
+import { ThemeSwitcher } from './theme-switcher';
 
 interface ModeToggleProps {
     onClose?: () => void;
 }
 
-export function ModeToggle({ onClose }: ModeToggleProps) {
-    const { theme, setTheme } = useTheme();
-
-    const handleToggle = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
-        // Don't close settings when toggling theme
-    };
-
+export function ModeToggle({ onClose: _onClose }: ModeToggleProps) {
     return (
         <GatedFeatureAlert
             requiredFeature={FeatureSlug.DARK_THEME}
@@ -29,9 +19,7 @@ export function ModeToggle({ onClose }: ModeToggleProps) {
                 console.log('User attempted to use dark theme without VT+ subscription');
             }}
         >
-            <Button variant="outlined" size="sm" onClick={handleToggle}>
-                {theme === 'dark' ? 'Light' : 'Dark'}
-            </Button>
+            <ThemeSwitcher />
         </GatedFeatureAlert>
     );
 }

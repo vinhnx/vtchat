@@ -4,7 +4,17 @@ import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Avatar, Badge, Button, Flex, Toaster, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
+import {
+    Avatar,
+    Badge,
+    Button,
+    Flex,
+    Toaster,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, User, Settings } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -70,7 +80,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             >
                 <Drawer.Portal>
                     <Drawer.Overlay className="fixed inset-0 z-30 backdrop-blur-sm" />
-                    <Drawer.Content className="fixed bottom-0 left-0 top-0 z-[50] w-[280px] bg-tertiary">
+                    <Drawer.Content className="bg-tertiary fixed bottom-0 left-0 top-0 z-[50] w-[280px]">
                         <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
                         <div className="h-full">
                             <Sidebar forceMobile={true} />
@@ -85,7 +95,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     <AgentProvider>
                         <div className={containerClass}>
                             {/* Mobile Header */}
-                            <div className="md:hidden absolute top-0 left-0 right-0 z-50 bg-secondary border-b border-border p-3">
+                            <div className="bg-secondary border-border absolute left-0 right-0 top-0 z-50 border-b p-3 md:hidden">
                                 <div className="flex items-center justify-between">
                                     <Button
                                         variant="ghost"
@@ -95,17 +105,17 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     >
                                         <Menu size={20} strokeWidth={2} />
                                     </Button>
-                                    <div className="text-lg font-bold text-foreground">VT</div>
+                                    <div className="text-foreground text-lg font-bold">VT</div>
                                     <div className="w-8" /> {/* Spacer for centering */}
                                 </div>
                             </div>
-                            
+
                             <div className="relative flex h-full w-0 flex-1 flex-row">
-                                <div className="flex w-full flex-col gap-2 overflow-y-auto md:pt-0 pt-16">
+                                <div className="flex w-full flex-col gap-2 overflow-y-auto pt-16 md:pt-0">
                                     {shouldShowDropShadow && (
-                                        <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block hidden"></div>
+                                        <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block"></div>
                                     )}
-                                    
+
                                     {children}
                                 </div>
                             </div>
@@ -118,16 +128,16 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             </Flex>
 
             <Toaster />
-            
+
             {/* Mobile Floating User Button */}
             {isClient && session && (
-                <div className="md:hidden fixed bottom-4 right-4 z-50">
+                <div className="fixed bottom-4 right-4 z-50 md:hidden">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
                                 variant="default"
                                 size="icon"
-                                className="h-12 w-12 rounded-full bg-primary shadow-lg hover:shadow-xl transition-shadow p-1"
+                                className="bg-primary h-12 w-12 rounded-full p-1 shadow-lg transition-shadow hover:shadow-xl"
                             >
                                 <Avatar
                                     name={session.user?.name || session.user?.email || 'User'}
@@ -137,7 +147,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 mb-2">
+                        <DropdownMenuContent align="end" className="mb-2 w-48">
                             <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                                 <Settings size={16} strokeWidth={2} className="mr-2" />
                                 Settings
@@ -233,7 +243,7 @@ export const SideDrawer = () => {
                         damping: 30,
                         exit: { duration: 0.2 },
                     }}
-                    className="flex min-h-[99dvh] w-full max-w-[500px] md:w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5"
+                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
                 >
                     <div className="bg-background border-border shadow-subtle-xs flex h-full w-full flex-col overflow-hidden rounded-lg">
                         <div className="border-border flex flex-row items-center justify-between gap-2 border-b py-1.5 pl-4 pr-2">

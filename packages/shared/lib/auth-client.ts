@@ -1,4 +1,5 @@
 import { createAuthClient } from 'better-auth/react';
+import { multiSessionClient } from 'better-auth/client/plugins';
 
 // Import performance utilities
 const requestDeduplicator =
@@ -31,6 +32,7 @@ const getBaseURL = () => {
 // Create the auth client that will be used across all packages
 export const authClient = createAuthClient({
     baseURL: getBaseURL(),
+    plugins: [multiSessionClient()],
     // Remove fetchOptions from client config - this is server-side only
 });
 
@@ -54,8 +56,16 @@ const createOptimizedSessionGetter = () => {
 
 // Export optimized methods
 export const getSession = createOptimizedSessionGetter();
-export const { useSession, signIn, signOut, signUp, linkSocial, unlinkAccount, listAccounts } =
-    authClient;
+export const {
+    useSession,
+    signIn,
+    signOut,
+    signUp,
+    linkSocial,
+    unlinkAccount,
+    listAccounts,
+    multiSession,
+} = authClient;
 
 // Create compatibility aliases for Better Auth
 export const useSignOut = () => {

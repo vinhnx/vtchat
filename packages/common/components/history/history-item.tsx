@@ -46,8 +46,6 @@ export const HistoryItem = ({
         isPinned && 'border-l-2 border-l-amber-400 dark:border-l-amber-500'
     );
 
-
-
     const handleDeleteConfirm = () => {
         if (!isSignedIn) {
             requireLogin();
@@ -70,7 +68,7 @@ export const HistoryItem = ({
                 <div className="flex-1 overflow-hidden">
                     <p
                         className={cn(
-                            'w-full truncate text-sm font-medium transition-colors leading-relaxed',
+                            'w-full truncate text-sm font-medium leading-relaxed transition-colors',
                             isActive
                                 ? 'text-foreground font-semibold'
                                 : 'text-muted-foreground hover:text-foreground'

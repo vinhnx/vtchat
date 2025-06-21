@@ -11,6 +11,7 @@ export const SETTING_TABS = {
     USAGE_CREDITS: 'usage-credits',
     PLUS: 'plus',
     REASONING_MODE: 'reasoning-mode',
+    ACTIVE_SESSIONS: 'active-sessions',
     TERMS: 'terms',
     PRIVACY: 'privacy',
 } as const;
