@@ -75,6 +75,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 apiKeys: newApiKeys,
                 webSearch,
                 mathCalculator,
+                charts,
                 showSuggestions,
                 thinkingMode,
             } = payload;
@@ -108,6 +109,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 apiKeys: newApiKeys,
                 webSearch,
                 mathCalculator,
+                charts,
                 showSuggestions,
                 thinkingMode: getThinkingModeForChatMode(mode, thinkingMode),
                 onFinish: (_data: any) => {},

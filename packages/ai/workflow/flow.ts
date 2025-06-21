@@ -87,6 +87,7 @@ export type WorkflowContextSchema = {
     }[];
     webSearch: boolean;
     mathCalculator: boolean;
+    charts: boolean;
     queries: string[];
     summaries: string[];
     gl?: Geo;
@@ -119,6 +120,7 @@ export const runWorkflow = ({
     signal,
     webSearch = false,
     mathCalculator = false,
+    charts = false,
     showSuggestions = false,
     onFinish,
     customInstructions,
@@ -135,6 +137,7 @@ export const runWorkflow = ({
     signal?: AbortSignal;
     webSearch?: boolean;
     mathCalculator?: boolean;
+    charts?: boolean;
     showSuggestions?: boolean;
     onFinish?: (data: any) => void;
     gl?: Geo;
@@ -146,6 +149,7 @@ export const runWorkflow = ({
         includeThoughts: boolean;
     };
 }) => {
+    console.log('🔥 runWorkflow called with params:', { webSearch, mathCalculator, charts });
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
         maxIterations: 2,
@@ -173,11 +177,13 @@ export const runWorkflow = ({
         status: 'PENDING',
     });
 
+    console.log('🌟 Workflow context created with:', { webSearch, mathCalculator, charts });
     const context = createContext<WorkflowContextSchema>({
         question,
         mode,
         webSearch,
         mathCalculator,
+        charts,
         search_queries: [],
         messages: messages as any,
         goals: [],

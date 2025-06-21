@@ -17,7 +17,8 @@
         "./providers": "./providers/index.ts",
         "./providers/subscription-provider": "./providers/subscription-provider.tsx",
         "./utils": "./utils/index.ts",
-        "./constants/math-tools": "./constants/math-tools.ts"
+        "./constants/math-tools": "./constants/math-tools.ts",
+        "./constants/chart-tools": "./constants/chart-tools.ts"
     },
     "scripts": {
         "lint": "oxlint",

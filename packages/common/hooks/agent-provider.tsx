@@ -32,6 +32,7 @@ export type AgentContextType = {
         messages?: ThreadItem[];
         useWebSearch?: boolean;
         useMathCalculator?: boolean;
+        useCharts?: boolean;
         showSuggestions?: boolean;
     }) => Promise<void>;
     updateContext: (threadId: string, data: any) => void;
@@ -353,6 +354,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             messages,
             useWebSearch,
             useMathCalculator,
+            useCharts,
             showSuggestions,
         }: {
             formData: FormData;
@@ -362,8 +364,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             messages?: ThreadItem[];
             useWebSearch?: boolean;
             useMathCalculator?: boolean;
+            useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
+            console.log('🔥 Agent provider received flags:', { useWebSearch, useMathCalculator, useCharts });
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
                 !isSignedIn &&
@@ -436,6 +440,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     updateThreadItem(threadId, { id: optimisticAiThreadItemId, status: 'ABORTED' });
                 });
 
+                console.log('🎯 About to call startWorkflow with:', { useWebSearch, useMathCalculator, useCharts });
                 startWorkflow({
                     mode,
                     question: query,
@@ -446,6 +451,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     customInstructions,
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
+                    charts: useCharts,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: apiKeys(),
                     thinkingMode,
@@ -469,6 +475,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     parentThreadItemId: '',
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
+                    charts: useCharts,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: useWebSearch ? apiKeys() : undefined,
                 });

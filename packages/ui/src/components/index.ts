@@ -9,6 +9,7 @@ export * from './button';
 export * from './button-with-icon';
 export * from './card';
 export * from './carousel';
+export * from './chart';
 export * from './checkbox';
 export * from './command';
 export * from './context-menu';

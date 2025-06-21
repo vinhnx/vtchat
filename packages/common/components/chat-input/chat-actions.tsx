@@ -27,7 +27,7 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Calculator, ChevronDown, Globe, Paperclip, Square } from 'lucide-react';
+import { ArrowUp, Calculator, ChevronDown, Globe, Paperclip, Square, BarChart3 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
@@ -249,6 +249,39 @@ export function MathCalculatorButton() {
                     )}
                 />
                 {mathCalculatorEnabled && <p className="text-xs">Math Calculator</p>}
+            </Button>
+        </>
+    );
+}
+
+export function ChartsButton() {
+    const useCharts = useChatStore(state => state.useCharts);
+    const setActiveButton = useChatStore(state => state.setActiveButton);
+
+    // Always show charts for all users (similar to math calculator)
+    const handleChartsToggle = () => {
+        console.log('📊 Charts button clicked, current state:', useCharts);
+        setActiveButton('charts');
+        console.log('📊 Charts button toggled');
+    };
+
+    return (
+        <>
+            <Button
+                size={useCharts ? 'sm' : 'icon-sm'}
+                tooltip={useCharts ? 'Charts & Graphs - Enabled' : 'Charts & Graphs'}
+                variant={useCharts ? 'secondary' : 'ghost'}
+                className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
+                onClick={handleChartsToggle}
+            >
+                <BarChart3
+                    size={16}
+                    strokeWidth={2}
+                    className={cn(
+                        useCharts ? '!text-purple-500' : 'text-muted-foreground'
+                    )}
+                />
+                {useCharts && <p className="text-xs">Charts</p>}
             </Button>
         </>
     );

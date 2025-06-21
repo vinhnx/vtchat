@@ -1,6 +1,9 @@
 'use client';
 export * from './api-key-prompt-modal';
 export * from './byok-validation-dialog';
+export * from './charts/chart-popup';
+export * from './charts/chart-message';
+export * from './charts/chart-components';
 export * from './chat-input';
 export * from './client-boundary';
 export * from './code-block/code-block';

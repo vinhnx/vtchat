@@ -11,7 +11,9 @@ import {
     Steps,
     ThinkingLog,
 } from '@repo/common/components';
+import { ChartComponent } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
+import { isChartTool } from '@repo/common/constants/chart-tools';
 import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';
@@ -55,6 +57,11 @@ export const ThreadItem = memo(
             mathCalculatorEnabled &&
             hasMathToolCalls &&
             !hasCompletedMathResults;
+
+        // Check for chart tool results
+        const chartToolResults = Object.values(threadItem?.toolResults || {}).filter(result =>
+            isChartTool(result.toolName)
+        );
 
         const { ref: inViewRef, inView } = useInView({});
 
@@ -197,6 +204,18 @@ export const ThreadItem = memo(
                                         ref={messageRef}
                                         isLast={isLast}
                                     />
+
+                                    {/* Render Chart Components */}
+                                    {chartToolResults.length > 0 && (
+                                        <div className="mt-4 space-y-4">
+                                            {chartToolResults.map((toolResult) => (
+                                                <ChartComponent
+                                                    key={toolResult.toolCallId}
+                                                    chartData={toolResult.result}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
 
                                     {threadItem.documentAttachment && (
                                         <div className="flex justify-start">
