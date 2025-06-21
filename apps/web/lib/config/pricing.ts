@@ -99,8 +99,6 @@ export const PRICING_CONFIG = {
             ],
         },
     },
-
-    // Rate limiting - removed FREE_TIER_DAILY_LIMIT
 } as const;
 
 // Export individual values for convenience

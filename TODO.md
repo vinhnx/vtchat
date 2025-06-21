@@ -216,14 +216,23 @@ remove icons in VT+ Features and Subscription settings page
 [] <https://docs.creem.io/faq/account-reviews>
 
 --
+remove all reference of
 
-[] remove FREE_TIER_DAILY_LIMIT key and KV Redis Upstash depedeny completly
-[] remove credit tracking (FREE_TIER_DAILY_LIMIT)
-[] check if any impact?
-use context7
---
-remove card component in Subscription and VT+ Features setting page
---
+KV_URL=your_upstash_redis_url
+KV_REST_API_URL=your_upstash_rest_url
+KV_REST_API_TOKEN=your_upstash_rest_token
+KV_REST_API_READ_ONLY_TOKEN=your_upstash_readonly_token
+REDIS_URL=your_upstash_redis_url
+
+# Alternative Upstash Redis environment variables (same values as above)
+
+UPSTASH_REDIS_REST_URL=your_upstash_rest_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
+
+## both in codebase, in env files and in dockerfile
+
+## use shadcn Card component for all sections in setting page
+
 [] open free chat for logged in user -> use vtchat gemini key
 [] free: if use pre-defined key: 9 per day
 [] plus: if use pre-defined key: 30 per day
