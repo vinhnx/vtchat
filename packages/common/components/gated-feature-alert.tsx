@@ -81,18 +81,17 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     const [showUpgradeAlert, setShowUpgradeAlert] = useState(false);
     const isVtPlus = useVtPlusAccess(); // Use the VT+ access hook that checks Creem subscription
 
-    // Don't render anything while auth is loading
-    if (!session) {
-        return null;
-    }
-
     // Check if user has access based on feature or plan
     const hasAccess = React.useMemo(() => {
+        // If no session, no access
+        if (!session) return false;
+        
         // VT+ exclusive features
         if (
             requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredFeature === FeatureSlug.CHART_VISUALIZATION ||
             requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;
@@ -114,7 +113,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         }
 
         return true;
-    }, [requiredFeature, requiredPlan, isVtPlus]);
+    }, [requiredFeature, requiredPlan, isVtPlus, session]);
 
     // Generate default message based on feature/plan
     const defaultMessage = React.useMemo(() => {
@@ -133,6 +132,11 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
         return 'Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.';
     }, [message, requiredFeature, requiredPlan]);
+
+    // Don't render anything while auth is loading
+    if (!session) {
+        return null;
+    }
 
     const handleUpgrade = () => {
         router.push(upgradeUrl);
@@ -217,6 +221,7 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
             requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
+            requiredFeature === FeatureSlug.CHART_VISUALIZATION ||
             requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;

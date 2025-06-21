@@ -81,6 +81,7 @@ export function useSubscriptionAccess() {
                     FeatureSlug.DOCUMENT_PARSING,
                     FeatureSlug.THINKING_MODE_TOGGLE,
                     FeatureSlug.REASONING_CHAIN,
+                    FeatureSlug.CHART_VISUALIZATION,
                 ];
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;

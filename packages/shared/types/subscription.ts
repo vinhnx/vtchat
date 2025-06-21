@@ -32,6 +32,7 @@ export enum FeatureSlug {
     THINKING_MODE_TOGGLE = 'thinking_mode_toggle',
     REASONING_CHAIN = 'reasoning_chain',
     GEMINI_EXPLICIT_CACHING = 'gemini_explicit_caching',
+    CHART_VISUALIZATION = 'chart_visualization',
 }
 
 // Plan configuration interface
@@ -91,6 +92,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.THINKING_MODE_TOGGLE,
             FeatureSlug.REASONING_CHAIN,
             FeatureSlug.GEMINI_EXPLICIT_CACHING,
+            FeatureSlug.CHART_VISUALIZATION,
         ],
     },
 };
@@ -185,6 +187,12 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: 'Gemini Explicit Caching',
         description:
             'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse',
+    },
+    [FeatureSlug.CHART_VISUALIZATION]: {
+        slug: FeatureSlug.CHART_VISUALIZATION,
+        name: 'Interactive Chart Generation',
+        description:
+            'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations',
     },
 };
 

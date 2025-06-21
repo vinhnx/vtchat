@@ -537,6 +537,38 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Chart Visualization */}
+                        <AccordionItem value="chart-visualization">
+                            <AccordionTrigger className="font-medium">
+                                How does interactive chart generation work?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT+ subscribers can create beautiful, interactive charts directly from AI conversations:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with AI-powered chart generation
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Chart Types:</strong> Bar charts, line charts, area charts, pie charts, and radar charts
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Interactive Features:</strong> Hover effects, tooltips, animations, and responsive design
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Easy Creation:</strong> Simply ask the AI to create charts with your data or specifications
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Professional Design:</strong> Beautiful visualizations with shadcn/ui styling and animations
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Enable charts mode in your chat interface and ask for visualizations like "Create a bar chart showing sales data" to get started.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Tool Integration */}
                         <AccordionItem value="tool-integration">
                             <AccordionTrigger className="font-medium">
