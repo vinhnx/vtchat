@@ -30,29 +30,60 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
         const question = context?.get('question') || '';
         const { updateStatus, updateAnswer, updateObject } = sendEvents(events);
 
-        const prompt = `You are a professional research assistant tasked with refining user queries for deep research.
+        const prompt = `You are a professional research assistant for DEEP RESEARCH - a comprehensive, multi-step analysis workflow.
 
                 CURRENT DATE: ${getHumanizedDate()}
 
-                Analyze the user's question to determine if it needs clarification before research.
+                CONTEXT: You are the first stage of Deep Research, which differs from Pro Search:
+                
+                **Deep Research Workflow**: refine-query → planner → web-search → analysis → writer
+                - For complex topics requiring comprehensive analysis
+                - Multi-angle investigation with strategic planning
+                - Synthesis of findings into detailed reports
+                - Examples: "impact of AI on future employment", "comprehensive analysis of renewable energy adoption"
+                
+                **Pro Search** (not your workflow): direct web-search
+                - For quick factual lookups and current information
+                - Examples: "current Bitcoin price", "weather in Tokyo today"
 
-                For well-formed queries:
+                Your task: Determine if the query needs clarification before proceeding with Deep Research.
+
+                BIAS: Most queries suitable for Deep Research are ready to proceed. Only ask for clarification if truly ambiguous.
+
+                For well-formed queries (DEFAULT - 90% of cases):
                 - Return needsClarification: false
-                - Provide a refinedQuery that enhances the original
+                - Provide a refinedQuery optimized for comprehensive research
+                - Enhance scope, specificity, and research angles
 
-                For queries needing improvement:
+                For ambiguous queries (RARE - only when truly unclear):
                 - Return needsClarification: true
-                - Provide reasoning explaining why
-                - Include clarifying questions with 2-3 options
+                - Provide reasoning explaining the ambiguity
+                - Include clarifying questions with 2-3 specific options
                 - The choiceType should be single or multiple based on the question
+
+                Examples of Deep Research queries that DON'T need clarification:
+                - "impact of remote work on urban planning and city development"
+                - "comprehensive analysis of CRISPR gene editing ethical implications"
+                - "economic and social effects of cryptocurrency adoption in developing countries"
+                - "climate change mitigation strategies and their effectiveness"
+                - "AI safety research progress and remaining challenges"
+                - "renewable energy transition challenges in Europe"
+
+                Examples that DO need clarification (extremely vague):
+                - "help me with my project"
+                - "research something interesting"
+                - "what should I write about?"
+                - "tell me about technology"
+
+                Query Enhancement Guidelines:
+                - Add temporal context when relevant (e.g., "recent developments", "2024 trends")
+                - Specify research angles (economic, social, technical, ethical impacts)
+                - Include scope indicators (global, regional, industry-specific)
+                - Suggest comparative elements when appropriate
 
                 If the user has already responded to previous clarifying questions:
                 - Return needsClarification: false
                 - Provide a refinedQuery incorporating their response
-
-                If the user has not responded to clarifying questions:
-                - Return needsClarification: false
-                - Use the original query
 
                 `;
 
@@ -94,7 +125,8 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
     },
     onError: handleError,
     route: ({ result }) => {
-        if (result?.needsClarification) {
+        console.log('🔍 refine-query route result:', result);
+        if (result?.needsClarification === true) {
             return 'end';
         }
 

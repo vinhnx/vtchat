@@ -192,11 +192,13 @@ export function WebSearchButton() {
                 tooltip={
                     useWebSearch
                         ? webSearchType === 'native'
-                            ? 'Web Search - by Gemini (Native)'
-                            : webSearchType === 'unsupported'
-                              ? 'Web Search - by Gemini (models only)'
-                              : 'Web Search - by Gemini'
-                        : 'Web Search - by Gemini'
+                            ? 'Native Web Search - by Gemini'
+                            : webSearchType === 'openai'
+                              ? 'Native Web Search - by OpenAI'
+                              : webSearchType === 'unsupported'
+                                ? 'Native Web Search - by Gemini (models only)'
+                                : 'Native Web Search - by Gemini'
+                        : 'Native Web Search'
                 }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}

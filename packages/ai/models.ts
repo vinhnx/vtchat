@@ -17,6 +17,8 @@ export enum ModelEnum {
     GPT_4_1_Mini = 'gpt-4.1-mini',
     GPT_4_1_Nano = 'gpt-4.1-nano',
     GPT_4_1 = 'gpt-4.1',
+    O3 = 'o3',
+    O3_Mini = 'o3-mini',
     O4_Mini = 'o4-mini',
     GROK_3 = 'grok-3',
     GROK_3_MINI = 'grok-3-mini',
@@ -68,6 +70,20 @@ export const models: Model[] = [
         provider: 'openai',
         maxTokens: 16_384,
         contextWindow: 128_000,
+    },
+    {
+        id: ModelEnum.O3,
+        name: 'o3',
+        provider: 'openai',
+        maxTokens: 100_000,
+        contextWindow: 200_000,
+    },
+    {
+        id: ModelEnum.O3_Mini,
+        name: 'o3-mini',
+        provider: 'openai',
+        maxTokens: 100_000,
+        contextWindow: 200_000,
     },
     {
         id: ModelEnum.O4_Mini,
@@ -249,6 +265,10 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GPT_4_1_Mini;
         case ChatMode.GPT_4_1_Nano:
             return ModelEnum.GPT_4_1_Nano;
+        case ChatMode.O3:
+            return ModelEnum.O3;
+        case ChatMode.O3_Mini:
+            return ModelEnum.O3_Mini;
         case ChatMode.O4_Mini:
             return ModelEnum.O4_Mini;
         case ChatMode.GROK_3:
@@ -292,6 +312,8 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
             return 200_000;
+        case ChatMode.O3:
+        case ChatMode.O3_Mini:
         case ChatMode.O4_Mini:
         case ChatMode.GPT_4o_Mini:
             return 200_000;
@@ -358,6 +380,18 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     ];
 
     return googleModels.includes(model);
+};
+
+export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
+    const openaiWebSearchModels = [
+        ModelEnum.GPT_4o_Mini,
+        ModelEnum.GPT_4o,
+        ModelEnum.O3,
+        ModelEnum.O3_Mini,
+        // Add other models as they become available for Responses API
+    ];
+
+    return openaiWebSearchModels.includes(model);
 };
 
 export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: ChatMode) => {

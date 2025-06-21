@@ -1,4 +1,4 @@
-import { getModelFromChatMode, supportsNativeWebSearch } from '@repo/ai/models';
+import { getModelFromChatMode, supportsNativeWebSearch, supportsOpenAIWebSearch } from '@repo/ai/models';
 import { useMemo } from 'react';
 import { useChatStore } from '../store';
 
@@ -14,19 +14,26 @@ export const useWebSearch = () => {
         [currentModel]
     );
 
+    const supportsOpenAISearch = useMemo(
+        () => supportsOpenAIWebSearch(currentModel),
+        [currentModel]
+    );
+
     const webSearchType = useMemo(() => {
         if (!useWebSearch) return 'none';
         if (supportsNativeSearch) return 'native';
+        if (supportsOpenAISearch) return 'openai';
         return 'unsupported';
-    }, [useWebSearch, supportsNativeSearch]);
+    }, [useWebSearch, supportsNativeSearch, supportsOpenAISearch]);
 
     return {
         useWebSearch,
         setUseWebSearch,
         webSearchType,
         supportsNativeSearch,
+        supportsOpenAISearch,
         currentModel,
     };
 };
 
-export type WebSearchType = 'none' | 'native' | 'unsupported';
+export type WebSearchType = 'none' | 'native' | 'openai' | 'unsupported';
