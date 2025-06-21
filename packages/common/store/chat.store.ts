@@ -131,6 +131,12 @@ const loadInitialData = async () => {
         budget: THINKING_MODE.DEFAULT_BUDGET,
         includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
     };
+    
+    const geminiCaching = config.geminiCaching || {
+        enabled: false, // Disabled by default, VT+ feature
+        ttlSeconds: 300, // 5 minutes default
+        maxCaches: 10, // Maximum 10 cached conversations
+    };
 
     // Load and validate the persisted model
     const persistedModelId = config.model;
@@ -149,6 +155,7 @@ const loadInitialData = async () => {
         model,
         customInstructions,
         thinkingMode,
+        geminiCaching,
         showSuggestions: false, // Always disable suggestions
     };
 };
@@ -191,6 +198,12 @@ type State = {
         enabled: boolean;
         budget: number; // 0-24576 for Gemini 2.5 Flash
         includeThoughts: boolean;
+    };
+    // Gemini explicit caching settings (VT+ feature)
+    geminiCaching: {
+        enabled: boolean;
+        ttlSeconds: number; // Cache time-to-live in seconds
+        maxCaches: number; // Maximum number of cached conversations
     };
 };
 
@@ -250,6 +263,12 @@ type Actions = {
         enabled: boolean;
         budget?: number;
         includeThoughts?: boolean;
+    }) => void;
+    // Gemini caching management (VT+ feature)
+    setGeminiCaching: (config: {
+        enabled: boolean;
+        ttlSeconds?: number;
+        maxCaches?: number;
     }) => void;
     // Add user-specific database management
     switchUserDatabase: (userId: string | null) => Promise<void>;
@@ -779,6 +798,12 @@ export const useChatStore = create(
             budget: THINKING_MODE.DEFAULT_BUDGET,
             includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
         },
+        // Gemini caching defaults (VT+ feature)
+        geminiCaching: {
+            enabled: false,
+            ttlSeconds: 300,
+            maxCaches: 10,
+        },
 
         setCustomInstructions: (customInstructions: string) => {
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
@@ -979,6 +1004,25 @@ export const useChatStore = create(
 
             set(state => {
                 state.thinkingMode = thinkingMode;
+            });
+        },
+
+        setGeminiCaching: (config: {
+            enabled: boolean;
+            ttlSeconds?: number;
+            maxCaches?: number;
+        }) => {
+            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const geminiCaching = {
+                enabled: config.enabled,
+                ttlSeconds: config.ttlSeconds ?? 300, // 5 minutes default
+                maxCaches: config.maxCaches ?? 10,
+            };
+
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, geminiCaching }));
+
+            set(state => {
+                state.geminiCaching = geminiCaching;
             });
         },
 

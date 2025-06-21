@@ -71,6 +71,13 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'Advanced chain-of-thought reasoning capabilities for complex analysis and problem solving.',
         enabled: true,
     },
+    [FeatureSlug.GEMINI_EXPLICIT_CACHING]: {
+        id: FeatureSlug.GEMINI_EXPLICIT_CACHING,
+        name: 'Gemini Explicit Caching',
+        description:
+            'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse.',
+        enabled: true,
+    },
 } as const;
 
 /**
@@ -164,6 +171,13 @@ export const VTPlusAccess = {
      */
     hasReasoningChain: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.REASONING_CHAIN);
+    },
+
+    /**
+     * Check if user has access to Gemini Explicit Caching
+     */
+    hasGeminiExplicitCaching: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.GEMINI_EXPLICIT_CACHING);
     },
 
     /**

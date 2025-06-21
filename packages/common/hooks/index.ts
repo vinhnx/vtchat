@@ -14,3 +14,4 @@ export * from './use-subscription-access';
 export * from './use-text-selection';
 export * from './use-thread-auth';
 export * from './use-web-search';
+export * from './use-gemini-caching';

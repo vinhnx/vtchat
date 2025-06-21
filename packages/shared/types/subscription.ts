@@ -31,6 +31,7 @@ export enum FeatureSlug {
     DOCUMENT_PARSING = 'document_parsing',
     THINKING_MODE_TOGGLE = 'thinking_mode_toggle',
     REASONING_CHAIN = 'reasoning_chain',
+    GEMINI_EXPLICIT_CACHING = 'gemini_explicit_caching',
 }
 
 // Plan configuration interface
@@ -89,6 +90,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.DOCUMENT_PARSING,
             FeatureSlug.THINKING_MODE_TOGGLE,
             FeatureSlug.REASONING_CHAIN,
+            FeatureSlug.GEMINI_EXPLICIT_CACHING,
         ],
     },
 };
@@ -177,6 +179,12 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: 'Reasoning Chain',
         description:
             'Advanced chain-of-thought reasoning capabilities for complex problem solving and analysis',
+    },
+    [FeatureSlug.GEMINI_EXPLICIT_CACHING]: {
+        slug: FeatureSlug.GEMINI_EXPLICIT_CACHING,
+        name: 'Gemini Explicit Caching',
+        description:
+            'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse',
     },
 };
 

@@ -13,7 +13,8 @@
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
         "./worker": "./worker/index.ts",
-        "./constants/reasoning": "./constants/reasoning.ts"
+        "./constants/reasoning": "./constants/reasoning.ts",
+        "./cache": "./cache/gemini-cache.ts"
     },
     "dependencies": {
         "@ai-sdk/anthropic": "^1.1.8",
@@ -24,6 +25,7 @@
         "@ai-sdk/togetherai": "^0.1.11",
         "@ai-sdk/xai": "^1.2.16",
         "@anthropic-ai/sdk": "^0.54.0",
+        "@google/generative-ai": "^0.24.1",
         "@openrouter/ai-sdk-provider": "^0.0.5",
         "@repo/orchestrator": "*",
         "@repo/shared": "*",

@@ -2,38 +2,23 @@
 --
 
 https://fly.io/docs/apps/going-to-production/
-
---
 https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
 migrate from railway to fly.io
 -> free if use under 5$ a month
--
-
-[] explore full Anthropic capablity
-<https://ai-sdk.dev/providers/ai-sdk-providers/anthropic>
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-use>
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#bash-tool>
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#text-editor-tool>
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#computer-tool>
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#pdf-support>
 
 --
 
-## [pro] <https://ai-sdk.dev/cookbook/next/chat-with-pdf>
+https://ai-sdk.dev/cookbook/next/chat-with-pdf
 
 --
 
-## <https://docs.railway.com/reference/production-readiness-checklist>
+railway: https://docs.railway.com/reference/production-readiness-checklist
 
 --
 
 [] <https://docs.creem.io/faq/account-reviews>
 
 ==
-
-migrate tailwind 4 https://tailwindcss.com/docs/upgrade-guide
-
---
 
 []
 remember to publish Google Auth
@@ -51,21 +36,6 @@ remember to publish Google Auth
 --
 [] <https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
 
---
-[] support openai full
-[] <https://ai-sdk.dev/providers/ai-sdk-providers/openai>
-[][monet] OpenAI web search - <https://ai-sdk.dev/providers/ai-sdk-providers/openai#web-search>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#audio-input>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#reasoning-summaries>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#reasoning-summaries>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#image-models>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#image-models>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/openai#speech-models>
---
-
-[] Gemini
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-outputs>
-[][monet] <https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#explicit-caching>
 --
 
 ## Future
