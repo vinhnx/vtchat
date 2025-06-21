@@ -89,13 +89,13 @@ export function BYOKValidationDialog({
         try {
             // Save the API key
             setKey(requiredKeyType, apiKey.trim());
-            
+
             // Clear the input
             setApiKey('');
-            
+
             // Call the callback to continue with the message
             onApiKeySet();
-            
+
             // Close the dialog
             onClose();
         } catch (error) {

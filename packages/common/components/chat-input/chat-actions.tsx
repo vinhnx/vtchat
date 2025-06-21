@@ -28,7 +28,15 @@ import {
     Kbd,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, ChevronDown, Globe, Paperclip, Square, BarChart3, Calculator } from 'lucide-react';
+import {
+    ArrowUp,
+    ChevronDown,
+    Globe,
+    Paperclip,
+    Square,
+    BarChart3,
+    Calculator,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../icons';
@@ -224,8 +232,6 @@ export function WebSearchButton() {
     );
 }
 
-
-
 export function MathCalculatorButton() {
     const { useMathCalculator: mathCalculatorEnabled } = useMathCalculatorHook();
     const setActiveButton = useChatStore(state => state.setActiveButton);
@@ -253,9 +259,14 @@ export function MathCalculatorButton() {
             >
                 <Button
                     size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
-                    tooltip={mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'}
+                    tooltip={
+                        mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'
+                    }
                     variant={mathCalculatorEnabled ? 'secondary' : 'ghost'}
-                    className={cn('gap-2', mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500')}
+                    className={cn(
+                        'gap-2',
+                        mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500'
+                    )}
                     onClick={handleMathCalculatorToggle}
                     disabled={!hasMathCalculatorAccess}
                 >
@@ -267,7 +278,9 @@ export function MathCalculatorButton() {
                             !hasMathCalculatorAccess && 'opacity-50'
                         )}
                     />
-                    {mathCalculatorEnabled && hasMathCalculatorAccess && <p className="text-xs">Calculator</p>}
+                    {mathCalculatorEnabled && hasMathCalculatorAccess && (
+                        <p className="text-xs">Calculator</p>
+                    )}
                 </Button>
             </GatedFeatureAlert>
         </>

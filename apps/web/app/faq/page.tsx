@@ -398,30 +398,40 @@ function FAQs() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Gemini Explicit Caching is a VT+ exclusive feature that reduces API costs by reusing conversation context across multiple queries:
+                                    Gemini Explicit Caching is a VT+ exclusive feature that reduces
+                                    API costs by reusing conversation context across multiple
+                                    queries:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Supported Models:</strong> Available for Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, and 1.5 Pro-001
+                                        <strong>Supported Models:</strong> Available for Gemini 2.5
+                                        Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, and 1.5 Pro-001
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Cost Reduction:</strong> Significantly reduces API costs when you have long conversations or reuse similar context
+                                        <strong>Cost Reduction:</strong> Significantly reduces API
+                                        costs when you have long conversations or reuse similar
+                                        context
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Configurable Duration:</strong> Cache conversations for 1 minute to 1 hour based on your needs
+                                        <strong>Configurable Duration:</strong> Cache conversations
+                                        for 1 minute to 1 hour based on your needs
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Cache Management:</strong> Manage up to 20 cached conversations simultaneously
+                                        <strong>Cache Management:</strong> Manage up to 20 cached
+                                        conversations simultaneously
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Automatic Cleanup:</strong> Cached content expires automatically based on your TTL settings
+                                        <strong>Automatic Cleanup:</strong> Cached content expires
+                                        automatically based on your TTL settings
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Smart Context Reuse:</strong> Reuses conversation context intelligently without compromising response quality
+                                        <strong>Smart Context Reuse:</strong> Reuses conversation
+                                        context intelligently without compromising response quality
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Enable Gemini caching in your VT+ settings and configure cache duration and limits to optimize your usage costs.
+                                    Enable Gemini caching in your VT+ settings and configure cache
+                                    duration and limits to optimize your usage costs.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -544,27 +554,35 @@ function FAQs() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT+ subscribers can create beautiful, interactive charts directly from AI conversations:
+                                    VT+ subscribers can create beautiful, interactive charts
+                                    directly from AI conversations:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with AI-powered chart generation
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+
+                                        subscribers with AI-powered chart generation
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Chart Types:</strong> Bar charts, line charts, area charts, pie charts, and radar charts
+                                        <strong>Chart Types:</strong> Bar charts, line charts, area
+                                        charts, pie charts, and radar charts
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Interactive Features:</strong> Hover effects, tooltips, animations, and responsive design
+                                        <strong>Interactive Features:</strong> Hover effects,
+                                        tooltips, animations, and responsive design
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Easy Creation:</strong> Simply ask the AI to create charts with your data or specifications
+                                        <strong>Easy Creation:</strong> Simply ask the AI to create
+                                        charts with your data or specifications
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Professional Design:</strong> Beautiful visualizations with shadcn/ui styling and animations
+                                        <strong>Professional Design:</strong> Beautiful
+                                        visualizations with shadcn/ui styling and animations
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Enable charts mode in your chat interface and ask for visualizations like "Create a bar chart showing sales data" to get started.
+                                    Enable charts mode in your chat interface and ask for
+                                    visualizations like "Create a bar chart showing sales data" to
+                                    get started.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>

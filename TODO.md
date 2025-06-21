@@ -1,11 +1,87 @@
 # TODO
 
+import { Text } from "@/components/ui/text"
+
+export function TextShineExample() {
+return (
+<Text variant="shine">
+Generating code...
+</Text>
+)
+}
+--
+https://www.luxeui.com/ui/dropdown-menu
+--
+import { Card } from "@/components/ui/card"
+
+export function CardRevealedPointerExample() {
+return (
+<Card variant="revealed-pointer">
+<div className="flex flex-col gap-2">
+<span className="text-xl font-semibold text-black dark:text-neutral-200">
+Luxe
+</span>
+<span className="text-sm leading-[1.5] text-neutral-500 dark:text-neutral-400">
+Explore the new website that simplifies the creation of sophisticated components.
+</span>
+</div>
+</Card>
+)
+}
+
+--
+import { Button } from "@/components/ui/button"
+
+export function ButtonAnimatedBorderExample() {
+return (
+<Button variant="animated-border">
+Button
+</Button>
+)
+}
+
+## use for plus button in sidebar
+
+import { Badge } from "@/components/ui/badge"
+
+export function BadgeAnimatedBorderExample() {
+return (
+<Badge variant="animated-border">
+Badge
+</Badge>
+)
+}
+
+## use for user tier badge
+
+https://next-safe-action.dev/
+--`
+https://fluid.tw/#installation
+--
+
+## https://react-scan.com/
+
+## https://requestindexing.com/
+
+## https://og.new/
+
+## https://unlighthouse.dev/
+
+## https://million.dev/docs
+
+https://page-speed.dev
+
+--
+can safely remove LoginBYOKManager and OnboardingManager?
+check for reduntdant charts components and package. should use recharts and shadcn/ui
+--
+--
+Preferences is not persisted between page refresh. double check all setings prefs make sure they are saved when changes in settings page
+--
 table component https://ui.shadcn.com/docs/components/table
 
-for tools use
---
-revamp /404 page design to match AuthErrorBoundary design
---
+## for tools use
+
 [openai only]
 https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-speech#generatespeech
 generateSpeech()
@@ -18,8 +94,8 @@ import { openai } from '@ai-sdk/openai';
 import { readFile } from 'fs/promises';
 
 const { audio } = await generateSpeech({
-  model: openai.speech('tts-1'),
-  text: 'Hello from the AI SDK!',
+model: openai.speech('tts-1'),
+text: 'Hello from the AI SDK!',
 });
 
 console.log(audio);
@@ -109,8 +185,7 @@ make sure weather and stock tools are available in plus tier, and not available 
 weather visualization slug: weather_visualization
 stock visualization slug: weather_visualization
 
-all should be using modern shadcn and tailwind ui components, and should be responsive.
---
+## all should be using modern shadcn and tailwind ui components, and should be responsive.
 
 https://github.com/e2b-dev/fragments
 
@@ -126,42 +201,15 @@ theme settings is not persisted in local storage, so it resets to default on pag
 click on theme change button, it should toggle the theme between light and dark mode, and persist the selected theme in local storage so that it remains consistent across page reloads.
 
 --
-add dot pattern background to /plus page
-"use client";
 
-import { cn } from "@/lib/utils";
-import { DotPattern } from "@/components/magicui/dot-pattern";
-
-export function DotPatternLinearGradient() {
-  return (
-    <div className="relative flex size-full items-center justify-center overflow-hidden rounded-lg border bg-background p-20">
-      <DotPattern
-        width={20}
-        height={20}
-        cx={1}
-        cy={1}
-        cr={1}
-        className={cn(
-          "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] ",
-        )}
-      />
-    </div>
-  );
-}
-
---
-
-https://magicui.design/docs/components/confetti#fireworks
-
---
 1. check models-data.json add new models and providers
-2. also implement BYOK support for those providers.
---
-https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
+2. ## also implement BYOK support for those providers.
 
-1. build charts and graphs with the AI SDK UI
-https://ui.shadcn.com/docs/components/chart
-1. test with some prompt to triggger show charts and graphs when chatting with AI
+    https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
+
+3. build charts and graphs with the AI SDK UI
+   https://ui.shadcn.com/docs/components/chart
+4. test with some prompt to triggger show charts and graphs when chatting with AI
 
 --
 

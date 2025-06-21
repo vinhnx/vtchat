@@ -23,14 +23,14 @@ export const ChartPopup = ({ chartData, isOpen, onClose }: ChartPopupProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
                 <DialogHeader className="flex flex-row items-center justify-between">
                     <DialogTitle className="text-lg font-semibold">
                         📊 {chartData.title}
                     </DialogTitle>
                     <button
                         onClick={onClose}
-                        className="rounded-md p-1 hover:bg-gray-100 transition-colors"
+                        className="rounded-md p-1 transition-colors hover:bg-gray-100"
                     >
                         <X size={16} />
                     </button>
@@ -63,12 +63,6 @@ export const useChartPopup = () => {
         isOpen,
         showChart,
         closeChart,
-        ChartPopup: () => (
-            <ChartPopup 
-                chartData={chartData} 
-                isOpen={isOpen} 
-                onClose={closeChart} 
-            />
-        ),
+        ChartPopup: () => <ChartPopup chartData={chartData} isOpen={isOpen} onClose={closeChart} />,
     };
 };

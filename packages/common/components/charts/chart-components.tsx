@@ -1,35 +1,35 @@
 'use client';
 
-import { 
-    Bar, 
-    BarChart, 
-    Line, 
-    LineChart, 
-    Area, 
-    AreaChart, 
-    Pie, 
-    PieChart, 
-    Radar, 
+import {
+    Bar,
+    BarChart,
+    Line,
+    LineChart,
+    Area,
+    AreaChart,
+    Pie,
+    PieChart,
+    Radar,
     RadarChart,
     Cell,
-    CartesianGrid, 
-    XAxis, 
+    CartesianGrid,
+    XAxis,
     YAxis,
     PolarGrid,
-    PolarAngleAxis
+    PolarAngleAxis,
 } from 'recharts';
-import { 
-    Card, 
-    CardContent, 
-    CardDescription, 
-    CardHeader, 
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
     CardTitle,
     ChartContainer,
     ChartConfig,
     ChartTooltip,
     ChartTooltipContent,
     ChartLegend,
-    ChartLegendContent 
+    ChartLegendContent,
 } from '@repo/ui';
 import { TrendingUp, BarChart3 } from 'lucide-react';
 
@@ -43,18 +43,18 @@ export type ChartComponentData = {
 
 // Color scheme for charts
 const CHART_COLORS = {
-    primary: "hsl(var(--chart-1))",
-    secondary: "hsl(var(--chart-2))",
-    tertiary: "hsl(var(--chart-3))",
-    quaternary: "hsl(var(--chart-4))",
-    quinary: "hsl(var(--chart-5))",
+    primary: 'hsl(var(--chart-1))',
+    secondary: 'hsl(var(--chart-2))',
+    tertiary: 'hsl(var(--chart-3))',
+    quaternary: 'hsl(var(--chart-4))',
+    quinary: 'hsl(var(--chart-5))',
 };
 
 // Bar Chart Component
 const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any) => {
     const chartConfig = {
         value: {
-            label: yAxisLabel || "Value",
+            label: yAxisLabel || 'Value',
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
@@ -68,15 +68,14 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
                         {title}
                     </CardTitle>
                     <CardDescription>
-                        {xAxisLabel && yAxisLabel ? `${xAxisLabel} vs ${yAxisLabel}` : 'Data visualization'}
+                        {xAxisLabel && yAxisLabel
+                            ? `${xAxisLabel} vs ${yAxisLabel}`
+                            : 'Data visualization'}
                     </CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="px-2 sm:p-6">
-                <ChartContainer
-                    config={chartConfig}
-                    className="aspect-auto h-[250px] w-full"
-                >
+                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <BarChart
                         accessibilityLayer
                         data={data}
@@ -93,24 +92,15 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
                             tickMargin={8}
                             minTickGap={32}
                         />
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
+                        <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                         <ChartTooltip
-                            content={
-                                <ChartTooltipContent
-                                    className="w-[150px]"
-                                    nameKey="value"
-                                />
-                            }
+                            content={<ChartTooltipContent className="w-[150px]" nameKey="value" />}
                         />
-                        <Bar 
-                            dataKey="value" 
-                            fill="var(--color-value)" 
+                        <Bar
+                            dataKey="value"
+                            fill="var(--color-value)"
                             radius={[4, 4, 0, 0]}
-                            className="hover:opacity-80 transition-opacity"
+                            className="transition-opacity hover:opacity-80"
                         />
                     </BarChart>
                 </ChartContainer>
@@ -120,10 +110,18 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
 };
 
 // Line Chart Component
-const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name, series2Name, series3Name }: any) => {
+const InteractiveLineChart = ({
+    title,
+    data,
+    xAxisLabel,
+    yAxisLabel,
+    series1Name,
+    series2Name,
+    series3Name,
+}: any) => {
     const chartConfig = {
         series1: {
-            label: series1Name || "Series 1",
+            label: series1Name || 'Series 1',
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
@@ -148,7 +146,9 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                     {title}
                 </CardTitle>
                 <CardDescription>
-                    {xAxisLabel && yAxisLabel ? `${xAxisLabel} vs ${yAxisLabel}` : 'Trending data over time'}
+                    {xAxisLabel && yAxisLabel
+                        ? `${xAxisLabel} vs ${yAxisLabel}`
+                        : 'Trending data over time'}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -162,17 +162,8 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                         }}
                     >
                         <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="name"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} />
+                        <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                         <ChartLegend content={<ChartLegendContent />} />
                         <Line
@@ -181,7 +172,7 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                             stroke="var(--color-series1)"
                             strokeWidth={2}
                             dot={{
-                                fill: "var(--color-series1)",
+                                fill: 'var(--color-series1)',
                                 strokeWidth: 2,
                                 r: 4,
                             }}
@@ -198,7 +189,7 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                                 stroke="var(--color-series2)"
                                 strokeWidth={2}
                                 dot={{
-                                    fill: "var(--color-series2)",
+                                    fill: 'var(--color-series2)',
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
@@ -216,7 +207,7 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                                 stroke="var(--color-series3)"
                                 strokeWidth={2}
                                 dot={{
-                                    fill: "var(--color-series3)",
+                                    fill: 'var(--color-series3)',
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
@@ -235,10 +226,18 @@ const InteractiveLineChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
 };
 
 // Area Chart Component
-const InteractiveAreaChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name, series2Name, stacked }: any) => {
+const InteractiveAreaChart = ({
+    title,
+    data,
+    xAxisLabel,
+    yAxisLabel,
+    series1Name,
+    series2Name,
+    stacked,
+}: any) => {
     const chartConfig = {
         series1: {
-            label: series1Name || "Series 1",
+            label: series1Name || 'Series 1',
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
@@ -254,7 +253,9 @@ const InteractiveAreaChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
-                    {xAxisLabel && yAxisLabel ? `${xAxisLabel} vs ${yAxisLabel}` : 'Area visualization'}
+                    {xAxisLabel && yAxisLabel
+                        ? `${xAxisLabel} vs ${yAxisLabel}`
+                        : 'Area visualization'}
                     {stacked && ' (Stacked)'}
                 </CardDescription>
             </CardHeader>
@@ -269,17 +270,8 @@ const InteractiveAreaChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                         }}
                     >
                         <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="name"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} />
+                        <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                         <ChartLegend content={<ChartLegendContent />} />
                         <Area
@@ -289,7 +281,7 @@ const InteractiveAreaChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                             fillOpacity={0.6}
                             stroke="var(--color-series1)"
                             strokeWidth={2}
-                            stackId={stacked ? "stack" : undefined}
+                            stackId={stacked ? 'stack' : undefined}
                             className="drop-shadow-sm"
                         />
                         {series2Name && (
@@ -300,7 +292,7 @@ const InteractiveAreaChart = ({ title, data, xAxisLabel, yAxisLabel, series1Name
                                 fillOpacity={0.6}
                                 stroke="var(--color-series2)"
                                 strokeWidth={2}
-                                stackId={stacked ? "stack" : undefined}
+                                stackId={stacked ? 'stack' : undefined}
                                 className="drop-shadow-sm"
                             />
                         )}
@@ -337,10 +329,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
                     className="mx-auto aspect-square max-h-[300px]"
                 >
                     <PieChart>
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                         <Pie
                             data={data}
                             dataKey="value"
@@ -353,10 +342,10 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
                                 const colorKeys = Object.keys(CHART_COLORS);
                                 const colorKey = colorKeys[index % colorKeys.length];
                                 return (
-                                    <Cell 
-                                        key={`cell-${index}`} 
+                                    <Cell
+                                        key={`cell-${index}`}
                                         fill={CHART_COLORS[colorKey as keyof typeof CHART_COLORS]}
-                                        className="hover:opacity-80 transition-opacity cursor-pointer"
+                                        className="cursor-pointer transition-opacity hover:opacity-80"
                                     />
                                 );
                             })}
@@ -367,7 +356,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
                     <div className="flex items-center gap-2 font-medium leading-none">
                         Total: {total.toLocaleString()} items
                     </div>
-                    <div className="flex items-center gap-2 leading-none text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center gap-2 leading-none">
                         Showing distribution of {data.length} categories
                     </div>
                 </div>
@@ -380,7 +369,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
 const InteractiveRadarChart = ({ title, data, maxValue }: any) => {
     const chartConfig = {
         value: {
-            label: "Value",
+            label: 'Value',
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
@@ -433,8 +422,10 @@ export const ChartComponent = ({ chartData }: { chartData: ChartComponentData })
         default:
             return (
                 <Card className="w-full">
-                    <CardContent className="flex items-center justify-center h-[200px]">
-                        <p className="text-muted-foreground">Unsupported chart type: {chartData.type}</p>
+                    <CardContent className="flex h-[200px] items-center justify-center">
+                        <p className="text-muted-foreground">
+                            Unsupported chart type: {chartData.type}
+                        </p>
                     </CardContent>
                 </Card>
             );

@@ -1,27 +1,32 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { 
-    Bar, 
-    BarChart, 
-    Line, 
-    LineChart, 
-    Area, 
-    AreaChart, 
-    Pie, 
-    PieChart, 
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from '@/components/ui/chart';
+import {
+    Bar,
+    BarChart,
+    Line,
+    LineChart,
+    Area,
+    AreaChart,
+    Pie,
+    PieChart,
     Cell,
     Radar,
     RadarChart,
     PolarGrid,
     PolarAngleAxis,
     PolarRadiusAxis,
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
+    XAxis,
+    YAxis,
+    CartesianGrid,
     ResponsiveContainer,
-    Legend
+    Legend,
 } from 'recharts';
 
 interface BaseChartData {
@@ -103,18 +108,24 @@ const chartColors = {
 const RADIAN = Math.PI / 180;
 
 const renderCustomizedLabel = ({
-    cx, cy, midAngle, innerRadius, outerRadius, percent, name
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    name,
 }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-        <text 
-            x={x} 
-            y={y} 
-            fill="white" 
-            textAnchor={x > cx ? 'start' : 'end'} 
+        <text
+            x={x}
+            y={y}
+            fill="white"
+            textAnchor={x > cx ? 'start' : 'end'}
             dominantBaseline="central"
             fontSize={12}
             fontWeight="500"
@@ -129,7 +140,7 @@ export function ChartRenderer(props: ChartProps) {
 
     const getChartConfig = (): ChartConfig => {
         const colors = chartColors[(props as any).color] || chartColors.default;
-        
+
         if (type === 'lineChart' || type === 'areaChart') {
             return {
                 series1: {
@@ -146,7 +157,7 @@ export function ChartRenderer(props: ChartProps) {
                 },
             };
         }
-        
+
         return {
             value: {
                 label: 'Value',
@@ -178,27 +189,27 @@ export function ChartRenderer(props: ChartProps) {
                             <XAxis dataKey="name" />
                             <YAxis />
                             <ChartTooltip content={<ChartTooltipContent />} />
-                            <Line 
-                                type="monotone" 
-                                dataKey="series1" 
-                                stroke="var(--color-series1)" 
+                            <Line
+                                type="monotone"
+                                dataKey="series1"
+                                stroke="var(--color-series1)"
                                 strokeWidth={2}
                                 dot={{ fill: 'var(--color-series1)' }}
                             />
                             {props.data.some(d => d.series2 !== undefined) && (
-                                <Line 
-                                    type="monotone" 
-                                    dataKey="series2" 
-                                    stroke="var(--color-series2)" 
+                                <Line
+                                    type="monotone"
+                                    dataKey="series2"
+                                    stroke="var(--color-series2)"
                                     strokeWidth={2}
                                     dot={{ fill: 'var(--color-series2)' }}
                                 />
                             )}
                             {props.data.some(d => d.series3 !== undefined) && (
-                                <Line 
-                                    type="monotone" 
-                                    dataKey="series3" 
-                                    stroke="var(--color-series3)" 
+                                <Line
+                                    type="monotone"
+                                    dataKey="series3"
+                                    stroke="var(--color-series3)"
                                     strokeWidth={2}
                                     dot={{ fill: 'var(--color-series3)' }}
                                 />
@@ -215,20 +226,20 @@ export function ChartRenderer(props: ChartProps) {
                             <XAxis dataKey="name" />
                             <YAxis />
                             <ChartTooltip content={<ChartTooltipContent />} />
-                            <Area 
-                                type="monotone" 
-                                dataKey="series1" 
-                                stackId={props.stacked ? "1" : undefined}
-                                stroke="var(--color-series1)" 
+                            <Area
+                                type="monotone"
+                                dataKey="series1"
+                                stackId={props.stacked ? '1' : undefined}
+                                stroke="var(--color-series1)"
                                 fill="var(--color-series1)"
                                 fillOpacity={0.6}
                             />
                             {props.data.some(d => d.series2 !== undefined) && (
-                                <Area 
-                                    type="monotone" 
-                                    dataKey="series2" 
-                                    stackId={props.stacked ? "1" : undefined}
-                                    stroke="var(--color-series2)" 
+                                <Area
+                                    type="monotone"
+                                    dataKey="series2"
+                                    stackId={props.stacked ? '1' : undefined}
+                                    stroke="var(--color-series2)"
                                     fill="var(--color-series2)"
                                     fillOpacity={0.6}
                                 />
@@ -253,9 +264,9 @@ export function ChartRenderer(props: ChartProps) {
                                 dataKey="value"
                             >
                                 {props.data.map((entry, index) => (
-                                    <Cell 
-                                        key={`cell-${index}`} 
-                                        fill={colors[index % colors.length]} 
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={colors[index % colors.length]}
                                     />
                                 ))}
                             </Pie>
@@ -271,10 +282,7 @@ export function ChartRenderer(props: ChartProps) {
                         <RadarChart data={props.data}>
                             <PolarGrid />
                             <PolarAngleAxis dataKey="category" />
-                            <PolarRadiusAxis 
-                                angle={90} 
-                                domain={[0, props.maxValue || 100]}
-                            />
+                            <PolarRadiusAxis angle={90} domain={[0, props.maxValue || 100]} />
                             <Radar
                                 name="Value"
                                 dataKey="value"
@@ -303,9 +311,7 @@ export function ChartRenderer(props: ChartProps) {
                 )}
             </CardHeader>
             <CardContent>
-                <div className="h-[300px]">
-                    {renderChart()}
-                </div>
+                <div className="h-[300px]">{renderChart()}</div>
             </CardContent>
         </Card>
     );

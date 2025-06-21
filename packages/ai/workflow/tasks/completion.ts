@@ -96,25 +96,25 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         // Combine tools based on enabled features
         let tools: any = {};
-        
+
         if (mathCalculator) {
             tools = { ...tools, ...calculatorTools() };
         }
-        
+
         if (charts) {
             console.log('🎨 Charts enabled, adding chart tools...');
             const chartToolsObj = chartTools();
             console.log('📊 Available chart tools:', Object.keys(chartToolsObj));
             tools = { ...tools, ...chartToolsObj };
         }
-        
+
         if (webSearch && supportsOpenAISearch) {
             const webSearchTools = getWebSearchTool(model);
             if (webSearchTools) {
                 tools = { ...tools, ...webSearchTools };
             }
         }
-        
+
         // Convert to undefined if no tools are enabled
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
         console.log('🔧 Final tools for AI:', finalTools ? Object.keys(finalTools) : 'none');
@@ -166,9 +166,13 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                                 data: {
                                     toolName: toolCall.toolName,
                                     args: toolCall.args,
-                                    type: charts && Object.keys(chartTools()).includes(toolCall.toolName) 
-                                        ? 'charts' 
-                                        : mathCalculator ? 'math_calculator' : 'unknown',
+                                    type:
+                                        charts &&
+                                        Object.keys(chartTools()).includes(toolCall.toolName)
+                                            ? 'charts'
+                                            : mathCalculator
+                                              ? 'math_calculator'
+                                              : 'unknown',
                                 },
                                 status: 'COMPLETED',
                             },
@@ -199,9 +203,15 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                             toolResult: {
                                 data: {
                                     result: toolResult.result,
-                                    type: charts && Object.keys(chartTools()).includes(toolResult.toolName || '') 
-                                        ? 'charts' 
-                                        : mathCalculator ? 'math_calculator' : 'unknown',
+                                    type:
+                                        charts &&
+                                        Object.keys(chartTools()).includes(
+                                            toolResult.toolName || ''
+                                        )
+                                            ? 'charts'
+                                            : mathCalculator
+                                              ? 'math_calculator'
+                                              : 'unknown',
                                 },
                                 status: 'COMPLETED',
                             },

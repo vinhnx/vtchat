@@ -18,7 +18,7 @@ export const getWebSearchTool = (model: ModelEnum) => {
             web_search: openaiWebSearchTool(),
         };
     }
-    
+
     // For models that don't support native web search, return null
     // The application can fall back to other search implementations
     return null;

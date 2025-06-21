@@ -15,7 +15,7 @@ const userTTLSeconds = userTTLMinutes * 60; // 600 seconds
 setGeminiCaching({
     enabled: true,
     ttlSeconds: userTTLSeconds, // 600 seconds
-    maxCaches: 15
+    maxCaches: 15,
 });
 ```
 
@@ -72,7 +72,7 @@ The slider in VT+ settings converts minutes to seconds:
         })
     }
     min={60}    // 1 minute
-    max={3600}  // 60 minutes  
+    max={3600}  // 60 minutes
     step={60}   // 1 minute increments
 />
 

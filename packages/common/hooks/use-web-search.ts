@@ -1,4 +1,8 @@
-import { getModelFromChatMode, supportsNativeWebSearch, supportsOpenAIWebSearch } from '@repo/ai/models';
+import {
+    getModelFromChatMode,
+    supportsNativeWebSearch,
+    supportsOpenAIWebSearch,
+} from '@repo/ai/models';
 import { useMemo } from 'react';
 import { useChatStore, useAppStore } from '../store';
 

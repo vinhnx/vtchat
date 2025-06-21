@@ -1,6 +1,6 @@
 /**
  * Gemini Explicit Caching Implementation
- * 
+ *
  * Provides cost-effective caching for Gemini 2.5 and 2.0 models using GoogleAICacheManager.
  * This feature is exclusive to VT+ subscribers.
  */
@@ -13,7 +13,7 @@ import { ModelEnum } from '../models';
  */
 export type GoogleModelCacheableId =
     | 'models/gemini-2.5-pro'
-    | 'models/gemini-2.5-flash' 
+    | 'models/gemini-2.5-flash'
     | 'models/gemini-2.0-flash'
     | 'models/gemini-1.5-flash-001'
     | 'models/gemini-1.5-pro-001';

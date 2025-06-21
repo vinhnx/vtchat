@@ -3,6 +3,12 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import {
+    getDefaultSettingsForPlan,
+    mergeWithPlusDefaults,
+    PlusDefaultSettings,
+} from '@repo/shared/utils/plus-defaults';
 
 export const SETTING_TABS = {
     API_KEYS: 'api-keys',
@@ -77,6 +83,9 @@ type Actions = {
     setShowSuggestions: (show: boolean) => void;
     setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
     setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
+    // Plus user settings actions
+    applyPlusDefaults: (plan: PlanSlug, preserveUserChanges?: boolean) => void;
+    initializeSettingsForPlan: (plan: PlanSlug) => void;
     // Reset actions
     resetUserState: () => void;
     // Customer portal actions
@@ -112,6 +121,9 @@ export const useAppStore = create<State & Actions>()(
         immer((set, get) => {
             const { isOpen: initialSidebarOpen, animationDisabled } = initializeSidebarState();
 
+            // Initialize with base plan defaults
+            const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
+
             return {
                 // Initial state
                 isSidebarOpen: initialSidebarOpen,
@@ -120,23 +132,15 @@ export const useAppStore = create<State & Actions>()(
                 isSettingsOpen: false,
                 settingTab: SETTING_TABS.PROFILE,
                 showSignInModal: false,
-                // Default settings
+                // Default settings - using base plan defaults initially
                 showExamplePrompts: true,
                 customInstructions: '',
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
                 showSuggestions: false,
-                thinkingMode: {
-                    enabled: false,
-                    budget: 8192,
-                    includeThoughts: true,
-                },
-                geminiCaching: {
-                    enabled: false,
-                    ttlSeconds: 3600,
-                    maxCaches: 10,
-                },
+                thinkingMode: baseDefaults.thinkingMode,
+                geminiCaching: baseDefaults.geminiCaching,
                 sideDrawer: {
                     open: false,
                     badge: undefined,
@@ -259,25 +263,51 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
+                applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
+                    set(state => {
+                        const currentSettings: PlusDefaultSettings = {
+                            thinkingMode: state.thinkingMode,
+                            geminiCaching: state.geminiCaching,
+                        };
+
+                        const mergedSettings = mergeWithPlusDefaults(
+                            currentSettings,
+                            plan,
+                            preserveUserChanges
+                        );
+
+                        state.thinkingMode = mergedSettings.thinkingMode;
+                        state.geminiCaching = mergedSettings.geminiCaching;
+                    });
+                },
+
+                initializeSettingsForPlan: (plan: PlanSlug) => {
+                    const defaults = getDefaultSettingsForPlan(plan);
+                    set(state => {
+                        // Only apply defaults if current settings are still at base defaults
+                        const isUsingBaseDefaults =
+                            !state.thinkingMode.enabled && !state.geminiCaching.enabled;
+
+                        if (isUsingBaseDefaults || plan === PlanSlug.VT_PLUS) {
+                            state.thinkingMode = defaults.thinkingMode;
+                            state.geminiCaching = defaults.geminiCaching;
+                        }
+                    });
+                },
+
                 resetUserState: () => {
                     set(state => {
-                        // Reset all user preferences to defaults
+                        // Reset all user preferences to base plan defaults
+                        const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
+
                         state.showExamplePrompts = true;
                         state.customInstructions = '';
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
                         state.useCharts = false;
                         state.showSuggestions = false;
-                        state.thinkingMode = {
-                            enabled: false,
-                            budget: 8192,
-                            includeThoughts: true,
-                        };
-                        state.geminiCaching = {
-                            enabled: false,
-                            ttlSeconds: 3600,
-                            maxCaches: 10,
-                        };
+                        state.thinkingMode = baseDefaults.thinkingMode;
+                        state.geminiCaching = baseDefaults.geminiCaching;
                         // Reset UI state to defaults
                         state.isSettingsOpen = false;
                         state.settingTab = SETTING_TABS.PROFILE;

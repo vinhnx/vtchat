@@ -79,7 +79,9 @@ export function UserButton({ showName = false }: UserButtonProps) {
                         title="Dark Theme Available in VT+"
                         message="Dark theme is a VT+ feature. Please upgrade your plan to use this feature."
                         onGatedClick={() => {
-                            console.log('User attempted to use dark theme without VT+ subscription');
+                            console.log(
+                                'User attempted to use dark theme without VT+ subscription'
+                            );
                         }}
                     >
                         <ThemeSwitcher className="scale-75" />

@@ -150,8 +150,6 @@ export const MarkdownContent = memo(
             );
         }
 
-
-
         return (
             <div className={cn('', markdownStyles, className)}>
                 {previousContent.length > 0 &&

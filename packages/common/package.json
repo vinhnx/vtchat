@@ -18,7 +18,9 @@
         "./providers/subscription-provider": "./providers/subscription-provider.tsx",
         "./utils": "./utils/index.ts",
         "./constants/math-tools": "./constants/math-tools.ts",
-        "./constants/chart-tools": "./constants/chart-tools.ts"
+        "./constants/chart-tools": "./constants/chart-tools.ts",
+        "./components/plus-defaults-provider": "./components/plus-defaults-provider.tsx",
+        "./hooks/use-plus-defaults": "./hooks/use-plus-defaults.ts"
     },
     "scripts": {
         "lint": "oxlint",

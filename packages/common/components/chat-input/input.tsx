@@ -89,7 +89,7 @@ export const ChatInput = ({
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const { hasApiKeyForChatMode } = useApiKeysStore();
-    
+
     const handleApiKeySet = () => {
         // Clear the pending message and execute the original send
         setPendingMessage(null);
@@ -156,7 +156,11 @@ export const ChatInput = ({
 
         console.log('threadItems', threadItems);
 
-        console.log('🚀 Sending to handleSubmit with flags:', { useWebSearch, useMathCalculator, useCharts });
+        console.log('🚀 Sending to handleSubmit with flags:', {
+            useWebSearch,
+            useMathCalculator,
+            useCharts,
+        });
         handleSubmit({
             formData,
             newThreadId: threadId,

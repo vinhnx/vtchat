@@ -208,7 +208,7 @@ export const ThreadItem = memo(
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
                                         <div className="mt-4 space-y-4">
-                                            {chartToolResults.map((toolResult) => (
+                                            {chartToolResults.map(toolResult => (
                                                 <ChartComponent
                                                     key={toolResult.toolCallId}
                                                     chartData={toolResult.result}

@@ -39,7 +39,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'GPT-4.1': ChatMode.GPT_4_1,
         'GPT-4.1 Mini': ChatMode.GPT_4_1_Mini,
         'GPT-4.1 Nano': ChatMode.GPT_4_1_Nano,
-        'o3': ChatMode.O3,
+        o3: ChatMode.O3,
         'o3 mini': ChatMode.O3_Mini,
         'o4 mini': ChatMode.O4_Mini,
         // xAI models

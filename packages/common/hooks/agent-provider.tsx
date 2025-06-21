@@ -354,7 +354,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
-            console.log('🔥 Agent provider received flags:', { useWebSearch, useMathCalculator, useCharts });
+            console.log('🔥 Agent provider received flags:', {
+                useWebSearch,
+                useMathCalculator,
+                useCharts,
+            });
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
                 !isSignedIn &&
@@ -427,7 +431,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     updateThreadItem(threadId, { id: optimisticAiThreadItemId, status: 'ABORTED' });
                 });
 
-                console.log('🎯 About to call startWorkflow with:', { useWebSearch, useMathCalculator, useCharts });
+                console.log('🎯 About to call startWorkflow with:', {
+                    useWebSearch,
+                    useMathCalculator,
+                    useCharts,
+                });
                 startWorkflow({
                     mode,
                     question: query,

@@ -79,7 +79,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                 typeof authClient.multiSession.listDeviceSessions !== 'function'
             ) {
                 console.warn('MultiSession plugin not available or not properly configured');
-                
+
                 // Fallback: create a current session entry based on the current session data
                 if (session) {
                     const currentSession: DeviceSession = {
@@ -126,7 +126,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             }
         } catch (err) {
             console.error('Fetch sessions error:', err);
-            
+
             // Fallback: show current session even on error
             if (session) {
                 const currentSession: DeviceSession = {

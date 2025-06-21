@@ -35,33 +35,29 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                     )}
                     <Badge
                         className={
-                            isResultMathTool 
+                            isResultMathTool
                                 ? 'border-green-300 bg-green-100 text-green-800'
-                                : isResultChartTool 
-                                    ? 'border-purple-300 bg-purple-100 text-purple-800'
-                                    : ''
+                                : isResultChartTool
+                                  ? 'border-purple-300 bg-purple-100 text-purple-800'
+                                  : ''
                         }
                     >
-                        {isResultMathTool 
-                            ? '✅ Result'
-                            : isResultChartTool 
-                                ? '📊 Chart'
-                                : 'Result'}
+                        {isResultMathTool ? '✅ Result' : isResultChartTool ? '📊 Chart' : 'Result'}
                     </Badge>
                     <Badge
                         className={
-                            isResultMathTool 
+                            isResultMathTool
                                 ? 'border-green-200 bg-green-50 text-green-700'
-                                : isResultChartTool 
-                                    ? 'border-purple-200 bg-purple-50 text-purple-700'
-                                    : ''
+                                : isResultChartTool
+                                  ? 'border-purple-200 bg-purple-50 text-purple-700'
+                                  : ''
                         }
                     >
-                        {isResultMathTool 
+                        {isResultMathTool
                             ? `🧮 ${toolResult.toolName}`
-                            : isResultChartTool 
-                                ? `📈 ${toolResult.toolName}`
-                                : toolResult.toolName}
+                            : isResultChartTool
+                              ? `📈 ${toolResult.toolName}`
+                              : toolResult.toolName}
                     </Badge>
                 </div>
                 <div className="pr-2">

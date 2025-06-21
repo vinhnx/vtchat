@@ -202,11 +202,11 @@ export const getLanguageModel = (
 
             try {
                 const modelOptions: any = {};
-                
+
                 if (useSearchGrounding) {
                     modelOptions.useSearchGrounding = true;
                 }
-                
+
                 if (cachedContent) {
                     modelOptions.cachedContent = cachedContent;
                 }

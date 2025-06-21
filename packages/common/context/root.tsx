@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useThreadAuth } from '../hooks';
 import { initializeStorageCleanup } from '../utils/storage-cleanup';
 
-
 export type RootContextType = {
     isSidebarOpen: boolean;
     setIsSidebarOpen: (isSidebarOpen: boolean) => void;

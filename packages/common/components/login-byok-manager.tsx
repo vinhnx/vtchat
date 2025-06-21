@@ -15,15 +15,17 @@ export function LoginBYOKManager() {
     useEffect(() => {
         // Detect login event: user was not signed in, now they are
         const justLoggedIn = !previousSignedInState.current && isSignedIn;
-        
+
         if (justLoggedIn) {
             console.log('[LoginBYOK] User just logged in');
-            console.log('[LoginBYOK] BYOK validation will happen when user tries to send a message');
-            
+            console.log(
+                '[LoginBYOK] BYOK validation will happen when user tries to send a message'
+            );
+
             // Note: We no longer automatically show BYOK dialog after login
             // The validation will happen when user actually tries to send a message
         }
-        
+
         // Update previous state
         previousSignedInState.current = isSignedIn;
     }, [isSignedIn]);

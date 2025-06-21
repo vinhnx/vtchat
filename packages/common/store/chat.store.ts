@@ -125,7 +125,7 @@ const loadInitialData = async () => {
     });
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
-    
+
     // Get settings from app store
     const appStore = useAppStore.getState();
     const useWebSearch = appStore.useWebSearch;
@@ -810,14 +810,14 @@ export const useChatStore = create(
         setCustomInstructions: (customInstructions: string) => {
             // Save to simple settings
             useAppStore.getState().setCustomInstructions(customInstructions);
-            
+
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, customInstructions })
             );
-            
+
             set(state => {
                 state.customInstructions = customInstructions;
             });
@@ -883,10 +883,10 @@ export const useChatStore = create(
         setShowSuggestions: (showSuggestions: boolean) => {
             // Always disable suggestions regardless of input value
             const disabledSuggestions = false;
-            
+
             // Save to simple settings
             useAppStore.getState().setShowSuggestions(!disabledSuggestions);
-            
+
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
@@ -901,7 +901,7 @@ export const useChatStore = create(
         setUseWebSearch: (useWebSearch: boolean) => {
             // Save to simple settings
             useAppStore.getState().setUseWebSearch(useWebSearch);
-            
+
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
@@ -913,7 +913,7 @@ export const useChatStore = create(
         setUseMathCalculator: (useMathCalculator: boolean) => {
             // Save to simple settings
             useAppStore.getState().setUseMathCalculator(useMathCalculator);
-            
+
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
@@ -928,7 +928,7 @@ export const useChatStore = create(
         setUseCharts: (useCharts: boolean) => {
             // Save to simple settings
             useAppStore.getState().setUseCharts(useCharts);
-            
+
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
@@ -1334,7 +1334,7 @@ export const useChatStore = create(
                 set(state => {
                     // Clear cache since we're modifying threadItems
                     state._cache = {};
-                    
+
                     if (state.threadItems.find(t => t.id === threadItem.id)) {
                         state.threadItems = state.threadItems.map(t =>
                             t.id === threadItem.id ? threadItem : t
@@ -1385,7 +1385,7 @@ export const useChatStore = create(
                 set(state => {
                     // Clear cache since we're modifying threadItems
                     state._cache = {};
-                    
+
                     const index = state.threadItems.findIndex(t => t.id === threadItem.id);
                     if (index !== -1) {
                         state.threadItems[index] = updatedItem;
@@ -1545,7 +1545,7 @@ export const useChatStore = create(
         getPreviousThreadItems: threadId => {
             const state = get();
             const cacheKey = `prev_${threadId}`;
-            
+
             // Simple cache to prevent infinite loops
             if (state._cache?.[cacheKey]) {
                 const cached = state._cache[cacheKey];
@@ -1563,7 +1563,7 @@ export const useChatStore = create(
                 });
 
             const result = allThreadItems.length > 1 ? allThreadItems.slice(0, -1) : [];
-            
+
             // Cache the result
             set(state => {
                 if (!state._cache) state._cache = {};
@@ -1576,11 +1576,13 @@ export const useChatStore = create(
         getCurrentThreadItem: () => {
             const state = get();
             const cacheKey = `current_${state.currentThreadId}`;
-            
+
             // Simple cache to prevent infinite loops
             if (state._cache?.[cacheKey]) {
                 const cached = state._cache[cacheKey];
-                const currentItems = state.threadItems.filter(item => item.threadId === state.currentThreadId);
+                const currentItems = state.threadItems.filter(
+                    item => item.threadId === state.currentThreadId
+                );
                 if (cached.length === currentItems.length) {
                     return cached.result;
                 }
@@ -1591,9 +1593,9 @@ export const useChatStore = create(
                 .sort((a, b) => {
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
-            
+
             const result = allThreadItems[allThreadItems.length - 1] || null;
-            
+
             // Cache the result
             set(state => {
                 if (!state._cache) state._cache = {};

@@ -4,7 +4,14 @@ import { useAgentStream, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ChatMode, getChatModeName } from '@repo/shared/config';
 import { ThreadItem } from '@repo/shared/types';
-import { Alert, AlertDescription, AlertTitle, Button, DropdownMenu, DropdownMenuTrigger } from '@repo/ui';
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    Button,
+    DropdownMenu,
+    DropdownMenuTrigger,
+} from '@repo/ui';
 import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 type MessageActionsProps = {

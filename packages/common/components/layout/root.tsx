@@ -276,7 +276,6 @@ export const SideDrawer = () => {
             )}
             <OnboardingManager key="onboarding-manager" />
             <LoginBYOKManager key="login-byok-manager" />
-            
         </AnimatePresence>
     );
 };

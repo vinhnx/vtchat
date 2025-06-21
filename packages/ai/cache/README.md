@@ -92,9 +92,9 @@ function MyComponent() {
 
 ```typescript
 export const DEFAULT_CACHE_SETTINGS = {
-    DEFAULT_TTL_SECONDS: 300,    // 5 minutes
-    MAX_TTL_SECONDS: 3600,       // 1 hour
-    MIN_TTL_SECONDS: 60,         // 1 minute
+    DEFAULT_TTL_SECONDS: 300, // 5 minutes
+    MAX_TTL_SECONDS: 3600, // 1 hour
+    MIN_TTL_SECONDS: 60, // 1 minute
     MAX_CACHED_CONVERSATIONS: 10, // 10 conversations
 };
 ```

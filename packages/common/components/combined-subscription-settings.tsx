@@ -385,7 +385,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 </Badge>
                             </CardTitle>
                             <CardDescription>
-                                Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs
+                                Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API
+                                costs
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -411,9 +412,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     <Switch
                                         id="gemini-caching"
                                         checked={geminiCaching.enabled}
-                                        onCheckedChange={(enabled) => 
-                                            setGeminiCaching({ enabled })
-                                        }
+                                        onCheckedChange={enabled => setGeminiCaching({ enabled })}
                                     />
                                 </div>
                             </div>
@@ -436,7 +435,11 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Cache Duration: {Math.round(geminiCaching.ttlSeconds / 60)} minutes
+                                                            Cache Duration:{' '}
+                                                            {Math.round(
+                                                                geminiCaching.ttlSeconds / 60
+                                                            )}{' '}
+                                                            minutes
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
                                                             How long to keep cached conversations
@@ -471,10 +474,12 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Max Cached Conversations: {geminiCaching.maxCaches}
+                                                            Max Cached Conversations:{' '}
+                                                            {geminiCaching.maxCaches}
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
-                                                            Maximum number of conversations to cache simultaneously
+                                                            Maximum number of conversations to cache
+                                                            simultaneously
                                                         </div>
                                                     </div>
                                                 </div>

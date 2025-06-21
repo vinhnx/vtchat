@@ -16,6 +16,7 @@ The OpenAI Web Search tool provides web search capabilities using OpenAI's built
 ### Supported Models
 
 Currently supports:
+
 - `gpt-4o-mini`
 - `gpt-4o`
 
@@ -29,11 +30,11 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 
 const result = await generateText({
-  model: openai('gpt-4o-mini'),
-  prompt: 'What are the latest developments in AI?',
-  tools: {
-    web_search: openaiWebSearchTool(),
-  },
+    model: openai('gpt-4o-mini'),
+    prompt: 'What are the latest developments in AI?',
+    tools: {
+        web_search: openaiWebSearchTool(),
+    },
 });
 ```
 
@@ -43,7 +44,7 @@ const result = await generateText({
 import { openaiWebSearchWithModel } from '@repo/ai/tools';
 
 const tools = {
-  web_search: openaiWebSearchWithModel('gpt-4o'),
+    web_search: openaiWebSearchWithModel('gpt-4o'),
 };
 ```
 
@@ -57,12 +58,12 @@ const model = ModelEnum.GPT_4o_Mini;
 const webSearchTools = getWebSearchTool(model);
 
 if (webSearchTools) {
-  // Model supports web search
-  const result = await generateText({
-    model: openai(model),
-    prompt: 'Search for recent news',
-    tools: webSearchTools,
-  });
+    // Model supports web search
+    const result = await generateText({
+        model: openai(model),
+        prompt: 'Search for recent news',
+        tools: webSearchTools,
+    });
 }
 ```
 
@@ -79,6 +80,7 @@ Creates a basic web search tool using `gpt-4o-mini`.
 Creates a web search tool with a specific OpenAI model.
 
 **Parameters**:
+
 - `modelId`: The OpenAI model ID (must support Responses API)
 
 **Returns**: `Tool` - A web search tool configured for the specified model
@@ -88,6 +90,7 @@ Creates a web search tool with a specific OpenAI model.
 Checks if a model supports OpenAI's Responses API web search.
 
 **Parameters**:
+
 - `modelId`: The model ID to check
 
 **Returns**: `boolean` - Whether the model supports web search
@@ -97,6 +100,7 @@ Checks if a model supports OpenAI's Responses API web search.
 Returns the appropriate web search tool for a given model, or null if not supported.
 
 **Parameters**:
+
 - `model`: The model enum value
 
 **Returns**: `{ web_search: Tool } | null` - Web search tools object or null
@@ -109,10 +113,10 @@ The tools include comprehensive error handling:
 const result = await openaiWebSearchTool().execute({ query: 'test search' });
 
 if (!result.success) {
-  console.error('Search failed:', result.error);
+    console.error('Search failed:', result.error);
 } else {
-  console.log('Search results:', result.text);
-  console.log('Sources:', result.sources);
+    console.log('Search results:', result.text);
+    console.log('Sources:', result.sources);
 }
 ```
 
@@ -133,8 +137,8 @@ const webSearchTools = getWebSearchTool(model);
 
 // Use in generateText
 const config = {
-  model: getLanguageModel(model),
-  prompt: userQuery,
-  ...(webSearchTools && { tools: webSearchTools }),
+    model: getLanguageModel(model),
+    prompt: userQuery,
+    ...(webSearchTools && { tools: webSearchTools }),
 };
 ```

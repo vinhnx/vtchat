@@ -85,7 +85,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     const hasAccess = React.useMemo(() => {
         // If no session, no access
         if (!session) return false;
-        
+
         // VT+ exclusive features
         if (
             requiredFeature === FeatureSlug.DARK_THEME ||

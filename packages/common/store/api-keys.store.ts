@@ -139,12 +139,12 @@ export const useApiKeysStore = create<ApiKeysState>()(
             hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
                 if (!isSignedIn) return false;
                 const apiKeys = get().keys;
-                
+
                 // Helper function to check if API key exists and is not empty
                 const isValidKey = (key: string | undefined): boolean => {
                     return !!(key && key.trim() !== '');
                 };
-                
+
                 switch (chatMode) {
                     case ChatMode.O3:
                     case ChatMode.O3_Mini:

@@ -41,17 +41,19 @@
 ## State Management Best Practices (Zustand)
 
 - **Individual Selectors:** Always use individual selectors instead of object destructuring to avoid infinite re-renders:
-  ```tsx
-  // ✅ Correct: Individual selectors
-  const value1 = useStore(state => state.value1);
-  const value2 = useStore(state => state.value2);
-  
-  // ❌ Incorrect: Object destructuring (causes infinite loops)
-  const { value1, value2 } = useStore(state => ({ 
-    value1: state.value1, 
-    value2: state.value2 
-  }));
-  ```
+
+    ```tsx
+    // ✅ Correct: Individual selectors
+    const value1 = useStore(state => state.value1);
+    const value2 = useStore(state => state.value2);
+
+    // ❌ Incorrect: Object destructuring (causes infinite loops)
+    const { value1, value2 } = useStore(state => ({
+        value1: state.value1,
+        value2: state.value2,
+    }));
+    ```
+
 - **Selector Memoization:** Use callback memoization for complex selectors to prevent unnecessary re-renders.
 - **Settings Persistence:** All user settings use unified storage system (`SettingsStorage`) with type-safe operations, error handling, and user-specific isolation.
 

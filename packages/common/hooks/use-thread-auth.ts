@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
 
-
 /**
  * Hook to manage thread database switching based on user authentication
  * Ensures threads and API keys are isolated per user account

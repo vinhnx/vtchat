@@ -16,7 +16,7 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
     const chartData = useMemo(() => {
         const chartDataMatch = content.match(/\[CHART_DATA:(.*?)\]/);
         if (!chartDataMatch) return null;
-        
+
         try {
             return JSON.parse(chartDataMatch[1]) as ChartData;
         } catch (error) {
@@ -40,7 +40,7 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
         <div className="space-y-3">
             {/* Display the cleaned content */}
             <div className="whitespace-pre-wrap">{cleanContent}</div>
-            
+
             {/* Show chart button if chart data exists */}
             {chartData && (
                 <div className="flex justify-start">
@@ -48,14 +48,14 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
                         onClick={handleViewChart}
                         variant="outline"
                         size="sm"
-                        className="gap-2 bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-300"
+                        className="gap-2 border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100"
                     >
                         <BarChart3 size={16} />
                         View Chart
                     </Button>
                 </div>
             )}
-            
+
             {/* Chart popup */}
             <ChartPopupComponent />
         </div>

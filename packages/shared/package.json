@@ -28,7 +28,8 @@
         "./utils/performance-monitor": "./utils/performance-monitor.ts",
         "./utils/request-deduplication": "./utils/request-deduplication.ts",
         "./utils/session-cache": "./utils/session-cache.ts",
-        "./utils/ssr-session": "./utils/ssr-session.ts"
+        "./utils/ssr-session": "./utils/ssr-session.ts",
+        "./utils/plus-defaults": "./utils/plus-defaults.ts"
     },
     "scripts": {
         "lint": "oxlint",

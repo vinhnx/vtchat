@@ -38,7 +38,7 @@ export function useGeminiCaching() {
         isEnabled,
         settings: geminiCaching,
         updateSettings,
-        
+
         // Convenience methods
         enable: () => updateSettings({ enabled: true }),
         disable: () => updateSettings({ enabled: false }),

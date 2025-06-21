@@ -22,19 +22,17 @@ export function OnboardingManager() {
             if (!hasCompletedFirstLaunch) {
                 console.log('[Onboarding] First session detected');
                 setFirstLaunchCompleted();
-                
+
                 // Note: We no longer automatically open settings
                 // API key validation will happen when user tries to send a message
-                console.log('[Onboarding] First launch completed - API keys will be requested when needed');
+                console.log(
+                    '[Onboarding] First launch completed - API keys will be requested when needed'
+                );
             }
         };
 
         checkOnboarding();
-    }, [
-        isSignedIn,
-        hasCompletedFirstLaunch,
-        setFirstLaunchCompleted,
-    ]);
+    }, [isSignedIn, hasCompletedFirstLaunch, setFirstLaunchCompleted]);
 
     // This component doesn't render anything
     return null;

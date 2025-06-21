@@ -27,31 +27,31 @@ export const useChartStore = create<ChartStore>()(
         (set, get) => ({
             charts: [],
 
-            addChart: (chartData) => {
+            addChart: chartData => {
                 const id = `chart_${Date.now()}_${Math.random().toString(36).substring(7)}`;
                 const chart: ChartData = {
                     ...chartData,
                     id,
                     createdAt: Date.now(),
                 };
-                
-                set((state) => ({
+
+                set(state => ({
                     charts: [...state.charts, chart],
                 }));
-                
+
                 return id;
             },
 
-            getChart: (id) => {
+            getChart: id => {
                 return get().charts.find(chart => chart.id === id);
             },
 
-            getChartsForThreadItem: (threadItemId) => {
+            getChartsForThreadItem: threadItemId => {
                 return get().charts.filter(chart => chart.threadItemId === threadItemId);
             },
 
-            removeChart: (id) => {
-                set((state) => ({
+            removeChart: id => {
+                set(state => ({
                     charts: state.charts.filter(chart => chart.id !== id),
                 }));
             },
