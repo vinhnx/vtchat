@@ -1,16 +1,23 @@
 # AI Agents System
 
+## Tech Stack & Guidelines (Project Overview)
+
+- **Monorepo**: Turborepo-managed, with `apps/web` (Next.js app) and `packages/` (shared code: `ai`, `common`, `shared`, `ui`, etc.).
+- **Core Technologies**: Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
+- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
+
 This document provides an overview of the AI Agent system implemented in the `packages/ai/` directory. The system is designed for building flexible and powerful AI agent workflows using a graph-based architecture.
 
 ## Core Concepts
 
 - **Agentic Graph System**: The foundation of the AI capabilities, allowing for complex workflows to be defined and managed as a graph of interconnected nodes.
 - **Workflow Management**:
-  - Workflows are defined in `packages/ai/workflow/flow.ts`.
-  - Execution of these workflows is handled by workers, as seen in `packages/ai/worker/worker.ts` and `packages/ai/worker/use-workflow-worker.ts`.
-  - The system is event-driven, emitting events like `workflow.started`, `workflow.completed`, `node.processing`, etc.
+    - Workflows are defined in `packages/ai/workflow/flow.ts`.
+    - Execution of these workflows is handled by workers, as seen in `packages/ai/worker/worker.ts` and `packages/ai/worker/use-workflow-worker.ts`.
+    - The system is event-driven, emitting events like `workflow.started`, `workflow.completed`, `node.processing`, etc.
 - **Tool Integration**:
-  - Agents framework ready for future tool integrations (MCP implementation temporarily removed for optimization).
+    - Agents framework ready for future tool integrations (MCP implementation temporarily removed for optimization).
 
 ## Key Components and Features
 
@@ -20,30 +27,26 @@ This document provides an overview of the AI Agent system implemented in the `pa
 
 ### 2. Specialized Node Types
 
-   The system defines several types of nodes, each with a specific role in the workflow:
-    -   **Executor Node**: Responsible for executing specific tasks or actions. It processes input and generates responses, and can be specialized for different roles within an agent.
-    -   **Router Node**: Intelligently routes data or control flow to other appropriate nodes within the graph. It often uses confidence scoring or other logic to make routing decisions.
-    -   **Memory Node**: Manages state and interaction history for an agent or workflow. This can include short-term context and long-term knowledge.
-    -   **Observer Node**: Monitors the behavior of the workflow and its nodes. It can be used for logging, analysis, performance tracking, and generating insights.
+The system defines several types of nodes, each with a specific role in the workflow: - **Executor Node**: Responsible for executing specific tasks or actions. It processes input and generates responses, and can be specialized for different roles within an agent. - **Router Node**: Intelligently routes data or control flow to other appropriate nodes within the graph. It often uses confidence scoring or other logic to make routing decisions. - **Memory Node**: Manages state and interaction history for an agent or workflow. This can include short-term context and long-term knowledge. - **Observer Node**: Monitors the behavior of the workflow and its nodes. It can be used for logging, analysis, performance tracking, and generating insights.
 
 ### 3. Event-Driven System
 
 - The architecture relies on an event system for communication between components and for tracking the state of workflows and nodes.
 - Key events include:
-  - `workflow.started`
-  - `workflow.completed`
-  - `workflow.error`
-  - `node.processing`
-  - `node.processed`
-  - `node.error`
+    - `workflow.started`
+    - `workflow.completed`
+    - `workflow.error`
+    - `node.processing`
+    - `node.processed`
+    - `node.error`
 
 ### 4. LLM Provider Support
 
 - The system is designed to be flexible with Large Language Model (LLM) providers.
 - Currently supports:
-  - OpenAI
-  - Anthropic
-  - Together AI
+    - OpenAI
+    - Anthropic
+    - Together AI
 - Configuration for these providers (API keys, model names) is managed through environment variables (see `packages/ai/.env.example`).
 
 ### 5. Workflow Execution
@@ -55,14 +58,14 @@ This document provides an overview of the AI Agent system implemented in the `pa
 
 - API keys and model preferences are set in `.env.local` (copied from `packages/ai/.env.example`).
 - Key environment variables include:
-  - `OPENAI_API_KEY`
-  - `OPENAI_MODEL`
-  - `ANTHROPIC_API_KEY`
-  - `ANTHROPIC_MODEL`
-  - `TOGETHER_API_KEY`
-  - `TOGETHER_MODEL`
-  - `TEMPERATURE`
-  - `MAX_TOKENS`
+    - `OPENAI_API_KEY`
+    - `OPENAI_MODEL`
+    - `ANTHROPIC_API_KEY`
+    - `ANTHROPIC_MODEL`
+    - `TOGETHER_API_KEY`
+    - `TOGETHER_MODEL`
+    - `TEMPERATURE`
+    - `MAX_TOKENS`
 
 ## Example Usage
 
@@ -71,6 +74,6 @@ This document provides an overview of the AI Agent system implemented in the `pa
 ## Further Exploration
 
 - For more detailed implementation, refer to the files within the `packages/ai/` directory, particularly:
-  - `packages/ai/README.md`
-  - `packages/ai/workflow/flow.ts`
-  - `packages/ai/worker/worker.ts`
+    - `packages/ai/README.md`
+    - `packages/ai/workflow/flow.ts`
+    - `packages/ai/worker/worker.ts`
