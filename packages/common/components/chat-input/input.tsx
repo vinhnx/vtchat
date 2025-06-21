@@ -192,7 +192,7 @@ export const ChatInput = ({
                                         {isGenerating && !isChatPage ? (
                                             <GeneratingStatus />
                                         ) : (
-                                            <Flex gap="xs" items="center" className="shrink-0">
+                                            <Flex gap="xs" items="center" className="shrink-0 flex-wrap">
                                                 <ChatModeButton />
                                                 {/* Hide accessory tool buttons when advanced modes are active */}
                                                 {chatMode !== ChatMode.Deep &&
@@ -271,7 +271,8 @@ export const ChatInput = ({
                 className={cn(
                     'mx-auto flex w-full max-w-3xl flex-col items-start',
                     !threadItemsLength && 'justify-start',
-                    size === 'sm' && 'px-8'
+                    size === 'sm' && 'px-8',
+                    'px-4 md:px-0' // Add mobile padding
                 )}
             >
                 <Flex

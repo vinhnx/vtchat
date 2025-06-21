@@ -7,6 +7,7 @@ import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
 import {
+    Avatar,
     Badge,
     Button,
     cn,
@@ -42,9 +43,9 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { UserTierBadge } from './user-tier-badge';
 
-export const Sidebar = () => {
+export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
-    const { setIsCommandSearchOpen } = useRootContext();
+    const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
     const threads = useChatStore(state => state.threads);
     const pinThread = useChatStore(state => state.pinThread);
     const unpinThread = useChatStore(state => state.unpinThread);
@@ -56,7 +57,7 @@ export const Sidebar = () => {
     const isSignedIn = !!session;
     const user = session?.user;
     const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
-    const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
+    const isSidebarOpen = forceMobile || useAppStore(state => state.isSidebarOpen);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
@@ -110,7 +111,7 @@ export const Sidebar = () => {
                 {threads.length === 0 && renderEmptyState ? (
                     renderEmptyState()
                 ) : (
-                    <Flex className="border-border/50 w-full gap-0.5" gap="none" direction="col">
+                    <Flex className="w-full gap-0.5" gap="none" direction="col">
                         {threads.map(thread => (
                             <HistoryItem
                                 thread={thread}
@@ -119,7 +120,11 @@ export const Sidebar = () => {
                                 isPinned={thread.pinned}
                                 key={thread.id}
                                 dismiss={() => {
-                                    setIsSidebarOpen(() => false);
+                                    if (forceMobile) {
+                                        setIsMobileSidebarOpen(false);
+                                    } else {
+                                        setIsSidebarOpen(() => false);
+                                    }
                                 }}
                                 isActive={thread.id === currentThreadId}
                             />
@@ -133,27 +138,38 @@ export const Sidebar = () => {
     return (
         <div
             className={cn(
-                'relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col  py-2 transition-all duration-200',
-                isSidebarOpen ? 'top-0 h-full w-[230px]' : 'w-[50px]'
+                'relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col transition-all duration-300 ease-in-out',
+                isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
             )}
         >
             <Flex direction="col" className="w-full flex-1 items-start overflow-hidden">
-                <div className="mb-3 flex w-full flex-row items-center justify-between">
+                {/* Header Section */}
+                <div
+                    className={cn(
+                        'flex w-full flex-row items-center justify-between transition-all duration-200',
+                        isSidebarOpen ? 'mb-4 px-4 py-3' : 'mb-2 px-2 py-2'
+                    )}
+                >
                     <Link href="/chat" className="w-full">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, delay: 0.2 }}
                             className={cn(
-                                'flex h-8 w-full cursor-pointer items-center justify-start gap-1.5 px-4',
+                                'hover:bg-accent/50 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200',
                                 !isSidebarOpen && 'justify-center px-0'
                             )}
                         >
-                            <Logo className="text-brand size-5" />
+                            <Logo className="text-brand size-6 flex-shrink-0" />
                             {isSidebarOpen && (
-                                <p className="font-clash text-foreground text-lg font-bold tracking-wide">
+                                <motion.p
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.2, delay: 0.1 }}
+                                    className="font-clash text-foreground text-xl font-bold tracking-wide"
+                                >
                                     VT
-                                </p>
+                                </motion.p>
                             )}
                         </motion.div>
                     </Link>
@@ -164,113 +180,151 @@ export const Sidebar = () => {
                             tooltipSide="right"
                             size="icon-sm"
                             onClick={() => setIsSidebarOpen(prev => !prev)}
-                            className={cn(!isSidebarOpen && 'mx-auto', 'mr-2')}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />
                         </Button>
                     )}
                 </div>
+                {/* Primary Actions Section */}
                 <Flex
                     direction="col"
                     className={cn(
-                        'w-full items-end px-3 ',
-                        !isSidebarOpen && 'items-center justify-center px-0'
+                        'w-full transition-all duration-200',
+                        isSidebarOpen ? 'gap-2 px-4' : 'items-center gap-3 px-2'
                     )}
-                    gap="xs"
                 >
-                    {/* Primary Actions Section */}
-                    <div
-                        className={cn('flex w-full gap-2', isSidebarOpen ? 'flex-col' : 'flex-col')}
+                    {/* New Chat Button */}
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="default"
+                        rounded="lg"
+                        tooltip={isSidebarOpen ? undefined : 'New Chat'}
+                        tooltipSide="right"
+                        className={cn(
+                            'relative shadow-sm transition-all duration-200',
+                            isSidebarOpen
+                                ? 'bg-primary hover:bg-primary/90 w-full justify-start'
+                                : 'bg-primary hover:bg-primary/90'
+                        )}
+                        onClick={() => {
+                            // Navigate to /chat to start a new conversation
+                            push('/chat');
+                            // Close mobile drawer if open
+                            if (forceMobile) {
+                                setIsMobileSidebarOpen(false);
+                            }
+                        }}
                     >
-                        {/* New Chat Button */}
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="bordered"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'New Chat'}
-                            tooltipSide="right"
-                            className={cn(isSidebarOpen && 'relative w-full', 'justify-center')}
-                            onClick={() => {
-                                // Navigate to /chat to start a new conversation
-                                push('/chat');
-                            }}
-                        >
-                            <Plus
+                        <Plus
+                            size={16}
+                            strokeWidth={2}
+                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                        />
+                        {isSidebarOpen && 'New Chat'}
+                    </Button>
+
+                    {/* Search Button */}
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="ghost"
+                        rounded="lg"
+                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
+                        tooltipSide="right"
+                        className={cn(
+                            'transition-all duration-200',
+                            isSidebarOpen
+                                ? 'text-muted-foreground hover:text-foreground hover:bg-accent relative w-full justify-between'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        )}
+                        onClick={() => setIsCommandSearchOpen(true)}
+                    >
+                        <div className="flex items-center">
+                            <Search
                                 size={16}
                                 strokeWidth={2}
-                                className={cn(isSidebarOpen && 'mr-2')}
-                            />
-                            {isSidebarOpen && 'New Chat'}
-                        </Button>
-
-                        {/* Search Button */}
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="ghost"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
-                            tooltipSide="right"
-                            className={cn(
-                                isSidebarOpen && 'relative w-full',
-                                'text-muted-foreground justify-center px-2'
-                            )}
-                            onClick={() => setIsCommandSearchOpen(true)}
-                        >
-                            <Search
-                                size={14}
-                                strokeWidth={2}
-                                className={cn(isSidebarOpen && 'mr-2')}
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             />
                             {isSidebarOpen && 'Search'}
-                            {isSidebarOpen && <div className="flex-1" />}
-                            {isSidebarOpen && (
-                                <div className="flex flex-row items-center gap-1">
-                                    <Badge
-                                        variant="secondary"
-                                        className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
-                                    >
-                                        <Command size={12} strokeWidth={2} className="shrink-0" />
-                                    </Badge>
-                                    <Badge
-                                        variant="secondary"
-                                        className="bg-muted-foreground/10 text-muted-foreground flex size-5 items-center justify-center rounded-md p-0"
-                                    >
-                                        K
-                                    </Badge>
-                                </div>
-                            )}
-                        </Button>
-                    </div>
+                        </div>
+                        {isSidebarOpen && (
+                            <div className="ml-auto flex flex-row items-center gap-1">
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                >
+                                    <Command size={10} strokeWidth={2} className="shrink-0" />
+                                </Badge>
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                >
+                                    K
+                                </Badge>
+                            </div>
+                        )}
+                    </Button>
+                </Flex>
 
-                    {/* Subscription Section */}
-                    {isSidebarOpen && (
-                        <div className="border-border mt-2 w-full border-t border-dashed pt-2">
-                            <Button
-                                size="sm"
-                                variant={isPlusSubscriber ? 'secondary' : 'bordered'}
-                                rounded="lg"
-                                disabled={isPortalLoading}
-                                className="relative w-full justify-center px-2"
-                                onClick={() => {
-                                    if (isPlusSubscriber) {
-                                        openCustomerPortal();
-                                    } else {
-                                        push('/plus');
-                                    }
-                                }}
-                            >
-                                <Sparkles size={14} strokeWidth={2} />
+                {/* Subscription Section */}
+                <div
+                    className={cn(
+                        'w-full transition-all duration-200',
+                        isSidebarOpen ? 'border-border/50 mt-3 border-t px-4 pt-3' : 'mt-1 px-2'
+                    )}
+                >
+                    {isSidebarOpen ? (
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            rounded="lg"
+                            disabled={isPortalLoading}
+                            className={cn(
+                                'relative w-full justify-start transition-all duration-300 border shadow-sm overflow-hidden group',
+                                isPlusSubscriber
+                                    ? // VT+ Subscriber - Premium Gold Style
+                                      'bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 border-[#D99A4E]/30 text-[#262626] dark:text-[#BFB38F] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-[#D99A4E]/20 hover:shadow-lg dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
+                                    : // Upgrade Button - Attention-grabbing Red to Orange
+                                      'bg-gradient-to-r from-[#BF4545]/90 to-[#D99A4E]/90 border-[#BF4545]/50 text-white hover:from-[#BF4545] hover:to-[#D99A4E] hover:shadow-[#BF4545]/30 hover:shadow-lg dark:from-[#BF4545]/80 dark:to-[#D99A4E]/80 dark:border-[#BF4545]/40 dark:hover:from-[#BF4545]/90 dark:hover:to-[#D99A4E]/90 dark:hover:shadow-[#BF4545]/20'
+                            )}
+                            onClick={() => {
+                                if (isPlusSubscriber) {
+                                    openCustomerPortal();
+                                } else {
+                                    push('/plus');
+                                }
+                            }}
+                        >
+                            <Sparkles
+                                size={16}
+                                strokeWidth={2}
+                                className={cn(
+                                    'mr-2 flex-shrink-0 transition-all duration-300 group-hover:scale-110',
+                                    isPlusSubscriber
+                                        ? 'text-[#D99A4E] dark:text-[#BFB38F] group-hover:text-[#D99A4E] dark:group-hover:text-[#BFB38F]'
+                                        : 'text-white drop-shadow-sm group-hover:text-white'
+                                )}
+                            />
+                            <span className={cn(
+                                'flex-1 text-left font-medium',
+                                isPlusSubscriber
+                                    ? 'text-[#262626] dark:text-[#BFB38F]'
+                                    : 'text-white drop-shadow-sm'
+                            )}>
                                 {isPortalLoading
                                     ? BUTTON_TEXT.LOADING
                                     : isPlusSubscriber
                                       ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
                                       : BUTTON_TEXT.UPGRADE_TO_PLUS}
-                                {isPlusSubscriber && <ExternalLink size={12} />}
-                            </Button>
-                        </div>
-                    )}
-
-                    {!isSidebarOpen && (
+                            </span>
+                            {isPlusSubscriber && (
+                                <ExternalLink
+                                    size={12}
+                                    className="ml-1 flex-shrink-0 text-[#D99A4E] dark:text-[#BFB38F]"
+                                />
+                            )}
+                        </Button>
+                    ) : (
                         <Button
                             size="icon-sm"
                             variant="ghost"
@@ -282,7 +336,14 @@ export const Sidebar = () => {
                                     : TOOLTIP_TEXT.UPGRADE_TO_PLUS
                             }
                             tooltipSide="right"
-                            className="text-muted-foreground justify-center px-2"
+                            className={cn(
+                                'transition-all duration-300 flex items-center justify-center border shadow-sm group !p-0 !m-0',
+                                isPlusSubscriber
+                                    ? // VT+ Subscriber - Premium Gold Style
+                                      'bg-gradient-to-br from-[#D99A4E]/20 to-[#BFB38F]/20 border-[#D99A4E]/30 hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-[#D99A4E]/20 hover:shadow-lg dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
+                                    : // Upgrade Button - Attention-grabbing Red to Orange
+                                      'bg-gradient-to-br from-[#BF4545]/90 to-[#D99A4E]/90 border-[#BF4545]/50 hover:from-[#BF4545] hover:to-[#D99A4E] hover:shadow-[#BF4545]/30 hover:shadow-lg dark:from-[#BF4545]/80 dark:to-[#D99A4E]/80 dark:border-[#BF4545]/40 dark:hover:from-[#BF4545]/90 dark:hover:to-[#D99A4E]/90 dark:hover:shadow-[#BF4545]/20'
+                            )}
                             onClick={() => {
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
@@ -291,29 +352,27 @@ export const Sidebar = () => {
                                 }
                             }}
                         >
-                            <Sparkles size={14} strokeWidth={2} />
+                            <Sparkles
+                                size={16}
+                                strokeWidth={2}
+                                className={cn(
+                                    'transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 m-0 p-0',
+                                    isPlusSubscriber
+                                        ? 'text-[#D99A4E] dark:text-[#BFB38F] group-hover:text-[#D99A4E] dark:group-hover:text-[#BFB38F]'
+                                        : 'text-white drop-shadow-sm group-hover:text-white'
+                                )}
+                            />
                         </Button>
                     )}
-                </Flex>
+                </div>
 
                 {/* Thread History Section */}
-                <Flex
-                    direction="col"
-                    gap="xs"
+                <div
                     className={cn(
-                        'border-hard mt-4 w-full justify-center border-t border-dashed px-3 pt-3',
-                        !isSidebarOpen && 'items-center justify-center px-0'
-                    )}
-                >
-                    {/* Thread history will be displayed below when sidebar is open */}
-                </Flex>
-
-                <Flex
-                    direction="col"
-                    gap="lg"
-                    className={cn(
-                        'no-scrollbar w-full flex-1 overflow-y-auto px-3 pb-[100px]',
-                        isSidebarOpen ? 'flex' : 'hidden'
+                        'no-scrollbar w-full flex-1 overflow-y-auto transition-all duration-200',
+                        isSidebarOpen
+                            ? 'border-border/50 mt-4 flex flex-col gap-4 border-t px-4 pb-[120px] pt-4'
+                            : 'hidden'
                     )}
                 >
                     {threads.length === 0 ? (
@@ -370,58 +429,47 @@ export const Sidebar = () => {
                             })}
                         </>
                     )}
-                </Flex>
+                </div>
 
-                <Flex
+                {/* Bottom Section */}
+                <div
                     className={cn(
-                        'from-tertiary via-tertiary/95 absolute bottom-0 mt-auto w-full items-center bg-gradient-to-t via-60% to-transparent p-2 pt-12',
-                        isSidebarOpen && 'items-start justify-between'
+                        'from-tertiary via-tertiary/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent transition-all duration-200',
+                        isSidebarOpen ? 'px-4 py-3 pt-12' : 'px-2 py-2 pt-8'
                     )}
-                    gap="xs"
-                    direction={'col'}
                 >
                     {!isSidebarOpen && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            tooltip="Open Sidebar"
-                            tooltipSide="right"
-                            onClick={() => setIsSidebarOpen(prev => !prev)}
-                            className={cn(!isSidebarOpen && 'mx-auto')}
-                        >
-                            <PanelRightClose size={16} strokeWidth={2} />
-                        </Button>
+                        <div className="mb-2 flex flex-col items-center gap-3">
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                tooltip="Open Sidebar"
+                                tooltipSide="right"
+                                onClick={() => setIsSidebarOpen(prev => !prev)}
+                                className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                            >
+                                <PanelRightClose size={16} strokeWidth={2} />
+                            </Button>
+                        </div>
                     )}
                     {isSignedIn && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <div
                                     className={cn(
-                                        'hover:bg-quaternary bg-background shadow-subtle-xs flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg px-2 py-1.5',
-                                        !isSidebarOpen && 'px-1.5'
+                                        'bg-background hover:bg-accent border-border/50 flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
+                                        isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
                                     )}
                                 >
-                                    <div className="bg-brand flex size-5 shrink-0 items-center justify-center rounded-full">
-                                        {user && user.image ? (
-                                            <img
-                                                src={user.image}
-                                                width={0}
-                                                height={0}
-                                                className="size-full shrink-0 rounded-full"
-                                                alt=""
-                                            />
-                                        ) : (
-                                            <User
-                                                size={14}
-                                                strokeWidth={2}
-                                                className="text-background"
-                                            />
-                                        )}
-                                    </div>
+                                    <Avatar
+                                        name={user?.name || user?.email || 'User'}
+                                        src={user?.image || undefined}
+                                        size="sm"
+                                    />
 
                                     {isSidebarOpen && (
-                                        <div className="flex flex-1 flex-col items-start">
-                                            <p className="line-clamp-1 !text-sm font-medium">
+                                        <div className="flex min-w-0 flex-1 flex-col items-start">
+                                            <p className="text-foreground line-clamp-1 text-sm font-medium">
                                                 {user?.name || user?.email}
                                             </p>
                                             <UserTierBadge />
@@ -431,7 +479,7 @@ export const Sidebar = () => {
                                         <ChevronsUpDown
                                             size={14}
                                             strokeWidth={2}
-                                            className="text-muted-foreground"
+                                            className="text-muted-foreground flex-shrink-0"
                                         />
                                     )}
                                 </div>
@@ -439,6 +487,10 @@ export const Sidebar = () => {
                             <DropdownMenuContent align="start" className="w-56 pl-2">
                                 {/* Account Management */}
                                 <DropdownMenuLabel>Account</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => push('/profile')}>
+                                    <User size={16} strokeWidth={2} />
+                                    Profile
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                                     <Settings size={16} strokeWidth={2} />
                                     Settings
@@ -487,24 +539,30 @@ export const Sidebar = () => {
                         </DropdownMenu>
                     )}
                     {isSidebarOpen && !isSignedIn && (
-                        <div className="flex w-full flex-col gap-1.5 p-1">
+                        <div className="border-border/50 mt-3 flex w-full flex-col gap-2 border-t pt-3">
                             <Button
-                                variant="bordered"
+                                variant="ghost"
                                 size="sm"
                                 rounded="lg"
+                                className="text-muted-foreground hover:text-foreground w-full justify-start"
                                 onClick={() => {
                                     setIsSettingsOpen(true);
                                 }}
                             >
-                                <Settings2 size={14} strokeWidth={2} />
+                                <Settings2 size={16} strokeWidth={2} className="mr-2" />
                                 Settings
                             </Button>
-                            <Button size="sm" rounded="lg" onClick={() => push('/login')}>
+                            <Button
+                                size="sm"
+                                rounded="lg"
+                                className="w-full"
+                                onClick={() => push('/login')}
+                            >
                                 Log in / Sign up
                             </Button>
                         </div>
                     )}
-                </Flex>
+                </div>
             </Flex>
         </div>
     );

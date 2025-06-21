@@ -1,5 +1,5 @@
 import { useAppStore } from '@repo/common/store';
-import { Button } from '@repo/ui/src/components/button';
+import { Button } from '@repo/ui';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@repo/ui';
 

@@ -1,12 +1,13 @@
 import { AccountProfilePanel } from '@/components/account-profile-panel';
 import { auth } from '@/lib/auth-server';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, TypographyH1 } from '@repo/ui';
+import { Avatar, Card, CardContent, CardDescription, CardHeader, CardTitle, TypographyH1 } from '@repo/ui';
 import { User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
+    const headersList = await headers();
     const session = await auth.api.getSession({
-        headers: headers(),
+        headers: headersList,
     });
 
     if (!session?.user) {
@@ -36,13 +37,12 @@ export default async function ProfilePage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-center gap-4">
-                            {user.image && (
-                                <img
-                                    src={user.image}
-                                    alt={user.name || 'User avatar'}
-                                    className="h-12 w-12 rounded-full border"
-                                />
-                            )}
+                            <Avatar
+                                name={user.name || user.email || 'User'}
+                                src={user.image || undefined}
+                                size="lg"
+                                className="border"
+                            />
                             <div>
                                 <p className="font-medium">{user.name || 'No name set'}</p>
                                 <p className="text-muted-foreground text-sm">{user.email}</p>

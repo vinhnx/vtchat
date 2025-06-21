@@ -1,195 +1,22 @@
 # TODO
 
-## update all section components in setting page pane sections to use card shadcn components
+https://www.better-auth.com/docs/plugins/one-tap
+--
 
+--
+https://fly.io/docs/apps/going-to-production/
+
+--
 https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
 migrate from railway to fly.io
---
-implement mobile version responsive design
-
-fix :Mobile version is coming soon.
-Please use a desktop browser."
---
-https://ui.shadcn.com/blocks#sidebar-07
-
---
-https://ui.shadcn.com/blocks#login-04
-
+-> free if use under 5$ a month
 --
 
-IMPORTANT: fix shadcn button variant migrate to shadcn button in #codebase
-
 --
-CSS Variables
-
-<div className="bg-background text-foreground" />
-
-To use CSS variables for theming set tailwind.cssVariables to true in your components.json file.
-components.json
-
-{
-"style": "default",
-"rsc": true,
-"tailwind": {
-"config": "",
-"css": "app/globals.css",
-"baseColor": "neutral",
-"cssVariables": true
-},
-"aliases": {
-"components": "@/components",
-"utils": "@/lib/utils",
-"ui": "@/components/ui",
-"lib": "@/lib",
-"hooks": "@/hooks"
-},
-"iconLibrary": "lucide"
-}
-
-Utility classes
-
-<div className="bg-zinc-950 dark:bg-white" />
-
-To use utility classes for theming set tailwind.cssVariables to false in your components.json file.
-components.json
-
-{
-"style": "default",
-"rsc": true,
-"tailwind": {
-"config": "",
-"css": "app/globals.css",
-"baseColor": "neutral",
-"cssVariables": false
-},
-"aliases": {
-"components": "@/components",
-"utils": "@/lib/utils",
-"ui": "@/components/ui",
-"lib": "@/lib",
-"hooks": "@/hooks"
-},
-"iconLibrary": "lucide"
-}
-
-Convention
-
-We use a simple background and foreground convention for colors. The background variable is used for the background color of the component and the foreground variable is used for the text color.
-
-The background suffix is omitted when the variable is used for the background color of the component.
-
-Given the following CSS variables:
-
---primary: oklch(0.205 0 0);
---primary-foreground: oklch(0.985 0 0);
-
-The background color of the following component will be var(--primary) and the foreground color will be var(--primary-foreground).
-
-<div className="bg-primary text-primary-foreground">Hello</div>
-
-List of variables
-
-Here's the list of variables available for customization:
-app/globals.css
-
-:root {
---radius: 0.625rem;
---background: oklch(1 0 0);
---foreground: oklch(0.145 0 0);
---card: oklch(1 0 0);
---card-foreground: oklch(0.145 0 0);
---popover: oklch(1 0 0);
---popover-foreground: oklch(0.145 0 0);
---primary: oklch(0.205 0 0);
---primary-foreground: oklch(0.985 0 0);
---secondary: oklch(0.97 0 0);
---secondary-foreground: oklch(0.205 0 0);
---muted: oklch(0.97 0 0);
---muted-foreground: oklch(0.556 0 0);
---accent: oklch(0.97 0 0);
---accent-foreground: oklch(0.205 0 0);
---destructive: oklch(0.577 0.245 27.325);
---border: oklch(0.922 0 0);
---input: oklch(0.922 0 0);
---ring: oklch(0.708 0 0);
---chart-1: oklch(0.646 0.222 41.116);
---chart-2: oklch(0.6 0.118 184.704);
---chart-3: oklch(0.398 0.07 227.392);
---chart-4: oklch(0.828 0.189 84.429);
---chart-5: oklch(0.769 0.188 70.08);
---sidebar: oklch(0.985 0 0);
---sidebar-foreground: oklch(0.145 0 0);
---sidebar-primary: oklch(0.205 0 0);
---sidebar-primary-foreground: oklch(0.985 0 0);
---sidebar-accent: oklch(0.97 0 0);
---sidebar-accent-foreground: oklch(0.205 0 0);
---sidebar-border: oklch(0.922 0 0);
---sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
---background: oklch(0.145 0 0);
---foreground: oklch(0.985 0 0);
---card: oklch(0.205 0 0);
---card-foreground: oklch(0.985 0 0);
---popover: oklch(0.269 0 0);
---popover-foreground: oklch(0.985 0 0);
---primary: oklch(0.922 0 0);
---primary-foreground: oklch(0.205 0 0);
---secondary: oklch(0.269 0 0);
---secondary-foreground: oklch(0.985 0 0);
---muted: oklch(0.269 0 0);
---muted-foreground: oklch(0.708 0 0);
---accent: oklch(0.371 0 0);
---accent-foreground: oklch(0.985 0 0);
---destructive: oklch(0.704 0.191 22.216);
---border: oklch(1 0 0 / 10%);
---input: oklch(1 0 0 / 15%);
---ring: oklch(0.556 0 0);
---chart-1: oklch(0.488 0.243 264.376);
---chart-2: oklch(0.696 0.17 162.48);
---chart-3: oklch(0.769 0.188 70.08);
---chart-4: oklch(0.627 0.265 303.9);
---chart-5: oklch(0.645 0.246 16.439);
---sidebar: oklch(0.205 0 0);
---sidebar-foreground: oklch(0.985 0 0);
---sidebar-primary: oklch(0.488 0.243 264.376);
---sidebar-primary-foreground: oklch(0.985 0 0);
---sidebar-accent: oklch(0.269 0 0);
---sidebar-accent-foreground: oklch(0.985 0 0);
---sidebar-border: oklch(1 0 0 / 10%);
---sidebar-ring: oklch(0.439 0 0);
-}
-
-Adding new colors
-
-To add new colors, you need to add them to your CSS file and to your tailwind.config.js file.
-app/globals.css
-
-:root {
---warning: oklch(0.84 0.16 84);
---warning-foreground: oklch(0.28 0.07 46);
-}
-
-.dark {
---warning: oklch(0.41 0.11 46);
---warning-foreground: oklch(0.99 0.02 95);
-}
-
-@theme inline {
---color-warning: var(--warning);
---color-warning-foreground: var(--warning-foreground);
-}
-
-You can now use the warning utility class in your components.
-
-<div className="bg-warning text-warning-foreground" />
-
-also, update css to use stone theme shadcn
-https://ui.shadcn.com/docs/theming#stone
-
+https://www.better-auth.com/docs/plugins/multi-session
 --
-remove icons in VT+ Features and Subscription settings page
+https://www.better-auth.com/docs/plugins/captcha
+--
 
 -
 
@@ -209,141 +36,17 @@ remove icons in VT+ Features and Subscription settings page
 
 ## [pro] <https://ai-sdk.dev/cookbook/next/chat-with-pdf>
 
+--
+
 ## <https://docs.railway.com/reference/production-readiness-checklist>
 
 --
 
 [] <https://docs.creem.io/faq/account-reviews>
 
---
-remove all reference of
-
-KV_URL=your_upstash_redis_url
-KV_REST_API_URL=your_upstash_rest_url
-KV_REST_API_TOKEN=your_upstash_rest_token
-KV_REST_API_READ_ONLY_TOKEN=your_upstash_readonly_token
-REDIS_URL=your_upstash_redis_url
-
-# Alternative Upstash Redis environment variables (same values as above)
-
-UPSTASH_REDIS_REST_URL=your_upstash_rest_url
-UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
-
-## both in codebase, in env files and in dockerfile
-
-## use shadcn Card component for all sections in setting page
-
-[] open free chat for logged in user -> use vtchat gemini key
-[] free: if use pre-defined key: 9 per day
-[] plus: if use pre-defined key: 30 per day
-[] -> if has gemini in byok -> unlimited
 ==
 
-better auth: build Account Linking in settting profile -> use existing github and google links. allow user link between those 2.
-
-use neon context7 mcp if needed. guide:
-
-Account linking enables users to associate multiple authentication methods with a single account. With Better Auth, users can connect additional social sign-ons or OAuth providers to their existing accounts if the provider confirms the user's email as verified.
-
-If account linking is disabled, no accounts can be linked, regardless of the provider or email verification status.
-auth.ts
-
-export const auth = betterAuth({
-account: {
-accountLinking: {
-enabled: true,
-}
-},
-});
-
-Forced Linking
-
-You can specify a list of "trusted providers." When a user logs in using a trusted provider, their account will be automatically linked even if the provider doesn’t confirm the email verification status. Use this with caution as it may increase the risk of account takeover.
-auth.ts
-
-export const auth = betterAuth({
-account: {
-accountLinking: {
-enabled: true,
-trustedProviders: ["google", "github"]
-}
-},
-});
-
-Manually Linking Accounts
-
-Users already signed in can manually link their account to additional social providers or credential-based accounts.
-
-    Linking Social Accounts: Use the linkSocial method on the client to link a social provider to the user's account.
-
-await authClient.linkSocial({
-provider: "google", // Provider to link
-callbackURL: "/callback" // Callback URL after linking completes
-});
-
-You can also request specific scopes when linking a social account, which can be different from the scopes used during the initial authentication:
-
-await authClient.linkSocial({
-provider: "google",
-callbackURL: "/callback",
-scopes: ["https://www.googleapis.com/auth/drive.readonly"] // Request additional scopes
-});
-
-If you want your users to be able to link a social account with a different email address than the user, or if you want to use a provider that does not return email addresses, you will need to enable this in the account linking settings.
-auth.ts
-
-export const auth = betterAuth({
-account: {
-accountLinking: {
-allowDifferentEmails: true
-}
-},
-});
-
-Linking Credential-Based Accounts: To link a credential-based account (e.g., email and password), users can initiate a "forgot password" flow, or you can call the setPassword method on the server.
-
-    await auth.api.setPassword({
-        headers: /* headers containing the user's session token */,
-        password: /* new password */
-    });
-
-setPassword can't be called from the client for security reasons.
-Account Unlinking
-
-You can unlink a user account by providing a providerId.
-
-await authClient.unlinkAccount({
-providerId: "google"
-});
-
-// Unlink a specific account
-await authClient.unlinkAccount({
-providerId: "google",
-accountId: "123"
-});
-
-If the account doesn't exist, it will throw an error. Additionally, if the user only has one account, the unlinking process will fail to prevent account lockout unless allowUnlinkingAll is set to true.
-auth.ts
-
-export const auth = betterAuth({
-account: {
-accountLinking: {
-allowUnlinkingAll: true
-}
-},
-});
-
---
-
 migrate tailwind 4 https://tailwindcss.com/docs/upgrade-guide
-
---
-
-when reasoning -> open "steps" reasoning panel
-
-also render thought reasoning output realtime in markdown
-
-rename "Steps" to "Thinking Steps" add model name to the top of the panel
 
 --
 
