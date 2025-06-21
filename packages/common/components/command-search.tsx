@@ -138,23 +138,12 @@ export const CommandSearch = () => {
             name: 'Change Theme',
             icon: Palette,
             action: () => {
-                if (!isSignedIn) {
-                    requireLogin();
-                    return;
-                }
-
-                // Check if user has VT+ subscription for dark theme
-                if (!canAccess(FeatureSlug.DARK_THEME)) {
-                    setShowSubscriptionDialog(true);
-                    return;
-                }
-
-                // Cycle through themes: light -> dark -> system
-                const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+                // Simple toggle between light and dark mode
+                const nextTheme = theme === 'light' ? 'dark' : 'light';
                 setTheme(nextTheme);
                 onClose();
             },
-            requiresAuth: true,
+            requiresAuth: false,
         },
         {
             name: 'Settings',
