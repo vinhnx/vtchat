@@ -391,6 +391,41 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Gemini Caching */}
+                        <AccordionItem value="gemini-caching">
+                            <AccordionTrigger className="font-medium">
+                                What is Gemini Explicit Caching and how does it save costs?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    Gemini Explicit Caching is a VT+ exclusive feature that reduces API costs by reusing conversation context across multiple queries:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Supported Models:</strong> Available for Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, and 1.5 Pro-001
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Cost Reduction:</strong> Significantly reduces API costs when you have long conversations or reuse similar context
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Configurable Duration:</strong> Cache conversations for 1 minute to 1 hour based on your needs
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Cache Management:</strong> Manage up to 20 cached conversations simultaneously
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Automatic Cleanup:</strong> Cached content expires automatically based on your TTL settings
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Smart Context Reuse:</strong> Reuses conversation context intelligently without compromising response quality
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Enable Gemini caching in your VT+ settings and configure cache duration and limits to optimize your usage costs.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* BYOK Feature */}
                         <AccordionItem value="byok-feature">
                             <AccordionTrigger className="font-medium">

@@ -81,6 +81,11 @@ export const PRICING_CONFIG = {
                         'Advanced chain-of-thought reasoning for complex problem solving and analysis',
                 },
                 {
+                    name: 'Gemini Explicit Caching',
+                    description:
+                        'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse',
+                },
+                {
                     name: 'Priority Support',
                     description: 'Get priority customer support',
                 },

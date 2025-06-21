@@ -61,8 +61,11 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     } = useCreemSubscription();
 
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
+    const hasGeminiCachingAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
     const thinkingMode = useChatStore(state => state.thinkingMode);
     const setThinkingMode = useChatStore(state => state.setThinkingMode);
+    const geminiCaching = useChatStore(state => state.geminiCaching);
+    const setGeminiCaching = useChatStore(state => state.setGeminiCaching);
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
@@ -133,6 +136,13 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     benefit: 'Comfortable dark mode',
                     description:
                         'Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.',
+                };
+            case FeatureSlug.GEMINI_EXPLICIT_CACHING:
+                return {
+                    icon: <Zap className="h-4 w-4" />,
+                    benefit: 'Cost-effective Gemini caching',
+                    description:
+                        'Reduce API costs for Gemini 2.5 and 2.0 models by reusing conversation context across multiple queries.',
                 };
             default:
                 return {
@@ -349,6 +359,141 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 <div className="text-muted-foreground flex justify-between text-xs">
                                                     <span>Quick ({THINKING_MODE.MIN_BUDGET})</span>
                                                     <span>Deep ({THINKING_MODE.MAX_BUDGET})</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* Gemini Explicit Caching Section - Only show if user has VT+ */}
+                {hasGeminiCachingAccess && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Zap className="h-5 w-5 text-orange-500" />
+                                Gemini Explicit Caching
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
+                                >
+                                    VT+ Active
+                                </Badge>
+                            </CardTitle>
+                            <CardDescription>
+                                Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {/* Enable/Disable Toggle */}
+                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/20">
+                                            <Zap className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                        </div>
+                                        <div>
+                                            <Label
+                                                htmlFor="gemini-caching"
+                                                className="cursor-pointer text-sm font-medium"
+                                            >
+                                                Enable Explicit Caching
+                                            </Label>
+                                            <div className="text-muted-foreground text-xs">
+                                                Cache conversation context to reduce API costs
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        id="gemini-caching"
+                                        checked={geminiCaching.enabled}
+                                        onCheckedChange={(enabled) => 
+                                            setGeminiCaching({ enabled })
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <AnimatePresence mode="wait">
+                                {geminiCaching.enabled && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="space-y-4"
+                                    >
+                                        {/* Cache TTL Slider */}
+                                        <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
+                                                        <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <Label className="text-sm font-medium">
+                                                            Cache Duration: {Math.round(geminiCaching.ttlSeconds / 60)} minutes
+                                                        </Label>
+                                                        <div className="text-muted-foreground text-xs">
+                                                            How long to keep cached conversations
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <Slider
+                                                    value={[geminiCaching.ttlSeconds]}
+                                                    onValueChange={([value]) =>
+                                                        setGeminiCaching({
+                                                            enabled: geminiCaching.enabled,
+                                                            ttlSeconds: value,
+                                                        })
+                                                    }
+                                                    min={60} // 1 minute
+                                                    max={3600} // 1 hour
+                                                    step={60}
+                                                    className="w-full"
+                                                />
+                                                <div className="text-muted-foreground flex justify-between text-xs">
+                                                    <span>1 minute</span>
+                                                    <span>60 minutes</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Max Caches Setting */}
+                                        <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+                                                        <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <Label className="text-sm font-medium">
+                                                            Max Cached Conversations: {geminiCaching.maxCaches}
+                                                        </Label>
+                                                        <div className="text-muted-foreground text-xs">
+                                                            Maximum number of conversations to cache simultaneously
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <Slider
+                                                    value={[geminiCaching.maxCaches]}
+                                                    onValueChange={([value]) =>
+                                                        setGeminiCaching({
+                                                            enabled: geminiCaching.enabled,
+                                                            maxCaches: value,
+                                                        })
+                                                    }
+                                                    min={1}
+                                                    max={20}
+                                                    step={1}
+                                                    className="w-full"
+                                                />
+                                                <div className="text-muted-foreground flex justify-between text-xs">
+                                                    <span>1 conversation</span>
+                                                    <span>20 conversations</span>
                                                 </div>
                                             </div>
                                         </div>

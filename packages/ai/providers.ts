@@ -161,7 +161,8 @@ export const getLanguageModel = (
     m: ModelEnum,
     middleware?: LanguageModelV1Middleware,
     byokKeys?: Record<string, string>,
-    useSearchGrounding?: boolean
+    useSearchGrounding?: boolean,
+    cachedContent?: string
 ) => {
     console.log('=== getLanguageModel START ===');
     console.log('Parameters:', {
@@ -193,19 +194,29 @@ export const getLanguageModel = (
             instanceType: typeof instance,
         });
 
-        // Handle Gemini models with search grounding
-        if (model?.provider === 'google' && useSearchGrounding) {
-            console.log('Creating Gemini model with search grounding...');
+        // Handle Gemini models with search grounding or caching
+        if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
+            console.log('Creating Gemini model with special options...');
             const modelId = model?.id || ChatMode.GEMINI_2_0_FLASH;
             console.log('Using model ID:', modelId);
 
             try {
-                const selectedModel = instance(modelId, {
-                    useSearchGrounding: true,
-                });
-                console.log('Gemini model with grounding created:', {
+                const modelOptions: any = {};
+                
+                if (useSearchGrounding) {
+                    modelOptions.useSearchGrounding = true;
+                }
+                
+                if (cachedContent) {
+                    modelOptions.cachedContent = cachedContent;
+                }
+
+                const selectedModel = instance(modelId, modelOptions);
+                console.log('Gemini model created with options:', {
                     hasModel: !!selectedModel,
                     modelType: typeof selectedModel,
+                    useSearchGrounding,
+                    hasCachedContent: !!cachedContent,
                 });
 
                 if (middleware) {
@@ -217,7 +228,7 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error: any) {
-                console.error('Error creating Gemini model with enhanced search:', error);
+                console.error('Error creating Gemini model with special options:', error);
                 console.error('Error stack:', error.stack);
                 throw error;
             }
