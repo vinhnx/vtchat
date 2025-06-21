@@ -69,11 +69,20 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             variant="ghost-bordered"
                             size="icon-sm"
                             onClick={() => {
-                                copyMarkdown(
-                                    `${threadItem?.answer?.text}\n\n## References\n${threadItem?.sources
-                                        ?.map(source => `[${source.index}] ${source.link}`)
+                                // Get text content from the DOM element (same as regular copy)
+                                let textContent = '';
+                                if (ref && 'current' in ref && ref.current) {
+                                    textContent = ref.current.innerText || ref.current.textContent || '';
+                                }
+                                
+                                // Build references section
+                                const referencesSection = threadItem?.sources?.length 
+                                    ? `\n\n## References\n${threadItem.sources
+                                        .map(source => `[${source.index}] ${source.link}`)
                                         .join('\n')}`
-                                );
+                                    : '';
+                                
+                                copyMarkdown(`${textContent}${referencesSection}`);
                             }}
                             tooltip="Copy Markdown"
                         >

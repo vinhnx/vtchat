@@ -25,6 +25,7 @@
         "react-intersection-observer": "^9.16.0",
         "remark-slug": "^8.0.0",
         "turndown": "^7.2.0",
+        "zustand": "^5.0.5",
       },
       "devDependencies": {
         "@better-auth/cli": "^1.2.9",
@@ -178,7 +179,7 @@
         "use-stick-to-bottom": "^1.0.46",
         "uuid": "^11.0.5",
         "vaul": "^0.9.1",
-        "zustand": "^5.0.5",
+        "zustand": "^4.5.4",
       },
       "devDependencies": {
         "@repo/typescript-config": "*",
@@ -2698,6 +2699,8 @@
     "@openrouter/ai-sdk-provider/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@1.0.2", "", { "dependencies": { "@ai-sdk/provider": "0.0.12", "eventsource-parser": "1.1.2", "nanoid": "3.3.6", "secure-json-parse": "2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-57f6O4OFVNEpI8Z8o+K40tIB3YQiTw+VCql/qrAO9Utq7Ti1o6+X9tvm177DlZJL7ft0Rwzvgy48S9YhrEKgmA=="],
 
     "@repo/ai/@types/node": ["@types/node@20.19.0", "", { "dependencies": { "undici-types": "~6.21.0" } }, ""],
+
+    "@repo/common/zustand": ["zustand@4.5.7", "", { "dependencies": { "use-sync-external-store": "^1.2.2" }, "peerDependencies": { "@types/react": ">=16.8", "immer": ">=9.0.6", "react": ">=16.8" }, "optionalPeers": ["@types/react", "immer", "react"] }, "sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw=="],
 
     "@repo/shared/lucide-react": ["lucide-react@0.516.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-aybBJzLHcw1CIn3rUcRkztB37dsJATtpffLNX+0/w+ws2p21nYIlOwX/B5fqxq8F/BjqVemnJX8chKwRidvROg=="],
 

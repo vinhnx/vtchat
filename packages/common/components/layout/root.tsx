@@ -1,6 +1,5 @@
 'use client';
 import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
-import { OnboardingManager, LoginBYOKManager } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
@@ -274,8 +273,7 @@ export const SideDrawer = () => {
                     </div>
                 </motion.div>
             )}
-            <OnboardingManager key="onboarding-manager" />
-            <LoginBYOKManager key="login-byok-manager" />
+
         </AnimatePresence>
     );
 };

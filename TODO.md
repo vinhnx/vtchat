@@ -1,61 +1,7 @@
 # TODO
 
-import { Text } from "@/components/ui/text"
-
-export function TextShineExample() {
-return (
-<Text variant="shine">
-Generating code...
-</Text>
-)
-}
---
-https://www.luxeui.com/ui/dropdown-menu
---
-import { Card } from "@/components/ui/card"
-
-export function CardRevealedPointerExample() {
-return (
-<Card variant="revealed-pointer">
-<div className="flex flex-col gap-2">
-<span className="text-xl font-semibold text-black dark:text-neutral-200">
-Luxe
-</span>
-<span className="text-sm leading-[1.5] text-neutral-500 dark:text-neutral-400">
-Explore the new website that simplifies the creation of sophisticated components.
-</span>
-</div>
-</Card>
-)
-}
-
---
-import { Button } from "@/components/ui/button"
-
-export function ButtonAnimatedBorderExample() {
-return (
-<Button variant="animated-border">
-Button
-</Button>
-)
-}
-
-## use for plus button in sidebar
-
-import { Badge } from "@/components/ui/badge"
-
-export function BadgeAnimatedBorderExample() {
-return (
-<Badge variant="animated-border">
-Badge
-</Badge>
-)
-}
-
-## use for user tier badge
-
 https://next-safe-action.dev/
---`
+--
 https://fluid.tw/#installation
 --
 
@@ -75,100 +21,7 @@ https://page-speed.dev
 can safely remove LoginBYOKManager and OnboardingManager?
 check for reduntdant charts components and package. should use recharts and shadcn/ui
 --
---
-Preferences is not persisted between page refresh. double check all setings prefs make sure they are saved when changes in settings page
---
-table component https://ui.shadcn.com/docs/components/table
 
-## for tools use
-
-[openai only]
-https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-speech#generatespeech
-generateSpeech()
-generateSpeech is an experimental feature.
-
-Generates speech audio from text.
-
-import { experimental_generateSpeech as generateSpeech } from 'ai';
-import { openai } from '@ai-sdk/openai';
-import { readFile } from 'fs/promises';
-
-const { audio } = await generateSpeech({
-model: openai.speech('tts-1'),
-text: 'Hello from the AI SDK!',
-});
-
-console.log(audio);
-
-Import
-
-import { experimental_generateSpeech as generateSpeech } from "ai"
-
-API Signature
-Parameters
-model:
-SpeechModelV1
-The speech model to use.
-text:
-string
-The text to generate the speech from.
-voice?:
-string
-The voice to use for the speech.
-outputFormat?:
-string
-The output format to use for the speech e.g. "mp3", "wav", etc.
-instructions?:
-string
-Instructions for the speech generation.
-speed?:
-number
-The speed of the speech generation.
-providerOptions?:
-Record<string, Record<string, JSONValue>>
-Additional provider-specific options.
-maxRetries?:
-number
-Maximum number of retries. Default: 2.
-abortSignal?:
-AbortSignal
-An optional abort signal to cancel the call.
-headers?:
-Record<string, string>
-Additional HTTP headers for the request.
-Returns
-audio:
-GeneratedAudioFile
-The generated audio.
-GeneratedAudioFile
-base64:
-string
-Audio as a base64 encoded string.
-uint8Array:
-Uint8Array
-Audio as a Uint8Array.
-mimeType:
-string
-MIME type of the audio (e.g. "audio/mpeg").
-format:
-string
-Format of the audio (e.g. "mp3").
-warnings:
-SpeechWarning[]
-Warnings from the model provider (e.g. unsupported settings).
-responses:
-Array<SpeechModelResponseMetadata>
-Response metadata from the provider. There may be multiple responses if we made multiple calls to the model.
-SpeechModelResponseMetadata
-timestamp:
-Date
-Timestamp for the start of the generated response.
-modelId:
-string
-The ID of the response model that was used to generate the response.
-headers?:
-Record<string, string>
-Response headers.
 --
 check searches with grok 3 mini and grok 2 vision models?
 --
@@ -190,26 +43,11 @@ stock visualization slug: weather_visualization
 https://github.com/e2b-dev/fragments
 
 --
-check copy markdown from chat thread message doesn't work
-
---
-
-seems like all settings preference is not persisted in local storage, so it resets to default on page reload. please fix this issue.
-
-theme settings is not persisted in local storage, so it resets to default on page reload. please fix this issue.
-
-click on theme change button, it should toggle the theme between light and dark mode, and persist the selected theme in local storage so that it remains consistent across page reloads.
-
---
 
 1. check models-data.json add new models and providers
 2. ## also implement BYOK support for those providers.
 
     https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
-
-3. build charts and graphs with the AI SDK UI
-   https://ui.shadcn.com/docs/components/chart
-4. test with some prompt to triggger show charts and graphs when chatting with AI
 
 --
 

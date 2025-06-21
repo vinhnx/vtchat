@@ -60,7 +60,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const thinkingMode = useChatStore(state => state.thinkingMode);
     const { push } = useRouter();
 
-    const apiKeys = useApiKeysStore(state => state.keys);
+    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
 
     // In-memory store for thread items
@@ -448,7 +448,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     charts: useCharts,
                     showSuggestions: showSuggestions ?? true,
-                    apiKeys: apiKeys(),
+                    apiKeys: getAllKeys(),
                     thinkingMode,
                 });
             } else {
@@ -472,7 +472,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     charts: useCharts,
                     showSuggestions: showSuggestions ?? true,
-                    apiKeys: useWebSearch ? apiKeys() : undefined,
+                    apiKeys: useWebSearch ? getAllKeys() : undefined,
                 });
             }
         },
@@ -489,7 +489,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             abortWorkflow,
             startWorkflow,
             customInstructions,
-            apiKeys,
+            getAllKeys,
             hasApiKeyForChatMode,
             updateThreadItem,
             runAgent,

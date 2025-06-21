@@ -74,6 +74,7 @@
         "react-dropzone": "^14.3.8",
         "react-intersection-observer": "^9.16.0",
         "remark-slug": "^8.0.0",
-        "turndown": "^7.2.0"
+        "turndown": "^7.2.0",
+        "zustand": "^5.0.5"
     }
 }

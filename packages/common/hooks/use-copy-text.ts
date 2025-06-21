@@ -27,20 +27,48 @@ export const useCopyText = () => {
 
             return true;
         } catch (err) {
+            console.error('Copy to clipboard failed:', err);
             setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
             return false;
         }
     }, []);
 
     const copyMarkdown = useCallback(async (text?: string) => {
-        if (text) {
-            try {
+        if (!text) return;
+
+        try {
+            // Try modern clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(text);
                 setMarkdownCopyStatus('copied');
                 setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
-            } catch (err) {
-                setMarkdownCopyStatus('error');
+                return;
             }
+            
+            // Fallback to legacy method
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (successful) {
+                setMarkdownCopyStatus('copied');
+                setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
+            } else {
+                throw new Error('Copy command failed');
+            }
+        } catch (err) {
+            console.error('Copy markdown failed:', err);
+            setMarkdownCopyStatus('error');
+            setTimeout(() => setMarkdownCopyStatus('idle'), 3000);
         }
     }, []);
 
