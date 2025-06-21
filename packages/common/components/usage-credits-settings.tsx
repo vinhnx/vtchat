@@ -4,7 +4,7 @@ import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/com
 import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT } from '@repo/shared/constants';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, TypographyH3, TypographyMuted } from '@repo/ui';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, TypographyH3, TypographyMuted, Skeleton } from '@repo/ui';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
 
@@ -42,11 +42,6 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
         <>
             <PaymentRedirectLoader
                 isLoading={isPaymentLoading || isPortalLoading}
-                message={
-                    isPaymentLoading
-                        ? 'Redirecting to secure payment...'
-                        : 'Opening subscription portal...'
-                }
             />
             <div className="space-y-6">
                 {/* Header */}
@@ -83,7 +78,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         </div>
                                     </div>
                                 </div>
-                                {isLoaded && (
+                                {isLoaded ? (
                                     <div className="shrink-0">
                                         {isVtPlus ? (
                                             <Button
@@ -104,6 +99,10 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                                 Upgrade to Plus
                                             </Button>
                                         )}
+                                    </div>
+                                ) : (
+                                    <div className="shrink-0">
+                                        <Skeleton className="h-9 w-24 rounded-md" />
                                     </div>
                                 )}
                             </div>

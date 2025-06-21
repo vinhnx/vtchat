@@ -1,6 +1,6 @@
 'use client';
 
-import { DotSpinner } from '@repo/common/components';
+import { MotionSkeleton } from '@repo/common/components';
 import {
     useMathCalculator,
     useSubscriptionAccess,
@@ -267,8 +267,8 @@ export function NewLineIndicator() {
 
 export function GeneratingStatus() {
     return (
-        <div className="text-muted-foreground flex flex-row items-center gap-1 px-2 text-xs">
-            <DotSpinner /> Generating...
+        <div className="text-muted-foreground flex flex-row items-center gap-2 px-2 text-xs">
+            <MotionSkeleton className="h-3 w-3 rounded-full" />
         </div>
     );
 }

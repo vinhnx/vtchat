@@ -21,6 +21,7 @@ import {
     CardHeader,
     CardTitle,
     Label,
+    Skeleton,
     Slider,
     Switch,
     TypographyH3,
@@ -152,11 +153,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         <>
             <PaymentRedirectLoader
                 isLoading={isPaymentLoading || isPortalLoading}
-                message={
-                    isPaymentLoading
-                        ? 'Redirecting to secure payment...'
-                        : 'Opening subscription portal...'
-                }
             />
             <div className="space-y-6">
                 {/* Header */}
@@ -199,7 +195,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                     </div>
                                 </div>
-                                {isLoaded && (
+                                {isLoaded ? (
                                     <div className="shrink-0">
                                         {isVtPlus ? (
                                             <Button
@@ -217,6 +213,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 Upgrade to VT+
                                             </Button>
                                         )}
+                                    </div>
+                                ) : (
+                                    <div className="shrink-0">
+                                        <Skeleton className="h-9 w-28 rounded-md" />
                                     </div>
                                 )}
                             </div>

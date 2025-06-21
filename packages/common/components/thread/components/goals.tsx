@@ -3,8 +3,9 @@ import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
 import { Badge } from '@repo/ui';
-import { Atom, ChevronRight, ListChecks, Loader2, Star } from 'lucide-react';
+import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
+import { MotionSkeleton } from '@repo/common/components';
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
         return 'Research';
@@ -145,11 +146,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
             <div className="flex flex-row items-start gap-2">
                 <div className="mt-0.5">
                     {isLoading ? (
-                        <Loader2
-                            size={16}
-                            strokeWidth={2}
-                            className=" text-muted-foreground animate-spin"
-                        />
+                        <MotionSkeleton className="h-4 w-4 rounded" />
                     ) : (
                         getIcon(threadItem)
                     )}

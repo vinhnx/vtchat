@@ -4,7 +4,7 @@ import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Thread } from '@repo/shared/types';
-import { Button, cn, Flex } from '@repo/ui';
+import { Button, cn, Flex, Skeleton } from '@repo/ui';
 import { PanelLeftClose, PanelRightClose, Plus, Search } from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
@@ -126,7 +126,32 @@ export const Sidebar = () => {
                 </Flex>
 
                 {isAuthLoading ? (
-                    <FullPageLoader />
+                    <Flex
+                        direction="col"
+                        gap="md"
+                        className={cn(
+                            'border-border/70 mt-3 w-full flex-1 overflow-y-auto border-t border-dashed p-3',
+                            isSidebarOpen ? 'flex' : 'hidden'
+                        )}
+                    >
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Skeleton className="h-3 w-12" />
+                                <div className="space-y-1 pl-2">
+                                    <Skeleton className="h-6 w-full" />
+                                    <Skeleton className="h-6 w-3/4" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Skeleton className="h-3 w-16" />
+                                <div className="space-y-1 pl-2">
+                                    <Skeleton className="h-6 w-full" />
+                                    <Skeleton className="h-6 w-5/6" />
+                                    <Skeleton className="h-6 w-2/3" />
+                                </div>
+                            </div>
+                        </div>
+                    </Flex>
                 ) : (
                     <Flex
                         direction="col"
@@ -175,7 +200,10 @@ export const Sidebar = () => {
                     )}
                     <div className="sticky right-0 top-0 z-50 flex items-center gap-1 px-4 py-2">
                         {isAuthLoading ? (
-                            <div className="bg-muted h-8 w-full animate-pulse rounded-full" />
+                            <div className="flex items-center gap-2 p-1">
+                                <Skeleton className="h-6 w-6 rounded-full" />
+                                <Skeleton className="h-4 w-20 rounded" />
+                            </div>
                         ) : isSignedIn ? (
                             <UserButton showName />
                         ) : (

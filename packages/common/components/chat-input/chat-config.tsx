@@ -1,22 +1,22 @@
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { models, type Model } from '@repo/ai/models';
-import { type ApiKeys } from '@repo/common/store';
-import { ChatMode } from '@repo/shared/config';
-import { Atom, Brain, Gift, Star } from 'lucide-react';
+import { ApiKeys } from '@repo/common/store/api-keys.store';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { checkSubscriptionAccess, SubscriptionContext } from '@repo/shared/utils/subscription';
+import { Brain, Gift } from 'lucide-react';
 
 export const chatOptions = [
     {
         label: 'Deep Research',
-        description: 'Comprehensive multi-step research (Gemini 2.5 Pro) - Takes several minutes',
+        description: 'In depth research on complex topic',
         value: ChatMode.Deep,
-        icon: <Atom size={16} className="text-muted-foreground" strokeWidth={2} />,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        iconName: 'Atom',
     },
     {
         label: 'Pro Search',
-        description: 'Fast web search with grounding (Gemini 2.5 Flash)',
+        description: 'Enhanced web search with Gemini grounding',
         value: ChatMode.Pro,
-        icon: <Star size={16} className="text-muted-foreground" strokeWidth={2} />,
-        requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        iconName: 'Star',
     },
 ];
 
@@ -100,10 +100,7 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 };
 
 // Helper function to generate model options from models array
-export const generateModelOptionsForProvider = (
-    provider: string,
-    excludePreview: boolean = false
-) => {
+export const generateModelOptionsForProvider = (provider: string, excludePreview: boolean = false) => {
     return models
         .filter(model => model.provider === provider)
         .filter(model => !excludePreview || !model.name.toLowerCase().includes('preview'))
@@ -132,10 +129,10 @@ export const generateModelOptionsForProvider = (
                 label,
                 value: chatMode,
                 webSearch: true,
-                icon: hasReasoningCapability(chatMode) ? (
-                    <Brain size={16} className="text-purple-500" />
-                ) : model.isFree ? (
+                icon: model.isFree ? (
                     <Gift size={16} className="text-green-500" />
+                ) : hasReasoningCapability(chatMode) ? (
+                    <Brain size={16} className="text-purple-500" />
                 ) : undefined,
                 requiredApiKey: getApiKeyForProvider(model.provider),
             };
@@ -185,7 +182,7 @@ export const modelOptionsByProvider = {
             label: 'o4 mini',
             value: ChatMode.O4_Mini,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -215,14 +212,14 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.5 Flash',
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -231,14 +228,14 @@ export const modelOptionsByProvider = {
             label: 'Claude 4 Sonnet',
             value: ChatMode.CLAUDE_4_SONNET,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Claude 4 Opus',
             value: ChatMode.CLAUDE_4_OPUS,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -247,7 +244,7 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -263,7 +260,7 @@ export const modelOptionsByProvider = {
             label: 'Grok 3 Mini',
             value: ChatMode.GROK_3_MINI,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: undefined,
             requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -286,14 +283,14 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1_FREE,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'DeepSeek R1 0528',
             value: ChatMode.DEEPSEEK_R1_0528_FREE,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Gift size={16} className="text-green-500" />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
@@ -329,3 +326,51 @@ export const modelOptionsByProvider = {
 
 // Flatten array for backward compatibility
 export const modelOptions = Object.values(modelOptionsByProvider).flat();
+
+/**
+ * Step-by-step access check for a chat mode.
+ * Returns an object describing which requirements are met and which are not.
+ */
+export function checkChatModeAccess(
+    context: SubscriptionContext | null,
+    mode: ChatMode
+): {
+    isAuthRequired: boolean;
+    hasAuth: boolean;
+    requiredPlan?: PlanSlug;
+    hasRequiredPlan: boolean;
+    requiredFeature?: FeatureSlug;
+    hasRequiredFeature: boolean;
+    canAccess: boolean;
+} {
+    const config = ChatModeConfig[mode];
+    // Step 1: Check if auth is required and present
+    const isAuthRequired = !!config.isAuthRequired;
+    const hasAuth = !!context && !!context.user;
+
+    // Step 2: Check plan requirement
+    const requiredPlan = config.requiredPlan;
+    const hasRequiredPlan = requiredPlan
+        ? checkSubscriptionAccess(context || {}, { plan: requiredPlan })
+        : true;
+
+    // Step 3: Check feature requirement
+    const requiredFeature = config.requiredFeature;
+    const hasRequiredFeature = requiredFeature
+        ? checkSubscriptionAccess(context || {}, { feature: requiredFeature })
+        : true;
+
+    // Step 4: Final access
+    const canAccess =
+        (!isAuthRequired || hasAuth) && hasRequiredPlan && hasRequiredFeature;
+
+    return {
+        isAuthRequired,
+        hasAuth,
+        requiredPlan,
+        hasRequiredPlan,
+        requiredFeature,
+        hasRequiredFeature,
+        canAccess,
+    };
+}
