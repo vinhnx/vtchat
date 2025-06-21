@@ -29,7 +29,9 @@ export const useLogout = () => {
             console.log('[Logout] Starting secure logout process...');
 
             // 1. First reset theme to light mode (VT+ Dark Theme feature)
+            // Force theme change multiple times to ensure it takes effect
             setTheme('light');
+            setTimeout(() => setTheme('light'), 100); // Additional safety
             console.log('[Logout] ✅ Reset theme to light mode');
 
             // 2. Clear all API keys (BYOK security requirement)
@@ -76,7 +78,16 @@ export const useLogout = () => {
 
                 // Clear next-themes storage (dark mode is a VT+ feature)
                 localStorage.removeItem('theme');
-                console.log('[Logout] ✅ Cleared theme storage');
+                
+                // More aggressive theme cleanup
+                const allThemeKeys = Object.keys(localStorage).filter(key => 
+                    key.includes('theme') || 
+                    key.includes('next-themes') ||
+                    key.includes('dark') ||
+                    key.includes('mode')
+                );
+                allThemeKeys.forEach(key => localStorage.removeItem(key));
+                console.log(`[Logout] ✅ Cleared theme storage (${allThemeKeys.length + 1} keys)`);
 
                 // Clear any remaining VT+ or premium feature caches
                 const premiumKeys = Object.keys(localStorage).filter(
@@ -160,7 +171,19 @@ export const useLogout = () => {
 
             // Even if logout fails, ensure security-critical data is cleared
             try {
+                // Multiple theme resets for emergency cleanup
                 setTheme('light');
+                setTimeout(() => setTheme('light'), 50);
+                setTimeout(() => setTheme('light'), 200);
+                
+                // Clear theme storage in emergency cleanup
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem('theme');
+                    Object.keys(localStorage).filter(key => 
+                        key.includes('theme') || key.includes('dark')
+                    ).forEach(key => localStorage.removeItem(key));
+                }
+                
                 clearAllKeys();
                 await clearAllThreads();
                 resetUserState();

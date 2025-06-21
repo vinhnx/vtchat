@@ -1,55 +1,19 @@
 # TODO
 
 
+1. `check models-data.json add new models and providers
+2. also implement BYOK support for those providers.
+--
 https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces#generative-user-interfaces
 
-build charts and graphs with the AI SDK UI
+1. build charts and graphs with the AI SDK UI
 https://ui.shadcn.com/docs/components/chart
+1. test with some prompt to triggger show charts and graphs when chatting with AI
 
 --
 
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
 
---
-implement first session launch with onboarding setup api key providers
-
-open "API Keys" settings page automatically on first session launch if no API keys are set up.
-
---
-https://ai-sdk.dev/docs/ai-sdk-ui/chatbot#cancellation-and-regeneration
-Cancellation and regeneration
-
-It's also a common use case to abort the response message while it's still streaming back from the AI provider. You can do this by calling the stop function returned by the useChat hook.
-
-const { stop, status, ... } = useChat()
-
-return <>
-  <button onClick={stop} disabled={!(status === 'streaming' || status === 'submitted')}>Stop</button>
-  ...
-
-When the user clicks the "Stop" button, the fetch request will be aborted. This avoids consuming unnecessary resources and improves the UX of your chatbot application.
-
-Similarly, you can also request the AI provider to reprocess the last message by calling the reload function returned by the useChat hook:
-
-const { reload, status, ... } = useChat()
-
-return <>
-  <button onClick={reload} disabled={!(status === 'ready' || status === 'error')}>Regenerate</button>
-  ...
-</>
-
-When the user clicks the "Regenerate" button, the AI provider will regenerate the last message and replace the current one correspondingly.
-
---
-add retry button on thread if failed
-
-Something went wrong while processing your request. Please try again.
-
---
-make sure to check for valid provider BYOK key for all modes, check the provider API key must be not empty before send chat input to llm and chat input box. if not valid, show byok popup to user to input and save valid key. (for example, if user select OpenAI provider, but no valid OpenAI API key, show popup to input OpenAI API key and save it to local storage or remote storage if user is logged in)
-
---
-check change theme command bar -> should toggle between light and dark mode
 --
 
 https://fly.io/docs/apps/going-to-production/
@@ -67,7 +31,7 @@ railway: https://docs.railway.com/reference/production-readiness-checklist
 
 --
 
-[] <https://docs.creem.io/faq/account-reviews>
+<https://docs.creem.io/faq/account-reviews>
 
 ==
 

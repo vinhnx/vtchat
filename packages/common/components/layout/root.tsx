@@ -1,5 +1,6 @@
 'use client';
 import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
+import { OnboardingManager, LoginBYOKManager, ThemeEnforcer } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
@@ -234,6 +235,7 @@ export const SideDrawer = () => {
         <AnimatePresence>
             {sideDrawer.open && isThreadPage && isClient && (
                 <motion.div
+                    key="side-drawer"
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 40 }}
@@ -272,6 +274,9 @@ export const SideDrawer = () => {
                     </div>
                 </motion.div>
             )}
+            <OnboardingManager key="onboarding-manager" />
+            <LoginBYOKManager key="login-byok-manager" />
+            <ThemeEnforcer key="theme-enforcer" />
         </AnimatePresence>
     );
 };

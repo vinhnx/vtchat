@@ -139,6 +139,12 @@ export const useApiKeysStore = create<ApiKeysState>()(
             hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
                 if (!isSignedIn) return false;
                 const apiKeys = get().keys;
+                
+                // Helper function to check if API key exists and is not empty
+                const isValidKey = (key: string | undefined): boolean => {
+                    return !!(key && key.trim() !== '');
+                };
+                
                 switch (chatMode) {
                     case ChatMode.O3:
                     case ChatMode.O3_Mini:
@@ -148,24 +154,25 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.GPT_4_1_Mini:
                     case ChatMode.GPT_4_1_Nano:
                     case ChatMode.GPT_4_1:
-                        return !!apiKeys['OPENAI_API_KEY'];
+                        return isValidKey(apiKeys['OPENAI_API_KEY']);
                     case ChatMode.Deep:
                         // Deep Research mode requires Gemini API key (uses Gemini 2.5 Pro)
-                        return !!apiKeys['GEMINI_API_KEY'];
+                        return isValidKey(apiKeys['GEMINI_API_KEY']);
                     case ChatMode.Pro:
                     case ChatMode.GEMINI_2_0_FLASH:
                     case ChatMode.GEMINI_2_5_PRO:
                     case ChatMode.GEMINI_2_0_FLASH_LITE:
                     case ChatMode.GEMINI_2_5_FLASH:
-                        return !!apiKeys['GEMINI_API_KEY'];
+                    case ChatMode.GEMINI_2_5_FLASH_LITE:
+                        return isValidKey(apiKeys['GEMINI_API_KEY']);
                     case ChatMode.CLAUDE_4_SONNET:
                     case ChatMode.CLAUDE_4_OPUS:
-                        return !!apiKeys['ANTHROPIC_API_KEY'];
+                        return isValidKey(apiKeys['ANTHROPIC_API_KEY']);
                     case ChatMode.DEEPSEEK_R1:
-                        return !!apiKeys['FIREWORKS_API_KEY'];
+                        return isValidKey(apiKeys['FIREWORKS_API_KEY']);
                     case ChatMode.GROK_3:
                     case ChatMode.GROK_3_MINI:
-                        return !!apiKeys['XAI_API_KEY'];
+                        return isValidKey(apiKeys['XAI_API_KEY']);
                     // OpenRouter models
                     case ChatMode.DEEPSEEK_V3_0324_FREE:
                     case ChatMode.DEEPSEEK_V3_0324:
@@ -175,7 +182,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.QWEN3_32B:
                     case ChatMode.MISTRAL_NEMO:
                     case ChatMode.QWEN3_14B_FREE:
-                        return !!apiKeys['OPENROUTER_API_KEY'];
+                        return isValidKey(apiKeys['OPENROUTER_API_KEY']);
                     default:
                         return false;
                 }

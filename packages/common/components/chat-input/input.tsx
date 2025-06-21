@@ -1,6 +1,8 @@
 'use client';
 import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
+import { BYOKValidationDialog } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
+import { useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
@@ -41,6 +43,8 @@ export const ChatInput = ({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [showBYOKDialog, setShowBYOKDialog] = useState(false);
+    const [pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
 
     const { threadId: currentThreadId } = useParams();
@@ -82,12 +86,21 @@ export const ChatInput = ({
     const { dropzoneProps: docDropzoneProps } = useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
+    const { hasApiKeyForChatMode } = useApiKeysStore();
+    
+    const handleApiKeySet = () => {
+        // Clear the pending message and execute the original send
+        setPendingMessage(null);
+        // Re-execute sendMessage after API key is set
+        sendMessage();
+    };
+
     const sendMessage = async () => {
         if (!isSignedIn) {
             // This specific check for chat mode auth requirement might be redundant
             // if the focus prompt already directs to login.
             // However, keeping it for cases where send is triggered programmatically or by other means.
-            if (!!ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
+            if (ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
                 setShowLoginPrompt(true); // Show prompt instead of direct push
                 return;
             }
@@ -98,6 +111,21 @@ export const ChatInput = ({
 
         if (!editor?.getText()) {
             return;
+        }
+
+        // Check if user has valid API key for the selected chat mode
+        // This applies to all users (signed in or not) for modes that require API keys
+        if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
+            if (!isSignedIn) {
+                // For non-signed in users, show login prompt first
+                setShowLoginPrompt(true);
+                return;
+            } else {
+                // For signed-in users, show BYOK dialog
+                setPendingMessage(() => sendMessage);
+                setShowBYOKDialog(true);
+                return;
+            }
         }
 
         let threadId = currentThreadId?.toString();
@@ -308,6 +336,17 @@ export const ChatInput = ({
                     onClose={() => setShowLoginPrompt(false)}
                     title="Login Required"
                     description="Please log in to start chatting or save your conversation."
+                />
+            )}
+            {showBYOKDialog && (
+                <BYOKValidationDialog
+                    isOpen={showBYOKDialog}
+                    onClose={() => {
+                        setShowBYOKDialog(false);
+                        setPendingMessage(null);
+                    }}
+                    chatMode={chatMode}
+                    onApiKeySet={handleApiKeySet}
                 />
             )}
         </div>
