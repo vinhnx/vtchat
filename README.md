@@ -8,30 +8,30 @@ The platform features a robust subscription system (VT_BASE and VT_PLUS tiers) m
 
 ## Key Features
 
-* **Advanced Research Modes**:
-  * **Deep Research (VT+ exclusive)**: Comprehensive multi-step research using Gemini 2.5 Pro for in-depth analysis of complex topics.
-  * **Pro Search (VT+ exclusive)**: Fast grounding web search using Gemini 2.5 Flash for quick information retrieval.
-  * **Document Upload**: Upload and analyze PDF, DOC, DOCX, TXT, and MD files (Gemini models only).
-* **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
-* **Free Models Access**: Access to free AI models including:
-  * **Google Gemini**: Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite (1M input/64K output), Gemini 2.5 Flash Preview, Gemini 2.5 Pro Preview
-  * **OpenRouter Models**: DeepSeek V3, DeepSeek R1, Qwen3 14B
-  * Mathematical calculator tools with trigonometric functions, logarithms, exponentials, and arithmetic operations
-* **Privacy-Focused**:
-  * **Local Storage**: All user chat data stored in the browser's IndexedDB via Dexie.js.
-  * **No Server-Side Chat Storage**: Chat history does not leave the user's device.
-* **Agentic Capabilities**:
-  * **Workflow Orchestration**: Custom engine for coordinating complex tasks.
-  * **Reflective Analysis**: Potential for self-improvement by analyzing prior reasoning.
-* **Subscription System**:
-  * VT_BASE (free) and VT_PLUS (premium) tiers.
-  * Payment processing via Creem.io.
-  * Integrated Customer Portal for managing subscriptions (opens in a new tab for seamless UX).
-  * Unified subscription logic with global providers and efficient caching.
-* **Modern UI/UX**:
-  * Built with Shadcn UI and Tailwind CSS.
-  * Consistent design and user experience.
-  * Dark mode available for VT_PLUS subscribers.
+- **Advanced Research Modes**:
+    - **Deep Research (VT+ exclusive)**: Comprehensive multi-step research using Gemini 2.5 Pro for in-depth analysis of complex topics.
+    - **Pro Search (VT+ exclusive)**: Fast grounding web search using Gemini 2.5 Flash for quick information retrieval.
+    - **Document Upload**: Upload and analyze PDF, DOC, DOCX, TXT, and MD files (Gemini models only).
+- **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI.
+- **Free Models Access**: Access to free AI models including:
+    - **Google Gemini**: Gemini 2.0 Flash Lite, Gemini 2.5 Flash Lite (1M input/64K output), Gemini 2.5 Flash Preview, Gemini 2.5 Pro Preview
+    - **OpenRouter Models**: DeepSeek V3, DeepSeek R1, Qwen3 14B
+    - Mathematical calculator tools with trigonometric functions, logarithms, exponentials, and arithmetic operations
+- **Privacy-Focused**:
+    - **Local Storage**: All user chat data stored in the browser's IndexedDB via Dexie.js.
+    - **No Server-Side Chat Storage**: Chat history does not leave the user's device.
+- **Agentic Capabilities**:
+    - **Workflow Orchestration**: Custom engine for coordinating complex tasks.
+    - **Reflective Analysis**: Potential for self-improvement by analyzing prior reasoning.
+- **Subscription System**:
+    - VT_BASE (free) and VT_PLUS (premium) tiers.
+    - Payment processing via Creem.io.
+    - Integrated Customer Portal for managing subscriptions (opens in a new tab for seamless UX).
+    - Unified subscription logic with global providers and efficient caching.
+- **Modern UI/UX**:
+    - Built with Shadcn UI and Tailwind CSS.
+    - Consistent design and user experience.
+    - Dark mode available for VT_PLUS subscribers.
 
 ## Architecture
 
@@ -91,7 +91,9 @@ import { TypedEventEmitter } from '@repo/orchestrator';
 const events = new TypedEventEmitter<AgentEvents>();
 const builder = new WorkflowBuilder<AgentEvents, AgentContext>('research-agent', {
     events,
-    context: new Context<AgentContext>({ /* initial context */ }),
+    context: new Context<AgentContext>({
+        /* initial context */
+    }),
 });
 const llm = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 ```
@@ -122,26 +124,26 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 
 ## Tech Stack
 
-* **Core Framework**: Next.js 14 (App Router)
-* **Language**: TypeScript
-* **Styling**: Tailwind CSS
-* **UI Components**: Shadcn UI
-* **State Management**: Zustand
-* **Data Fetching (Client)**: React Query (implicitly, common with Zustand)
-* **Database ORM**: Drizzle ORM (for application metadata, not chat logs)
-* **Runtime & Package Manager**: Bun
-* **Monorepo Management**: Turborepo
-* **Authentication**: NextAuth.js (with ongoing considerations for Better Auth/Stack Auth)
-* **Payment Integration**: Creem.io
-* **Local Database**: IndexedDB via Dexie.js (for chat history and user settings)
-* **Linting/Formatting**: ESLint, Prettier
+- **Core Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn UI
+- **State Management**: Zustand
+- **Data Fetching (Client)**: React Query (implicitly, common with Zustand)
+- **Database ORM**: Drizzle ORM (for application metadata, not chat logs)
+- **Runtime & Package Manager**: Bun
+- **Monorepo Management**: Turborepo
+- **Authentication**: NextAuth.js (with ongoing considerations for Better Auth/Stack Auth)
+- **Payment Integration**: Creem.io
+- **Local Database**: IndexedDB via Dexie.js (for chat history and user settings)
+- **Linting/Formatting**: ESLint, Prettier
 
 ## Getting Started
 
 ### Prerequisites
 
-* Bun (JavaScript runtime and package manager)
-* Node.js (for some Turborepo operations, though Bun is primary)
+- Bun (JavaScript runtime and package manager)
+- Node.js (for some Turborepo operations, though Bun is primary)
 
 ### Installation
 
@@ -159,8 +161,9 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
     ```
 
 3. Set up environment variables:
-    * Copy `apps/web/.env.example` to `apps/web/.env.local`.
-    * Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys).
+
+    - Copy `apps/web/.env.example` to `apps/web/.env.local`.
+    - Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys).
 
 4. Start the development server:
 
@@ -176,8 +179,8 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 
 For more detailed information on specific systems, refer to the `/docs` directory:
 
-* **Subscription System**: Details on plan management, caching, and Creem.io integration.
-* **Customer Portal**: Information on how users manage their subscriptions.
-* **Webhook Setup**: Guide for configuring Creem.io webhooks for development.
+- **Subscription System**: Details on plan management, caching, and Creem.io integration.
+- **Customer Portal**: Information on how users manage their subscriptions.
+- **Webhook Setup**: Guide for configuring Creem.io webhooks for development.
 
 The `/memory-bank` directory contains contextual documents used by the AI assistant (Cline) for ongoing development and understanding of the project's state.
