@@ -1,138 +1,91 @@
 # CLAUDE.md - Project Guide for VTCHAT
 
-This file provides essential information for working on the VTCHAT project. Its accuracy and completeness are vital as my memory resets between sessions.
+## Tech Stack & Project Overview
 
-## 1. Common Bash Commands
+- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
+- **Core Technologies**: Next.js (App Router, v14+), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
+- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
 
-Referenced from `AGENT.MD`:
+## Package Management
 
-- **Dev Server**: `bun dev` (starts Turborepo development server for all apps/packages)
-- **Build Project**: `bun run build` (Turborepo build)
-- **Lint Code**: `bun run lint` (Turborepo lint)
-- **Format Code**: `bun run format` (Prettier write)
-- **Check Formatting**: `bun run format:check`
-- **Database Migrations (Drizzle Kit)**:
-    - `cd apps/web && bun run db:generate` (generates migration SQL based on schema changes)
-    - `cd apps/web && bun run db:migrate` (applies pending migrations to the database)
-    - `cd apps/web && bun run db:studio` (opens Drizzle Studio)
+- Use `bun` instead of `npm` for all operations
 
-## 2. Core Project Information
+## Code Style
 
-### Key Project Goals & Focus Areas (from Memory Bank)
+- Make sure no string in #codebase, use enum pattern.
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use centralize enum for custom reusable keys.
+- 4-space indentation, single quotes, 100 char line length
+- PascalCase components, camelCase hooks/utils, kebab-case files
+- Named exports preferred over default exports
 
-- **Overall Aim**: Refactor and enhance the web application for better maintainability, UX, and developer efficiency.
-- **Environment & Configuration**: Standardize using `NODE_ENV`; remove hardcoded checks.
-- **Authentication & Authorization**:
-    - Enforce login for most app usage, especially chat.
-    - Alert non-logged-in users attempting protected actions.
-    - Disable BYOK (Bring Your Own Key) for non-logged-in users.
-- **UI/UX Simplification**:
-    - Adopt `shadcn/ui` components and styles more broadly.
-    - Update `UserTierBadge` to use `PlanSlug` enum for plan names.
-    - Replace complex/outdated components (e.g., `TextShimmerComponent` was replaced).
-- **Subscription System**: Focus on VT+ subscriptions. Recent work includes improving error handling (toasts) and UI consistency on the `/plus` page.
-- **Code Cleanup**: Removal of legacy systems like credit system, Langfuse, and Plausible analytics.
+## Tech Stack
 
-### Project Structure (from `AGENT.MD` & Memory Bank)
+- Next.js 14 with App Router, TypeScript, Tailwind CSS
+- Zustand for state, Drizzle ORM for DB, Better Auth for authentication
+- Framer Motion for animations, Radix UI components
+- Shadcn/ui for UI components, Lucide icons, clsx for classnames
+- Payment integration with Creem.io
 
-- **Monorepo**: Managed by Turborepo.
-- **Main Application**: `apps/web/` (Next.js 15 with App Router)
-    - **Auth Logic**: `apps/web/lib/auth.ts` (Better-Auth integration)
-    - **Database Schema**: `apps/web/lib/database/schema.ts` (Drizzle ORM)
-    - **API Routes**: `apps/web/app/api/`
-    - **Key UI Pages**: `/plus/page.tsx` (recently updated design and dynamic CTAs)
-    - **Layout/Theme**: `apps/web/app/layout.tsx` (handles `ThemeProvider` from `next-themes`)
-- **Shared Packages**: `packages/`
-    - `packages/ui/`: Base UI components (Radix UI + shadcn/ui).
-    - `packages/common/`: Shared React components, hooks, context, Zustand stores.
-        - `packages/common/components/index.ts`: Manages component exports.
-        - `packages/common/hooks/use-payment-subscription.ts`: Handles VT+ subscription logic.
-        - `packages/common/providers/subscription-provider.tsx`: Central provider for subscription state.
-    - `packages/ai/`: AI agent system ("Agentic Graph System").
-        - `README.md` in this folder has a good overview.
-        - Core: `workflow/flow.ts`, `worker/worker.ts` (MCP tools integration removed for optimization).
-        - Supports OpenAI, Anthropic, Google, Groq, Together AI. Config via `packages/ai/.env.example`.
-    - `packages/shared/`: Core types (e.g., `PlanSlug` from `packages/shared/types.ts`), configs, logger, utilities.
-    - `packages/typescript-config/`: Shared TypeScript configurations.
-    - `packages/tailwind-config/`: Shared Tailwind CSS configuration.
-- **Database**: Drizzle ORM with Neon PostgreSQL.
+## Architecture
 
-### Key Technical Decisions & Patterns (from Memory Bank)
+- Turborepo monorepo: `apps/` and `packages/`
+- `@repo/common` - components/hooks, `@repo/shared` - types/utils
+- Use `'use client'` for client components
 
-- **Full-Stack Next.js**: For both frontend and backend APIs.
-- **TypeScript**: For type safety across the project.
-- **Component-Based UI**: React with shadcn/ui.
-- **Utility-First CSS**: Tailwind CSS.
-- **State Management**: Zustand for global state.
-- **Data Fetching/Caching**: React Query (client-side).
-- **Design Patterns**:
-    - Provider Pattern (Theming, React Query, Subscription).
-    - Custom Hooks (e.g., `useSubscriptionAccess`, `use-payment-subscription`).
-    - Server Actions (for Next.js server-side logic from client).
-- **Critical Implementation Paths**:
-    - Authentication flow.
-    - Payment and Subscription flow (VT+).
-    - Chat interface and AI service interaction.
-    - Environment-specific configurations.
+## Domain Knowledge
 
-### Memory Bank System (`memory-bank/` & `.clinerules`)
+- Chat application with AI models (OpenAI, Anthropic, etc.)
+- Subscription tiers: VT_BASE (default) and VT_PLUS
+- MCP integration for external tools
+- Use promptBoost tools to enhance prompt quality
+- You can use playwright MCP tool to test web components integration
 
-- **Purpose**: My primary context retention mechanism. Critical for project continuity.
-- **Core Files**:
-    - `projectbrief.md`: Core requirements and goals.
-    - `productContext.md`: Project rationale, problems solved, UX goals.
-    - `systemPatterns.md`: Architecture, technical decisions, design patterns.
-    - `techContext.md`: Technologies, setup, constraints, dependencies.
-    - `activeContext.md`: Current focus, recent changes, next steps, learnings.
-    - `progress.md`: Completed tasks, current status.
-- **Usage**:
-    - **MUST READ ALL** memory bank files at the start of every task.
-    - Update relevant files after significant changes or when new patterns/insights emerge.
-    - Follow guidelines in `.clinerules` and `USER'S CUSTOM INSTRUCTIONS`.
-    - Adhere to "Memory Bank First", "Iterative Approach", and "Clear Communication" principles.
+## Testing
 
-## 3. Code Style Guidelines
+- Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
+- Every implemented feature should have a test case to maintain quality
+- Every unit test should cover critical paths and edge cases
+- Use `vitest` for testing, with `@testing-library/react` for React components.
+- Run tests regularly to ensure code quality
+- Use `@testing-library/jest-dom/vitest` for custom matchers
+- Use `@testing-library/user-event` for simulating user interactions
+- Use `@testing-library/react` for rendering components in tests
+- Use `@testing-library/jest-dom` for custom matchers in tests
+- Use `@testing-library/react-hooks` for testing custom hooks
+- Use `@testing-library/dom` for DOM-related utilities in tests
 
-Referenced from `AGENT.MD`:
+## Bun
 
-- **Package Manager**: Bun (v1.1.19 or compatible).
-- **Monorepo**: Turborepo (`apps/*`, `packages/*`).
-- **Formatting**: Prettier (config: single quotes, 4-space tabs, 100 char width, semicolons, trailing commas). Run `bun run format`.
-- **TypeScript**: Strict mode enabled. `esModuleInterop: true`, `forceConsistentCasingInFileNames: true`.
-- **Imports**: Use workspace aliases: `@repo/*` (e.g., `@repo/ui`, `@repo/common`) or specific paths for `apps/web` like `@/lib/...`.
-- **Components**: Radix UI + shadcn/ui patterns.
-- **Styling**: Tailwind CSS.
+- Use `bun` instead of `npm` or `yarn`
+- Use `bun` for all package management and script execution
 
-## 4. Testing Instructions
+## UI components
 
-- (Specific testing strategies or commands are not yet detailed. For now, rely on build and lint commands for checks.)
-- `bun run typecheck` (or similar, if defined) should be run after significant code changes.
-- Prefer running single tests for performance during development if applicable.
+- when try to install components, navigatete to ~/Developer/learn-by-doing/vtchat/packages/ui first, then use bunx
+- To install shadcn components, check example command: `npx shadcn@latest add label`
+- Use shadcn/ui components for UI elements
+- Use `@repo/ui` for shared UI components
+- Use lucide icons from `lucide-react`
+- Use Tailwind CSS for styling
+- Use `clsx` for conditional class names
+- Use `tailwind-merge` for merging Tailwind classes
+- Use `framer-motion` for animations
 
-## 5. Repository Etiquette
+## Error Handling
 
-- (Branch naming conventions, merge vs. rebase preferences, PR guidelines are not yet detailed. Follow standard good practices.)
+- Use `try/catch` for async operations
+- Use `console.error` for logging errors
+- Use `toast` from `@repo/ui` for user notifications
+- Use `ErrorBoundary` for catching errors in React components
 
-## 6. Developer Environment Setup
+## Documentation
 
-Referenced from `AGENT.MD` and `memory-bank/techContext.md`:
-
-- **Package Manager**: Ensure Bun v1.1.19 or a compatible version is installed.
-- **Environment Variables**:
-    - Copy `apps/web/.env.example` to `apps/web/.env.local` for the web app (this is the only environment file needed for local development).
-    - Fill in necessary API keys (OpenAI, Anthropic, etc.) and configurations.
-- **Database**: Neon PostgreSQL. Migrations managed by Drizzle Kit (see commands in section 1).
-- **Monorepo Tool**: Turborepo handles task running and build caching.
-
-## 7. Unexpected Behaviors or Warnings
-
-- **TypeScript Path Aliases**: Monitor TypeScript errors in the "Problems" pane in VS Code. Path alias issues (e.g., `@/lib/...` within `packages/*` or incorrect `@repo/*` usage) can sometimes arise and may need manual correction in import statements. `packages/*` should use `@repo/*` or relative paths, not `@/*`.
-- **Environment Variables**: Ensure `NODE_ENV` is correctly set and used for environment-specific logic.
-
-## 8. Other Information to Remember
-
-- **My Memory Reset**: My memory resets between sessions. The Memory Bank and this `CLAUDE.MD` file are the _only_ sources of truth for project history and context. Their accuracy and completeness are paramount.
-- **Current Project State**: Major refactoring tasks (subscription system unification, UI updates, removal of legacy systems) are largely complete. Focus is on VT+ subscriptions.
-- **Key Enums/Types**: `PlanSlug` (from `packages/shared/types.ts`) is used for standardizing subscription plan identifiers.
-- **UI Library**: `shadcn/ui` is the preferred component library.
-- **Theme**: Dark theme is gated for subscribed users. Default is light. Managed by `next-themes` in `apps/web/app/layout.tsx`.
+- Use Markdown files for documentation, those guides with Guides markdown files should be in `docs/guides/`
+- You can search for documentation using `context7` MCP tool
+- You can search the internet using MCP tool `tavily-search`
+- Documentation should be in `docs/` directory
+- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
+- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.

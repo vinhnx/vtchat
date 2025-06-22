@@ -2,70 +2,90 @@
 
 ## Tech Stack & Project Overview
 
-- **Monorepo**: Managed with Turborepo, using `apps/` for applications (mainly Next.js web app in `apps/web`) and `packages/` for shared libraries (`common`, `shared`, `ai`, `ui`, etc.).
-- **Frontend/Backend**: Next.js (App Router, v14+), React, TypeScript.
-- **Styling/UI**: Tailwind CSS, shadcn/ui, Radix UI, Lucide icons, Framer Motion for animation.
-- **State Management**: Zustand.
-- **Database/ORM**: Drizzle ORM with Neon PostgreSQL.
-- **Authentication**: Better-Auth (migration from NextAuth.js in progress).
+- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
+- **Core Technologies**: Next.js (App Router, v14+), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
 - **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
-- **Testing**: Vitest, @testing-library/react, tests in `apps/web/app/tests/`.
-- **Package Manager**: Bun (use `bun` and `bunx` for all scripts and installs).
+- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
 
-## Key Guidelines
+## Package Management
 
-- Use environment variables for all configuration (no hardcoded values).
-- Use enums for string constants and keys.
-- Prefer named exports, PascalCase for components, camelCase for hooks/utils, kebab-case for files.
-- Use shadcn/ui and @repo/ui for UI components, Tailwind for styling.
-- Document changes in `memory-bank/` and keep this file up to date.
+- Use `bun` instead of `npm` for all operations
 
-## Build/Test/Lint Commands
+## Code Style
 
-- **Dev**: `bun dev` (starts turbo dev)
-- **Build**: `bun run build` (turbo build)
-- **Lint**: `bun run lint` (turbo lint)
-- **Format**: `bun run format` (prettier write)
-- **Format Check**: `bun run format:check`
-- **Database**: `cd apps/web && bun run generate` (drizzle-kit)
+- Make sure no string in #codebase, use enum pattern.
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use centralize enum for custom reusable keys.
+- 4-space indentation, single quotes, 100 char line length
+- PascalCase components, camelCase hooks/utils, kebab-case files
+- Named exports preferred over default exports
 
-## Code Style Guidelines
+## Tech Stack
 
-- **Package Manager**: Bun (v1.1.19)
-- **Monorepo**: Turbo with apps/_ and packages/_ structure
-- **Formatting**: Prettier with single quotes, 4-space tabs, 100 char width, semicolons, trailing commas
-- **TypeScript**: Strict mode enabled, ESM interop, force consistent casing
-- **Imports**: Use workspace packages via `@repo/*` or `@vtchat/*`
-- **Components**: Radix UI + shadcn/ui patterns, Tailwind for styling
+- Next.js 14 with App Router, TypeScript, Tailwind CSS
+- Zustand for state, Drizzle ORM for DB, Better Auth for authentication
+- Framer Motion for animations, Radix UI components
+- Shadcn/ui for UI components, Lucide icons, clsx for classnames
+- Payment integration with Creem.io
 
-## Project Structure
+## Architecture
 
-- **Main App**: `apps/web/` (Next.js 15)
-- **Shared Code**: `packages/` (ui, common, ai, shared, typescript-config, tailwind-config)
-- **Database**: Drizzle ORM + Neon PostgreSQL
-- **Auth**: Better-Auth integration
-- **AI**: Multiple providers (OpenAI, Anthropic, Google, Groq)
+- Turborepo monorepo: `apps/` and `packages/`
+- `@repo/common` - components/hooks, `@repo/shared` - types/utils
+- Use `'use client'` for client components
 
-## Memory Bank System
+## Domain Knowledge
 
-- Follow Cline's memory bank patterns in `.clinerules`
-- Read all memory bank files at start of tasks
-- Update `memory-bank/` files when making significant changes
+- Chat application with AI models (OpenAI, Anthropic, etc.)
+- Subscription tiers: VT_BASE (default) and VT_PLUS
+- MCP integration for external tools
+- Use promptBoost tools to enhance prompt quality
+- You can use playwright MCP tool to test web components integration
 
-## AI Agent System Overview
+## Testing
 
-The project includes an "Agentic Graph System" located in `packages/ai/` for building AI agent workflows. Key features and concepts include:
+- Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
+- Every implemented feature should have a test case to maintain quality
+- Every unit test should cover critical paths and edge cases
+- Use `vitest` for testing, with `@testing-library/react` for React components.
+- Run tests regularly to ensure code quality
+- Use `@testing-library/jest-dom/vitest` for custom matchers
+- Use `@testing-library/user-event` for simulating user interactions
+- Use `@testing-library/react` for rendering components in tests
+- Use `@testing-library/jest-dom` for custom matchers in tests
+- Use `@testing-library/react-hooks` for testing custom hooks
+- Use `@testing-library/dom` for DOM-related utilities in tests
 
-- **Graph-Based Workflow Management**: Workflows are structured as graphs of interconnected nodes.
-- **Specialized Node Types**:
-    - **Executor Node**: Handles specific task execution.
-    - **Router Node**: Provides intelligent routing between nodes.
-    - **Memory Node**: Manages state and interaction history.
-    - **Observer Node**: Monitors system behavior and analyzes patterns.
-- **Event-Driven Architecture**: The system uses events for communication and state changes (e.g., `workflow.started`, `node.processing`).
-- **Multiple LLM Provider Support**: Integrates with OpenAI, Anthropic, and Together AI.
-- **Configuration**: Managed via environment variables (see `packages/ai/.env.example`).
-- **Core Components**:
-    - `packages/ai/workflow/flow.ts`: Defines workflow logic.
-    - `packages/ai/worker/worker.ts`: Manages workflow execution.
-    - `packages/ai/tools/mcp.ts`: Handles MCP tool integration.
+## Bun
+
+- Use `bun` instead of `npm` or `yarn`
+- Use `bun` for all package management and script execution
+
+## UI components
+
+- when try to install components, navigatete to ~/Developer/learn-by-doing/vtchat/packages/ui first, then use bunx
+- To install shadcn components, check example command: `npx shadcn@latest add label`
+- Use shadcn/ui components for UI elements
+- Use `@repo/ui` for shared UI components
+- Use lucide icons from `lucide-react`
+- Use Tailwind CSS for styling
+- Use `clsx` for conditional class names
+- Use `tailwind-merge` for merging Tailwind classes
+- Use `framer-motion` for animations
+
+## Error Handling
+
+- Use `try/catch` for async operations
+- Use `console.error` for logging errors
+- Use `toast` from `@repo/ui` for user notifications
+- Use `ErrorBoundary` for catching errors in React components
+
+## Documentation
+
+- Use Markdown files for documentation, those guides with Guides markdown files should be in `docs/guides/`
+- You can search for documentation using `context7` MCP tool
+- You can search the internet using MCP tool `tavily-search`
+- Documentation should be in `docs/` directory
+- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
+- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.

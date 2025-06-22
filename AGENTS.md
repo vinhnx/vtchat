@@ -1,79 +1,91 @@
 # AI Agents System
 
-## Tech Stack & Guidelines (Project Overview)
+## Tech Stack & Project Overview
 
-- **Monorepo**: Turborepo-managed, with `apps/web` (Next.js app) and `packages/` (shared code: `ai`, `common`, `shared`, `ui`, etc.).
-- **Core Technologies**: Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
+- **Core Technologies**: Next.js (App Router, v14+), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
 - **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
 - **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
 
-This document provides an overview of the AI Agent system implemented in the `packages/ai/` directory. The system is designed for building flexible and powerful AI agent workflows using a graph-based architecture.
+## Package Management
 
-## Core Concepts
+- Use `bun` instead of `npm` for all operations
 
-- **Agentic Graph System**: The foundation of the AI capabilities, allowing for complex workflows to be defined and managed as a graph of interconnected nodes.
-- **Workflow Management**:
-    - Workflows are defined in `packages/ai/workflow/flow.ts`.
-    - Execution of these workflows is handled by workers, as seen in `packages/ai/worker/worker.ts` and `packages/ai/worker/use-workflow-worker.ts`.
-    - The system is event-driven, emitting events like `workflow.started`, `workflow.completed`, `node.processing`, etc.
-- **Tool Integration**:
-    - Agents framework ready for future tool integrations (MCP implementation temporarily removed for optimization).
+## Code Style
 
-## Key Components and Features
+- Make sure no string in #codebase, use enum pattern.
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use centralize enum for custom reusable keys.
+- 4-space indentation, single quotes, 100 char line length
+- PascalCase components, camelCase hooks/utils, kebab-case files
+- Named exports preferred over default exports
 
-### 1. Graph-Based Architecture
+## Tech Stack
 
-- Workflows are constructed as a series of nodes, allowing for modular and scalable agent designs.
+- Next.js 14 with App Router, TypeScript, Tailwind CSS
+- Zustand for state, Drizzle ORM for DB, Better Auth for authentication
+- Framer Motion for animations, Radix UI components
+- Shadcn/ui for UI components, Lucide icons, clsx for classnames
+- Payment integration with Creem.io
 
-### 2. Specialized Node Types
+## Architecture
 
-The system defines several types of nodes, each with a specific role in the workflow: - **Executor Node**: Responsible for executing specific tasks or actions. It processes input and generates responses, and can be specialized for different roles within an agent. - **Router Node**: Intelligently routes data or control flow to other appropriate nodes within the graph. It often uses confidence scoring or other logic to make routing decisions. - **Memory Node**: Manages state and interaction history for an agent or workflow. This can include short-term context and long-term knowledge. - **Observer Node**: Monitors the behavior of the workflow and its nodes. It can be used for logging, analysis, performance tracking, and generating insights.
+- Turborepo monorepo: `apps/` and `packages/`
+- `@repo/common` - components/hooks, `@repo/shared` - types/utils
+- Use `'use client'` for client components
 
-### 3. Event-Driven System
+## Domain Knowledge
 
-- The architecture relies on an event system for communication between components and for tracking the state of workflows and nodes.
-- Key events include:
-    - `workflow.started`
-    - `workflow.completed`
-    - `workflow.error`
-    - `node.processing`
-    - `node.processed`
-    - `node.error`
+- Chat application with AI models (OpenAI, Anthropic, etc.)
+- Subscription tiers: VT_BASE (default) and VT_PLUS
+- MCP integration for external tools
+- Use promptBoost tools to enhance prompt quality
+- You can use playwright MCP tool to test web components integration
 
-### 4. LLM Provider Support
+## Testing
 
-- The system is designed to be flexible with Large Language Model (LLM) providers.
-- Currently supports:
-    - OpenAI
-    - Anthropic
-    - Together AI
-- Configuration for these providers (API keys, model names) is managed through environment variables (see `packages/ai/.env.example`).
+- Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
+- Every implemented feature should have a test case to maintain quality
+- Every unit test should cover critical paths and edge cases
+- Use `vitest` for testing, with `@testing-library/react` for React components.
+- Run tests regularly to ensure code quality
+- Use `@testing-library/jest-dom/vitest` for custom matchers
+- Use `@testing-library/user-event` for simulating user interactions
+- Use `@testing-library/react` for rendering components in tests
+- Use `@testing-library/jest-dom` for custom matchers in tests
+- Use `@testing-library/react-hooks` for testing custom hooks
+- Use `@testing-library/dom` for DOM-related utilities in tests
 
-### 5. Workflow Execution
+## Bun
 
-- Workflows are typically initiated and managed by a worker system (`packages/ai/worker/`).
-- The `use-workflow-worker.ts` hook likely provides a way for the frontend or other parts of the application to interact with these AI workflows.
+- Use `bun` instead of `npm` or `yarn`
+- Use `bun` for all package management and script execution
 
-## Configuration
+## UI components
 
-- API keys and model preferences are set in `.env.local` (copied from `packages/ai/.env.example`).
-- Key environment variables include:
-    - `OPENAI_API_KEY`
-    - `OPENAI_MODEL`
-    - `ANTHROPIC_API_KEY`
-    - `ANTHROPIC_MODEL`
-    - `TOGETHER_API_KEY`
-    - `TOGETHER_MODEL`
-    - `TEMPERATURE`
-    - `MAX_TOKENS`
+- when try to install components, navigatete to ~/Developer/learn-by-doing/vtchat/packages/ui first, then use bunx
+- To install shadcn components, check example command: `npx shadcn@latest add label`
+- Use shadcn/ui components for UI elements
+- Use `@repo/ui` for shared UI components
+- Use lucide icons from `lucide-react`
+- Use Tailwind CSS for styling
+- Use `clsx` for conditional class names
+- Use `tailwind-merge` for merging Tailwind classes
+- Use `framer-motion` for animations
 
-## Example Usage
+## Error Handling
 
-- The `packages/ai/README.md` mentions an example `customer-support-workflow.ts` which demonstrates creating a workflow, setting up routing, storing history, and monitoring.
+- Use `try/catch` for async operations
+- Use `console.error` for logging errors
+- Use `toast` from `@repo/ui` for user notifications
+- Use `ErrorBoundary` for catching errors in React components
 
-## Further Exploration
+## Documentation
 
-- For more detailed implementation, refer to the files within the `packages/ai/` directory, particularly:
-    - `packages/ai/README.md`
-    - `packages/ai/workflow/flow.ts`
-    - `packages/ai/worker/worker.ts`
+- Use Markdown files for documentation, those guides with Guides markdown files should be in `docs/guides/`
+- You can search for documentation using `context7` MCP tool
+- You can search the internet using MCP tool `tavily-search`
+- Documentation should be in `docs/` directory
+- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
+- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.
