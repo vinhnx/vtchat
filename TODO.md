@@ -21,9 +21,6 @@ https://page-speed.dev
 https://github.com/e2b-dev/fragments
 
 --
-
-https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
-
 --
 
 https://fly.io/docs/apps/going-to-production/
@@ -52,8 +49,6 @@ remember to publish Google Auth
 --
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
---
-[][monet] <https://ai-sdk.dev/docs/guides/multi-modal-chatbot>
 --
 
 [][monet] RAG <https://ai-sdk.dev/docs/guides/rag-chatbot>

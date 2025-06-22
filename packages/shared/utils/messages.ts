@@ -1,15 +1,17 @@
-import { DocumentAttachment, ThreadItem } from '@repo/shared/types';
+import { DocumentAttachment, ThreadItem, Attachment } from '@repo/shared/types';
 
 export const buildCoreMessagesFromThreadItems = ({
     messages,
     query,
     imageAttachment,
     documentAttachment,
+    attachments,
 }: {
     messages: ThreadItem[];
     query: string;
     imageAttachment?: string;
     documentAttachment?: DocumentAttachment;
+    attachments?: Attachment[];
 }) => {
     const threadMessages = (messages || []).flatMap(item => {
         const content: any[] = [{ type: 'text', text: item.query || '' }];
@@ -26,6 +28,24 @@ export const buildCoreMessagesFromThreadItems = ({
                 type: 'file',
                 data: buffer,
                 mimeType: item.documentAttachment.mimeType,
+            });
+        }
+
+        // Add multi-modal attachments
+        if (item.attachments) {
+            item.attachments.forEach(attachment => {
+                if (attachment.contentType.startsWith('image/')) {
+                    content.push({ type: 'image', image: attachment.url });
+                } else if (attachment.contentType === 'application/pdf') {
+                    // Convert data URL to buffer for PDF
+                    const base64Data = attachment.url.split(',')[1];
+                    const buffer = Buffer.from(base64Data, 'base64');
+                    content.push({
+                        type: 'file',
+                        data: buffer,
+                        mimeType: attachment.contentType,
+                    });
+                }
             });
         }
 
@@ -56,6 +76,24 @@ export const buildCoreMessagesFromThreadItems = ({
             type: 'file',
             data: buffer,
             mimeType: documentAttachment.mimeType,
+        });
+    }
+
+    // Add current multi-modal attachments
+    if (attachments) {
+        attachments.forEach(attachment => {
+            if (attachment.contentType.startsWith('image/')) {
+                currentContent.push({ type: 'image', image: attachment.url });
+            } else if (attachment.contentType === 'application/pdf') {
+                // Convert data URL to buffer for PDF
+                const base64Data = attachment.url.split(',')[1];
+                const buffer = Buffer.from(base64Data, 'base64');
+                currentContent.push({
+                    type: 'file',
+                    data: buffer,
+                    mimeType: attachment.contentType,
+                });
+            }
         });
     }
 

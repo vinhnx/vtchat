@@ -246,9 +246,18 @@ export default function PlusPage() {
                                             (feature, index) => (
                                                 <li key={index} className="flex gap-x-3">
                                                     <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                                    {typeof feature === 'string'
-                                                        ? feature
-                                                        : feature.name}
+                                                    <div className="flex items-center gap-2">
+                                                        <span>
+                                                            {typeof feature === 'string'
+                                                                ? feature
+                                                                : feature.name}
+                                                        </span>
+                                                        {(typeof feature === 'object' && feature.name === 'Multi-Modal Chat') && (
+                                                            <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full">
+                                                                NEW
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </li>
                                             )
                                         )}
@@ -286,6 +295,46 @@ export default function PlusPage() {
                                     </div>
                                 </div>
                             </CardSpotlightPricing>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Multi-Modal Feature Highlight */}
+                <div className="mb-8 mt-12">
+                    <div className="mx-auto max-w-4xl text-center">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
+                            <Sparkles className="h-4 w-4" />
+                            NEW FEATURE
+                        </div>
+                        <TypographyH2 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+                            Multi-Modal AI Conversations
+                        </TypographyH2>
+                        <p className="mt-4 text-lg text-gray-300">
+                            Upload and analyze images and PDFs directly in your conversations. 
+                            Get insights from documents, analyze charts, extract text, and have meaningful discussions about visual content with advanced AI models like GPT-4o, Claude, and Gemini.
+                        </p>
+                        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <div className="rounded-lg bg-gray-800/50 p-4 text-center">
+                                <div className="mx-auto mb-2 h-8 w-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                    <span className="text-blue-400">📷</span>
+                                </div>
+                                <p className="text-sm font-medium text-white">Image Analysis</p>
+                                <p className="text-xs text-gray-400">JPEG, PNG, GIF, WebP</p>
+                            </div>
+                            <div className="rounded-lg bg-gray-800/50 p-4 text-center">
+                                <div className="mx-auto mb-2 h-8 w-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                                    <span className="text-red-400">📄</span>
+                                </div>
+                                <p className="text-sm font-medium text-white">PDF Documents</p>
+                                <p className="text-xs text-gray-400">Full document analysis</p>
+                            </div>
+                            <div className="rounded-lg bg-gray-800/50 p-4 text-center">
+                                <div className="mx-auto mb-2 h-8 w-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                    <span className="text-purple-400">🤖</span>
+                                </div>
+                                <p className="text-sm font-medium text-white">AI-Powered</p>
+                                <p className="text-xs text-gray-400">GPT-4o, Claude, Gemini</p>
+                            </div>
                         </div>
                     </div>
                 </div>

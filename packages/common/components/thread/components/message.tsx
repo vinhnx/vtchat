@@ -6,6 +6,7 @@ import { Button, cn } from '@repo/ui';
 import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';
 type MessageProps = {
@@ -41,6 +42,9 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
             {imageAttachment && <ImageMessage imageAttachment={imageAttachment} />}
             {threadItem.documentAttachment && (
                 <DocumentDisplay documentAttachment={threadItem.documentAttachment} />
+            )}
+            {threadItem.attachments && threadItem.attachments.length > 0 && (
+                <AttachmentDisplay attachments={threadItem.attachments} />
             )}
             <div
                 className={cn(

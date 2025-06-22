@@ -65,6 +65,13 @@ export type DocumentAttachment = {
     fileName: string;
 };
 
+export type Attachment = {
+    url: string;
+    name: string;
+    contentType: string;
+    size?: number;
+};
+
 export type ThreadItem = {
     query: string;
     toolCalls?: Record<string, ToolCall>;
@@ -86,6 +93,8 @@ export type ThreadItem = {
     object?: Record<string, any>;
     imageAttachment?: string;
     documentAttachment?: DocumentAttachment;
+    // Multi-modal attachments (VT+ feature)
+    attachments?: Attachment[];
     // Thinking mode data (VT+ feature) - contains AI reasoning/thoughts
     reasoning?: string;
     // Structured reasoning details from AI SDK (includes text and redacted content)

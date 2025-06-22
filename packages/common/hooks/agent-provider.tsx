@@ -381,6 +381,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             const documentAttachment = formData.get('documentAttachment') as string;
             const documentMimeType = formData.get('documentMimeType') as string;
             const documentFileName = formData.get('documentFileName') as string;
+            const multiModalAttachmentsStr = formData.get('multiModalAttachments') as string;
+            const multiModalAttachments = multiModalAttachmentsStr ? JSON.parse(multiModalAttachmentsStr) : undefined;
 
             const aiThreadItem: ThreadItem = {
                 id: optimisticAiThreadItemId,
@@ -397,6 +399,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                           fileName: documentFileName,
                       }
                     : undefined,
+                attachments: multiModalAttachments,
                 mode,
             };
 
@@ -417,6 +420,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                           fileName: documentFileName,
                       }
                     : undefined,
+                attachments: multiModalAttachments,
             });
 
             if (hasApiKeyForChatMode(mode, isSignedIn)) {

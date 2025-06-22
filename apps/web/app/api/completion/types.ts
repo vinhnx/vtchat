@@ -20,6 +20,15 @@ export const completionRequestSchema = z.object({
             includeThoughts: z.boolean(),
         })
         .optional(),
+    attachments: z
+        .array(
+            z.object({
+                url: z.string(),
+                name: z.string(),
+                contentType: z.string(),
+            })
+        )
+        .optional(),
     apiKeys: z
         .object({
             OPENAI_API_KEY: z.string().optional(),

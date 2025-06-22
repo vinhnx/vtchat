@@ -587,6 +587,49 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Multi-Modal Chat */}
+                        <AccordionItem value="multi-modal-chat">
+                            <AccordionTrigger className="font-medium">
+                                How does multi-modal chat work with images and PDFs?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT+ subscribers can upload and analyze images and PDF documents
+                                    alongside text conversations using advanced AI models:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+
+                                        subscribers with supported AI models
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Supported Models:</strong> GPT-4o, Claude models,
+                                        Gemini models, and other vision-capable models
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Image Support:</strong> JPEG, PNG, GIF, and WebP
+                                        images up to 10MB each
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>PDF Support:</strong> Full PDF document analysis and
+                                        text extraction
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Multiple Files:</strong> Upload up to 5 files per
+                                        conversation
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Smart Model Selection:</strong> Multi-modal upload
+                                        appears only when supported models are selected
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    When using compatible models, look for the "Attach Files" button
+                                    in your chat interface to upload images and PDFs for analysis.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Tool Integration */}
                         <AccordionItem value="tool-integration">
                             <AccordionTrigger className="font-medium">

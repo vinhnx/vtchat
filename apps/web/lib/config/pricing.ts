@@ -99,6 +99,11 @@ export const PRICING_CONFIG = {
                         'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations',
                 },
                 {
+                    name: 'Multi-Modal Chat',
+                    description:
+                        'Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini',
+                },
+                {
                     name: 'Advanced AI Capabilities',
                     description: 'Access to the latest AI features and models',
                 },

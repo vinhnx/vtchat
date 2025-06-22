@@ -3,7 +3,7 @@ import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/c
 import { BYOKValidationDialog } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useApiKeysStore } from '@repo/common/store';
-import { ChatMode, ChatModeConfig, STORAGE_KEYS } from '@repo/shared/config';
+import { ChatMode, ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -30,6 +30,8 @@ import { ChatEditor } from './chat-editor';
 import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
+import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
+import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
 
 export const ChatInput = ({
@@ -89,6 +91,19 @@ export const ChatInput = ({
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const { hasApiKeyForChatMode } = useApiKeysStore();
+    
+    // Multi-modal attachments state
+    const [multiModalAttachments, setMultiModalAttachments] = useState<Array<{
+        url: string;
+        name: string;
+        contentType: string;
+        size?: number;
+    }>>([]);
+
+    const removeMultiModalAttachment = (index: number) => {
+        const newAttachments = multiModalAttachments.filter((_, i) => i !== index);
+        setMultiModalAttachments(newAttachments);
+    };
 
     const handleApiKeySet = () => {
         // Clear the pending message and execute the original send
@@ -152,6 +167,12 @@ export const ChatInput = ({
             formData.append('documentMimeType', documentAttachment?.mimeType);
         documentAttachment?.fileName &&
             formData.append('documentFileName', documentAttachment?.fileName);
+        
+        // Add multi-modal attachments
+        if (multiModalAttachments.length > 0) {
+            formData.append('multiModalAttachments', JSON.stringify(multiModalAttachments));
+        }
+        
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
         console.log('threadItems', threadItems);
@@ -175,6 +196,7 @@ export const ChatInput = ({
         editor.commands.clearContent();
         clearImageAttachment();
         clearDocumentAttachment();
+        setMultiModalAttachments([]);
     };
 
     const renderChatInput = () => (
@@ -210,6 +232,12 @@ export const ChatInput = ({
                                         <ImageAttachment />
                                         <DocumentAttachment />
                                         <StructuredDataDisplay />
+                                        {multiModalAttachments.length > 0 && (
+                                            <MultiModalAttachmentsDisplay
+                                                attachments={multiModalAttachments}
+                                                onRemove={removeMultiModalAttachment}
+                                            />
+                                        )}
                                     </div>
                                     <Flex className="flex w-full flex-row items-end gap-0">
                                         <ChatEditor
@@ -243,15 +271,23 @@ export const ChatInput = ({
                                                             <ChartsButton />
                                                             <DocumentUploadButton />
                                                             <StructuredOutputButton />
-                                                            <ImageUpload
-                                                                id="image-attachment"
-                                                                label="Image"
-                                                                tooltip="Image Attachment"
-                                                                showIcon={true}
-                                                                handleImageUpload={
-                                                                    handleImageUpload
-                                                                }
-                                                            />
+                                                            {supportsMultiModal(chatMode) ? (
+                                                                <MultiModalAttachmentButton
+                                                                    onAttachmentsChange={setMultiModalAttachments}
+                                                                    attachments={multiModalAttachments}
+                                                                    disabled={isGenerating}
+                                                                />
+                                                            ) : (
+                                                                <ImageUpload
+                                                                    id="image-attachment"
+                                                                    label="Image"
+                                                                    tooltip="Image Attachment"
+                                                                    showIcon={true}
+                                                                    handleImageUpload={
+                                                                        handleImageUpload
+                                                                    }
+                                                                />
+                                                            )}
                                                         </>
                                                     )}
                                             </Flex>

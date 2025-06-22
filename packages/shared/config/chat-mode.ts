@@ -38,6 +38,7 @@ export const ChatModeConfig: Record<
     {
         webSearch: boolean;
         imageUpload: boolean;
+        multiModal: boolean;
         retry: boolean;
         isNew?: boolean;
         isAuthRequired?: boolean;
@@ -49,6 +50,7 @@ export const ChatModeConfig: Record<
     [ChatMode.Deep]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: false,
         isAuthRequired: true,
         requiredFeature: FeatureSlug.DEEP_RESEARCH,
@@ -57,6 +59,7 @@ export const ChatModeConfig: Record<
     [ChatMode.Pro]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: false,
         isAuthRequired: true,
         requiredFeature: FeatureSlug.PRO_SEARCH,
@@ -65,6 +68,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GPT_4_1]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -73,6 +77,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GPT_4_1_Mini]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -80,6 +85,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GPT_4_1_Nano]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -87,6 +93,7 @@ export const ChatModeConfig: Record<
     [ChatMode.O3]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -95,6 +102,7 @@ export const ChatModeConfig: Record<
     [ChatMode.O3_Mini]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: false,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -103,6 +111,7 @@ export const ChatModeConfig: Record<
     [ChatMode.O4_Mini]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -110,12 +119,14 @@ export const ChatModeConfig: Record<
     [ChatMode.GPT_4o_Mini]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
     },
     [ChatMode.GPT_4o]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
         requiredPlan: PlanSlug.VT_PLUS,
@@ -123,6 +134,7 @@ export const ChatModeConfig: Record<
     [ChatMode.CLAUDE_4_SONNET]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
         requiredPlan: PlanSlug.VT_PLUS,
@@ -130,6 +142,7 @@ export const ChatModeConfig: Record<
     [ChatMode.CLAUDE_4_OPUS]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
         requiredPlan: PlanSlug.VT_PLUS,
@@ -137,12 +150,14 @@ export const ChatModeConfig: Record<
     [ChatMode.GEMINI_2_5_PRO]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
     },
     [ChatMode.GEMINI_2_5_FLASH]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -150,6 +165,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GEMINI_2_5_FLASH_LITE]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isNew: true,
         isAuthRequired: true,
@@ -157,18 +173,21 @@ export const ChatModeConfig: Record<
     [ChatMode.GEMINI_2_0_FLASH]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
     },
     [ChatMode.GEMINI_2_0_FLASH_LITE]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: true,
         retry: true,
         isAuthRequired: true,
     },
     [ChatMode.DEEPSEEK_R1]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         requiredPlan: PlanSlug.VT_PLUS,
@@ -176,6 +195,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GROK_3]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -184,6 +204,7 @@ export const ChatModeConfig: Record<
     [ChatMode.GROK_3_MINI]: {
         webSearch: true,
         imageUpload: true,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -193,6 +214,7 @@ export const ChatModeConfig: Record<
     [ChatMode.DEEPSEEK_V3_0324_FREE]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -200,6 +222,7 @@ export const ChatModeConfig: Record<
     [ChatMode.DEEPSEEK_V3_0324]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -208,6 +231,7 @@ export const ChatModeConfig: Record<
     [ChatMode.DEEPSEEK_R1_FREE]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -215,6 +239,7 @@ export const ChatModeConfig: Record<
     [ChatMode.DEEPSEEK_R1_0528_FREE]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -222,6 +247,7 @@ export const ChatModeConfig: Record<
     [ChatMode.QWEN3_235B_A22B]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -230,6 +256,7 @@ export const ChatModeConfig: Record<
     [ChatMode.QWEN3_32B]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -238,6 +265,7 @@ export const ChatModeConfig: Record<
     [ChatMode.MISTRAL_NEMO]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -246,6 +274,7 @@ export const ChatModeConfig: Record<
     [ChatMode.QWEN3_14B_FREE]: {
         webSearch: true,
         imageUpload: false,
+        multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
@@ -329,6 +358,13 @@ export function getChatModeUpgradeRequirements(mode: ChatMode): {
         requiredFeature: config.requiredFeature,
         requiredPlan: config.requiredPlan,
     };
+}
+
+/**
+ * Check if a chat mode supports multi-modal features (images/PDFs)
+ */
+export function supportsMultiModal(mode: ChatMode): boolean {
+    return ChatModeConfig[mode]?.multiModal || false;
 }
 
 export const getChatModeName = (mode: ChatMode) => {
