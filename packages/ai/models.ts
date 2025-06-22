@@ -65,13 +65,6 @@ export const models: Model[] = [
         contextWindow: 1_047_576,
     },
     {
-        id: ModelEnum.GPT_4o,
-        name: 'GPT-4o',
-        provider: 'openai',
-        maxTokens: 16_384,
-        contextWindow: 128_000,
-    },
-    {
         id: ModelEnum.O3,
         name: 'o3',
         provider: 'openai',
