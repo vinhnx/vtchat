@@ -59,7 +59,10 @@
       "name": "@vtchat/web",
       "version": "0.1.0",
       "dependencies": {
+        "@ai-sdk/openai": "^1.3.22",
+        "@ai-sdk/react": "^1.2.12",
         "@electric-sql/pglite": "0.2.13",
+        "@google/generative-ai": "^0.24.1",
         "@neondatabase/serverless": "^1.0.1",
         "@radix-ui/react-slot": "^1.2.3",
         "@repo/ai": "*",

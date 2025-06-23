@@ -34,6 +34,7 @@ export enum FeatureSlug {
     GEMINI_EXPLICIT_CACHING = 'gemini_explicit_caching',
     CHART_VISUALIZATION = 'chart_visualization',
     MULTI_MODAL_CHAT = 'multi_modal_chat',
+    RAG = 'rag',
 }
 
 // Plan configuration interface
@@ -95,6 +96,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.GEMINI_EXPLICIT_CACHING,
             FeatureSlug.CHART_VISUALIZATION,
             FeatureSlug.MULTI_MODAL_CHAT,
+            FeatureSlug.RAG,
         ],
     },
 };
@@ -198,9 +200,15 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
     },
     [FeatureSlug.MULTI_MODAL_CHAT]: {
         slug: FeatureSlug.MULTI_MODAL_CHAT,
-        name: 'c',
+        name: 'Multi-Modal Chat',
         description:
             'Upload and analyze images and PDF documents alongside text conversations using advanced AI models',
+    },
+    [FeatureSlug.RAG]: {
+        slug: FeatureSlug.RAG,
+        name: 'RAG (Retrieval-Augmented Generation)',
+        description:
+            'Personal knowledge base with intelligent information storage and retrieval capabilities',
     },
 };
 

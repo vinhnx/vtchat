@@ -20,6 +20,10 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
     Label,
     Skeleton,
     Slider,
@@ -34,9 +38,12 @@ import {
     BarChart3,
     Brain,
     Check,
+    ChevronDown,
     Crown,
+    Database,
     FileText,
     Lock,
+    Settings,
     Sparkles,
     Zap,
     CreditCard,
@@ -45,6 +52,8 @@ import {
     MessageSquare,
     Palette,
 } from 'lucide-react';
+import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
+import { ModelEnum, models } from '@repo/ai/models';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
 
@@ -67,6 +76,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const setThinkingMode = useAppStore(state => state.setThinkingMode);
     const geminiCaching = useAppStore(state => state.geminiCaching);
     const setGeminiCaching = useAppStore(state => state.setGeminiCaching);
+    const embeddingModel = useAppStore(state => state.embeddingModel);
+    const setEmbeddingModel = useAppStore(state => state.setEmbeddingModel);
+    const ragChatModel = useAppStore(state => state.ragChatModel);
+    const setRagChatModel = useAppStore(state => state.setRagChatModel);
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
@@ -504,6 +517,125 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     </motion.div>
                                 )}
                             </AnimatePresence>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* RAG Embedding Model Selection */}
+                {isVtPlus && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                                <Database className="h-5 w-5" />
+                                RAG Embedding Model
+                            </CardTitle>
+                            <CardDescription>
+                                Choose which AI model to use for generating embeddings in your RAG knowledge base.
+                                Different models may provide varying quality and performance characteristics.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <div className="text-foreground text-sm font-medium">
+                                            Embedding Provider
+                                        </div>
+                                        <div className="text-muted-foreground text-xs">
+                                            {EMBEDDING_MODEL_CONFIG[embeddingModel].description}
+                                        </div>
+                                    </div>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" className="min-w-[120px] justify-between z-50">
+                                                {EMBEDDING_MODEL_CONFIG[embeddingModel].name}
+                                                <ChevronDown className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="z-[100]">
+                                            {Object.entries(EMBEDDING_MODEL_CONFIG).map(([key, config]) => (
+                                                <DropdownMenuItem
+                                                    key={key}
+                                                    onClick={() => setEmbeddingModel(key as any)}
+                                                    className={embeddingModel === key ? 'bg-accent' : ''}
+                                                >
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{config.name}</span>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {config.provider} • {config.dimensions}D
+                                                        </span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* RAG Chat Model Selection */}
+                {isVtPlus && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                                <Settings className="h-5 w-5" />
+                                RAG Chat Model
+                            </CardTitle>
+                            <CardDescription>
+                                Choose which AI model to use for conversations in your RAG knowledge chat.
+                                Different models may provide varying quality, speed, and capabilities.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <div className="text-foreground text-sm font-medium">
+                                            Chat Model
+                                        </div>
+                                        <div className="text-muted-foreground text-xs">
+                                            {models.find(m => m.id === ragChatModel)?.name || 'Unknown Model'}
+                                        </div>
+                                    </div>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" className="min-w-[140px] justify-between z-50">
+                                                {models.find(m => m.id === ragChatModel)?.name || 'Select Model'}
+                                                <ChevronDown className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="z-[100]">
+                                            {models.filter(model => 
+                                                // Filter to show commonly used models for RAG
+                                                [
+                                                    ModelEnum.GPT_4o,
+                                                    ModelEnum.GPT_4o_Mini,
+                                                    ModelEnum.CLAUDE_4_SONNET,
+                                                    ModelEnum.CLAUDE_4_OPUS,
+                                                    ModelEnum.GEMINI_2_5_PRO,
+                                                    ModelEnum.GEMINI_2_5_FLASH,
+                                                    ModelEnum.GEMINI_2_0_FLASH
+                                                ].includes(model.id)
+                                            ).map((model) => (
+                                                <DropdownMenuItem
+                                                    key={`${model.provider}-${model.id}`}
+                                                    onClick={() => setRagChatModel(model.id)}
+                                                    className={ragChatModel === model.id ? 'bg-accent' : ''}
+                                                >
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{model.name}</span>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {model.provider} • {model.contextWindow} tokens
+                                                        </span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 )}

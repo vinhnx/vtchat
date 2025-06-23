@@ -1,6 +1,19 @@
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, json, pgTable, text, timestamp, uuid, varchar, index, customType } from 'drizzle-orm/pg-core';
+
+// Custom vector type for pgvector
+const vector = customType<{ data: number[]; notNull: false; default: false }>({
+    dataType(config) {
+        return `vector(${config?.dimensions ?? 768})`;
+    },
+    toDriver(value: number[]) {
+        return `[${value.join(',')}]`;
+    },
+    fromDriver(value: string) {
+        return value.slice(1, -1).split(',').map(Number);
+    },
+});
 
 // Users table for Better Auth
 export const users = pgTable('users', {
@@ -87,6 +100,36 @@ export const feedback = pgTable('feedback', {
     createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+// Resources table for RAG knowledge base
+export const resources = pgTable('resources', {
+    id: varchar('id', { length: 191 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    content: text('content').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Embeddings table for RAG vector search
+export const embeddings = pgTable(
+    'embeddings',
+    {
+        id: varchar('id', { length: 191 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+        resourceId: varchar('resource_id', { length: 191 })
+            .notNull()
+            .references(() => resources.id, { onDelete: 'cascade' }),
+        content: text('content').notNull(),
+        embedding: vector('embedding', { dimensions: 768 }).notNull(), // Default to 768 for text-embedding-004
+    },
+    (table) => ({
+        embeddingIndex: index('embedding_index').using(
+            'hnsw',
+            table.embedding.op('vector_cosine_ops'),
+        ),
+    }),
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
@@ -99,3 +142,7 @@ export type UserSubscription = typeof userSubscriptions.$inferSelect;
 export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
 export type Feedback = typeof feedback.$inferSelect;
 export type NewFeedback = typeof feedback.$inferInsert;
+export type Resource = typeof resources.$inferSelect;
+export type NewResource = typeof resources.$inferInsert;
+export type Embedding = typeof embeddings.$inferSelect;
+export type NewEmbedding = typeof embeddings.$inferInsert;

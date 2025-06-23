@@ -630,6 +630,41 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* RAG Knowledge Chat */}
+                        <AccordionItem value="rag-knowledge-chat">
+                            <AccordionTrigger className="font-medium">
+                                What is RAG Knowledge Chat and how does it work?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you build and query your personal knowledge base using Retrieval-Augmented Generation (RAG):
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with AI models that support tool calling
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Personal Knowledge Base:</strong> Store documents, notes, and information for intelligent conversational access
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Smart Storage:</strong> Information is automatically chunked, embedded, and stored in a vector database
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Intelligent Retrieval:</strong> AI searches your knowledge base using semantic similarity to find relevant information
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Natural Interaction:</strong> Simply share information or ask questions in natural language
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Privacy-First:</strong> Your knowledge base is private and secure, tied to your account only
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Access RAG Chat from the sidebar (VT+ users) and start building your knowledge base by sharing information or asking questions about stored content.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Tool Integration */}
                         <AccordionItem value="tool-integration">
                             <AccordionTrigger className="font-medium">

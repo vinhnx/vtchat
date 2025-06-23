@@ -108,6 +108,11 @@ export const PRICING_CONFIG = {
                     description: 'Access to the latest AI features and models',
                 },
                 {
+                    name: 'RAG Knowledge Chat',
+                    description:
+                        'Build and query your personal knowledge base with Retrieval-Augmented Generation (RAG). Store documents and information for intelligent conversational access',
+                },
+                {
                     name: 'More features coming soon',
                     description: 'Continuous improvements and new additions',
                 },

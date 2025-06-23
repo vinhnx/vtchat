@@ -31,6 +31,7 @@ import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
 import { UserProfileSettings } from './user-profile-settings';
 
+
 export const SettingsModal = () => {
     const isSettingsOpen = useAppStore(state => state.isSettingsOpen);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
@@ -541,6 +542,7 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                     </div>
                 </CardContent>
             </Card>
+
 
             {/* Custom Instructions Section */}
             <Card>

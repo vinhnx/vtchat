@@ -2,6 +2,7 @@
 import { HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { useCreemSubscription, useLogout } from '@repo/common/hooks';
+import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -24,6 +25,7 @@ import { motion } from 'framer-motion';
 import {
     ChevronsUpDown,
     Command,
+    Database,
     ExternalLink,
     FileText,
     HelpCircle,
@@ -61,6 +63,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
+    const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
     const { logout, isLoggingOut } = useLogout();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
@@ -262,6 +265,47 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     K
                                 </Badge>
                             </div>
+                        )}
+                    </Button>
+
+                    {/* RAG Knowledge Chat Button - Plus Feature */}
+                    <Button
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        variant="ghost"
+                        rounded="lg"
+                        tooltip={isSidebarOpen ? undefined : 'RAG Knowledge Chat (Plus Feature)'}
+                        tooltipSide="right"
+                        className={cn(
+                            'relative transition-all duration-200',
+                            isSidebarOpen
+                                ? 'text-muted-foreground hover:text-foreground hover:bg-accent w-full justify-start'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        )}
+                        onClick={() => {
+                            push('/rag');
+                            // Close mobile drawer if open
+                            if (forceMobile) {
+                                setIsMobileSidebarOpen(false);
+                            }
+                        }}
+                    >
+                        <Database
+                            size={16}
+                            strokeWidth={2}
+                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                        />
+                        {isSidebarOpen && (
+                            <span className="flex items-center gap-2">
+                                RAG Chat
+                                {!isPlusFromGlobal && (
+                                    <Badge
+                                        variant="secondary" 
+                                        className="bg-[#BFB38F]/20 text-[#BFB38F] text-[10px] px-1.5 py-0.5"
+                                    >
+                                        Plus
+                                    </Badge>
+                                )}
+                            </span>
                         )}
                     </Button>
                 </Flex>

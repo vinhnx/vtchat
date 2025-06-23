@@ -9,6 +9,8 @@ import {
     mergeWithPlusDefaults,
     PlusDefaultSettings,
 } from '@repo/shared/utils/plus-defaults';
+import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
+import { ModelEnum } from '@repo/ai/models';
 
 export const SETTING_TABS = {
     API_KEYS: 'api-keys',
@@ -55,6 +57,8 @@ type State = {
         ttlSeconds: number;
         maxCaches: number;
     };
+    embeddingModel: EmbeddingModel;
+    ragChatModel: ModelEnum;
     // Customer portal state
     portalState: {
         isOpen: boolean;
@@ -83,6 +87,8 @@ type Actions = {
     setShowSuggestions: (show: boolean) => void;
     setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
     setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
+    setEmbeddingModel: (model: EmbeddingModel) => void;
+    setRagChatModel: (model: ModelEnum) => void;
     // Plus user settings actions
     applyPlusDefaults: (plan: PlanSlug, preserveUserChanges?: boolean) => void;
     initializeSettingsForPlan: (plan: PlanSlug) => void;
@@ -141,6 +147,8 @@ export const useAppStore = create<State & Actions>()(
                 showSuggestions: false,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
+                embeddingModel: DEFAULT_EMBEDDING_MODEL,
+                ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
                 sideDrawer: {
                     open: false,
                     badge: undefined,
@@ -263,6 +271,14 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
+                setEmbeddingModel: (model: EmbeddingModel) => {
+                    set({ embeddingModel: model });
+                },
+
+                setRagChatModel: (model: ModelEnum) => {
+                    set({ ragChatModel: model });
+                },
+
                 applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
                     set(state => {
                         const currentSettings: PlusDefaultSettings = {
@@ -308,6 +324,8 @@ export const useAppStore = create<State & Actions>()(
                         state.showSuggestions = false;
                         state.thinkingMode = baseDefaults.thinkingMode;
                         state.geminiCaching = baseDefaults.geminiCaching;
+                        state.embeddingModel = DEFAULT_EMBEDDING_MODEL;
+                        state.ragChatModel = ModelEnum.GEMINI_2_5_FLASH;
                         // Reset UI state to defaults
                         state.isSettingsOpen = false;
                         state.settingTab = SETTING_TABS.PROFILE;
@@ -359,6 +377,8 @@ export const useAppStore = create<State & Actions>()(
                 showSuggestions: state.showSuggestions,
                 thinkingMode: state.thinkingMode,
                 geminiCaching: state.geminiCaching,
+                embeddingModel: state.embeddingModel,
+                ragChatModel: state.ragChatModel,
             }),
         }
     )

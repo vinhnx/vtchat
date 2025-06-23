@@ -85,6 +85,13 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations.',
         enabled: true,
     },
+    [FeatureSlug.RAG]: {
+        id: FeatureSlug.RAG,
+        name: 'RAG (Retrieval-Augmented Generation)',
+        description:
+            'Personal knowledge base with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
+        enabled: true,
+    },
 } as const;
 
 /**
@@ -192,6 +199,13 @@ export const VTPlusAccess = {
      */
     hasChartVisualization: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.CHART_VISUALIZATION);
+    },
+
+    /**
+     * Check if user has access to RAG
+     */
+    hasRAG: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
     },
 
     /**

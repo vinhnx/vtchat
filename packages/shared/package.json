@@ -6,6 +6,7 @@
         "./config": "./config/index.ts",
         "./config/payment": "./config/payment.ts",
         "./config/vt-plus-features": "./config/vt-plus-features.ts",
+        "./config/embedding-models": "./config/embedding-models.ts",
         "./constants": "./constants/index.ts",
         "./constants/routes": "./constants/routes.ts",
         "./constants/document-upload": "./constants/document-upload.ts",
