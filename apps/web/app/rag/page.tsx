@@ -4,7 +4,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { RAGChatbot } from '../../components/rag-chatbot';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@repo/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '@repo/ui';
 import { Database, Lock, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
@@ -103,14 +103,21 @@ export default function RAGPage() {
 
     // Show RAG chatbot for plus subscribers
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="mb-8 text-center">
-                <h1 className="text-3xl font-bold mb-2">RAG Knowledge Chat</h1>
-                <p className="text-muted-foreground">
-                    Build and query your personal knowledge base with AI
-                </p>
+        <div className="h-screen flex flex-col overflow-hidden">
+            <div className="container mx-auto px-4 py-8 flex-1 flex flex-col min-h-0">
+                <div className="mb-6 flex-shrink-0">
+                    <h1 className="text-2xl font-bold flex items-center gap-2">
+                        RAG Knowledge Chat
+                        <Badge variant="secondary">Plus Feature</Badge>
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                        Build and query your personal knowledge base with AI
+                    </p>
+                </div>
+                <div className="flex-1 min-h-0">
+                    <RAGChatbot />
+                </div>
             </div>
-            <RAGChatbot />
         </div>
     );
 }

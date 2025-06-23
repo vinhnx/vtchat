@@ -72,7 +72,12 @@ export async function POST(req: Request) {
             When users ask questions:
             - Use the getInformation tool to search your knowledge base first
             - If relevant information is found, use it to answer the question
-            - If no relevant information is found, respond "I don't have information about that in your knowledge base."
+            - If no relevant information is found, respond "I don't have information about that in your knowledge base. Would you like me to add this information so I can help you with similar questions in the future?"
+
+            Be proactive about building the knowledge base:
+            - When users mention facts, preferences, or experiences that aren't stored, suggest adding them by saying "This seems like useful information. Should I add this to your knowledge base for future reference?"
+            - When users share stories, insights, or knowledge during conversation, offer to store them
+            - Help users build a comprehensive personal knowledge repository
 
             Important: Do not repeatedly call the same tools. After storing information with addResource, simply confirm you've saved it. After retrieving information with getInformation, use what you found to answer directly.`,
             messages,

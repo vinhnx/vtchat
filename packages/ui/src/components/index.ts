@@ -33,6 +33,7 @@ export * from './pagination';
 export * from './popover';
 export * from './progress';
 export * from './radio-group';
+export * from './scroll-area';
 export * from './separator';
 export * from './sheet';
 export * from './skeleton';

@@ -52,10 +52,11 @@ import {
     MessageSquare,
     Palette,
 } from 'lucide-react';
-import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
+import { EMBEDDING_MODEL_CONFIG, DEFAULT_EMBEDDING_MODEL } from '@repo/shared/config/embedding-models';
 import { ModelEnum, models } from '@repo/ai/models';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
+import { Combobox } from './combobox';
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -80,6 +81,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const setEmbeddingModel = useAppStore(state => state.setEmbeddingModel);
     const ragChatModel = useAppStore(state => state.ragChatModel);
     const setRagChatModel = useAppStore(state => state.setRagChatModel);
+
+    // Ensure embeddingModel is valid, reset to default if not
+    const safeEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel] ? embeddingModel : DEFAULT_EMBEDDING_MODEL;
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
@@ -536,39 +540,27 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         </CardHeader>
                         <CardContent>
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
-                                <div className="flex items-center justify-between">
+                                <div className="space-y-3">
                                     <div className="space-y-1">
                                         <div className="text-foreground text-sm font-medium">
                                             Embedding Provider
                                         </div>
                                         <div className="text-muted-foreground text-xs">
-                                            {EMBEDDING_MODEL_CONFIG[embeddingModel].description}
+                                            {EMBEDDING_MODEL_CONFIG[safeEmbeddingModel].description}
                                         </div>
                                     </div>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" className="min-w-[120px] justify-between z-50">
-                                                {EMBEDDING_MODEL_CONFIG[embeddingModel].name}
-                                                <ChevronDown className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className="z-[100]">
-                                            {Object.entries(EMBEDDING_MODEL_CONFIG).map(([key, config]) => (
-                                                <DropdownMenuItem
-                                                    key={key}
-                                                    onClick={() => setEmbeddingModel(key as any)}
-                                                    className={embeddingModel === key ? 'bg-accent' : ''}
-                                                >
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium">{config.name}</span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {config.provider} • {config.dimensions}D
-                                                        </span>
-                                                    </div>
-                                                </DropdownMenuItem>
-                                            ))}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <Combobox
+                                        options={Object.entries(EMBEDDING_MODEL_CONFIG).map(([key, config]) => ({
+                                            value: key,
+                                            label: config.name,
+                                            description: `${config.provider} • ${config.dimensions}D`,
+                                        }))}
+                                        value={safeEmbeddingModel}
+                                        onValueChange={(value) => setEmbeddingModel(value as any)}
+                                        placeholder="Select embedding model..."
+                                        searchPlaceholder="Search models..."
+                                        className="w-full"
+                                    />
                                 </div>
                             </div>
                         </CardContent>
@@ -590,7 +582,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         </CardHeader>
                         <CardContent>
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
-                                <div className="flex items-center justify-between">
+                                <div className="space-y-3">
                                     <div className="space-y-1">
                                         <div className="text-foreground text-sm font-medium">
                                             Chat Model
@@ -599,41 +591,29 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             {models.find(m => m.id === ragChatModel)?.name || 'Unknown Model'}
                                         </div>
                                     </div>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" className="min-w-[140px] justify-between z-50">
-                                                {models.find(m => m.id === ragChatModel)?.name || 'Select Model'}
-                                                <ChevronDown className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className="z-[100]">
-                                            {models.filter(model => 
-                                                // Filter to show commonly used models for RAG
-                                                [
-                                                    ModelEnum.GPT_4o,
-                                                    ModelEnum.GPT_4o_Mini,
-                                                    ModelEnum.CLAUDE_4_SONNET,
-                                                    ModelEnum.CLAUDE_4_OPUS,
-                                                    ModelEnum.GEMINI_2_5_PRO,
-                                                    ModelEnum.GEMINI_2_5_FLASH,
-                                                    ModelEnum.GEMINI_2_0_FLASH
-                                                ].includes(model.id)
-                                            ).map((model) => (
-                                                <DropdownMenuItem
-                                                    key={`${model.provider}-${model.id}`}
-                                                    onClick={() => setRagChatModel(model.id)}
-                                                    className={ragChatModel === model.id ? 'bg-accent' : ''}
-                                                >
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium">{model.name}</span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {model.provider} • {model.contextWindow} tokens
-                                                        </span>
-                                                    </div>
-                                                </DropdownMenuItem>
-                                            ))}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <Combobox
+                                        options={models.filter(model => 
+                                            // Filter to show commonly used models for RAG
+                                            [
+                                                ModelEnum.GPT_4o,
+                                                ModelEnum.GPT_4o_Mini,
+                                                ModelEnum.CLAUDE_4_SONNET,
+                                                ModelEnum.CLAUDE_4_OPUS,
+                                                ModelEnum.GEMINI_2_5_PRO,
+                                                ModelEnum.GEMINI_2_5_FLASH,
+                                                ModelEnum.GEMINI_2_0_FLASH
+                                            ].includes(model.id)
+                                        ).map((model) => ({
+                                            value: model.id,
+                                            label: model.name,
+                                            description: `${model.provider} • ${model.contextWindow} tokens`,
+                                        }))}
+                                        value={ragChatModel}
+                                        onValueChange={(value) => setRagChatModel(value as ModelEnum)}
+                                        placeholder="Select chat model..."
+                                        searchPlaceholder="Search models..."
+                                        className="w-full"
+                                    />
                                 </div>
                             </div>
                         </CardContent>

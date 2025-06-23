@@ -139,10 +139,8 @@ export function ChatModeButton() {
 
             {/* Gated Feature Alert Modal */}
             <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
-                <DialogContent
-                    ariaTitle={showGateAlert?.title || 'Upgrade Required'}
-                    className="mx-4 max-w-md rounded-xl"
-                >
+                <DialogContent className="mx-4 max-w-md rounded-xl">
+                    <DialogTitle className="sr-only">{showGateAlert?.title || 'Upgrade Required'}</DialogTitle>
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
                             <ArrowUp size={24} className="text-purple-600 dark:text-purple-400" />
@@ -463,7 +461,7 @@ export function BYOKSetupModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="mx-4 max-w-md rounded-xl" ariaTitle="Setup API Key Required">
+            <DialogContent className="mx-4 max-w-md rounded-xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <BYOKIcon />

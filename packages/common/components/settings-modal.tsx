@@ -14,6 +14,7 @@ import {
     cn,
     Dialog,
     DialogContent,
+    DialogTitle,
     Input,
     TypographyH2,
     TypographyH3,
@@ -105,9 +106,9 @@ export const SettingsModal = () => {
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
             <DialogContent
-                ariaTitle="Settings"
                 className="mx-4 h-full max-h-[700px] !max-w-[900px] max-w-[calc(100vw-2rem)] overflow-x-hidden rounded-xl p-0 md:mx-auto md:max-w-[900px]"
             >
+                <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     ref={scrollRef}
                     className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden"
