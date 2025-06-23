@@ -61,7 +61,7 @@ export default function RAGPage() {
                             </div>
                             <CardTitle className="flex items-center justify-center gap-2">
                                 <Database className="h-5 w-5" />
-                                RAG Knowledge Chat
+                                Personal AI Assistant with Memory
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -107,7 +107,7 @@ export default function RAGPage() {
             <div className="container mx-auto px-4 py-8 flex-1 flex flex-col min-h-0">
                 <div className="mb-6 flex-shrink-0">
                     <h1 className="text-2xl font-bold flex items-center gap-2">
-                        RAG Knowledge Chat
+                        Personal AI Assistant with Memory
                         <Badge variant="secondary">VT+</Badge>
                     </h1>
                     <p className="text-sm text-muted-foreground">

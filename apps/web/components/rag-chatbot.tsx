@@ -43,7 +43,8 @@ export function RAGChatbot() {
     const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const embeddingModel = useAppStore(state => state.embeddingModel);
     const ragChatModel = useAppStore(state => state.ragChatModel);
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const profile = useAppStore(state => state.profile);
+     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
@@ -53,21 +54,22 @@ export function RAGChatbot() {
     
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    
-    // Track if we're currently processing to avoid duplicate indicators
-    const isProcessing = isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
         api: '/api/chat/rag',
         maxSteps: 3,
         body: {
-            apiKeys: getAllKeys(),
-            embeddingModel,
-            ragChatModel,
-        },
-    });
+        apiKeys: getAllKeys(),
+        embeddingModel,
+        ragChatModel,
+            profile,
+         },
+         });
 
-    const fetchKnowledgeBase = async () => {
+         // Track if we're currently processing to avoid duplicate indicators
+     const isProcessing = isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
+
+     const fetchKnowledgeBase = async () => {
         try {
             const response = await fetch('/api/rag/knowledge');
             if (response.ok) {
@@ -132,8 +134,8 @@ export function RAGChatbot() {
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {
-        scrollToBottom();
-    }, [messages, isProcessing]);
+    scrollToBottom();
+    }, [messages, isLoading]);
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
@@ -148,7 +150,7 @@ export function RAGChatbot() {
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-12 text-center">
                                 <h3 className="text-foreground mb-2 text-xl font-semibold">
-                                    RAG Knowledge Chat
+                                Personal AI Assistant with Memory
                                 </h3>
                                 <p className="mx-auto mb-6 max-w-md text-sm">
                                     Build your personal AI assistant with your own knowledge. Store
@@ -199,7 +201,7 @@ export function RAGChatbot() {
                                         className="h-8 w-8 shrink-0"
                                     />
                                 ) : (
-                                    <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full overflow-hidden">
+                                    <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded overflow-hidden" style={{borderRadius: '2px'}}>
                                         <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                             <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
                                             <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
@@ -236,7 +238,7 @@ export function RAGChatbot() {
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full overflow-hidden">
+                                <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded overflow-hidden" style={{borderRadius: '2px'}}>
                                     <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
                                         <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
@@ -318,7 +320,7 @@ export function RAGChatbot() {
                                             <DialogHeader>
                                                 <DialogTitle>Knowledge Base ({knowledgeBase.length} items)</DialogTitle>
                                                 <DialogDescription>
-                                                    Your personal knowledge stored for RAG retrieval
+                                                Your personal knowledge stored for AI assistance
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <ScrollArea className="max-h-96">

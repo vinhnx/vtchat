@@ -296,7 +296,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         />
                         {isSidebarOpen && (
                             <span className="flex items-center gap-2">
-                                RAG Chat
+                                AI Assistant
                                 {!isPlusFromGlobal && (
                                     <Badge
                                         variant="secondary"

@@ -633,21 +633,21 @@ function FAQs() {
                         {/* RAG Getting Started */}
                         <AccordionItem value="rag-getting-started">
                             <AccordionTrigger className="font-medium">
-                                How do I get started with RAG Knowledge Chat?
+                                How do I get started with Personal AI Assistant with Memory?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Getting started with RAG Knowledge Chat is simple! Here's how to build your personal AI assistant:
+                                    Getting started with Personal AI Assistant with Memory is simple! Here's how to build your personal AI assistant:
                                 </p>
                                 <ol className="mt-4 list-outside list-decimal space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Get VT+ subscription:</strong> RAG is exclusive to VT+ users for enhanced privacy and features
+                                        <strong>Get VT+ subscription:</strong> Personal AI Assistant with Memory is exclusive to VT+ users for enhanced privacy and features
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Set up API keys:</strong> Add your Google Gemini API key in Settings → API Keys (required for embeddings)
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Access RAG Chat:</strong> Click "RAG Knowledge Chat" in the sidebar navigation
+                                        <strong>Access AI Assistant:</strong> Click "AI Assistant" in the sidebar navigation
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Start sharing information:</strong> Tell the AI about yourself, your work, preferences, or important facts
@@ -680,7 +680,7 @@ function FAQs() {
                         {/* RAG Knowledge Chat */}
                         <AccordionItem value="rag-knowledge-chat">
                             <AccordionTrigger className="font-medium">
-                                What is RAG Knowledge Chat and how does it work?
+                                What is Personal AI Assistant with Memory and how does it work?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">

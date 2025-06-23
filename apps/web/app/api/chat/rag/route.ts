@@ -22,7 +22,7 @@ export async function POST(req: Request) {
             return new Response('Unauthorized', { status: 401 });
         }
 
-        const { messages, apiKeys, embeddingModel, ragChatModel = ModelEnum.GEMINI_2_5_FLASH } = await req.json();
+        const { messages, apiKeys, embeddingModel, ragChatModel = ModelEnum.GEMINI_2_5_FLASH, profile } = await req.json();
         
         // Validate API keys are provided
         if (!apiKeys || typeof apiKeys !== 'object') {
@@ -61,11 +61,16 @@ export async function POST(req: Request) {
             return new Response('Unsupported model selected', { status: 400 });
         }
 
-        const result = streamText({
-            model,
-            system: `You are a friendly and encouraging AI assistant helping users build their personal knowledge repository! 🧠✨
+        // Build personalized system prompt based on profile
+        const profileContext = profile?.name || profile?.workDescription 
+        ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ''}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ''}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
+             : '';
 
-            Your mission is to help users create their own intelligent knowledge base by:
+         const result = streamText({
+             model,
+             system: `You are a friendly and encouraging AI assistant helping users build their personal knowledge repository! 🧠✨${profileContext}
+
+             Your mission is to help users create their own intelligent knowledge base by:
 
             📚 **When users share information, facts, or personal details:**
             - Enthusiastically use the addResource tool to save it to their private knowledge base

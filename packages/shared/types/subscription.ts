@@ -206,7 +206,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
     },
     [FeatureSlug.RAG]: {
         slug: FeatureSlug.RAG,
-        name: 'RAG (Retrieval-Augmented Generation)',
+        name: 'Personal AI Assistant with Memory',
         description:
             'Personal knowledge base with intelligent information storage and retrieval capabilities',
     },

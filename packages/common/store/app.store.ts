@@ -59,11 +59,16 @@ type State = {
     };
     embeddingModel: EmbeddingModel;
     ragChatModel: ModelEnum;
-    // Customer portal state
-    portalState: {
-        isOpen: boolean;
-        url: string | null;
+    // Profile settings for Personal AI Assistant
+    profile: {
+    name: string;
+    workDescription: string;
     };
+     // Customer portal state
+     portalState: {
+         isOpen: boolean;
+         url: string | null;
+     };
 };
 
 type Actions = {
@@ -89,7 +94,9 @@ type Actions = {
     setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
     setEmbeddingModel: (model: EmbeddingModel) => void;
     setRagChatModel: (model: ModelEnum) => void;
-    // Plus user settings actions
+    // Profile settings actions
+     setProfile: (profile: Partial<State['profile']>) => void;
+     // Plus user settings actions
     applyPlusDefaults: (plan: PlanSlug, preserveUserChanges?: boolean) => void;
     initializeSettingsForPlan: (plan: PlanSlug) => void;
     // Reset actions
@@ -149,7 +156,11 @@ export const useAppStore = create<State & Actions>()(
                 geminiCaching: baseDefaults.geminiCaching,
                 embeddingModel: DEFAULT_EMBEDDING_MODEL,
                 ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
-                sideDrawer: {
+                profile: {
+                     name: '',
+                     workDescription: '',
+                 },
+                 sideDrawer: {
                     open: false,
                     badge: undefined,
                     title: '',
@@ -276,10 +287,16 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 setRagChatModel: (model: ModelEnum) => {
-                    set({ ragChatModel: model });
+                set({ ragChatModel: model });
                 },
 
-                applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
+                setProfile: (profile: Partial<State['profile']>) => {
+                     set(state => {
+                         state.profile = { ...state.profile, ...profile };
+                     });
+                 },
+
+                 applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
                     set(state => {
                         const currentSettings: PlusDefaultSettings = {
                             thinkingMode: state.thinkingMode,
@@ -379,6 +396,7 @@ export const useAppStore = create<State & Actions>()(
                 geminiCaching: state.geminiCaching,
                 embeddingModel: state.embeddingModel,
                 ragChatModel: state.ragChatModel,
+                 profile: state.profile,
             }),
         }
     )

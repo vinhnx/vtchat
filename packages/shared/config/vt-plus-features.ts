@@ -87,7 +87,7 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     },
     [FeatureSlug.RAG]: {
         id: FeatureSlug.RAG,
-        name: 'RAG (Retrieval-Augmented Generation)',
+        name: 'Personal AI Assistant with Memory',
         description:
             'Personal knowledge base with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
         enabled: true,
@@ -202,10 +202,10 @@ export const VTPlusAccess = {
     },
 
     /**
-     * Check if user has access to RAG
+     * Check if user has access to Personal AI Assistant with Memory
      */
-    hasRAG: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
+     hasPersonalAI: (isVTPlusActive: boolean): boolean => {
+     return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
     },
 
     /**

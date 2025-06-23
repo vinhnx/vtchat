@@ -1,8 +1,7 @@
 # TODO
-
-
+change vt+ icon settings from crown to sparkles
 --
-combine RAG into main agent flow?cumentation.
+combine RAG into main agent /chat flow?
 
 --
 
