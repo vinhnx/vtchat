@@ -53,6 +53,9 @@ export function RAGChatbot() {
     
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    
+    // Track if we're currently processing to avoid duplicate indicators
+    const isProcessing = isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
         api: '/api/chat/rag',
@@ -127,10 +130,10 @@ export function RAGChatbot() {
         fetchKnowledgeBase();
     }, [messages]);
 
-    // Scroll to bottom when messages change or when loading state changes
+    // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isLoading]);
+    }, [messages, isProcessing]);
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
@@ -184,7 +187,9 @@ export function RAGChatbot() {
                             </div>
                         )}
 
-                        {messages.map((message, index) => (
+                        {messages
+                            .filter(message => message.content && message.content.trim())
+                            .map((message, index) => (
                             <div key={index} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
                                 {message.role === 'user' ? (
                                     <Avatar 
@@ -228,9 +233,9 @@ export function RAGChatbot() {
                             </div>
                         ))}
                         
-                        {/* Loading indicator when AI is processing */}
-                        {isLoading && (
-                            <div className="flex gap-3">
+                        {/* Single consolidated loading indicator */}
+                        {isProcessing && (
+                            <div className="flex gap-3" key="loading-indicator">
                                 <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full overflow-hidden">
                                     <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
@@ -244,10 +249,15 @@ export function RAGChatbot() {
                                 <div className="flex-1 space-y-2">
                                     <div className="rounded-lg bg-muted p-3 max-w-[80%]">
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce"></div>
-                                            <span className="ml-2">Thinking...</span>
+                                            <div className="flex items-center gap-1">
+                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce"></div>
+                                            </div>
+                                            <span className="ml-2">AI is thinking...</span>
+                                        </div>
+                                        <div className="mt-1 text-xs text-muted-foreground/70">
+                                            Searching knowledge base and generating response
                                         </div>
                                     </div>
                                 </div>
