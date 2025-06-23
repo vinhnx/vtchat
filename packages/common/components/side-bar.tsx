@@ -268,12 +268,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         )}
                     </Button>
 
-                    {/* RAG Knowledge Chat Button - Plus Feature */}
+                    {/* RAG Knowledge Chat Button */}
                     <Button
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="ghost"
                         rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'RAG Knowledge Chat (Plus Feature)'}
+                        tooltip={isSidebarOpen ? undefined : 'Knowledge Base'}
                         tooltipSide="right"
                         className={cn(
                             'relative transition-all duration-200',
@@ -299,8 +299,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 RAG Chat
                                 {!isPlusFromGlobal && (
                                     <Badge
-                                        variant="secondary" 
-                                        className="bg-[#BFB38F]/20 text-[#BFB38F] text-[10px] px-1.5 py-0.5"
+                                        variant="secondary"
+                                        className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#BFB38F]"
                                     >
                                         Plus
                                     </Badge>

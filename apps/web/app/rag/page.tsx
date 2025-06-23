@@ -108,7 +108,7 @@ export default function RAGPage() {
                 <div className="mb-6 flex-shrink-0">
                     <h1 className="text-2xl font-bold flex items-center gap-2">
                         RAG Knowledge Chat
-                        <Badge variant="secondary">Plus Feature</Badge>
+                        <Badge variant="secondary">VT+</Badge>
                     </h1>
                     <p className="text-sm text-muted-foreground">
                         Build and query your personal knowledge base with AI

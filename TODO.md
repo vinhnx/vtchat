@@ -22,45 +22,6 @@ update these information to RAG knowledge base
 --
 
 --
-@vtchat/web:dev: Database connection removed from pool
-@vtchat/web:dev:  ○ Compiling /api/chat/rag ...
-@vtchat/web:dev:  ✓ Compiled /api/chat/rag in 1776ms
-@vtchat/web:dev: Query: insert into "resources" ("id", "user_id", "content", "created_at", "updated_at") values ($1, $2, $3, default, default) returning "id", "user_id", "content", "created_at", "updated_at" -- params: ["83e540d8-4d61-401c-acdd-7f6a54cf3c5c", "dc60d50d-9aac-47e7-8cb1-ce9000d28208", "My favorite food is pizza"]
-@vtchat/web:dev: Database connection established
-@vtchat/web:dev: Error creating resource: Error: OpenAI API key is required for OpenAI embeddings. Please add it in Settings → API Keys.
-@vtchat/web:dev:     at generateEmbeddings (lib/ai/embedding.ts:96:18)
-@vtchat/web:dev:     at createResource (lib/actions/resources.ts:41:58)
-@vtchat/web:dev:   94 |         const openaiApiKey = apiKeys.OPENAI_API_KEY;
-@vtchat/web:dev:   95 |         if (!openaiApiKey) {
-@vtchat/web:dev: > 96 |             throw new Error('OpenAI API key is required for OpenAI embeddings. Please add it in Settings → API Keys.');
-@vtchat/web:dev:      |                  ^
-@vtchat/web:dev:   97 |         }
-@vtchat/web:dev:   98 |
-@vtchat/web:dev:   99 |         const modelConfig = EMBEDDING_MODEL_CONFIG[embeddingModel];
-@vtchat/web:dev: Query: insert into "resources" ("id", "user_id", "content", "created_at", "updated_at") values ($1, $2, $3, default, default) returning "id", "user_id", "content", "created_at", "updated_at" -- params: ["6a155c5e-29fb-421f-ae2c-771ce0727e71", "dc60d50d-9aac-47e7-8cb1-ce9000d28208", "My favorite food is pizza"]
-@vtchat/web:dev: Error creating resource: Error: OpenAI API key is required for OpenAI embeddings. Please add it in Settings → API Keys.
-@vtchat/web:dev:     at generateEmbeddings (lib/ai/embedding.ts:96:18)
-@vtchat/web:dev:     at createResource (lib/actions/resources.ts:41:58)
-@vtchat/web:dev:   94 |         const openaiApiKey = apiKeys.OPENAI_API_KEY;
-@vtchat/web:dev:   95 |         if (!openaiApiKey) {
-@vtchat/web:dev: > 96 |             throw new Error('OpenAI API key is required for OpenAI embeddings. Please add it in Settings → API Keys.');
-@vtchat/web:dev:      |                  ^
-@vtchat/web:dev:   97 |         }
-@vtchat/web:dev:   98 |
-@vtchat/web:dev:   99 |         const modelConfig = EMBEDDING_MODEL_CONFIG[embeddingModel];
-@vtchat/web:dev:  POST /api/chat/rag 200 in 6088ms
-@vtchat/web:dev:  POST /api/chat/rag 200 in 2074ms
-@vtchat/web:dev:  ○ Compiling /_not-found/page ...
-@vtchat/web:dev:  GET /rag 200 in 644ms
-@vtchat/web:dev:  ✓ Compiled /_not-found/page in 4.7s
-@vtchat/web:dev:  GET /installHook.js.map 404 in 5238ms
-@vtchat/web:dev: Database connection removed from pool
-
---
-
-there seem to be inconsistent of retrieval model and embedding and apikey flow.
-also, please make gemini embedding and models are default
---
 
 sometime get auth and subscription failed
 

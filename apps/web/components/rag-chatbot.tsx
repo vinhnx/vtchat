@@ -23,16 +23,14 @@ import {
 } from '@repo/ui';
 import { useChat } from 'ai/react';
 import {
-    Brain,
     Database,
     Eye,
     Send,
     Settings,
     Shield,
-    Sparkles,
     Trash2,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface KnowledgeItem {
     id: string;
@@ -45,12 +43,16 @@ export function RAGChatbot() {
     const getAllKeys = useApiKeysStore(state => state.getAllKeys);
     const embeddingModel = useAppStore(state => state.embeddingModel);
     const ragChatModel = useAppStore(state => state.ragChatModel);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
     const [isClearing, setIsClearing] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    
+    // Ref for auto-scroll functionality
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
         api: '/api/chat/rag',
@@ -116,9 +118,19 @@ export function RAGChatbot() {
         }
     };
 
+    // Auto-scroll to bottom when new messages arrive
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     useEffect(() => {
         fetchKnowledgeBase();
     }, [messages]);
+
+    // Scroll to bottom when messages change or when loading state changes
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, isLoading]);
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
@@ -132,9 +144,6 @@ export function RAGChatbot() {
                     <div className="space-y-4 p-4">
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-12 text-center">
-                                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary">
-                                    <Brain className="h-12 w-12 text-primary-foreground" />
-                                </div>
                                 <h3 className="text-foreground mb-2 text-xl font-semibold">
                                     RAG Knowledge Chat
                                 </h3>
@@ -164,7 +173,7 @@ export function RAGChatbot() {
                                     </div>
                                     <div className="rounded-xl border bg-card p-4">
                                         <div className="flex justify-center mb-2">
-                                            <Sparkles className="h-6 w-6 text-muted-foreground" />
+                                            <Database className="h-6 w-6 text-muted-foreground" />
                                         </div>
                                         <div className="font-medium">Contextual Answers</div>
                                         <div className="text-muted-foreground">
@@ -180,13 +189,20 @@ export function RAGChatbot() {
                                 {message.role === 'user' ? (
                                     <Avatar 
                                         name={session?.user?.name || 'User'}
-                                        src={session?.user?.image}
+                                        src={session?.user?.image ?? undefined}
                                         size="md"
                                         className="h-8 w-8 shrink-0"
                                     />
                                 ) : (
-                                    <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full">
-                                        <Brain className="h-4 w-4" />
+                                    <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full overflow-hidden">
+                                        <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
+                                            <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
+                                                  fill="none" 
+                                                  stroke="currentColor" 
+                                                  strokeWidth="1"
+                                                  className="text-background"/>
+                                        </svg>
                                     </div>
                                 )}
                                 <div className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}>
@@ -198,10 +214,48 @@ export function RAGChatbot() {
                                         <div className="text-sm">
                                             {message.content}
                                         </div>
+                                        {message.role === 'assistant' && (
+                                            <div className="mt-2 pt-2 border-t border-border text-xs text-muted-foreground">
+                                                <div className="flex items-center gap-2">
+                                                    <span>Chat: {currentRagChatModel?.name || 'Unknown'}</span>
+                                                    <span>•</span>
+                                                    <span>Embed: {currentEmbeddingModel?.name || 'Unknown'}</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                         ))}
+                        
+                        {/* Loading indicator when AI is processing */}
+                        {isLoading && (
+                            <div className="flex gap-3">
+                                <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded-full overflow-hidden">
+                                    <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
+                                        <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
+                                              fill="none" 
+                                              stroke="currentColor" 
+                                              strokeWidth="1"
+                                              className="text-background"/>
+                                    </svg>
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                    <div className="rounded-lg bg-muted p-3 max-w-[80%]">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                            <div className="h-2 w-2 bg-current rounded-full animate-bounce"></div>
+                                            <span className="ml-2">Thinking...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Scroll target */}
+                        <div ref={messagesEndRef} />
                     </div>
                 </ScrollArea>
 
@@ -368,6 +422,18 @@ export function RAGChatbot() {
                                         {currentEmbeddingModel?.provider} • {currentEmbeddingModel?.dimensions}D
                                     </div>
                                 </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="w-full mt-3"
+                                    onClick={() => setIsSettingsOpen(true)}
+                                >
+                                    <Settings className="mr-2 h-3 w-3" />
+                                    Open VT+ Settings
+                                </Button>
+                                <p className="text-xs text-muted-foreground">
+                                    Configure AI models, API keys, and embedding preferences in VT+ settings.
+                                </p>
                             </CardContent>
                         </Card>
 
@@ -378,7 +444,7 @@ export function RAGChatbot() {
                             </CardHeader>
                             <CardContent className="space-y-4 text-sm">
                                 <div className="flex gap-2">
-                                    <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                                    <Database className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
                                     <div>
                                         <div className="font-medium">Smart Context</div>
                                         <div className="text-muted-foreground">

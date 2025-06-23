@@ -1,8 +1,8 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from '../database';
-import { cosineDistance, desc, gt, sql } from 'drizzle-orm';
-import { embeddings } from '../database/schema';
+import { cosineDistance, desc, gt, sql, eq, and } from 'drizzle-orm';
+import { embeddings, resources } from '../database/schema';
 import { 
     EMBEDDING_MODELS, 
     EMBEDDING_MODEL_CONFIG, 
@@ -127,16 +127,27 @@ export const generateEmbedding = async (
     return generateEmbeddingWithProvider(value, embeddingModel, apiKeys);
 };
 
-export const findRelevantContent = async (userQuery: string, apiKeys: ApiKeys, userModel?: EmbeddingModel) => {
+export const findRelevantContent = async (userQuery: string, apiKeys: ApiKeys, userModel?: EmbeddingModel, userId?: string) => {
+    // CRITICAL: Must have userId to ensure user isolation
+    if (!userId) {
+        throw new Error('User ID is required for knowledge base search to ensure data isolation');
+    }
+    
     const userQueryEmbedded = await generateEmbedding(userQuery, apiKeys, userModel);
     const similarity = sql<number>`1 - (${cosineDistance(
         embeddings.embedding,
         userQueryEmbedded,
     )})`;
+    
+    // SECURITY: Only search within the current user's embeddings by joining with resources table
     const similarGuides = await db
         .select({ name: embeddings.content, similarity })
         .from(embeddings)
-        .where(gt(similarity, 0.5))
+        .innerJoin(resources, eq(embeddings.resourceId, resources.id))
+        .where(and(
+            eq(resources.userId, userId), // CRITICAL: Filter by user ID
+            gt(similarity, 0.5)
+        ))
         .orderBy(t => desc(t.similarity))
         .limit(4);
     return similarGuides;

@@ -630,6 +630,53 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* RAG Getting Started */}
+                        <AccordionItem value="rag-getting-started">
+                            <AccordionTrigger className="font-medium">
+                                How do I get started with RAG Knowledge Chat?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    Getting started with RAG Knowledge Chat is simple! Here's how to build your personal AI assistant:
+                                </p>
+                                <ol className="mt-4 list-outside list-decimal space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Get VT+ subscription:</strong> RAG is exclusive to VT+ users for enhanced privacy and features
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Set up API keys:</strong> Add your Google Gemini API key in Settings → API Keys (required for embeddings)
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Access RAG Chat:</strong> Click "RAG Knowledge Chat" in the sidebar navigation
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Start sharing information:</strong> Tell the AI about yourself, your work, preferences, or important facts
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Ask questions:</strong> Query your stored knowledge by asking questions about anything you've shared
+                                    </li>
+                                </ol>
+                                <h4 className="font-medium mt-6 mb-2">Example conversations to start:</h4>
+                                <ul className="list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        "My name is John and I work as a software engineer at Google"
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        "I prefer working remotely and my favorite programming languages are Python and TypeScript"
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        "I have a meeting with the product team every Tuesday at 2 PM"
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        "What did I tell you about my work schedule?" (after sharing information)
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    The AI will automatically save information you share and help you retrieve it later through natural conversation. The more you share, the more personalized your assistant becomes!
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* RAG Knowledge Chat */}
                         <AccordionItem value="rag-knowledge-chat">
                             <AccordionTrigger className="font-medium">
@@ -637,30 +684,63 @@ function FAQs() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you build and query your personal knowledge base using Retrieval-Augmented Generation (RAG):
+                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you build and query your personal knowledge base using Retrieval-Augmented Generation (RAG) technology. It's like having your own AI assistant with perfect memory of everything you've shared:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with AI models that support tool calling
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with enhanced privacy and security features
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Personal Knowledge Base:</strong> Store documents, notes, and information for intelligent conversational access
+                                        <strong>Personal AI Assistant:</strong> Build your own intelligent knowledge repository that remembers everything you share
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Smart Storage:</strong> Information is automatically chunked, embedded, and stored in a vector database
+                                        <strong>Smart Auto-Storage:</strong> Information is automatically processed, chunked, and embedded using advanced vector embeddings
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Intelligent Retrieval:</strong> AI searches your knowledge base using semantic similarity to find relevant information
+                                        <strong>Semantic Search:</strong> AI finds relevant information using meaning-based search, not just keywords
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Natural Interaction:</strong> Simply share information or ask questions in natural language
+                                        <strong>Natural Conversations:</strong> Share facts, preferences, experiences, or ask questions in plain English
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Privacy-First:</strong> Your knowledge base is private and secure, tied to your account only
+                                        <strong>Proactive Learning:</strong> AI encourages you to build your knowledge base for more personalized assistance
+                                    </li>
+                                </ul>
+                                <h4 className="font-medium mt-6 mb-2">Key Benefits:</h4>
+                                <ul className="list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Persistent Memory:</strong> Unlike regular chat, your knowledge base grows over time and remembers everything
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Personalized Responses:</strong> Get answers tailored to your specific information and preferences
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Intelligent Organization:</strong> No need to manually organize - AI finds connections automatically
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Instant Access:</strong> Quickly retrieve any stored information through natural conversation
+                                    </li>
+                                </ul>
+                                <h4 className="font-medium mt-6 mb-2">Privacy & Security:</h4>
+                                <ul className="list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Complete Isolation:</strong> Your knowledge base is completely private and isolated to your account only
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Zero Data Sharing:</strong> No other users can access your stored information - guaranteed
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Secure Storage:</strong> All embeddings and data are encrypted and stored securely in our database
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>User-Controlled:</strong> You can view, delete individual items, or clear your entire knowledge base anytime
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>No Third-Party Sharing:</strong> Your data is never shared with any third parties and only used to improve your VT experience
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Access RAG Chat from the sidebar (VT+ users) and start building your knowledge base by sharing information or asking questions about stored content.
+                                    Access RAG Knowledge Chat from the sidebar (VT+ users) and start building your personalized AI assistant by sharing information about yourself, your work, preferences, and important facts.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
