@@ -246,27 +246,31 @@ export const SideDrawer = () => {
                     }}
                     className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
                 >
-                    <div className="bg-background border-border shadow-subtle-xs flex h-full w-full flex-col overflow-hidden rounded-lg">
-                        <div className="border-border flex flex-row items-center justify-between gap-2 border-b py-1.5 pl-4 pr-2">
-                            <div className="text-sm font-medium">{renderTitle()}</div>
-                            {sideDrawer.badge && (
-                                <Badge variant="default">{sideDrawer.badge}</Badge>
-                            )}
-                            <div className="flex-1" />
+                    <div className="bg-background/95 backdrop-blur-sm border-muted/50 shadow-lg flex h-full w-full flex-col overflow-hidden rounded-xl">
+                        <div className="border-muted/50 flex flex-row items-center justify-between gap-3 border-b px-4 py-3 bg-muted/20">
+                            <div className="flex items-center gap-2">
+                                <div className="text-sm font-medium text-foreground">{renderTitle()}</div>
+                                {sideDrawer.badge && (
+                                    <Badge variant="secondary" className="bg-muted/30 text-muted-foreground border-muted-foreground/20">
+                                        {sideDrawer.badge}
+                                    </Badge>
+                                )}
+                            </div>
                             <Button
-                                variant="secondary"
+                                variant="ghost"
                                 size="icon-xs"
                                 onClick={() => dismissSideDrawer()}
                                 tooltip="Close"
+                                className="hover:bg-muted/40 h-7 w-7 rounded-md"
                             >
-                                <X size={14} strokeWidth={2} />
+                                <X size={14} strokeWidth={2} className="text-muted-foreground" />
                             </Button>
                         </div>
                         <div
-                            className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto p-2"
+                            className="no-scrollbar flex flex-1 flex-col gap-3 overflow-y-auto p-4"
                             ref={scrollRef}
                         >
-                            <div ref={contentRef} className="w-full">
+                            <div ref={contentRef} className="w-full space-y-3">
                                 {renderContent()}
                             </div>
                         </div>

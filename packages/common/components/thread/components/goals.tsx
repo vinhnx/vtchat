@@ -2,9 +2,10 @@ import { StepRenderer, StepStatus, ToolCallStep, ToolResultStep } from '@repo/co
 import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
-import { Badge } from '@repo/ui';
+import { Badge, Card } from '@repo/ui';
 import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { MotionSkeleton } from '@repo/common/components';
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
@@ -175,20 +176,43 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
 
     return (
         <>
-            <div
-                className="bg-background shadow-subtle-xs hover:bg-secondary flex w-full cursor-pointer flex-row items-center gap-2 rounded-lg px-3 py-2.5"
-                onClick={() => {
-                    handleClick();
-                }}
-            >
-                {renderTitle()}
-                <div className="flex-1" />
-
-                <Badge variant="default" size="sm">
-                    {stepCounts} {stepCounts === 1 ? 'Step' : 'Steps'}
-                </Badge>
-                <ChevronRight size={14} strokeWidth={2} />
-            </div>
+            <Card className="w-full border-muted/50 bg-muted/20 transition-all duration-200 hover:bg-muted/30 cursor-pointer">
+                <motion.div
+                    className="flex w-full flex-row items-center gap-3 p-3"
+                    onClick={handleClick}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                        {isLoading ? (
+                            <MotionSkeleton className="h-4 w-4 rounded" />
+                        ) : (
+                            getIcon(threadItem)
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <div className="text-sm font-medium text-foreground">
+                            {getTitle(threadItem)}
+                        </div>
+                        {!hasAnswer && (
+                            <div className="text-xs text-muted-foreground">{getNote(threadItem)}</div>
+                        )}
+                    </div>
+                    <div className="flex-1" />
+                    <Badge 
+                        variant="secondary" 
+                        className="bg-muted/30 text-muted-foreground border-muted-foreground/20 text-xs"
+                    >
+                        {stepCounts} {stepCounts === 1 ? 'Step' : 'Steps'}
+                    </Badge>
+                    <motion.div
+                        className="rounded-md p-1 hover:bg-muted/60"
+                        whileHover={{ x: 2 }}
+                    >
+                        <ChevronRight size={14} strokeWidth={2} className="text-muted-foreground" />
+                    </motion.div>
+                </motion.div>
+            </Card>
         </>
     );
 };

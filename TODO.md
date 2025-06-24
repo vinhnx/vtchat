@@ -1,16 +1,5 @@
 # TODO
 
-1. polish improve tools panel ui/ux.
-1. SideDrawer and Steps tools/steps
-1. use modern shadcn ui components, no color, use mute color scheme.
-1. improve motion and animation.
-1. improve output tools response and make sure to populate tools call answers in the chat.
-
---
-https://x.ai/news/grok-3
-
-grok 3 mini free?
---
 
 ## https://react-scan.com/
 

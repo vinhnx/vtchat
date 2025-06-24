@@ -2,9 +2,10 @@ import { CodeBlock, ToolResultIcon } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import { isChartTool } from '@repo/common/constants/chart-tools';
 import { ToolResult as ToolResultType } from '@repo/shared/types';
-import { Badge, cn, ChartRenderer } from '@repo/ui';
-import { ChevronDown, CheckCircle, BarChart3 } from 'lucide-react';
+import { Badge, cn, ChartRenderer, Card } from '@repo/ui';
+import { ChevronDown, CheckCircle, BarChart3, CheckCheck, Activity } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export type ToolResultProps = {
     toolResult: ToolResultType;
@@ -20,75 +21,89 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
     const isResultChartTool = isChartTool(toolResult.toolName);
 
     return (
-        <div className="overflow-hidde flex w-full flex-col items-start">
-            <div
-                className="flex w-full cursor-pointer flex-row items-center justify-between gap-2.5 pb-2 pt-2"
+        <Card className="w-full border-muted/50 bg-muted/20 transition-all duration-200 hover:bg-muted/30">
+            <motion.div
+                className="flex w-full cursor-pointer flex-row items-center justify-between gap-3 p-3"
                 onClick={toggleOpen}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
             >
-                <div className="flex flex-row items-center gap-2.5">
-                    {isResultMathTool ? (
-                        <CheckCircle size={16} className="text-green-600" />
-                    ) : isResultChartTool ? (
-                        <BarChart3 size={16} className="text-purple-600" />
-                    ) : (
-                        <ToolResultIcon />
-                    )}
-                    <Badge
-                        className={
-                            isResultMathTool
-                                ? 'border-green-300 bg-green-100 text-green-800'
-                                : isResultChartTool
-                                  ? 'border-purple-300 bg-purple-100 text-purple-800'
-                                  : ''
-                        }
-                    >
-                        {isResultMathTool ? '✅ Result' : isResultChartTool ? '📊 Chart' : 'Result'}
-                    </Badge>
-                    <Badge
-                        className={
-                            isResultMathTool
-                                ? 'border-green-200 bg-green-50 text-green-700'
-                                : isResultChartTool
-                                  ? 'border-purple-200 bg-purple-50 text-purple-700'
-                                  : ''
-                        }
-                    >
-                        {isResultMathTool
-                            ? `🧮 ${toolResult.toolName}`
-                            : isResultChartTool
-                              ? `📈 ${toolResult.toolName}`
-                              : toolResult.toolName}
-                    </Badge>
-                </div>
-                <div className="pr-2">
-                    <ChevronDown
-                        size={14}
-                        strokeWidth={2}
-                        className={cn(
-                            'text-muted-foreground transform transition-transform',
-                            isOpen && 'rotate-180'
+                <div className="flex flex-row items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                        {isResultMathTool ? (
+                            <CheckCheck size={16} className="text-muted-foreground" />
+                        ) : isResultChartTool ? (
+                            <Activity size={16} className="text-muted-foreground" />
+                        ) : (
+                            <ToolResultIcon />
                         )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Badge 
+                            variant="secondary" 
+                            className="border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium"
+                        >
+                            <CheckCircle size={10} className="mr-1" />
+                            {isResultMathTool ? 'Result' : isResultChartTool ? 'Chart' : 'Result'}
+                        </Badge>
+                        <Badge 
+                            variant="outline" 
+                            className="border-muted-foreground/10 bg-muted/20 text-muted-foreground text-xs"
+                        >
+                            {isResultMathTool
+                                ? `${toolResult.toolName}`
+                                : isResultChartTool
+                                  ? `${toolResult.toolName}`
+                                  : toolResult.toolName}
+                        </Badge>
+                    </div>
+                </div>
+                <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="rounded-md p-1 hover:bg-muted/60"
+                >
+                    <ChevronDown
+                        size={16}
+                        strokeWidth={2}
+                        className="text-muted-foreground"
                     />
-                </div>
-            </div>
-            {isOpen && (
-                <div className="flex w-full flex-row items-center gap-2.5">
-                    {isResultChartTool ? (
-                        <div className="my-2 w-full">
-                            <ChartRenderer {...(toolResult.result as any)} />
+                </motion.div>
+            </motion.div>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                    >
+                        <div className="border-t border-muted/50 p-3 pt-3">
+                            {isResultChartTool ? (
+                                <div className="w-full">
+                                    <ChartRenderer {...(toolResult.result as any)} />
+                                </div>
+                            ) : (
+                                <div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Activity size={14} className="text-muted-foreground" />
+                                        <span className="text-xs font-medium text-muted-foreground">Output</span>
+                                    </div>
+                                    <CodeBlock
+                                        variant="secondary"
+                                        showHeader={false}
+                                        lang="json"
+                                        className="rounded-md border-muted/50"
+                                        code={JSON.stringify(toolResult.result, null, 2)}
+                                    />
+                                </div>
+                            )}
                         </div>
-                    ) : (
-                        <CodeBlock
-                            variant="secondary"
-                            showHeader={false}
-                            lang="json"
-                            className="my-2"
-                            code={JSON.stringify(toolResult.result, null, 2)}
-                        />
-                    )}
-                </div>
-            )}
-        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </Card>
     );
 });
 

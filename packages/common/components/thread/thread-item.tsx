@@ -10,6 +10,7 @@ import {
     SourceGrid,
     Steps,
     ThinkingLog,
+    ToolsPanel,
 } from '@repo/common/components';
 import { ChartComponent } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
@@ -132,6 +133,8 @@ export const ThreadItem = memo(
                         </div>
 
                         {threadItem.steps && <Steps steps={steps} threadItem={threadItem} />}
+                        
+                        <ToolsPanel threadItem={threadItem} />
 
                         {isCalculatingMath && <MathCalculatorIndicator isCalculating={true} />}
 
