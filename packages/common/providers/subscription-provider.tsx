@@ -142,11 +142,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         ...(forceRefresh && { force: 'true' }),
                     });
 
-                    // Create AbortController for timeout (reduced from 8s to 5s for better UX)
+                    // Create AbortController for timeout (increased to 10s for dev environments)
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => {
                         controller.abort();
-                    }, 5000); // 5 second timeout
+                    }, 10000); // 10 second timeout
 
                     try {
                         const response = await fetch(`/api/subscription/status?${params}`, {
@@ -184,7 +184,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         clearTimeout(timeoutId);
 
                         if (error instanceof Error && error.name === 'AbortError') {
-                            throw new Error('Subscription fetch timeout (5s)');
+                            throw new Error('Subscription fetch timeout (10s)');
                         }
                         throw error;
                     }

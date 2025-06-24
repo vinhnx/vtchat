@@ -2,15 +2,20 @@ import { useDocumentAttachment } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
 import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, cn } from '@repo/ui';
 import { FileText } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 export const DocumentUploadButton = () => {
     const chatMode = useChatStore(state => state.chatMode);
     const documentAttachment = useChatStore(state => state.documentAttachment);
     const { handleDocumentUpload } = useDocumentAttachment();
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     // Only show for Gemini models
     if (!isGeminiModel(chatMode)) return null;
@@ -18,6 +23,10 @@ export const DocumentUploadButton = () => {
     const hasDocument = !!documentAttachment?.file;
 
     const handleClick = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
         fileInputRef.current?.click();
     };
 
@@ -55,6 +64,14 @@ export const DocumentUploadButton = () => {
                 accept={acceptString}
                 className="hidden"
                 onChange={handleFileChange}
+            />
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to upload and attach documents to your messages."
             />
         </>
     );

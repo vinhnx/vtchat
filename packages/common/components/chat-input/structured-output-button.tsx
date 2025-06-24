@@ -1,9 +1,11 @@
 import { useStructuredExtraction } from '@repo/common/hooks';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Button,
+    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -16,6 +18,7 @@ import { FileText, FileUp, Info, ScanText, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CustomSchemaBuilder } from '../custom-schema-builder';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 export const StructuredOutputButton = () => {
     const { extractStructuredOutput, isGeminiModel, hasDocument, isPDF } =
@@ -23,8 +26,11 @@ export const StructuredOutputButton = () => {
     const hasStructuredOutputAccess = useFeatureAccess(FeatureSlug.STRUCTURED_OUTPUT);
     const [showDialog, setShowDialog] = useState(false);
     const [showSchemaBuilder, setShowSchemaBuilder] = useState(false);
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
 
     // Use individual selectors to avoid infinite re-renders
     const structuredData = useChatStore(state => state.structuredData);
@@ -34,6 +40,12 @@ export const StructuredOutputButton = () => {
     const isProcessed = !!structuredData;
 
     const handleClick = () => {
+        // Check login first
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
+
         // Check subscription access first
         if (!hasStructuredOutputAccess) {
             setShowDialog(true);
@@ -156,11 +168,12 @@ export const StructuredOutputButton = () => {
                                 ? `Structured data extracted from ${structuredData?.fileName}`
                                 : 'Extract structured data from PDF (Gemini only)'
                 }
-                className={`text-muted-foreground hover:text-foreground ${
-                    useStructuredOutput ? 'bg-primary/10 text-primary hover:text-primary' : ''
-                } ${isProcessed ? 'text-green-600 hover:text-green-700' : ''} ${
-                    !hasStructuredOutputAccess ? 'opacity-50' : ''
-                }`}
+                className={cn(
+                    'text-muted-foreground hover:text-foreground',
+                    useStructuredOutput && 'bg-green-500/10 text-green-500 hover:text-green-600',
+                    isProcessed && 'text-green-600 hover:text-green-700',
+                    !hasStructuredOutputAccess && 'opacity-50'
+                )}
             >
                 {!hasStructuredOutputAccess ? (
                     <Sparkles size={16} strokeWidth={2} />
@@ -266,6 +279,14 @@ export const StructuredOutputButton = () => {
                     </DialogContent>
                 </Dialog>
             )}
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use structured output extraction functionality."
+            />
         </>
     );
 };

@@ -26,7 +26,6 @@ import {
     Activity,
     BarChart3,
     Brain,
-    Crown,
     FileText,
     Link,
     Palette,
@@ -106,7 +105,7 @@ export const PlusSettings = () => {
                 {/* Header */}
                 <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-                        <Crown className="h-6 w-6 text-amber-500" />
+                        <Sparkles className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
                         <TypographyH3>VT+ Features</TypographyH3>
@@ -178,7 +177,7 @@ export const PlusSettings = () => {
                                 className="group gap-2"
                                 onClick={() => (window.location.href = '/plus')}
                             >
-                                <Crown className="h-4 w-4" />
+                                <Sparkles className="h-4 w-4" />
                                 Upgrade to VT+
                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </Button>
@@ -194,7 +193,7 @@ export const PlusSettings = () => {
             {/* Header */}
             <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-                    <Crown className="h-6 w-6 text-amber-500" />
+                    <Sparkles className="h-6 w-6 text-amber-500" />
                 </div>
                 <div>
                     <TypographyH3>VT+ Features</TypographyH3>

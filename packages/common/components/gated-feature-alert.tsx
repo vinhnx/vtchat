@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@repo/ui';
-import { Crown } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useVtPlusAccess } from '../hooks/use-subscription-access';
@@ -195,7 +195,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                             Cancel
                         </Button>
                         <Button onClick={handleUpgrade} className="gap-2">
-                            <Crown size={16} />
+                            <Sparkles size={16} />
                             Upgrade Now
                         </Button>
                     </DialogFooter>

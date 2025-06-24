@@ -107,7 +107,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         if (threads.length === 0 && !renderEmptyState) return null;
         return (
             <Flex direction="col" items="start" className="w-full gap-0.5">
-                <div className="text-muted-foreground/70 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
+                <div className="text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
                     {groupIcon}
                     {title}
                 </div>
@@ -141,7 +141,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col transition-all duration-300 ease-in-out',
+                'relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out',
+                'dark:bg-black/95 dark:border-gray-800',
                 isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
             )}
         >
@@ -159,7 +160,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, delay: 0.2 }}
                             className={cn(
-                                'hover:bg-accent/50 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200',
+                                'hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200',
                                 !isSidebarOpen && 'justify-center px-0'
                             )}
                         >
@@ -169,7 +170,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.2, delay: 0.1 }}
-                                    className="font-clash text-foreground text-xl font-bold tracking-wide"
+                                    className="font-clash text-sidebar-foreground text-xl font-bold tracking-wide"
                                 >
                                     VT
                                 </motion.p>
@@ -183,7 +184,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             tooltipSide="right"
                             size="icon-sm"
                             onClick={() => setIsSidebarOpen(prev => !prev)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />
                         </Button>
@@ -237,8 +238,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         className={cn(
                             'transition-all duration-200',
                             isSidebarOpen
-                                ? 'text-muted-foreground hover:text-foreground hover:bg-accent relative w-full justify-between'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                                ? 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent relative w-full justify-between'
+                                : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         )}
                         onClick={() => setIsCommandSearchOpen(true)}
                     >
@@ -278,8 +279,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         className={cn(
                             'relative transition-all duration-200',
                             isSidebarOpen
-                                ? 'text-muted-foreground hover:text-foreground hover:bg-accent w-full justify-start'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                                ? 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full justify-start'
+                                : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         )}
                         onClick={() => {
                             push('/rag');
@@ -314,7 +315,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 <div
                     className={cn(
                         'w-full transition-all duration-200',
-                        isSidebarOpen ? 'border-border/50 mt-3 border-t px-4 pt-3' : 'mt-1 px-2'
+                        isSidebarOpen ? 'border-sidebar-border mt-3 border-t px-4 pt-3' : 'mt-1 px-2'
                     )}
                 >
                     {isSidebarOpen ? (
@@ -417,20 +418,20 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     className={cn(
                         'no-scrollbar w-full flex-1 overflow-y-auto transition-all duration-200',
                         isSidebarOpen
-                            ? 'border-border/50 mt-4 flex flex-col gap-4 border-t px-4 pb-[120px] pt-4'
+                            ? 'border-sidebar-border mt-4 flex flex-col gap-4 border-t px-4 pb-[120px] pt-4'
                             : 'hidden'
                     )}
                 >
                     {threads.length === 0 ? (
                         <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                            <div className="text-muted-foreground/50 text-center">
+                            <div className="text-sidebar-foreground/30 text-center">
                                 <FileText size={24} strokeWidth={1.5} />
                             </div>
                             <div className="text-center">
-                                <p className="text-muted-foreground text-sm font-medium">
+                                <p className="text-sidebar-foreground/70 text-sm font-medium">
                                     No conversations yet
                                 </p>
-                                <p className="text-muted-foreground/70 text-xs">
+                                <p className="text-sidebar-foreground/50 text-xs">
                                     Start a new chat to begin
                                 </p>
                             </div>
@@ -447,12 +448,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 renderEmptyState: () => (
                                     <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
                                         <Pin
-                                            size={16}
-                                            strokeWidth={1.5}
-                                            className="text-muted-foreground/50"
+                                        size={16}
+                                        strokeWidth={1.5}
+                                        className="text-sidebar-foreground/30"
                                         />
-                                        <p className="text-muted-foreground text-center text-xs">
-                                            Pin important conversations to keep them at the top
+                                        <p className="text-sidebar-foreground/60 text-center text-xs">
+                                        Pin important conversations to keep them at the top
                                         </p>
                                     </div>
                                 ),
@@ -480,7 +481,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Bottom Section */}
                 <div
                     className={cn(
-                        'from-tertiary via-tertiary/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent transition-all duration-200',
+                        'from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent transition-all duration-200',
                         isSidebarOpen ? 'px-4 py-3 pt-12' : 'px-2 py-2 pt-8'
                     )}
                 >
@@ -492,7 +493,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 tooltip="Open Sidebar"
                                 tooltipSide="right"
                                 onClick={() => setIsSidebarOpen(prev => !prev)}
-                                className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                                className="text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
                             >
                                 <PanelRightClose size={16} strokeWidth={2} />
                             </Button>
@@ -503,7 +504,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <DropdownMenuTrigger asChild>
                                 <div
                                     className={cn(
-                                        'bg-background hover:bg-accent border-border/50 flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
+                                        'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
                                         isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
                                     )}
                                 >
@@ -515,7 +516,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                     {isSidebarOpen && (
                                         <div className="flex min-w-0 flex-1 flex-col items-start">
-                                            <p className="text-foreground line-clamp-1 text-sm font-medium">
+                                            <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
                                                 {user?.name || user?.email}
                                             </p>
                                             <UserTierBadge />
@@ -525,7 +526,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         <ChevronsUpDown
                                             size={14}
                                             strokeWidth={2}
-                                            className="text-muted-foreground flex-shrink-0"
+                                            className="text-sidebar-foreground/60 flex-shrink-0"
                                         />
                                     )}
                                 </div>
@@ -585,12 +586,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         </DropdownMenu>
                     )}
                     {isSidebarOpen && !isSignedIn && (
-                        <div className="border-border/50 mt-3 flex w-full flex-col gap-2 border-t pt-3">
+                        <div className="border-sidebar-border mt-3 flex w-full flex-col gap-2 border-t pt-3">
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 rounded="lg"
-                                className="text-muted-foreground hover:text-foreground w-full justify-start"
+                                className="text-sidebar-foreground/70 hover:text-sidebar-foreground w-full justify-start"
                                 onClick={() => {
                                     setIsSettingsOpen(true);
                                 }}

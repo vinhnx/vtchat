@@ -38,7 +38,6 @@ import {
     BarChart3,
     Brain,
     Check,
-    Crown,
     Database,
     FileText,
     Lock,
@@ -274,7 +273,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 {/* Header */}
                 <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-                        <Crown className="h-6 w-6 text-amber-500" />
+                        <Sparkles className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
                         <TypographyH3>VT+</TypographyH3>
@@ -982,7 +981,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         {!isVtPlus && (
                             <div className="mt-6 flex items-center justify-center">
                                 <Button className="group gap-2" onClick={handleUpgradeToPlus}>
-                                    <Crown className="h-4 w-4" />
+                                    <Sparkles className="h-4 w-4" />
                                     Upgrade to VT+
                                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </Button>

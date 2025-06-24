@@ -5,7 +5,6 @@ import { MotionSkeleton, GatedFeatureAlert } from '@repo/common/components';
 import {
     useSubscriptionAccess,
     useWebSearch as useWebSearchHook,
-    useMathCalculator as useMathCalculatorHook,
 } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
@@ -165,13 +164,15 @@ export function ChatModeButton() {
 }
 
 export function WebSearchButton() {
-    const { useWebSearch, webSearchType } = useWebSearchHook();
+    const useWebSearch = useChatStore(state => state.useWebSearch);
+    const { webSearchType } = useWebSearchHook();
     const chatMode = useChatStore(state => state.chatMode);
     const setActiveButton = useChatStore(state => state.setActiveButton);
     const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { canAccess } = useSubscriptionAccess();
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     // Hide web search button if chat mode doesn't support it
     if (!ChatModeConfig[chatMode]?.webSearch) {
@@ -189,6 +190,10 @@ export function WebSearchButton() {
     }
 
     const handleWebSearchToggle = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
         setActiveButton('webSearch');
     };
 
@@ -226,19 +231,34 @@ export function WebSearchButton() {
                     </p>
                 )}
             </Button>
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use web search functionality."
+            />
         </>
     );
 }
 
 export function MathCalculatorButton() {
-    const { useMathCalculator: mathCalculatorEnabled } = useMathCalculatorHook();
+    const mathCalculatorEnabled = useChatStore(state => state.useMathCalculator);
     const setActiveButton = useChatStore(state => state.setActiveButton);
     const { canAccess } = useSubscriptionAccess();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     // Check if user has access to math calculator feature
     const hasMathCalculatorAccess = canAccess(FeatureSlug.MATH_CALCULATOR);
 
     const handleMathCalculatorToggle = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
         if (!hasMathCalculatorAccess) {
             // Show upgrade dialog if user doesn't have access
             console.log('🧮 Math calculator feature requires VT+ subscription');
@@ -281,6 +301,14 @@ export function MathCalculatorButton() {
                     )}
                 </Button>
             </GatedFeatureAlert>
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use math calculator functionality."
+            />
         </>
     );
 }
@@ -289,11 +317,18 @@ export function ChartsButton() {
     const useCharts = useChatStore(state => state.useCharts);
     const setActiveButton = useChatStore(state => state.setActiveButton);
     const { canAccess } = useSubscriptionAccess();
+    const { data: session } = useSession();
+    const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     // Check if user has access to chart visualization feature
     const hasChartAccess = canAccess(FeatureSlug.CHART_VISUALIZATION);
 
     const handleChartsToggle = () => {
+        if (!isSignedIn) {
+            setShowLoginPrompt(true);
+            return;
+        }
         if (!hasChartAccess) {
             // Show upgrade dialog if user doesn't have access
             console.log('📊 Charts feature requires VT+ subscription');
@@ -329,6 +364,14 @@ export function ChartsButton() {
                     {useCharts && hasChartAccess && <p className="text-xs">Charts</p>}
                 </Button>
             </GatedFeatureAlert>
+
+            {/* Login Required Dialog */}
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                title="Login Required"
+                description="Please log in to use charts and graphs functionality."
+            />
         </>
     );
 }

@@ -99,6 +99,8 @@ export const ChatInput = ({
         contentType: string;
         size?: number;
     }>>([]);
+    
+
 
     const removeMultiModalAttachment = (index: number) => {
         const newAttachments = multiModalAttachments.filter((_, i) => i !== index);
@@ -262,34 +264,37 @@ export const ChatInput = ({
                                                 className="shrink-0 flex-wrap"
                                             >
                                                 <ChatModeButton />
-                                                {/* Hide accessory tool buttons when advanced modes are active */}
-                                                {chatMode !== ChatMode.Deep &&
-                                                    chatMode !== ChatMode.Pro && (
-                                                        <>
-                                                            <WebSearchButton />
-                                                            <MathCalculatorButton />
-                                                            <ChartsButton />
-                                                            <DocumentUploadButton />
-                                                            <StructuredOutputButton />
-                                                            {supportsMultiModal(chatMode) ? (
-                                                                <MultiModalAttachmentButton
-                                                                    onAttachmentsChange={setMultiModalAttachments}
-                                                                    attachments={multiModalAttachments}
-                                                                    disabled={isGenerating}
-                                                                />
-                                                            ) : (
-                                                                <ImageUpload
-                                                                    id="image-attachment"
-                                                                    label="Image"
-                                                                    tooltip="Image Attachment"
-                                                                    showIcon={true}
-                                                                    handleImageUpload={
-                                                                        handleImageUpload
-                                                                    }
-                                                                />
-                                                            )}
-                                                        </>
-                                                    )}
+                                                
+                                                {/* AI Enhancement Tools Group */}
+                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <WebSearchButton />
+                                                <MathCalculatorButton />
+                                                <ChartsButton />
+                                                
+                                                {/* File Upload Tools Group */}
+                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <DocumentUploadButton />
+                                                {supportsMultiModal(chatMode) ? (
+                                                    <MultiModalAttachmentButton
+                                                        onAttachmentsChange={setMultiModalAttachments}
+                                                        attachments={multiModalAttachments}
+                                                        disabled={isGenerating}
+                                                    />
+                                                ) : (
+                                                    <ImageUpload
+                                                        id="image-attachment"
+                                                        label="Image"
+                                                        tooltip="Image Attachment"
+                                                        showIcon={true}
+                                                        handleImageUpload={
+                                                            handleImageUpload
+                                                        }
+                                                    />
+                                                )}
+                                                
+                                                {/* Data Processing Tools Group */}
+                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <StructuredOutputButton />
                                             </Flex>
                                         )}
 

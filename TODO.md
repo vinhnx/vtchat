@@ -1,70 +1,33 @@
 # TODO
-change vt+ icon settings from crown to sparkles
---
-combine RAG into main agent /chat flow?
+
+1. polish improve tools panel ui/ux.
+1. SideDrawer and Steps tools/steps
+1. use modern shadcn ui components, no color, use mute color scheme.
+1. improve motion and animation.
+1. improve output tools response and make sure to populate tools call answers in the chat.
 
 --
+https://x.ai/news/grok-3
 
---> check Claude for inspiration on how to implement RAG knowledge base
-https://claude.ai/settings/profile
-
-1. put this in settings VT+ section
-# Section RAG knowledge base
-What should ChatGPT call you? {name} -> rag
-What best describes your work? {about me} -> rag
--> also note a note about privacy, this data is not shared with any third party and only used to improve your experience with VTChat.
-
-1. add a option to clear RAG knowledge base
-1. add a option to view RAG knowledge base
-1. this feature is only available for VT+ users
-update these information to RAG knowledge base
---
-
---
-
-sometime get auth and subscription failed
-
- Console Error
-
-Error: Subscription fetch timeout (5s)
-
-Call Stack 1
-SubscriptionProvider.useCallback[fetchSubscriptionStatus]
-file:/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/apps/web/.next/static/chunks/packages_common_d6e0c1dd._.js (2310:39)
-
---
-
-https://next-safe-action.dev/
---
-https://fluid.tw/#installation
+grok 3 mini free?
 --
 
 ## https://react-scan.com/
 
 ## https://requestindexing.com/
 
-## https://og.new/
-
 ## https://unlighthouse.dev/
 
-## https://million.dev/docs
-
-https://page-speed.dev
 
 --
-https://github.com/e2b-dev/fragments
+offer free models and usage credit, rate limit?
 
---
 --
 
 https://fly.io/docs/apps/going-to-production/
 https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
 migrate from railway to fly.io
 -> free if use under 5$ a month
-
---
-
-https://ai-sdk.dev/cookbook/next/chat-with-pdf
 
 --
 
@@ -84,24 +47,6 @@ remember to publish Google Auth
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
 --
-
-[][monet] RAG <https://ai-sdk.dev/docs/guides/rag-chatbot>
-
---
-
-<https://ai-sdk.dev/cookbook/node/web-search-agent#building-a-web-search-tool>
-
---
-
-## Future
-
-- [ ] Free tier: Continue using local IndexedDB for threads.
-- [ ] [PLUS TIER ONLY] Implement full remote thread synchronization with Neon DB.
-- [ ] [PLUS TIER ONLY] Sync threads to Neon DB.
-
---
-
-- [ ] Electron: [https://github.com/electron/electron](https://github.com/electron/electron)
 
 --
 

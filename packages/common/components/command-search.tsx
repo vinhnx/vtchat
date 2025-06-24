@@ -185,17 +185,16 @@ export const CommandSearch = () => {
 
     return (
         <CommandDialog open={isCommandSearchOpen} onOpenChange={setIsCommandSearchOpen}>
-            <div className="flex w-full flex-row items-center gap-2 p-0.5">
-                <CommandInput placeholder="Search..." className="w-full" />
+            <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
+                <div className="flex-1 [&_[cmdk-input-wrapper]]:border-b-0">
+                    <CommandInput placeholder="Search..." />
+                </div>
                 <div className="flex shrink-0 items-center gap-1 px-2">
                     <Kbd className="h-5 w-5">
                         <Command size={12} strokeWidth={2} className="shrink-0" />
                     </Kbd>
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
-            </div>
-            <div className="w-full">
-                <div className="border-border h-[1px] w-full border-b" />
             </div>
             <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>

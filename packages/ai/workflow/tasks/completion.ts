@@ -98,7 +98,10 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         let tools: any = {};
 
         if (mathCalculator) {
-            tools = { ...tools, ...calculatorTools() };
+            console.log('🧮 Math calculator enabled, adding calculator tools...');
+            const mathToolsObj = calculatorTools();
+            console.log('🔢 Available math tools:', Object.keys(mathToolsObj));
+            tools = { ...tools, ...mathToolsObj };
         }
 
         if (charts) {
@@ -153,6 +156,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 chunkBuffer.add(chunk);
             },
             onToolCall: toolCall => {
+                console.log('🔧 Tool call:', toolCall.toolName, 'with args:', toolCall.args);
                 // Send tool call event to UI
                 events?.update('steps', prev => ({
                     ...prev,
@@ -191,6 +195,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 ]);
             },
             onToolResult: toolResult => {
+                console.log('🔧 Tool result for:', toolResult.toolName, 'result:', toolResult.result);
                 // Send tool result event to UI
                 events?.update('steps', prev => ({
                     ...prev,
