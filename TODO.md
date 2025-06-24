@@ -1,15 +1,9 @@
 # TODO
 
 
-## https://react-scan.com/
-
 ## https://requestindexing.com/
 
 ## https://unlighthouse.dev/
-
-
---
-offer free models and usage credit, rate limit?
 
 --
 
