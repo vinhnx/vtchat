@@ -1,5 +1,8 @@
 # TODO
 
+https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
+
+--
 
 ## https://requestindexing.com/
 
