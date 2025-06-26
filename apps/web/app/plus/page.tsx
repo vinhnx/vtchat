@@ -328,15 +328,15 @@ export default function PlusPage() {
 
                 {/* Contact Section */}
                 <div className="mb-8 mt-8 text-center">
-                    <p className="text-base text-gray-600">
-                        Have questions? Get in touch:{' '}
-                        <a
-                            href="mailto:vtchat.io@gmail.com"
-                            className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
-                        >
-                            vtchat.io@gmail.com
-                        </a>
-                    </p>
+                <p className="text-base text-gray-600">
+                Have questions? Get in touch:{' '}
+                <a
+                href="mailto:support@vtchat.io.vn"
+                className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
+                >
+                support@vtchat.io.vn
+                </a>
+                </p>
                 </div>
             </div>
         </div>

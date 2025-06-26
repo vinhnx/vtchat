@@ -1,9 +1,11 @@
 export const termsMdx = `
 # Terms of Service
 
-**Last Updated:** June 14, 2025
+**Last Updated:** June 25, 2025
 
-Welcome to **VT** ("we," "our," or "us"), an advanced AI-powered research and chat platform. These Terms of Service ("Terms") govern your use of our website, application, and services (collectively, the "Service").
+Welcome to **VT** ("we," "our," or "us"), an independent AI wrapper platform providing custom interfaces for AI models. These Terms of Service ("Terms") govern your use of our website, application, and services (collectively, the "Service").
+
+**Important Notice:** VT is an independent platform providing custom interfaces for AI models. We are not affiliated with, endorsed by, or sponsored by OpenAI, Anthropic, Google, or other AI model providers.
 
 By accessing or using VT, you agree to be bound by these Terms. If you disagree with any part of these Terms, please do not use our Service.
 
@@ -11,18 +13,18 @@ By accessing or using VT, you agree to be bound by these Terms. If you disagree 
 
 ## 1. Service Overview
 
-VT is a privacy-focused AI platform featuring advanced research capabilities that enables you to:
-- **Agentic Workflows**: Complex task coordination via custom workflow orchestration
-- **Grounding Web Search**: Comprehensive analysis of complex topics with in-depth exploration
-- **Grounding Web Search**: Enhanced search with web integration for real-time information
-- **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models
-- **Local Privacy**: All conversations stored locally on your device using IndexedDB
-- **BYOK Support**: Use your own API keys for unlimited access
-- **MCP Integration**: Connect with Model Context Protocol servers and external tools
-- **VT+ Premium Features**: Enhanced capabilities through subscription
-- **Free Models Access**: Access to free AI models including DeepSeek and Qwen models via OpenRouter
-- **Mathematical Tools**: Built-in calculator with trigonometric functions, logarithms, exponentials, and arithmetic operations
-- **Base Features**: Essential AI functionality perfect for getting started with VT
+VT is an independent AI wrapper platform that provides user-friendly interfaces built on top of AI models to enhance usability and provide additional features. Our platform enables you to:
+- **Custom AI Interfaces**: Enhanced user experience for multiple AI model providers
+- **Privacy-First Architecture**: All conversations stored locally on your device using IndexedDB
+- **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models through our interface
+- **Advanced Features**: Reasoning mode, document processing, web search integration
+- **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
+- **Local Privacy**: Zero server-side storage of chat data for maximum privacy
+- **Mathematical Tools**: Built-in calculator with advanced mathematical functions
+- **Document Processing**: Upload and analyze various document formats (VT+ feature)
+- **Web Search Integration**: Real-time information grounding (VT+ feature)
+
+**AI Model Disclaimer**: Our platform provides interfaces for third-party AI models. We are not affiliated with the model providers and do not control the underlying AI model outputs.
 
 ---
 
@@ -92,8 +94,9 @@ VT+ is a monthly subscription service for **$9.99 USD** that includes:
 ### 4.3 Cancellation & Refunds
 - You may cancel your subscription at any time through the customer portal
 - Access to premium features continues until the end of your current billing period
-- **No automatic refunds** - refunds are evaluated on a case-by-case basis
-- Contact support for refund requests with valid justification
+- **Refund Policy**: Refunds available within 30 days for monthly subscriptions, 14 days for annual subscriptions
+- Contact support@vtchat.io.vn for refund requests and assistance
+- Customer support responds within 3 business days as per payment processor requirements
 
 ---
 
@@ -234,8 +237,9 @@ For questions about these Terms, please contact us:
 
 **Email:** vtchat.io@gmail.com
 **Address:** An Giang, Vietnam
-**Support:** Available through our platform
-**Business Hours:** Monday-Friday, 9 AM - 6 PM ICT
+**Support:** support@vtchat.io.vn (responds within 3 business days)
+**Business Hours:** Monday-Friday, 9 AM - 6 PM UTC+7 (Vietnam Time)
+**Customer Portal:** Available 24/7 for subscription management through Creem.io
 
 ---
 

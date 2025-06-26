@@ -2,6 +2,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, TypographyH1, Skeleton } from '@repo/ui';
+import { WrapperDisclosure, Footer } from '@repo/common/components';
 import Link from 'next/link';
 
 export default function Home() {
@@ -33,10 +34,12 @@ export default function Home() {
                 <div className="max-w-2xl space-y-6 text-center">
                     <TypographyH1 className="text-4xl font-bold">VT</TypographyH1>
                     <p className="text-lg text-gray-600 dark:text-gray-400">
-                        Welcome to VT - Your intelligent conversation companion.
+                        Welcome to VT - Your privacy-focused AI chat platform.
                     </p>
+                    <WrapperDisclosure className="mt-4" />
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

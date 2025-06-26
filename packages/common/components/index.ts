@@ -1,4 +1,5 @@
 'use client';
+export * from './ai-disclaimer';
 export * from './api-key-prompt-modal';
 export * from './byok-validation-dialog';
 export * from './charts/chart-components';

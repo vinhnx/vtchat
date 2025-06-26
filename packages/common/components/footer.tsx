@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { TypographySmall } from '@repo/ui';
+import { AIDisclaimer } from './ai-disclaimer';
 
 export const Footer = () => {
     const links = [
@@ -14,6 +15,10 @@ export const Footer = () => {
         {
             href: '/faq',
             label: 'FAQs',
+        },
+        {
+            href: 'mailto:support@vtchat.io.vn',
+            label: 'Support',
         },
     ];
 
@@ -30,6 +35,7 @@ export const Footer = () => {
                     </Link>
                 ))}
             </div>
+            <AIDisclaimer className="mb-2" />
             <TypographySmall className="text-muted-foreground text-xs">
                 © 2025 VT. All rights reserved.
             </TypographySmall>
