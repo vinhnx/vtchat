@@ -1,5 +1,7 @@
 # TODO
 
+style LoadableComponent container
+--
 https://x.com/KuittinenPetri/status/1937496855342121234
 Gemini 2.5 Flash Lite Preview 05-17 still has very generous 15 RPM and 500 free requests per day. It is surprisingly capable model considering how cheap and fast it is.
 
