@@ -1,9 +1,9 @@
 'use client';
 import { useRootContext } from '@repo/common/context';
-import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
+
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+
 import {
     Button,
     cn,
@@ -44,7 +44,7 @@ export const CommandSearch = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
-    const { canAccess } = useSubscriptionAccess();
+
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
     const groupedThreads: Record<string, typeof threads> = {
@@ -98,7 +98,7 @@ export const CommandSearch = () => {
         };
         document.addEventListener('keydown', down);
         return () => document.removeEventListener('keydown', down);
-    }, []);
+    }, [setIsCommandSearchOpen]);
 
     type ActionItem = {
         name: string;
@@ -182,6 +182,11 @@ export const CommandSearch = () => {
             },
         },
     ];
+
+    // Don't render command search for non-logged users
+    if (!isSignedIn) {
+        return null;
+    }
 
     return (
         <CommandDialog open={isCommandSearchOpen} onOpenChange={setIsCommandSearchOpen}>
