@@ -9,7 +9,7 @@ This guide helps you set up VT for local development with all the necessary envi
 - Node.js 18+ or Bun 1.0+
 - Git
 - PostgreSQL (local or cloud)
-- Railway CLI (optional, for cloud database)
+- Fly CLI (optional, for deployment)
 
 ## 🚀 Environment Setup
 
@@ -59,8 +59,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # Option 1: Local PostgreSQL
 DATABASE_URL=postgresql://username:password@localhost:5432/vtchat_dev
 
-# Option 2: Railway PostgreSQL (recommended for development)
-# DATABASE_URL=postgresql://postgres:password@host:port/railway
+# Option 2: Neon PostgreSQL (recommended for development)
+# DATABASE_URL=postgresql://postgres:password@host:port/database
 
 # Option 3: Neon PostgreSQL
 # DATABASE_URL=postgresql://username:password@hostname.neon.tech/dbname?sslmode=require
@@ -130,21 +130,15 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 #### 2. Database Setup
 
-**Option A: Railway PostgreSQL (Recommended)**
+**Option A: Neon PostgreSQL (Recommended)**
 
 ```bash
-# Install Railway CLI
-npm install -g @railway/cli
+# 1. Go to https://neon.tech and create account
+# 2. Create new project: vtchat-dev  
+# 3. Copy database URL from dashboard
+# 4. Add to your .env.local file
 
-# Login and create a new project
-railway login
-railway init vtchat-dev
-
-# Add PostgreSQL database
-railway add postgresql
-
-# Get database URL
-railway variables get DATABASE_URL
+DATABASE_URL=postgresql://username:password@hostname.neon.tech/dbname?sslmode=require
 ```
 
 **Option B: Local PostgreSQL**
@@ -381,7 +375,7 @@ Keep your local environment similar to production:
 
 ```bash
 # Use similar Node.js version
-node --version  # Should match Railway
+node --version  # Should match Fly.io (Node 20+)
 
 # Use same package manager
 bun --version   # Preferred for this project
@@ -393,8 +387,8 @@ bun run build && bun start
 ### Database Syncing
 
 ```bash
-# If using Railway database for development
-railway connect postgres  # Opens direct connection
+# If using Neon database for development
+# Use Neon console or psql with connection string
 
 # If using local database, occasionally sync schema
 # with production migrations
@@ -428,4 +422,18 @@ railway connect postgres  # Opens direct connection
 
 **🎉 Success!** Your local development environment is now set up and ready for VT development!
 
-**Next**: Start building features, test locally, then deploy to Railway following the deployment guide.
+**Next**: Start building features, test locally, then deploy to Fly.io following the deployment guide.
+
+## 🚀 Deployment
+
+Once your local development is working:
+
+```bash
+# Deploy to development environment
+./deploy-fly.sh --dev
+
+# Deploy to production environment  
+./deploy-fly.sh --prod
+```
+
+See [DEPLOYMENT.md](../DEPLOYMENT.md) for detailed deployment instructions.

@@ -1,4 +1,16 @@
-# Production Deployment Checklist
+# Production Deployment Checklist - Fly.io
+
+## 🚀 Quick Deployment
+
+```bash
+# Production deployment
+./deploy-fly.sh --clean --prod
+
+# Development deployment
+./deploy-fly.sh --dev
+```
+
+## Pre-Deployment Checklist
 
 ## Pre-Deployment Verification
 

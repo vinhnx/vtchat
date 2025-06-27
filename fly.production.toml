@@ -1,0 +1,40 @@
+# Production fly.toml
+app = 'vtchat-prod'
+primary_region = 'sin'
+
+[build]
+
+[env]
+  NODE_ENV = 'production'
+  BASE_URL = 'https://vtchat-prod.fly.dev'
+  BETTER_AUTH_URL = 'https://vtchat-prod.fly.dev'
+  NEXT_PUBLIC_BASE_URL = 'https://vtchat-prod.fly.dev'
+  NEXT_PUBLIC_APP_URL = 'https://vtchat-prod.fly.dev'
+  NEXT_PUBLIC_COMMON_URL = 'https://vtchat-prod.fly.dev'
+  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat-prod.fly.dev'
+  CREEM_ENVIRONMENT = 'production'
+  BETTER_AUTH_ENV = 'production'
+  PRODUCT_NAME = 'VT Chat'
+  PRODUCT_DESCRIPTION = 'AI-powered chat application'
+  PRICING_CURRENCY = 'USD'
+  PRICING_INTERVAL = 'month'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/health"
+
+[[vm]]
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 2

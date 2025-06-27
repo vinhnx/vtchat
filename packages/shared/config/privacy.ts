@@ -12,12 +12,12 @@ At **VT**, we are committed to protecting your privacy and being transparent abo
 ## Overview
 
 VT is built with **privacy-first principles** at its core:
-- 🔒 **Your conversations never leave your device** - stored locally using IndexedDB
-- 🚫 **No server-side chat storage** - we cannot access your conversation history
-- 🔐 **Direct API communication** - your messages go straight to AI providers
-- 🛡️ **Minimal data collection** - only what's essential to provide our service
-- 🔑 **Local API key storage** - encrypted and stored only in your browser
-- ⚡ **Anonymous usage option** - use VT without creating an account
+- **Your conversations never leave your device** - stored locally using IndexedDB
+- **No server-side chat storage** - we cannot access your conversation history
+- **Direct API communication** - your messages go straight to AI providers
+- **Minimal data collection** - only what's essential to provide our service
+- **Local API key storage** - encrypted and stored only in your browser
+- **Anonymous usage option** - use VT without creating an account
 
 ---
 

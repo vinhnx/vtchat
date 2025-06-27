@@ -1,20 +1,11 @@
-# fly.toml app configuration file generated for vtchat-dev on 2025-06-26T21:49:22+07:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
+# Development fly.toml
 app = 'vtchat-dev'
 primary_region = 'sin'
 
 [build]
-  # Use Dockerfile in root directory (default)
-  # dockerfile = "Dockerfile"
-  
-  # Build arguments (optional)
-  # [build.args]
-  #   NODE_ENV = "production"
 
 [env]
+  NODE_ENV = 'development'
   BASE_URL = 'https://vtchat-dev.fly.dev'
   BETTER_AUTH_URL = 'https://vtchat-dev.fly.dev'
   NEXT_PUBLIC_BASE_URL = 'https://vtchat-dev.fly.dev'
@@ -22,9 +13,9 @@ primary_region = 'sin'
   NEXT_PUBLIC_COMMON_URL = 'https://vtchat-dev.fly.dev'
   NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat-dev.fly.dev'
   CREEM_ENVIRONMENT = 'sandbox'
-  BETTER_AUTH_ENV = 'production'
-  PRODUCT_NAME = 'VT Chat'
-  PRODUCT_DESCRIPTION = 'AI-powered chat application'
+  BETTER_AUTH_ENV = 'development'
+  PRODUCT_NAME = 'VT Chat Dev'
+  PRODUCT_DESCRIPTION = 'AI-powered chat application - Development'
   PRICING_CURRENCY = 'USD'
   PRICING_INTERVAL = 'month'
 
@@ -35,6 +26,13 @@ primary_region = 'sin'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "60s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/health"
 
 [[vm]]
   memory = '1gb'

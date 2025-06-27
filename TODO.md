@@ -1,6 +1,21 @@
 # TODO
 
+
+fix background color for user button container in side menu
+
+remove sidebar border and background color
+
+decorate /chat contentainer with dark/white background color
+
+--
+review .env config production
+
+-> copy config from .env to .env.production
+
+--
 ## Fly.io deployment. Good luck!
+
+fly.toml -> can set production/development environment variables? NODE_ENV and [env] setup, as path and env keys are difference between production and development?
 
 https://fly.io/docs/apps/going-to-production/#main-content-start
 
@@ -13,6 +28,7 @@ app: https://fly.io/apps/vtchat-dev/configuration
 https://fly.io/docs/apps/going-to-production/
 https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
 ✅ migrate from railway to fly.io
+✅ update deployment setup guide and documents
 -> free if use under 5$ a month
 
 --

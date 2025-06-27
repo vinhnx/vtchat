@@ -112,7 +112,7 @@ trackPerformance('ai-response', performance.now() - startTime);
 - Check interval: 5 minutes
 - Alert methods: Email, Slack, Discord
 
-#### Option 2: Railway Built-in Health Checks
+#### Option 2: Fly.io Built-in Health Checks
 ```typescript
 // app/api/health/route.ts
 import { NextResponse } from 'next/server';
@@ -143,19 +143,14 @@ export async function GET() {
 ```
 
 ### Health Check Configuration
-```yaml
-# railway.json
-{
-  "build": {
-    "builder": "NIXPACKS"
-  },
-  "deploy": {
-    "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 30,
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
-  }
-}
+```toml
+# fly.toml (already configured)
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/health"
 ```
 
 ## Application Logs
@@ -338,7 +333,7 @@ const sendSlackAlert = async (message: string, severity: 'critical' | 'warning' 
 ```
 
 ### Email Alerts
-- Use Railway's built-in alerting
+- Use Fly.io's built-in monitoring
 - Configure email notifications for deployment failures
 - Set up Sentry email alerts for errors
 
@@ -365,7 +360,7 @@ const sendSlackAlert = async (message: string, severity: 'critical' | 'warning' 
 
 ### Dashboard Tools
 - **Grafana** (Open source)
-- **Railway Analytics** (Built-in)
+- **Fly.io Metrics** (Built-in)
 - **Sentry Performance** (Error tracking + performance)
 - **Custom Dashboard** (Next.js admin panel)
 
@@ -449,7 +444,7 @@ ENABLE_SECURITY_MONITORING=true
 
 1. **Choose monitoring services** based on budget and requirements
 2. **Set up basic error tracking** with Sentry or similar
-3. **Configure health checks** for Railway deployment
+3. **Configure health checks** for Fly.io deployment
 4. **Implement structured logging** throughout the application
 5. **Set up alerting** for critical issues
 6. **Create monitoring dashboard** for key metrics
