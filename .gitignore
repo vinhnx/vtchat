@@ -52,6 +52,6 @@ better-auth-mcp.log
 .env.prod.backup
 
 # web app environment files
-apps/web/.env.development
-apps/web/.env.production
+apps/web/.env*
+!apps/web/.env.example
 apps/web/.env.build
