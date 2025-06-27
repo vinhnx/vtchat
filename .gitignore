@@ -50,3 +50,8 @@ bundle-history.json
 better-auth-mcp.log
 .roo/mcp.json
 .env.prod.backup
+
+# web app environment files
+apps/web/.env.development
+apps/web/.env.production
+apps/web/.env.build
