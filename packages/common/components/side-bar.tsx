@@ -22,6 +22,7 @@ import {
 } from '@repo/ui';
 import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
+import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 import {
     ChevronsUpDown,
     Command,
@@ -65,6 +66,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
     const { logout, isLoggingOut } = useLogout();
+    const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -241,7 +243,13 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 ? 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent relative w-full justify-between'
                                 : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         )}
-                        onClick={() => setIsCommandSearchOpen(true)}
+                        onClick={() => {
+                            if (!isSignedIn) {
+                                requireLogin();
+                                return;
+                            }
+                            setIsCommandSearchOpen(true);
+                        }}
                     >
                         <div className="flex items-center">
                             <Search
@@ -611,6 +619,13 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
             </Flex>
+            
+            <LoginRequiredDialog
+                isOpen={showLoginPrompt}
+                onClose={hideLoginPrompt}
+                title="Login Required"
+                description="Please sign in to access the command search feature."
+            />
         </div>
     );
 };

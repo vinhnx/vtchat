@@ -183,11 +183,6 @@ export const CommandSearch = () => {
         },
     ];
 
-    // Don't render command search for non-logged users
-    if (!isSignedIn) {
-        return null;
-    }
-
     return (
         <CommandDialog open={isCommandSearchOpen} onOpenChange={setIsCommandSearchOpen}>
             <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
