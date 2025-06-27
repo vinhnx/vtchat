@@ -137,7 +137,7 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 - **Authentication**: Better Auth (modern session management)
 - **Payment Processing**: Creem.io integration
 - **Local Storage**: IndexedDB via Dexie.js
-- **Deployment**: Railway (production-ready)
+- **Deployment**: Fly.io (production-ready)
 
 ### **Development & Build**
 - **Runtime**: Bun (package manager + JavaScript runtime)

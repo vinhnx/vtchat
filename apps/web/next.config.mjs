@@ -105,7 +105,7 @@ const nextConfig = {
                         key: 'Access-Control-Allow-Origin',
                         value:
                             process.env.NEXT_PUBLIC_BASE_URL ||
-                            'https://vtchat-web-development.up.railway.app',
+                            'https://vtchat-dev.fly.dev',
                     },
                     {
                         key: 'Access-Control-Allow-Methods',
@@ -128,7 +128,7 @@ const nextConfig = {
         return [{ source: '/', destination: '/chat', permanent: true }];
     },
 
-    // Railway-specific configuration for minimal working deployment
+    // Fly.io-specific configuration for deployment
     output: 'standalone',
     poweredByHeader: false,
     generateBuildId: async () => {

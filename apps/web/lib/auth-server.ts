@@ -1,8 +1,8 @@
 import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
 import { emailHarmony } from 'better-auth-harmony';
-import { multiSession } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { multiSession } from 'better-auth/plugins';
 import { db } from './database';
 import * as schema from './database/schema';
 
@@ -71,7 +71,7 @@ export const auth = betterAuth({
         max: 200, // Increased from 100 to handle more requests
     },
     trustedOrigins: [
-        'https://vtchat-web-development.up.railway.app',
+        'https://vtchat-dev.fly.dev',
         process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
         'http://localhost:3000',
         'http://127.0.0.1:3000',

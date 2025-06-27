@@ -1,15 +1,26 @@
 # TODO
 
+## Fly.io deployment. Good luck!
+
+https://fly.io/docs/apps/going-to-production/#main-content-start
+
++ dev
+web: https://vtchat-dev.fly.dev
+app: https://fly.io/apps/vtchat-dev/configuration
+
+
+
+https://fly.io/docs/apps/going-to-production/
+https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
+✅ migrate from railway to fly.io
+-> free if use under 5$ a month
+
+--
 style LoadableComponent container
 --
 https://x.com/KuittinenPetri/status/1937496855342121234
 Gemini 2.5 Flash Lite Preview 05-17 still has very generous 15 RPM and 500 free requests per day. It is surprisingly capable model considering how cheap and fast it is.
-
 --
---
-https://x.com/rayon_labs/status/1938176081976037505?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
-
--
 https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
 
 --
@@ -20,14 +31,9 @@ https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwR
 
 --
 
-https://fly.io/docs/apps/going-to-production/
-https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
-migrate from railway to fly.io
--> free if use under 5$ a month
-
 --
 
-railway: https://docs.railway.com/reference/production-readiness-checklist
+fly.io: https://fly.io/docs/apps/going-to-production/
 
 --
 

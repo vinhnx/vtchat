@@ -1,4 +1,4 @@
-# Production Dockerfile for VT - Railway deployment
+# Production Dockerfile for VT - Fly.io deployment
 # Use multi-stage build for better optimization
 
 # Stage 1: Base image with dependencies
@@ -9,8 +9,9 @@ WORKDIR /app
 # Install system dependencies
 RUN apk add --no-cache curl bash python3 make g++ ca-certificates
 
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash \
+# Install Bun and disable corepack to avoid conflicts
+RUN corepack disable && \
+    curl -fsSL https://bun.sh/install | bash \
     && mv /root/.bun/bin/bun /usr/local/bin/ \
     && chmod +x /usr/local/bin/bun
 
@@ -37,7 +38,7 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 # Copy source code
 COPY . .
 
-# Accept build-time environment variables from Railway
+# Accept build-time environment variables from Fly.io
 # NOTE: NODE_ENV is automatically set by Next.js (development for dev, production for build)
 ARG BASE_URL
 ARG BETTER_AUTH_URL
@@ -120,11 +121,15 @@ ENV CREEM_PRODUCT_ID=${CREEM_PRODUCT_ID}
 ENV CREEM_ENVIRONMENT=${CREEM_ENVIRONMENT}
 
 # Build the application with environment variables
+# Set a placeholder DATABASE_URL for build time (actual value is set at runtime via secrets)
+ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder"
+
 RUN cd apps/web && \
     echo "=== BUILD ENVIRONMENT DEBUG ===" && \
     echo "BASE_URL: $BASE_URL" && \
     echo "NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL" && \
     echo "CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT" && \
+    echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && \
     echo "NODE_ENV will be automatically set by Next.js build process" && \
     echo "==============================" && \
     bun run build

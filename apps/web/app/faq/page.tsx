@@ -794,7 +794,7 @@ function FAQs() {
                                         keys)
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Configure PostgreSQL database (local or Railway)
+                                        Configure PostgreSQL database (local or Neon)
                                     </li>
                                     <li className="text-muted-foreground">
                                         Run development server with <code>bun dev</code>

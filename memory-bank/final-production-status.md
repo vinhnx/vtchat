@@ -32,7 +32,7 @@ VT (VTChat) has successfully completed all production readiness requirements and
 - **Status**: COMPLETE
 - **Documentation**: `docs/production-monitoring-setup.md` created
 - **Coverage**: Error tracking, performance monitoring, uptime monitoring, logging
-- **Recommended Services**: Sentry, UptimeRobot, Railway built-in health checks
+- **Recommended Services**: Sentry, UptimeRobot, Fly.io built-in health checks
 - **Implementation**: Structured logging, health check endpoints, alerting strategy
 
 ### ✅ Production Documentation
@@ -100,7 +100,7 @@ VT (VTChat) has successfully completed all production readiness requirements and
 - **Customer Experience**: Polished UI/UX with modern design system
 
 ### ✅ Operational Readiness
-- **Deployment Platform**: Railway configuration complete
+- **Deployment Platform**: Fly.io configuration complete
 - **Domain**: vtchat.io.vn ready for activation
 - **Monitoring**: Comprehensive monitoring strategy documented
 - **Documentation**: Complete deployment and maintenance guides
@@ -134,7 +134,7 @@ The application is ready for immediate production deployment following the provi
 
 1. **Execute Production Deployment**
    - Follow the 50-point deployment checklist
-   - Use Railway deployment configuration
+   - Use Fly.io deployment configuration
    - Activate vtchat.io.vn domain
 
 2. **Post-Launch Monitoring**

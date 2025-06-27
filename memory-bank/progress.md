@@ -1258,16 +1258,16 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 ## Previous Session - December 15, 2024
 
-### Railway Configuration Review & Optimization ✅
+### Fly.io Configuration Review & Optimization ✅
 
-**TASK**: Final review and optimization of Railway configuration settings for development environment
+**TASK**: Final review and optimization of Fly.io configuration settings for development environment
 
 **COMPLETED**:
 
-1. **Railway Configuration Optimization**:
+1. **Fly.io Configuration Optimization**:
 
-    - Updated `railway.toml` with environment-specific build and deploy settings
-    - Updated `railway.json` with proper schema validation and environment configs
+- Updated `fly.toml` with environment-specific build and deploy settings
+- Updated fly configuration with proper schema validation and environment configs
     - Added dedicated build configurations for development and production environments
     - Optimized healthcheck timeouts (180s for dev, 300s for production)
     - Ensured consistent restart policies across environments
@@ -1281,7 +1281,7 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 3. **Configuration Documentation**:
 
-    - Created comprehensive `docs/railway-config-review.md`
+    - Created comprehensive `docs/fly-config-review.md`
     - Documented current resource settings (2 vCPU, 1GB RAM, serverless enabled)
     - Provided environment variable configuration guide
     - Added troubleshooting section and validation checklist
@@ -1289,27 +1289,27 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 4. **Security & Best Practices**:
 
-    - Confirmed all `.env.railway.*` files are properly gitignored
+    - Confirmed all `.env.fly.*` files are properly gitignored
     - Verified only template files are committed to repository
-    - Documented proper secrets management via Railway Dashboard/CLI
+    - Documented proper secrets management via Fly.io Dashboard/CLI
     - Ensured no hardcoded credentials in codebase
 
 5. **Health Check Verification**:
     - Confirmed `/api/health` endpoint exists and returns proper JSON response
     - Verified endpoint returns 200 status with service metadata
-    - Healthcheck path properly configured in Railway settings
+    - Healthcheck path properly configured in Fly.io settings
 
-**CURRENT RAILWAY SETUP**:
+**CURRENT FLY.IO SETUP**:
 
 - **Services**: `vtchat` (production), `vtchat-development` (dev), shared `Postgres`
-- **Configuration**: Environment-specific settings in `railway.toml` and `railway.json`
+- **Configuration**: Environment-specific settings in `fly.toml`
 - **Resources**: 2 vCPU, 1GB RAM, serverless enabled for cost optimization
 - **Health Checks**: `/api/health` endpoint with appropriate timeouts
 - **CI/CD**: GitHub Actions configured for branch-based deployments
 
 **NEXT STEPS**:
 
-- Set environment variables in Railway Dashboard for development environment
+- Set environment variables in Fly.io Dashboard for development environment
 - Test deployment of dev branch to development environment
 - Monitor performance and adjust resource allocation if needed
 
@@ -1379,18 +1379,18 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 **RESULT**: Single source of truth for local development environment variables at `apps/web/.env.local`
 
-### Railway Deployment Issues Resolution ✅
+### Fly.io Deployment Issues Resolution ✅
 
-**ISSUE**: 502 error on Railway deployment despite successful build
+**ISSUE**: 502 error on Fly.io deployment despite successful build
 
 **COMPLETED FIXES**:
 
-1. **Dockerfile Updates for Railway Compatibility**:
+1. **Dockerfile Updates for Fly.io Compatibility**:
 
     - Removed NODE_ENV override (let Next.js manage automatically)
-    - Added HOSTNAME="0.0.0.0" for Railway port binding
+    - Added HOSTNAME="0.0.0.0" for Fly.io port binding
     - Enhanced debug logging with CREEM_ENVIRONMENT
-    - Fixed port configuration for Railway
+    - Fixed port configuration for Fly.io
 
 2. **Environment Variable Strategy**:
 
@@ -1398,9 +1398,9 @@ When switching from anonymous to logged-in user (or between different accounts):
     - Updated codebase to use getCurrentEnvironment() function
     - Proper separation between Node.js environment and application environment
 
-3. **Railway Strategy Documentation**:
-    - **RECOMMENDATION**: Use 2 separate Railway projects (dev + prod) instead of 1 project with 2 environments
-    - Created comprehensive guide: `docs/railway-development-deployment-guide.md`
+3. **Fly.io Strategy Documentation**:
+    - **RECOMMENDATION**: Use 2 separate Fly.io apps (dev + prod) instead of 1 project with 2 environments
+    - Created comprehensive guide: `docs/fly-development-deployment-guide.md`
     - Benefits: Complete isolation, independent scaling, separate billing, better security
 
 **CURRENT STATUS**:
@@ -1412,39 +1412,39 @@ When switching from anonymous to logged-in user (or between different accounts):
 
 **NEXT STEPS**:
 
-1. Debug 502 error via Railway logs
-2. Create separate Railway development project
+1. Debug 502 error via Fly.io logs
+2. Create separate Fly.io development app
 3. Migrate to 2-project strategy
 
-### Railway Deployment Configuration Update ✅
+### Fly.io Deployment Configuration Update ✅
 
-**ISSUE**: Dockerfile and environment configuration needed proper setup for different Railway environments
+**ISSUE**: Dockerfile and environment configuration needed proper setup for different Fly.io environments
 
 **COMPLETED FIXES**:
 
 1. **Environment-Specific Configuration**:
 
-    - Created `.env.railway.development` for Railway development environment
-    - Created `.env.railway.production` for Railway production environment
-    - Updated `.env.railway` to serve as template with clear instructions
+    - Created `.env.fly.development` for Fly.io development environment
+- Created `.env.fly.production` for Fly.io production environment
+- Updated `.env.fly` to serve as template with clear instructions
     - Configured proper URLs for each environment:
         - Local: `http://localhost:3000`
-        - Development: `https://vtchat-web-development.up.railway.app`
-        - Production: `https://vtchat-web-production.up.railway.app`
+        - Development: `https://vtchat-web-development.fly.dev`
+        - Production: `https://vtchat-web-production.fly.dev`
 
-2. **Railway Configuration**:
+2. **Fly.io Configuration**:
 
-    - Verified `Dockerfile` is properly configured for Railway deployment
-    - Updated `railway.toml` with proper health check and build settings
-    - Created `railway.json` as alternative configuration format
+    - Verified `Dockerfile` is properly configured for Fly.io deployment
+    - Updated `fly.toml` with proper health check and build settings
+    - Created fly configuration with alternative configuration format
     - Ensured proper environment variable handling in build process
 
 3. **Documentation**:
 
-    - Created comprehensive `docs/railway-deployment-configuration.md`
+    - Created comprehensive `docs/fly-deployment-configuration.md`
     - Documented deployment process for both environments
     - Added security considerations and troubleshooting guide
-    - Included Railway CLI commands for environment setup
+    - Included Fly.io CLI commands for environment setup
 
 4. **Environment Variables Structure**:
     - Environment-specific URLs properly configured
@@ -1452,7 +1452,7 @@ When switching from anonymous to logged-in user (or between different accounts):
     - Auth environment settings aligned with deployment environment
     - Logging levels appropriate for each environment
 
-**RESULT**: Proper Railway deployment configuration with environment-specific URLs and settings
+**RESULT**: Proper Fly.io deployment configuration with environment-specific URLs and settings
 
 ## Completed Tasks
 
@@ -2043,7 +2043,7 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 **Date:** June 16, 2025
 **Status:** ✅ COMPLETED - CRITICAL FIX
 
-**ISSUE**: Railway deployment failing with "Cannot find module '/app/server.js'" error
+**ISSUE**: Fly.io deployment failing with "Cannot find module '/app/server.js'" error
 
 **ROOT CAUSE**:
 
@@ -2064,32 +2064,32 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 
 **EXPECTED RESULT**:
 
-- App should now start successfully on Railway
+- App should now start successfully on Fly.io
 - All endpoints including `/api/auth/*` should be accessible
 - No more "Cannot find module" errors
 
 **VERIFICATION NEEDED**:
 
-1. ✅ Check Railway deployment logs show successful startup
+1. ✅ Check Fly.io deployment logs show successful startup
 2. ⏳ Test auth endpoints (200/302 responses, not 404)
 3. ⏳ Verify CORS headers working correctly
 4. ⏳ Confirm login functionality works end-to-end
 
-### GitHub Actions & Railway Configuration Updates ✅
+### GitHub Actions & Fly.io Configuration Updates ✅
 
-**COMPLETED**: Updated branch-based deployment strategy and Railway configuration
+**COMPLETED**: Updated branch-based deployment strategy and Fly.io configuration
 
 **IMPLEMENTATION**:
 
 1. **Branch Strategy Implementation**:
 
-    - ✅ `dev` branch → triggers Railway `development` environment deployment
-    - ✅ `main` branch → triggers Railway `production` environment deployment
+    - ✅ `dev` branch → triggers Fly.io `development` environment deployment
+- ✅ `main` branch → triggers Fly.io `production` environment deployment
     - ✅ Updated all references from `railway-deployment` to `dev` branch
 
 2. **GitHub Actions Workflows**:
 
-    - ✅ **Railway Deploy Workflow** (`.github/workflows/railway-deploy.yml`):
+    - ✅ **Fly.io Deploy Workflow** (`.github/workflows/fly-deploy.yml`):
         - Automatic deployment to development on `dev` branch push
         - Automatic deployment to production on `main` branch push
         - Build validation for all PRs
@@ -2098,16 +2098,16 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
         - Automatic cleanup when PRs are closed
         - Environment-specific commenting and URL generation
 
-3. **Railway Configuration Updates**:
+3. **Fly.io Configuration Updates**:
 
-    - ✅ Updated `railway.json` with environment-specific configurations
-    - ✅ Updated `railway.toml` with environment-specific health check settings
+    - ✅ Updated fly configuration with environment-specific configurations
+- ✅ Updated `fly.toml` with environment-specific health check settings
     - ✅ Development environment: 180s health check timeout
     - ✅ Production environment: 300s health check timeout
 
 4. **Documentation Review**:
-    - ✅ Used Context7 to review Railway best practices
-    - ✅ Verified branch-based deployment patterns align with Railway recommendations
+    - ✅ Used Context7 to review Fly.io best practices
+- ✅ Verified branch-based deployment patterns align with Fly.io recommendations
     - ✅ Confirmed environment-specific configuration support
 
 **WORKFLOW STRUCTURE**:
