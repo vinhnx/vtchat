@@ -5,6 +5,69 @@
 
 set -e
 
+# Check if git working directory is clean
+check_git_status() {
+    if [[ -n $(git status --porcelain) ]]; then
+        echo "❌ Error: Working directory is not clean!"
+        echo "Please commit or stash your changes before deploying."
+        git status --short
+        exit 1
+    fi
+    echo "✅ Working directory is clean"
+}
+
+# Validate semver format
+validate_semver() {
+    local version=$1
+    if [[ ! $version =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)(-[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$ ]]; then
+        return 1
+    fi
+    return 0
+}
+
+# Prompt for version tag
+prompt_version() {
+    echo "🏷️  Version tagging for deployment"
+    
+    # Get latest tag
+    local latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+    echo "Latest tag: $latest_tag"
+    
+    echo "Enter new version (semver format, e.g., v1.0.0, v1.2.3-beta.1):"
+    read -r new_version
+    
+    # Add 'v' prefix if not present
+    if [[ ! $new_version =~ ^v ]]; then
+        new_version="v$new_version"
+    fi
+    
+    # Validate semver format
+    if ! validate_semver "$new_version"; then
+        echo "❌ Invalid semver format. Expected: v1.2.3 or v1.2.3-beta.1"
+        exit 1
+    fi
+    
+    # Check if tag already exists
+    if git rev-parse "$new_version" >/dev/null 2>&1; then
+        echo "❌ Tag $new_version already exists!"
+        exit 1
+    fi
+    
+    echo "Creating tag: $new_version"
+    echo "Proceed? (y/N):"
+    read -r confirm
+    
+    if [[ $confirm != "y" && $confirm != "Y" ]]; then
+        echo "❌ Deployment cancelled"
+        exit 1
+    fi
+    
+    # Create and push tag
+    git tag -a "$new_version" -m "Release $new_version"
+    git push origin "$new_version"
+    echo "✅ Tag $new_version created and pushed"
+}
+
 # Default values
 ENV_FILE=""
 FORCE_CLEANUP=false
@@ -52,6 +115,14 @@ if [[ -z "$ENV_FILE" ]]; then
     else
         ENV_FILE="apps/web/.env.development"
     fi
+fi
+
+# Pre-deployment checks
+check_git_status
+
+# Version tagging (only for production)
+if [[ "$ENVIRONMENT" == "prod" ]]; then
+    prompt_version
 fi
 
 echo "🚀 Starting Fly.io deployment for vtchat..."
