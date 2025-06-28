@@ -16,10 +16,10 @@ const withBundleAnalyzer =
 const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
 
-    // Server-side optimizations
+    // Server-side optimizations - exclude workspace packages from bundling
     serverExternalPackages: ['@repo/ai', '@repo/shared', '@repo/common'],
     
-    // Enable automatic bundling for Pages Router
+    // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true,
     
     // Webpack memory optimizations
@@ -75,6 +75,23 @@ const nextConfig = {
     // Webpack optimizations (only when not using Turbopack)
     ...(process.env.TURBOPACK !== '1' && {
         webpack: (config, { dev, isServer }) => {
+            // Ensure undici is bundled for standalone production builds
+            if (isServer && !dev) {
+                config.externals = config.externals || [];
+                const externals = Array.isArray(config.externals) ? config.externals : [config.externals];
+                config.externals = externals.filter(external => {
+                    if (typeof external === 'function') {
+                        return (context, request, callback) => {
+                            if (request === 'undici' || request.startsWith('undici/')) {
+                                return callback(); // Include in bundle
+                            }
+                            return external(context, request, callback);
+                        };
+                    }
+                    return external !== 'undici';
+                });
+            }
+
             // Optimize for development speed
             if (dev) {
                 config.cache = {

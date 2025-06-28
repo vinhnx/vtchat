@@ -1,33 +1,64 @@
-# Docker ignore for optimized build
+# Fly.io optimized .dockerignore
+# Exclude development files and build artifacts
+
+# Dependencies (will be installed in container)
 node_modules
+*/node_modules
+**/node_modules
+
+# Build outputs (will be generated in container)
 .next
-.git
-.gitignore
-README.md
-Dockerfile
-.dockerignore
-.env*
-!.env.example
-!.env.build
-.vercel
-.DS_Store
-*.log
-.turbo
-# Build outputs
 apps/web/.next
 packages/*/.next
-packages/*/node_modules
-.railway
+.turbo
 dist
 build
+
+# Additional optimization - exclude more dev files
+.git
+.github
+**/.git
+**/.github
+*.log
+**/*.log
+.build-cache-warmed
+
+# Version control
+.git
+.gitignore
+
+# Environment files (secrets managed by Fly.io)
+.env*
+!.env.example
+
+# Platform-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Development tools
+.vercel
+.railway
 coverage
 .nyc_output
-*.tgz
-*.tar.gz
-# Development files
+
+# Documentation and development files
 docs/
 memory-bank/
 scripts/
 terminal
 *.md
 !README.md
+
+# Archive files
+*.tgz
+*.tar.gz
+
+# IDE files
+.vscode/
+.idea/

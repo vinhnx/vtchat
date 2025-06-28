@@ -11,6 +11,10 @@ echo "NODE_ENV: ${NODE_ENV}"
 # Verify server.js exists
 if [ ! -f "apps/web/server.js" ]; then
     echo "Error: server.js not found at apps/web/server.js"
+    echo "Contents of current directory:"
+    ls -la
+    echo "Contents of apps/web/:"
+    ls -la apps/web/ || echo "apps/web directory not found"
     exit 1
 fi
 
