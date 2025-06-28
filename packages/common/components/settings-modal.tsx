@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Alert, AlertDescription, Button } from '@repo/ui';
+import { Alert, AlertDescription, Button, TypographyH1 } from '@repo/ui';
 import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
 
 import {
@@ -16,7 +16,6 @@ import {
     DialogContent,
     DialogTitle,
     Input,
-    TypographyH2,
     TypographyH3,
     TypographyMuted,
 } from '@repo/ui';
@@ -121,9 +120,9 @@ export const SettingsModal = () => {
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
                         <div className="flex items-center justify-between px-4 py-4 md:px-6">
                             <div>
-                                <TypographyH2 className="text-xl font-semibold">
+                                <TypographyH1 className="text-xl font-semibold">
                                     Settings
-                                </TypographyH2>
+                                </TypographyH1>
                                 <p className="text-muted-foreground text-sm">
                                     Customize your VT experience and manage your account
                                 </p>
@@ -547,7 +546,7 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
