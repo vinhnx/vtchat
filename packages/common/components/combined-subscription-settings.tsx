@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { ModelEnum, models } from '@repo/ai/models';
 import {
     useCreemSubscription,
     useCurrentPlan,
@@ -8,6 +8,10 @@ import {
     useVtPlusAccess,
 } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
+import {
+    DEFAULT_EMBEDDING_MODEL,
+    EMBEDDING_MODEL_CONFIG,
+} from '@repo/shared/config/embedding-models';
 import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT, THINKING_MODE } from '@repo/shared/constants';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
@@ -21,15 +25,14 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-    
     Input,
     Label,
     Skeleton,
     Slider,
     Switch,
     Textarea,
-     TypographyH3,
-     TypographyMuted,
+    TypographyH3,
+    TypographyMuted,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -38,25 +41,24 @@ import {
     BarChart3,
     Brain,
     Check,
+    CreditCard,
     Database,
     FileText,
     Lock,
+    MessageSquare,
+    Palette,
+    Search,
     Settings,
+    Shield,
     Sparkles,
     Trash2,
     User,
-     Zap,
-    CreditCard,
-     Shield,
-    Search,
-    MessageSquare,
-    Palette,
+    Zap,
 } from 'lucide-react';
-import { EMBEDDING_MODEL_CONFIG, DEFAULT_EMBEDDING_MODEL } from '@repo/shared/config/embedding-models';
-import { ModelEnum, models } from '@repo/ai/models';
+import React, { useState } from 'react';
+import { Combobox } from './combobox';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
-import { Combobox } from './combobox';
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -81,90 +83,96 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const setEmbeddingModel = useAppStore(state => state.setEmbeddingModel);
     const ragChatModel = useAppStore(state => state.ragChatModel);
     const setRagChatModel = useAppStore(state => state.setRagChatModel);
-     const profile = useAppStore(state => state.profile);
-     const setProfile = useAppStore(state => state.setProfile);
+    const profile = useAppStore(state => state.profile);
+    const setProfile = useAppStore(state => state.setProfile);
 
-     // Auto-fill suggestions from knowledge base
-     const [knowledgeBaseSuggestions, setKnowledgeBaseSuggestions] = useState<{
-         name: string;
-         work: string;
-     } | null>(null);
-     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    // Auto-fill suggestions from knowledge base
+    const [knowledgeBaseSuggestions, setKnowledgeBaseSuggestions] = useState<{
+        name: string;
+        work: string;
+    } | null>(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-     // Ensure embeddingModel is valid, reset to default if not
-    const safeEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel] ? embeddingModel : DEFAULT_EMBEDDING_MODEL;
+    // Ensure embeddingModel is valid, reset to default if not
+    const safeEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel]
+        ? embeddingModel
+        : DEFAULT_EMBEDDING_MODEL;
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
     const vtPlusFeatures = getEnabledVTPlusFeatures();
 
-     // Function to analyze knowledge base and suggest profile information
-     const analyzeKnowledgeBase = async () => {
-         setIsAnalyzing(true);
-         try {
-             const response = await fetch('/api/rag/knowledge');
-             if (response.ok) {
-                 const data = await response.json();
-                 const resources = data.resources || data.knowledge || [];
-                 
-                 if (resources.length > 0) {
-                     // Simple analysis to extract potential name and work info
-                     const allContent = resources.map((r: any) => r.content).join(' ');
-                     
-                     // Look for patterns like "I'm [name]", "My name is [name]", "call me [name]"
-                     const namePatterns = [
-                         /(?:I'm|I am|call me|my name is|i'm|i am)\s+([A-Z][a-z]+)/gi,
-                         /(?:this is|here's|i'm)\s+([A-Z][a-z]+)/gi
-                     ];
-                     
-                     let suggestedName = '';
-                     for (const pattern of namePatterns) {
-                         const match = pattern.exec(allContent);
-                         if (match && match[1] && !['The', 'A', 'An', 'This', 'That'].includes(match[1])) {
-                             suggestedName = match[1];
-                             break;
-                         }
-                     }
-                     
-                     // Look for work-related patterns
-                     const workPatterns = [
-                         /(?:I work as|I'm a|I am a|my job is|I do)\s+([^.!?]+)/gi,
-                         /(?:software engineer|developer|manager|designer|student|teacher|doctor|nurse|analyst|consultant|freelancer|entrepreneur|founder|CEO|CTO|VP|director)/gi,
-                         /(?:at [A-Z][a-z]+ [A-Z][a-z]+|at [A-Z][a-z]+)/gi
-                     ];
-                     
-                     let suggestedWork = '';
-                     for (const pattern of workPatterns) {
-                         const match = pattern.exec(allContent);
-                         if (match) {
-                             suggestedWork = match[0].trim();
-                             if (suggestedWork.length > 100) {
-                                 suggestedWork = suggestedWork.substring(0, 100) + '...';
-                             }
-                             break;
-                         }
-                     }
-                     
-                     if (suggestedName || suggestedWork) {
-                         setKnowledgeBaseSuggestions({
-                             name: suggestedName,
-                             work: suggestedWork
-                         });
-                     }
-                 }
-             }
-         } catch (error) {
-             console.error('Error analyzing knowledge base:', error);
-         } finally {
-             setIsAnalyzing(false);
-         }
-     };
+    // Function to analyze knowledge base and suggest profile information
+    const analyzeKnowledgeBase = async () => {
+        setIsAnalyzing(true);
+        try {
+            const response = await fetch('/api/rag/knowledge');
+            if (response.ok) {
+                const data = await response.json();
+                const resources = data.resources || data.knowledge || [];
 
-     // Auto-analyze on mount if profile is empty
-     React.useEffect(() => {
-         if (isVtPlus && (!profile.name && !profile.workDescription)) {
-             analyzeKnowledgeBase();
-         }
-     }, [isVtPlus, profile.name, profile.workDescription]);
+                if (resources.length > 0) {
+                    // Simple analysis to extract potential name and work info
+                    const allContent = resources.map((r: any) => r.content).join(' ');
+
+                    // Look for patterns like "I'm [name]", "My name is [name]", "call me [name]"
+                    const namePatterns = [
+                        /(?:I'm|I am|call me|my name is|i'm|i am)\s+([A-Z][a-z]+)/gi,
+                        /(?:this is|here's|i'm)\s+([A-Z][a-z]+)/gi,
+                    ];
+
+                    let suggestedName = '';
+                    for (const pattern of namePatterns) {
+                        const match = pattern.exec(allContent);
+                        if (
+                            match &&
+                            match[1] &&
+                            !['The', 'A', 'An', 'This', 'That'].includes(match[1])
+                        ) {
+                            suggestedName = match[1];
+                            break;
+                        }
+                    }
+
+                    // Look for work-related patterns
+                    const workPatterns = [
+                        /(?:I work as|I'm a|I am a|my job is|I do)\s+([^.!?]+)/gi,
+                        /(?:software engineer|developer|manager|designer|student|teacher|doctor|nurse|analyst|consultant|freelancer|entrepreneur|founder|CEO|CTO|VP|director)/gi,
+                        /(?:at [A-Z][a-z]+ [A-Z][a-z]+|at [A-Z][a-z]+)/gi,
+                    ];
+
+                    let suggestedWork = '';
+                    for (const pattern of workPatterns) {
+                        const match = pattern.exec(allContent);
+                        if (match) {
+                            suggestedWork = match[0].trim();
+                            if (suggestedWork.length > 100) {
+                                suggestedWork = suggestedWork.substring(0, 100) + '...';
+                            }
+                            break;
+                        }
+                    }
+
+                    if (suggestedName || suggestedWork) {
+                        setKnowledgeBaseSuggestions({
+                            name: suggestedName,
+                            work: suggestedWork,
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error analyzing knowledge base:', error);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
+    // Auto-analyze on mount if profile is empty
+    React.useEffect(() => {
+        if (isVtPlus && !profile.name && !profile.workDescription) {
+            analyzeKnowledgeBase();
+        }
+    }, [isVtPlus, profile.name, profile.workDescription]);
 
     const setThinkingModeEnabled = (enabled: boolean) => {
         setThinkingMode({
@@ -350,7 +358,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Thinking Mode
                                 <Badge
                                     variant="secondary"
-                                    className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
+                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
                                 >
                                     VT+ Active
                                 </Badge>
@@ -474,7 +482,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Gemini Explicit Caching
                                 <Badge
                                     variant="secondary"
-                                    className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
+                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
                                 >
                                     VT+ Active
                                 </Badge>
@@ -604,167 +612,211 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 )}
 
                 {/* Personal AI Assistant Profile Settings */}
-                 {isVtPlus && (
-                     <Card>
-                         <CardHeader>
-                             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                             <User className="h-5 w-5" />
-                             Personal AI Assistant Profile
-                                 <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
-                                      Beta
-                                  </Badge>
-                              </CardTitle>
-                             <CardDescription>
-                                 Help your AI assistant understand you better. This information is stored locally and never shared with third parties.
-                             </CardDescription>
-                         </CardHeader>
-                         <CardContent className="space-y-4">
-                             <div className="space-y-2">
-                             <Label htmlFor="profile-name">What should your AI assistant call you?</Label>
-                             <div className="space-y-2">
-                             <Input
-                                 id="profile-name"
-                                 placeholder="e.g., Alex, Dr. Smith, or your preferred name"
-                                 value={profile.name}
-                                 onChange={(e) => setProfile({ name: e.target.value })}
-                                     className="w-full"
-                                     />
-                                      {knowledgeBaseSuggestions?.name && !profile.name && (
-                                          <div className="flex items-center gap-2 text-sm">
-                                              <span className="text-muted-foreground">Found in your knowledge:</span>
-                                              <Button
-                                                  variant="outline"
-                                                  size="sm"
-                                                  onClick={() => setProfile({ name: knowledgeBaseSuggestions.name })}
-                                                  className="h-6 px-2 text-xs"
-                                              >
-                                                  Use "{knowledgeBaseSuggestions.name}"
-                                              </Button>
-                                          </div>
-                                      )}
-                                      {isAnalyzing && (
-                                          <div className="text-xs text-muted-foreground">
-                                              Analyzing your knowledge base for suggestions...
-                                          </div>
-                                      )}
-                                  </div>
-                              </div>
-                             <div className="space-y-2">
-                             <Label htmlFor="profile-work">What best describes your work?</Label>
-                             <div className="space-y-2">
-                             <Textarea
-                                 id="profile-work"
-                                 placeholder="e.g., Software engineer at a fintech startup, Marketing manager in healthcare, Student studying computer science..."
-                                 value={profile.workDescription}
-                                 onChange={(e) => setProfile({ workDescription: e.target.value })}
-                                 className="w-full min-h-[80px] resize-none"
-                                     maxLength={500}
-                                 />
-                             {knowledgeBaseSuggestions?.work && !profile.workDescription && (
-                                 <div className="flex items-center gap-2 text-sm">
-                                         <span className="text-muted-foreground">Found in your knowledge:</span>
-                                             <Button
-                                                  variant="outline"
-                                                  size="sm"
-                                                  onClick={() => setProfile({ workDescription: knowledgeBaseSuggestions.work })}
-                                                  className="h-6 px-2 text-xs"
-                                              >
-                                                  Use "{knowledgeBaseSuggestions.work.length > 30 ? knowledgeBaseSuggestions.work.substring(0, 30) + '...' : knowledgeBaseSuggestions.work}"
-                                              </Button>
-                                          </div>
-                                      )}
-                                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                                          <span>This helps your AI provide more relevant and personalized responses</span>
-                                          <span>{profile.workDescription.length}/500</span>
-                                      </div>
-                                  </div>
-                              </div>
-                             <div className="flex items-center justify-between">
-                             <Alert className="flex-1">
-                                 <Shield className="h-4 w-4" />
-                             <AlertDescription>
-                                     <strong>Privacy Notice:</strong> This information is stored locally on your device and is not shared with any third parties. It's only used to enhance your experience with your Personal AI Assistant.
-                                     </AlertDescription>
-                                  </Alert>
-                              </div>
-                              
-                              {/* Re-analyze button */}
-                              <div className="flex justify-center pt-2">
-                                  <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={analyzeKnowledgeBase}
-                                      disabled={isAnalyzing}
-                                      className="text-xs"
-                                  >
-                                      {isAnalyzing ? 'Analyzing...' : 'Re-analyze Knowledge Base'}
-                                  </Button>
-                              </div>
-                         </CardContent>
-                     </Card>
-                 )}
+                {isVtPlus && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                                <User className="h-5 w-5" />
+                                Personal AI Assistant Profile
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-blue-100 text-xs text-blue-800"
+                                >
+                                    Beta
+                                </Badge>
+                            </CardTitle>
+                            <CardDescription>
+                                Help your AI assistant understand you better. This information is
+                                stored locally and never shared with third parties.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="profile-name">
+                                    What should your AI assistant call you?
+                                </Label>
+                                <div className="space-y-2">
+                                    <Input
+                                        id="profile-name"
+                                        placeholder="e.g., Alex, Dr. Smith, or your preferred name"
+                                        value={profile.name}
+                                        onChange={e => setProfile({ name: e.target.value })}
+                                        className="w-full"
+                                    />
+                                    {knowledgeBaseSuggestions?.name && !profile.name && (
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground">
+                                                Found in your knowledge:
+                                            </span>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setProfile({
+                                                        name: knowledgeBaseSuggestions.name,
+                                                    })
+                                                }
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Use "{knowledgeBaseSuggestions.name}"
+                                            </Button>
+                                        </div>
+                                    )}
+                                    {isAnalyzing && (
+                                        <div className="text-muted-foreground text-xs">
+                                            Analyzing your knowledge base for suggestions...
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="profile-work">What best describes your work?</Label>
+                                <div className="space-y-2">
+                                    <Textarea
+                                        id="profile-work"
+                                        placeholder="e.g., Software engineer at a fintech startup, Marketing manager in healthcare, Student studying computer science..."
+                                        value={profile.workDescription}
+                                        onChange={e =>
+                                            setProfile({ workDescription: e.target.value })
+                                        }
+                                        className="min-h-[80px] w-full resize-none"
+                                        maxLength={500}
+                                    />
+                                    {knowledgeBaseSuggestions?.work && !profile.workDescription && (
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground">
+                                                Found in your knowledge:
+                                            </span>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setProfile({
+                                                        workDescription:
+                                                            knowledgeBaseSuggestions.work,
+                                                    })
+                                                }
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Use "
+                                                {knowledgeBaseSuggestions.work.length > 30
+                                                    ? knowledgeBaseSuggestions.work.substring(
+                                                          0,
+                                                          30
+                                                      ) + '...'
+                                                    : knowledgeBaseSuggestions.work}
+                                                "
+                                            </Button>
+                                        </div>
+                                    )}
+                                    <div className="text-muted-foreground flex items-center justify-between text-xs">
+                                        <span>
+                                            This helps your AI provide more relevant and
+                                            personalized responses
+                                        </span>
+                                        <span>{profile.workDescription.length}/500</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <Alert className="flex-1">
+                                    <Shield className="h-4 w-4" />
+                                    <AlertDescription>
+                                        <strong>Privacy Notice:</strong> This information is stored
+                                        locally on your device and is not shared with any third
+                                        parties. It's only used to enhance your experience with your
+                                        Personal AI Assistant.
+                                    </AlertDescription>
+                                </Alert>
+                            </div>
 
-                 {/* Knowledge Base Management */}
-                 {isVtPlus && (
-                     <Card>
-                         <CardHeader>
-                             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                                 <Database className="h-5 w-5" />
-                                 Knowledge Base Management
-                             </CardTitle>
-                             <CardDescription>
-                                 Manage your Personal AI Assistant's knowledge base. View stored information or clear all data.
-                             </CardDescription>
-                         </CardHeader>
-                         <CardContent className="space-y-4">
-                             <div className="flex flex-col sm:flex-row gap-3">
-                                 <Button
-                                     variant="outline"
-                                     className="flex-1"
-                                     onClick={() => {
-                                         // Open the AI Assistant page to view knowledge base
-                                         window.open('/rag', '_blank');
-                                     }}
-                                 >
-                                     <Database className="mr-2 h-4 w-4" />
-                                     View Knowledge Base
-                                 </Button>
-                                 <Button
-                                     variant="destructive"
-                                     className="flex-1"
-                                     onClick={async () => {
-                                         if (confirm('Are you sure you want to clear all knowledge base data? This action cannot be undone.')) {
-                                             try {
-                                                 const response = await fetch('/api/rag/clear', {
-                                                     method: 'DELETE',
-                                                 });
-                                                 if (response.ok) {
-                                                     alert('Knowledge base cleared successfully');
-                                                 } else {
-                                                     alert('Failed to clear knowledge base');
-                                                 }
-                                             } catch (error) {
-                                                 console.error('Error clearing knowledge base:', error);
-                                                 alert('Error clearing knowledge base');
-                                             }
-                                         }
-                                     }}
-                                 >
-                                     <Trash2 className="mr-2 h-4 w-4" />
-                                     Clear All Data
-                                 </Button>
-                             </div>
-                             <Alert>
-                                 <Shield className="h-4 w-4" />
-                                 <AlertDescription>
-                                     <strong>Data Safety:</strong> All knowledge base operations are performed securely with your personal data isolated from other users.
-                                 </AlertDescription>
-                             </Alert>
-                         </CardContent>
-                     </Card>
-                 )}
+                            {/* Re-analyze button */}
+                            <div className="flex justify-center pt-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={analyzeKnowledgeBase}
+                                    disabled={isAnalyzing}
+                                    className="text-xs"
+                                >
+                                    {isAnalyzing ? 'Analyzing...' : 'Re-analyze Knowledge Base'}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
-                 {/* Personal AI Assistant Embedding Model Selection */}
+                {/* Knowledge Base Management */}
+                {isVtPlus && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                                <Database className="h-5 w-5" />
+                                Knowledge Base Management
+                            </CardTitle>
+                            <CardDescription>
+                                Manage your Personal AI Assistant's knowledge base. View stored
+                                information or clear all data.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex flex-col gap-3 sm:flex-row">
+                                <Button
+                                    variant="outline"
+                                    className="flex-1"
+                                    onClick={() => {
+                                        // Open the AI Assistant page to view knowledge base
+                                        window.open('/rag', '_blank');
+                                    }}
+                                >
+                                    <Database className="mr-2 h-4 w-4" />
+                                    View Knowledge Base
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    className="flex-1"
+                                    onClick={async () => {
+                                        if (
+                                            confirm(
+                                                'Are you sure you want to clear all knowledge base data? This action cannot be undone.'
+                                            )
+                                        ) {
+                                            try {
+                                                const response = await fetch('/api/rag/clear', {
+                                                    method: 'DELETE',
+                                                });
+                                                if (response.ok) {
+                                                    alert('Knowledge base cleared successfully');
+                                                } else {
+                                                    alert('Failed to clear knowledge base');
+                                                }
+                                            } catch (error) {
+                                                console.error(
+                                                    'Error clearing knowledge base:',
+                                                    error
+                                                );
+                                                alert('Error clearing knowledge base');
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Clear All Data
+                                </Button>
+                            </div>
+                            <Alert>
+                                <Shield className="h-4 w-4" />
+                                <AlertDescription>
+                                    <strong>Data Safety:</strong> All knowledge base operations are
+                                    performed securely with your personal data isolated from other
+                                    users.
+                                </AlertDescription>
+                            </Alert>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* Personal AI Assistant Embedding Model Selection */}
                 {isVtPlus && (
                     <Card>
                         <CardHeader>
@@ -773,8 +825,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Personal AI Assistant Embedding Model
                             </CardTitle>
                             <CardDescription>
-                                Choose which AI model to use for generating embeddings in your Personal AI Assistant knowledge base.
-                                Different models may provide varying quality and performance characteristics.
+                                Choose which AI model to use for generating embeddings in your
+                                Personal AI Assistant knowledge base. Different models may provide
+                                varying quality and performance characteristics.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -789,13 +842,15 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                     </div>
                                     <Combobox
-                                        options={Object.entries(EMBEDDING_MODEL_CONFIG).map(([key, config]) => ({
-                                            value: key,
-                                            label: config.name,
-                                            description: `${config.provider} • ${config.dimensions}D`,
-                                        }))}
+                                        options={Object.entries(EMBEDDING_MODEL_CONFIG).map(
+                                            ([key, config]) => ({
+                                                value: key,
+                                                label: config.name,
+                                                description: `${config.provider} • ${config.dimensions}D`,
+                                            })
+                                        )}
                                         value={safeEmbeddingModel}
-                                        onValueChange={(value) => setEmbeddingModel(value as any)}
+                                        onValueChange={value => setEmbeddingModel(value as any)}
                                         placeholder="Select embedding model..."
                                         searchPlaceholder="Search models..."
                                         className="w-full"
@@ -815,8 +870,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Personal AI Assistant Chat Model
                             </CardTitle>
                             <CardDescription>
-                                Choose which AI model to use for conversations in your Personal AI Assistant chat.
-                                Different models may provide varying quality, speed, and capabilities.
+                                Choose which AI model to use for conversations in your Personal AI
+                                Assistant chat. Different models may provide varying quality, speed,
+                                and capabilities.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -827,28 +883,31 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             Chat Model
                                         </div>
                                         <div className="text-muted-foreground text-xs">
-                                            {models.find(m => m.id === ragChatModel)?.name || 'Unknown Model'}
+                                            {models.find(m => m.id === ragChatModel)?.name ||
+                                                'Unknown Model'}
                                         </div>
                                     </div>
                                     <Combobox
-                                        options={models.filter(model => 
-                                            // Filter to show commonly used models for RAG
-                                            [
-                                                ModelEnum.GPT_4o,
-                                                ModelEnum.GPT_4o_Mini,
-                                                ModelEnum.CLAUDE_4_SONNET,
-                                                ModelEnum.CLAUDE_4_OPUS,
-                                                ModelEnum.GEMINI_2_5_PRO,
-                                                ModelEnum.GEMINI_2_5_FLASH,
-                                                ModelEnum.GEMINI_2_0_FLASH
-                                            ].includes(model.id)
-                                        ).map((model) => ({
-                                            value: model.id,
-                                            label: model.name,
-                                            description: `${model.provider} • ${model.contextWindow} tokens`,
-                                        }))}
+                                        options={models
+                                            .filter(model =>
+                                                // Filter to show commonly used models for RAG
+                                                [
+                                                    ModelEnum.GPT_4o,
+                                                    ModelEnum.GPT_4o_Mini,
+                                                    ModelEnum.CLAUDE_4_SONNET,
+                                                    ModelEnum.CLAUDE_4_OPUS,
+                                                    ModelEnum.GEMINI_2_5_PRO,
+                                                    ModelEnum.GEMINI_2_5_FLASH,
+                                                    ModelEnum.GEMINI_2_0_FLASH,
+                                                ].includes(model.id)
+                                            )
+                                            .map(model => ({
+                                                value: model.id,
+                                                label: model.name,
+                                                description: `${model.provider} • ${model.contextWindow} tokens`,
+                                            }))}
                                         value={ragChatModel}
-                                        onValueChange={(value) => setRagChatModel(value as ModelEnum)}
+                                        onValueChange={value => setRagChatModel(value as ModelEnum)}
                                         placeholder="Select chat model..."
                                         searchPlaceholder="Search models..."
                                         className="w-full"

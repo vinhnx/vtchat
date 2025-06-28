@@ -1,6 +1,12 @@
 'use client';
 
-import { ModelEnum, supportsReasoning, supportsTools, getModelFromChatMode, supportsWebSearch } from '@repo/ai/models';
+import {
+    getModelFromChatMode,
+    ModelEnum,
+    supportsReasoning,
+    supportsTools,
+    supportsWebSearch,
+} from '@repo/ai/models';
 import { GatedFeatureAlert, MotionSkeleton, RateLimitIndicator } from '@repo/common/components';
 import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
@@ -463,7 +469,6 @@ export function BYOKSetupModal({
             setTimeout(() => {
                 const savedKeys = getAllKeys();
                 if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
-
                 } else {
                     console.error(`[BYOK Modal] API key verification failed for ${requiredApiKey}`);
                 }
@@ -695,9 +700,10 @@ export function ChatModeOptions({
 
             // For Deep Research and Pro Search, user MUST have VT+ subscription
             const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
-            const hasFeatureAccess = mode === ChatMode.Deep
-                ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
-                : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+            const hasFeatureAccess =
+                mode === ChatMode.Deep
+                    ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                    : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
             return !(hasVtPlusAccess && hasFeatureAccess);
         }
@@ -725,17 +731,23 @@ export function ChatModeOptions({
             if (!hasByokGeminiKey) {
                 // No BYOK key, check subscription
                 const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
-                const hasFeatureAccess = mode === ChatMode.Deep
-                    ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
-                    : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+                const hasFeatureAccess =
+                    mode === ChatMode.Deep
+                        ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                        : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
                 if (!hasVtPlusAccess || !hasFeatureAccess) {
                     // Block access - show gated feature dialog
-                    const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
-                        .find(opt => opt.value === mode);
+                    const option = [
+                        ...chatOptions,
+                        ...Object.values(modelOptionsByProvider).flat(),
+                    ].find(opt => opt.value === mode);
 
                     onGatedFeature({
-                        feature: mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
+                        feature:
+                            mode === ChatMode.Deep
+                                ? FeatureSlug.DEEP_RESEARCH
+                                : FeatureSlug.PRO_SEARCH,
                         plan: PlanSlug.VT_PLUS,
                         title: `${option?.label}`,
                         message: `${option?.label} is a VT+ exclusive feature. Upgrade to VT+ to access advanced AI research capabilities.`,
@@ -749,8 +761,10 @@ export function ChatModeOptions({
             if (isGated) {
                 // Show gated feature dialog instead of selecting
                 const config = ChatModeConfig[mode];
-                const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
-                    .find(opt => opt.value === mode);
+                const option = [
+                    ...chatOptions,
+                    ...Object.values(modelOptionsByProvider).flat(),
+                ].find(opt => opt.value === mode);
 
                 onGatedFeature({
                     feature: config.requiredFeature,
@@ -777,7 +791,6 @@ export function ChatModeOptions({
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
                     {chatOptions.map(option => {
-
                         return (
                             <DropdownMenuItem
                                 key={`advanced-${option.value}`}
@@ -787,15 +800,19 @@ export function ChatModeOptions({
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
                                     <div className="flex flex-col gap-0">
-                                    <div className="flex items-center gap-2">
-                                    <p className="m-0 text-sm font-medium">
-                                            {option.label}
-                                        </p>
-                                    {(option.value === ChatMode.Deep || option.value === ChatMode.Pro) && (
-                                    <Badge>
-                                    VT+
-                                    </Badge>
-                                    )}
+                                        <div className="flex items-center gap-2">
+                                            <p className="m-0 text-sm font-medium">
+                                                {option.label}
+                                            </p>
+                                            {(option.value === ChatMode.Deep ||
+                                                option.value === ChatMode.Pro) && (
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                                >
+                                                    VT+
+                                                </Badge>
+                                            )}
                                         </div>
                                         {option.description && (
                                             <p className="text-muted-foreground text-xs font-light">
@@ -805,7 +822,11 @@ export function ChatModeOptions({
                                     </div>
                                     <div className="flex-1" />
                                     {supportsReasoning(getModelFromChatMode(option.value)) && (
-                                        <Brain size={14} className="text-purple-500" title="Reasoning Model" />
+                                        <Brain
+                                            size={14}
+                                            className="text-purple-500"
+                                            title="Reasoning Model"
+                                        />
                                     )}
                                 </div>
                             </DropdownMenuItem>
@@ -850,19 +871,33 @@ export function ChatModeOptions({
                                             <div className="flex items-center gap-1">
                                                 {/* Model capability indicators */}
                                                 {(() => {
-                                                    const model = getModelFromChatMode(option.value);
+                                                    const model = getModelFromChatMode(
+                                                        option.value
+                                                    );
                                                     if (!model) return null;
 
                                                     return (
                                                         <>
                                                             {supportsTools(model) && (
-                                                                <Wrench size={12} className="text-gray-500" title="Supports Tools" />
+                                                                <Wrench
+                                                                    size={12}
+                                                                    className="text-gray-500"
+                                                                    title="Supports Tools"
+                                                                />
                                                             )}
                                                             {supportsReasoning(model) && (
-                                                                <Brain size={12} className="text-purple-500" title="Reasoning Model" />
+                                                                <Brain
+                                                                    size={12}
+                                                                    className="text-purple-500"
+                                                                    title="Reasoning Model"
+                                                                />
                                                             )}
                                                             {supportsWebSearch(model) && (
-                                                                <Globe size={12} className="text-blue-500" title="Web Search" />
+                                                                <Globe
+                                                                    size={12}
+                                                                    className="text-blue-500"
+                                                                    title="Web Search"
+                                                                />
                                                             )}
                                                         </>
                                                     );
