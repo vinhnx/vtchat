@@ -2,7 +2,7 @@ import { CodeBlock, ToolResultIcon } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import { isChartTool } from '@repo/common/constants/chart-tools';
 import { ToolResult as ToolResultType } from '@repo/shared/types';
-import { Badge, cn, ChartRenderer, Card } from '@repo/ui';
+import { Badge, cn, DynamicChartRenderer, Card } from '@repo/ui';
 import { ChevronDown, CheckCircle, BarChart3, CheckCheck, Activity } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -82,7 +82,7 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
                         <div className="border-t border-muted/50 p-3 pt-3">
                             {isResultChartTool ? (
                                 <div className="w-full">
-                                    <ChartRenderer {...(toolResult.result as any)} />
+                                    <DynamicChartRenderer {...(toolResult.result as any)} />
                                 </div>
                             ) : (
                                 <div>

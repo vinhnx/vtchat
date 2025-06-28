@@ -87,7 +87,7 @@ interface RadarChartProps {
     maxValue?: number;
 }
 
-type ChartProps = BarChartProps | LineChartProps | AreaChartProps | PieChartProps | RadarChartProps;
+export type ChartProps = BarChartProps | LineChartProps | AreaChartProps | PieChartProps | RadarChartProps;
 
 // Color palettes
 const chartColors = {

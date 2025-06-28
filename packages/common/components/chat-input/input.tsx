@@ -9,10 +9,10 @@ import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useApiKeysStore } from '@repo/common/store';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { cn, Flex } from '@repo/ui';
+import { cn, Flex, TypographyH3 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
@@ -369,7 +369,7 @@ export const ChatInput = ({
                 >
                     {!currentThreadId && showGreeting && (
                         <div className="mb-4 flex w-full flex-col items-center gap-1">
-                            <p className="text-muted-foreground text-sm">How can I help you today?</p>
+                            <TypographyH3>How can I help you today?</TypographyH3>
                         </div>
                     )}
 
@@ -401,5 +401,3 @@ export const ChatInput = ({
         </div>
     );
 };
-
-
