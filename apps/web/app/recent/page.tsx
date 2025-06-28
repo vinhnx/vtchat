@@ -19,7 +19,7 @@ import { CommandItem } from 'cmdk';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 // Create a wrapper component for Trash2 to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -52,9 +52,9 @@ export default function ThreadsPage() {
         setTitle(threadTitle);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
-    };
+    }, []);
 
     const handleInputBlur = () => {
         if (editingId) {

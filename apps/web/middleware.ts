@@ -35,9 +35,9 @@ export default async function middleware(request: NextRequest) {
                 headers: request.headers,
             });
 
-            // Add 3-second timeout to prevent hanging (reduced from 5s)
+            // Add 1-second timeout to prevent hanging (optimized for INP)
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Auth timeout')), 3000)
+                setTimeout(() => reject(new Error('Auth timeout')), 1000)
             );
 
             const session = await Promise.race([sessionPromise, timeoutPromise]);

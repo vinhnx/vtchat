@@ -1,18 +1,25 @@
 # TODO
 
-Interaction to Next Paint (INP)
 
-272 ms
-Your local INP value of 272 ms needs improvement.
-INP interaction
-pointer
+[DOMAIN NAME PURCHASE]
+https://pay.matbao.net/payment/payoo-return.html?status=1&order_no=115120_PAY_1_S2312340&checksum=53115f09f23b1196b43db91e01c3294d64bd5cc25946a2eff4843eece460dcc54c4502c20c64207d247fb810f3a0221b3652d20bb86f7de519c3b1d5400e63c3&totalAmount=94900&paymentFee=0
 
-Largest Contentful Paint (LCP)
+vtchat.io.vn
 
-4.40 s
-Your local LCP value of 4.40 s is poor.
-LCP element
-div.text-center
+-> setup email forward
+-> setup domain config
+-> setup domain DNS
+-> setup env confg
+-> setup fly.io domain config
+
+good luck!
+
+--
+
+change vtchat.io@gmail.com -> support@vtchat.io@gmail.com domain?
+
+--
+scan and update email and domain config in project (faq, terms, privacy, etc.)
 
 --
 
@@ -96,21 +103,6 @@ remember to publish Google Auth
 
 --
 
---
-
-Domain:
-
--> vtchat.io.vn
-
-- [ ] Domain Name Research (vtai.io.vn, vtchat.io.vn) - _Consider moving detailed notes to a separate research document._
-    - Whois VN: [https://whois.inet.vn/whois?domain=vtchat.io.vn](https://whois.inet.vn/whois?domain=vtchat.io.vn)
-    - VinaHost: [https://secure.vinahost.vn/ac/cart.php?a=confdomains](https://secure.vinahost.vn/ac/cart.php?a=confdomains)
-    - <https://www.matbao.net/ten-mien/ket-qua-kiem-tra-ten-mien.html?tenmien=vtchat.io.vn#top_search>
-
---> use matbao. they offer email
-https://pay.matbao.net/order?id=K%2fhplNC8biTACGMxJx6dNA%3d%3d
-
---> inet https://inet.vn/cart/basket also email
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
