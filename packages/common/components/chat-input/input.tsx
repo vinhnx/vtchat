@@ -4,12 +4,13 @@ import {
     ImageAttachment,
     ImageDropzoneRoot,
     InlineLoader,
+    ShineText,
 } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useApiKeysStore } from '@repo/common/store';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { cn, Flex, TypographyH3 } from '@repo/ui';
+import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -459,9 +460,9 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
                     }}
                     className="text-center"
                 >
-                    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    <ShineText className="text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl">
                         {greeting}
-                    </h3>
+                    </ShineText>
                     <p className="text-muted-foreground mt-2 text-sm">How can I help you today?</p>
                 </motion.div>
             </AnimatePresence>
