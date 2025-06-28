@@ -3,6 +3,8 @@ app = 'vtchat'
 primary_region = 'sin'
 
 [build]
+  # Enable build target for optimized caching
+  build-target = "runner"
 
 [env]
   NODE_ENV = 'production'
