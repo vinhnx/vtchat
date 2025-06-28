@@ -20,6 +20,7 @@ import {
     DialogHeader,
     DialogTitle,
     Kbd,
+    useToast,
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { Command, Key, MessageCircle, Moon, Palette, Plus, Settings, Trash } from 'lucide-react';
@@ -47,6 +48,7 @@ export const CommandSearch = () => {
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
+    const { toast } = useToast();
 
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
@@ -100,19 +102,27 @@ export const CommandSearch = () => {
                 setIsCommandSearchOpen(true);
                 return;
             }
-            
+
             // Command+Ctrl+Option+N for new chat
             if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
                 e.preventDefault();
                 console.log('🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+
+                // Show toast notification
+                toast({
+                    title: "New Chat",
+                    description: "Starting a new conversation...",
+                    duration: 2000,
+                });
+
                 router.push('/chat');
                 return;
             }
         };
-        
+
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [setIsCommandSearchOpen, router]);
+    }, [setIsCommandSearchOpen, router, toast]);
 
     type ActionItem = {
         name: string;
@@ -154,12 +164,12 @@ export const CommandSearch = () => {
             action: () => {
                 // Check if user is trying to switch to dark mode without VT+ access
                 const nextTheme = theme === 'light' ? 'dark' : 'light';
-                
+
                 if (nextTheme === 'dark' && !hasThemeAccess) {
                     setShowSubscriptionDialog(true);
                     return;
                 }
-                
+
                 setTheme(nextTheme);
                 onClose();
             },
@@ -173,7 +183,7 @@ export const CommandSearch = () => {
                     setShowSubscriptionDialog(true);
                     return;
                 }
-                
+
                 setTheme('dark');
                 onClose();
             },

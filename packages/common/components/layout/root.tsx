@@ -9,7 +9,7 @@ import {
     Badge,
     Button,
     Flex,
-    Toaster,
+    SonnerToaster,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -127,7 +127,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <CommandSearch />
             </Flex>
 
-            <Toaster />
+            <SonnerToaster />
 
             {/* Mobile Floating User Button */}
             {isClient && session && (

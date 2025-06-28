@@ -56,6 +56,8 @@ ${analysis}
    - Use lists, tables, links, images when appropriate
    - use bold text for key points
    - Implement markdown tables for comparative data where appropriate
+   - **Summarize quantitative data in tables or structured formats that could be easily converted to charts**
+   - When presenting statistics, trends, or comparative data, organize information in table format to facilitate visualization
    - Ensure proper spacing between sections for optimal readability
 
 4. Citations:

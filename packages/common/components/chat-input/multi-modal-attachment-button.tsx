@@ -3,10 +3,9 @@ import { useChatStore } from '@repo/common/store';
 import { supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Attachment } from '@repo/shared/types';
-import { Button, Tooltip } from '@repo/ui';
+import { Button, Tooltip, useToast } from '@repo/ui';
 import { Paperclip } from 'lucide-react';
 import { FC, useCallback, useRef, useState } from 'react';
-import { toast } from 'sonner';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
@@ -37,12 +36,17 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 
     const hasAttachments = attachments.length > 0;
 
+    const { toast } = useToast();
+    
     const handleFileUpload = useCallback(async (files: File[]) => {
         if (files.length === 0) return;
 
         const maxFiles = 5;
         if (attachments.length + files.length > maxFiles) {
-            toast.error(`Maximum ${maxFiles} files allowed`);
+            toast({
+                title: `Maximum ${maxFiles} files allowed`,
+                variant: 'destructive',
+            });
             return;
         }
 
@@ -66,14 +70,20 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
             const newAttachments = [...attachments, ...data.attachments];
             
             onAttachmentsChange(newAttachments);
-            toast.success(data.message);
+            toast({
+                title: data.message,
+                variant: 'success',
+            });
         } catch (error) {
             console.error('Upload error:', error);
-            toast.error(error instanceof Error ? error.message : 'Upload failed');
+            toast({
+                title: error instanceof Error ? error.message : 'Upload failed',
+                variant: 'destructive',
+            });
         } finally {
             setUploading(false);
         }
-    }, [attachments, onAttachmentsChange]);
+    }, [attachments, onAttachmentsChange, toast]);
 
     const handleFileInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);

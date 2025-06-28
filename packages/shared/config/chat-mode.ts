@@ -7,6 +7,8 @@ export enum ChatMode {
     O3 = 'o3',
     O3_Mini = 'o3-mini',
     O4_Mini = 'o4-mini',
+    O1_MINI = 'o1-mini',
+    O1_PREVIEW = 'o1-preview',
     GPT_4_1 = 'gpt-4.1',
     GPT_4_1_Mini = 'gpt-4.1-mini',
     GPT_4_1_Nano = 'gpt-4.1-nano',
@@ -15,11 +17,16 @@ export enum ChatMode {
     GEMINI_2_5_PRO = 'gemini-2.5-pro',
     GEMINI_2_5_FLASH = 'gemini-2.5-flash',
     GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
+    GEMINI_2_5_FLASH_PREVIEW_05_20 = 'gemini-2.5-flash-preview-05-20',
+    GEMINI_2_5_PRO_PREVIEW_05_06 = 'gemini-2.5-pro-preview-05-06',
+    GEMINI_2_5_PRO_PREVIEW_06_05 = 'gemini-2.5-pro-preview-06-05',
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
     CLAUDE_4_SONNET = 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS = 'claude-opus-4-20250514',
+    CLAUDE_3_7_SONNET = 'claude-3-7-sonnet-20250219',
     DEEPSEEK_R1 = 'deepseek-r1-0528',
+    DEEPSEEK_R1_MAIN = 'deepseek-r1',
     GROK_3 = 'grok-3',
     GROK_3_MINI = 'grok-3-mini',
     // OpenRouter models
@@ -279,6 +286,62 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
+    [ChatMode.O1_MINI]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.O1_PREVIEW]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.CLAUDE_3_7_SONNET]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.DEEPSEEK_R1_MAIN]: {
+        webSearch: true,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
+    },
 };
 
 // Previously deprecated hasChatModeAccess function removed
@@ -426,5 +489,19 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenRouter Mistral Nemo';
         case ChatMode.QWEN3_14B_FREE:
             return 'OpenRouter Qwen3 14B';
+        case ChatMode.O1_MINI:
+            return 'OpenAI o1-mini';
+        case ChatMode.O1_PREVIEW:
+            return 'OpenAI o1-preview';
+        case ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20:
+            return 'Gemini 2.5 Flash Preview (05-20)';
+        case ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06:
+            return 'Gemini 2.5 Pro Preview (05-06)';
+        case ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05:
+            return 'Gemini 2.5 Pro Preview (06-05)';
+        case ChatMode.CLAUDE_3_7_SONNET:
+            return 'Claude 3.7 Sonnet';
+        case ChatMode.DEEPSEEK_R1_MAIN:
+            return 'DeepSeek R1';
     }
 };

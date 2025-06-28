@@ -188,4 +188,5 @@ function useToast() {
     };
 }
 
-export { toast, useToast };
+// Legacy Radix toast - deprecated in favor of Sonner
+export { toast as legacyToast, useToast as useLegacyToast };

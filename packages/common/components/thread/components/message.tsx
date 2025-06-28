@@ -2,10 +2,9 @@ import { ChatEditor, markdownStyles } from '@repo/common/components';
 import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ThreadItem } from '@repo/shared/types';
-import { Button, cn } from '@repo/ui';
+import { Button, cn, useToast } from '@repo/ui';
 import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
 import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';
@@ -146,9 +145,14 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
         defaultContent: message,
     });
 
+    const { toast } = useToast();
+    
     const handleSave = async (query: string) => {
         if (!query.trim()) {
-            toast.error('Please enter a message');
+            toast({
+                title: 'Please enter a message',
+                variant: 'destructive',
+            });
             return;
         }
         removeFollowupThreadItems(threadItem.id);
