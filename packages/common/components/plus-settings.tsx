@@ -24,17 +24,17 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Activity,
+    ArrowRight,
     BarChart3,
     Brain,
+    Check,
     FileText,
     Link,
+    Lock,
     Palette,
     Search,
     Sparkles,
     Zap,
-    ArrowRight,
-    Check,
-    Lock,
 } from 'lucide-react';
 
 export const PlusSettings = () => {
@@ -209,7 +209,7 @@ export const PlusSettings = () => {
                         Thinking Mode
                         <Badge
                             variant="secondary"
-                            className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
+                            className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
                         >
                             VT+ Active
                         </Badge>

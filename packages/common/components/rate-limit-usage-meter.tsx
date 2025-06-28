@@ -251,7 +251,8 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
     }
 
     const dailyPercentage = (status.dailyUsed / status.dailyLimit) * 100;
-    const perMinutePercentage = status.remainingDaily <= 0 ? 100 : (status.minuteUsed / status.minuteLimit) * 100;
+    const perMinutePercentage =
+        status.remainingDaily <= 0 ? 100 : (status.minuteUsed / status.minuteLimit) * 100;
 
     const getDailyStatus = () => {
         if (dailyPercentage >= 80)
@@ -290,8 +291,11 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                     ) : (
                         <>
                             <Sparkle className="text-muted-foreground h-8 w-8" />
-                            <Badge variant="outline" className="px-4 py-2 text-lg font-semibold">
-                                VT+ Unlimited
+                            <Badge
+                                variant="secondary"
+                                className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                            >
+                                VT+ Active
                             </Badge>
                         </>
                     )}
@@ -364,7 +368,9 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                                 <span className="font-medium text-blue-600">
                                     {dailyPercentage.toFixed(1)}% used
                                 </span>
-                                <span className={`font-medium ${status.remainingDaily === 0 ? 'text-[#BF4545]' : 'text-green-600'}`}>
+                                <span
+                                    className={`font-medium ${status.remainingDaily === 0 ? 'text-[#BF4545]' : 'text-green-600'}`}
+                                >
                                     {status.remainingDaily} remaining
                                 </span>
                             </div>
@@ -399,7 +405,11 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                                     </div>
                                 </div>
                                 <CircleProgress
-                                    value={status.remainingDaily <= 0 ? status.minuteLimit : status.minuteUsed}
+                                    value={
+                                        status.remainingDaily <= 0
+                                            ? status.minuteLimit
+                                            : status.minuteUsed
+                                    }
                                     maxValue={status.minuteLimit}
                                     size={80}
                                 />
@@ -408,8 +418,11 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                                 <span className="text-muted-foreground font-medium">
                                     {perMinutePercentage.toFixed(1)}% used
                                 </span>
-                                <span className={`font-medium ${(status.remainingDaily <= 0 || status.remainingMinute === 0) ? 'text-[#BF4545]' : 'text-muted-foreground'}`}>
-                                    {status.remainingDaily <= 0 ? 0 : status.remainingMinute} available
+                                <span
+                                    className={`font-medium ${status.remainingDaily <= 0 || status.remainingMinute === 0 ? 'text-[#BF4545]' : 'text-muted-foreground'}`}
+                                >
+                                    {status.remainingDaily <= 0 ? 0 : status.remainingMinute}{' '}
+                                    available
                                 </span>
                             </div>
                         </div>
