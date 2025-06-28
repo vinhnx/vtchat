@@ -1,6 +1,6 @@
 'use client';
 
-import { ModelEnum, supportsReasoning, getModelFromChatMode } from '@repo/ai/models';
+import { ModelEnum, supportsReasoning, supportsTools, getModelFromChatMode, supportsWebSearch } from '@repo/ai/models';
 import { GatedFeatureAlert, MotionSkeleton, RateLimitIndicator } from '@repo/common/components';
 import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
@@ -8,6 +8,7 @@ import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
+    Badge,
     Button,
     cn,
     Dialog,
@@ -31,9 +32,9 @@ import {
     Calculator,
     ChevronDown,
     Globe,
-    Lock,
     Paperclip,
     Square,
+    Wrench,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -561,7 +562,7 @@ export function ChatModeOptions({
 }) {
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
+
     const apiKeys = useApiKeysStore(state => state.getAllKeys());
     const _isChatPage = usePathname().startsWith('/chat');
     const { push } = useRouter();
@@ -623,8 +624,7 @@ export function ChatModeOptions({
             }
 
             // CRITICAL: Explicit check for Deep Research and Pro Search
-            const isCriticalMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
-            
+
             // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
             const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
             const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
@@ -695,10 +695,10 @@ export function ChatModeOptions({
 
             // For Deep Research and Pro Search, user MUST have VT+ subscription
             const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
-            const hasFeatureAccess = mode === ChatMode.Deep 
+            const hasFeatureAccess = mode === ChatMode.Deep
                 ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                 : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
-                
+
             return !(hasVtPlusAccess && hasFeatureAccess);
         }
 
@@ -725,15 +725,15 @@ export function ChatModeOptions({
             if (!hasByokGeminiKey) {
                 // No BYOK key, check subscription
                 const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
-                const hasFeatureAccess = mode === ChatMode.Deep 
+                const hasFeatureAccess = mode === ChatMode.Deep
                     ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                     : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
-                
+
                 if (!hasVtPlusAccess || !hasFeatureAccess) {
                     // Block access - show gated feature dialog
                     const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
                         .find(opt => opt.value === mode);
-                    
+
                     onGatedFeature({
                         feature: mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
                         plan: PlanSlug.VT_PLUS,
@@ -751,7 +751,7 @@ export function ChatModeOptions({
                 const config = ChatModeConfig[mode];
                 const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
                     .find(opt => opt.value === mode);
-                
+
                 onGatedFeature({
                     feature: config.requiredFeature,
                     plan: config.requiredPlan,
@@ -761,7 +761,7 @@ export function ChatModeOptions({
                 return;
             }
         }
-        
+
         // If not gated, proceed with normal selection
         handleModeSelect(mode);
     };
@@ -777,7 +777,6 @@ export function ChatModeOptions({
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
                     {chatOptions.map(option => {
-                        const isGated = isModeGated(option.value);
 
                         return (
                             <DropdownMenuItem
@@ -788,9 +787,16 @@ export function ChatModeOptions({
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
                                     <div className="flex flex-col gap-0">
-                                        <p className="m-0 text-sm font-medium">
+                                    <div className="flex items-center gap-2">
+                                    <p className="m-0 text-sm font-medium">
                                             {option.label}
                                         </p>
+                                    {(option.value === ChatMode.Deep || option.value === ChatMode.Pro) && (
+                                    <Badge>
+                                    VT+
+                                    </Badge>
+                                    )}
+                                        </div>
                                         {option.description && (
                                             <p className="text-muted-foreground text-xs font-light">
                                                 {option.description}
@@ -814,7 +820,6 @@ export function ChatModeOptions({
                                 {providerName}
                             </DropdownMenuLabel>
                             {options.map(option => {
-                                const isGated = isModeGated(option.value);
                                 const isFreeModel = option.value === ChatMode.GEMINI_2_5_FLASH_LITE;
 
                                 return (
@@ -842,17 +847,33 @@ export function ChatModeOptions({
                                                 )}
                                             </div>
                                             <div className="flex-1" />
-                                            {isGated && (
-                                                <Lock size={14} className="text-muted-foreground" />
-                                            )}
-                                            {supportsReasoning(option.value) && (
-                                                <Brain size={14} className="text-purple-500" title="Reasoning Model" />
-                                            )}
-                                            {option.icon && (
-                                                <div className="flex items-center">
-                                                    {option.icon}
+                                            <div className="flex items-center gap-1">
+                                                {/* Model capability indicators */}
+                                                {(() => {
+                                                    const model = getModelFromChatMode(option.value);
+                                                    if (!model) return null;
+
+                                                    return (
+                                                        <>
+                                                            {supportsTools(model) && (
+                                                                <Wrench size={12} className="text-gray-500" title="Supports Tools" />
+                                                            )}
+                                                            {supportsReasoning(model) && (
+                                                                <Brain size={12} className="text-purple-500" title="Reasoning Model" />
+                                                            )}
+                                                            {supportsWebSearch(model) && (
+                                                                <Globe size={12} className="text-blue-500" title="Web Search" />
+                                                            )}
+                                                        </>
+                                                    );
+                                                })()}
+                                                {/* Original icon (free/gift) */}
+                                                {option.icon && (
+                                                    <div className="flex items-center">
+                                                        {option.icon}
                                                     </div>
-                                                    )}
+                                                )}
+                                            </div>
                                         </div>
                                     </DropdownMenuItem>
                                 );

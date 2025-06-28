@@ -1,14 +1,53 @@
 # TODO
 
-https://app.vemetric.com/public/snappify.com?t=24hrs
---
-accessibility test https://x.com/pqoqubbw/status/1938636823892303947?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
---
-fix background color for user button container in side menu
+integrate pino  lightweight, fast and secure logging. automatic PII redaction
 
-remove sidebar border and background color
+Top Recommendations
+Pino (Most Popular)
+javascriptimport pino from 'pino'
 
-decorate /chat contentainer with dark/white background color
+const logger = pino({
+  level: 'info',
+  redact: ['password', 'email'] // Auto-sanitize sensitive data
+})
+
+logger.info({ userId: 123 }, 'User logged in')
+
+bashnpm install pino
+
+--
+
+https://x.com/pqoqubbw/status/1938636823892303947
+
+ACCESSBILITY TESTING
+
+--
+review ui/ux and refine, polish, make sure the premium fealing and minimal design is consistent across the app.
+--
+decorated premium Deep Research and Pro Search modes with a "Premium" label in the chat input component when selected.
+base on model-data.json add a tool indicator to each chat models that supports tools, reasoning, and web search in the model selection dropdown in chat input component.
+
+--
+
+1. fix DARK MODE THEME SWITCH DOESN'T WORK FOR PREMIUM USERS
+
+--
+https://million.dev/docs
+--
+
+--
+
+https://page-speed.dev/
+
+--
+
+https://unlighthouse.dev/
+
+--
+https://requestindexing.com/
+
+--
+https://fumadocs.dev/docs/ui
 
 --
 https://github.com/intern3-chat/intern3-chat/blob/main/src/components/artifact-preview.tsx
@@ -21,9 +60,6 @@ refence https://github.com/intern3-chat/intern3-chat
 + Supermemory API integration for persistent memories
 + Native Voice input in input box using Groq
 + https://intern3.chat/settings/profile
-
---
-update Deep Research prompt to encourage the Agent to use Summarize data in a way that could be turned into charts or tables"
 
 --
 
@@ -103,6 +139,10 @@ Domain:
     - VinaHost: [https://secure.vinahost.vn/ac/cart.php?a=confdomains](https://secure.vinahost.vn/ac/cart.php?a=confdomains)
     - <https://www.matbao.net/ten-mien/ket-qua-kiem-tra-ten-mien.html?tenmien=vtchat.io.vn#top_search>
 
+--> use matbao. they offer email
+https://pay.matbao.net/order?id=K%2fhplNC8biTACGMxJx6dNA%3d%3d
+
+--> inet https://inet.vn/cart/basket also email
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>

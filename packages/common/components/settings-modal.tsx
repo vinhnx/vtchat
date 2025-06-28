@@ -180,7 +180,6 @@ export const SettingsModal = () => {
 };
 
 export const ApiKeySettings = () => {
-    const { data: session } = useSession();
     const apiKeys = useApiKeysStore(state => state.getAllKeys());
     const setApiKey = useApiKeysStore(state => state.setKey);
     const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -323,9 +322,7 @@ export const ApiKeySettings = () => {
                                             </Badge>
                                         )}
                                     </div>
-                                    <div className="text-muted-foreground mb-2 text-xs">
-                                        {apiKey.description}
-                                    </div>
+
                                     <a
                                         href={apiKey.url}
                                         target="_blank"
@@ -463,6 +460,8 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
     const setCustomInstructions = useAppStore(state => state.setCustomInstructions);
     const showExamplePrompts = useAppStore(state => state.showExamplePrompts);
     const setShowExamplePrompts = useAppStore(state => state.setShowExamplePrompts);
+    const sidebarPlacement = useAppStore(state => state.sidebarPlacement);
+    const setSidebarPlacement = useAppStore(state => state.setSidebarPlacement);
 
     const { editor } = useChatEditor({
         charLimit: MAX_CHAR_LIMIT,
@@ -517,7 +516,38 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                         Customize your chat interface to match your workflow and preferences.
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                                <div className="text-foreground text-sm font-medium">
+                                    Sidebar Placement
+                                </div>
+                                <div className="text-muted-foreground text-xs">
+                                    Choose whether to display the sidebar on the left or right side
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant={sidebarPlacement === 'left' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setSidebarPlacement('left')}
+                                    className="min-w-[60px]"
+                                >
+                                    Left
+                                </Button>
+                                <Button
+                                    variant={sidebarPlacement === 'right' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setSidebarPlacement('right')}
+                                    className="min-w-[60px]"
+                                >
+                                    Right
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">

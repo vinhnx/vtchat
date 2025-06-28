@@ -1,11 +1,10 @@
 'use client';
 
-import { Monitor, Moon, Sun } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
-import { useFeatureAccess } from '../hooks/use-subscription-access';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Tooltip } from '@repo/ui';
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useCallback, useEffect, useState } from 'react';
+import { useVtPlusAccess } from '../hooks/use-subscription-access';
 
 const themes = [
     {
@@ -35,11 +34,12 @@ export type ThemeSwitcherProps = {
 export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) => {
     const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
+    // Dark theme is exclusively for VT+ premium subscribers
+    const hasThemeAccess = useVtPlusAccess();
 
     const handleThemeClick = useCallback(
         (themeKey: 'light' | 'dark' | 'system') => {
-            // Block dark mode and system theme (which could resolve to dark) for non-VT+ users
+            // Block dark mode and system theme for non-VT+ users
             if ((themeKey === 'dark' || themeKey === 'system') && !hasThemeAccess) {
                 console.warn('Dark theme access blocked: VT+ subscription required');
                 // Fallback to light theme for non-VT+ users
@@ -120,10 +120,7 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
     // Show upgrade tooltip for free users
     if (!hasThemeAccess) {
         return (
-            <Tooltip 
-                content="Upgrade to VT+ to unlock dark theme and system theme" 
-                side="bottom"
-            >
+            <Tooltip content="Upgrade to VT+ to unlock dark theme and system theme" side="bottom">
                 {themeSwitcher}
             </Tooltip>
         );
