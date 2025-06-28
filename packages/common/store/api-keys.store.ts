@@ -26,6 +26,51 @@ function getStorageKey(userId: string | null): string {
     return userId ? `api-keys-storage-${userId}` : 'api-keys-storage-anonymous';
 }
 
+/**
+ * Get effective storage key for the current context
+ * Handles the case where Zustand passes the default name during hydration
+ */
+function getEffectiveStorageKey(requestedName: string): string {
+    // During initial hydration, Zustand passes the persist name
+    if (requestedName === 'api-keys-storage') {
+        return currentStorageKey;
+    }
+    return requestedName;
+}
+
+/**
+ * Try to find API keys in any available storage location
+ * Used during hydration to recover data from previous storage keys
+ */
+function findStoredApiKeys(): string | null {
+    if (typeof window === 'undefined') return null;
+    
+    // Try current storage key first
+    let stored = localStorage.getItem(currentStorageKey);
+    if (stored) {
+        console.log(`[ApiKeys] Found data in current storage key: ${currentStorageKey}`);
+        return stored;
+    }
+    
+    // Try anonymous key if not current
+    if (currentStorageKey !== 'api-keys-storage-anonymous') {
+        stored = localStorage.getItem('api-keys-storage-anonymous');
+        if (stored) {
+            console.log(`[ApiKeys] Found data in anonymous storage key`);
+            return stored;
+        }
+    }
+    
+    // Try original Zustand key (fallback for older data)
+    stored = localStorage.getItem('api-keys-storage');
+    if (stored) {
+        console.log(`[ApiKeys] Found data in original storage key`);
+        return stored;
+    }
+    
+    return null;
+}
+
 type ApiKeysState = {
     keys: ApiKeys;
     setKey: (provider: keyof ApiKeys, key: string) => void;
@@ -34,6 +79,7 @@ type ApiKeysState = {
     getAllKeys: () => ApiKeys;
     hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => boolean;
     switchUserStorage: (userId: string | null) => void;
+    forceRehydrate: () => void;
 };
 
 export const useApiKeysStore = create<ApiKeysState>()(
@@ -107,8 +153,20 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     currentUserId = newUserId;
                     currentStorageKey = getStorageKey(newUserId);
 
-                    // Load API keys for the new user from localStorage with safe JSON parsing
-                    const storedData = localStorage.getItem(currentStorageKey);
+                    // Load API keys for the new user - try multiple storage locations
+                    let storedData = localStorage.getItem(currentStorageKey);
+                    
+                    // If no data found in user-specific storage, try fallback locations
+                    if (!storedData && newUserId) {
+                        // Try anonymous storage first
+                        storedData = localStorage.getItem('api-keys-storage-anonymous');
+                        if (storedData) {
+                            console.log(`[ApiKeys] Migrating data from anonymous storage to user storage`);
+                            // Copy the data to the new user-specific storage
+                            localStorage.setItem(currentStorageKey, storedData);
+                        }
+                    }
+                    
                     const userData = safeJsonParse(storedData, { state: { keys: {} } });
 
                     // Update state with new user's data
@@ -135,6 +193,15 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         );
                     }
                 }
+            },
+            forceRehydrate: () => {
+                // Force re-read from current storage location
+                const storedData = localStorage.getItem(currentStorageKey);
+                const userData = safeJsonParse(storedData, { state: { keys: {} } });
+                set({ keys: userData.state?.keys || {} });
+                console.log(
+                    `[ApiKeys] Force rehydrated ${Object.keys(userData.state?.keys || {}).length} keys from ${currentStorageKey}`
+                );
             },
             hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
                 if (!isSignedIn) return false;
@@ -163,8 +230,9 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.GEMINI_2_5_PRO:
                     case ChatMode.GEMINI_2_0_FLASH_LITE:
                     case ChatMode.GEMINI_2_5_FLASH:
-                    case ChatMode.GEMINI_2_5_FLASH_LITE:
                         return isValidKey(apiKeys['GEMINI_API_KEY']);
+                    case ChatMode.GEMINI_2_5_FLASH_LITE:
+                        return true; // Free model, no API key required
                     case ChatMode.CLAUDE_4_SONNET:
                     case ChatMode.CLAUDE_4_OPUS:
                         return isValidKey(apiKeys['ANTHROPIC_API_KEY']);
@@ -200,10 +268,20 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     }
 
                     try {
-                        const key = currentStorageKey || name;
+                        // For hydration requests, try to find data from any storage location
+                        if (name === 'api-keys-storage') {
+                            const value = findStoredApiKeys();
+                            console.log(
+                                `[ApiKeys] Storage getItem (hydration): ${name} -> ${value ? 'found' : 'not found'}`
+                            );
+                            return value;
+                        }
+                        
+                        // For other requests, use the effective storage key
+                        const key = getEffectiveStorageKey(name);
                         const value = localStorage.getItem(key);
                         console.log(
-                            `[ApiKeys] Storage getItem: ${key} -> ${value ? 'found' : 'not found'}`
+                            `[ApiKeys] Storage getItem: ${key} (requested: ${name}) -> ${value ? 'found' : 'not found'}`
                         );
                         return value;
                     } catch (error) {
@@ -218,9 +296,9 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     }
 
                     try {
-                        const key = currentStorageKey || name;
+                        const key = getEffectiveStorageKey(name);
                         localStorage.setItem(key, value);
-                        console.log(`[ApiKeys] Storage setItem: ${key} -> saved`);
+                        console.log(`[ApiKeys] Storage setItem: ${key} (requested: ${name}) -> saved`);
 
                         // Simplified verification - only log warning instead of throwing
                         setTimeout(() => {
@@ -250,9 +328,9 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     }
 
                     try {
-                        const key = currentStorageKey || name;
+                        const key = getEffectiveStorageKey(name);
                         localStorage.removeItem(key);
-                        console.log(`[ApiKeys] Storage removeItem: ${key}`);
+                        console.log(`[ApiKeys] Storage removeItem: ${key} (requested: ${name})`);
                     } catch (error) {
                         console.error('[ApiKeys] Storage removeItem error:', error);
                     }

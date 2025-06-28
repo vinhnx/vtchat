@@ -142,7 +142,27 @@ export type UserSubscription = typeof userSubscriptions.$inferSelect;
 export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
 export type Feedback = typeof feedback.$inferSelect;
 export type NewFeedback = typeof feedback.$inferInsert;
+// User rate limits table for free model usage tracking
+export const userRateLimits = pgTable('user_rate_limits', {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' })
+        .unique(),
+    modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
+    dailyRequestCount: text('daily_request_count').notNull().default('0'),
+    minuteRequestCount: text('minute_request_count').notNull().default('0'),
+    lastDailyReset: timestamp('last_daily_reset').notNull().defaultNow(),
+    lastMinuteReset: timestamp('last_minute_reset').notNull().defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+    userModelIndex: index('user_model_index').on(table.userId, table.modelId),
+}));
+
 export type Resource = typeof resources.$inferSelect;
 export type NewResource = typeof resources.$inferInsert;
 export type Embedding = typeof embeddings.$inferSelect;
 export type NewEmbedding = typeof embeddings.$inferInsert;
+export type UserRateLimit = typeof userRateLimits.$inferSelect;
+export type NewUserRateLimit = typeof userRateLimits.$inferInsert;

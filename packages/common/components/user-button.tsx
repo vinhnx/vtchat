@@ -36,7 +36,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex h-auto items-center gap-2 p-1">
+                <Button variant="secondary" className="flex h-auto items-center gap-2 p-1 bg-background border shadow-sm">
                     {user.image ? (
                         <img src={user.image} width={24} height={24} className="rounded-full" />
                     ) : (

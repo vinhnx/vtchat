@@ -1,5 +1,6 @@
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { getRateLimitMessage } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
@@ -185,14 +186,20 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 if (!response.ok) {
                     let errorText = await response.text();
 
-                    if (response.status === 429 && isSignedIn) {
-                        errorText =
-                            'You have reached the daily limit of requests. Please try again tomorrow or Use your own API key.';
-                    }
-
-                    if (response.status === 429 && !isSignedIn) {
-                        errorText =
-                            'You have reached the daily limit of requests. Please sign in to enjoy more requests.';
+                    if (response.status === 429) {
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            if (errorData.message) {
+                                errorText = errorData.message;
+                            } else if (errorData.limitType === 'daily_limit_exceeded') {
+                                errorText = getRateLimitMessage.dailyLimit(isSignedIn);
+                            } else {
+                                errorText = getRateLimitMessage.minuteLimit(isSignedIn);
+                            }
+                        } catch {
+                            // Fallback if JSON parsing fails
+                            errorText = getRateLimitMessage.dailyLimit(isSignedIn);
+                        }
                     }
 
                     setIsGenerating(false);
@@ -306,7 +313,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
                         status: 'ERROR',
-                        error: 'You have reached the daily limit of requests. Please try again tomorrow or Use your own API key.',
+                        error: getRateLimitMessage.dailyLimit(isSignedIn),
                     });
                 } else {
                     updateThreadItem(body.threadId, {
@@ -359,6 +366,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 useMathCalculator,
                 useCharts,
             });
+            
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
                 !isSignedIn &&
@@ -423,7 +431,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 attachments: multiModalAttachments,
             });
 
-            if (hasApiKeyForChatMode(mode, isSignedIn)) {
+            // Check if this is a free model that should use server-side API
+            const isFreeModel = mode === ChatMode.GEMINI_2_5_FLASH_LITE;
+            
+            if (hasApiKeyForChatMode(mode, isSignedIn) && !isFreeModel) {
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);
@@ -457,7 +468,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
-                if (isSignedIn) {
+                // BUT NOT for free models which don't require user API keys
+                if (isSignedIn && !isFreeModel) {
                     setModalChatMode(mode);
                     setShowApiKeyModal(true);
                     setIsGenerating(false);
@@ -476,7 +488,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     charts: useCharts,
                     showSuggestions: showSuggestions ?? true,
-                    apiKeys: useWebSearch ? getAllKeys() : undefined,
+                    apiKeys: getAllKeys(),
                 });
             }
         },

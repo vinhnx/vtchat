@@ -133,14 +133,13 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
-        isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite',
+        name: 'Gemini 2.5 Flash Lite Preview 06-17',
         provider: 'google',
-        maxTokens: 64_000,
-        contextWindow: 1_000_000,
+        maxTokens: 65536,
+        contextWindow: 65536,
         isFree: true,
     },
     {
@@ -149,7 +148,6 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
-        isFree: false,
     },
     {
         id: ModelEnum.GROK_3,
@@ -167,35 +165,11 @@ export const models: Model[] = [
     },
     // OpenRouter models
     {
-        id: ModelEnum.DEEPSEEK_V3_0324_FREE,
-        name: 'DeepSeek V3 0324',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-        isFree: true,
-    },
-    {
         id: ModelEnum.DEEPSEEK_V3_0324,
         name: 'DeepSeek V3 0324',
         provider: 'openrouter',
         maxTokens: 32_768,
         contextWindow: 163_840,
-    },
-    {
-        id: ModelEnum.DEEPSEEK_R1_FREE,
-        name: 'DeepSeek R1',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.DEEPSEEK_R1_0528_FREE,
-        name: 'DeepSeek R1 0528',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-        isFree: true,
     },
     {
         id: ModelEnum.QWEN3_235B_A22B,
@@ -286,7 +260,7 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         case ChatMode.QWEN3_14B_FREE:
             return ModelEnum.QWEN3_14B_FREE;
         default:
-            return ModelEnum.GEMINI_2_0_FLASH;
+            return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
 };
 
@@ -465,10 +439,18 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_FLASH_LITE,
     ];
 
+    // OpenAI reasoning models
+    const openaiReasoningModels = [
+        ModelEnum.O3,
+        ModelEnum.O3_Mini,
+        ModelEnum.O4_Mini,
+    ];
+
     return [
         ...deepseekReasoningModels,
         ...anthropicReasoningModels,
         ...geminiThinkingModels,
+        ...openaiReasoningModels,
     ].includes(model);
 };
 

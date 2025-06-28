@@ -17,6 +17,7 @@ import {
 } from '@repo/ui';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
+import { RateLimitMeter } from './rate-limit-meter';
 
 interface UsageCreditsSettingsProps {
     onClose?: () => void;
@@ -99,7 +100,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                             </Button>
                                         ) : (
                                             <Button size="sm" onClick={handleUpgradeToPlus}>
-                                                Upgrade to Plus
+                                                Upgrade to VT+
                                             </Button>
                                         )}
                                     </div>
@@ -157,6 +158,9 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Rate Limit Meter for Free Users */}
+                {!isVtPlus && <RateLimitMeter />}
 
                 {/* Upgrade Promotion for Free Users */}
                 {!isVtPlus && (

@@ -93,12 +93,12 @@ const loadInitialData = async () => {
                 useMathCalculator: false,
                 useCharts: false,
                 showSuggestions: true,
-                chatMode: ChatMode.GEMINI_2_0_FLASH,
+                chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
             },
             useWebSearch: false,
             useMathCalculator: false,
             useCharts: false,
-            chatMode: ChatMode.GEMINI_2_0_FLASH,
+            chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
             customInstructions: '',
             showSuggestions: false,
         };
@@ -124,7 +124,7 @@ const loadInitialData = async () => {
         },
     });
 
-    const chatMode = config.chatMode || ChatMode.GEMINI_2_0_FLASH;
+    const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
 
     // Get settings from app store
     const appStore = useAppStore.getState();

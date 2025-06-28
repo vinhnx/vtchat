@@ -141,7 +141,7 @@ export const generateModelOptionsForProvider = (
                 ) : hasReasoningCapability(chatMode) ? (
                     <Brain size={16} className="text-purple-500" />
                 ) : undefined,
-                requiredApiKey: getApiKeyForProvider(model.provider),
+                ...(model.isFree ? {} : { requiredApiKey: getApiKeyForProvider(model.provider) }),
             };
         })
         .filter((option): option is NonNullable<typeof option> => option !== null); // Type-safe filter
@@ -203,11 +203,19 @@ export const modelOptionsByProvider = {
             label: 'o4 mini',
             value: ChatMode.O4_Mini,
             webSearch: true,
-            icon: undefined,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
     ],
     Google: [
+        {
+            label: 'Gemini 2.5 Flash Lite Preview',
+            value: ChatMode.GEMINI_2_5_FLASH_LITE,
+            webSearch: true,
+            icon: <Gift size={16} className="text-green-500" />,
+            description: 'Free model • 10 requests/day per account • 1 request/minute',
+            isFreeModel: true,
+        },
         {
             label: 'Gemini 2.0 Flash',
             value: ChatMode.GEMINI_2_0_FLASH,
@@ -223,24 +231,17 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Flash Lite Preview',
-            value: ChatMode.GEMINI_2_5_FLASH_LITE,
-            webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
             label: 'Gemini 2.5 Flash',
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
-            icon: undefined,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -249,14 +250,14 @@ export const modelOptionsByProvider = {
             label: 'Claude 4 Sonnet',
             value: ChatMode.CLAUDE_4_SONNET,
             webSearch: true,
-            icon: undefined,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Claude 4 Opus',
             value: ChatMode.CLAUDE_4_OPUS,
             webSearch: true,
-            icon: undefined,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -265,7 +266,7 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
-            icon: undefined,
+            icon: <Brain size={16} className="text-purple-500" />,
             requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -345,8 +346,14 @@ export const modelOptionsByProvider = {
     ],
 };
 
-// Flatten array for backward compatibility
-export const modelOptions = Object.values(modelOptionsByProvider).flat();
+// Create modelOptions with Gemini 2.5 Flash Lite as the first option
+const allModelOptions = Object.values(modelOptionsByProvider).flat();
+const geminiFlashLiteOption = allModelOptions.find(option => option.value === ChatMode.GEMINI_2_5_FLASH_LITE);
+const otherOptions = allModelOptions.filter(option => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE);
+
+export const modelOptions = geminiFlashLiteOption 
+    ? [geminiFlashLiteOption, ...otherOptions]
+    : allModelOptions;
 
 /**
  * Step-by-step access check for a chat mode.

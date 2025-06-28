@@ -298,7 +298,6 @@ export class PaymentService {
                     }
 
                     const result = await response.json();
-                    console.log('[PaymentService] Creem API response:', result);
 
                     if (result && typeof result === 'string') {
                         // If the response is directly a URL string

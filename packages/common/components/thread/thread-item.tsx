@@ -20,6 +20,7 @@ import { useChatStore } from '@repo/common/store';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
 import { AlertCircle, Book } from 'lucide-react';
+import { RateLimitErrorAlert } from '../rate-limit-error-alert';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -177,14 +178,11 @@ export const ThreadItem = memo(
                         </div>
                         <QuestionPrompt threadItem={threadItem} />
                         {threadItem.error && (
-                            <Alert variant="destructive">
-                                <AlertDescription>
-                                    <AlertCircle className="mt-0.5 size-3.5" />
-                                    {typeof threadItem.error === 'string'
-                                        ? threadItem.error
-                                        : 'Something went wrong while processing your request. Please try again.'}
-                                </AlertDescription>
-                            </Alert>
+                            <RateLimitErrorAlert 
+                                error={typeof threadItem.error === 'string'
+                                    ? threadItem.error
+                                    : 'Something went wrong while processing your request. Please try again.'}
+                            />
                         )}
 
                         {threadItem.status === 'ABORTED' && (

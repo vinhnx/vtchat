@@ -73,9 +73,18 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
 
 export const getProviderInstance = (
     provider: ProviderEnumType,
-    byokKeys?: Record<string, string>
+    byokKeys?: Record<string, string>,
+    isFreeModel?: boolean
 ): any => {
-    const apiKey = getApiKey(provider, byokKeys);
+    let apiKey = getApiKey(provider, byokKeys);
+    
+    // For free models, try to use server-side API keys if no BYOK key is provided
+    if (isFreeModel && !apiKey && provider === 'google') {
+        if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
+            apiKey = process.env.GEMINI_API_KEY;
+            console.log('Using server-side API key for free Gemini model');
+        }
+    }
 
     switch (provider) {
         case Providers.OPENAI:
@@ -188,7 +197,7 @@ export const getLanguageModel = (
 
     try {
         console.log('Getting provider instance for:', model.provider);
-        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys);
+        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys, model?.isFree);
         console.log('Provider instance created:', {
             hasInstance: !!instance,
             instanceType: typeof instance,
@@ -197,7 +206,7 @@ export const getLanguageModel = (
         // Handle Gemini models with search grounding or caching
         if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
             console.log('Creating Gemini model with special options...');
-            const modelId = model?.id || ChatMode.GEMINI_2_0_FLASH;
+            const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
             console.log('Using model ID:', modelId);
 
             try {
@@ -235,7 +244,7 @@ export const getLanguageModel = (
         }
 
         console.log('Creating standard model...');
-        const modelId = model?.id || ChatMode.GEMINI_2_0_FLASH;
+        const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
         console.log('Using model ID:', modelId);
 
         try {

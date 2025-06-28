@@ -49,7 +49,7 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            console.log('[useCreemSubscription] Requesting customer portal for user:', user.id);
+            console.log('[useCreemSubscription] Requesting customer portal for user');
 
             // Call the portal API endpoint
             const response = await fetch('/api/portal', {
@@ -75,10 +75,9 @@ export function useCreemSubscription() {
             }
 
             const result = await response.json();
-            console.log('[useCreemSubscription] Portal API response:', result);
 
             if (result.success && result.url) {
-                console.log('[useCreemSubscription] Opening portal in new tab:', result.url);
+                console.log('[useCreemSubscription] Opening portal in new tab');
 
                 // Open portal in new tab
                 const portalWindow = window.open(result.url, '_blank');

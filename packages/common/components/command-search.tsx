@@ -22,12 +22,14 @@ import {
     Kbd,
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
-import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
+import { Command, Key, MessageCircle, Moon, Palette, Plus, Settings, Trash } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { useFeatureAccess } from '../hooks/use-subscription-access';
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -44,6 +46,7 @@ export const CommandSearch = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
+    const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
 
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
@@ -90,15 +93,26 @@ export const CommandSearch = () => {
     const onClose = () => setIsCommandSearchOpen(false);
 
     useEffect(() => {
-        const down = (e: KeyboardEvent) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Command+K for command search
             if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
                 setIsCommandSearchOpen(true);
+                return;
+            }
+            
+            // Command+Ctrl+Option+N for new chat
+            if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
+                e.preventDefault();
+                console.log('🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+                router.push('/chat');
+                return;
             }
         };
-        document.addEventListener('keydown', down);
-        return () => document.removeEventListener('keydown', down);
-    }, [setIsCommandSearchOpen]);
+        
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [setIsCommandSearchOpen, router]);
 
     type ActionItem = {
         name: string;
@@ -138,9 +152,29 @@ export const CommandSearch = () => {
             name: 'Change Theme',
             icon: Palette,
             action: () => {
-                // Simple toggle between light and dark mode
+                // Check if user is trying to switch to dark mode without VT+ access
                 const nextTheme = theme === 'light' ? 'dark' : 'light';
+                
+                if (nextTheme === 'dark' && !hasThemeAccess) {
+                    setShowSubscriptionDialog(true);
+                    return;
+                }
+                
                 setTheme(nextTheme);
+                onClose();
+            },
+            requiresAuth: false,
+        },
+        {
+            name: 'Switch to Dark Mode',
+            icon: Moon,
+            action: () => {
+                if (!hasThemeAccess) {
+                    setShowSubscriptionDialog(true);
+                    return;
+                }
+                
+                setTheme('dark');
                 onClose();
             },
             requiresAuth: false,

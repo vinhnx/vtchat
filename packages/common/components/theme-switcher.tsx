@@ -3,6 +3,9 @@
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useFeatureAccess } from '../hooks/use-subscription-access';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { Tooltip } from '@repo/ui';
 
 const themes = [
     {
@@ -32,13 +35,23 @@ export type ThemeSwitcherProps = {
 export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) => {
     const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
 
     const handleThemeClick = useCallback(
         (themeKey: 'light' | 'dark' | 'system') => {
+            // Block dark mode and system theme (which could resolve to dark) for non-VT+ users
+            if ((themeKey === 'dark' || themeKey === 'system') && !hasThemeAccess) {
+                console.warn('Dark theme access blocked: VT+ subscription required');
+                // Fallback to light theme for non-VT+ users
+                setTheme('light');
+                onChange?.('light');
+                return;
+            }
+
             setTheme(themeKey);
             onChange?.(themeKey);
         },
-        [setTheme, onChange]
+        [setTheme, onChange, hasThemeAccess]
     );
 
     // Prevent hydration mismatch
@@ -58,7 +71,7 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
         );
     }
 
-    return (
+    const themeSwitcher = (
         <div
             className={`bg-background ring-border relative isolate flex h-8 rounded-full p-1 ring-1 ${className}`}
         >
@@ -67,15 +80,22 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
                 // For system theme, also show the resolved theme icon as a hint
                 const showSystemHint = key === 'system' && theme === 'system' && resolvedTheme;
                 const SystemHintIcon = resolvedTheme === 'dark' ? Moon : Sun;
+                // Check if this theme option is disabled for non-VT+ users
+                const isDisabled = (key === 'dark' || key === 'system') && !hasThemeAccess;
 
                 return (
                     <button
                         type="button"
                         key={key}
-                        className="relative h-6 w-6 rounded-full transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className={`relative h-6 w-6 rounded-full transition-all duration-200 ${
+                            isDisabled
+                                ? 'cursor-not-allowed opacity-50'
+                                : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                        }`}
                         onClick={() => handleThemeClick(key as 'light' | 'dark' | 'system')}
-                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}`}
-                        title={`${label}${showSystemHint ? ` (currently ${resolvedTheme})` : ''}`}
+                        disabled={isDisabled}
+                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}${isDisabled ? ' (VT+ required)' : ''}`}
+                        title={`${label}${showSystemHint ? ` (currently ${resolvedTheme})` : ''}${isDisabled ? ' - VT+ subscription required' : ''}`}
                     >
                         {isActive && (
                             <div className="bg-secondary absolute inset-0 rounded-full transition-all duration-200" />
@@ -96,4 +116,18 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
             })}
         </div>
     );
+
+    // Show upgrade tooltip for free users
+    if (!hasThemeAccess) {
+        return (
+            <Tooltip 
+                content="Upgrade to VT+ to unlock dark theme and system theme" 
+                side="bottom"
+            >
+                {themeSwitcher}
+            </Tooltip>
+        );
+    }
+
+    return themeSwitcher;
 };

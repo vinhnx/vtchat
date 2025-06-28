@@ -1,11 +1,8 @@
 'use client';
 
-import React from 'react';
-import { MotionSkeleton, GatedFeatureAlert } from '@repo/common/components';
-import {
-    useSubscriptionAccess,
-    useWebSearch as useWebSearchHook,
-} from '@repo/common/hooks';
+import { ModelEnum, supportsReasoning, getModelFromChatMode } from '@repo/ai/models';
+import { GatedFeatureAlert, MotionSkeleton, RateLimitIndicator } from '@repo/common/components';
+import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -29,16 +26,18 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowUp,
+    BarChart3,
+    Brain,
+    Calculator,
     ChevronDown,
     Globe,
+    Lock,
     Paperclip,
     Square,
-    BarChart3,
-    Calculator,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { BYOKIcon, NewIcon } from '../icons';
+import { BYOKIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config';
 
@@ -139,7 +138,9 @@ export function ChatModeButton() {
             {/* Gated Feature Alert Modal */}
             <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
                 <DialogContent className="mx-4 max-w-md rounded-xl">
-                    <DialogTitle className="sr-only">{showGateAlert?.title || 'Upgrade Required'}</DialogTitle>
+                    <DialogTitle className="sr-only">
+                        {showGateAlert?.title || 'Upgrade Required'}
+                    </DialogTitle>
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
                             <ArrowUp size={24} className="text-purple-600 dark:text-purple-400" />
@@ -166,28 +167,12 @@ export function ChatModeButton() {
 export function WebSearchButton() {
     const useWebSearch = useChatStore(state => state.useWebSearch);
     const { webSearchType } = useWebSearchHook();
-    const chatMode = useChatStore(state => state.chatMode);
     const setActiveButton = useChatStore(state => state.setActiveButton);
-    const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const { canAccess } = useSubscriptionAccess();
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-    // Hide web search button if chat mode doesn't support it
-    if (!ChatModeConfig[chatMode]?.webSearch) {
-        return null;
-    }
-
-    // Hide web search button if no API key is available for this chat mode
-    if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
-        return null;
-    }
-
-    // Hide web search button for non-subscribers to simplify workflow
-    if (!isSignedIn || !canAccess(FeatureSlug.PRO_SEARCH)) {
-        return null;
-    }
+    // Show web search button by default - gating handled at functionality level
 
     const handleWebSearchToggle = () => {
         if (!isSignedIn) {
@@ -470,20 +455,18 @@ export function BYOKSetupModal({
 
         setIsSaving(true);
         try {
-            console.log(`[BYOK Modal] Saving API key for ${requiredApiKey}...`);
-
             // Save the API key
             setApiKey(requiredApiKey, apiKeyValue.trim());
 
             // Verify the key was saved by checking storage immediately
             setTimeout(() => {
-                const savedKeys = getAllKeys;
+                const savedKeys = getAllKeys();
                 if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
-                    console.log(`[BYOK Modal] API key for ${requiredApiKey} verified as saved`);
+
                 } else {
                     console.error(`[BYOK Modal] API key verification failed for ${requiredApiKey}`);
                 }
-            }, 100);
+            }, 200);
 
             setApiKeyValue('');
             onApiKeySaved();
@@ -698,6 +681,14 @@ export function ChatModeOptions({
             return false; // Not gated if no requirements
         }
 
+        // Check BYOK bypass first
+        const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+        const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
+        
+        if (isByokEligibleMode && hasByokGeminiKey) {
+            return false; // Not gated if BYOK bypass applies
+        }
+
         let hasRequiredAccess = true;
 
         if (config.requiredFeature) {
@@ -709,6 +700,29 @@ export function ChatModeOptions({
         }
 
         return !hasRequiredAccess;
+    };
+
+    // Handler for dropdown item selection with gating
+    const handleDropdownSelect = (mode: ChatMode) => {
+        const isGated = isModeGated(mode);
+        
+        if (isGated) {
+            // Show gated feature dialog instead of selecting
+            const config = ChatModeConfig[mode];
+            const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
+                .find(opt => opt.value === mode);
+            
+            onGatedFeature({
+                feature: config.requiredFeature,
+                plan: config.requiredPlan,
+                title: `${option?.label}`,
+                message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+            });
+            return;
+        }
+        
+        // If not gated, proceed with normal selection
+        handleModeSelect(mode);
     };
 
     return (
@@ -723,13 +737,12 @@ export function ChatModeOptions({
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
                     {chatOptions.map(option => {
                         const isGated = isModeGated(option.value);
-                        const config = ChatModeConfig[option.value];
 
                         return (
                             <DropdownMenuItem
                                 key={`advanced-${option.value}`}
-                                onSelect={() => handleModeSelect(option.value)}
-                                className={cn('h-auto', isGated && 'opacity-80')}
+                                onSelect={() => handleDropdownSelect(option.value)}
+                                className={cn('h-auto', isGated && 'opacity-50 cursor-not-allowed')}
                             >
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
@@ -749,7 +762,12 @@ export function ChatModeOptions({
                                         )}
                                     </div>
                                     <div className="flex-1" />
-                                    {config?.isNew && <NewIcon />}
+                                    {isGated && (
+                                        <Lock size={14} className="text-muted-foreground" />
+                                    )}
+                                    {supportsReasoning(getModelFromChatMode(option.value)) && (
+                                        <Brain size={14} className="text-purple-500" title="Reasoning Model" />
+                                    )}
                                 </div>
                             </DropdownMenuItem>
                         );
@@ -764,13 +782,13 @@ export function ChatModeOptions({
                             </DropdownMenuLabel>
                             {options.map(option => {
                                 const isGated = isModeGated(option.value);
-                                const config = ChatModeConfig[option.value];
+                                const isFreeModel = option.value === ChatMode.GEMINI_2_5_FLASH_LITE;
 
                                 return (
                                     <DropdownMenuItem
                                         key={`model-${option.value}`}
-                                        onSelect={() => handleModeSelect(option.value)}
-                                        className={cn('h-auto pl-4', isGated && 'opacity-80')}
+                                        onSelect={() => handleDropdownSelect(option.value)}
+                                        className={cn('h-auto pl-4', isGated && 'opacity-50 cursor-not-allowed')}
                                     >
                                         <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
                                             <div className="flex flex-col gap-0">
@@ -782,14 +800,31 @@ export function ChatModeOptions({
                                                         </span>
                                                     )}
                                                 </p>
+                                                {isFreeModel && (option as any).description && (
+                                                    <p className="text-muted-foreground text-xs">
+                                                        {(option as any).description}
+                                                    </p>
+                                                )}
+                                                {isFreeModel && isSignedIn && (
+                                                    <RateLimitIndicator
+                                                        modelId={ModelEnum.GEMINI_2_5_FLASH_LITE}
+                                                        compact
+                                                        className="mt-1"
+                                                    />
+                                                )}
                                             </div>
                                             <div className="flex-1" />
+                                            {isGated && (
+                                                <Lock size={14} className="text-muted-foreground" />
+                                            )}
+                                            {supportsReasoning(option.value) && (
+                                                <Brain size={14} className="text-purple-500" title="Reasoning Model" />
+                                            )}
                                             {option.icon && (
                                                 <div className="flex items-center">
                                                     {option.icon}
                                                 </div>
                                             )}
-                                            {config?.isNew && <NewIcon />}
                                             {hasApiKeyForChatMode(option.value, isSignedIn) && (
                                                 <BYOKIcon />
                                             )}

@@ -11,6 +11,22 @@ remove sidebar border and background color
 decorate /chat contentainer with dark/white background color
 
 --
+https://github.com/intern3-chat/intern3-chat/blob/main/src/components/artifact-preview.tsx
+
+--
+refence https://github.com/intern3-chat/intern3-chat
+
++ HTML/Mermaid/React artifacts preview
++ HTTP/SSE MCP Support for Model Context Protocol
++ Supermemory API integration for persistent memories
++ Native Voice input in input box using Groq
++ https://intern3.chat/settings/profile
+
+--
+update Deep Research prompt to encourage the Agent to use Summarize data in a way that could be turned into charts or tables"
+
+--
+
 review .env config production
 
 -> copy config from .env to .env.production
@@ -26,25 +42,34 @@ https://fly.io/docs/apps/going-to-production/#main-content-start
 web: https://vtchat-dev.fly.dev
 app: https://fly.io/apps/vtchat-dev/configuration
 
-
-
 https://fly.io/docs/apps/going-to-production/
-https://claude.ai/chat/524e3244-6d68-4f2a-9a74-4a4c281aba99
-✅ migrate from railway to fly.io
-✅ update deployment setup guide and documents
--> free if use under 5$ a month
 
 --
+
 https://x.com/KuittinenPetri/status/1937496855342121234
 Gemini 2.5 Flash Lite Preview 05-17 still has very generous 15 RPM and 500 free requests per day. It is surprisingly capable model considering how cheap and fast it is.
+
+--> add `gemini-2.5-flash-lite-preview-06-17` model
+
+1. set as free and with rate limit
+2. add GEMINI_API_KEY to .env.production and .env.development (i have set this) -> update to fly.io deployment config
+3. offer to register users only with constraints:
+a. only 10 requests per day
+b. only 1 request per minute
+4. reset requests per day and per minute for each user at 00:00 UTC
+5. add a note to the UI that this is a free model with limited requests
+6. when user reaches the limit, show a message that they need to upgrade to a paid plan -> route to /plus
+7. add credit/limit tracking meter to settings page, only show for registered users and not subscribed users
+8. non-logged in users should not be used this offer, they should be redirected to login page with a message that they need to register to use this model.
+9. think even harder
+10. test thoroughly
+11. note that this limit is per account
+12. auto selected gemini-2.5-flash-lite-preview-06-17 model as default on chat input model dropdown selection
+13. priority selection: gemini-2.5-flash-lite-preview-06-17 -> check if user has already input BYOK -> use their BYOK gemini key. if not, use the default gemini key from env that we offer.
+14. make sure for this feature, gemini-2.5-flash-lite-preview-06-17 should get the api key from .env only for this features. all other models are from BYOK
+
 --
 https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
-
---
-
-## https://requestindexing.com/
-
-## https://unlighthouse.dev/
 
 --
 

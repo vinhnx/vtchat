@@ -14,6 +14,7 @@ export const useThreadAuth = () => {
     const { data: session } = useSession();
     const switchUserDatabase = useChatStore(state => state.switchUserDatabase);
     const switchUserStorage = useApiKeysStore(state => state.switchUserStorage);
+    const forceRehydrate = useApiKeysStore(state => state.forceRehydrate);
     const previousUserIdRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -41,11 +42,16 @@ export const useThreadAuth = () => {
 
             // Switch to the appropriate user storage for API keys
             switchUserStorage(currentUserId);
+            
+            // Force rehydration to ensure the store has the latest data
+            setTimeout(() => {
+                forceRehydrate();
+            }, 100);
 
             // Update the ref to track the current user
             previousUserIdRef.current = currentUserId;
         }
-    }, [session?.user?.id, switchUserDatabase, switchUserStorage]);
+    }, [session?.user?.id, switchUserDatabase, switchUserStorage, forceRehydrate]);
 
     return {
         currentUserId: session?.user?.id || null,
