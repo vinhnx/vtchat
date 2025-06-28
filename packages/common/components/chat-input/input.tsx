@@ -460,7 +460,7 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
                     }}
                     className="text-center"
                 >
-                    <ShineText className="text-2xl font-bold leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
+                    <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
                         {greeting}
                     </ShineText>
                 </motion.div>
