@@ -83,9 +83,9 @@ export const Sidebar = () => {
     return (
         <div
             className={cn(
-                'border-border/0 relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-r border-dashed py-2 transition-all duration-200',
+                'border-border/0 relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l border-dashed py-2 transition-all duration-200',
                 isSidebarOpen
-                    ? 'bg-background border-border/70 shadow-xs top-0 h-full w-[240px] border-r'
+                    ? 'bg-background border-border/70 shadow-xs top-0 h-full w-[240px] border-l'
                     : 'w-[50px]'
             )}
         >

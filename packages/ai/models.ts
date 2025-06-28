@@ -455,6 +455,75 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 };
 
 /**
+ * Checks if a model supports tool calls/function calling
+ * Based on capabilities defined in models-data.json
+ */
+export const supportsTools = (model: ModelEnum): boolean => {
+    // OpenAI models that support tools
+    const openaiToolModels = [
+        ModelEnum.GPT_4o,
+        ModelEnum.GPT_4o_Mini,
+        ModelEnum.GPT_4_1,
+        ModelEnum.GPT_4_1_Mini,
+        ModelEnum.GPT_4_1_Nano,
+        // Note: O1/O3 models do NOT support tools
+    ];
+
+    // Anthropic models that support tools
+    const anthropicToolModels = [
+        ModelEnum.CLAUDE_4_SONNET,
+        ModelEnum.CLAUDE_4_OPUS,
+    ];
+
+    // Google models that support tools
+    const googleToolModels = [
+        ModelEnum.GEMINI_2_0_FLASH,
+        ModelEnum.GEMINI_2_0_FLASH_LITE,
+        ModelEnum.GEMINI_2_5_FLASH,
+        ModelEnum.GEMINI_2_5_PRO,
+        ModelEnum.GEMINI_2_5_FLASH_LITE,
+    ];
+
+    // OpenRouter models that support tools
+    const openrouterToolModels = [
+        ModelEnum.DEEPSEEK_V3_0324,
+        ModelEnum.DEEPSEEK_V3_0324_FREE,
+        ModelEnum.QWEN3_235B_A22B,
+        ModelEnum.QWEN3_32B,
+        ModelEnum.QWEN3_14B_FREE,
+        ModelEnum.MISTRAL_NEMO,
+    ];
+
+    // xAI models that support tools
+    const xaiToolModels = [
+        ModelEnum.GROK_3,
+        ModelEnum.GROK_3_MINI,
+    ];
+
+    return [
+        ...openaiToolModels,
+        ...anthropicToolModels,
+        ...googleToolModels,
+        ...openrouterToolModels,
+        ...xaiToolModels,
+    ].includes(model);
+};
+
+/**
+ * Checks if a model supports web search
+ * Most models support web search through our implementation
+ */
+export const supportsWebSearch = (model: ModelEnum): boolean => {
+    // Almost all models support web search through our unified implementation
+    // Only some very specialized or limited models might not support it
+    const nonWebSearchModels: ModelEnum[] = [
+        // Add any models that don't support web search here if needed
+    ];
+    
+    return !nonWebSearchModels.includes(model);
+};
+
+/**
  * Determines the reasoning implementation type for a model
  */
 export const getReasoningType = (model: ModelEnum): ReasoningType => {

@@ -32,6 +32,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const pathname = usePathname();
     const { data: session } = useSession();
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const sidebarPlacement = useAppStore(state => state.sidebarPlacement);
     const router = useRouter();
 
     const containerClass =
@@ -53,50 +54,48 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         </span>
                     </div>
                 </div>
-                <div className="hidden lg:flex">
-                    {/* Placeholder for sidebar during SSR */}
-                    {isSidebarOpen && (
-                        <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
-                    )}
-                </div>
+                {/* Left sidebar placeholder during SSR */}
+                {sidebarPlacement === 'left' && (
+                    <div className="hidden lg:flex">
+                        {isSidebarOpen && (
+                            <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
+                        )}
+                    </div>
+                )}
                 <div className={containerClass}>
                     <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
                 </div>
+                {/* Right sidebar placeholder during SSR */}
+                {sidebarPlacement === 'right' && (
+                    <div className="hidden lg:flex">
+                        {isSidebarOpen && (
+                            <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
+                        )}
+                    </div>
+                )}
             </div>
         );
     }
 
     return (
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
-            <Flex className="hidden md:flex">
-                <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-            </Flex>
-
-            <Drawer.Root
-                open={isMobileSidebarOpen}
-                direction="left"
-                shouldScaleBackground
-                onOpenChange={setIsMobileSidebarOpen}
-            >
-                <Drawer.Portal>
-                    <Drawer.Overlay className="fixed inset-0 z-30 backdrop-blur-sm" />
-                    <Drawer.Content className="bg-tertiary fixed bottom-0 left-0 top-0 z-[50] w-[280px]">
-                        <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
-                        <div className="h-full">
-                            <Sidebar forceMobile={true} />
-                        </div>
-                    </Drawer.Content>
-                </Drawer.Portal>
-            </Drawer.Root>
+            {/* Left Sidebar */}
+            {sidebarPlacement === 'left' && (
+                <Flex className="hidden md:flex">
+                    <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
+                </Flex>
+            )}
 
             {/* Main Content */}
             <Flex className="flex-1 overflow-hidden">
-                <motion.div className="flex w-full md:py-1 md:pr-1">
+                <motion.div className={`flex w-full md:py-1 ${sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'}`}>
                     <AgentProvider>
                         <div className={containerClass}>
                             {/* Mobile Header */}
                             <div className="bg-secondary border-border absolute left-0 right-0 top-0 z-50 border-b p-3 md:hidden">
                                 <div className="flex items-center justify-between">
+                                    <div className="w-8" /> {/* Spacer for centering */}
+                                    <div className="text-foreground text-lg font-bold">VT</div>
                                     <Button
                                         variant="ghost"
                                         size="icon-sm"
@@ -105,8 +104,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     >
                                         <Menu size={20} strokeWidth={2} />
                                     </Button>
-                                    <div className="text-foreground text-lg font-bold">VT</div>
-                                    <div className="w-8" /> {/* Spacer for centering */}
                                 </div>
                             </div>
 
@@ -126,6 +123,30 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <SettingsModal />
                 <CommandSearch />
             </Flex>
+
+            {/* Right Sidebar */}
+            {sidebarPlacement === 'right' && (
+                <Flex className="hidden md:flex">
+                    <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
+                </Flex>
+            )}
+
+            <Drawer.Root
+                open={isMobileSidebarOpen}
+                direction={sidebarPlacement}
+                shouldScaleBackground
+                onOpenChange={setIsMobileSidebarOpen}
+            >
+                <Drawer.Portal>
+                    <Drawer.Overlay className="fixed inset-0 z-30 backdrop-blur-sm" />
+                    <Drawer.Content className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}>
+                        <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
+                        <div className="h-full">
+                            <Sidebar forceMobile={true} />
+                        </div>
+                    </Drawer.Content>
+                </Drawer.Portal>
+            </Drawer.Root>
 
             <SonnerToaster />
 

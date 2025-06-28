@@ -185,18 +185,28 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         <>
             {gatedChildren}
             <Dialog open={showUpgradeAlert} onOpenChange={setShowUpgradeAlert}>
-                <DialogContent ariaTitle={title} className="max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription>{defaultMessage}</DialogDescription>
+                <DialogContent ariaTitle={title} className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl">
+                    <DialogHeader className="text-center pb-4">
+                        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg">
+                            <Sparkles size={24} className="text-white" />
+                        </div>
+                        <DialogTitle className="text-xl font-bold text-gray-900">{title}</DialogTitle>
+                        <DialogDescription className="text-gray-600 leading-relaxed">{defaultMessage}</DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="gap-3">
-                        <Button variant="outline" onClick={() => setShowUpgradeAlert(false)}>
+                    <DialogFooter className="gap-3 pt-4">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setShowUpgradeAlert(false)}
+                            className="border-gray-200 text-gray-600 hover:bg-gray-50"
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={handleUpgrade} className="gap-2">
+                        <Button 
+                            onClick={handleUpgrade} 
+                            className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg font-semibold"
+                        >
                             <Sparkles size={16} />
-                            Upgrade Now
+                            UPGRADE TO VT+
                         </Button>
                     </DialogFooter>
                 </DialogContent>

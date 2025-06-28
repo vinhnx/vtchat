@@ -36,6 +36,7 @@ type SideDrawerProps = {
 type State = {
     isSidebarOpen: boolean;
     sidebarAnimationDisabled: boolean;
+    sidebarPlacement: 'left' | 'right';
     isSourcesOpen: boolean;
     isSettingsOpen: boolean;
     showSignInModal: boolean;
@@ -76,6 +77,7 @@ type Actions = {
     // UI state actions
     setIsSidebarOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setSidebarAnimationDisabled: (disabled: boolean) => void;
+    setSidebarPlacement: (placement: 'left' | 'right') => void;
     setIsSourcesOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setIsSettingsOpen: (open: boolean) => void;
     setSettingTab: (tab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS]) => void;
@@ -142,6 +144,7 @@ export const useAppStore = create<State & Actions>()(
                 // Initial state
                 isSidebarOpen: initialSidebarOpen,
                 sidebarAnimationDisabled: animationDisabled,
+                sidebarPlacement: 'right',
                 isSourcesOpen: false,
                 isSettingsOpen: false,
                 settingTab: SETTING_TABS.USAGE_CREDITS,
@@ -206,6 +209,10 @@ export const useAppStore = create<State & Actions>()(
                     } catch (error) {
                         console.warn('Failed to save sidebar state:', error);
                     }
+                },
+
+                setSidebarPlacement: placement => {
+                    set({ sidebarPlacement: placement });
                 },
 
                 setIsSourcesOpen: open => {
@@ -387,6 +394,7 @@ export const useAppStore = create<State & Actions>()(
         {
             name: 'vtchat-settings',
             partialize: state => ({
+                sidebarPlacement: state.sidebarPlacement,
                 showExamplePrompts: state.showExamplePrompts,
                 customInstructions: state.customInstructions,
                 useWebSearch: state.useWebSearch,

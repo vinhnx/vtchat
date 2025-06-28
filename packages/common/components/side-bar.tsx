@@ -146,7 +146,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'bg-sidebar border-sidebar-border relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-r transition-all duration-300 ease-in-out',
+                'bg-sidebar border-sidebar-border relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l transition-all duration-300 ease-in-out',
                 'dark:border-gray-800 dark:bg-black/95',
                 isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
             )}

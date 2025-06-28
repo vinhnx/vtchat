@@ -176,20 +176,6 @@ export const CommandSearch = () => {
             requiresAuth: false,
         },
         {
-            name: 'Switch to Dark Mode',
-            icon: Moon,
-            action: () => {
-                if (!hasThemeAccess) {
-                    setShowSubscriptionDialog(true);
-                    return;
-                }
-
-                setTheme('dark');
-                onClose();
-            },
-            requiresAuth: false,
-        },
-        {
             name: 'Settings',
             icon: Settings,
             action: () => {
