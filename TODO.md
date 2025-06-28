@@ -1,35 +1,28 @@
 # TODO
 
-integrate pino  lightweight, fast and secure logging. automatic PII redaction
+Interaction to Next Paint (INP)
 
-Top Recommendations
-Pino (Most Popular)
-javascriptimport pino from 'pino'
+272 ms
+Your local INP value of 272 ms needs improvement.
+INP interaction
+pointer
 
-const logger = pino({
-  level: 'info',
-  redact: ['password', 'email'] // Auto-sanitize sensitive data
-})
+Largest Contentful Paint (LCP)
 
-logger.info({ userId: 123 }, 'User logged in')
-
-bashnpm install pino
+4.40 s
+Your local LCP value of 4.40 s is poor.
+LCP element
+div.text-center
 
 --
 
-https://x.com/pqoqubbw/status/1938636823892303947
-
-ACCESSBILITY TESTING
+IMPORTANT: ACCESSBILITY TESTING with Chrome
+https://developer.chrome.com/docs/devtools/accessibility/reference
 
 --
 review ui/ux and refine, polish, make sure the premium fealing and minimal design is consistent across the app.
---
-decorated premium Deep Research and Pro Search modes with a "Premium" label in the chat input component when selected.
-base on model-data.json add a tool indicator to each chat models that supports tools, reasoning, and web search in the model selection dropdown in chat input component.
 
 --
-
-1. fix DARK MODE THEME SWITCH DOESN'T WORK FOR PREMIUM USERS
 
 --
 https://million.dev/docs
@@ -81,33 +74,8 @@ app: https://fly.io/apps/vtchat-dev/configuration
 https://fly.io/docs/apps/going-to-production/
 
 --
-
-https://x.com/KuittinenPetri/status/1937496855342121234
-Gemini 2.5 Flash Lite Preview 05-17 still has very generous 15 RPM and 500 free requests per day. It is surprisingly capable model considering how cheap and fast it is.
-
---> add `gemini-2.5-flash-lite-preview-06-17` model
-
-1. set as free and with rate limit
-2. add GEMINI_API_KEY to .env.production and .env.development (i have set this) -> update to fly.io deployment config
-3. offer to register users only with constraints:
-a. only 10 requests per day
-b. only 1 request per minute
-4. reset requests per day and per minute for each user at 00:00 UTC
-5. add a note to the UI that this is a free model with limited requests
-6. when user reaches the limit, show a message that they need to upgrade to a paid plan -> route to /plus
-7. add credit/limit tracking meter to settings page, only show for registered users and not subscribed users
-8. non-logged in users should not be used this offer, they should be redirected to login page with a message that they need to register to use this model.
-9. think even harder
-10. test thoroughly
-11. note that this limit is per account
-12. auto selected gemini-2.5-flash-lite-preview-06-17 model as default on chat input model dropdown selection
-13. priority selection: gemini-2.5-flash-lite-preview-06-17 -> check if user has already input BYOK -> use their BYOK gemini key. if not, use the default gemini key from env that we offer.
-14. make sure for this feature, gemini-2.5-flash-lite-preview-06-17 should get the api key from .env only for this features. all other models are from BYOK
-
 --
 https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
-
---
 
 --
 
