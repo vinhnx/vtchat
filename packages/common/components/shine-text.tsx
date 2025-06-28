@@ -7,10 +7,25 @@ interface ShineTextProps {
 
 export const ShineText = ({ children, className = '' }: ShineTextProps) => {
     return (
-        <span
-            className={`animate-background-shine inline-flex bg-[linear-gradient(110deg,#939393,45%,#1e293b,55%,#939393)] bg-[length:250%_100%] bg-clip-text text-transparent ${className}`}
-        >
-            {children}
+        <span className={`relative inline-flex ${className}`}>
+            {/* Fallback text (visible if gradient clipping fails) */}
+            <span className="text-foreground">
+                {children}
+            </span>
+            {/* Shine effect overlay */}
+            <span
+                className="absolute inset-0"
+                style={{
+                    background: 'linear-gradient(110deg, #1e293b 0%, #64748b 45%, #1e293b 55%, #64748b 100%)',
+                    backgroundSize: '250% 100%',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    color: 'transparent',
+                    animation: 'background-shine 3s ease-in-out infinite'
+                }}
+            >
+                {children}
+            </span>
         </span>
     );
 };
