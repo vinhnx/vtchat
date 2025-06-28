@@ -12,7 +12,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex, TypographyH3 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
@@ -368,9 +368,14 @@ export const ChatInput = ({
                     className={cn('w-full pb-4', threadItemsLength > 0 ? 'mb-0' : 'h-full')}
                 >
                     {!currentThreadId && showGreeting && (
-                        <div className="mb-4 flex w-full flex-col items-center gap-1">
-                            <TypographyH3>How can I help you today?</TypographyH3>
-                        </div>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            className="mb-4 flex w-full flex-col items-center gap-1"
+                        >
+                            <PersonalizedGreeting session={session} />
+                        </motion.div>
                     )}
 
                     {renderChatBottom()}
@@ -399,5 +404,67 @@ export const ChatInput = ({
                 />
             )}
         </div>
+    );
+};
+
+type PersonalizedGreetingProps = {
+    session?: any;
+};
+
+const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
+    const [greeting, setGreeting] = React.useState<string>('');
+
+    React.useEffect(() => {
+        const getTimeBasedGreeting = () => {
+            const hour = new Date().getHours();
+            const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
+            const userNamePart = userName ? `, ${userName}!` : '';
+
+            if (hour >= 5 && hour < 12) {
+                return `Good morning${userNamePart}`;
+            } else if (hour >= 12 && hour < 18) {
+                return `Good afternoon${userNamePart}`;
+            } else {
+                return `Good evening${userNamePart}`;
+            }
+        };
+
+        setGreeting(getTimeBasedGreeting());
+
+        // Update the greeting if the component is mounted during a time transition
+        const interval = setInterval(() => {
+            const newGreeting = getTimeBasedGreeting();
+            if (newGreeting !== greeting) {
+                setGreeting(newGreeting);
+            }
+        }, 60000); // Check every minute
+
+        return () => clearInterval(interval);
+    }, [greeting, session]);
+
+    return (
+        <Flex
+            direction="col"
+            className="relative h-[100px] w-full items-center justify-center overflow-hidden"
+        >
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={greeting}
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    transition={{
+                        duration: 0.8,
+                        ease: 'easeInOut',
+                    }}
+                    className="text-center"
+                >
+                    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                        {greeting}
+                    </h3>
+                    <p className="text-muted-foreground mt-2 text-sm">How can I help you today?</p>
+                </motion.div>
+            </AnimatePresence>
+        </Flex>
     );
 };
