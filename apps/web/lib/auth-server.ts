@@ -8,9 +8,11 @@ import * as schema from './database/schema';
 
 export const auth = betterAuth({
     baseURL:
-        process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
-        process.env.NEXT_PUBLIC_BASE_URL ||
-        'http://localhost:3000',
+        process.env.NODE_ENV === 'production'
+            ? 'https://vtchat.fly.dev'
+            : process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+              process.env.NEXT_PUBLIC_BASE_URL ||
+              'http://localhost:3000',
     basePath: '/api/auth',
     database: drizzleAdapter(db, {
         provider: 'pg',
@@ -39,6 +41,10 @@ export const auth = betterAuth({
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,
             clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+            redirectURI:
+                process.env.NODE_ENV === 'production'
+                    ? 'https://vtchat.fly.dev/api/auth/callback/github'
+                    : 'http://localhost:3000/api/auth/callback/github',
             scope: ['read:user', 'user:email'],
             mapProfileToUser: profile => {
                 return {
@@ -49,6 +55,10 @@ export const auth = betterAuth({
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            redirectURI:
+                process.env.NODE_ENV === 'production'
+                    ? 'https://vtchat.fly.dev/api/auth/callback/google'
+                    : 'http://localhost:3000/api/auth/callback/google',
             scope: ['openid', 'email', 'profile'],
             mapProfileToUser: profile => {
                 return {
@@ -71,8 +81,10 @@ export const auth = betterAuth({
         max: 200, // Increased from 100 to handle more requests
     },
     trustedOrigins: [
-        'https://vtchat-dev.fly.dev',
-        process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+        'https://vtchat.fly.dev', // Production
+        'https://vtchat.io.vn', // Production - custom domain
+        'https://vtchat-dev.fly.dev', // Development
+        process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.fly.dev',
         'http://localhost:3000',
         'http://127.0.0.1:3000',
     ],

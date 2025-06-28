@@ -289,6 +289,36 @@ export const ApiKeySettings = () => {
                 </CardContent>
             </Card>
 
+            {/* Free Gemini Flash Lite Message */}
+            {!apiKeys.GEMINI_API_KEY && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-blue-600 dark:text-blue-400">
+                            <Info className="h-5 w-5" />
+                            Free Gemini 2.5 Flash Lite Available
+                        </CardTitle>
+                        <CardDescription>
+                            You're currently using the free Gemini 2.5 Flash Lite with rate limits
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="border-border/50 bg-blue-50 dark:bg-blue-950/20 rounded-lg border p-4">
+                            <div className="space-y-3">
+                                <div className="text-foreground text-sm">
+                                    <strong>Current limits:</strong> 10 requests per day, 1 request per minute
+                                </div>
+                                <div className="text-muted-foreground text-sm">
+                                    Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.
+                                </div>
+                                <div className="text-muted-foreground text-sm">
+                                    <strong>Pro tip:</strong> With your own API key, you'll have access to Gemini 2.5 Pro, Gemini 2.0 Flash, and other premium models without restrictions.
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* API Keys Management */}
             <Card>
                 <CardHeader>

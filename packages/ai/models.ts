@@ -6,9 +6,9 @@ import { ProviderEnumType } from './providers';
 export enum ModelEnum {
     CLAUDE_4_SONNET = 'claude-4-sonnet-20250514',
     Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
+    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
     GEMINI_2_0_FLASH = 'gemini-2.0-flash',
     GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
-    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
     GEMINI_2_5_FLASH = 'gemini-2.5-flash',
     GEMINI_2_5_PRO = 'gemini-2.5-pro',
     CLAUDE_4_OPUS = 'claude-4-opus-20250514',
@@ -440,11 +440,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     ];
 
     // OpenAI reasoning models
-    const openaiReasoningModels = [
-        ModelEnum.O3,
-        ModelEnum.O3_Mini,
-        ModelEnum.O4_Mini,
-    ];
+    const openaiReasoningModels = [ModelEnum.O3, ModelEnum.O3_Mini, ModelEnum.O4_Mini];
 
     return [
         ...deepseekReasoningModels,
@@ -470,10 +466,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ];
 
     // Anthropic models that support tools
-    const anthropicToolModels = [
-        ModelEnum.CLAUDE_4_SONNET,
-        ModelEnum.CLAUDE_4_OPUS,
-    ];
+    const anthropicToolModels = [ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
 
     // Google models that support tools
     const googleToolModels = [
@@ -495,10 +488,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ];
 
     // xAI models that support tools
-    const xaiToolModels = [
-        ModelEnum.GROK_3,
-        ModelEnum.GROK_3_MINI,
-    ];
+    const xaiToolModels = [ModelEnum.GROK_3, ModelEnum.GROK_3_MINI];
 
     return [
         ...openaiToolModels,
@@ -519,7 +509,7 @@ export const supportsWebSearch = (model: ModelEnum): boolean => {
     const nonWebSearchModels: ModelEnum[] = [
         // Add any models that don't support web search here if needed
     ];
-    
+
     return !nonWebSearchModels.includes(model);
 };
 
