@@ -1,6 +1,5 @@
 # TODO
 
-
 [DOMAIN NAME PURCHASE]
 https://pay.matbao.net/payment/payoo-return.html?status=1&order_no=115120_PAY_1_S2312340&checksum=53115f09f23b1196b43db91e01c3294d64bd5cc25946a2eff4843eece460dcc54c4502c20c64207d247fb810f3a0221b3652d20bb86f7de519c3b1d5400e63c3&totalAmount=94900&paymentFee=0
 
@@ -20,46 +19,13 @@ change vtchat.io@gmail.com -> support@vtchat.io@gmail.com domain?
 
 --
 scan and update email and domain config in project (faq, terms, privacy, etc.)
-
 --
-
-IMPORTANT: ACCESSBILITY TESTING with Chrome
-https://developer.chrome.com/docs/devtools/accessibility/reference
-
---
-review ui/ux and refine, polish, make sure the premium fealing and minimal design is consistent across the app.
-
---
-
---
-https://million.dev/docs
---
-
 --
 
 https://page-speed.dev/
 
 --
-
-https://unlighthouse.dev/
-
---
 https://requestindexing.com/
-
---
-https://fumadocs.dev/docs/ui
-
---
-https://github.com/intern3-chat/intern3-chat/blob/main/src/components/artifact-preview.tsx
-
---
-refence https://github.com/intern3-chat/intern3-chat
-
-+ HTML/Mermaid/React artifacts preview
-+ HTTP/SSE MCP Support for Model Context Protocol
-+ Supermemory API integration for persistent memories
-+ Native Voice input in input box using Groq
-+ https://intern3.chat/settings/profile
 
 --
 
@@ -101,31 +67,20 @@ remember to publish Google Auth
 --
 [] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
 
+
 --
+
+launch:
+
++ https://www.producthunt.com/
++ https://peerlist.io/
++ https://uneed.best/
++ https://microlaunch.net/
+
 
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
-
---
-
-Before final production deployment, ensure all environment variables are set correctly for production, including API keys, database URLs, and any other sensitive information.
-
-- [ ] Finalize production environment configuration:
-- [ ] Ensure all environment variables are set correctly for production, including API keys, database URLs, and any other sensitive information.
-- [ ] Test the production deployment thoroughly to ensure all features work as expected.
-- [ ] Set up monitoring and logging for the production environment to catch any issues early
-- [ ] Document the production deployment process for future reference.
-- [ ] Create a final checklist for production deployment, including:
-    - [ ] Environment variable verification
-    - [ ] Database connection checks
-    - [ ] API key validation
-    - [ ] Feature testing
-    - [ ] Monitoring setup
-- [ ] Review and finalize the production deployment documentation, ensuring it is clear and comprehensive for future deployments.
-- [ ] Conduct a final review of the codebase to ensure all changes are committed and pushed to the main branch.
-- [ ] Prepare a final release note summarizing the changes, features, and fixes included in the production deployment.
-- [ ] Schedule a final deployment date and time, ensuring all team members are aware and available for any last-minute issues that may arise.
 
 --
 

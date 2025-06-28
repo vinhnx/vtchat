@@ -167,6 +167,63 @@ html.dark .shiki span {
         scrollbar-width: none;
         /* Firefox */
     }
+
+    /* Premium Glass Morphism Effect */
+    .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glass-dark {
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Premium Glow Effects */
+    .glow-blue {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .glow-purple {
+        box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+    }
+
+    .glow-green {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Enhanced Hover Effects */
+    .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Premium Gradient Backgrounds */
+    .bg-premium-gradient {
+        background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+    }
+
+    .bg-brand-gradient {
+        background: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--primary)) 100%);
+    }
+
+    /* Smooth Reveal Animation */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal-on-scroll.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 mark.prompt-highlight {
