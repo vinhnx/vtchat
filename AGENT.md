@@ -77,9 +77,20 @@
 ## Error Handling
 
 - Use `try/catch` for async operations
-- Use `console.error` for logging errors
+- Use Pino logger from `@repo/shared/logger` for structured logging with automatic PII redaction
 - Use `toast` from `@repo/ui` for user notifications
 - Use `ErrorBoundary` for catching errors in React components
+
+## Logging
+
+- Use Pino logger (`@repo/shared/logger`) for all logging instead of console.log/error
+- **Automatic PII redaction** for sensitive fields (email, password, tokens, IP addresses, etc.)
+- **Next.js compatible** configuration that avoids worker thread bundling issues
+- **Request tracing** with `withRequestId()` and `withLogging()` middleware
+- **Performance timing** with `createTimer()` for monitoring operations
+- **Child loggers** with `createChildLogger()` for scoped context
+- **Structured JSON logging** with error serialization and context preservation
+- **Environment-specific** configurations (development/production/test)
 
 ## Documentation
 

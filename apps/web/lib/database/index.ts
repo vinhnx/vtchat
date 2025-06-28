@@ -1,6 +1,7 @@
 import { Pool } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
+import { logger } from '@repo/shared/logger';
 
 if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL environment variable is required');
@@ -27,19 +28,19 @@ try {
 
     // Add error handling for connection pool
     pool.on('error', (err: Error) => {
-        console.error('Database pool error:', err);
+        logger.error({ err }, 'Database pool error');
         // Don't throw here to prevent crashing the app
     });
 
     pool.on('connect', () => {
-        console.log('Database connection established');
+        logger.info('Database connection established');
     });
 
     pool.on('remove', () => {
-        console.log('Database connection removed from pool');
+        logger.info('Database connection removed from pool');
     });
 } catch (error) {
-    console.error('Failed to create database pool:', error);
+    logger.error({ error }, 'Failed to create database pool');
     throw new Error('Database connection pool creation failed');
 }
 
@@ -57,12 +58,12 @@ export const withDatabaseErrorHandling = async <T>(
     try {
         return await operation();
     } catch (error: any) {
-        console.error(`${operationName} failed:`, {
+        logger.error({
             error: error.message,
             code: error.code,
             severity: error.severity,
             detail: error.detail,
-        });
+        }, `${operationName} failed`);
 
         // Handle specific Neon/PostgreSQL error codes
         if (error.code === '57P01') {

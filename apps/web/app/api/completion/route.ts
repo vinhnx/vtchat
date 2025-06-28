@@ -6,6 +6,7 @@ import { NextRequest } from 'next/server';
 import { checkVTPlusAccess } from '../subscription/access-control';
 import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
 import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
+import { logger } from '@repo/shared/logger';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
         const validatedBody = completionRequestSchema.safeParse(parsed);
 
         if (!validatedBody.success) {
-            console.log('❌ Request validation failed:', validatedBody.error.format());
+            logger.warn({ validationError: validatedBody.error.format() }, 'Request validation failed');
             return new Response(
                 JSON.stringify({
                     error: 'Invalid request body',
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
                 try {
                     rateLimitResult = await checkRateLimit(userId, selectedModel);
                 } catch (error) {
-                    console.error('Rate limit check failed:', error);
+                    logger.error({ error }, 'Rate limit check failed');
                     // Continue without rate limiting if check fails (graceful degradation)
                     rateLimitResult = { allowed: true };
                 }
@@ -196,7 +197,7 @@ export async function POST(request: NextRequest) {
 
         return new Response(stream, { headers: enhancedHeaders });
     } catch (error) {
-        console.error('Error in POST handler:', error);
+        logger.error({ error }, 'Error in POST handler');
         return new Response(
             JSON.stringify({ error: 'Internal server error', details: String(error) }),
             { status: 500, headers: { 'Content-Type': 'application/json' } }
