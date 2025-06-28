@@ -29,6 +29,7 @@ import '@repo/ui/src/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.fly.dev'),
     title: 'VT',
     description: 'Minimal AI chat application.',
     keywords:

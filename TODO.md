@@ -2,6 +2,56 @@
 
 ok go!
 
+
+--
+IMPORTANT verify creem.io LIVE payment
+
+https://www.creem.io/checkout/prod_1UZhx15bSgbT8ggWTPQNi/ch_4oVL59zbacFQaBIGrGBgug
+
+--
+
+try to setup email from matbao.net
+
+--
+
+now all critical config: verify neon config, creem io config, webhook and other configs to make sure production config works
+use context7 and mcp if needed
+use subagent if needed
+--
+
+fly.io: https://fly.io/docs/apps/going-to-production/
+--
+Make sure private services are not exposed
+
+Check that your private apps with services don’t have public IP addresses. Run fly ips list and use fly ips release to release unnecessary public IPs. See flyctl fly ips commands. Assign private apps a Flycast address instead.
+
+--
+
+Use Arcjet application security for JavaScript apps
+
+Secure your app with rate limiting, bot protection, email validation, and defense against common attacks through our extension partner Arcjet. Currently free in beta, but pricing is subject to change. See Application Security by Arcjet.
+https://github.com/arcjet/arcjet-js
+
+use context7
+
+--
+
+https://fly.io/docs/monitoring/sentry/
+ Application Monitoring by Sentry
+
+Sentry is a developer-first application monitoring platform that helps you identify and fix software problems before they impact your users. Through our partnerships with Sentry, each of your Fly organizations can claim a year’s worth of Team Plan credits.
+
+--
+Fly.io Metric dashboard
+
+> https://fly-metrics.net/d/fly-app/fly-app?orgId=1142684
+
+--
+
+IMPORTANT: research and config machine config
+
+https://fly.io/dashboard/vt/builders -> use lowest machine?
+
 --
 
 [DOMAIN NAME PURCHASE]
@@ -56,7 +106,6 @@ https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwR
 
 --
 
-fly.io: https://fly.io/docs/apps/going-to-production/
 
 --
 
