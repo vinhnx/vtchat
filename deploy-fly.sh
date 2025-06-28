@@ -10,6 +10,7 @@ ENV_FILE=""
 FORCE_CLEANUP=false
 ENVIRONMENT="dev"
 FLY_CONFIG="fly.toml"
+FLY_APP="vtchat-dev"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -21,12 +22,14 @@ while [[ $# -gt 0 ]]; do
         --prod|--production)
             ENVIRONMENT="prod"
             FLY_CONFIG="fly.production.toml"
+            FLY_APP="vtchat"
             ENV_FILE="${ENV_FILE:-apps/web/.env.production}"
             shift
             ;;
         --dev|--development)
             ENVIRONMENT="dev"
             FLY_CONFIG="fly.toml"
+            FLY_APP="vtchat-dev"
             ENV_FILE="${ENV_FILE:-apps/web/.env.development}"
             shift
             ;;
@@ -53,6 +56,7 @@ fi
 
 echo "🚀 Starting Fly.io deployment for vtchat..."
 echo "📋 Using config: $FLY_CONFIG"
+echo "🎯 Target app: $FLY_APP"
 echo "🔧 Processing environment from: $ENV_FILE"
 
 # Check if env file exists
@@ -89,18 +93,18 @@ if [[ ${#secrets[@]} -gt 0 ]]; then
 
     # Clear existing secrets if requested
     if [[ $FORCE_CLEANUP == true ]]; then
-        existing_secrets=$(fly secrets list --json 2>/dev/null || echo "[]")
+        existing_secrets=$(fly secrets list -a "$FLY_APP" --json 2>/dev/null || echo "[]")
         if [[ "$existing_secrets" != "[]" && "$existing_secrets" != "" ]]; then
             existing_keys=$(echo "$existing_secrets" | jq -r '.[].Name' | tr '\n' ' ')
             if [[ -n "$existing_keys" ]]; then
                 echo "🗑️  Clearing existing secrets..."
-                fly secrets unset $existing_keys
+                fly secrets unset -a "$FLY_APP" $existing_keys
             fi
         fi
     fi
 
     # Set new secrets
-    cmd="fly secrets set"
+    cmd="fly secrets set -a \"$FLY_APP\""
     for secret in "${secrets[@]}"; do
         cmd="$cmd \"$secret\""
     done
@@ -112,7 +116,7 @@ fi
 
 # Deploy using Dockerfile with specific config
 echo "🐳 Deploying with Dockerfile..."
-fly deploy --config "$FLY_CONFIG"
+fly deploy -a "$FLY_APP" --config "$FLY_CONFIG"
 
 echo ""
 echo "🎉 Deployment complete!"

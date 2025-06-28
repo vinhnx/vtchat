@@ -102,34 +102,22 @@ https://fly.io/docs/apps/going-to-production/
 
 --
 --
-https://x.com/tuantruong/status/1937400031281328602?s=46&t=PpYJInz2WcSN_fhoxWJwRQ
-
---
-
 
 --
 
 <https://docs.creem.io/faq/account-reviews>
 
-==
-
-[]
-remember to publish Google Auth
-<https://console.cloud.google.com/auth/audience?authuser=6&inv=1&invt=Ab0LuQ&project=psyched-span-463012-h5>
-
---
-[] Reddit marketing cheat codes every startup founder should know: <https://x.natiakourdadze/status/1933939677016228177>
-
-
 --
 
-launch:
+Marketting plan
+"better to launch waitlist + DMs first, then do researches, before building and launching
+
+I like the idea of SEO with ChatGPT blogs though"
 
 + https://www.producthunt.com/
 + https://peerlist.io/
 + https://uneed.best/
 + https://microlaunch.net/
-
 
 --
 
@@ -139,11 +127,17 @@ launch:
 
 Write a final report and update readme, documentation, and any other relevant materials to reflect the current state of the project.
 
-
 --
 
-future
-https://supermemory.ai/docs/memory-api/overview
+Future plan
++ Adding username/password login option https://www.better-auth.com/docs/plugins/username
++ forgot password
++ update profile
++ verify email
++ otp email
++ magic link
++ https://supermemory.ai/docs/memory-api/overview
++ mcp
 
 --
 
