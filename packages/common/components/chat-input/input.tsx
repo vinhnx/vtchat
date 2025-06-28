@@ -1,9 +1,13 @@
 'use client';
-import { ImageAttachment, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
-import { BYOKValidationDialog } from '@repo/common/components';
+import {
+    BYOKValidationDialog,
+    ImageAttachment,
+    ImageDropzoneRoot,
+    InlineLoader,
+} from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useApiKeysStore } from '@repo/common/store';
-import { ChatMode, ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
+import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,11 +20,11 @@ import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
-import { ShineText } from '../shine-text';
+
 import { StructuredDataDisplay } from '../structured-data-display';
 import {
-    ChatModeButton,
     ChartsButton,
+    ChatModeButton,
     GeneratingStatus,
     MathCalculatorButton,
     SendStopButton,
@@ -91,16 +95,16 @@ export const ChatInput = ({
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore(state => state.chatMode);
     const { hasApiKeyForChatMode } = useApiKeysStore();
-    
-    // Multi-modal attachments state
-    const [multiModalAttachments, setMultiModalAttachments] = useState<Array<{
-        url: string;
-        name: string;
-        contentType: string;
-        size?: number;
-    }>>([]);
-    
 
+    // Multi-modal attachments state
+    const [multiModalAttachments, setMultiModalAttachments] = useState<
+        Array<{
+            url: string;
+            name: string;
+            contentType: string;
+            size?: number;
+        }>
+    >([]);
 
     const removeMultiModalAttachment = (index: number) => {
         const newAttachments = multiModalAttachments.filter((_, i) => i !== index);
@@ -169,12 +173,12 @@ export const ChatInput = ({
             formData.append('documentMimeType', documentAttachment?.mimeType);
         documentAttachment?.fileName &&
             formData.append('documentFileName', documentAttachment?.fileName);
-        
+
         // Add multi-modal attachments
         if (multiModalAttachments.length > 0) {
             formData.append('multiModalAttachments', JSON.stringify(multiModalAttachments));
         }
-        
+
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
         console.log('threadItems', threadItems);
@@ -264,19 +268,21 @@ export const ChatInput = ({
                                                 className="shrink-0 flex-wrap"
                                             >
                                                 <ChatModeButton />
-                                                
+
                                                 {/* AI Enhancement Tools Group */}
-                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <div className="bg-border/50 mx-1 h-4 w-px" />
                                                 <WebSearchButton />
                                                 <MathCalculatorButton />
                                                 <ChartsButton />
-                                                
+
                                                 {/* File Upload Tools Group */}
-                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <div className="bg-border/50 mx-1 h-4 w-px" />
                                                 <DocumentUploadButton />
                                                 {supportsMultiModal(chatMode) ? (
                                                     <MultiModalAttachmentButton
-                                                        onAttachmentsChange={setMultiModalAttachments}
+                                                        onAttachmentsChange={
+                                                            setMultiModalAttachments
+                                                        }
                                                         attachments={multiModalAttachments}
                                                         disabled={isGenerating}
                                                     />
@@ -286,14 +292,12 @@ export const ChatInput = ({
                                                         label="Image"
                                                         tooltip="Image Attachment"
                                                         showIcon={true}
-                                                        handleImageUpload={
-                                                            handleImageUpload
-                                                        }
+                                                        handleImageUpload={handleImageUpload}
                                                     />
                                                 )}
-                                                
+
                                                 {/* Data Processing Tools Group */}
-                                                <div className="h-4 w-px bg-border/50 mx-1" />
+                                                <div className="bg-border/50 mx-1 h-4 w-px" />
                                                 <StructuredOutputButton />
                                             </Flex>
                                         )}
@@ -455,9 +459,10 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
                     }}
                     className="text-center"
                 >
-                    <ShineText className="text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl">
+                    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
                         {greeting}
-                    </ShineText>
+                    </h3>
+                    <p className="text-muted-foreground mt-2 text-sm">How can I help you today?</p>
                 </motion.div>
             </AnimatePresence>
         </Flex>
