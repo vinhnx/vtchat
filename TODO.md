@@ -118,7 +118,7 @@ HTTPS: Fully operational ✅
 ## Fly.io deployment. Good luck!
 
 ✅ Production: https://vtchat.io.vn (LIVE)
-✅ Development: https://vtchat-dev.fly.dev
+✅ Development: Local only (http://localhost:3000)
 ✅ Apps configured with proper environment separation
 
 https://fly.io/docs/apps/going-to-production/

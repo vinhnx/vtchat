@@ -1,31 +1,31 @@
-# Development fly.toml
-app = 'vtchat-dev'
+# Production fly.toml
+app = 'vtchat'
 primary_region = 'sin'
 
 [build]
 
 [env]
-  NODE_ENV = 'development'
-  BASE_URL = 'https://vtchat-dev.fly.dev'
-  BETTER_AUTH_URL = 'https://vtchat-dev.fly.dev'
-  NEXT_PUBLIC_BASE_URL = 'https://vtchat-dev.fly.dev'
-  NEXT_PUBLIC_APP_URL = 'https://vtchat-dev.fly.dev'
-  NEXT_PUBLIC_COMMON_URL = 'https://vtchat-dev.fly.dev'
-  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat-dev.fly.dev'
-  CREEM_ENVIRONMENT = 'sandbox'
-  BETTER_AUTH_ENV = 'development'
+  NODE_ENV = 'production'
+  BASE_URL = 'https://vtchat.io.vn'
+  BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  CREEM_ENVIRONMENT = 'production'
+  BETTER_AUTH_ENV = 'production'
 
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = 'suspend'
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
   processes = ['app']
 
 [[http_service.checks]]
   grace_period = "15s"
-  interval = "60s"
+  interval = "30s"
   method = "GET"
   timeout = "10s"
   path = "/api/health"
@@ -37,6 +37,6 @@ primary_region = 'sin'
   timeout = "2s"
 
 [[vm]]
-  memory = '256mb'
+  memory = '2gb'
   cpu_kind = 'shared'
-  cpus = 1
+  cpus = 2

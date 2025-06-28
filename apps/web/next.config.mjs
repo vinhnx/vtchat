@@ -180,7 +180,7 @@ const nextConfig = {
                         key: 'Access-Control-Allow-Origin',
                         value:
                             process.env.NEXT_PUBLIC_BASE_URL ||
-                            'https://vtchat-dev.fly.dev',
+                            'http://localhost:3000',
                     },
                     {
                         key: 'Access-Control-Allow-Methods',

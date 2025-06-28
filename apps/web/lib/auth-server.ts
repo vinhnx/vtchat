@@ -81,9 +81,6 @@ export const auth = betterAuth({
         max: 200, // Increased from 100 to handle more requests
     },
     trustedOrigins: [
-        'https://vtchat.io.vn', // Production
-        'https://vtchat.io.vn', // Production - custom domain
-        'https://vtchat-dev.fly.dev', // Development
         process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
         'http://localhost:3000',
         'http://127.0.0.1:3000',
