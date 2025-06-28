@@ -51,7 +51,7 @@ if [[ -z "$ENV_FILE" ]]; then
     fi
 fi
 
-echo "🚀 Starting Fly.io deployment for vtchat-$ENVIRONMENT..."
+echo "🚀 Starting Fly.io deployment for vtchat..."
 echo "📋 Using config: $FLY_CONFIG"
 echo "🔧 Processing environment from: $ENV_FILE"
 
@@ -69,13 +69,13 @@ fi
 secrets=()
 while IFS= read -r line || [[ -n "$line" ]]; do
     [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
-    
+
     if [[ "$line" =~ ^[[:space:]]*([^=]+)=(.*)$ ]]; then
         key="${BASH_REMATCH[1]}"
         value="${BASH_REMATCH[2]}"
         value=$(echo "$value" | sed 's/^["'\'']//' | sed 's/["'\'']$//')
         value=$(echo "$value" | sed 's|https://vtchat-web-development\.up\.railway\.app|https://vtchat-dev.fly.dev|g')
-        
+
         # Only process secrets (not public env vars)
         if [[ ! "$key" =~ ^NEXT_PUBLIC_ ]] && [[ ! "$key" =~ ^(BASE_URL|BETTER_AUTH_URL|CREEM_ENVIRONMENT|BETTER_AUTH_ENV|PRODUCT_NAME|PRODUCT_DESCRIPTION|PRICING_CURRENCY|PRICING_INTERVAL)$ ]]; then
             secrets+=("$key=$value")
@@ -86,7 +86,7 @@ done < "$ENV_FILE"
 # Set secrets if any exist
 if [[ ${#secrets[@]} -gt 0 ]]; then
     echo "🔒 Setting secrets..."
-    
+
     # Clear existing secrets if requested
     if [[ $FORCE_CLEANUP == true ]]; then
         existing_secrets=$(fly secrets list --json 2>/dev/null || echo "[]")
@@ -98,7 +98,7 @@ if [[ ${#secrets[@]} -gt 0 ]]; then
             fi
         fi
     fi
-    
+
     # Set new secrets
     cmd="fly secrets set"
     for secret in "${secrets[@]}"; do
@@ -116,5 +116,3 @@ fly deploy --config "$FLY_CONFIG"
 
 echo ""
 echo "🎉 Deployment complete!"
-echo "🌐 Your app: https://vtchat-$ENVIRONMENT.fly.dev"
-echo "📊 Monitor: fly logs -f --app vtchat-$ENVIRONMENT"
