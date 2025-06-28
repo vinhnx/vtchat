@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // CORS headers for auth endpoints
 const corsHeaders = {
     'Access-Control-Allow-Origin':
-        process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat-dev.fly.dev',
+        process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
     'Access-Control-Allow-Credentials': 'true',
