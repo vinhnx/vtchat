@@ -14,17 +14,13 @@ primary_region = 'sin'
   NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat-dev.fly.dev'
   CREEM_ENVIRONMENT = 'sandbox'
   BETTER_AUTH_ENV = 'development'
-  PRODUCT_NAME = 'VT Chat Dev'
-  PRODUCT_DESCRIPTION = 'AI-powered chat application - Development'
-  PRICING_CURRENCY = 'USD'
-  PRICING_INTERVAL = 'month'
 
 [http_service]
   internal_port = 3000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ['app']
 
 [[http_service.checks]]
@@ -33,7 +29,7 @@ primary_region = 'sin'
   method = "GET"
   timeout = "10s"
   path = "/api/health"
-  
+
 [[http_service.checks]]
   type = "tcp"
   grace_period = "5s"
