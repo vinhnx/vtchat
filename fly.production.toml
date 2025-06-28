@@ -14,10 +14,6 @@ primary_region = 'sin'
   NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
   CREEM_ENVIRONMENT = 'production'
   BETTER_AUTH_ENV = 'production'
-  PRODUCT_NAME = 'VT Chat'
-  PRODUCT_DESCRIPTION = 'AI-powered chat application'
-  PRICING_CURRENCY = 'USD'
-  PRICING_INTERVAL = 'month'
 
 [http_service]
   internal_port = 3000
@@ -33,7 +29,7 @@ primary_region = 'sin'
   method = "GET"
   timeout = "10s"
   path = "/api/health"
-  
+
 [[http_service.checks]]
   type = "tcp"
   grace_period = "5s"
