@@ -110,7 +110,7 @@ export const StructuredOutputButton = () => {
     const getDialogContent = () => {
         if (!hasStructuredOutputAccess) {
             return {
-                title: 'Unlock Structured Output ✨',
+                title: 'Unlock Structured Output',
                 description:
                     'Transform your PDFs into organized data with AI-powered extraction. This powerful feature analyzes documents and creates structured JSON output perfect for data processing, analysis, and automation.',
                 icon: <Sparkles className="h-6 w-6 text-yellow-500" />,
@@ -248,7 +248,7 @@ export const StructuredOutputButton = () => {
                                 <Button
                                     onClick={() => {
                                         setShowDialog(false);
-                                        router.push('/pricing');
+                                        router.push('/plus');
                                     }}
                                     className="flex-1"
                                 >
