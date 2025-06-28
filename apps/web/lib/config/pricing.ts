@@ -2,8 +2,8 @@
 export const PRICING_CONFIG = {
     // Product information
     product: {
-        name: process.env.PRODUCT_NAME || 'VT+',
-        description: process.env.PRODUCT_DESCRIPTION || 'For everyday productivity',
+        name: 'VT+',
+        description: 'For everyday productivity',
         id: process.env.CREEM_PRODUCT_ID || '',
     },
 
@@ -17,7 +17,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'Free Gemini 2.5 Flash Lite Preview',
                     description:
-                        'Free access to Gemini 2.5 Flash Lite Preview with 10 requests per day and 1 request per minute rate limit for registered users using VT\'s server API key',
+                        "Free access to Gemini 2.5 Flash Lite Preview with 10 requests per day and 1 request per minute rate limit for registered users using VT's server API key",
                 },
                 {
                     name: 'Access to Free Models with BYOK',
@@ -42,9 +42,9 @@ export const PRICING_CONFIG = {
             ],
         },
         plus: {
-            price: parseFloat(process.env.VT_PLUS_PRICE || '9.99'),
-            currency: process.env.PRICING_CURRENCY || 'USD',
-            interval: process.env.PRICING_INTERVAL || 'month',
+            price: parseFloat('9.99'),
+            currency: 'USD',
+            interval: 'month',
             features: [
                 {
                     name: 'All Benefits from Base Plan',
