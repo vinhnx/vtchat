@@ -1,17 +1,17 @@
 # Production fly.toml
-app = 'vtchat-prod'
+app = 'vtchat'
 primary_region = 'sin'
 
 [build]
 
 [env]
   NODE_ENV = 'production'
-  BASE_URL = 'https://vtchat-prod.fly.dev'
-  BETTER_AUTH_URL = 'https://vtchat-prod.fly.dev'
-  NEXT_PUBLIC_BASE_URL = 'https://vtchat-prod.fly.dev'
-  NEXT_PUBLIC_APP_URL = 'https://vtchat-prod.fly.dev'
-  NEXT_PUBLIC_COMMON_URL = 'https://vtchat-prod.fly.dev'
-  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat-prod.fly.dev'
+  BASE_URL = 'https://vtchat.fly.dev'
+  BETTER_AUTH_URL = 'https://vtchat.fly.dev'
+  NEXT_PUBLIC_BASE_URL = 'https://vtchat.fly.dev'
+  NEXT_PUBLIC_APP_URL = 'https://vtchat.fly.dev'
+  NEXT_PUBLIC_COMMON_URL = 'https://vtchat.fly.dev'
+  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.fly.dev'
   CREEM_ENVIRONMENT = 'production'
   BETTER_AUTH_ENV = 'production'
   PRODUCT_NAME = 'VT Chat'
