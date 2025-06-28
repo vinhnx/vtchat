@@ -130,7 +130,7 @@ export function RAGChatbot() {
 
     useEffect(() => {
         fetchKnowledgeBase();
-    }, [messages]);
+    }, []);
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {

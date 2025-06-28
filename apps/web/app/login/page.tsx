@@ -1,4 +1,5 @@
 import { MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 import { LoginForm } from '@/components/login-form';
 
@@ -21,10 +22,15 @@ export default function LoginPage() {
                 </div>
             </div>
             <div className="relative hidden lg:block">
-                <img
+                <Image
                     src="/bg/bg_vt.avif"
                     alt="VT Background"
-                    className="absolute inset-0 h-full w-full object-cover"
+                    fill
+                    priority
+                    sizes="50vw"
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
             </div>
         </div>
