@@ -35,17 +35,13 @@ https://fly.io/docs/monitoring/sentry/
 Sentry is a developer-first application monitoring platform that helps you identify and fix software problems before they impact your users. Through our partnerships with Sentry, each of your Fly organizations can claim a year’s worth of Team Plan credits.
 
 --
-Fly.io Metric dashboard
 
-> https://fly-metrics.net/d/fly-app/fly-app?orgId=1142684
+✅ COMPLETED: research and config machine config
+- Dev: shared-cpu-1x/256MB = $1.94/month  
+- Prod: shared-cpu-2x/1GB = $6.39/month + scale-to-zero
+- Total savings: ~$8.76/month
 
---
-
-IMPORTANT: research and config machine config
-
-https://fly.io/dashboard/vt/builders -> use lowest machine?
-
---
+;--
 
 [DOMAIN NAME PURCHASE]
 https://pay.matbao.net/payment/payoo-return.html?status=1&order_no=115120_PAY_1_S2312340&checksum=53115f09f23b1196b43db91e01c3294d64bd5cc25946a2eff4843eece460dcc54c4502c20c64207d247fb810f3a0221b3652d20bb86f7de519c3b1d5400e63c3&totalAmount=94900&paymentFee=0
@@ -95,7 +91,7 @@ https://requestindexing.com/
 **Custom Domain Successfully Configured:**
 ```
 Domain: vtchat.io.vn ✅ LIVE
-CNAME: vtchat.fly.dev ✅ CONFIGURED  
+CNAME: vtchat.fly.dev ✅ CONFIGURED
 Status: Certificate issued and ready ✅
 HTTPS: Fully operational ✅
 ```
