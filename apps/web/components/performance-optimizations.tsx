@@ -4,29 +4,12 @@ import { Suspense } from 'react';
 export function PerformanceOptimizations() {
   return (
     <>
-      {/* Preload critical fonts */}
-      <link
-        rel="preload"
-        href="/InterVariable.woff2"
-        as="font"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
-      <link
-        rel="preload"
-        href="/ClashGrotesk-Variable.woff2"
-        as="font"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
-      
-      {/* DNS prefetch for external domains */}
-      <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-      <link rel="dns-prefetch" href="//www.google.com" />
-      
-      {/* Preconnect for faster resource loading */}
+      {/* Google Fonts preconnect for Inter and Bricolage Grotesque */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      
+      {/* DNS prefetch for external domains */}
+      <link rel="dns-prefetch" href="//www.google.com" />
       
       {/* Resource hints for better performance */}
       <link rel="prefetch" href="/api/health" />

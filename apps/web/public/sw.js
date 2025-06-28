@@ -1,8 +1,6 @@
 // Service Worker for performance optimizations
 const CACHE_NAME = 'vtchat-v1';
 const STATIC_ASSETS = [
-  '/InterVariable.woff2',
-  '/ClashGrotesk-Variable.woff2',
   '/favicon.ico',
   '/icon.svg',
   '/manifest.webmanifest'

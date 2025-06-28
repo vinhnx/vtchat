@@ -123,6 +123,13 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --prod|--production)
+            # Production safety check: block --clean flag
+            if [[ $FORCE_CLEANUP == true ]]; then
+                echo "❌ ERROR: --clean flag is NOT ALLOWED in production environment!"
+                echo "This flag clears all secrets and could cause service disruption."
+                echo "Please deploy to production without the --clean flag."
+                exit 1
+            fi
             ENVIRONMENT="prod"
             FLY_CONFIG="fly.production.toml"
             FLY_APP="vtchat"

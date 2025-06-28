@@ -14,7 +14,7 @@ import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
 import { Bricolage_Grotesque } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 
@@ -85,13 +85,13 @@ export const viewport: Viewport = {
     userScalable: false,
 };
 
-const inter = localFont({
-    src: './InterVariable.woff2',
+const inter = Inter({
+    subsets: ['latin'],
     variable: '--font-inter',
 });
 
-const clash = localFont({
-    src: './ClashGrotesk-Variable.woff2',
+const clash = Bricolage_Grotesque({
+    subsets: ['latin'],
     variable: '--font-clash',
 });
 
