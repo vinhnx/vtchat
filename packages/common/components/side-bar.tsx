@@ -24,8 +24,8 @@ import {
 import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
-    ChevronsUp,
     ChevronsUpDown,
+    ChevronUp,
     Command,
     Database,
     ExternalLink,
@@ -363,7 +363,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
                                 >
-                                    <ChevronsUp size={10} strokeWidth={2} className="shrink-0" />
+                                    <ChevronUp size={10} strokeWidth={2} className="shrink-0" />
                                 </Badge>
                                 <Badge
                                     variant="secondary"

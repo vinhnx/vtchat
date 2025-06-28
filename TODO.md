@@ -19,7 +19,7 @@ change vtchat.io@gmail.com -> support@vtchat.io@gmail.com domain?
 
 --
 scan and update email and domain config in project (faq, terms, privacy, etc.)
---
+
 --
 
 https://page-speed.dev/
@@ -85,6 +85,12 @@ launch:
 --
 
 Write a final report and update readme, documentation, and any other relevant materials to reflect the current state of the project.
+
+
+--
+
+future
+https://supermemory.ai/docs/memory-api/overview
 
 --
 

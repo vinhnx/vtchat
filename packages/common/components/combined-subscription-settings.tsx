@@ -280,9 +280,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-                        <Sparkles className="h-6 w-6 text-amber-500" />
-                    </div>
                     <div>
                         <TypographyH3>VT+</TypographyH3>
                         <TypographyMuted>
@@ -295,7 +292,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-blue-500" />
+                            <CreditCard className="h-5 w-5" />
                             Plan & Billing
                         </CardTitle>
                         <CardDescription>
@@ -354,7 +351,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Brain className="h-5 w-5 text-purple-500" />
+                                <Brain className="h-5 w-5" />
                                 Thinking Mode
                                 <Badge
                                     variant="secondary"
@@ -373,8 +370,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/20">
-                                            <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                            <Zap className="h-4 w-4" />
                                         </div>
                                         <div>
                                             <Label
@@ -409,9 +406,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
-                                                        <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                                    </div>
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                <FileText className="h-4 w-4" />
+                                                </div>
                                                     <div>
                                                         <Label
                                                             htmlFor="include-thoughts"
@@ -436,9 +433,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
-                                                        <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
-                                                    </div>
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                <Activity className="h-4 w-4" />
+                                                </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
                                                             Thinking Budget: {thinkingMode.budget}
@@ -478,7 +475,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Zap className="h-5 w-5 text-orange-500" />
+                                <Zap className="h-5 w-5" />
                                 Gemini Explicit Caching
                                 <Badge
                                     variant="secondary"
@@ -497,8 +494,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/20">
-                                            <Zap className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                            <Zap className="h-4 w-4" />
                                         </div>
                                         <div>
                                             <Label
@@ -533,8 +530,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
-                                                        <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                    <FileText className="h-4 w-4" />
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
@@ -572,8 +569,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
-                                                        <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                    <Activity className="h-4 w-4" />
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
@@ -924,12 +921,12 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         <CardTitle className="flex items-center gap-2">
                             {isVtPlus ? (
                                 <>
-                                    <Check className="h-5 w-5 text-green-500" />
+                                    <Check className="h-5 w-5" />
                                     Your VT+ Features
                                 </>
                             ) : (
                                 <>
-                                    <Sparkles className="h-5 w-5 text-amber-500" />
+                                    <Sparkles className="h-5 w-5" />
                                     Available with VT+
                                 </>
                             )}
@@ -952,7 +949,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             className="border-border/50 bg-muted/20 rounded-lg border p-4"
                                         >
                                             <div className="flex items-start gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                                                     {details.icon}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
@@ -960,7 +957,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                         <div className="text-foreground font-medium">
                                                             {feature.name}
                                                         </div>
-                                                        <Check className="h-4 w-4 text-green-500" />
+                                                        <Check className="h-4 w-4" />
                                                     </div>
                                                     <div className="text-muted-foreground mb-2 text-sm">
                                                         {details.benefit}
@@ -979,15 +976,15 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     {/* Current free plan feature */}
                                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                         <div className="flex items-start gap-3">
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400">
-                                                <MessageSquare className="h-4 w-4" />
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                            <MessageSquare className="h-4 w-4" />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <div className="mb-1 flex items-center gap-2">
                                                     <div className="text-foreground font-medium">
                                                         Basic Chat
                                                     </div>
-                                                    <Check className="h-4 w-4 text-green-500" />
+                                                    <Check className="h-4 w-4" />
                                                 </div>
                                                 <div className="text-muted-foreground mb-2 text-sm">
                                                     Essential AI conversations
@@ -1015,8 +1012,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 </div>
 
                                                 <div className="flex items-start gap-3 pr-12">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
-                                                        {details.icon}
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                    {details.icon}
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <div className="text-foreground mb-1 font-medium">
@@ -1052,7 +1049,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 {/* Simple Upgrade Promotion for Free Users */}
                 {!isVtPlus && (
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
-                        <Sparkles className="h-4 w-4 text-amber-600" />
+                        <Sparkles className="h-4 w-4" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
                             <strong>Ready to upgrade?</strong> Get VT+ for $9.99/month and unlock
                             advanced AI reasoning, document parsing, and premium tools.
