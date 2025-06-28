@@ -9,12 +9,12 @@
 | `DATABASE_URL` | ✅ Set | Secret | Neon PostgreSQL connection |
 | `BETTER_AUTH_SECRET` | ✅ Set | Secret | Authentication encryption key |
 | `NODE_ENV` | ✅ Set | Config | `production` |
-| `BASE_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
-| `BETTER_AUTH_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
-| `NEXT_PUBLIC_BASE_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
-| `NEXT_PUBLIC_APP_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
-| `NEXT_PUBLIC_COMMON_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
-| `NEXT_PUBLIC_BETTER_AUTH_URL` | ✅ Set | Config | `https://vtchat.fly.dev` |
+| `BASE_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
+| `BETTER_AUTH_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
+| `NEXT_PUBLIC_BASE_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
+| `NEXT_PUBLIC_APP_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
+| `NEXT_PUBLIC_COMMON_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
+| `NEXT_PUBLIC_BETTER_AUTH_URL` | ✅ Set | Config | `https://vtchat.io.vn` |
 
 ### ✅ Payment Integration (CONFIGURED)
 | Variable | Status | Type | Production Value |
