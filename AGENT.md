@@ -59,6 +59,7 @@
 
 ## Bun
 
+- Don't need to run `bun run build` on every change, just lint and check what need to be fixed.
 - Use `bun` instead of `npm` or `yarn`
 - Use `bun` for all package management and script execution
 
