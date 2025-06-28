@@ -9,7 +9,7 @@ import * as schema from './database/schema';
 export const auth = betterAuth({
     baseURL:
         process.env.NODE_ENV === 'production'
-            ? 'https://vtchat.fly.dev'
+            ? 'https://vtchat.io.vn'
             : process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
               process.env.NEXT_PUBLIC_BASE_URL ||
               'http://localhost:3000',
@@ -43,7 +43,7 @@ export const auth = betterAuth({
             clientSecret: process.env.GITHUB_CLIENT_SECRET!,
             redirectURI:
                 process.env.NODE_ENV === 'production'
-                    ? 'https://vtchat.fly.dev/api/auth/callback/github'
+                    ? 'https://vtchat.io.vn/api/auth/callback/github'
                     : 'http://localhost:3000/api/auth/callback/github',
             scope: ['read:user', 'user:email'],
             mapProfileToUser: profile => {
@@ -57,7 +57,7 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             redirectURI:
                 process.env.NODE_ENV === 'production'
-                    ? 'https://vtchat.fly.dev/api/auth/callback/google'
+                    ? 'https://vtchat.io.vn/api/auth/callback/google'
                     : 'http://localhost:3000/api/auth/callback/google',
             scope: ['openid', 'email', 'profile'],
             mapProfileToUser: profile => {
@@ -81,10 +81,10 @@ export const auth = betterAuth({
         max: 200, // Increased from 100 to handle more requests
     },
     trustedOrigins: [
-        'https://vtchat.fly.dev', // Production
+        'https://vtchat.io.vn', // Production
         'https://vtchat.io.vn', // Production - custom domain
         'https://vtchat-dev.fly.dev', // Development
-        process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.fly.dev',
+        process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
         'http://localhost:3000',
         'http://127.0.0.1:3000',
     ],

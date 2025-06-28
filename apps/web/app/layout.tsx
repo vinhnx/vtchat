@@ -1,14 +1,14 @@
 import {
     FullPageLoader,
+    GatedThemeProvider,
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
-    GatedThemeProvider,
 } from '@repo/common/components';
+import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { RootProvider } from '@repo/common/context';
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
-import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { cn, TooltipProvider } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
@@ -30,7 +30,7 @@ import '@repo/ui/src/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.fly.dev'),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn'),
     title: 'VT',
     description: 'Minimal AI chat application.',
     keywords:

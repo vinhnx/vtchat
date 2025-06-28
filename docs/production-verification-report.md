@@ -19,12 +19,12 @@ Based on the analysis of the codebase and configuration files, here's the compre
 
 ### ✅ Core Application Variables
 - **NODE_ENV**: ✅ Set to 'production' in fly.production.toml
-- **BASE_URL**: ✅ Set to 'https://vtchat.fly.dev'
-- **BETTER_AUTH_URL**: ✅ Set to 'https://vtchat.fly.dev'
-- **NEXT_PUBLIC_BASE_URL**: ✅ Set to 'https://vtchat.fly.dev'
-- **NEXT_PUBLIC_APP_URL**: ✅ Set to 'https://vtchat.fly.dev'
-- **NEXT_PUBLIC_COMMON_URL**: ✅ Set to 'https://vtchat.fly.dev'
-- **NEXT_PUBLIC_BETTER_AUTH_URL**: ✅ Set to 'https://vtchat.fly.dev'
+- **BASE_URL**: ✅ Set to 'https://vtchat.io.vn'
+- **BETTER_AUTH_URL**: ✅ Set to 'https://vtchat.io.vn'
+- **NEXT_PUBLIC_BASE_URL**: ✅ Set to 'https://vtchat.io.vn'
+- **NEXT_PUBLIC_APP_URL**: ✅ Set to 'https://vtchat.io.vn'
+- **NEXT_PUBLIC_COMMON_URL**: ✅ Set to 'https://vtchat.io.vn'
+- **NEXT_PUBLIC_BETTER_AUTH_URL**: ✅ Set to 'https://vtchat.io.vn'
 
 ### ❌ Critical Missing Variables
 - **BETTER_AUTH_SECRET**: ❌ Not visible in fly.production.toml (must be set as Fly secret)
@@ -210,10 +210,10 @@ fly logs --app vtchat
 ### Post-Deployment Verification
 ```bash
 # Test health endpoint
-curl https://vtchat.fly.dev/api/health
+curl https://vtchat.io.vn/api/health
 
 # Test authentication
-curl https://vtchat.fly.dev/api/debug
+curl https://vtchat.io.vn/api/debug
 
 # Monitor application
 fly status --app vtchat
