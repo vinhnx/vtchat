@@ -75,15 +75,29 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
 // Helper function to check if a model has reasoning capability
 export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
     const reasoningModels = [
+        // OpenAI o-series models
         ChatMode.O3,
         ChatMode.O3_Mini,
         ChatMode.O4_Mini,
+        ChatMode.O1_MINI,
+        ChatMode.O1_PREVIEW,
+        // DeepSeek reasoning models
         ChatMode.DEEPSEEK_R1,
+        ChatMode.DEEPSEEK_R1_MAIN,
+        ChatMode.DEEPSEEK_R1_FREE,
+        ChatMode.DEEPSEEK_R1_0528_FREE,
+        // Anthropic reasoning models
         ChatMode.CLAUDE_4_SONNET,
         ChatMode.CLAUDE_4_OPUS,
+        ChatMode.CLAUDE_3_7_SONNET,
+        // Gemini models with thinking support
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,
         ChatMode.GEMINI_2_5_FLASH_LITE,
+        ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
+        ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
+        ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
+        // xAI reasoning models
         ChatMode.GROK_3_MINI,
     ];
     return reasoningModels.includes(chatMode);

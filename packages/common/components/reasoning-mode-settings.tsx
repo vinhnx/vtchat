@@ -3,6 +3,7 @@
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore, useAppStore } from '@repo/common/store';
+import { ChatMode } from '@repo/shared/config';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Label, Slider, Switch, TypographyH3, TypographyH4 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -19,24 +20,24 @@ export const ReasoningModeSettings = () => {
     const supportsReasoning = useMemo(() => {
         const reasoningModels = [
             // Gemini models with thinking support
-            'gemini-2.5-flash',
+            ChatMode.GEMINI_2_5_FLASH,
             ChatMode.GEMINI_2_5_FLASH_LITE,
-            'gemini-2.5-flash-preview-05-20',
-            'gemini-2.5-pro-preview-05-06',
-            'gemini-2.5-pro-preview-06-05',
+            ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
+            ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
+            ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
             // DeepSeek reasoning models
-            'deepseek-r1',
-            'deepseek-r1-free',
-            'deepseek-r1-0528-free',
+            ChatMode.DEEPSEEK_R1_MAIN,
+            ChatMode.DEEPSEEK_R1_FREE,
+            ChatMode.DEEPSEEK_R1_0528_FREE,
             // Anthropic reasoning models
-            'claude-4-sonnet-20250514',
-            'claude-4-opus-20250514',
-            'claude-3-7-sonnet-20250219',
+            ChatMode.CLAUDE_4_SONNET,
+            ChatMode.CLAUDE_4_OPUS,
+            ChatMode.CLAUDE_3_7_SONNET,
             // OpenAI o-series models
-            'o4-mini',
-            'o3-mini',
-            'o1-mini',
-            'o1-preview',
+            ChatMode.O4_Mini,
+            ChatMode.O3_Mini,
+            ChatMode.O1_MINI,
+            ChatMode.O1_PREVIEW,
         ];
         return reasoningModels.some(model => chatMode.includes(model.replace(/-/g, '_')));
     }, [chatMode]);

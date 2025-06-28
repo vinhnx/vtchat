@@ -19,6 +19,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
     Flex,
+    useToast,
 } from '@repo/ui';
 import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -38,7 +39,6 @@ import {
     Plus,
     Search,
     Settings,
-    Settings2,
     Shield,
     Sparkles,
     User,
@@ -69,6 +69,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
     const { logout, isLoggingOut } = useLogout();
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
+    const { toast } = useToast();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -151,7 +152,111 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
             )}
         >
             <Flex direction="col" className="w-full flex-1 items-start overflow-hidden">
-                {/* Header Section */}
+                {/* Top User Section */}
+                <div
+                    className={cn(
+                        'w-full transition-all duration-200',
+                        isSidebarOpen ? 'px-4 py-3' : 'px-2 py-2'
+                    )}
+                >
+                    {isSignedIn ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div
+                                    className={cn(
+                                        'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
+                                        isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
+                                    )}
+                                >
+                                    <Avatar
+                                        name={user?.name || user?.email || 'User'}
+                                        src={user?.image || undefined}
+                                        size="sm"
+                                    />
+
+                                    {isSidebarOpen && (
+                                        <div className="flex min-w-0 flex-1 flex-col items-start">
+                                            <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
+                                                {user?.name || user?.email}
+                                            </p>
+                                            <UserTierBadge />
+                                        </div>
+                                    )}
+                                    {isSidebarOpen && (
+                                        <ChevronsUpDown
+                                            size={14}
+                                            strokeWidth={2}
+                                            className="text-sidebar-foreground/60 flex-shrink-0"
+                                        />
+                                    )}
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-56 pl-2">
+                                {/* Account Management */}
+                                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => push('/profile')}>
+                                    <User size={16} strokeWidth={2} />
+                                    Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+                                    <Settings size={16} strokeWidth={2} />
+                                    Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+
+                                {/* Support & Legal */}
+                                <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => push('/faq')}>
+                                    <HelpCircle size={16} strokeWidth={2} />
+                                    FAQ
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => push('/privacy')}>
+                                    <Shield size={16} strokeWidth={2} />
+                                    Privacy Policy
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => push('/terms')}>
+                                    <FileText size={16} strokeWidth={2} />
+                                    Terms of Service
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+
+                                {/* Authentication */}
+                                <DropdownMenuItem
+                                    onClick={() => logout()}
+                                    disabled={isLoggingOut}
+                                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                                >
+                                    <LogOut size={16} strokeWidth={2} />
+                                    {isLoggingOut ? 'Signing out...' : 'Sign out'}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button
+                            variant="ghost"
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            tooltip={isSidebarOpen ? undefined : 'Login'}
+                            tooltipSide="right"
+                            rounded="lg"
+                            className="w-full justify-start"
+                            onClick={() => push('/login')}
+                        >
+                            <User
+                                size={16}
+                                strokeWidth={2}
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                            />
+                            {isSidebarOpen && 'Log in / Sign up'}
+                        </Button>
+                    )}
+                </div>
+
+                {/* Divider */}
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className="border-sidebar-border w-full border-t" />
+                </div>
+
+                {/* Header Section with Logo */}
                 <div
                     className={cn(
                         'flex w-full flex-row items-center justify-between transition-all duration-200',
@@ -216,6 +321,13 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 : 'bg-primary hover:bg-primary/90'
                         )}
                         onClick={() => {
+                            // Show toast notification
+                            toast({
+                                title: 'New Chat',
+                                description: 'Starting a new conversation...',
+                                duration: 2000,
+                            });
+
                             // Navigate to /chat to start a new conversation
                             push('/chat');
                             // Close mobile drawer if open
@@ -352,13 +464,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     </Button>
                 </Flex>
 
+                {/* Divider */}
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className="border-sidebar-border w-full border-t" />
+                </div>
+
                 {/* Subscription Section */}
                 <div
                     className={cn(
                         'w-full transition-all duration-200',
-                        isSidebarOpen
-                            ? 'border-sidebar-border mt-3 border-t px-4 pt-3'
-                            : 'mt-1 px-2'
+                        isSidebarOpen ? 'px-4 py-3' : 'px-2 py-2'
                     )}
                 >
                     {isSidebarOpen ? (
@@ -456,13 +571,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
 
+                {/* Divider */}
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className="border-sidebar-border w-full border-t" />
+                </div>
+
                 {/* Thread History Section */}
                 <div
                     className={cn(
                         'no-scrollbar w-full flex-1 overflow-y-auto transition-all duration-200',
-                        isSidebarOpen
-                            ? 'border-sidebar-border mt-4 flex flex-col gap-4 border-t px-4 pb-[120px] pt-4'
-                            : 'hidden'
+                        isSidebarOpen ? 'flex flex-col gap-4 px-4 pb-6 pt-4' : 'hidden'
                     )}
                 >
                     {threads.length === 0 ? (
@@ -521,15 +639,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
 
-                {/* Bottom Section */}
-                <div
-                    className={cn(
-                        'from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent transition-all duration-200',
-                        isSidebarOpen ? 'px-4 py-3 pt-12' : 'px-2 py-2 pt-8'
-                    )}
-                >
-                    {!isSidebarOpen && (
-                        <div className="mb-2 flex flex-col items-center gap-3">
+                {/* Bottom Section - Expand Button for Collapsed State */}
+                {!isSidebarOpen && (
+                    <div className="from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent px-2 py-2 pt-8">
+                        <div className="flex flex-col items-center gap-3">
                             <Button
                                 variant="ghost"
                                 size="icon-sm"
@@ -541,118 +654,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <PanelRightClose size={16} strokeWidth={2} />
                             </Button>
                         </div>
-                    )}
-                    {isSignedIn && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div
-                                    className={cn(
-                                        'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
-                                        isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
-                                    )}
-                                >
-                                    <Avatar
-                                        name={user?.name || user?.email || 'User'}
-                                        src={user?.image || undefined}
-                                        size="sm"
-                                    />
-
-                                    {isSidebarOpen && (
-                                        <div className="flex min-w-0 flex-1 flex-col items-start">
-                                            <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
-                                                {user?.name || user?.email}
-                                            </p>
-                                            <UserTierBadge />
-                                        </div>
-                                    )}
-                                    {isSidebarOpen && (
-                                        <ChevronsUpDown
-                                            size={14}
-                                            strokeWidth={2}
-                                            className="text-sidebar-foreground/60 flex-shrink-0"
-                                        />
-                                    )}
-                                </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="w-56 pl-2">
-                                {/* Account Management */}
-                                <DropdownMenuLabel>Account</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => push('/profile')}>
-                                    <User size={16} strokeWidth={2} />
-                                    Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                                    <Settings size={16} strokeWidth={2} />
-                                    Settings
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-
-                                {/* Support & Legal */}
-                                <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => push('/faq')}>
-                                    <HelpCircle size={16} strokeWidth={2} />
-                                    FAQ
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => push('/privacy')}>
-                                    <Shield size={16} strokeWidth={2} />
-                                    Privacy Policy
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => push('/terms')}>
-                                    <FileText size={16} strokeWidth={2} />
-                                    Terms of Service
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-
-                                {/* Authentication */}
-                                {!isSignedIn && (
-                                    <DropdownMenuItem onClick={() => push('/login')}>
-                                        <User size={16} strokeWidth={2} />
-                                        Log in
-                                    </DropdownMenuItem>
-                                )}
-                                {isSignedIn && (
-                                    <>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={() => logout()}
-                                            disabled={isLoggingOut}
-                                            className={
-                                                isLoggingOut ? 'cursor-not-allowed opacity-50' : ''
-                                            }
-                                        >
-                                            <LogOut size={16} strokeWidth={2} />
-                                            {isLoggingOut ? 'Signing out...' : 'Sign out'}
-                                        </DropdownMenuItem>
-                                    </>
-                                )}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
-                    {isSidebarOpen && !isSignedIn && (
-                        <div className="border-sidebar-border mt-3 flex w-full flex-col gap-2 border-t pt-3">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                rounded="lg"
-                                className="text-sidebar-foreground/70 hover:text-sidebar-foreground w-full justify-start"
-                                onClick={() => {
-                                    setIsSettingsOpen(true);
-                                }}
-                            >
-                                <Settings2 size={16} strokeWidth={2} className="mr-2" />
-                                Settings
-                            </Button>
-                            <Button
-                                size="sm"
-                                rounded="lg"
-                                className="w-full"
-                                onClick={() => push('/login')}
-                            >
-                                Log in / Sign up
-                            </Button>
-                        </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </Flex>
 
             <LoginRequiredDialog

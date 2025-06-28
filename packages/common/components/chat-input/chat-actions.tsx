@@ -614,19 +614,23 @@ export function ChatModeOptions({
             }
         }
 
-        // Check subscription requirements using the unified system
+        // CRITICAL: Check subscription requirements using the unified system
+        // Deep Research and Pro Search MUST be blocked for base users
         if (config?.requiredFeature || config?.requiredPlan) {
             // Wait for subscription status to load
             if (!isLoaded) {
                 return; // Don't allow selection while loading
             }
 
+            // CRITICAL: Explicit check for Deep Research and Pro Search
+            const isCriticalMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
+            
             // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
             const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
             const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
 
             if (isByokEligibleMode && hasByokGeminiKey) {
-                // Bypass subscription check for BYOK Gemini users
+                // Bypass subscription check for BYOK Gemini users ONLY
             } else {
                 let hasRequiredAccess = true;
 
@@ -674,21 +678,31 @@ export function ChatModeOptions({
 
     // Helper function to check if a mode is gated
     const isModeGated = (mode: ChatMode): boolean => {
-        if (!isLoaded) return false; // Don't show as gated while loading
+        if (!isLoaded) return true; // Show as gated while loading to prevent unauthorized access
 
         const config = ChatModeConfig[mode];
         if (!config?.requiredFeature && !config?.requiredPlan) {
             return false; // Not gated if no requirements
         }
 
-        // Check BYOK bypass first
-        const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
-        const isByokEligibleMode = mode === ChatMode.Deep || mode === ChatMode.Pro;
-        
-        if (isByokEligibleMode && hasByokGeminiKey) {
-            return false; // Not gated if BYOK bypass applies
+        // CRITICAL: Explicit check for Deep Research and Pro Search
+        if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
+            // Check BYOK bypass first for these specific modes
+            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+            if (hasByokGeminiKey) {
+                return false; // Not gated if user has BYOK Gemini key
+            }
+
+            // For Deep Research and Pro Search, user MUST have VT+ subscription
+            const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
+            const hasFeatureAccess = mode === ChatMode.Deep 
+                ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+                
+            return !(hasVtPlusAccess && hasFeatureAccess);
         }
 
+        // For other modes, use regular logic
         let hasRequiredAccess = true;
 
         if (config.requiredFeature) {
@@ -704,21 +718,48 @@ export function ChatModeOptions({
 
     // Handler for dropdown item selection with gating
     const handleDropdownSelect = (mode: ChatMode) => {
-        const isGated = isModeGated(mode);
-        
-        if (isGated) {
-            // Show gated feature dialog instead of selecting
-            const config = ChatModeConfig[mode];
-            const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
-                .find(opt => opt.value === mode);
-            
-            onGatedFeature({
-                feature: config.requiredFeature,
-                plan: config.requiredPlan,
-                title: `${option?.label}`,
-                message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
-            });
-            return;
+        // CRITICAL: Check specifically for Deep Research and Pro Search
+        if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
+            // Check BYOK bypass first
+            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+            if (!hasByokGeminiKey) {
+                // No BYOK key, check subscription
+                const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
+                const hasFeatureAccess = mode === ChatMode.Deep 
+                    ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                    : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+                
+                if (!hasVtPlusAccess || !hasFeatureAccess) {
+                    // Block access - show gated feature dialog
+                    const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
+                        .find(opt => opt.value === mode);
+                    
+                    onGatedFeature({
+                        feature: mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
+                        plan: PlanSlug.VT_PLUS,
+                        title: `${option?.label}`,
+                        message: `${option?.label} is a VT+ exclusive feature. Upgrade to VT+ to access advanced AI research capabilities.`,
+                    });
+                    return;
+                }
+            }
+        } else {
+            // For other modes, use the regular gating check
+            const isGated = isModeGated(mode);
+            if (isGated) {
+                // Show gated feature dialog instead of selecting
+                const config = ChatModeConfig[mode];
+                const option = [...chatOptions, ...Object.values(modelOptionsByProvider).flat()]
+                    .find(opt => opt.value === mode);
+                
+                onGatedFeature({
+                    feature: config.requiredFeature,
+                    plan: config.requiredPlan,
+                    title: `${option?.label}`,
+                    message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+                });
+                return;
+            }
         }
         
         // If not gated, proceed with normal selection
@@ -742,18 +783,13 @@ export function ChatModeOptions({
                             <DropdownMenuItem
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
-                                className={cn('h-auto', isGated && 'opacity-50 cursor-not-allowed')}
+                                className="h-auto"
                             >
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
                                     <div className="flex flex-col gap-0">
                                         <p className="m-0 text-sm font-medium">
                                             {option.label}
-                                            {isGated && (
-                                                <span className="ml-1 text-xs text-blue-600">
-                                                    (VT+)
-                                                </span>
-                                            )}
                                         </p>
                                         {option.description && (
                                             <p className="text-muted-foreground text-xs font-light">
@@ -762,9 +798,6 @@ export function ChatModeOptions({
                                         )}
                                     </div>
                                     <div className="flex-1" />
-                                    {isGated && (
-                                        <Lock size={14} className="text-muted-foreground" />
-                                    )}
                                     {supportsReasoning(getModelFromChatMode(option.value)) && (
                                         <Brain size={14} className="text-purple-500" title="Reasoning Model" />
                                     )}
@@ -788,17 +821,12 @@ export function ChatModeOptions({
                                     <DropdownMenuItem
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
-                                        className={cn('h-auto pl-4', isGated && 'opacity-50 cursor-not-allowed')}
+                                        className="h-auto pl-4"
                                     >
                                         <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
                                             <div className="flex flex-col gap-0">
                                                 <p className="text-sm font-medium">
                                                     {option.label}
-                                                    {isGated && (
-                                                        <span className="ml-1 text-xs text-blue-600">
-                                                            (VT+)
-                                                        </span>
-                                                    )}
                                                 </p>
                                                 {isFreeModel && (option as any).description && (
                                                     <p className="text-muted-foreground text-xs">
@@ -823,11 +851,8 @@ export function ChatModeOptions({
                                             {option.icon && (
                                                 <div className="flex items-center">
                                                     {option.icon}
-                                                </div>
-                                            )}
-                                            {hasApiKeyForChatMode(option.value, isSignedIn) && (
-                                                <BYOKIcon />
-                                            )}
+                                                    </div>
+                                                    )}
                                         </div>
                                     </DropdownMenuItem>
                                 );
