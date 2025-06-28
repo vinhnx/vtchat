@@ -245,6 +245,14 @@ const nextConfig = {
     generateBuildId: async () => {
         return process.env.BUILD_ID || 'development';
     },
+    
+    // Ensure server binds to all interfaces in production
+    ...(process.env.NODE_ENV === 'production' && {
+        experimental: {
+            ...nextConfig.experimental,
+            serverMinification: false,
+        },
+    }),
 
     // Disable problematic features for initial deployment
     typescript: {
