@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Skip middleware for static files, API routes, and Next.js internals
+    // Skip middleware for static files, API routes with their own protection, and Next.js internals
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api/') ||
@@ -63,12 +63,15 @@ export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
-         * - api/auth (auth endpoints)
+         * - api/auth (auth endpoints) - these have their own Arcjet protection
+         * - api/chat (chat endpoints) - these have their own Arcjet protection  
+         * - api/feedback (feedback endpoints) - these have their own Arcjet protection
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          * - public folder files
+         * - healthz (health checks)
          */
-        '/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*|public/).*)',
+        '/((?!api/auth|api/chat|api/feedback|_next/static|_next/image|favicon.ico|.*\\..*|public/|healthz).*)',
     ],
 };

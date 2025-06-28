@@ -1,66 +1,45 @@
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { auth } from '@/lib/auth-server';
-import arcjet, { detectBot, shield, slidingWindow } from '@arcjet/next';
+import { arcjetChat, handleArcjetDecision } from '@/lib/arcjet';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
 import { ModelEnum } from '@repo/ai/models';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-// Arcjet protection for chat endpoints
-const aj = arcjet({
-    key: process.env.ARCJET_KEY!,
-    characteristics: ["userId", "ip.src"],
-    rules: [
-        shield({ mode: "LIVE" }),
-        detectBot({
-            mode: "LIVE",
-            allow: ["CATEGORY:SEARCH_ENGINE"],
-        }),
-        slidingWindow({
-            mode: "LIVE",
-            interval: "1h",
-            max: 50,
-        }),
-    ],
-});
-
-export async function POST(req: Request) {
-    // Apply Arcjet protection if key is available
-    if (process.env.ARCJET_KEY) {
-        const decision = await aj.protect(req);
-        
-        if (decision.isDenied()) {
-            if (decision.reason.isRateLimit()) {
-                return new Response(JSON.stringify({ 
-                    error: "Rate limit exceeded", 
-                    message: "Too many requests. Please try again later." 
-                }), { 
-                    status: 429,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } else if (decision.reason.isBot()) {
-                return new Response(JSON.stringify({ 
-                    error: "Bot traffic not allowed" 
-                }), { 
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } else {
-                return new Response(JSON.stringify({ 
-                    error: "Request denied" 
-                }), { 
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' }
+export async function POST(req: NextRequest) {
+    // Apply Arcjet protection for chat endpoints
+    if (arcjetChat) {
+        try {
+            const decision = await arcjetChat.protect(req, {
+                // Use user ID for rate limiting if available
+                userId: req.headers.get('x-user-id') || undefined,
+            });
+            
+            const denial = handleArcjetDecision(decision);
+            if (denial) {
+                return NextResponse.json(denial.body, { 
+                    status: denial.status,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(denial.body.retryAfter && {
+                            'Retry-After': denial.body.retryAfter
+                        })
+                    }
                 });
             }
+        } catch (error) {
+            console.error('[RAG Chat] Arcjet protection failed:', error);
+            // Continue without Arcjet protection if it fails
         }
     }
+
     try {
         // Check authentication
         const session = await auth.api.getSession({

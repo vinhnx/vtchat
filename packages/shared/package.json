@@ -30,7 +30,8 @@
         "./utils/request-deduplication": "./utils/request-deduplication.ts",
         "./utils/session-cache": "./utils/session-cache.ts",
         "./utils/ssr-session": "./utils/ssr-session.ts",
-        "./utils/plus-defaults": "./utils/plus-defaults.ts"
+        "./utils/plus-defaults": "./utils/plus-defaults.ts",
+        "./lib/arcjet-config": "./lib/arcjet-config.ts"
     },
     "scripts": {
         "lint": "oxlint",
@@ -40,6 +41,7 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
+        "@arcjet/next": "^1.0.0-beta.8",
         "@hotjar/browser": "^1.0.9",
         "@langchain/core": "^0.3.59",
         "@tiptap/react": "^2.14.0",

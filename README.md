@@ -22,6 +22,7 @@ VT combines enterprise-grade security with user-friendly design, featuring local
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
 - **Enterprise-Grade Security**: Secure authentication with Better Auth
+- **Advanced Application Security**: Arcjet protection with rate limiting, bot detection, email validation, and WAF
 
 ### Subscription Tiers
 - **VT_BASE (Free)**: 9 AI models, calculator, basic chat, local privacy
@@ -135,6 +136,7 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 ### **Backend & Infrastructure**
 - **Database**: Neon PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth (modern session management)
+- **Application Security**: Arcjet protection (rate limiting, bot detection, attack prevention)
 - **Payment Processing**: Creem.io integration
 - **Local Storage**: IndexedDB via Dexie.js
 - **Deployment**: Fly.io (production-ready)
@@ -177,7 +179,7 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 3. Set up environment variables:
 
     - Copy `apps/web/.env.example` to `apps/web/.env.local`.
-    - Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys).
+    - Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys, Arcjet key).
 
 4. Start the development server:
 
@@ -199,6 +201,7 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 
 ### **Development & Integration**
 - **[AGENT.md](AGENT.md)**: Development guidelines and conventions
+- **[Security Guide](docs/guides/arcjet-security.md)**: Comprehensive Arcjet application security implementation
 - **Subscription System**: Plan management, caching, and Creem.io integration
 - **Customer Portal**: User subscription management interface
 - **Webhook Setup**: Creem.io webhook configuration for development
@@ -212,7 +215,8 @@ VT is fully prepared for production deployment with:
 
 - **Zero TypeScript Errors**: Complete type safety
 - **Performance Optimized**: 87% faster compilation, optimized bundle size
-- **Security Hardened**: Privacy-first architecture with secure authentication
+- **Security Hardened**: Privacy-first architecture with secure authentication and Arcjet application security
+- **Attack Protection**: Comprehensive defense against bots, rate limiting abuse, and common web attacks
 - **Monitoring Ready**: Error tracking and performance monitoring setup
 - **Documentation Complete**: Comprehensive guides and troubleshooting
 - **Testing Coverage**: Vitest framework with comprehensive test coverage
