@@ -312,3 +312,14 @@ mark.prompt-highlight {
 .animate-border-width {
     animation: border-width 3s ease-in-out infinite;
 }
+
+/* Global text selection styles */
+::selection {
+    background-color: #BFB38F;
+    color: #262626;
+}
+
+::-moz-selection {
+    background-color: #BFB38F;
+    color: #262626;
+}
