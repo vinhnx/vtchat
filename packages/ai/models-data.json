@@ -1,7 +1,9 @@
 {
     "openai": {
         "id": "openai",
-        "env": ["OPENAI_API_KEY"],
+        "env": [
+            "OPENAI_API_KEY"
+        ],
         "npm": "@ai-sdk/openai",
         "name": "OpenAI",
         "doc": "https://platform.openai.com/docs/models",
@@ -14,10 +16,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.4, "output": 1.6, "cache_read": 0.1 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.4,
+                    "output": 1.6,
+                    "cache_read": 0.1
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "o1-preview": {
                 "id": "o1-preview",
@@ -27,10 +47,27 @@
                 "temperature": true,
                 "tool_call": false,
                 "knowledge": "2023-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 15, "output": 60, "cache_read": 7.5 },
-                "limit": { "context": 128000, "output": 32768 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 15,
+                    "output": 60,
+                    "cache_read": 7.5
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "o1-mini": {
                 "id": "o1-mini",
@@ -40,10 +77,27 @@
                 "temperature": false,
                 "tool_call": false,
                 "knowledge": "2023-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.55 },
-                "limit": { "context": 128000, "output": 65536 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.55
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-4.5-preview": {
                 "id": "gpt-4.5-preview",
@@ -53,10 +107,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 75, "output": 150, "cache_read": 37.5 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 75,
+                    "output": 150,
+                    "cache_read": 37.5
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "o1-pro": {
                 "id": "o1-pro",
@@ -66,10 +138,28 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 150, "output": 600 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 150,
+                    "output": 600
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "o3-mini": {
                 "id": "o3-mini",
@@ -79,10 +169,27 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.55 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.55
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-4.1": {
                 "id": "gpt-4.1",
@@ -92,10 +199,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 8, "cache_read": 0.5 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 8,
+                    "cache_read": 0.5
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "o3": {
                 "id": "o3",
@@ -105,10 +230,29 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 8, "cache_read": 0.5 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 8,
+                    "cache_read": 0.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-4o-mini": {
                 "id": "gpt-4o-mini",
@@ -118,10 +262,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.15, "output": 0.6, "cache_read": 0.08 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.6,
+                    "cache_read": 0.08
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "o3-pro": {
                 "id": "o3-pro",
@@ -131,10 +293,28 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 20, "output": 80 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 20,
+                    "output": 80
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "codex-mini-latest": {
                 "id": "codex-mini-latest",
@@ -144,10 +324,27 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.5, "output": 6, "cache_read": 0.375 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.5,
+                    "output": 6,
+                    "cache_read": 0.375
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-4.1-nano": {
                 "id": "gpt-4.1-nano",
@@ -157,10 +354,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.4, "cache_read": 0.03 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.4,
+                    "cache_read": 0.03
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "o4-mini": {
                 "id": "o4-mini",
@@ -170,10 +385,29 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.28 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.28
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "o1": {
                 "id": "o1",
@@ -183,10 +417,29 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 15, "output": 60, "cache_read": 7.5 },
-                "limit": { "context": 200000, "output": 100000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 15,
+                    "output": 60,
+                    "cache_read": 7.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gpt-4": {
                 "id": "gpt-4",
@@ -196,10 +449,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-04",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 10, "output": 30 },
-                "limit": { "context": 8192, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 10,
+                    "output": 30
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4-turbo": {
                 "id": "gpt-4-turbo",
@@ -209,10 +477,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-12",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 10, "output": 30 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 10,
+                    "output": 30
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "gpt-4o": {
                 "id": "gpt-4o",
@@ -222,16 +507,36 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2.5, "output": 10, "cache_read": 1.25 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2.5,
+                    "output": 10,
+                    "cache_read": 1.25
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             }
         }
     },
     "deepseek": {
         "id": "deepseek",
-        "env": ["DEEPSEEK_API_KEY"],
+        "env": [
+            "DEEPSEEK_API_KEY"
+        ],
         "npm": "@ai-sdk/openai",
         "name": "DeepSeek",
         "doc": "https://platform.deepseek.com/api-docs/pricing",
@@ -244,10 +549,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.55, "output": 2.19, "cache_read": 0.14 },
-                "limit": { "context": 65536, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.55,
+                    "output": 2.19,
+                    "cache_read": 0.14
+                },
+                "limit": {
+                    "context": 65536,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "deepseek-chat": {
                 "id": "deepseek-chat",
@@ -257,16 +579,35 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.27, "output": 1.1, "cache_read": 0.07 },
-                "limit": { "context": 65536, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.27,
+                    "output": 1.1,
+                    "cache_read": 0.07
+                },
+                "limit": {
+                    "context": 65536,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             }
         }
     },
     "anthropic": {
         "id": "anthropic",
-        "env": ["ANTHROPIC_API_KEY"],
+        "env": [
+            "ANTHROPIC_API_KEY"
+        ],
         "npm": "@ai-sdk/anthropic",
         "name": "Anthropic",
         "doc": "https://docs.anthropic.com/en/docs/about-claude/models",
@@ -279,10 +620,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.25, "output": 1.25, "cache_read": 0.03, "cache_write": 0.03 },
-                "limit": { "context": 200000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.25,
+                    "output": 1.25,
+                    "cache_read": 0.03,
+                    "cache_write": 0.03
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-3-opus-20240229": {
                 "id": "claude-3-opus-20240229",
@@ -292,10 +652,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 15, "output": 75, "cache_read": 1.5, "cache_write": 1.5 },
-                "limit": { "context": 200000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 15,
+                    "output": 75,
+                    "cache_read": 1.5,
+                    "cache_write": 1.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-3-5-haiku-20241022": {
                 "id": "claude-3-5-haiku-20241022",
@@ -305,10 +684,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.8, "output": 4, "cache_read": 0.08, "cache_write": 0.08 },
-                "limit": { "context": 200000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.8,
+                    "output": 4,
+                    "cache_read": 0.08,
+                    "cache_write": 0.08
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-sonnet-4-20250514": {
                 "id": "claude-sonnet-4-20250514",
@@ -318,10 +716,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 3.75, "cache_write": 0.3 },
-                "limit": { "context": 200000, "output": 50000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 3.75,
+                    "cache_write": 0.3
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 50000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true,
+                    "reasoning_display": true
+                }
             },
             "claude-3-sonnet-20240229": {
                 "id": "claude-3-sonnet-20240229",
@@ -331,10 +749,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 0.3 },
-                "limit": { "context": 200000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 0.3
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-3-5-sonnet-20240620": {
                 "id": "claude-3-5-sonnet-20240620",
@@ -344,10 +781,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04-30",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 0.3 },
-                "limit": { "context": 200000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 0.3
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-opus-4-20250514": {
                 "id": "claude-opus-4-20250514",
@@ -357,10 +813,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 15, "output": 75, "cache_read": 1.5, "cache_write": 1.5 },
-                "limit": { "context": 200000, "output": 32000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 15,
+                    "output": 75,
+                    "cache_read": 1.5,
+                    "cache_write": 1.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "claude-3-5-sonnet-20241022": {
                 "id": "claude-3-5-sonnet-20241022",
@@ -370,10 +846,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04-30",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 0.3 },
-                "limit": { "context": 200000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 0.3
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "claude-3-7-sonnet-20250219": {
                 "id": "claude-3-7-sonnet-20250219",
@@ -383,16 +878,38 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10-31",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 0.3 },
-                "limit": { "context": 200000, "output": 64000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 0.3
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 64000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             }
         }
     },
     "vercel": {
         "id": "vercel",
-        "env": ["V0_API_KEY"],
+        "env": [
+            "V0_API_KEY"
+        ],
         "npm": "@ai-sdk/vercel",
         "name": "Vercel",
         "doc": "https://sdk.vercel.ai/providers/ai-sdk-providers/vercel",
@@ -404,10 +921,28 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 15, "output": 75 },
-                "limit": { "context": 512000, "output": 32000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 15,
+                    "output": 75
+                },
+                "limit": {
+                    "context": 512000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "v0-1.5-md": {
                 "id": "v0-1.5-md",
@@ -416,10 +951,28 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15 },
-                "limit": { "context": 128000, "output": 32000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "v0-1.0-md": {
                 "id": "v0-1.0-md",
@@ -428,16 +981,36 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15 },
-                "limit": { "context": 128000, "output": 32000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             }
         }
     },
     "mistral": {
         "id": "mistral",
-        "env": ["MISTRAL_API_KEY"],
+        "env": [
+            "MISTRAL_API_KEY"
+        ],
         "npm": "@ai-sdk/mistral",
         "name": "Mistral",
         "doc": "https://docs.mistral.ai/getting-started/models/",
@@ -450,10 +1023,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.1 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.1
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "open-mixtral-8x7b": {
                 "id": "open-mixtral-8x7b",
@@ -463,10 +1051,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-01",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.7, "output": 0.7 },
-                "limit": { "context": 32000, "output": 32000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.7,
+                    "output": 0.7
+                },
+                "limit": {
+                    "context": 32000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "open-mistral-7b": {
                 "id": "open-mistral-7b",
@@ -476,10 +1079,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-12",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.25, "output": 0.25 },
-                "limit": { "context": 8000, "output": 8000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.25,
+                    "output": 0.25
+                },
+                "limit": {
+                    "context": 8000,
+                    "output": 8000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "pixtral-12b": {
                 "id": "pixtral-12b",
@@ -489,10 +1107,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-09",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.15, "output": 0.15 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.15
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "mistral-medium-latest": {
                 "id": "mistral-medium-latest",
@@ -502,10 +1137,26 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-05",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.4, "output": 2 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.4,
+                    "output": 2
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "open-mixtral-8x22b": {
                 "id": "open-mixtral-8x22b",
@@ -515,10 +1166,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 6 },
-                "limit": { "context": 64000, "output": 64000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 6
+                },
+                "limit": {
+                    "context": 64000,
+                    "output": 64000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "pixtral-large-latest": {
                 "id": "pixtral-large-latest",
@@ -528,10 +1194,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 6 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 6
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "devstral-small-2505": {
                 "id": "devstral-small-2505",
@@ -541,10 +1224,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-05",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.3 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.3
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "mistral-nemo": {
                 "id": "mistral-nemo",
@@ -554,10 +1252,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.15, "output": 0.15 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.15
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "magistral-medium-latest": {
                 "id": "magistral-medium-latest",
@@ -567,10 +1280,26 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-06",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 5 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 5
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "codestral-latest": {
                 "id": "codestral-latest",
@@ -580,10 +1309,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.3, "output": 0.9 },
-                "limit": { "context": 256000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.3,
+                    "output": 0.9
+                },
+                "limit": {
+                    "context": 256000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "ministral-3b-latest": {
                 "id": "ministral-3b-latest",
@@ -593,10 +1337,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.04, "output": 0.04 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.04,
+                    "output": 0.04
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "mistral-large-latest": {
                 "id": "mistral-large-latest",
@@ -606,10 +1365,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 6 },
-                "limit": { "context": 131072, "output": 16384 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 6
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "magistral-small": {
                 "id": "magistral-small",
@@ -619,10 +1393,26 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-06",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.5, "output": 1.5 },
-                "limit": { "context": 128000, "output": 128000 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.5,
+                    "output": 1.5
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 128000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "mistral-small-latest": {
                 "id": "mistral-small-latest",
@@ -632,16 +1422,34 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.3 },
-                "limit": { "context": 128000, "output": 16384 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.3
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "xai": {
         "id": "xai",
-        "env": ["XAI_API_KEY"],
+        "env": [
+            "XAI_API_KEY"
+        ],
         "npm": "@ai-sdk/xai",
         "name": "xAI",
         "doc": "https://docs.x.ai/docs/models",
@@ -654,10 +1462,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-3-mini-latest": {
                 "id": "grok-3-mini-latest",
@@ -667,10 +1492,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.3, "output": 0.5, "cache_read": 0.075, "cache_write": 0.5 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.3,
+                    "output": 0.5,
+                    "cache_read": 0.075,
+                    "cache_write": 0.5
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "grok-2-vision": {
                 "id": "grok-2-vision",
@@ -680,10 +1523,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 8192, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "grok-3-fast": {
                 "id": "grok-3-fast",
@@ -693,10 +1555,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 5, "output": 25, "cache_read": 1.25, "cache_write": 25 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 5,
+                    "output": 25,
+                    "cache_read": 1.25,
+                    "cache_write": 25
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-3-mini-fast": {
                 "id": "grok-3-mini-fast",
@@ -706,10 +1585,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.6, "output": 4, "cache_read": 0.15, "cache_write": 4 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.6,
+                    "output": 4,
+                    "cache_read": 0.15,
+                    "cache_write": 4
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "grok-3-mini-fast-latest": {
                 "id": "grok-3-mini-fast-latest",
@@ -719,10 +1616,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.6, "output": 4, "cache_read": 0.15, "cache_write": 4 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.6,
+                    "output": 4,
+                    "cache_read": 0.15,
+                    "cache_write": 4
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "grok-2-1212": {
                 "id": "grok-2-1212",
@@ -732,10 +1647,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-2-latest": {
                 "id": "grok-2-latest",
@@ -745,10 +1677,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-2-vision-1212": {
                 "id": "grok-2-vision-1212",
@@ -758,10 +1707,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 8192, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "grok-beta": {
                 "id": "grok-beta",
@@ -771,10 +1739,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 5, "output": 15, "cache_read": 5, "cache_write": 15 },
-                "limit": { "context": 131072, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 5,
+                    "output": 15,
+                    "cache_read": 5,
+                    "cache_write": 15
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-3-fast-latest": {
                 "id": "grok-3-fast-latest",
@@ -784,10 +1769,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 5, "output": 25, "cache_read": 1.25, "cache_write": 25 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 5,
+                    "output": 25,
+                    "cache_read": 1.25,
+                    "cache_write": 25
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-vision-beta": {
                 "id": "grok-vision-beta",
@@ -797,10 +1799,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 5, "output": 15, "cache_read": 5, "cache_write": 15 },
-                "limit": { "context": 8192, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 5,
+                    "output": 15,
+                    "cache_read": 5,
+                    "cache_write": 15
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "grok-3-latest": {
                 "id": "grok-3-latest",
@@ -810,10 +1831,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.75, "cache_write": 15 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.75,
+                    "cache_write": 15
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "grok-3-mini": {
                 "id": "grok-3-mini",
@@ -823,10 +1861,28 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.3, "output": 0.5, "cache_read": 0.075, "cache_write": 0.5 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.3,
+                    "output": 0.5,
+                    "cache_read": 0.075,
+                    "cache_write": 0.5
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "grok-2-vision-latest": {
                 "id": "grok-2-vision-latest",
@@ -836,10 +1892,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 2, "output": 10, "cache_read": 2, "cache_write": 10 },
-                "limit": { "context": 8192, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 2,
+                    "output": 10,
+                    "cache_read": 2,
+                    "cache_write": 10
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "grok-3": {
                 "id": "grok-3",
@@ -849,16 +1924,37 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 3, "output": 15, "cache_read": 0.75, "cache_write": 15 },
-                "limit": { "context": 131072, "output": 8192 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.75,
+                    "cache_write": 15
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "amazon-bedrock": {
         "id": "amazon-bedrock",
-        "env": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"],
+        "env": [
+            "AWS_ACCESS_KEY_ID",
+            "AWS_SECRET_ACCESS_KEY",
+            "AWS_REGION"
+        ],
         "npm": "@ai-sdk/amazon-bedrock",
         "name": "Amazon Bedrock",
         "doc": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
@@ -869,8 +1965,21 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.8, "output": 4, "cache_read": 0.08, "cache_write": 1 },
-                "limit": { "context": 200000, "output": 8192 }
+                "cost": {
+                    "input": 0.8,
+                    "output": 4,
+                    "cache_read": 0.08,
+                    "cache_write": 1
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-sonnet-4-20250514-v1:0": {
                 "id": "anthropic.claude-sonnet-4-20250514-v1:0",
@@ -878,8 +1987,22 @@
                 "attachment": true,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75 },
-                "limit": { "context": 200000, "output": 64000 }
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 3.75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 64000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "meta.llama3-2-1b-instruct-v1:0": {
                 "id": "meta.llama3-2-1b-instruct-v1:0",
@@ -887,8 +2010,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.1, "output": 0.1 },
-                "limit": { "context": 131000, "output": 4096 }
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.1
+                },
+                "limit": {
+                    "context": 131000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-v2:1": {
                 "id": "anthropic.claude-v2:1",
@@ -896,8 +2030,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 8, "output": 24 },
-                "limit": { "context": 200000, "output": 4096 }
+                "cost": {
+                    "input": 8,
+                    "output": 24
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama4-maverick-17b-instruct-v1:0": {
                 "id": "meta.llama4-maverick-17b-instruct-v1:0",
@@ -905,8 +2050,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.24, "output": 0.97 },
-                "limit": { "context": 1000000, "output": 16384 }
+                "cost": {
+                    "input": 0.24,
+                    "output": 0.97
+                },
+                "limit": {
+                    "context": 1000000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-3-7-sonnet-20250219-v1:0": {
                 "id": "anthropic.claude-3-7-sonnet-20250219-v1:0",
@@ -914,8 +2070,21 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75 },
-                "limit": { "context": 200000, "output": 8192 }
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 3.75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-instant-v1": {
                 "id": "anthropic.claude-instant-v1",
@@ -923,8 +2092,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.8, "output": 2.4 },
-                "limit": { "context": 100000, "output": 4096 }
+                "cost": {
+                    "input": 0.8,
+                    "output": 2.4
+                },
+                "limit": {
+                    "context": 100000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "amazon.nova-lite-v1:0": {
                 "id": "amazon.nova-lite-v1:0",
@@ -932,8 +2112,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.06, "output": 0.24, "cache_read": 0.015 },
-                "limit": { "context": 300000, "output": 8192 }
+                "cost": {
+                    "input": 0.06,
+                    "output": 0.24,
+                    "cache_read": 0.015
+                },
+                "limit": {
+                    "context": 300000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-2-3b-instruct-v1:0": {
                 "id": "meta.llama3-2-3b-instruct-v1:0",
@@ -941,8 +2133,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.15, "output": 0.15 },
-                "limit": { "context": 131000, "output": 4096 }
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.15
+                },
+                "limit": {
+                    "context": 131000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "cohere.command-light-text-v14": {
                 "id": "cohere.command-light-text-v14",
@@ -950,8 +2153,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.3, "output": 0.6 },
-                "limit": { "context": 4096, "output": 4096 }
+                "cost": {
+                    "input": 0.3,
+                    "output": 0.6
+                },
+                "limit": {
+                    "context": 4096,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "amazon.nova-premier-v1:0": {
                 "id": "amazon.nova-premier-v1:0",
@@ -959,8 +2173,20 @@
                 "attachment": true,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 2.5, "output": 12.5 },
-                "limit": { "context": 1000000, "output": 16384 }
+                "cost": {
+                    "input": 2.5,
+                    "output": 12.5
+                },
+                "limit": {
+                    "context": 1000000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "anthropic.claude-v2": {
                 "id": "anthropic.claude-v2",
@@ -968,8 +2194,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 8, "output": 24 },
-                "limit": { "context": 100000, "output": 4096 }
+                "cost": {
+                    "input": 8,
+                    "output": 24
+                },
+                "limit": {
+                    "context": 100000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-1-8b-instruct-v1:0": {
                 "id": "meta.llama3-1-8b-instruct-v1:0",
@@ -977,8 +2214,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.22, "output": 0.22 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.22,
+                    "output": 0.22
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-3-opus-20240229-v1:0": {
                 "id": "anthropic.claude-3-opus-20240229-v1:0",
@@ -986,8 +2234,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 15, "output": 75 },
-                "limit": { "context": 200000, "output": 4096 }
+                "cost": {
+                    "input": 15,
+                    "output": 75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "ai21.jamba-1-5-mini-v1:0": {
                 "id": "ai21.jamba-1-5-mini-v1:0",
@@ -995,8 +2254,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.2, "output": 0.4 },
-                "limit": { "context": 256000, "output": 4096 }
+                "cost": {
+                    "input": 0.2,
+                    "output": 0.4
+                },
+                "limit": {
+                    "context": 256000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-3-5-sonnet-20240620-v1:0": {
                 "id": "anthropic.claude-3-5-sonnet-20240620-v1:0",
@@ -1004,8 +2274,21 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75 },
-                "limit": { "context": 200000, "output": 8192 }
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 3.75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-3-70b-instruct-v1:0": {
                 "id": "meta.llama3-3-70b-instruct-v1:0",
@@ -1013,8 +2296,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.72, "output": 0.72 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.72,
+                    "output": 0.72
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "cohere.command-r-plus-v1:0": {
                 "id": "cohere.command-r-plus-v1:0",
@@ -1022,8 +2316,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 3,
+                    "output": 15
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-70b-instruct-v1:0": {
                 "id": "meta.llama3-70b-instruct-v1:0",
@@ -1031,8 +2336,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 2.65, "output": 3.5 },
-                "limit": { "context": 8192, "output": 2048 }
+                "cost": {
+                    "input": 2.65,
+                    "output": 3.5
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 2048
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "amazon.nova-micro-v1:0": {
                 "id": "amazon.nova-micro-v1:0",
@@ -1040,8 +2356,20 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.035, "output": 0.14, "cache_read": 0.00875 },
-                "limit": { "context": 128000, "output": 8192 }
+                "cost": {
+                    "input": 0.035,
+                    "output": 0.14,
+                    "cache_read": 0.00875
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-8b-instruct-v1:0": {
                 "id": "meta.llama3-8b-instruct-v1:0",
@@ -1049,8 +2377,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.3, "output": 0.6 },
-                "limit": { "context": 8192, "output": 2048 }
+                "cost": {
+                    "input": 0.3,
+                    "output": 0.6
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 2048
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "ai21.jamba-1-5-large-v1:0": {
                 "id": "ai21.jamba-1-5-large-v1:0",
@@ -1058,8 +2397,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 2, "output": 8 },
-                "limit": { "context": 256000, "output": 4096 }
+                "cost": {
+                    "input": 2,
+                    "output": 8
+                },
+                "limit": {
+                    "context": 256000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "cohere.command-text-v14": {
                 "id": "cohere.command-text-v14",
@@ -1067,8 +2417,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 1.5, "output": 2 },
-                "limit": { "context": 4096, "output": 4096 }
+                "cost": {
+                    "input": 1.5,
+                    "output": 2
+                },
+                "limit": {
+                    "context": 4096,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "deepseek.r1-v1:0": {
                 "id": "deepseek.r1-v1:0",
@@ -1076,8 +2437,20 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 1.35, "output": 5.4 },
-                "limit": { "context": 128000, "output": 8192 }
+                "cost": {
+                    "input": 1.35,
+                    "output": 5.4
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "anthropic.claude-3-5-sonnet-20241022-v2:0": {
                 "id": "anthropic.claude-3-5-sonnet-20241022-v2:0",
@@ -1085,8 +2458,21 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75 },
-                "limit": { "context": 200000, "output": 8192 }
+                "cost": {
+                    "input": 3,
+                    "output": 15,
+                    "cache_read": 0.3,
+                    "cache_write": 3.75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "amazon.nova-pro-v1:0": {
                 "id": "amazon.nova-pro-v1:0",
@@ -1094,8 +2480,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.8, "output": 3.2, "cache_read": 0.2 },
-                "limit": { "context": 300000, "output": 8192 }
+                "cost": {
+                    "input": 0.8,
+                    "output": 3.2,
+                    "cache_read": 0.2
+                },
+                "limit": {
+                    "context": 300000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-1-70b-instruct-v1:0": {
                 "id": "meta.llama3-1-70b-instruct-v1:0",
@@ -1103,8 +2501,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.72, "output": 0.72 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.72,
+                    "output": 0.72
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama4-scout-17b-instruct-v1:0": {
                 "id": "meta.llama4-scout-17b-instruct-v1:0",
@@ -1112,8 +2521,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.17, "output": 0.66 },
-                "limit": { "context": 3500000, "output": 16384 }
+                "cost": {
+                    "input": 0.17,
+                    "output": 0.66
+                },
+                "limit": {
+                    "context": 3500000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-opus-4-20250514-v1:0": {
                 "id": "anthropic.claude-opus-4-20250514-v1:0",
@@ -1121,8 +2541,22 @@
                 "attachment": true,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 15, "output": 75, "cache_read": 1.5, "cache_write": 18.75 },
-                "limit": { "context": 200000, "output": 32000 }
+                "cost": {
+                    "input": 15,
+                    "output": 75,
+                    "cache_read": 1.5,
+                    "cache_write": 18.75
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "cohere.command-r-v1:0": {
                 "id": "cohere.command-r-v1:0",
@@ -1130,8 +2564,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.5, "output": 1.5 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.5,
+                    "output": 1.5
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-3-sonnet-20240229-v1:0": {
                 "id": "anthropic.claude-3-sonnet-20240229-v1:0",
@@ -1139,8 +2584,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 15 },
-                "limit": { "context": 200000, "output": 4096 }
+                "cost": {
+                    "input": 3,
+                    "output": 15
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "anthropic.claude-3-haiku-20240307-v1:0": {
                 "id": "anthropic.claude-3-haiku-20240307-v1:0",
@@ -1148,8 +2604,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.25, "output": 1.25 },
-                "limit": { "context": 200000, "output": 4096 }
+                "cost": {
+                    "input": 0.25,
+                    "output": 1.25
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-2-90b-instruct-v1:0": {
                 "id": "meta.llama3-2-90b-instruct-v1:0",
@@ -1157,8 +2624,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.72, "output": 0.72 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.72,
+                    "output": 0.72
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "meta.llama3-2-11b-instruct-v1:0": {
                 "id": "meta.llama3-2-11b-instruct-v1:0",
@@ -1166,14 +2644,27 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.16, "output": 0.16 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 0.16,
+                    "output": 0.16
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "groq": {
         "id": "groq",
-        "env": ["GROQ_API_KEY"],
+        "env": [
+            "GROQ_API_KEY"
+        ],
         "npm": "@ai-sdk/groq",
         "name": "Groq",
         "doc": "https://console.groq.com/docs/models",
@@ -1184,8 +2675,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.2, "output": 0.6 },
-                "limit": { "context": 131072, "output": 8192 }
+                "cost": {
+                    "input": 0.2,
+                    "output": 0.6
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-3.3-70b-versatile": {
                 "id": "llama-3.3-70b-versatile",
@@ -1193,8 +2695,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.59, "output": 0.79 },
-                "limit": { "context": 131072, "output": 32768 }
+                "cost": {
+                    "input": 0.59,
+                    "output": 0.79
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-3.1-8b-instant": {
                 "id": "llama-3.1-8b-instant",
@@ -1202,8 +2715,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.05, "output": 0.08 },
-                "limit": { "context": 131072, "output": 8192 }
+                "cost": {
+                    "input": 0.05,
+                    "output": 0.08
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-guard-3-8b": {
                 "id": "llama-guard-3-8b",
@@ -1211,8 +2735,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.2, "output": 0.2 },
-                "limit": { "context": 8192, "output": 8192 }
+                "cost": {
+                    "input": 0.2,
+                    "output": 0.2
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "qwen%2Fqwen3-32b": {
                 "id": "qwen%2fqwen3-32b",
@@ -1220,8 +2755,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.29, "output": 0.59 },
-                "limit": { "context": 131072, "output": 16384 }
+                "cost": {
+                    "input": 0.29,
+                    "output": 0.59
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gemma2-9b-it": {
                 "id": "gemma2-9b-it",
@@ -1229,8 +2775,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.2, "output": 0.2 },
-                "limit": { "context": 8192, "output": 8192 }
+                "cost": {
+                    "input": 0.2,
+                    "output": 0.2
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama3-8b-8192": {
                 "id": "llama3-8b-8192",
@@ -1238,8 +2795,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.05, "output": 0.08 },
-                "limit": { "context": 8192, "output": 8192 }
+                "cost": {
+                    "input": 0.05,
+                    "output": 0.08
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama3-70b-8192": {
                 "id": "llama3-70b-8192",
@@ -1247,8 +2815,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.59, "output": 0.79 },
-                "limit": { "context": 8192, "output": 8192 }
+                "cost": {
+                    "input": 0.59,
+                    "output": 0.79
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "deepseek-r1-distill-llama-70b": {
                 "id": "deepseek-r1-distill-llama-70b",
@@ -1256,8 +2835,20 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 0.75, "output": 0.99 },
-                "limit": { "context": 131072, "output": 8192 }
+                "cost": {
+                    "input": 0.75,
+                    "output": 0.99
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "meta-llama%2Fllama-4-scout-17b-16e-instruct": {
                 "id": "meta-llama%2fllama-4-scout-17b-16e-instruct",
@@ -1265,8 +2856,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.11, "output": 0.34 },
-                "limit": { "context": 131072, "output": 8192 }
+                "cost": {
+                    "input": 0.11,
+                    "output": 0.34
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "qwen-qwq-32b": {
                 "id": "qwen-qwq-32b",
@@ -1274,8 +2876,20 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": true,
-                "cost": { "input": 0.29, "output": 0.39 },
-                "limit": { "context": 131072, "output": 16384 }
+                "cost": {
+                    "input": 0.29,
+                    "output": 0.39
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "meta-llama%2Fllama-guard-4-12b": {
                 "id": "meta-llama%2fllama-guard-4-12b",
@@ -1283,8 +2897,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.2, "output": 0.2 },
-                "limit": { "context": 131072, "output": 128 }
+                "cost": {
+                    "input": 0.2,
+                    "output": 0.2
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 128
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "mistral-saba-24b": {
                 "id": "mistral-saba-24b",
@@ -1292,14 +2917,27 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.79, "output": 0.79 },
-                "limit": { "context": 32768, "output": 32768 }
+                "cost": {
+                    "input": 0.79,
+                    "output": 0.79
+                },
+                "limit": {
+                    "context": 32768,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "morph": {
         "id": "morph",
-        "env": ["MORPH_API_KEY"],
+        "env": [
+            "MORPH_API_KEY"
+        ],
         "npm": "@ai-sdk/openai-compatible",
         "api": "https://api.morphllm.com/v1",
         "name": "Morph",
@@ -1311,8 +2949,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": false,
-                "cost": { "input": 0.9, "output": 1.9 },
-                "limit": { "context": 32000, "output": 32000 }
+                "cost": {
+                    "input": 0.9,
+                    "output": 1.9
+                },
+                "limit": {
+                    "context": 32000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "morph-v3-fast": {
                 "id": "morph-v3-fast",
@@ -1320,8 +2969,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": false,
-                "cost": { "input": 0.8, "output": 1.2 },
-                "limit": { "context": 16000, "output": 16000 }
+                "cost": {
+                    "input": 0.8,
+                    "output": 1.2
+                },
+                "limit": {
+                    "context": 16000,
+                    "output": 16000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "auto": {
                 "id": "auto",
@@ -1329,14 +2989,27 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": false,
-                "cost": { "input": 0.85, "output": 1.55 },
-                "limit": { "context": 32000, "output": 32000 }
+                "cost": {
+                    "input": 0.85,
+                    "output": 1.55
+                },
+                "limit": {
+                    "context": 32000,
+                    "output": 32000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "llama": {
         "id": "llama",
-        "env": ["LLAMA_API_KEY"],
+        "env": [
+            "LLAMA_API_KEY"
+        ],
         "npm": "@ai-sdk/openai-compatible",
         "api": "https://api.llama.com/compat/v1/",
         "name": "Llama",
@@ -1350,10 +3023,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-4-scout-17b-16e-instruct-fp8": {
                 "id": "llama-4-scout-17b-16e-instruct-fp8",
@@ -1363,10 +3051,27 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "llama-3.3-70b-instruct": {
                 "id": "llama-3.3-70b-instruct",
@@ -1376,10 +3081,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-12",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "groq-llama-4-maverick-17b-128e-instruct": {
                 "id": "groq-llama-4-maverick-17b-128e-instruct",
@@ -1389,10 +3109,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "cerebras-llama-4-maverick-17b-128e-instruct": {
                 "id": "cerebras-llama-4-maverick-17b-128e-instruct",
@@ -1402,10 +3137,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-3.3-8b-instruct": {
                 "id": "llama-3.3-8b-instruct",
@@ -1415,10 +3165,25 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-12",
-                "input_modalities": ["text"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "llama-4-maverick-17b-128e-instruct-fp8": {
                 "id": "llama-4-maverick-17b-128e-instruct-fp8",
@@ -1428,16 +3193,36 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0, "output": 0 },
-                "limit": { "context": 128000, "output": 4096 }
+                "input_modalities": [
+                    "text",
+                    "image"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0,
+                    "output": 0
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             }
         }
     },
     "azure": {
         "id": "azure",
-        "env": ["AZURE_RESOURCE_NAME", "AZURE_API_KEY"],
+        "env": [
+            "AZURE_RESOURCE_NAME",
+            "AZURE_API_KEY"
+        ],
         "npm": "@ai-sdk/azure",
         "name": "Azure",
         "doc": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
@@ -1448,8 +3233,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.4, "output": 1.6, "cache_read": 0.1 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "cost": {
+                    "input": 0.4,
+                    "output": 1.6,
+                    "cache_read": 0.1
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "o1-preview": {
                 "id": "o1-preview",
@@ -1457,8 +3254,21 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 16.5, "output": 66, "cache_read": 8.25 },
-                "limit": { "context": 128000, "output": 32768 }
+                "cost": {
+                    "input": 16.5,
+                    "output": 66,
+                    "cache_read": 8.25
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "o1-mini": {
                 "id": "o1-mini",
@@ -1466,8 +3276,21 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.55 },
-                "limit": { "context": 128000, "output": 65536 }
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.55
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-3.5-turbo-1106": {
                 "id": "gpt-3.5-turbo-1106",
@@ -1475,8 +3298,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 1, "output": 2 },
-                "limit": { "context": 16384, "output": 16384 }
+                "cost": {
+                    "input": 1,
+                    "output": 2
+                },
+                "limit": {
+                    "context": 16384,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-3.5-turbo-instruct": {
                 "id": "gpt-3.5-turbo-instruct",
@@ -1484,8 +3318,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 1.5, "output": 2 },
-                "limit": { "context": 4096, "output": 4096 }
+                "cost": {
+                    "input": 1.5,
+                    "output": 2
+                },
+                "limit": {
+                    "context": 4096,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "o3-mini": {
                 "id": "o3-mini",
@@ -1493,8 +3338,21 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.55 },
-                "limit": { "context": 200000, "output": 100000 }
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.55
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-4.1": {
                 "id": "gpt-4.1",
@@ -1502,8 +3360,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 2, "output": 8, "cache_read": 0.5 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "cost": {
+                    "input": 2,
+                    "output": 8,
+                    "cache_read": 0.5
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "o3": {
                 "id": "o3",
@@ -1511,8 +3381,21 @@
                 "attachment": true,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 2, "output": 8, "cache_read": 0.5 },
-                "limit": { "context": 200000, "output": 100000 }
+                "cost": {
+                    "input": 2,
+                    "output": 8,
+                    "cache_read": 0.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-3.5-turbo-0613": {
                 "id": "gpt-3.5-turbo-0613",
@@ -1520,8 +3403,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 3, "output": 4 },
-                "limit": { "context": 16384, "output": 16384 }
+                "cost": {
+                    "input": 3,
+                    "output": 4
+                },
+                "limit": {
+                    "context": 16384,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4o-mini": {
                 "id": "gpt-4o-mini",
@@ -1529,8 +3423,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.15, "output": 0.6, "cache_read": 0.08 },
-                "limit": { "context": 128000, "output": 16384 }
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.6,
+                    "cache_read": 0.08
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4-turbo-vision": {
                 "id": "gpt-4-turbo-vision",
@@ -1538,8 +3444,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 10, "output": 30 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 10,
+                    "output": 30
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4.1-nano": {
                 "id": "gpt-4.1-nano",
@@ -1547,8 +3464,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.1, "output": 0.4, "cache_read": 0.03 },
-                "limit": { "context": 1047576, "output": 32768 }
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.4,
+                    "cache_read": 0.03
+                },
+                "limit": {
+                    "context": 1047576,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "o4-mini": {
                 "id": "o4-mini",
@@ -1556,8 +3485,21 @@
                 "attachment": true,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 1.1, "output": 4.4, "cache_read": 0.28 },
-                "limit": { "context": 200000, "output": 100000 }
+                "cost": {
+                    "input": 1.1,
+                    "output": 4.4,
+                    "cache_read": 0.28
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-3.5-turbo-0125": {
                 "id": "gpt-3.5-turbo-0125",
@@ -1565,8 +3507,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 0.5, "output": 1.5 },
-                "limit": { "context": 16384, "output": 16384 }
+                "cost": {
+                    "input": 0.5,
+                    "output": 1.5
+                },
+                "limit": {
+                    "context": 16384,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "o1": {
                 "id": "o1",
@@ -1574,8 +3527,21 @@
                 "attachment": false,
                 "reasoning": true,
                 "temperature": false,
-                "cost": { "input": 15, "output": 60, "cache_read": 7.5 },
-                "limit": { "context": 200000, "output": 100000 }
+                "cost": {
+                    "input": 15,
+                    "output": 60,
+                    "cache_read": 7.5
+                },
+                "limit": {
+                    "context": 200000,
+                    "output": 100000
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true
+                }
             },
             "gpt-3.5-turbo-0301": {
                 "id": "gpt-3.5-turbo-0301",
@@ -1583,8 +3549,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 1.5, "output": 2 },
-                "limit": { "context": 4096, "output": 4096 }
+                "cost": {
+                    "input": 1.5,
+                    "output": 2
+                },
+                "limit": {
+                    "context": 4096,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4": {
                 "id": "gpt-4",
@@ -1592,8 +3569,19 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 60, "output": 120 },
-                "limit": { "context": 8192, "output": 8192 }
+                "cost": {
+                    "input": 60,
+                    "output": 120
+                },
+                "limit": {
+                    "context": 8192,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4-turbo": {
                 "id": "gpt-4-turbo",
@@ -1601,8 +3589,19 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 10, "output": 30 },
-                "limit": { "context": 128000, "output": 4096 }
+                "cost": {
+                    "input": 10,
+                    "output": 30
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4o": {
                 "id": "gpt-4o",
@@ -1610,8 +3609,20 @@
                 "attachment": true,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 2.5, "output": 10, "cache_read": 1.25 },
-                "limit": { "context": 128000, "output": 16384 }
+                "cost": {
+                    "input": 2.5,
+                    "output": 10,
+                    "cache_read": 1.25
+                },
+                "limit": {
+                    "context": 128000,
+                    "output": 16384
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             },
             "gpt-4-32k": {
                 "id": "gpt-4-32k",
@@ -1619,14 +3630,27 @@
                 "attachment": false,
                 "reasoning": false,
                 "temperature": true,
-                "cost": { "input": 60, "output": 120 },
-                "limit": { "context": 32768, "output": 32768 }
+                "cost": {
+                    "input": 60,
+                    "output": 120
+                },
+                "limit": {
+                    "context": 32768,
+                    "output": 32768
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
             }
         }
     },
     "google": {
         "id": "google",
-        "env": ["GOOGLE_GENERATIVE_AI_API_KEY"],
+        "env": [
+            "GOOGLE_GENERATIVE_AI_API_KEY"
+        ],
         "npm": "@ai-sdk/google",
         "name": "Google",
         "doc": "https://ai.google.dev/gemini-api/docs/pricing",
@@ -1639,10 +3663,32 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video", "pdf"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.25, "output": 10, "cache_read": 0.31 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video",
+                    "pdf"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.25,
+                    "output": 10,
+                    "cache_read": 0.31
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-pro-preview-06-05": {
                 "id": "gemini-2.5-pro-preview-06-05",
@@ -1652,10 +3698,32 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video", "pdf"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.25, "output": 10, "cache_read": 0.31 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video",
+                    "pdf"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.25,
+                    "output": 10,
+                    "cache_read": 0.31
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-pro": {
                 "id": "gemini-2.5-pro",
@@ -1665,10 +3733,32 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video", "pdf"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.25, "output": 10, "cache_read": 0.31 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video",
+                    "pdf"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.25,
+                    "output": 10,
+                    "cache_read": 0.31
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-flash-lite-preview-06-17": {
                 "id": "gemini-2.5-flash-lite-preview-06-17",
@@ -1678,10 +3768,31 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.4, "cache_read": 0.025 },
-                "limit": { "context": 65536, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.4,
+                    "cache_read": 0.025
+                },
+                "limit": {
+                    "context": 65536,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.0-flash-lite": {
                 "id": "gemini-2.0-flash-lite",
@@ -1691,10 +3802,29 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.075, "output": 0.3 },
-                "limit": { "context": 1048576, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.075,
+                    "output": 0.3
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "gemini-1.5-pro": {
                 "id": "gemini-1.5-pro",
@@ -1704,10 +3834,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 1.25, "output": 5, "cache_read": 0.3125 },
-                "limit": { "context": 2000000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 1.25,
+                    "output": 5,
+                    "cache_read": 0.3125
+                },
+                "limit": {
+                    "context": 2000000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-flash-preview-04-17": {
                 "id": "gemini-2.5-flash-preview-04-17",
@@ -1717,10 +3867,31 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.15, "output": 0.6, "cache_read": 0.0375 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.6,
+                    "cache_read": 0.0375
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-1.5-flash-8b": {
                 "id": "gemini-1.5-flash-8b",
@@ -1730,10 +3901,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.0375, "output": 0.15, "cache_read": 0.01 },
-                "limit": { "context": 1000000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.0375,
+                    "output": 0.15,
+                    "cache_read": 0.01
+                },
+                "limit": {
+                    "context": 1000000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-flash-preview-05-20": {
                 "id": "gemini-2.5-flash-preview-05-20",
@@ -1743,10 +3934,31 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.15, "output": 0.6, "cache_read": 0.0375 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.15,
+                    "output": 0.6,
+                    "cache_read": 0.0375
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.0-flash": {
                 "id": "gemini-2.0-flash",
@@ -1756,10 +3968,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.1, "output": 0.4, "cache_read": 0.025 },
-                "limit": { "context": 1048576, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.1,
+                    "output": 0.4,
+                    "cache_read": 0.025
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             },
             "gemini-2.5-flash": {
                 "id": "gemini-2.5-flash",
@@ -1769,10 +4001,31 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.3, "output": 2.5, "cache_read": 0.075 },
-                "limit": { "context": 1048576, "output": 65536 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.3,
+                    "output": 2.5,
+                    "cache_read": 0.075
+                },
+                "limit": {
+                    "context": 1048576,
+                    "output": 65536
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "reasoning_display": true,
+                    "multi_modal": true
+                }
             },
             "gemini-1.5-flash": {
                 "id": "gemini-1.5-flash",
@@ -1782,10 +4035,30 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": ["text", "image", "audio", "video"],
-                "output_modalities": ["text"],
-                "cost": { "input": 0.075, "output": 0.3, "cache_read": 0.01875 },
-                "limit": { "context": 1000000, "output": 8192 }
+                "input_modalities": [
+                    "text",
+                    "image",
+                    "audio",
+                    "video"
+                ],
+                "output_modalities": [
+                    "text"
+                ],
+                "cost": {
+                    "input": 0.075,
+                    "output": 0.3,
+                    "cache_read": 0.01875
+                },
+                "limit": {
+                    "context": 1000000,
+                    "output": 8192
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true,
+                    "multi_modal": true
+                }
             }
         }
     }

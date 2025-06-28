@@ -111,13 +111,6 @@ export const generateTextWithGeminiSearch = async ({
             (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) ||
             windowApiKey;
 
-        console.log('API key check:', {
-            hasGeminiKey,
-            byokApiKey: !!byokKeys?.GEMINI_API_KEY,
-            processEnvKey: !!(typeof process !== 'undefined' && process.env?.GEMINI_API_KEY),
-            windowKey: windowApiKey,
-        });
-
         if (!hasGeminiKey) {
             throw new Error('Gemini API key is required for web search functionality');
         }
@@ -1121,7 +1114,6 @@ export const selectAvailableModel = (
             [ModelEnum.GEMINI_2_0_FLASH]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_0_FLASH_LITE]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
             // OpenAI models
             [ModelEnum.GPT_4o_Mini]: 'OPENAI_API_KEY',
@@ -1218,7 +1210,7 @@ export const selectAvailableModel = (
     // Fallback priority list - most reliable and cost-effective models first
     const fallbackModels = [
         ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model
-        ModelEnum.GEMINI_2_0_FLASH, // Free/cheap Gemini model
+        ModelEnum.GEMINI_2_5_FLASH_LITE, // Free Gemini model
         ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
         ModelEnum.GPT_4o, // More expensive but reliable
         ModelEnum.GEMINI_2_5_FLASH, // Newer Gemini

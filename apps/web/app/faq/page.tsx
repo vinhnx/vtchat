@@ -463,6 +463,41 @@ function FAQs() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Free Gemini Model */}
+                        <AccordionItem value="free-gemini-model">
+                            <AccordionTrigger className="font-medium">
+                                What is the new free Gemini model offering?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT now offers free access to Gemini 2.5 Flash Lite Preview for registered users:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Free Model:</strong> Gemini 2.5 Flash Lite Preview with advanced AI capabilities
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Daily Limit:</strong> 10 requests per day for registered users
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Rate Limit:</strong> Maximum 1 request per minute
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Reset Time:</strong> Daily limits reset at 00:00 UTC
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Registration Required:</strong> Must be signed in to access free model
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Server API Key:</strong> Uses VT's server-side API key (no need for BYOK)
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Upgrade to VT+ for unlimited access to all models and advanced features.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Subscription Plans */}
                         <AccordionItem value="subscription-plans">
                             <AccordionTrigger className="font-medium">
@@ -474,15 +509,16 @@ function FAQs() {
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT Base (Free):</strong> Limited daily requests with
-                                        our keys, unlimited with BYOK
+                                        <strong>VT Base (Free):</strong> Free access to Gemini 2.5 Flash Lite Preview (10 requests/day, 1/minute limit) plus unlimited usage with BYOK
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>VT Plus:</strong> Higher daily limits, priority
-                                        support, and advanced features
+                                        <strong>VT Plus:</strong> Unlimited access to all models, advanced features, priority support, and no daily limits
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers support full thread isolation and local storage
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        VT+ users get unlimited access without rate limiting or daily caps
                                     </li>
                                 </ul>
                             </AccordionContent>

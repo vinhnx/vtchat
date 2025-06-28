@@ -30,8 +30,8 @@ import { ChatEditor } from './chat-input';
 import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
+import RateLimitUsageMeter from './rate-limit-usage-meter';
 import { UserProfileSettings } from './user-profile-settings';
-
 
 export const SettingsModal = () => {
     const isSettingsOpen = useAppStore(state => state.isSettingsOpen);
@@ -46,7 +46,7 @@ export const SettingsModal = () => {
     // Default to first panel if none selected
     useEffect(() => {
         if (isSettingsOpen && !settingTab) {
-            setSettingTab(SETTING_TABS.PROFILE);
+            setSettingTab(SETTING_TABS.USAGE_CREDITS);
         }
     }, [isSettingsOpen, settingTab, setSettingTab]);
 
@@ -78,6 +78,18 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
+            title: 'VT+',
+            description: 'Premium features and usage management',
+            key: SETTING_TABS.USAGE_CREDITS,
+            component: <CombinedSubscriptionSettings onClose={() => setIsSettingsOpen(false)} />,
+        },
+        {
+            title: 'Usage',
+            description: 'Track your VT usage and explore upgrade options',
+            key: SETTING_TABS.USAGE,
+            component: <RateLimitUsageMeter userId={session?.user?.id} />,
+        },
+        {
             title: 'Profile',
             description: 'Manage your account details',
             key: SETTING_TABS.PROFILE,
@@ -90,12 +102,6 @@ export const SettingsModal = () => {
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            title: 'VT+',
-            description: 'Premium features and usage management',
-            key: SETTING_TABS.USAGE_CREDITS,
-            component: <CombinedSubscriptionSettings onClose={() => setIsSettingsOpen(false)} />,
-        },
-        {
             title: 'API Keys',
             description: 'Connect your own AI providers',
             key: SETTING_TABS.API_KEYS,
@@ -105,9 +111,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
-            <DialogContent
-                className="mx-4 h-full max-h-[700px] !max-w-[900px] max-w-[calc(100vw-2rem)] overflow-x-hidden rounded-xl p-0 md:mx-auto md:max-w-[900px]"
-            >
+            <DialogContent className="mx-4 h-full max-h-[700px] !max-w-[900px] max-w-[calc(100vw-2rem)] overflow-x-hidden rounded-xl p-0 md:mx-auto md:max-w-[900px]">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     ref={scrollRef}
@@ -176,6 +180,7 @@ export const SettingsModal = () => {
 };
 
 export const ApiKeySettings = () => {
+    const { data: session } = useSession();
     const apiKeys = useApiKeysStore(state => state.getAllKeys());
     const setApiKey = useApiKeysStore(state => state.setKey);
     const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -187,7 +192,6 @@ export const ApiKeySettings = () => {
             key: 'OPENAI_API_KEY' as keyof ApiKeys,
             value: apiKeys.OPENAI_API_KEY,
             url: 'https://platform.openai.com/api-keys',
-            description: 'Access advanced models',
             placeholder: 'sk-...',
         },
         {
@@ -195,7 +199,6 @@ export const ApiKeySettings = () => {
             key: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
             value: apiKeys.ANTHROPIC_API_KEY,
             url: 'https://console.anthropic.com/settings/keys',
-            description: 'Access advanced models',
             placeholder: 'sk-ant-...',
         },
         {
@@ -203,7 +206,6 @@ export const ApiKeySettings = () => {
             key: 'GEMINI_API_KEY' as keyof ApiKeys,
             value: apiKeys.GEMINI_API_KEY,
             url: 'https://ai.google.dev/api',
-            description: 'Access advanced models',
             placeholder: 'AIza...',
         },
         {
@@ -211,7 +213,6 @@ export const ApiKeySettings = () => {
             key: 'OPENROUTER_API_KEY' as keyof ApiKeys,
             value: apiKeys.OPENROUTER_API_KEY,
             url: 'https://openrouter.ai/settings/keys',
-            description: 'Access advanced models',
             placeholder: 'sk-or-...',
         },
         {
@@ -219,7 +220,6 @@ export const ApiKeySettings = () => {
             key: 'TOGETHER_API_KEY' as keyof ApiKeys,
             value: apiKeys.TOGETHER_API_KEY,
             url: 'https://api.together.xyz/settings/api-keys',
-            description: 'Access advanced models',
             placeholder: 'tok-...',
         },
         {
@@ -227,7 +227,6 @@ export const ApiKeySettings = () => {
             key: 'FIREWORKS_API_KEY' as keyof ApiKeys,
             value: apiKeys.FIREWORKS_API_KEY,
             url: 'https://app.fireworks.ai/settings/users/api-keys',
-            description: 'Fast inference for open-source and proprietary models',
             placeholder: 'fw-...',
         },
         {
@@ -235,7 +234,6 @@ export const ApiKeySettings = () => {
             key: 'XAI_API_KEY' as keyof ApiKeys,
             value: apiKeys.XAI_API_KEY,
             url: 'https://x.ai/api',
-            description: 'Access Grok models with real-time knowledge',
             placeholder: 'xai-...',
         },
     ];
@@ -543,7 +541,6 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                     </div>
                 </CardContent>
             </Card>
-
 
             {/* Custom Instructions Section */}
             <Card>

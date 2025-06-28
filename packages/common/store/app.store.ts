@@ -17,6 +17,7 @@ export const SETTING_TABS = {
     MCP_TOOLS: 'mcp-tools',
     PERSONALIZATION: 'personalization',
     PROFILE: 'profile',
+    USAGE: 'usage',
     USAGE_CREDITS: 'usage-credits',
     PLUS: 'plus',
     REASONING_MODE: 'reasoning-mode',
@@ -143,7 +144,7 @@ export const useAppStore = create<State & Actions>()(
                 sidebarAnimationDisabled: animationDisabled,
                 isSourcesOpen: false,
                 isSettingsOpen: false,
-                settingTab: SETTING_TABS.PROFILE,
+                settingTab: SETTING_TABS.USAGE_CREDITS,
                 showSignInModal: false,
                 // Default settings - using base plan defaults initially
                 showExamplePrompts: true,
@@ -345,7 +346,7 @@ export const useAppStore = create<State & Actions>()(
                         state.ragChatModel = ModelEnum.GEMINI_2_5_FLASH;
                         // Reset UI state to defaults
                         state.isSettingsOpen = false;
-                        state.settingTab = SETTING_TABS.PROFILE;
+                        state.settingTab = SETTING_TABS.USAGE_CREDITS;
                         state.showSignInModal = false;
                         state.sideDrawer = {
                             open: false,

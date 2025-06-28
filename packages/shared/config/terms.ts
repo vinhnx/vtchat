@@ -19,6 +19,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models through our interface
 - **Advanced Features**: Reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
+- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (10 requests/day, 1/minute rate limit)
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (VT+ feature)
@@ -33,6 +34,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 ### 2.1 Account Creation
 - You may use VT anonymously for basic functionality
 - Account registration (via Google or GitHub OAuth) is required for:
+  - Free Gemini 2.5 Flash Lite Preview access (10 requests/day, 1/minute limit)
   - VT+ subscription features (Grounding Web Search, Dark Mode)
   - Daily usage tracking and fair usage enforcement
   - Thread synchronization and account-based management
@@ -76,22 +78,31 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 
 ## 4. Subscription & Billing (VT+)
 
-### 4.1 VT+ Subscription Features
+### 4.1 Free Tier Benefits (VT_BASE)
+VT_BASE is our free tier that includes:
+- **Free Gemini Model**: Access to Gemini 2.5 Flash Lite Preview with 10 requests per day and 1 request per minute rate limit
+- **Server API Key**: Uses VT's server-side API key for free model access (no BYOK required)
+- **Daily Reset**: Usage limits reset at 00:00 UTC daily
+- **Registration Required**: Must be signed in to access free model benefits
+- **BYOK Option**: Unlimited usage with your own API keys as alternative
+
+### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **$9.99 USD** that includes:
+- **Unlimited Access**: No daily limits or rate limiting on all models
 - **Grounding Web Search**: Enhanced search with web integration for real-time information
-- **Grounding Web Search**: Comprehensive analysis of complex topics with in-depth exploration
+- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
 - **Dark Mode**: Access to dark theme interface
 - **Advanced Chat Modes**: Additional AI model access and capabilities
 - **Priority Support**: Enhanced customer support
 
-### 4.2 Payment Terms
+### 4.3 Payment Terms
 - All payments are processed securely through **Creem.io**
 - Subscription fees are charged monthly in advance
 - Pricing includes applicable taxes
 - Automatic renewal unless cancelled
 - Payment processed via secure PCI-compliant infrastructure
 
-### 4.3 Cancellation & Refunds
+### 4.4 Cancellation & Refunds
 - You may cancel your subscription at any time through the customer portal
 - Access to premium features continues until the end of your current billing period
 - **Refund Policy**: Refunds available within 30 days for monthly subscriptions, 14 days for annual subscriptions

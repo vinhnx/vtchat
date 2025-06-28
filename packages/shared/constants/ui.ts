@@ -6,7 +6,7 @@
 export const BUTTON_TEXT = {
     MANAGE_SUBSCRIPTION: 'Manage Subscription',
     MANAGE_BILLING: 'Manage Billing',
-    UPGRADE_TO_PLUS: 'Upgrade to Plus',
+    UPGRADE_TO_PLUS: 'Upgrade to VT+',
     LOADING: 'Loading...',
     OPENING_PORTAL: 'Opening Portal...',
 } as const;
@@ -14,7 +14,7 @@ export const BUTTON_TEXT = {
 export const TOOLTIP_TEXT = {
     MANAGE_SUBSCRIPTION_NEW_TAB: 'Manage subscription (opens in new tab)',
     MANAGE_BILLING_NEW_TAB: 'Manage billing (opens in new tab)',
-    UPGRADE_TO_PLUS: 'Upgrade to Plus',
+    UPGRADE_TO_PLUS: 'Upgrade to VT+',
 } as const;
 
 export const LOADING_MESSAGES = {

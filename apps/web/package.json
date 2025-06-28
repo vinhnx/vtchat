@@ -9,7 +9,12 @@
         "start": "next start",
         "lint": "oxlint",
         "prepare": "husky",
-        "generate": "bunx drizzle-kit generate"
+        "generate": "bunx drizzle-kit generate",
+        "test:gemini": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/rate-limit-simple.test.ts app/tests/implementation-check.test.ts",
+        "test:gemini-basic": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/rate-limit-simple.test.ts",
+        "test:gemini-implementation": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/implementation-check.test.ts",
+        "test:gemini-unit": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/gemini-free-model.test.ts",
+        "test:gemini-api": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/gemini-api-integration.test.ts"
     },
     "dependencies": {
         "@ai-sdk/openai": "^1.3.22",

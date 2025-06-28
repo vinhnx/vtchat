@@ -97,7 +97,7 @@ export function cacheSubscriptionStatus(
 export function invalidateSubscriptionCache(userId: string): void {
     const cacheKey = getCacheKey(userId);
     subscriptionCache.delete(cacheKey);
-    console.log(`[Subscription Cache] Invalidated cache for user ${userId}`);
+    console.log(`[Subscription Cache] Invalidated cache for user`);
 }
 
 /**

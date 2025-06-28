@@ -20,7 +20,7 @@ export const ReasoningModeSettings = () => {
         const reasoningModels = [
             // Gemini models with thinking support
             'gemini-2.5-flash',
-            'gemini-2.5-flash-lite-preview-06-17',
+            ChatMode.GEMINI_2_5_FLASH_LITE,
             'gemini-2.5-flash-preview-05-20',
             'gemini-2.5-pro-preview-05-06',
             'gemini-2.5-pro-preview-06-05',
@@ -94,7 +94,7 @@ export const ReasoningModeSettings = () => {
                                 generating responses. This advanced feature requires a VT+
                                 subscription.
                             </p>
-                            <Button className="bg-gradient-to-r from-[#D99A4E] to-[#BFB38F] font-medium text-[#262626] hover:opacity-90">
+                            <Button className="bg-[#BFB38F] hover:bg-[#BFB38F]/90 font-medium text-black border border-[#262626]">
                                 Upgrade to VT+
                             </Button>
                         </div>

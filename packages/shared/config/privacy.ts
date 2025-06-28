@@ -26,6 +26,7 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub)
+- **Free Model Usage:** Daily request counts and rate limiting data for Gemini 2.5 Flash Lite Preview (registered users only)
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team
 - **User Preferences:** Settings and configuration choices
@@ -57,6 +58,7 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
+- **Free Model Management:** Track daily usage limits and rate limiting for Gemini 2.5 Flash Lite Preview
 - **Subscription Management:** Process VT+ subscriptions and billing
 - **Feature Access:** Determine access to premium features based on subscription status
 - **Customer Support:** Respond to support requests and troubleshoot issues
@@ -92,6 +94,7 @@ VT is built with **privacy-first principles** at its core:
 ### 3.2 Server Storage (Our Systems)
 **We only store minimal data on our servers:**
 - **Account information** (email, name, subscription status) for registered users
+- **Free model usage data** (daily request counts and timestamps for rate limiting - no conversation content)
 - **Payment records** (handled securely by Creem.io, not stored on our servers)
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)

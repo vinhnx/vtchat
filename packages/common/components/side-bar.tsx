@@ -22,8 +22,8 @@ import {
 } from '@repo/ui';
 import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
-import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 import {
+    ChevronsUp,
     ChevronsUpDown,
     Command,
     Database,
@@ -31,6 +31,7 @@ import {
     FileText,
     HelpCircle,
     LogOut,
+    Option,
     PanelLeftClose,
     PanelRightClose,
     Pin,
@@ -44,6 +45,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 import { UserTierBadge } from './user-tier-badge';
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
@@ -143,8 +145,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out',
-                'dark:bg-black/95 dark:border-gray-800',
+                'bg-sidebar border-sidebar-border relative bottom-0 left-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-r transition-all duration-300 ease-in-out',
+                'dark:border-gray-800 dark:bg-black/95',
                 isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
             )}
         >
@@ -205,12 +207,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
                         variant="default"
                         rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'New Chat'}
+                        tooltip={isSidebarOpen ? undefined : 'New Chat (⌘⌃⌥N)'}
                         tooltipSide="right"
                         className={cn(
                             'relative shadow-sm transition-all duration-200',
                             isSidebarOpen
-                                ? 'bg-primary hover:bg-primary/90 w-full justify-start'
+                                ? 'bg-primary hover:bg-primary/90 w-full justify-between'
                                 : 'bg-primary hover:bg-primary/90'
                         )}
                         onClick={() => {
@@ -222,12 +224,43 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }
                         }}
                     >
-                        <Plus
-                            size={16}
-                            strokeWidth={2}
-                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
-                        />
-                        {isSidebarOpen && 'New Chat'}
+                        <div className="flex items-center">
+                            <Plus
+                                size={16}
+                                strokeWidth={2}
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                            />
+                            {isSidebarOpen && 'New Chat'}
+                        </div>
+                        {isSidebarOpen && (
+                            // <span className="text-xs opacity-60 font-mono">⌘⌃⌥N</span>
+                            <div className="ml-auto flex flex-row items-center gap-1">
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                >
+                                    <Command size={10} strokeWidth={2} className="shrink-0" />
+                                </Badge>
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                >
+                                    <Option size={10} strokeWidth={2} className="shrink-0" />
+                                </Badge>
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                >
+                                    <ChevronsUp size={10} strokeWidth={2} className="shrink-0" />
+                                </Badge>
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                >
+                                    N
+                                </Badge>
+                            </div>
+                        )}
                     </Button>
 
                     {/* Search Button */}
@@ -311,7 +344,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         variant="secondary"
                                         className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#BFB38F]"
                                     >
-                                        Plus
+                                        VT+
                                     </Badge>
                                 )}
                             </span>
@@ -323,7 +356,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 <div
                     className={cn(
                         'w-full transition-all duration-200',
-                        isSidebarOpen ? 'border-sidebar-border mt-3 border-t px-4 pt-3' : 'mt-1 px-2'
+                        isSidebarOpen
+                            ? 'border-sidebar-border mt-3 border-t px-4 pt-3'
+                            : 'mt-1 px-2'
                     )}
                 >
                     {isSidebarOpen ? (
@@ -456,12 +491,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 renderEmptyState: () => (
                                     <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
                                         <Pin
-                                        size={16}
-                                        strokeWidth={1.5}
-                                        className="text-sidebar-foreground/30"
+                                            size={16}
+                                            strokeWidth={1.5}
+                                            className="text-sidebar-foreground/30"
                                         />
                                         <p className="text-sidebar-foreground/60 text-center text-xs">
-                                        Pin important conversations to keep them at the top
+                                            Pin important conversations to keep them at the top
                                         </p>
                                     </div>
                                 ),
@@ -619,7 +654,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
             </Flex>
-            
+
             <LoginRequiredDialog
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}

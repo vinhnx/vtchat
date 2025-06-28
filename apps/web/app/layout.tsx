@@ -3,7 +3,7 @@ import {
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
-    ThemeProvider,
+    GatedThemeProvider,
 } from '@repo/common/components';
 import { RootProvider } from '@repo/common/context';
 import { OptimizedAuthProvider } from '@repo/common/providers';
@@ -108,9 +108,9 @@ export default function ParentLayout({
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
-                <ThemeProvider
+                <GatedThemeProvider
                     attribute="class"
-                    defaultTheme="system"
+                    defaultTheme="light"
                     enableSystem={true}
                     disableTransitionOnChange={false}
                     storageKey="vt-theme"
@@ -140,7 +140,7 @@ export default function ParentLayout({
                             </BetterAuthProvider>
                         </SSRErrorBoundary>
                     </TooltipProvider>
-                </ThemeProvider>
+                </GatedThemeProvider>
             </body>
         </html>
     );
