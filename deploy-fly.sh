@@ -16,6 +16,45 @@ check_git_status() {
     echo "✅ Working directory is clean"
 }
 
+# Switch to appropriate git branch and push changes
+prepare_git_branch() {
+    local target_branch="$1"
+    local current_branch=$(git branch --show-current)
+    
+    echo "🌿 Git branch management"
+    echo "Current branch: $current_branch"
+    echo "Target branch: $target_branch"
+    
+    # Switch to target branch if different
+    if [[ "$current_branch" != "$target_branch" ]]; then
+        echo "Switching to $target_branch branch..."
+        git checkout "$target_branch" || {
+            echo "❌ Failed to switch to $target_branch branch"
+            exit 1
+        }
+    fi
+    
+    # Pull latest changes
+    echo "Pulling latest changes from origin/$target_branch..."
+    git pull origin "$target_branch" || {
+        echo "❌ Failed to pull from origin/$target_branch"
+        exit 1
+    }
+    
+    # Check if there are any local commits to push
+    local commits_ahead=$(git rev-list --count origin/"$target_branch"..HEAD 2>/dev/null || echo "0")
+    if [[ "$commits_ahead" -gt 0 ]]; then
+        echo "📤 Pushing $commits_ahead local commit(s) to origin/$target_branch..."
+        git push origin "$target_branch" || {
+            echo "❌ Failed to push to origin/$target_branch"
+            exit 1
+        }
+        echo "✅ Commits pushed successfully"
+    else
+        echo "ℹ️  No local commits to push"
+    fi
+}
+
 # Validate semver format
 validate_semver() {
     local version=$1
@@ -65,7 +104,7 @@ prompt_version() {
     # Create and push tag
     git tag -a "$new_version" -m "Release $new_version"
     git push origin "$new_version"
-    echo "✅ Tag $new_version created and pushed"
+    echo "✅ Tag $new_version created and pushed to origin"
 }
 
 # Default values
@@ -74,6 +113,7 @@ FORCE_CLEANUP=false
 ENVIRONMENT="dev"
 FLY_CONFIG="fly.toml"
 FLY_APP="vtchat-dev"
+GIT_BRANCH="dev"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -86,6 +126,7 @@ while [[ $# -gt 0 ]]; do
             ENVIRONMENT="prod"
             FLY_CONFIG="fly.production.toml"
             FLY_APP="vtchat"
+            GIT_BRANCH="main"
             ENV_FILE="${ENV_FILE:-apps/web/.env.production}"
             shift
             ;;
@@ -93,6 +134,7 @@ while [[ $# -gt 0 ]]; do
             ENVIRONMENT="dev"
             FLY_CONFIG="fly.toml"
             FLY_APP="vtchat-dev"
+            GIT_BRANCH="dev"
             ENV_FILE="${ENV_FILE:-apps/web/.env.development}"
             shift
             ;;
@@ -119,6 +161,9 @@ fi
 
 # Pre-deployment checks
 check_git_status
+
+# Git branch management
+prepare_git_branch "$GIT_BRANCH"
 
 # Version tagging (only for production)
 if [[ "$ENVIRONMENT" == "prod" ]]; then
