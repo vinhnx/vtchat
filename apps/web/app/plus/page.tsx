@@ -309,7 +309,7 @@ export default function PlusPage() {
 
                 {/* CTA Section */}
                 <div className="mt-8 space-y-4 text-center">
-                    <TypographyH2 className="text-lg font-semibold text-white">
+                    <TypographyH2 className="text text-lg font-semibold">
                         Ready to get started?
                     </TypographyH2>
                     <div className="mx-auto max-w-md pt-4">
@@ -328,15 +328,15 @@ export default function PlusPage() {
 
                 {/* Contact Section */}
                 <div className="mb-8 mt-8 text-center">
-                <p className="text-base text-gray-600">
-                Have questions? Get in touch:{' '}
-                <a
-                href="mailto:support@vtchat.io.vn"
-                className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
-                >
-                support@vtchat.io.vn
-                </a>
-                </p>
+                    <p className="text-base text-gray-600">
+                        Have questions? Get in touch:{' '}
+                        <a
+                            href="mailto:support@vtchat.io.vn"
+                            className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
+                        >
+                            support@vtchat.io.vn
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

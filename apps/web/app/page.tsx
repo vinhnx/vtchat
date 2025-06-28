@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, TypographyH1, Skeleton } from '@repo/ui';
+import { PremiumButton, TypographyH1, Skeleton } from '@repo/ui';
 import { WrapperDisclosure, Footer } from '@repo/common/components';
 import Link from 'next/link';
 
@@ -17,16 +17,16 @@ export default function Home() {
                 ) : session ? (
                     <Link href="/chat">
                         {/* @ts-ignore - Type compatibility issue between React versions */}
-                        <Button variant="default" size="sm">
+                        <PremiumButton variant="premium" size="sm" shimmer>
                             Go to Chat
-                        </Button>
+                        </PremiumButton>
                     </Link>
                 ) : (
                     <Link href="/login">
                         {/* @ts-ignore - Type compatibility issue between React versions */}
-                        <Button variant="default" size="sm">
+                        <PremiumButton variant="outline" size="sm">
                             Sign In
-                        </Button>
+                        </PremiumButton>
                     </Link>
                 )}
             </header>

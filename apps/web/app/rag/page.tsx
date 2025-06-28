@@ -4,7 +4,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { RAGChatbot } from '../../components/rag-chatbot';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '@repo/ui';
+import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle, PremiumButton, Badge } from '@repo/ui';
 import { Database, Lock, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
@@ -54,17 +54,17 @@ export default function RAGPage() {
         return (
             <div className="container mx-auto px-4 py-8">
                 <div className="flex min-h-[60vh] items-center justify-center">
-                    <Card className="w-full max-w-md text-center">
-                        <CardHeader>
+                    <PremiumCard className="w-full max-w-md text-center" variant="elevated">
+                        <PremiumCardHeader>
                             <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
                                 <Lock className="h-8 w-8 text-primary" />
                             </div>
-                            <CardTitle className="flex items-center justify-center gap-2">
+                            <PremiumCardTitle className="flex items-center justify-center gap-2">
                                 <Database className="h-5 w-5" />
                                 Personal AI Assistant with Memory
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                            </PremiumCardTitle>
+                        </PremiumCardHeader>
+                        <PremiumCardContent className="space-y-4">
                             <p className="text-muted-foreground">
                                 This feature is available exclusively for {PRICING_CONFIG.product.name} subscribers.
                             </p>
@@ -78,24 +78,26 @@ export default function RAGPage() {
                                 </ul>
                             </div>
                             <div className="space-y-2">
-                                <Button 
+                                <PremiumButton 
                                     onClick={() => router.push('/plus')}
                                     className="w-full"
                                     size="lg"
+                                    variant="premium"
+                                    shimmer
                                 >
                                     <Sparkles className="mr-2 h-4 w-4" />
                                     Upgrade to {PRICING_CONFIG.product.name}
-                                </Button>
-                                <Button 
+                                </PremiumButton>
+                                <PremiumButton 
                                     onClick={() => router.push('/chat')}
                                     variant="outline"
                                     className="w-full"
                                 >
                                     Continue with Free Chat
-                                </Button>
+                                </PremiumButton>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </PremiumCardContent>
+                    </PremiumCard>
                 </div>
             </div>
         );
