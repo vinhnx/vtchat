@@ -18,6 +18,8 @@
     },
     "dependencies": {
         "@ai-sdk/openai": "^1.3.22",
+        "@arcjet/ip": "^1.0.0-beta.8",
+        "@arcjet/next": "^1.0.0-beta.8",
         "@google/generative-ai": "^0.24.1",
         "@neondatabase/serverless": "^1.0.1",
         "@radix-ui/react-slot": "^1.2.3",

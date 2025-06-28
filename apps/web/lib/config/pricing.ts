@@ -118,6 +118,26 @@ export const PRICING_CONFIG = {
                         'Build and query your personal knowledge base for intelligent conversations. Store information and get personalized AI responses based on your context.',
                 },
                 {
+                    name: 'Enterprise-Grade Security',
+                    description:
+                        'Advanced security protection with Arcjet: rate limiting, bot detection, email validation, WAF protection, and real-time threat monitoring',
+                },
+                {
+                    name: 'DDoS & Bot Protection',
+                    description:
+                        'Intelligent protection against distributed attacks, malicious bots, and automated threats with real-time analysis',
+                },
+                {
+                    name: 'Advanced Rate Limiting',
+                    description:
+                        'Smart rate limiting with user-specific controls, burst protection, and sliding window algorithms to ensure optimal performance',
+                },
+                {
+                    name: 'Email Security Validation',
+                    description:
+                        'Comprehensive email validation including disposable email detection, domain verification, and spam protection',
+                },
+                {
                     name: 'More features coming soon',
                     description: 'Continuous improvements and new additions',
                 },

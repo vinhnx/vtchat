@@ -15,7 +15,7 @@
 
 - Make sure no string in #codebase, use enum pattern.
 - Don't hard code values in the codebase.
-- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use environment variables for configuration (e.g., API keys, product IDs, Arcjet keys)
 - Use centralize enum for custom reusable keys.
 - 4-space indentation, single quotes, 100 char line length
 - PascalCase components, camelCase hooks/utils, kebab-case files
@@ -25,6 +25,7 @@
 
 - Next.js 14 with App Router, TypeScript, Tailwind CSS
 - Zustand for state, Drizzle ORM for DB, Better Auth for authentication
+- Arcjet for application security (rate limiting, bot protection, email validation, WAF)
 - Framer Motion for animations, Radix UI components
 - Shadcn/ui for UI components, Lucide icons, clsx for classnames
 - Payment integration with Creem.io
@@ -99,5 +100,6 @@
 - You can search for documentation using `context7` MCP tool
 - You can search the internet using MCP tool `tavily-search`
 - Documentation should be in `docs/` directory
+- **Security Documentation**: Comprehensive Arcjet security implementation documented in `docs/SECURITY.md` and `docs/guides/arcjet-security.md`
 - After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
 - Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.

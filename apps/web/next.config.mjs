@@ -249,7 +249,6 @@ const nextConfig = {
     // Ensure server binds to all interfaces in production
     ...(process.env.NODE_ENV === 'production' && {
         experimental: {
-            ...nextConfig.experimental,
             serverMinification: false,
         },
     }),
