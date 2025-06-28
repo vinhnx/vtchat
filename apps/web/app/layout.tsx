@@ -16,6 +16,7 @@ import { Metadata } from 'next';
 import { Bricolage_Grotesque } from 'next/font/google';
 import localFont from 'next/font/local';
 import { BetterAuthProvider } from '../components/better-auth-provider';
+import { PerformanceOptimizations } from '../components/performance-optimizations';
 
 // Force dynamic rendering to prevent SSR issues during build
 export const dynamic = 'force-dynamic';
@@ -106,6 +107,7 @@ export default function ParentLayout({
             suppressHydrationWarning
         >
             <head>
+                <PerformanceOptimizations />
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
