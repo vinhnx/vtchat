@@ -146,6 +146,10 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/start.sh ./apps/web/start.sh
+
+# Make start script executable
+RUN chmod +x ./apps/web/start.sh
 
 # Switch to non-root user
 USER nextjs
@@ -155,5 +159,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application with proper port binding and correct server.js path
-CMD ["sh", "-c", "PORT=${PORT:-3000} node apps/web/server.js"]
+# Start the application using the custom startup script
+CMD ["./apps/web/start.sh"]
