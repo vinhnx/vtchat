@@ -4,6 +4,7 @@ import { models } from '@repo/ai/models';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { RagOnboarding } from './rag-onboarding';
 import {
     Avatar,
     Badge,
@@ -22,15 +23,9 @@ import {
     ScrollArea,
 } from '@repo/ui';
 import { useChat } from 'ai/react';
-import {
-    Database,
-    Eye,
-    Send,
-    Settings,
-    Shield,
-    Trash2,
-} from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { Database, Eye, Send, Settings, Shield, Trash2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface KnowledgeItem {
     id: string;
@@ -44,7 +39,8 @@ export function RAGChatbot() {
     const embeddingModel = useAppStore(state => state.embeddingModel);
     const ragChatModel = useAppStore(state => state.ragChatModel);
     const profile = useAppStore(state => state.profile);
-     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
@@ -52,6 +48,21 @@ export function RAGChatbot() {
     const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     
+    // Simple BYOK check - show onboarding if no required API keys
+    const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
+    
+    const allApiKeys = getAllKeys();
+    const hasGeminiKey = !!allApiKeys['GEMINI_API_KEY'];
+    const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
+    const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
+    
+    // Check for required API keys on component mount
+    useEffect(() => {
+        if (!hasRequiredKeys) {
+            setShowApiKeyDialog(true);
+        }
+    }, [hasRequiredKeys]);
+
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -59,17 +70,42 @@ export function RAGChatbot() {
         api: '/api/chat/rag',
         maxSteps: 3,
         body: {
-        apiKeys: getAllKeys(),
-        embeddingModel,
-        ragChatModel,
+            apiKeys: allApiKeys,
+            embeddingModel,
+            ragChatModel,
             profile,
-         },
-         });
+        },
+        onError: error => {
+            console.error('RAG Chat Error:', error);
+            console.log('Error message:', error.message); // Debug log
+            
+            // Show user-friendly error message with sonner
+            if (error.message.includes('API key is required')) {
+                console.log('Showing API key error toast'); // Debug
+                toast.error('API Key Required', {
+                    description:
+                        'Please configure your API keys in Settings to use the Knowledge Assistant.',
+                });
+            } else if (error.message.includes('Rate limit')) {
+                console.log('Showing rate limit error toast'); // Debug
+                toast.error('Rate Limit Exceeded', {
+                    description: 'Too many requests. Please try again later.',
+                });
+            } else {
+                console.log('Showing general error toast'); // Debug
+                toast.error('Chat Error', {
+                    description: 'Something went wrong. Please try again.',
+                });
+            }
+            },
+       
+     });
 
-         // Track if we're currently processing to avoid duplicate indicators
-     const isProcessing = isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
+    // Track if we're currently processing to avoid duplicate indicators
+    const isProcessing =
+        isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
 
-     const fetchKnowledgeBase = async () => {
+    const fetchKnowledgeBase = async () => {
         try {
             const response = await fetch('/api/rag/knowledge');
             if (response.ok) {
@@ -78,7 +114,11 @@ export function RAGChatbot() {
                 console.log('📚 Knowledge Base fetched:', { total: resources.length, data });
                 setKnowledgeBase(resources);
             } else {
-                console.error('Failed to fetch knowledge base:', response.status, response.statusText);
+                console.error(
+                    'Failed to fetch knowledge base:',
+                    response.status,
+                    response.statusText
+                );
             }
         } catch (error) {
             console.error('Error fetching knowledge base:', error);
@@ -87,7 +127,7 @@ export function RAGChatbot() {
 
     const clearKnowledgeBase = async () => {
         if (!session?.user?.id) return;
-        
+
         setIsClearing(true);
         try {
             const response = await fetch('/api/rag/clear', {
@@ -134,7 +174,7 @@ export function RAGChatbot() {
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {
-    scrollToBottom();
+        scrollToBottom();
     }, [messages, isLoading]);
 
     // Get model info for display
@@ -150,7 +190,7 @@ export function RAGChatbot() {
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-12 text-center">
                                 <h3 className="text-foreground mb-2 text-xl font-semibold">
-                                Personal AI Assistant with Memory
+                                    Personal AI Assistant with Memory
                                 </h3>
                                 <p className="mx-auto mb-6 max-w-md text-sm">
                                     Build your personal AI assistant with your own knowledge. Store
@@ -158,27 +198,27 @@ export function RAGChatbot() {
                                 </p>
 
                                 <div className="mx-auto grid max-w-2xl grid-cols-1 gap-4 text-xs md:grid-cols-3">
-                                    <div className="rounded-xl border bg-card p-4">
-                                        <div className="flex justify-center mb-2">
-                                            <Database className="h-6 w-6 text-muted-foreground" />
+                                    <div className="bg-card rounded-xl border p-4">
+                                        <div className="mb-2 flex justify-center">
+                                            <Database className="text-muted-foreground h-6 w-6" />
                                         </div>
                                         <div className="font-medium">Smart Retrieval</div>
                                         <div className="text-muted-foreground">
                                             AI finds relevant info from your knowledge base
                                         </div>
                                     </div>
-                                    <div className="rounded-xl border bg-card p-4">
-                                        <div className="flex justify-center mb-2">
-                                            <Shield className="h-6 w-6 text-muted-foreground" />
+                                    <div className="bg-card rounded-xl border p-4">
+                                        <div className="mb-2 flex justify-center">
+                                            <Shield className="text-muted-foreground h-6 w-6" />
                                         </div>
                                         <div className="font-medium">Private & Secure</div>
                                         <div className="text-muted-foreground">
                                             Your data stays secure and private
                                         </div>
                                     </div>
-                                    <div className="rounded-xl border bg-card p-4">
-                                        <div className="flex justify-center mb-2">
-                                            <Database className="h-6 w-6 text-muted-foreground" />
+                                    <div className="bg-card rounded-xl border p-4">
+                                        <div className="mb-2 flex justify-center">
+                                            <Database className="text-muted-foreground h-6 w-6" />
                                         </div>
                                         <div className="font-medium">Contextual Answers</div>
                                         <div className="text-muted-foreground">
@@ -192,80 +232,100 @@ export function RAGChatbot() {
                         {messages
                             .filter(message => message.content && message.content.trim())
                             .map((message, index) => (
-                            <div key={index} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                                {message.role === 'user' ? (
-                                    <Avatar 
-                                        name={session?.user?.name || 'User'}
-                                        src={session?.user?.image ?? undefined}
-                                        size="md"
-                                        className="h-8 w-8 shrink-0"
-                                    />
-                                ) : (
-                                    <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded overflow-hidden" style={{borderRadius: '2px'}}>
-                                        <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                                            <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
-                                            <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
-                                                  fill="none" 
-                                                  stroke="currentColor" 
-                                                  strokeWidth="1"
-                                                  className="text-background"/>
-                                        </svg>
-                                    </div>
-                                )}
-                                <div className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}>
-                                    <div className={`rounded-lg p-3 max-w-[80%] ${
-                                        message.role === 'user' 
-                                            ? 'bg-primary text-primary-foreground ml-auto' 
-                                            : 'bg-muted'
-                                    }`}>
-                                        <div className="text-sm">
-                                            {message.content}
+                                <div
+                                    key={index}
+                                    className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                >
+                                    {message.role === 'user' ? (
+                                        <Avatar
+                                            name={session?.user?.name || 'User'}
+                                            src={session?.user?.image ?? undefined}
+                                            size="md"
+                                            className="h-8 w-8 shrink-0"
+                                        />
+                                    ) : (
+                                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border">
+                                            <svg
+                                                width="20"
+                                                height="20"
+                                                viewBox="-7.5 0 32 32"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
+                                                    fill="currentColor"
+                                                    className="text-foreground"
+                                                />
+                                            </svg>
                                         </div>
-                                        {message.role === 'assistant' && (
-                                            <div className="mt-2 pt-2 border-t border-border text-xs text-muted-foreground">
-                                                <div className="flex items-center gap-2">
-                                                    <span>Chat: {currentRagChatModel?.name || 'Unknown'}</span>
-                                                    <span>•</span>
-                                                    <span>Embed: {currentEmbeddingModel?.name || 'Unknown'}</span>
+                                    )}
+                                    <div
+                                        className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
+                                    >
+                                        <div
+                                            className={`max-w-[80%] rounded-lg p-3 ${
+                                                message.role === 'user'
+                                                    ? 'bg-primary text-primary-foreground ml-auto'
+                                                    : 'bg-muted'
+                                            }`}
+                                        >
+                                            <div className="text-sm">{message.content}</div>
+                                            {message.role === 'assistant' && (
+                                                <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
+                                                    <div className="flex items-center gap-2">
+                                                        <span>
+                                                            Chat:{' '}
+                                                            {currentRagChatModel?.name || 'Unknown'}
+                                                        </span>
+                                                        <span>•</span>
+                                                        <span>
+                                                            Embed:{' '}
+                                                            {currentEmbeddingModel?.name ||
+                                                                'Unknown'}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                        
+                            ))}
+
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="h-8 w-8 shrink-0 flex items-center justify-center bg-muted rounded overflow-hidden" style={{borderRadius: '2px'}}>
-                                    <svg width="20" height="20" viewBox="-7.5 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="-7.5" y="0" width="32" height="32" fill="currentColor" className="text-muted-foreground"/>
-                                        <path d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z" 
-                                              fill="none" 
-                                              stroke="currentColor" 
-                                              strokeWidth="1"
-                                              className="text-background"/>
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="-7.5 0 32 32"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
+                                            fill="currentColor"
+                                            className="text-foreground"
+                                        />
                                     </svg>
                                 </div>
                                 <div className="flex-1 space-y-2">
-                                    <div className="rounded-lg bg-muted p-3 max-w-[80%]">
-                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <div className="bg-muted max-w-[80%] rounded-lg p-3">
+                                        <div className="text-muted-foreground flex items-center gap-2 text-sm">
                                             <div className="flex items-center gap-1">
-                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                                <div className="h-2 w-2 bg-current rounded-full animate-bounce"></div>
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]"></div>
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]"></div>
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current"></div>
                                             </div>
                                             <span className="ml-2">AI is thinking...</span>
                                         </div>
-                                        <div className="mt-1 text-xs text-muted-foreground/70">
+                                        <div className="text-muted-foreground/70 mt-1 text-xs">
                                             Searching knowledge base and generating response
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         )}
-                        
+
                         {/* Scroll target */}
                         <div ref={messagesEndRef} />
                     </div>
@@ -273,17 +333,39 @@ export function RAGChatbot() {
 
                 {/* Chat Input */}
                 <div className="border-t p-4">
+                    {/* Show message when no API keys */}
+                    {!hasRequiredKeys && (
+                        <div className="mb-3 rounded-lg bg-amber-50 p-3 text-sm">
+                            <div className="flex items-center justify-between">
+                                <span className="text-amber-700">
+                                    Please add your API keys to use the Knowledge Assistant
+                                </span>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setShowApiKeyDialog(true)}
+                                    className="text-xs"
+                                >
+                                    Add API Keys
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                    
                     <form onSubmit={handleSubmit} className="flex gap-2">
                         <Input
                             value={input}
                             onChange={handleInputChange}
-                            placeholder="Ask anything or share knowledge..."
-                            disabled={isLoading}
+                            placeholder={!hasRequiredKeys 
+                                ? "Add API keys to continue chatting..." 
+                                : "Ask anything or share knowledge..."
+                            }
+                            disabled={isLoading || !hasRequiredKeys}
                             className="flex-1"
                         />
                         <Button 
                             type="submit" 
-                            disabled={isLoading || !input.trim()}
+                            disabled={isLoading || !input.trim() || !hasRequiredKeys} 
                             size="icon"
                         >
                             <Send className="h-4 w-4" />
@@ -295,11 +377,11 @@ export function RAGChatbot() {
             {/* Sidebar */}
             <div className="w-80 border-l">
                 <ScrollArea className="h-full">
-                    <div className="p-4 space-y-4">
+                    <div className="space-y-4 p-4">
                         {/* Knowledge Base Management */}
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-base flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 text-base">
                                     <Database className="h-4 w-4" />
                                     Knowledge Base
                                     <Badge variant="secondary" className="ml-auto">
@@ -309,39 +391,54 @@ export function RAGChatbot() {
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <div className="flex gap-2">
-                                    <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+                                    <Dialog
+                                        open={isViewDialogOpen}
+                                        onOpenChange={setIsViewDialogOpen}
+                                    >
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm" className="flex-1">
                                                 <Eye className="mr-2 h-3 w-3" />
                                                 View
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent className="max-w-2xl max-h-[80vh]">
+                                        <DialogContent className="max-h-[80vh] max-w-2xl">
                                             <DialogHeader>
-                                                <DialogTitle>Knowledge Base ({knowledgeBase.length} items)</DialogTitle>
+                                                <DialogTitle>
+                                                    Knowledge Base ({knowledgeBase.length} items)
+                                                </DialogTitle>
                                                 <DialogDescription>
-                                                Your personal knowledge stored for AI assistance
+                                                    Your personal knowledge stored for AI assistance
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <ScrollArea className="max-h-96">
                                                 <div className="space-y-3">
                                                     {knowledgeBase.length === 0 ? (
-                                                        <div className="text-center py-8 text-muted-foreground">
-                                                            No knowledge items yet. Start chatting to build your knowledge base!
+                                                        <div className="text-muted-foreground py-8 text-center">
+                                                            No knowledge items yet. Start chatting
+                                                            to build your knowledge base!
                                                         </div>
                                                     ) : (
-                                                        knowledgeBase.map((item) => (
-                                                            <div key={item.id} className="flex items-start justify-between gap-3 rounded-lg border p-3">
-                                                                <div className="flex-1 min-w-0">
-                                                                    <p className="text-sm break-words">{item.content}</p>
-                                                                    <p className="text-xs text-muted-foreground mt-1">
-                                                                        {new Date(item.createdAt).toLocaleDateString()}
+                                                        knowledgeBase.map(item => (
+                                                            <div
+                                                                key={item.id}
+                                                                className="flex items-start justify-between gap-3 rounded-lg border p-3"
+                                                            >
+                                                                <div className="min-w-0 flex-1">
+                                                                    <p className="break-words text-sm">
+                                                                        {item.content}
+                                                                    </p>
+                                                                    <p className="text-muted-foreground mt-1 text-xs">
+                                                                        {new Date(
+                                                                            item.createdAt
+                                                                        ).toLocaleDateString()}
                                                                     </p>
                                                                 </div>
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="sm"
-                                                                    onClick={() => setDeleteItemId(item.id)}
+                                                                    onClick={() =>
+                                                                        setDeleteItemId(item.id)
+                                                                    }
                                                                     className="text-destructive hover:text-destructive"
                                                                 >
                                                                     <Trash2 className="h-3 w-3" />
@@ -354,7 +451,10 @@ export function RAGChatbot() {
                                         </DialogContent>
                                     </Dialog>
 
-                                    <Dialog open={isClearDialogOpen} onOpenChange={setIsClearDialogOpen}>
+                                    <Dialog
+                                        open={isClearDialogOpen}
+                                        onOpenChange={setIsClearDialogOpen}
+                                    >
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm" className="flex-1">
                                                 <Trash2 className="mr-2 h-3 w-3" />
@@ -365,15 +465,20 @@ export function RAGChatbot() {
                                             <DialogHeader>
                                                 <DialogTitle>Clear Knowledge Base</DialogTitle>
                                                 <DialogDescription>
-                                                    This will permanently delete all {knowledgeBase.length} items from your knowledge base. This action cannot be undone.
+                                                    This will permanently delete all{' '}
+                                                    {knowledgeBase.length} items from your knowledge
+                                                    base. This action cannot be undone.
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <div className="flex justify-end gap-2">
-                                                <Button variant="outline" onClick={() => setIsClearDialogOpen(false)}>
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => setIsClearDialogOpen(false)}
+                                                >
                                                     Cancel
                                                 </Button>
-                                                <Button 
-                                                    variant="destructive" 
+                                                <Button
+                                                    variant="destructive"
                                                     onClick={clearKnowledgeBase}
                                                     disabled={isClearing}
                                                 >
@@ -385,21 +490,31 @@ export function RAGChatbot() {
                                 </div>
 
                                 {/* Individual Delete Confirmation Dialog */}
-                                <Dialog open={!!deleteItemId} onOpenChange={() => setDeleteItemId(null)}>
+                                <Dialog
+                                    open={!!deleteItemId}
+                                    onOpenChange={() => setDeleteItemId(null)}
+                                >
                                     <DialogContent>
                                         <DialogHeader>
                                             <DialogTitle>Delete Knowledge Item</DialogTitle>
                                             <DialogDescription>
-                                                Are you sure you want to delete this item from your knowledge base?
+                                                Are you sure you want to delete this item from your
+                                                knowledge base?
                                             </DialogDescription>
                                         </DialogHeader>
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="outline" onClick={() => setDeleteItemId(null)}>
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => setDeleteItemId(null)}
+                                            >
                                                 Cancel
                                             </Button>
-                                            <Button 
-                                                variant="destructive" 
-                                                onClick={() => deleteItemId && deleteKnowledgeItem(deleteItemId)}
+                                            <Button
+                                                variant="destructive"
+                                                onClick={() =>
+                                                    deleteItemId &&
+                                                    deleteKnowledgeItem(deleteItemId)
+                                                }
                                                 disabled={isDeleting}
                                             >
                                                 {isDeleting ? 'Deleting...' : 'Delete'}
@@ -413,38 +528,44 @@ export function RAGChatbot() {
                         {/* Model Configuration */}
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-base flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 text-base">
                                     <Settings className="h-4 w-4" />
                                     Configuration
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <div className="space-y-2">
-                                    <div className="text-xs font-medium text-muted-foreground">CHAT MODEL</div>
+                                    <div className="text-muted-foreground text-xs font-medium">
+                                        CHAT MODEL
+                                    </div>
                                     <div className="text-sm">
                                         {currentRagChatModel?.name || 'Unknown'}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <div className="text-xs font-medium text-muted-foreground">EMBEDDING MODEL</div>
+                                    <div className="text-muted-foreground text-xs font-medium">
+                                        EMBEDDING MODEL
+                                    </div>
                                     <div className="text-sm">
                                         {currentEmbeddingModel?.name || 'Unknown'}
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
-                                        {currentEmbeddingModel?.provider} • {currentEmbeddingModel?.dimensions}D
+                                    <div className="text-muted-foreground text-xs">
+                                        {currentEmbeddingModel?.provider} •{' '}
+                                        {currentEmbeddingModel?.dimensions}D
                                     </div>
                                 </div>
-                                <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    className="w-full mt-3"
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-3 w-full"
                                     onClick={() => setIsSettingsOpen(true)}
                                 >
                                     <Settings className="mr-2 h-3 w-3" />
                                     Open VT+ Settings
                                 </Button>
-                                <p className="text-xs text-muted-foreground">
-                                    Configure AI models, API keys, and embedding preferences in VT+ settings.
+                                <p className="text-muted-foreground text-xs">
+                                    Configure AI models, API keys, and embedding preferences in VT+
+                                    settings.
                                 </p>
                             </CardContent>
                         </Card>
@@ -456,7 +577,7 @@ export function RAGChatbot() {
                             </CardHeader>
                             <CardContent className="space-y-4 text-sm">
                                 <div className="flex gap-2">
-                                    <Database className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                                    <Database className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
                                     <div>
                                         <div className="font-medium">Smart Context</div>
                                         <div className="text-muted-foreground">
@@ -465,7 +586,7 @@ export function RAGChatbot() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Database className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                                    <Database className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
                                     <div>
                                         <div className="font-medium">Persistent Memory</div>
                                         <div className="text-muted-foreground">
@@ -478,6 +599,13 @@ export function RAGChatbot() {
                     </div>
                 </ScrollArea>
             </div>
+            
+            {/* API Key Dialog */}
+            <RagOnboarding
+                isOpen={showApiKeyDialog}
+                onComplete={() => setShowApiKeyDialog(false)}
+                onSkip={() => setShowApiKeyDialog(false)}
+            />
         </div>
     );
 }

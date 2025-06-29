@@ -1,4 +1,5 @@
 import { ChatMode } from '@repo/shared/config';
+import { log } from '@repo/shared/logger';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { safeJsonParse } from '../utils/storage-cleanup';
@@ -48,7 +49,6 @@ function findStoredApiKeys(): string | null {
     // Try current storage key first
     let stored = localStorage.getItem(currentStorageKey);
     if (stored) {
-        console.log(`[ApiKeys] Found data in current storage key: ${currentStorageKey}`);
         return stored;
     }
     
@@ -56,7 +56,6 @@ function findStoredApiKeys(): string | null {
     if (currentStorageKey !== 'api-keys-storage-anonymous') {
         stored = localStorage.getItem('api-keys-storage-anonymous');
         if (stored) {
-            console.log(`[ApiKeys] Found data in anonymous storage key`);
             return stored;
         }
     }
@@ -64,7 +63,6 @@ function findStoredApiKeys(): string | null {
     // Try original Zustand key (fallback for older data)
     stored = localStorage.getItem('api-keys-storage');
     if (stored) {
-        console.log(`[ApiKeys] Found data in original storage key`);
         return stored;
     }
     
@@ -99,9 +97,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         version: 0,
                     };
                     localStorage.setItem(currentStorageKey, JSON.stringify(persistData));
-                    console.log(
-                        `[ApiKeys] Immediately persisted API key for ${provider} to ${currentStorageKey}`
-                    );
 
                     // Also trigger the zustand persist mechanism
                     // Force a state change to trigger persist middleware
@@ -110,7 +105,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         set({ keys: latestState.keys });
                     }, 0);
                 } catch (error) {
-                    console.error('[ApiKeys] Failed to persist API key:', error);
+                    log.error({ error, provider }, '[ApiKeys] Failed to persist API key');
                     // Don't throw error to prevent store initialization failure
                 }
             },
@@ -130,9 +125,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
 
                 // Only switch if user changed
                 if (currentUserId !== newUserId) {
-                    console.log(
-                        `[ApiKeys] Switching storage from user ${currentUserId || 'anonymous'} to ${newUserId || 'anonymous'}`
-                    );
 
                     // Store current state before switching
                     const currentState = get();
@@ -144,9 +136,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     // Save current state to current storage key
                     try {
                         localStorage.setItem(currentStorageKey, JSON.stringify(currentPersistData));
-                        console.log(`[ApiKeys] Saved current state to ${currentStorageKey}`);
                     } catch (error) {
-                        console.error('[ApiKeys] Failed to save current state:', error);
+                        log.error({ error, storageKey: currentStorageKey }, '[ApiKeys] Failed to save current state');
                     }
 
                     // Update user context
@@ -161,7 +152,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         // Try anonymous storage first
                         storedData = localStorage.getItem('api-keys-storage-anonymous');
                         if (storedData) {
-                            console.log(`[ApiKeys] Migrating data from anonymous storage to user storage`);
                             // Copy the data to the new user-specific storage
                             localStorage.setItem(currentStorageKey, storedData);
                         }
@@ -172,10 +162,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     // Update state with new user's data
                     set({ keys: userData.state?.keys || {} });
 
-                    console.log(
-                        `[ApiKeys] Loaded ${Object.keys(userData.state?.keys || {}).length} API keys for user: ${newUserId || 'anonymous'}`
-                    );
-
                     // Force persistence with new storage key - but don't fail if it doesn't work
                     try {
                         const newPersistData = {
@@ -183,14 +169,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                             version: 0,
                         };
                         localStorage.setItem(currentStorageKey, JSON.stringify(newPersistData));
-                        console.log(
-                            `[ApiKeys] Initialized storage for new user: ${currentStorageKey}`
-                        );
                     } catch (error) {
-                        console.warn(
-                            '[ApiKeys] Failed to initialize storage after user switch:',
-                            error
-                        );
+                        log.warn({ error, storageKey: currentStorageKey }, '[ApiKeys] Failed to initialize storage after user switch');
                     }
                 }
             },
@@ -199,9 +179,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 const storedData = localStorage.getItem(currentStorageKey);
                 const userData = safeJsonParse(storedData, { state: { keys: {} } });
                 set({ keys: userData.state?.keys || {} });
-                console.log(
-                    `[ApiKeys] Force rehydrated ${Object.keys(userData.state?.keys || {}).length} keys from ${currentStorageKey}`
-                );
             },
             hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
                 if (!isSignedIn) return false;
@@ -271,21 +248,15 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         // For hydration requests, try to find data from any storage location
                         if (name === 'api-keys-storage') {
                             const value = findStoredApiKeys();
-                            console.log(
-                                `[ApiKeys] Storage getItem (hydration): ${name} -> ${value ? 'found' : 'not found'}`
-                            );
                             return value;
                         }
                         
                         // For other requests, use the effective storage key
                         const key = getEffectiveStorageKey(name);
                         const value = localStorage.getItem(key);
-                        console.log(
-                            `[ApiKeys] Storage getItem: ${key} (requested: ${name}) -> ${value ? 'found' : 'not found'}`
-                        );
                         return value;
                     } catch (error) {
-                        console.error('[ApiKeys] Storage getItem error:', error);
+                        log.error({ error, name }, '[ApiKeys] Storage getItem error');
                         return null;
                     }
                 },
@@ -298,26 +269,20 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     try {
                         const key = getEffectiveStorageKey(name);
                         localStorage.setItem(key, value);
-                        console.log(`[ApiKeys] Storage setItem: ${key} (requested: ${name}) -> saved`);
 
                         // Simplified verification - only log warning instead of throwing
                         setTimeout(() => {
                             try {
                                 const verification = localStorage.getItem(key);
                                 if (verification !== value) {
-                                    console.warn(
-                                        `[ApiKeys] Storage verification mismatch for ${key}, but continuing`
-                                    );
+                                    log.warn({ key }, '[ApiKeys] Storage verification mismatch, but continuing');
                                 }
                             } catch (verifyError) {
-                                console.warn(
-                                    `[ApiKeys] Storage verification failed for ${key}:`,
-                                    verifyError
-                                );
+                                log.warn({ error: verifyError, key }, '[ApiKeys] Storage verification failed');
                             }
                         }, 0);
                     } catch (error) {
-                        console.error('[ApiKeys] Storage setItem error:', error);
+                        log.error({ error, name }, '[ApiKeys] Storage setItem error');
                         // Don't throw error to prevent store initialization failure
                     }
                 },
@@ -330,15 +295,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     try {
                         const key = getEffectiveStorageKey(name);
                         localStorage.removeItem(key);
-                        console.log(`[ApiKeys] Storage removeItem: ${key} (requested: ${name})`);
                     } catch (error) {
-                        console.error('[ApiKeys] Storage removeItem error:', error);
+                        log.error({ error, name }, '[ApiKeys] Storage removeItem error');
                     }
                 },
             })),
             // Add migration and hydration logic
-            migrate: (persistedState: any, version: number) => {
-                console.log(`[ApiKeys] Migrating from version ${version}`);
+            migrate: (persistedState: any, _version: number) => {
                 // Ensure the state has the correct structure
                 if (persistedState && typeof persistedState === 'object') {
                     return {
@@ -351,14 +314,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
             onRehydrateStorage: () => {
                 return (state, error) => {
                     if (error) {
-                        console.error('[ApiKeys] Hydration error:', error);
+                        log.error({ error }, '[ApiKeys] Hydration error');
                         // Reset to default state on hydration error
                         return { keys: {} };
                     }
-                    console.log(
-                        '[ApiKeys] Hydration successful:',
-                        state?.keys ? Object.keys(state.keys) : 'no keys'
-                    );
+                    log.debug({ 
+                        keyCount: state?.keys ? Object.keys(state.keys).length : 0 
+                    }, '[ApiKeys] Hydration successful');
                 };
             },
         }

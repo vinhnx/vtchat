@@ -140,6 +140,7 @@ export async function POST(req: Request) {
             - This is THEIR personal, private knowledge base - completely isolated and secure
             - No other users can access their information
             - Emphasize that this helps create a personalized AI experience just for them
+            - CRITICAL: Never reveal specific PII (addresses, phone numbers, credit cards, SSNs) in responses. If you find redacted content like [ADDRESS_REDACTED], [PHONE_REDACTED], acknowledge you have the information but don't reveal specifics. Say "I have your address saved" or "Your contact info is in your knowledge base" instead.
 
             Keep responses friendly, encouraging, and focused on building their personal knowledge repository. Avoid repeating tool calls - once you save or retrieve something, move forward with the conversation naturally!`,
             messages,

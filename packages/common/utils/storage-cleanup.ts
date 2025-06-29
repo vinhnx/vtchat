@@ -35,10 +35,31 @@ export function cleanupCorruptedStorage(): void {
         }
     }
 
+    // Clean up deprecated RAG onboarding keys
+    cleanupDeprecatedRagKeys();
+
     if (cleanedCount > 0) {
         console.log(`[StorageCleanup] Cleaned up ${cleanedCount} corrupted storage entries`);
     } else {
         console.log('[StorageCleanup] No corrupted storage entries found');
+    }
+}
+
+/**
+ * Clean up deprecated RAG onboarding localStorage keys
+ * These are no longer used since the free trial system was removed
+ */
+function cleanupDeprecatedRagKeys(): void {
+    const deprecatedKeys = [
+        'rag-onboarding-completed',
+        'rag-system-usage-count'
+    ];
+    
+    for (const key of deprecatedKeys) {
+        if (localStorage.getItem(key) !== null) {
+            localStorage.removeItem(key);
+            console.log(`[StorageCleanup] Removed deprecated RAG key: ${key}`);
+        }
     }
 }
 
