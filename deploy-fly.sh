@@ -223,8 +223,10 @@ deploy_to_fly() {
     
     # Deploy
     print_status "Starting deployment..."
+    print_info "Running: flyctl deploy --app $FLY_APP"
     
-    if flyctl deploy --app "$FLY_APP"; then
+    # Run deployment with verbose output
+    if flyctl deploy --app "$FLY_APP" --verbose; then
         print_status "Deployment completed successfully!"
         echo ""
         echo "🌐 Your app is available at:"
@@ -233,11 +235,13 @@ deploy_to_fly() {
         echo ""
         
         # Show app status
+        print_info "Checking app status..."
         flyctl status --app "$FLY_APP"
         
         print_status "🎉 Deployment completed!"
     else
-        print_error "Deployment failed!"
+        print_error "Deployment failed with exit code $?"
+        print_error "Check the output above for details"
         exit 1
     fi
 }
