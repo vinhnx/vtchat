@@ -51,3 +51,5 @@ class RequestDeduplicator {
 }
 
 export const requestDeduplicator = new RequestDeduplicator();
+
+import { logger } from '@repo/shared/logger';

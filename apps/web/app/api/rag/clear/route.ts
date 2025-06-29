@@ -1,8 +1,13 @@
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const revalidate = 0;
+
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { resources, embeddings } from '@/lib/database/schema';
 import { eq, inArray } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@repo/shared/logger';
 
 export async function DELETE(_req: NextRequest) {
     try {
@@ -42,7 +47,7 @@ export async function DELETE(_req: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
-        console.error('Error clearing knowledge base:', error);
+        logger.error('Error clearing knowledge base:', { data: error });
         return NextResponse.json(
             { error: 'Failed to clear knowledge base' },
             { status: 500 }

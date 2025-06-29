@@ -1,5 +1,6 @@
 import { FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscription';
+import { logger } from '@repo/shared/logger';
 
 export enum ChatMode {
     Pro = 'pro',
@@ -352,7 +353,7 @@ export const ChatModeConfig: Record<
  */
 export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
-        console.warn('getAvailableChatModes called without a valid context.');
+        logger.warn('getAvailableChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !config.requiredFeature && !config.requiredPlan && !config.isAuthRequired;
@@ -384,7 +385,7 @@ export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] 
  */
 export function getRestrictedChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
-        console.warn('getRestrictedChatModes called without a valid context.');
+        logger.warn('getRestrictedChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !!(config.requiredFeature || config.requiredPlan || config.isAuthRequired);

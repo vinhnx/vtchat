@@ -8,6 +8,7 @@
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from './env';
+import { logger } from '@repo/shared/logger';
 
 // Types for Creem.io integration
 export enum PriceType {
@@ -100,7 +101,7 @@ export class CreemService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            console.log('[CreemService] Creating checkout session with:', {
+            logger.info('[CreemService] Creating checkout session with:', {
                 productId: request.productId,
                 quantity: request.quantity || 1,
                 email: request.customerEmail,
@@ -123,7 +124,7 @@ export class CreemService {
                     : `${normalizedBaseUrl}${request.successUrl}`
                 : `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`; // Used PlanSlug
 
-            console.log('[CreemService] Using success URL:', successUrl);
+            logger.info('[CreemService] Using success URL:', { data: successUrl });
 
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
@@ -145,7 +146,7 @@ export class CreemService {
                 },
             });
 
-            console.log('[CreemService] Checkout session created successfully:', {
+            logger.info('[CreemService] Checkout session created successfully:', {
                 checkoutId: result.id,
                 checkoutUrl: result.checkoutUrl,
             });
@@ -161,7 +162,7 @@ export class CreemService {
 
             throw new Error('Invalid checkout response - missing checkout URL');
         } catch (error: any) {
-            console.error('[CreemService] Checkout creation failed:', error);
+            logger.error('[CreemService] Checkout creation failed:', { data: error });
             throw new CheckoutError(
                 `Failed to create checkout session: ${error.message || 'Unknown error'}`
             );
@@ -201,7 +202,7 @@ export class CreemService {
                         );
                     }
                 } catch (dbError) {
-                    console.log('[CreemService] Database lookup failed, proceeding with fallback');
+                    logger.info('[CreemService] Database lookup failed, proceeding with fallback');
                 }
             }
 
@@ -260,7 +261,7 @@ export class CreemService {
                 success: true,
             };
         } catch (error) {
-            console.error('Creem portal error:', error);
+            logger.error('Creem portal error:', { data: error });
             // Return fallback URL instead of throwing
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
@@ -276,7 +277,7 @@ export class CreemService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        console.log('[CreemService] Creating VT+ subscription checkout for:', customerEmail);
+        logger.info('[CreemService] Creating VT+ subscription checkout for:', { data: customerEmail });
 
         return this.createCheckout({
             productId: this.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID

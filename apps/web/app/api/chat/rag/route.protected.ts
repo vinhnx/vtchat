@@ -9,6 +9,7 @@ import { streamText, tool } from 'ai';
 import { z } from 'zod';
 import { ModelEnum } from '@repo/ai/models';
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@repo/shared/logger';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
                 });
             }
         } catch (error) {
-            console.error('[RAG Chat] Arcjet protection failed:', error);
+            logger.error('[RAG Chat] Arcjet protection failed:', { data: error });
             // Continue without Arcjet protection if it fails
         }
     }
@@ -154,7 +155,7 @@ export async function POST(req: NextRequest) {
 
         return result.toDataStreamResponse();
     } catch (error) {
-        console.error('RAG Chat API Error:', error);
+        logger.error('RAG Chat API Error:', { data: error });
         return new Response('Internal Server Error', { status: 500 });
     }
 }

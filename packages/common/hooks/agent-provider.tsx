@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
+import { logger } from '@repo/shared/logger';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -164,7 +165,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             const startTime = performance.now();
 
             abortController.signal.addEventListener('abort', () => {
-                console.info('Abort controller triggered');
+                logger.info('Abort controller triggered');
                 setIsGenerating(false);
                 updateThreadItem(body.threadId, {
                     id: body.threadItemId,
@@ -209,7 +210,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         error: errorText,
                         persistToDB: true,
                     });
-                    console.error('Error response:', errorText);
+                    logger.error('Error response:', { data: errorText });
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
@@ -277,7 +278,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             threadItemMap.delete(data.threadItemId);
                                         }
                                         if (data.status === 'error') {
-                                            console.error('Stream error:', data.error);
+                                            logger.error('Stream error:', { data: data.error });
                                         }
                                     }
                                 } catch (jsonError) {
@@ -290,7 +291,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             }
                         }
                     } catch (readError) {
-                        console.error('Error reading from stream:', readError);
+                        logger.error('Error reading from stream:', { data: readError });
                         await new Promise(resolve => setTimeout(resolve, 1000));
                         continue;
                     }
@@ -361,7 +362,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
-            console.log('🔥 Agent provider received flags:', {
+            logger.info('🔥 Agent provider received flags:', {
                 useWebSearch,
                 useMathCalculator,
                 useCharts,
@@ -440,13 +441,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 setIsGenerating(true);
 
                 abortController.signal.addEventListener('abort', () => {
-                    console.info('Abort signal received');
+                    logger.info('Abort signal received');
                     setIsGenerating(false);
                     abortWorkflow();
                     updateThreadItem(threadId, { id: optimisticAiThreadItemId, status: 'ABORTED' });
                 });
 
-                console.log('🎯 About to call startWorkflow with:', {
+                logger.info('🎯 About to call startWorkflow with:', {
                     useWebSearch,
                     useMathCalculator,
                     useCharts,
@@ -516,7 +517,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
     const updateContext = useCallback(
         (threadId: string, data: any) => {
-            console.info('Updating context', data);
+            logger.info('Updating context', { data: data });
             updateThreadItem(threadId, {
                 id: data.threadItemId,
                 parentId: data.parentThreadItemId,

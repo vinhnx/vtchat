@@ -1,6 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { logger } from '@repo/shared/logger';
 
 // Common schemas for structured extraction
 export const InvoiceSchema = z.object({
@@ -165,7 +166,7 @@ export async function extractStructuredData(
             schema: schema._def,
         };
     } catch (error) {
-        console.error('Structured extraction failed:', error);
+        logger.error('Structured extraction failed:', { data: error });
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error',

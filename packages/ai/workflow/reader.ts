@@ -1,5 +1,6 @@
 import { parse } from 'node-html-parser';
 import TurndownService from 'turndown';
+import { logger } from '@repo/shared/logger';
 
 const turndownService = new TurndownService();
 
@@ -69,7 +70,7 @@ const readURL = async (url: string): Promise<TReaderResult> => {
         }
         return { success: false };
     } catch (error) {
-        console.error('Error in readURL:', error);
+        logger.error('Error in readURL:', { data: error });
         return { success: false };
     }
 };
@@ -125,9 +126,9 @@ export const readWebPagesWithTimeout = async (
         });
     } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
-            console.log('Reading operation timed out, returning partial results');
+            logger.info('Reading operation timed out, returning partial results');
         } else {
-            console.error('Error in readWebPagesWithTimeout:', error);
+            logger.error('Error in readWebPagesWithTimeout:', { data: error });
         }
         return [];
     } finally {

@@ -7,6 +7,7 @@ import {
 import { ChatMode } from '@repo/shared/config';
 import { Geo } from '@vercel/functions';
 import { CoreMessage } from 'ai';
+import { logger } from '@repo/shared/logger';
 import {
     analysisTask,
     completionTask,
@@ -149,7 +150,7 @@ export const runWorkflow = ({
         includeThoughts: boolean;
     };
 }) => {
-    console.log('🔥 runWorkflow called with params:', { webSearch, mathCalculator, charts });
+    logger.info('🔥 runWorkflow called with params:', { webSearch, mathCalculator, charts });
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
         maxIterations: 2,
@@ -177,7 +178,7 @@ export const runWorkflow = ({
         status: 'PENDING',
     });
 
-    console.log('🌟 Workflow context created with:', { webSearch, mathCalculator, charts });
+    logger.info('🌟 Workflow context created with:', { webSearch, mathCalculator, charts });
     const context = createContext<WorkflowContextSchema>({
         question,
         mode,

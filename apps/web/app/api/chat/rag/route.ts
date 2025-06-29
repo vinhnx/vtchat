@@ -8,6 +8,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
 import { ModelEnum } from '@repo/ai/models';
+import { logger } from '@repo/shared/logger';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -176,7 +177,7 @@ export async function POST(req: Request) {
 
         return result.toDataStreamResponse();
     } catch (error) {
-        console.error('RAG Chat API Error:', error);
+        logger.error('RAG Chat API Error:', { data: error });
         return new Response('Internal Server Error', { status: 500 });
     }
 }

@@ -5,6 +5,7 @@
 import { useFeatureAccess } from './use-subscription-access';
 import { useAppStore } from '../store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Hook to manage Gemini explicit caching settings and access
@@ -22,7 +23,7 @@ export function useGeminiCaching() {
         maxCaches?: number;
     }) => {
         if (!hasAccess) {
-            console.warn('Gemini caching is only available for VT+ users');
+            logger.warn('Gemini caching is only available for VT+ users');
             return;
         }
 

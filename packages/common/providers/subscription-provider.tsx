@@ -14,6 +14,7 @@ import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
+import { logger } from '@repo/shared/logger';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -219,7 +220,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 return result;
             } catch (err) {
-                console.error('[Subscription Provider] Error fetching subscription status:', err);
+                logger.error('[Subscription Provider] Error fetching subscription status:', { data: err });
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
                 // Update global and local error state
@@ -266,7 +267,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     // Trigger subscription status check when session becomes available or changes
     useEffect(() => {
         if (session?.user) {
-            console.log('[Subscription Provider] Session detected, refreshing subscription status');
+            logger.info('[Subscription Provider] Session detected, refreshing subscription status');
             fetchSubscriptionStatus('initial', false);
         }
     }, [session?.user, fetchSubscriptionStatus]);
@@ -329,7 +330,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // Refresh when close to expiration (within 1 day) or already expired
             if (daysDiff <= 1) {
-                console.log('[Subscription Provider] Subscription near expiration, refreshing...');
+                logger.info('[Subscription Provider] Subscription near expiration, refreshing...');
                 refreshSubscriptionStatus(true, 'expiration');
             }
         };
@@ -397,6 +398,6 @@ export function useGlobalSubscriptionStatus(): SubscriptionContextType {
  * Wraps the global subscription context
  */
 export function useSubscriptionStatus() {
-    console.warn('useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
+    logger.warn('useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
     return useGlobalSubscriptionStatus();
 }

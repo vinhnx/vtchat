@@ -3,9 +3,11 @@ import { db } from '@/lib/database';
 import { accounts } from '@/lib/database/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@repo/shared/logger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
     try {
@@ -33,9 +35,7 @@ export async function GET(request: NextRequest) {
             .from(accounts)
             .where(eq(accounts.userId, userId));
 
-        console.log(
-            `[List Accounts API] Found ${linkedAccounts.length} linked accounts for user ${userId}`
-        );
+        logger.info({ linkedAccountsCount: linkedAccounts.length, userId }, 'Found linked accounts for user');
 
         return NextResponse.json({
             success: true,
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
             userId: userId,
         });
     } catch (error) {
-        console.error('[List Accounts API] Error:', error);
+        logger.error('[List Accounts API] Error:', { data: error });
         return NextResponse.json(
             {
                 success: false,

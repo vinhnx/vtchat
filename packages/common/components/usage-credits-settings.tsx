@@ -18,6 +18,7 @@ import {
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
 import { RateLimitMeter } from './rate-limit-meter';
+import { logger } from '@repo/shared/logger';
 
 interface UsageCreditsSettingsProps {
     onClose?: () => void;
@@ -39,7 +40,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
         try {
             await openCustomerPortal();
         } catch (error) {
-            console.error('Failed to open subscription portal:', error);
+            logger.error('Failed to open subscription portal:', { data: error });
         }
     };
 

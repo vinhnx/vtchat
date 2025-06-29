@@ -38,6 +38,7 @@ import { ImageUpload } from './image-upload';
 import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
 import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
+import { logger } from '@repo/shared/logger';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -182,9 +183,9 @@ export const ChatInput = ({
 
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
-        console.log('threadItems', threadItems);
+        logger.info('threadItems', { data: threadItems });
 
-        console.log('🚀 Sending to handleSubmit with flags:', {
+        logger.info('🚀 Sending to handleSubmit with flags:', {
             useWebSearch,
             useMathCalculator,
             useCharts,

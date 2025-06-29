@@ -64,6 +64,8 @@ export class PerformanceMonitor {
 
 export const perfMonitor = PerformanceMonitor.getInstance();
 
+import { logger } from '@repo/shared/logger';
+
 // Auth-specific performance monitoring
 export const monitorAuth = {
     sessionCheck: (fn: () => Promise<any>) => perfMonitor.measureAsync('auth-session-check', fn),

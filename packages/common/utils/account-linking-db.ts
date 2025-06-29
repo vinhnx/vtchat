@@ -1,3 +1,5 @@
+
+import { logger } from '@repo/shared/logger';
 /**
  * Database queries for account linking using Neon MCP
  * Provides accurate account linking status from the database
@@ -32,14 +34,14 @@ export async function getLinkedAccountsFromDB(userId: string): Promise<LinkedAcc
         });
 
         if (!response.ok) {
-            console.warn('Failed to fetch linked accounts from API:', response.status);
+            logger.warn('Failed to fetch linked accounts from API:', { data: response.status });
             return [];
         }
 
         const data = await response.json();
         return data.accounts || [];
     } catch (error) {
-        console.error('Error fetching linked accounts from database:', error);
+        logger.error('Error fetching linked accounts from database:', { data: error });
         return [];
     }
 }
@@ -108,12 +110,12 @@ export async function getLinkedAccountsFromNeonMCP(userId: string): Promise<Link
         // const result = await neonMCP.query(query, [userId]);
         // return result.rows;
 
-        console.log('[Neon MCP] Query would be executed:', query, 'with userId:', userId);
+        logger.info('[Neon MCP] Query would be executed:', { query, userId });
 
         // Fallback to API call for now
         return await getLinkedAccountsFromDB(userId);
     } catch (error) {
-        console.error('[Neon MCP] Query failed:', error);
+        logger.error('[Neon MCP] Query failed:', { data: error });
         throw error;
     }
 }
@@ -143,7 +145,7 @@ export async function isProviderLinkedMCP(userId: string, providerId: string): P
         // Fallback to current implementation
         return await isProviderLinked(userId, providerId);
     } catch (error) {
-        console.error('[Neon MCP] Existence check failed:', error);
+        logger.error('[Neon MCP] Existence check failed:', { data: error });
         return false;
     }
 }

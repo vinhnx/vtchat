@@ -14,6 +14,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, cn } from '@repo/ui';
 import { FileCode, Check, Copy, File, FileJson, FileText, Terminal } from 'lucide-react';
 import './code-block.css';
+import { logger } from '@repo/shared/logger';
 
 export type CodeBlockProps = {
     lang?: string;
@@ -120,7 +121,7 @@ export function useClipboard() {
 
     const copy: CopyFn = useCallback(async text => {
         if (!navigator?.clipboard) {
-            console.warn('Clipboard not supported');
+            logger.warn('Clipboard not supported');
             return false;
         }
         try {
@@ -132,7 +133,7 @@ export function useClipboard() {
             }, 2000);
             return true;
         } catch (error) {
-            console.warn('Copy failed', error);
+            logger.warn('Copy failed', { data: error });
             setCopiedText(null);
             return false;
         }

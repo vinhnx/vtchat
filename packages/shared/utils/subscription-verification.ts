@@ -7,6 +7,7 @@
 // This utility is designed to be used from API routes where database access is available
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { logger } from '@repo/shared/logger';
 
 export interface SubscriptionVerificationResult {
     hasActiveSubscription: boolean;
@@ -161,7 +162,7 @@ export async function verifyExistingCreemSubscription(
             message: `No active ${targetPlan} subscription found`,
         };
     } catch (error) {
-        console.error('[Subscription Verification] Error during verification:', error);
+        logger.error('[Subscription Verification] Error during verification:', { data: error });
 
         // In case of database errors, we should be conservative and assume no subscription
         // to prevent blocking legitimate purchases
@@ -223,7 +224,7 @@ export async function getCreemCustomerInfo(
             source: 'none',
         };
     } catch (error) {
-        console.error('[Subscription Verification] Error getting Creem customer info:', error);
+        logger.error('[Subscription Verification] Error getting Creem customer info:', { data: error });
         return {
             customerId: null,
             source: 'none',
@@ -270,7 +271,7 @@ export async function validateSubscriptionConsistency(
             recommendations,
         };
     } catch (error) {
-        console.error('[Subscription Verification] Error during consistency check:', error);
+        logger.error('[Subscription Verification] Error during consistency check:', { data: error });
         return {
             isConsistent: false,
             issues: ['Database error during consistency check'],

@@ -7,6 +7,7 @@
 
 import { GoogleAICacheManager } from '@google/generative-ai/server';
 import { ModelEnum } from '../models';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Supported Gemini models for explicit caching
@@ -66,7 +67,7 @@ export class GeminiCacheManager {
             });
             return cachedContent;
         } catch (error) {
-            console.error('Failed to create Gemini cache:', error);
+            logger.error('Failed to create Gemini cache:', { data: error });
             throw new Error('Gemini cache creation failed');
         }
     }
@@ -78,7 +79,7 @@ export class GeminiCacheManager {
         try {
             return await this.cacheManager.list();
         } catch (error) {
-            console.error('Failed to list Gemini caches:', error);
+            logger.error('Failed to list Gemini caches:', { data: error });
             throw new Error('Failed to retrieve cache list');
         }
     }
@@ -90,7 +91,7 @@ export class GeminiCacheManager {
         try {
             await this.cacheManager.delete(cacheName);
         } catch (error) {
-            console.error('Failed to delete Gemini cache:', error);
+            logger.error('Failed to delete Gemini cache:', { data: error });
             throw new Error('Failed to delete cache');
         }
     }
@@ -102,7 +103,7 @@ export class GeminiCacheManager {
         try {
             return await this.cacheManager.get(cacheName);
         } catch (error) {
-            console.error('Failed to get Gemini cache:', error);
+            logger.error('Failed to get Gemini cache:', { data: error });
             throw new Error('Failed to retrieve cache');
         }
     }

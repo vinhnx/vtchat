@@ -1,4 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
+import { logger } from '@repo/shared/logger';
 
 export function parseSourceTagsFromXML(xmlText: string): string[] {
     if (!xmlText) {

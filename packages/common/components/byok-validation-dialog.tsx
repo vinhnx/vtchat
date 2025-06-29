@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useApiKeysStore } from '../store/api-keys.store';
+import { logger } from '@repo/shared/logger';
 import {
     Dialog,
     DialogContent,
@@ -98,7 +99,7 @@ export function BYOKValidationDialog({
             // Close the dialog
             onClose();
         } catch (error) {
-            console.error('Failed to save API key:', error);
+            logger.error('Failed to save API key:', { data: error });
         } finally {
             setIsLoading(false);
         }

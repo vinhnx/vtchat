@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { logger } from '@repo/shared/logger';
 type CustomSignInProps = {
     redirectUrl?: string;
     onClose?: () => void;
@@ -61,11 +62,11 @@ export const CustomSignIn = ({
                         console.log(error);
                     }
 
-                    console.error('Sign-in error:', error);
+                    logger.error('Sign-in error:', { data: error });
                     setError('Something went wrong while signing in. Please try again.');
                 }
             } else {
-                console.error('Verification error:', error);
+                logger.error('Verification error:', { data: error });
             }
         } finally {
             setIsLoading(null);
@@ -83,7 +84,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            console.error('Google authentication error:', error);
+            logger.error('Google authentication error:', { data: error });
         } finally {
             setIsLoading(null);
         }
@@ -100,7 +101,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            console.error('GitHub authentication error:', error);
+            logger.error('GitHub authentication error:', { data: error });
         } finally {
             setIsLoading(null);
         }
@@ -117,7 +118,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            console.error('Apple authentication error:', error);
+            logger.error('Apple authentication error:', { data: error });
         } finally {
             setIsLoading(null);
         }
@@ -191,12 +192,12 @@ export const CustomSignIn = ({
                     if (error.includes('Incorrect code')) {
                         setError('Incorrect code. Please try again.');
                     } else {
-                        console.error('Sign-in error:', error);
+                        logger.error('Sign-in error:', { data: error });
                         setError('Something went wrong while signing in. Please try again.');
                     }
                 }
             } else {
-                console.error('Authentication error:', error);
+                logger.error('Authentication error:', { data: error });
                 setError(
                     error?.errors?.[0]?.longMessage || 'Authentication failed. Please try again.'
                 );
@@ -251,12 +252,12 @@ export const CustomSignIn = ({
                     }
                 } catch (error) {
                     if (isClerkAPIResponseError(error)) {
-                        console.error('Error resending code:', error);
+                        logger.error('Error resending code:', { data: error });
                     }
                     setError('Failed to resend code. Please try again.');
                 }
             } else {
-                console.error('Error resending code:', error);
+                logger.error('Error resending code:', { data: error });
                 setError('Failed to resend code. Please try again.');
             }
         } finally {

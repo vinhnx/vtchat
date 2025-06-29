@@ -26,6 +26,7 @@ import {
 import { Github, ExternalLink, Unlink, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { MultiSessionPanel } from './multi-session-panel';
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@repo/shared/logger';
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
@@ -63,11 +64,11 @@ export const UserProfileSettings = () => {
                 `[Account Linking] Fetched ${accounts.length} linked accounts from database`
             );
         } catch (err) {
-            console.error('Error fetching linked accounts from database:', err);
+            logger.error('Error fetching linked accounts from database:', { data: err });
             // Fallback to session data if database query fails
             if (session.user.accounts && session.user.accounts.length >= 0) {
                 setLinkedAccounts(session.user.accounts);
-                console.log('[Account Linking] Using session data as fallback');
+                logger.info('[Account Linking] Using session data as fallback');
             } else {
                 setLinkedAccounts([]);
             }
@@ -135,7 +136,7 @@ export const UserProfileSettings = () => {
                         setIsLinking(null);
                         localStorage.removeItem('linking_provider');
                     } catch (err) {
-                        console.error('Error checking OAuth callback result:', err);
+                        logger.error('Error checking OAuth callback result:', { data: err });
                         setIsLinking(null);
                         localStorage.removeItem('linking_provider');
                     }
@@ -185,7 +186,7 @@ export const UserProfileSettings = () => {
 
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
-            console.error('Error updating profile:', err);
+            logger.error('Error updating profile:', { data: err });
             setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setIsUpdating(false);

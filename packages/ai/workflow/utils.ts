@@ -18,6 +18,7 @@ import {
 } from '../types/reasoning';
 import { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
+import { logger } from '@repo/shared/logger';
 
 export type ChunkBufferOptions = {
     threshold?: number;
@@ -82,8 +83,8 @@ export const generateTextWithGeminiSearch = async ({
     thinkingMode?: ThinkingModeConfig;
 }): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
-    console.log('=== generateTextWithGeminiSearch START ===');
-    console.log('Input parameters:', {
+    logger.info('=== generateTextWithGeminiSearch START ===');
+    logger.info('Input parameters:', {
         prompt: prompt?.slice(0, 100) + '...',
         model,
         hasOnChunk: !!onChunk,
@@ -115,9 +116,9 @@ export const generateTextWithGeminiSearch = async ({
             throw new Error('Gemini API key is required for web search functionality');
         }
 
-        console.log('Getting language model for:', model);
+        logger.info('Getting language model for:', { data: model });
         const selectedModel = getLanguageModel(model, undefined, byokKeys, true);
-        console.log('Selected model result:', {
+        logger.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
             modelType: typeof selectedModel,
             modelKeys: selectedModel ? Object.keys(selectedModel) : undefined,
@@ -129,11 +130,11 @@ export const generateTextWithGeminiSearch = async ({
 
         // Additional validation for the model object
         if (typeof selectedModel !== 'object' || selectedModel === null) {
-            console.error('Invalid model object:', selectedModel);
+            logger.error('Invalid model object:', { data: selectedModel });
             throw new Error('Invalid model configuration. Model must be a valid object.');
         }
 
-        console.log('Preparing streamText call with:', {
+        logger.info('Preparing streamText call with:', {
             hasMessages: !!messages?.length,
             messagesCount: messages?.length,
             promptLength: prompt?.length,
@@ -152,7 +153,7 @@ export const generateTextWithGeminiSearch = async ({
                           : true);
 
                 if (!hasContent) {
-                    console.warn('Filtering out message with empty content in GeminiSearch:', {
+                    logger.warn('Filtering out message with empty content in GeminiSearch:', {
                         role: message.role,
                         contentType: typeof message.content,
                     });
@@ -161,7 +162,7 @@ export const generateTextWithGeminiSearch = async ({
                 return hasContent;
             });
 
-            console.log('GeminiSearch message filtering:', {
+            logger.info('GeminiSearch message filtering:', {
                 originalCount: messages.length,
                 filteredCount: filteredMessages.length,
                 removedCount: messages.length - filteredMessages.length,
@@ -219,7 +220,7 @@ export const generateTextWithGeminiSearch = async ({
                       ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                   };
 
-            console.log('StreamText config:', {
+            logger.info('StreamText config:', {
                 configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
                 hasSystem: !!(streamTextConfig as any).system,
                 hasPrompt: !!(streamTextConfig as any).prompt,
@@ -229,10 +230,10 @@ export const generateTextWithGeminiSearch = async ({
             });
 
             streamResult = streamText(streamTextConfig as any);
-            console.log('StreamText call successful, result type:', typeof streamResult);
+            logger.info('StreamText call successful, result type:', { data: typeof streamResult });
         } catch (error: any) {
-            console.error('Error creating streamText:', error);
-            console.error('Error stack:', error.stack);
+            logger.error('Error creating streamText:', { data: error });
+            logger.error('Error stack:', { data: error.stack });
             if (error.message?.includes('undefined to object')) {
                 throw new Error(
                     'Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.'
@@ -242,27 +243,27 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         if (!streamResult) {
-            console.error('StreamResult is null/undefined');
+            logger.error('StreamResult is null/undefined');
             throw new Error('Failed to initialize text stream');
         }
 
-        console.log('StreamResult properties:', Object.keys(streamResult));
+        logger.info('StreamResult properties:', { data: Object.keys(streamResult) });
 
         // Don't destructure sources and providerMetadata immediately
-        console.log('Accessing fullStream...');
+        logger.info('Accessing fullStream...');
         const { fullStream } = streamResult;
-        console.log('FullStream extracted:', {
+        logger.info('FullStream extracted:', {
             hasFullStream: !!fullStream,
             fullStreamType: typeof fullStream,
         });
 
         if (!fullStream) {
-            console.error('FullStream is null/undefined');
+            logger.error('FullStream is null/undefined');
             throw new Error('Failed to get fullStream from streamText result');
         }
 
         let fullText = '';
-        console.log('Starting to iterate over fullStream...');
+        logger.info('Starting to iterate over fullStream...');
 
         try {
             for await (const chunk of fullStream) {
@@ -270,7 +271,7 @@ export const generateTextWithGeminiSearch = async ({
                     throw new Error('Operation aborted');
                 }
 
-                console.log('Received chunk:', {
+                logger.info('Received chunk:', {
                     type: chunk?.type,
                     hasTextDelta: !!(chunk as any)?.textDelta,
                     chunkKeys: chunk ? Object.keys(chunk) : undefined,
@@ -282,40 +283,40 @@ export const generateTextWithGeminiSearch = async ({
                 }
             }
         } catch (error: any) {
-            console.error('Error iterating over fullStream:', error);
-            console.error('Error stack:', error.stack);
+            logger.error('Error iterating over fullStream:', { data: error });
+            logger.error('Error stack:', { data: error.stack });
             throw error;
         }
 
-        console.log('Stream iteration completed, fullText length:', fullText.length);
+        logger.info('Stream iteration completed, fullText length:', { data: fullText.length });
 
         // Safely handle potentially undefined sources and metadata
-        console.log('Resolving sources and metadata...');
+        logger.info('Resolving sources and metadata...');
         let resolvedSources: any[] = [];
         let groundingMetadata: any = null;
 
         try {
-            console.log('Checking streamResult.sources:', {
+            logger.info('Checking streamResult.sources:', {
                 hasSources: !!streamResult?.sources,
                 sourcesType: typeof streamResult?.sources,
             });
             if (streamResult?.sources) {
                 resolvedSources = (await streamResult.sources) || [];
-                console.log('Sources resolved:', resolvedSources.length);
+                logger.info('Sources resolved:', { data: resolvedSources.length });
             }
         } catch (error) {
-            console.warn('Failed to resolve sources:', error);
+            logger.warn('Failed to resolve sources:', { data: error });
             resolvedSources = [];
         }
 
         try {
-            console.log('Checking streamResult.providerMetadata:', {
+            logger.info('Checking streamResult.providerMetadata:', {
                 hasProviderMetadata: !!streamResult?.providerMetadata,
                 providerMetadataType: typeof streamResult?.providerMetadata,
             });
             if (streamResult?.providerMetadata) {
                 const metadata = await streamResult.providerMetadata;
-                console.log('ProviderMetadata resolved:', {
+                logger.info('ProviderMetadata resolved:', {
                     hasMetadata: !!metadata,
                     hasGoogle: !!metadata?.google,
                     hasGroundingMetadata: !!metadata?.google?.groundingMetadata,
@@ -323,7 +324,7 @@ export const generateTextWithGeminiSearch = async ({
                 groundingMetadata = metadata?.google?.groundingMetadata || null;
             }
         } catch (error) {
-            console.warn('Failed to resolve provider metadata:', error);
+            logger.warn('Failed to resolve provider metadata:', { data: error });
             groundingMetadata = null;
         }
 
@@ -334,19 +335,19 @@ export const generateTextWithGeminiSearch = async ({
         try {
             if (streamResult?.reasoning) {
                 reasoning = (await streamResult.reasoning) || '';
-                console.log('Reasoning extracted:', reasoning.length);
+                logger.info('Reasoning extracted:', { data: reasoning.length });
             }
         } catch (error) {
-            console.warn('Failed to resolve reasoning:', error);
+            logger.warn('Failed to resolve reasoning:', { data: error });
         }
 
         try {
             if (streamResult?.reasoningDetails) {
                 reasoningDetails = (await streamResult.reasoningDetails) || [];
-                console.log('ReasoningDetails extracted:', reasoningDetails.length);
+                logger.info('ReasoningDetails extracted:', { data: reasoningDetails.length });
             }
         } catch (error) {
-            console.warn('Failed to resolve reasoningDetails:', error);
+            logger.warn('Failed to resolve reasoningDetails:', { data: error });
         }
 
         const result = {
@@ -357,8 +358,8 @@ export const generateTextWithGeminiSearch = async ({
             reasoningDetails,
         };
 
-        console.log('=== generateTextWithGeminiSearch END ===');
-        console.log('Returning result:', {
+        logger.info('=== generateTextWithGeminiSearch END ===');
+        logger.info('Returning result:', {
             textLength: result.text.length,
             sourcesCount: result.sources.length,
             hasGroundingMetadata: !!result.groundingMetadata,
@@ -368,7 +369,7 @@ export const generateTextWithGeminiSearch = async ({
 
         return result;
     } catch (error: any) {
-        console.error('Error in generateTextWithGeminiSearch:', error);
+        logger.error('Error in generateTextWithGeminiSearch:', { data: error });
 
         // Provide more specific error messages
         if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
@@ -535,7 +536,7 @@ export const generateText = async ({
             }
 
             if (chunk.type === 'error') {
-                console.error(chunk.error);
+                logger.error(chunk.error);
                 return Promise.reject(chunk.error);
             }
         }
@@ -549,12 +550,12 @@ export const generateText = async ({
                 }
             }
         } catch (error) {
-            console.warn('Failed to resolve reasoningDetails:', error);
+            logger.warn('Failed to resolve reasoningDetails:', { data: error });
         }
 
         return Promise.resolve(fullText);
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return Promise.reject(error);
     }
 };
@@ -581,8 +582,8 @@ export const generateObject = async ({
             throw new Error('Operation aborted');
         }
 
-        console.log('=== generateObject START ===');
-        console.log('Input parameters:', {
+        logger.info('=== generateObject START ===');
+        logger.info('Input parameters:', {
             prompt: prompt?.slice(0, 100) + '...',
             model,
             hasSchema: !!schema,
@@ -604,7 +605,7 @@ export const generateObject = async ({
                           : true);
 
                 if (!hasContent) {
-                    console.warn('Filtering out message with empty content:', {
+                    logger.warn('Filtering out message with empty content:', {
                         role: message.role,
                         contentType: typeof message.content,
                         contentLength: Array.isArray(message.content)
@@ -618,7 +619,7 @@ export const generateObject = async ({
                 return hasContent;
             });
 
-            console.log('Message filtering:', {
+            logger.info('Message filtering:', {
                 originalCount: messages.length,
                 filteredCount: filteredMessages.length,
                 removedCount: messages.length - filteredMessages.length,
@@ -629,7 +630,7 @@ export const generateObject = async ({
         const { supportsReasoning, getReasoningType } = await import('../models');
 
         const selectedModel = getLanguageModel(model, undefined, byokKeys);
-        console.log('Selected model for generateObject:', {
+        logger.info('Selected model for generateObject:', {
             hasModel: !!selectedModel,
             modelType: typeof selectedModel,
         });
@@ -664,7 +665,7 @@ export const generateObject = async ({
             }
         }
 
-        console.log('Calling generateObjectAi with:', {
+        logger.info('Calling generateObjectAi with:', {
             configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
             hasPrompt: !!prompt,
             hasSchema: !!schema,
@@ -691,19 +692,19 @@ export const generateObject = async ({
 
         const { object } = await generateObjectAi(generateConfig);
 
-        console.log('generateObjectAi successful, result:', {
+        logger.info('generateObjectAi successful, result:', {
             hasObject: !!object,
             objectType: typeof object,
         });
 
-        console.log('=== generateObject END ===');
+        logger.info('=== generateObject END ===');
         return JSON.parse(JSON.stringify(object));
     } catch (error: any) {
-        console.error('Error in generateObject:', error);
+        logger.error('Error in generateObject:', { data: error });
 
         // Provide more specific error messages for common issues
         if (error.message?.includes('contents.parts must not be empty')) {
-            console.error(
+            logger.error(
                 'Empty parts error - this indicates messages with empty content were passed to Gemini API'
             );
             throw new Error(
@@ -820,7 +821,7 @@ export const getWebPageContent = async (url: string) => {
 
         return `${title}${description}${content}${sourceUrl}`;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return `No Result Found for ${url}`;
     }
 };
@@ -888,12 +889,12 @@ export const readURL = async (url: string): Promise<TReaderResult> => {
         if (process.env.JINA_API_KEY) {
             return await fetchWithJina(url);
         } else {
-            console.log('No Jina API key found');
+            logger.info('No Jina API key found');
         }
 
         return { success: false };
     } catch (error) {
-        console.error('Error in readURL:', error);
+        logger.error('Error in readURL:', { data: error });
         return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
     }
 };
@@ -936,7 +937,7 @@ export const processWebPages = async (
 
         return processedResults.slice(0, options.maxPages);
     } catch (error) {
-        console.error('Error in processWebPages:', error);
+        logger.error('Error in processWebPages:', { data: error });
         return processedResults.slice(0, options.maxPages);
     } finally {
         // Clean up event listeners to prevent memory leaks
@@ -966,7 +967,7 @@ export type TReaderResult = {
 
 export const handleError = (error: Error, { context, events }: TaskParams) => {
     const errorMessage = generateErrorMessage(error);
-    console.error('Task failed', error);
+    logger.error('Task failed', { data: error });
 
     events?.update('error', prev => ({
         ...prev,
@@ -1073,7 +1074,7 @@ export const selectAvailableModel = (
     preferredModel: ModelEnum,
     byokKeys?: Record<string, string>
 ): ModelEnum => {
-    console.log('=== selectAvailableModel START ===');
+    logger.info('=== selectAvailableModel START ===');
 
     // Safe window/self checks for debugging
     let hasSelfApiKeys = false;
@@ -1091,7 +1092,7 @@ export const selectAvailableModel = (
         // window not available
     }
 
-    console.log('Input:', {
+    logger.info('Input:', {
         preferredModel,
         availableKeys: byokKeys ? Object.keys(byokKeys).filter(key => byokKeys[key]) : [],
         byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
@@ -1203,7 +1204,7 @@ export const selectAvailableModel = (
 
     // Try preferred model first
     if (hasApiKeyForModel(preferredModel)) {
-        console.log('Using preferred model:', preferredModel);
+        logger.info('Using preferred model:', { data: preferredModel });
         return preferredModel;
     }
 
@@ -1218,12 +1219,12 @@ export const selectAvailableModel = (
 
     for (const model of fallbackModels) {
         if (hasApiKeyForModel(model)) {
-            console.log('Using fallback model:', model);
+            logger.info('Using fallback model:', { data: model });
             return model;
         }
     }
 
-    console.warn('No API key found for any model, will fail with clear error message');
+    logger.warn('No API key found for any model, will fail with clear error message');
     // Return the preferred model to let the provider give a clear error message
     return preferredModel;
 };

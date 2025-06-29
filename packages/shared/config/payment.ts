@@ -10,6 +10,7 @@ import { CREEM_API_CONFIG, CreemApiError, CreemCustomerBillingRequest } from '..
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from '../utils/env';
 import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
+import { logger } from '@repo/shared/logger';
 
 // Types for payment integration
 export interface PaymentProduct {
@@ -144,7 +145,7 @@ export class PaymentService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            console.log('[PaymentService] Creating checkout session with:', {
+            logger.info('[PaymentService] Creating checkout session with:', {
                 productId: request.productId,
                 quantity: request.quantity || 1,
                 email: request.customerEmail,
@@ -169,7 +170,7 @@ export class PaymentService {
                   ? `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`
                   : `${normalizedBaseUrl}/success?package=${request.productId}&quantity=${request.quantity || 1}`;
 
-            console.log('[PaymentService] Using success URL:', successUrl);
+            logger.info('[PaymentService] Using success URL:', { data: successUrl });
 
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
@@ -188,7 +189,7 @@ export class PaymentService {
                 },
             });
 
-            console.log('[PaymentService] Checkout session created successfully:', {
+            logger.info('[PaymentService] Checkout session created successfully:', {
                 checkoutId: result.id,
                 checkoutUrl: result.checkoutUrl,
             });
@@ -203,7 +204,7 @@ export class PaymentService {
 
             throw new Error('Invalid checkout response - missing checkout URL');
         } catch (error: any) {
-            console.error('[PaymentService] Checkout creation failed:', error);
+            logger.error('[PaymentService] Checkout creation failed:', { data: error });
             throw new CheckoutError(
                 `Failed to create checkout session: ${error.message || 'Unknown error'}`
             );
@@ -301,7 +302,7 @@ export class PaymentService {
 
                     if (result && typeof result === 'string') {
                         // If the response is directly a URL string
-                        console.log('[PaymentService] Generated customer portal URL successfully');
+                        logger.info('[PaymentService] Generated customer portal URL successfully');
                         return {
                             url: result,
                             success: true,
@@ -319,7 +320,7 @@ export class PaymentService {
                             result.portalUrl ||
                             result.link ||
                             result.customer_portal_link;
-                        console.log('[PaymentService] Generated customer portal URL successfully');
+                        logger.info('[PaymentService] Generated customer portal URL successfully');
                         return {
                             url: portalUrl,
                             success: true,
@@ -330,7 +331,7 @@ export class PaymentService {
                         );
                     }
                 } catch (apiError) {
-                    console.error('[PaymentService] Creem API call failed:', apiError);
+                    logger.error('[PaymentService] Creem API call failed:', { data: apiError });
                     if (apiError instanceof CreemApiError) {
                         throw apiError; // Re-throw Creem API errors
                     }
@@ -354,7 +355,7 @@ export class PaymentService {
                 success: true,
             };
         } catch (error) {
-            console.error('Payment portal error:', error);
+            logger.error('Payment portal error:', { data: error });
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
@@ -371,7 +372,7 @@ export class PaymentService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        console.log('[PaymentService] Creating VT+ subscription checkout for:', customerEmail);
+        logger.info('[PaymentService] Creating VT+ subscription checkout for:', { data: customerEmail });
 
         return this.createCheckout({
             productId: PlanSlug.VT_PLUS,

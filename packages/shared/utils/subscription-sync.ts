@@ -8,6 +8,7 @@ import { users, userSubscriptions } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { and, eq, isNull } from 'drizzle-orm';
+import { logger } from '@repo/shared/logger';
 
 export interface SubscriptionSyncResult {
     success: boolean;
@@ -214,7 +215,7 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
             needsSync: subscription ? false : userPlanSlug === PlanSlug.VT_PLUS,
         };
     } catch (error) {
-        console.error('Error getting comprehensive subscription status:', error);
+        logger.error('Error getting comprehensive subscription status:', { data: error });
         throw error;
     }
 }

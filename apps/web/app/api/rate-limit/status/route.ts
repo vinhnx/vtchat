@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth-server';
 import { getRateLimitStatus } from '@/lib/services/rate-limit';
 import { ModelEnum } from '@repo/ai/models';
 import { NextRequest } from 'next/server';
+import { logger } from '@repo/shared/logger';
 
 export async function GET(request: NextRequest) {
     try {
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
             }
         );
     } catch (error) {
-        console.error('Error getting rate limit status:', error);
+        logger.error('Error getting rate limit status:', { data: error });
         return new Response(
             JSON.stringify({ error: 'Internal server error' }),
             { status: 500, headers: { 'Content-Type': 'application/json' } }

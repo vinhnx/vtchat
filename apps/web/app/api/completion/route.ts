@@ -249,7 +249,7 @@ function createCompletionStream({
                 });
             } catch (error) {
                 if (abortController.signal.aborted) {
-                    console.log('abortController.signal.aborted');
+                    logger.info('abortController.signal.aborted');
                     sendMessage(controller, _encoder, {
                         type: 'done',
                         status: 'aborted',
@@ -258,7 +258,7 @@ function createCompletionStream({
                         parentThreadItemId: data.parentThreadItemId,
                     });
                 } else {
-                    console.log('sending error message');
+                    logger.info('sending error message');
                     sendMessage(controller, _encoder, {
                         type: 'done',
                         status: 'error',
@@ -276,7 +276,7 @@ function createCompletionStream({
             }
         },
         cancel() {
-            console.log('cancelling stream');
+            logger.info('cancelling stream');
             abortController.abort();
         },
     });

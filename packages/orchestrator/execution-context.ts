@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { TaskTiming, WorkflowState } from './types';
+import { logger } from '@repo/shared/logger';
 
 export class ExecutionContext {
     private state: WorkflowState;
