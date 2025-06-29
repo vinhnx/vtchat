@@ -84,7 +84,14 @@ increment_version() {
     local version=$1
     local type=$2
     
-    IFS='.' read -r major minor patch <<< "$version"
+    # Extract only numeric parts, ignore any suffixes like -beta.1
+    local clean_version=$(echo "$version" | sed 's/-.*$//')
+    IFS='.' read -r major minor patch <<< "$clean_version"
+    
+    # Ensure we have numeric values
+    major=${major:-0}
+    minor=${minor:-0}
+    patch=${patch:-0}
     
     case $type in
         "major")
@@ -193,16 +200,13 @@ create_version_tag() {
     fi
     
     local new_version=$(increment_version $current_version $version_type)
-    local timestamp=$(date +"%Y%m%d.%H%M%S")
-    local build_number="build-$timestamp"
     local tag_name="v$new_version"
     
-    print_info "New version: $tag_name ($build_number)"
+    print_info "New version: $tag_name"
     
-    # Create tag with build info
+    # Create tag
     local tag_message="Release $tag_name
 
-Build: $build_number
 Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
 Branch: $(git branch --show-current)
 Commit: $(git rev-parse --short HEAD)
@@ -219,10 +223,6 @@ Fly.io App: vtchat"
     
     git tag -a "$tag_name" -m "$tag_message"
     print_status "Created tag: $tag_name"
-    
-    # Set build ID for Next.js
-    export BUILD_ID="$new_version-$timestamp"
-    echo "BUILD_ID=$BUILD_ID" > .env.build
     
     echo "$tag_name"
 }
@@ -341,9 +341,6 @@ main() {
     
     # Step 4: Deploy to Fly.io
     deploy_to_fly "$tag_name" "$auto_mode"
-    
-    # Cleanup
-    rm -f .env.build
     
     echo ""
     print_status "✨ Deployment pipeline completed successfully!"
