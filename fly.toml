@@ -5,6 +5,8 @@ primary_region = 'sin'
 [build]
   # Enable build target for optimized caching
   build-target = "runner"
+  [build.args]
+    NODE_ENV = "production"
 
 [env]
   NODE_ENV = 'production'
@@ -16,6 +18,13 @@ primary_region = 'sin'
   NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
   CREEM_ENVIRONMENT = 'production'
   BETTER_AUTH_ENV = 'production'
+  # Next.js optimizations
+  NEXT_TELEMETRY_DISABLED = '1'
+  PORT = '3000'
+  NODE_OPTIONS = '--max-old-space-size=512'
+  # AI SDK optimizations
+  AI_SDK_TELEMETRY_DISABLED = '1'
+  VERCEL_ANALYTICS_DISABLED = '1'
 
 # https://fly.io/docs/blueprints/resilient-apps-multiple-machines/
 [http_service]
@@ -30,15 +39,19 @@ primary_region = 'sin'
   processes = ['app']
   [http_service.concurrency]
     type = "requests"
-    soft_limit = 200 # Used by Fly Proxy to determine Machine excess capacity
+    soft_limit = 50     # Optimized for AI streaming responses
+    hard_limit = 100    # Prevent AI timeout issues
 
+# HTTP health check for /api/health endpoint
 [[http_service.checks]]
   grace_period = "15s"
-  interval = "30s"
+  interval = "45s"
   method = "GET"
   timeout = "10s"
   path = "/api/health"
+  headers = { "User-Agent" = "Fly-Health-Check" }
 
+# TCP health check for port connectivity
 [[http_service.checks]]
   type = "tcp"
   grace_period = "5s"
@@ -46,6 +59,6 @@ primary_region = 'sin'
   timeout = "2s"
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'    # Start small for <10 users
   cpu_kind = 'shared'
   cpus = 1
