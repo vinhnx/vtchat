@@ -413,9 +413,14 @@ type PersonalizedGreetingProps = {
 };
 
 const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
-    const [greeting, setGreeting] = React.useState<string>('');
-
+    const [greeting, setGreeting] = React.useState<string>(() => {
+        // Initialize with a default greeting to prevent hydration mismatch
+        const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
+        const userNamePart = userName ? `, ${userName}!` : '';
+        return `Hello${userNamePart}`;
+    });
     React.useEffect(() => {
+        
         const getTimeBasedGreeting = () => {
             const hour = new Date().getHours();
             const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
@@ -430,41 +435,27 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
             }
         };
 
+        // Set time-based greeting after mount to prevent hydration mismatch
         setGreeting(getTimeBasedGreeting());
 
-        // Update the greeting if the component is mounted during a time transition
+        // Update greeting every hour instead of every minute for better performance
         const interval = setInterval(() => {
-            const newGreeting = getTimeBasedGreeting();
-            if (newGreeting !== greeting) {
-                setGreeting(newGreeting);
-            }
-        }, 60000); // Check every minute
+            setGreeting(getTimeBasedGreeting());
+        }, 3600000); // Check every hour
 
         return () => clearInterval(interval);
-    }, [greeting, session]);
+    }, [session]);
 
     return (
         <Flex
             direction="col"
             className="relative h-[100px] w-full items-center justify-center overflow-hidden"
         >
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={greeting}
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 5 }}
-                    transition={{
-                        duration: 0.8,
-                        ease: 'easeInOut',
-                    }}
-                    className="text-center"
-                >
-                    <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
-                        {greeting}
-                    </ShineText>
-                </motion.div>
-            </AnimatePresence>
+            <div className="text-center">
+                <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
+                    {greeting}
+                </ShineText>
+            </div>
         </Flex>
     );
 };
