@@ -3,66 +3,40 @@ app = 'vtchat'
 primary_region = 'sin'
 
 [build]
-build-target = "runner"
-dockerfile = "Dockerfile"
-
-[build.args]
-NODE_ENV = "production"
-NEXT_PUBLIC_BASE_URL = "https://vtchat.io.vn"
-NEXT_PUBLIC_APP_URL = "https://vtchat.io.vn"
-NEXT_PUBLIC_COMMON_URL = "https://vtchat.io.vn"
-NEXT_PUBLIC_BETTER_AUTH_URL = "https://vtchat.io.vn"
-DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy"
 
 [env]
-NODE_ENV = 'production'
-BASE_URL = 'https://vtchat.io.vn'
-BETTER_AUTH_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
-CREEM_ENVIRONMENT = 'production'
-BETTER_AUTH_ENV = 'production'
-# Next.js optimizations
-NEXT_TELEMETRY_DISABLED = '1'
-TURBO_TELEMETRY_DISABLED = '1'
-PORT = '3000'
-NODE_OPTIONS = '--max-old-space-size=512'
-# AI SDK optimizations
-AI_SDK_TELEMETRY_DISABLED = '1'
-VERCEL_ANALYTICS_DISABLED = '1'
+  NODE_ENV = 'production'
+  BASE_URL = 'https://vtchat.io.vn'
+  BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  CREEM_ENVIRONMENT = 'production'
+  BETTER_AUTH_ENV = 'production'
 
 [http_service]
-internal_port = 3000
-force_https = true
-auto_stop_machines = "stop"
-auto_start_machines = true
-min_machines_running = 0
-processes = ['app']
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
 
-[http_service.concurrency]
-type = "requests"
-soft_limit = 50
-hard_limit = 100
-
-# HTTP health check
 [[http_service.checks]]
-grace_period = "60s"
-interval = "30s"
-method = "GET"
-timeout = "30s"
-path = "/api/health"
-headers = { "User-Agent" = "Fly-Health-Check" }
+  grace_period = "15s"
+  interval = "30s"
+  method = "GET"
+  timeout = "10s"
+  path = "/api/health"
 
-# TCP health check
 [[http_service.checks]]
-type = "tcp"
-grace_period = "15s"
-interval = "15s"
-timeout = "5s"
+  type = "tcp"
+  grace_period = "5s"
+  interval = "15s"
+  timeout = "2s"
 
 [[vm]]
-memory = '512mb'
-cpu_kind = 'shared'
-cpus = 1
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 2
