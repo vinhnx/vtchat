@@ -87,4 +87,4 @@ ENV NODE_OPTIONS="--max-old-space-size=512"
 EXPOSE 3000
 
 # Start the Next.js standalone server
-CMD ["/nodejs/bin/node", "apps/web/server.js"]
+CMD ["apps/web/server.js"]
