@@ -17,13 +17,20 @@ primary_region = 'sin'
   CREEM_ENVIRONMENT = 'production'
   BETTER_AUTH_ENV = 'production'
 
+# https://fly.io/docs/blueprints/resilient-apps-multiple-machines/
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = 'suspend'
-  auto_start_machines = true
-  min_machines_running = 0
+
+  # https://fly.io/docs/launch/autostop-autostart/#configure-autostop-autostart
+  auto_stop_machines = "stop" # Fly Proxy stops Machines based on traffic
+  auto_start_machines = true # Fly Proxy starts Machines based on traffic
+  min_machines_running = 0 # No. of Machines to keep running in primary region
+
   processes = ['app']
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200 # Used by Fly Proxy to determine Machine excess capacity
 
 [[http_service.checks]]
   grace_period = "15s"
@@ -39,6 +46,6 @@ primary_region = 'sin'
   timeout = "2s"
 
 [[vm]]
-  memory = '2gb'
+  memory = '1gb'
   cpu_kind = 'shared'
-  cpus = 2
+  cpus = 1
