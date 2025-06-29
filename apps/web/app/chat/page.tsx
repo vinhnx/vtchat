@@ -1,8 +1,13 @@
-'use client';
-
 import { Thread } from '@repo/common/components';
+import { generateMetadata as genMeta } from '../../lib/seo/metadata-utils';
 
-const ChatPage = () => {
+export const metadata = genMeta({
+    title: 'Chat',
+    description: 'Chat with AI assistants using various models.',
+    pathname: '/chat',
+});
+
+export default function ChatPage() {
     return (
         <div className="flex h-screen flex-col">
             <div className="flex-grow overflow-y-auto">
@@ -10,6 +15,4 @@ const ChatPage = () => {
             </div>
         </div>
     );
-};
-
-export default ChatPage;
+}
