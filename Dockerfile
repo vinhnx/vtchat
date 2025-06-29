@@ -66,7 +66,6 @@ ENV TURBO_TELEMETRY_DISABLED=1
 RUN --mount=type=cache,target=/app/apps/web/.next/cache \
     --mount=type=cache,target=/root/.bun/install/cache \
     cd apps/web && \
-    rm -rf .next/cache && \
     bun run build
 
 # Production stage - use distroless for smaller image
