@@ -5,6 +5,7 @@
 
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { logger } from '@repo/shared/logger';
 
 export interface SessionSubscriptionStatus {
     plan: PlanSlug;

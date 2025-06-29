@@ -2,6 +2,7 @@
 
 import { Component, ReactNode } from 'react';
 import { TypographyH2 } from '@repo/ui';
+import { logger } from '@repo/shared/logger';
 
 interface Props {
     children: ReactNode;
@@ -24,7 +25,7 @@ export class AuthErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: any) {
-        console.error('[Auth Error Boundary] Caught error:', error, errorInfo);
+        logger.error('[Auth Error Boundary] Caught error:', { data: error, errorInfo });
     }
 
     render() {

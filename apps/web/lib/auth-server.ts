@@ -5,6 +5,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { multiSession } from 'better-auth/plugins';
 import { db } from './database';
 import * as schema from './database/schema';
+import { logger } from '@repo/shared/logger';
 
 export const auth = betterAuth({
     baseURL:
