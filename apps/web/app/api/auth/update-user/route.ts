@@ -18,12 +18,16 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { name, email } = body;
 
+        console.log('[Update User API] Received data:', { name, email, body });
+
         // Validate input
         if (!name || typeof name !== 'string' || name.trim().length === 0) {
+            console.log('[Update User API] Name validation failed:', { name });
             return NextResponse.json({ error: 'Name is required' }, { status: 400 });
         }
 
         if (!email || typeof email !== 'string' || !email.includes('@')) {
+            console.log('[Update User API] Email validation failed:', { email });
             return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
         }
 
