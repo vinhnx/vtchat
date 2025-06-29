@@ -47,19 +47,19 @@ hard_limit = 100
 
 # HTTP health check
 [[http_service.checks]]
-grace_period = "30s"
+grace_period = "60s"
 interval = "30s"
 method = "GET"
-timeout = "15s"
+timeout = "30s"
 path = "/api/health"
 headers = { "User-Agent" = "Fly-Health-Check" }
 
 # TCP health check
 [[http_service.checks]]
 type = "tcp"
-grace_period = "5s"
+grace_period = "15s"
 interval = "15s"
-timeout = "2s"
+timeout = "5s"
 
 [[vm]]
 memory = '1gb'
