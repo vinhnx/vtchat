@@ -2,8 +2,6 @@
 
 ok go! -> https://vtchat.io.vn/
 
-https://supersaas.dev/tools
-
 --
 
 support email: hello@vtchat.io.vn
@@ -11,18 +9,6 @@ support email: hello@vtchat.io.vn
 -> now implement better auth email features
 -> implement resend or plunk email services
 
-------
-https://vercel.com/vtai/~/ai
-
---
-
-improve thread side bar title logic -> USE AI TO SUMMARIZE
-
---
-
-cookie consent https://c15t.com/
-
-> https://c15t.com/docs/nextjs/quickstart
 --
 
 launch discount promo code?
@@ -33,7 +19,7 @@ https://github.com/vercel/mcp-adapter
 
 --
 IMPORTANT verify creem.io LIVE payment
-
+good luck!
 https://www.creem.io/checkout/prod_1UZhx15bSgbT8ggWTPQNi/ch_4oVL59zbacFQaBIGrGBgug
 
 --
@@ -66,7 +52,21 @@ grand final -> show hn, good luck!
 gen new launch image https://og.new/
 
 ref https://x.com/fayazara/status/1820354290487083232
+Launch day
 
+https://supersaas.dev/ - A comprehensive Nuxt 3 saas starter kit.
+
+Auth - Email/Password, OTP, Passkey, oAuth
+DB - Turso, NuxtHub, Postgres
+Email - Resend, Sendgrid, Postmark, Plunk
+File storage - S3, R2, Local files
+Payments - Stripe & Lemonsqueezy
+--
+Fayaz Ahmed
+@fayazara
+·
+Aug 5, 2024
+Launching it on PH as well - Support appreciated - https://producthunt.com/posts/supersaas-1
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
