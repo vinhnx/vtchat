@@ -154,22 +154,15 @@ export const UserProfileSettings = () => {
         setSuccess('');
 
         try {
-            console.log('[User Profile] Session data:', session?.user);
-            console.log('[User Profile] Form data:', formData);
-            
-            const requestData = {
-                ...formData,
-                email: session.user.email || '',
-            };
-            
-            console.log('[User Profile] Sending update request:', requestData);
-            
             const response = await fetch('/api/auth/update-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestData),
+                body: JSON.stringify({
+                    ...formData,
+                    email: session.user.email || '',
+                }),
             });
 
             if (!response.ok) {
