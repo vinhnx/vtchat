@@ -44,10 +44,10 @@ primary_region = 'sin'
 
 # HTTP health check for /api/health endpoint
 [[http_service.checks]]
-  grace_period = "15s"
-  interval = "45s"
+  grace_period = "30s"      # Increased for AI app startup time
+  interval = "30s"          # More frequent checks
   method = "GET"
-  timeout = "10s"
+  timeout = "15s"           # Longer timeout for AI responses
   path = "/api/health"
   headers = { "User-Agent" = "Fly-Health-Check" }
 
