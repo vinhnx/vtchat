@@ -159,5 +159,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application using the custom startup script
-CMD ["./apps/web/start.sh"]
+# Start the application using the Node.js standalone server directly
+CMD ["node", "apps/web/server.js"]
