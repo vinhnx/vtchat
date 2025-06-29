@@ -161,10 +161,41 @@ export function CreemCheckoutProcessor() {
                                 result
                             );
 
+                            // Invalidate subscription cache to ensure fresh data
+                            try {
+                                console.log(
+                                    '[CreemCheckoutProcessor] Invalidating subscription cache...'
+                                );
+                                const cacheResponse = await fetch(
+                                    '/api/subscription/invalidate-cache',
+                                    {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                    }
+                                );
+
+                                if (cacheResponse.ok) {
+                                    console.log(
+                                        '[CreemCheckoutProcessor] Subscription cache invalidated successfully'
+                                    );
+                                } else {
+                                    console.warn(
+                                        '[CreemCheckoutProcessor] Failed to invalidate subscription cache'
+                                    );
+                                }
+                            } catch (cacheError) {
+                                console.error(
+                                    '[CreemCheckoutProcessor] Error invalidating cache:',
+                                    cacheError
+                                );
+                            }
+
                             toast({
-                                title: 'Account Updated! ✅',
+                                title: 'Payment Successful!',
                                 description:
-                                    'Your payment has been processed and your account has been updated.',
+                                    'Your payment has been processed successfully. Activating your subscription...',
                             });
                         } else {
                             const error = await response.json();
@@ -206,13 +237,6 @@ export function CreemCheckoutProcessor() {
                 }
 
                 if (isVtPlusSubscription) {
-                    // Process VT+ subscription
-                    toast({
-                        title: 'Welcome to VT+! 🎉',
-                        description:
-                            'Your subscription is now active. Enjoy Grounding Web Search, Dark Mode, and advanced features!',
-                    });
-
                     console.log('[CreemCheckoutProcessor] VT+ subscription activated');
                 } else {
                     // Invalid purchase type for VT+ only system
@@ -223,14 +247,8 @@ export function CreemCheckoutProcessor() {
                     });
                 }
 
-                // Refresh subscription status to get updated subscription from database
-                console.log(
-                    '[CreemCheckoutProcessor] Refreshing subscription status from database...'
-                );
-                await refreshSubscriptionStatus(true, 'payment');
-
-                // Don't reload the page as it causes infinite redirect loop
-                // The subscription refresh above should be sufficient
+                // Skip subscription refresh since we'll do a full page reload
+                // This prevents double refresh and ensures clean state
 
                 // Log successful purchase for analytics
                 console.log('[CreemCheckoutProcessor] Purchase completed successfully:', {
@@ -246,16 +264,24 @@ export function CreemCheckoutProcessor() {
                     timestamp: new Date().toISOString(),
                 });
 
-                // Redirect to appropriate page after a short delay
+                // Show welcome toast and redirect after delay
                 setTimeout(() => {
                     if (isVtPlusSubscription) {
-                        // Redirect VT+ subscribers to the main chat page
-                        router.push('/chat');
+                        // Show welcome toast right before redirect
+                        toast({
+                            title: 'Welcome to VT+! 🎉',
+                            description: 'Redirecting to chat to enjoy your new features...',
+                        });
+                        
+                        // Redirect after showing welcome toast
+                        setTimeout(() => {
+                            window.location.href = '/chat';
+                        }, 1500); // Short delay to show welcome message
                     } else {
-                        // Redirect to main app
-                        router.push('/');
+                        // Force full page reload to ensure all state is fresh
+                        window.location.href = '/';
                     }
-                }, 3000); // 3 second delay to allow user to see success message
+                }, 2000); // 2 second delay after payment success message
             } catch (error) {
                 console.error('[CreemCheckoutProcessor] Error processing checkout success:', error);
                 toast({
@@ -271,7 +297,7 @@ export function CreemCheckoutProcessor() {
         };
 
         processCheckout();
-    }, [searchParams, toast, refreshSubscriptionStatus]);
+    }, [searchParams, toast, refreshSubscriptionStatus, processing, processed, router]);
 
     // This component doesn't render anything visible, but we could add order details
     if (orderDetails) {
