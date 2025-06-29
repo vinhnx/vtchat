@@ -7,6 +7,7 @@ import { auth } from '../auth-server';
 import { z } from 'zod';
 import { type EmbeddingModel } from '@repo/shared/config/embedding-models';
 import { type ApiKeys } from '@repo/common/store';
+import { secureContentForEmbedding } from '@/lib/utils/content-security';
 
 // Schema for validating resource input
 const createResourceSchema = z.object({
@@ -40,11 +41,11 @@ export const createResource = async (input: NewResourceParams, apiKeys: ApiKeys,
         // Generate embeddings for the content
         const embeddingResults = await generateEmbeddings(content, apiKeys, embeddingModel);
         
-        // Save embeddings to database
+        // Save embeddings to database with secure content
         await db.insert(embeddings).values(
             embeddingResults.map(embedding => ({
                 resourceId: resource.id,
-                content: embedding.content,
+                content: secureContentForEmbedding(embedding.content),
                 embedding: embedding.embedding, // Array should be properly handled by Drizzle
             })),
         );

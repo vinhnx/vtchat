@@ -10,6 +10,7 @@ import {
     type EmbeddingModel 
 } from '@repo/shared/config/embedding-models';
 import { type ApiKeys } from '@repo/common/store';
+import { maskPII } from '../utils/content-security';
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
@@ -150,5 +151,10 @@ export const findRelevantContent = async (userQuery: string, apiKeys: ApiKeys, u
         ))
         .orderBy(t => desc(t.similarity))
         .limit(4);
-    return similarGuides;
+    
+    // SECURITY: Apply additional PII masking to retrieved content as a safety net
+    return similarGuides.map(guide => ({
+        ...guide,
+        name: maskPII(guide.name)
+    }));
 };

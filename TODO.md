@@ -2,6 +2,23 @@
 
 ok go! -> https://vtchat.io.vn/
 
+support email: hello@vtchat.io.vn
+
+-> now implement better auth email features
+-> implement resend or plunk email services
+
+------
+https://vercel.com/vtai/~/ai
+
+--
+
+improve thread side bar title logic -> USE AI TO SUMMARIZE
+
+--
+
+cookie consent https://c15t.com/
+
+> https://c15t.com/docs/nextjs/quickstart
 --
 
 launch discount promo code?
@@ -17,103 +34,11 @@ https://www.creem.io/checkout/prod_1UZhx15bSgbT8ggWTPQNi/ch_4oVL59zbacFQaBIGrGBg
 
 --
 
-try to setup email from matbao.net
-
---
-
 localization
 
 --
 
-fly.io: https://fly.io/docs/apps/going-to-production/
---
---
-
-https://fly.io/docs/monitoring/sentry/
- Application Monitoring by Sentry
-
-Sentry is a developer-first application monitoring platform that helps you identify and fix software problems before they impact your users. Through our partnerships with Sentry, each of your Fly organizations can claim a year’s worth of Team Plan credits.
-
-;--
-
-vtchat.io.vn
-
--> setup email forward
-good luck!
-
---
-
-change vtchat.io@gmail.com -> support@vtchat.io@gmail.com domain?
-
---
-scan and update email and domain config in project (faq, terms, privacy, etc.)
-
---
-
-https://page-speed.dev/
-
---
-https://requestindexing.com/
-
---
-
-## ✅ PRODUCTION CONFIGURATION COMPLETE
-
-**Status: 💯 100% READY FOR PRODUCTION**
-
-### ✅ Completed
-- Environment variables configured for production
-- Secrets properly stored in Fly.io
-- Database connection established
-- OAuth providers (GitHub, Google) configured
-- Payment integration (Creem.io) live
-- Health checks operational
-- HTTPS enforcement enabled
-- Production and development environments separated
-- **Arcjet Application Security**: Rate limiting, bot protection, email validation, and WAF protection implemented across all critical routes
-
-### ✅ DNS CONFIGURATION COMPLETE
-**Custom Domain Successfully Configured:**
-```
-Domain: vtchat.io.vn ✅ LIVE
-CNAME: vtchat.fly.dev ✅ CONFIGURED
-Status: Certificate issued and ready ✅
-HTTPS: Fully operational ✅
-```
-
-### 🟡 OPTIONAL ENHANCEMENTS
-1. **Error Monitoring (Sentry)**
-   ```bash
-   fly secrets set NEXT_PUBLIC_SENTRY_DSN="your-dsn" --app vtchat
-   ```
-
-2. **User Analytics (Hotjar)**
-   ```bash
-   fly secrets set NEXT_PUBLIC_HOTJAR_SITE_ID="your-id" --app vtchat
-   ```
-
-3. **Additional AI Models (OpenAI)**
-   ```bash
-   fly secrets set OPENAI_API_KEY="your-key" --app vtchat
-   ```
-
-**Full Report:** See `docs/production-readiness-report.md`
-
---
-## Fly.io deployment. Good luck!
-
-✅ Production: https://vtchat.io.vn (LIVE)
-✅ Development: Local only (http://localhost:3000)
-✅ Apps configured with proper environment separation
-
-https://fly.io/docs/apps/going-to-production/
-
---
---
-
---
-
-<https://docs.creem.io/faq/account-reviews>
+https://docs.creem.io/faq/account-reviews
 
 --
 
@@ -129,13 +54,22 @@ I like the idea of SEO with ChatGPT blogs though"
 
 
 grand final -> show hn, good luck!
+
+-> discuss with Claude.
+-> ask for tagline
+--
+
+gen new launch image https://og.new/
+
+ref https://x.com/fayazara/status/1820354290487083232
+
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
 
 --
 
-Write a final report and update readme, documentation, and any other relevant materials to reflect the current state of the project.
+Write a final readme, documentation, and any other relevant materials to reflect the current state of the project.
 
 --
 

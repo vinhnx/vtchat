@@ -106,7 +106,7 @@ VT+ is a monthly subscription service for **$9.99 USD** that includes:
 - You may cancel your subscription at any time through the customer portal
 - Access to premium features continues until the end of your current billing period
 - **Refund Policy**: Refunds available within 30 days for monthly subscriptions, 14 days for annual subscriptions
-- Contact support@vtchat.io.vn for refund requests and assistance
+- Contact hello@vtchat.io.vn for refund requests and assistance
 - Customer support responds within 3 business days as per payment processor requirements
 
 ---
@@ -248,7 +248,7 @@ For questions about these Terms, please contact us:
 
 **Email:** vtchat.io@gmail.com
 **Address:** An Giang, Vietnam
-**Support:** support@vtchat.io.vn (responds within 3 business days)
+**Support:** hello@vtchat.io.vn (responds within 3 business days)
 **Business Hours:** Monday-Friday, 9 AM - 6 PM UTC+7 (Vietnam Time)
 **Customer Portal:** Available 24/7 for subscription management through Creem.io
 

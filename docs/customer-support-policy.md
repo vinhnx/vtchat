@@ -2,13 +2,13 @@
 
 ## VT (VTChat) Customer Support Guidelines
 
-**Effective Date:** January 2025  
+**Effective Date:** January 2025
 **Last Updated:** January 2025
 
 ### Contact Information
 
-**Primary Support Email:** support@vtchat.io.vn  
-**Website:** https://vtchat.io.vn  
+**Primary Support Email:** hello@vtchat.io.vn
+**Website:** https://vtchat.io.vn
 **Customer Portal:** Accessible via Creem.io integration
 
 ### Response Time Commitment
@@ -17,7 +17,7 @@ VT is committed to providing excellent customer service with the following respo
 
 #### **Standard Response Times**
 - **General Inquiries:** Within 24 hours during business days
-- **Technical Issues:** Within 24 hours during business days  
+- **Technical Issues:** Within 24 hours during business days
 - **Billing/Subscription Issues:** Within 24 hours during business days
 - **Urgent Issues:** Within 12 hours during business days
 - **Critical Security Issues:** Within 4 hours, 24/7
@@ -41,7 +41,7 @@ In accordance with Creem.io payment processor requirements:
 ### Support Channels
 
 #### **Primary Channels**
-1. **Email Support:** support@vtchat.io.vn
+1. **Email Support:** hello@vtchat.io.vn
 2. **Customer Portal:** Creem.io customer portal for subscription management
 3. **Website Contact:** Forms available on vtchat.io.vn
 
@@ -128,7 +128,7 @@ In accordance with Creem.io payment processor requirements:
 ### Creem.io Compliance Checklist
 
 #### **Payment Processor Requirements Met:**
-- ✅ Branded support email: support@vtchat.io.vn
+- ✅ Branded support email: hello@vtchat.io.vn
 - ✅ Visible support contact on website and customer portal
 - ✅ 3-day maximum response time commitment
 - ✅ Subscription cancellation available through customer portal
@@ -144,7 +144,7 @@ In accordance with Creem.io payment processor requirements:
 - **Data Issues:** Immediate investigation and resolution
 
 #### **Contact Escalation**
-- **Level 1:** support@vtchat.io.vn
+- **Level 1:** hello@vtchat.io.vn
 - **Level 2:** Technical team escalation (internal)
 - **Level 3:** Management escalation for unresolved issues
 - **External:** Creem.io support for payment-related issues
@@ -167,9 +167,9 @@ In accordance with Creem.io payment processor requirements:
 
 ## Contact Information Summary
 
-**Primary Support:** support@vtchat.io.vn  
-**Response Time:** Within 24 hours (3 business days maximum)  
-**Customer Portal:** Available 24/7 for subscription management  
-**Emergency Issues:** Escalated immediately for critical problems  
+**Primary Support:** hello@vtchat.io.vn
+**Response Time:** Within 24 hours (3 business days maximum)
+**Customer Portal:** Available 24/7 for subscription management
+**Emergency Issues:** Escalated immediately for critical problems
 
 This policy ensures compliance with Creem.io requirements while maintaining high standards of customer service for all VT users.

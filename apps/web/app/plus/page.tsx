@@ -331,10 +331,10 @@ export default function PlusPage() {
                     <p className="text-base text-gray-600">
                         Have questions? Get in touch:{' '}
                         <a
-                            href="mailto:support@vtchat.io.vn"
+                            href="mailto:hello@vtchat.io.vn"
                             className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
                         >
-                            support@vtchat.io.vn
+                            hello@vtchat.io.vn
                         </a>
                     </p>
                 </div>

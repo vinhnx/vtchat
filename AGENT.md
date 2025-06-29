@@ -85,14 +85,18 @@
 
 ## Logging
 
-- Use Pino logger (`@repo/shared/logger`) for all logging instead of console.log/error
-- **Automatic PII redaction** for sensitive fields (email, password, tokens, IP addresses, etc.)
+- **NEVER use console.log/error/warn** - Always use Pino logger (`@repo/shared/logger`)
+- **Import**: `import { log } from '@repo/shared/logger'` for basic logging
+- **Usage**: `log.info({ key: value }, 'message')`, `log.error({ error }, 'message')`
+- **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
+- **Structured logging** - Always pass metadata as first parameter, message as second
+- **API key security** - API keys automatically redacted in logs (apiKey, api_key, Authorization headers)
 - **Next.js compatible** configuration that avoids worker thread bundling issues
 - **Request tracing** with `withRequestId()` and `withLogging()` middleware
 - **Performance timing** with `createTimer()` for monitoring operations
 - **Child loggers** with `createChildLogger()` for scoped context
-- **Structured JSON logging** with error serialization and context preservation
 - **Environment-specific** configurations (development/production/test)
+- **Log levels**: debug (dev only), info, warn, error, fatal
 
 ## Documentation
 

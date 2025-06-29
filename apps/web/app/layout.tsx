@@ -9,7 +9,7 @@ import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-prov
 import { RootProvider } from '@repo/common/context';
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
-import { cn, TooltipProvider } from '@repo/ui';
+import { cn, TooltipProvider, SonnerToaster } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
@@ -133,9 +133,10 @@ export default function ParentLayout({
                                         <SubscriptionProvider>
                                             <PlusDefaultsProvider>
                                                 <RootProvider>
-                                                    {/* @ts-ignore - Type compatibility issue between React versions */}
-                                                    <RootLayout>{children}</RootLayout>
-                                                </RootProvider>
+                                                {/* @ts-ignore - Type compatibility issue between React versions */}
+                                                <RootLayout>{children}</RootLayout>
+                                                    <SonnerToaster />
+                                                 </RootProvider>
                                             </PlusDefaultsProvider>
                                         </SubscriptionProvider>
                                     </OptimizedAuthProvider>
