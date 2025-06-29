@@ -2,14 +2,6 @@
 
 ok go! -> https://vtchat.io.vn/
 
---
-
-support email: hello@vtchat.io.vn
-
--> now implement better auth email features
--> implement resend or plunk email services
-
---
 
 launch discount promo code?
 
