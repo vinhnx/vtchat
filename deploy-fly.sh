@@ -12,28 +12,28 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Interactive deployment script for VT Chat
-echo -e "${PURPLE}🚀 VT Chat Interactive Deployment Pipeline${NC}"
-echo "=============================================="
+echo -e "${PURPLE}VT Chat Interactive Deployment Pipeline${NC}" >&2
+echo "===============================================" >&2
 
 # Function to print colored output
 print_status() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN}[SUCCESS] $1${NC}" >&2
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
+    echo -e "${YELLOW}[WARNING] $1${NC}" >&2
 }
 
 print_error() {
-    echo -e "${RED}❌ $1${NC}"
+    echo -e "${RED}[ERROR] $1${NC}" >&2
 }
 
 print_info() {
-    echo -e "${BLUE}ℹ️  $1${NC}"
+    echo -e "${BLUE}[INFO] $1${NC}" >&2
 }
 
 print_step() {
-    echo -e "${CYAN}📋 $1${NC}"
+    echo -e "${CYAN}[STEP] $1${NC}" >&2
 }
 
 # Show help if requested
@@ -128,8 +128,8 @@ check_git_status() {
     # Check for uncommitted changes
     if ! git diff-index --quiet HEAD --; then
         print_warning "You have uncommitted changes:"
-        git status --porcelain
-        echo ""
+        git status --porcelain >&2
+        echo "" >&2
         
         print_info "Auto-committing changes..."
         git add -A
@@ -224,21 +224,23 @@ deploy_to_fly() {
     # Deploy
     print_status "Starting deployment..."
     print_info "Running: flyctl deploy --app $FLY_APP"
+    print_info "You can also monitor deployment progress at: https://fly.io/apps/$FLY_APP"
+    print_info "View deployment logs at: https://fly.io/apps/$FLY_APP/monitoring"
     
     # Run deployment with verbose output
     if flyctl deploy --app "$FLY_APP" --verbose; then
         print_status "Deployment completed successfully!"
-        echo ""
-        echo "🌐 Your app is available at:"
-        echo "   https://vtchat.io.vn"
-        echo "   https://vtchat.fly.dev"
-        echo ""
+        echo "" >&2
+        echo "Your app is available at:" >&2
+        echo "   https://vtchat.io.vn" >&2
+        echo "   https://vtchat.fly.dev" >&2
+        echo "" >&2
         
         # Show app status
         print_info "Checking app status..."
         flyctl status --app "$FLY_APP"
         
-        print_status "🎉 Deployment completed!"
+        print_status "Deployment completed!"
     else
         print_error "Deployment failed with exit code $?"
         print_error "Check the output above for details"
@@ -269,7 +271,7 @@ main() {
         esac
     done
     
-    echo ""
+    echo "" >&2
     print_step "Starting deployment pipeline..."
     
     # Step 1: Check git status
@@ -284,12 +286,12 @@ main() {
     # Step 4: Deploy to Fly.io
     deploy_to_fly "$tag_name" "$auto_mode"
     
-    echo ""
-    print_status "✨ Deployment pipeline completed successfully!"
-    echo -e "${YELLOW}📊 Summary:${NC}"
-    echo -e "${YELLOW}  Version: $tag_name${NC}"
-    echo -e "${YELLOW}  App: vtchat${NC}"
-    echo -e "${YELLOW}  URL: https://vtchat.io.vn${NC}"
+    echo "" >&2
+    print_status "Deployment pipeline completed successfully!"
+    echo -e "${YELLOW}Summary:${NC}" >&2
+    echo -e "${YELLOW}  Version: $tag_name${NC}" >&2
+    echo -e "${YELLOW}  App: vtchat${NC}" >&2
+    echo -e "${YELLOW}  URL: https://vtchat.io.vn${NC}" >&2
 }
 
 # Run main function with all arguments
