@@ -50,18 +50,25 @@ export function RAGChatbot() {
     
     // Simple BYOK check - show onboarding if no required API keys
     const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
+    const [hasCheckedApiKeys, setHasCheckedApiKeys] = useState(false);
     
     const allApiKeys = getAllKeys();
     const hasGeminiKey = !!allApiKeys['GEMINI_API_KEY'];
     const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
     const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
     
-    // Check for required API keys on component mount
+    // Check for required API keys on component mount and when keys change
     useEffect(() => {
-        if (!hasRequiredKeys) {
+        if (!hasCheckedApiKeys) {
+            setHasCheckedApiKeys(true);
+            if (!hasRequiredKeys) {
+                setShowApiKeyDialog(true);
+            }
+        } else if (!hasRequiredKeys && !showApiKeyDialog) {
+            // Only show dialog if keys were removed and dialog isn't already open
             setShowApiKeyDialog(true);
         }
-    }, [hasRequiredKeys]);
+    }, [hasRequiredKeys, hasCheckedApiKeys, showApiKeyDialog]);
 
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -244,20 +251,20 @@ export function RAGChatbot() {
                                             className="h-8 w-8 shrink-0"
                                         />
                                     ) : (
-                                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border">
-                                            <svg
-                                                width="20"
-                                                height="20"
-                                                viewBox="-7.5 0 32 32"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
-                                                    fill="currentColor"
-                                                    className="text-foreground"
-                                                />
-                                            </svg>
-                                        </div>
+                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background border border-primary/20">
+                                    <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="-7.5 0 32 32"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                    <path
+                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
+                                    fill="currentColor"
+                                    className="text-primary"
+                                    />
+                                    </svg>
+                                    </div>
                                     )}
                                     <div
                                         className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
@@ -294,17 +301,17 @@ export function RAGChatbot() {
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border">
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background border border-primary/20">
                                     <svg
-                                        width="20"
-                                        height="20"
+                                        width="16"
+                                        height="16"
                                         viewBox="-7.5 0 32 32"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
                                             d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
                                             fill="currentColor"
-                                            className="text-foreground"
+                                            className="text-primary"
                                         />
                                     </svg>
                                 </div>
@@ -603,8 +610,14 @@ export function RAGChatbot() {
             {/* API Key Dialog */}
             <RagOnboarding
                 isOpen={showApiKeyDialog}
-                onComplete={() => setShowApiKeyDialog(false)}
-                onSkip={() => setShowApiKeyDialog(false)}
+                onComplete={() => {
+                    setShowApiKeyDialog(false);
+                    setHasCheckedApiKeys(true);
+                }}
+                onSkip={() => {
+                    setShowApiKeyDialog(false);
+                    setHasCheckedApiKeys(true);
+                }}
             />
         </div>
     );
