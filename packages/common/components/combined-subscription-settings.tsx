@@ -59,6 +59,7 @@ import React, { useState } from 'react';
 import { Combobox } from './combobox';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
+import { logger } from '@repo/shared/logger';
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -161,7 +162,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 }
             }
         } catch (error) {
-            console.error('Error analyzing knowledge base:', error);
+            logger.error('Error analyzing knowledge base:', { data: error });
         } finally {
             setIsAnalyzing(false);
         }
@@ -265,7 +266,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         try {
             await openCustomerPortal();
         } catch (error) {
-            console.error('Failed to open subscription portal:', error);
+            logger.error('Failed to open subscription portal:', { data: error });
         }
     };
 

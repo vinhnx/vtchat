@@ -3,6 +3,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { sessionCache } from '@repo/shared/utils/session-cache';
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { logger } from '@repo/shared/logger';
 
 interface OptimizedAuthContextType {
     isAuthenticated: boolean;
@@ -37,7 +38,7 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
         try {
             await refetch();
         } catch (error) {
-            console.warn('[OptimizedAuth] Failed to refresh session:', error);
+            logger.warn('[OptimizedAuth] Failed to refresh session:', { data: error });
         }
     }, [refetch]);
 

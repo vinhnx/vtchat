@@ -31,6 +31,7 @@ import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
+import { logger } from '@repo/shared/logger';
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -106,7 +107,7 @@ export const CommandSearch = () => {
             // Command+Ctrl+Option+N for new chat
             if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
                 e.preventDefault();
-                console.log('🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+                logger.info('🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
 
                 // Show toast notification
                 toast({

@@ -2,6 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { logger } from '@repo/shared/logger';
 import {
     generateObject,
     getHumanizedDate,
@@ -125,7 +126,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
     },
     onError: handleError,
     route: ({ result }) => {
-        console.log('🔍 refine-query route result:', result);
+        logger.info('🔍 refine-query route result:', { data: result });
         if (result?.needsClarification === true) {
             return 'end';
         }

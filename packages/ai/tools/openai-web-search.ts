@@ -1,6 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
+import { logger } from '@repo/shared/logger';
 
 /**
  * OpenAI Web Search Tool using the Responses API
@@ -41,7 +42,7 @@ export const openaiWebSearchTool = () =>
                     query,
                 };
             } catch (error: any) {
-                console.error('Error in OpenAI web search:', error);
+                logger.error('Error in OpenAI web search:', { data: error });
                 return {
                     success: false,
                     error: error.message || 'Failed to perform web search',

@@ -10,6 +10,7 @@ import { getUserWithSubscription } from '@repo/shared/lib/database-queries';
 import { NextRequest, NextResponse } from 'next/server';
 import { AccessCheckOptions, FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Server-side subscription access check using Better Auth.
@@ -71,7 +72,7 @@ export async function getServerUserSubscription(headers?: Headers) {
         const userWithSub = await getUserWithSubscription(session.user.id);
         return getUserSubscription(userWithSub?.users || null);
     } catch (error) {
-        console.error('Error getting server-side subscription:', error);
+        logger.error('Error getting server-side subscription:', { data: error });
         return getUserSubscription(null);
     }
 }
@@ -117,7 +118,7 @@ export function withSubscriptionAuth(
             const subscriptionForHandler = getUserSubscription(userWithSub?.users || null);
             return handler(req, session.user, subscriptionForHandler);
         } catch (error) {
-            console.error('Subscription auth middleware error:', error);
+            logger.error('Subscription auth middleware error:', { data: error });
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
         }
     };
@@ -200,7 +201,7 @@ export async function getServerAuthInfo() {
             isSignedIn: !!user,
         };
     } catch (error) {
-        console.error('Error getting server auth info:', error);
+        logger.error('Error getting server auth info:', { data: error });
         return {
             userId: null,
             user: null,

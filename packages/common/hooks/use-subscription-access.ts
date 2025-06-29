@@ -5,6 +5,7 @@ import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { useCallback } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
+import { logger } from '@repo/shared/logger';
 
 /**
  * Custom hook for optimized subscription access checking.

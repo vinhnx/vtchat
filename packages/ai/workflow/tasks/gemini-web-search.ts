@@ -2,6 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { getModelFromChatMode } from '../../models';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
+import { logger } from '@repo/shared/logger';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'gemini-web-search',
@@ -25,9 +26,9 @@ Please include:
         try {
             // Use the user's selected model
             const mode = context?.get('mode') || '';
-            console.log('=== gemini-web-search EXECUTE START ===');
-            console.log('Chat mode:', mode);
-            console.log('Context data:', {
+            logger.info('=== gemini-web-search EXECUTE START ===');
+            logger.info('Chat mode:', { data: mode });
+            logger.info('Context data:', {
                 hasQuestion: !!question,
                 questionLength: question?.length,
                 hasStepId: stepId !== undefined,
@@ -39,17 +40,17 @@ Please include:
             });
 
             const model = getModelFromChatMode(mode);
-            console.log('Selected model result:', {
+            logger.info('Selected model result:', {
                 model,
                 modelType: typeof model,
             });
 
             if (!model) {
-                console.error('No model found for mode:', mode);
+                logger.error('No model found for mode:', { data: mode });
                 throw new Error(`Invalid model for mode: ${mode}`);
             }
 
-            console.log('Calling generateTextWithGeminiSearch with:', {
+            logger.info('Calling generateTextWithGeminiSearch with:', {
                 model,
                 promptLength: prompt.length,
                 hasByokKeys: !!context?.get('apiKeys'),
@@ -64,7 +65,7 @@ Please include:
                 thinkingMode: context?.get('thinkingMode'),
             });
 
-            console.log('generateTextWithGeminiSearch result:', {
+            logger.info('generateTextWithGeminiSearch result:', {
                 hasResult: !!result,
                 hasText: !!result?.text,
                 textLength: result?.text?.length,
@@ -108,7 +109,7 @@ Please include:
                 });
             }
 
-            console.log('=== gemini-web-search EXECUTE END ===');
+            logger.info('=== gemini-web-search EXECUTE END ===');
             return {
                 stepId,
                 summary: result.text,
@@ -116,8 +117,8 @@ Please include:
                 groundingMetadata: result.groundingMetadata,
             };
         } catch (error: any) {
-            console.error('=== gemini-web-search ERROR ===');
-            console.error('Error details:', {
+            logger.error('=== gemini-web-search ERROR ===');
+            logger.error('Error details:', {
                 message: error.message,
                 name: error.name,
                 stack: error.stack,

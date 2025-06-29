@@ -6,6 +6,7 @@ import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, getHumanizedDate, handleError } from '../utils';
+import { logger } from '@repo/shared/logger';
 
 const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
@@ -98,16 +99,16 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         let tools: any = {};
 
         if (mathCalculator) {
-            console.log('🧮 Math calculator enabled, adding calculator tools...');
+            logger.info('🧮 Math calculator enabled, adding calculator tools...');
             const mathToolsObj = calculatorTools();
-            console.log('🔢 Available math tools:', Object.keys(mathToolsObj));
+            logger.info('🔢 Available math tools:', { data: Object.keys(mathToolsObj) });
             tools = { ...tools, ...mathToolsObj };
         }
 
         if (charts) {
-            console.log('🎨 Charts enabled, adding chart tools...');
+            logger.info('🎨 Charts enabled, adding chart tools...');
             const chartToolsObj = chartTools();
-            console.log('📊 Available chart tools:', Object.keys(chartToolsObj));
+            logger.info('📊 Available chart tools:', { data: Object.keys(chartToolsObj) });
             tools = { ...tools, ...chartToolsObj };
         }
 
@@ -120,7 +121,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         // Convert to undefined if no tools are enabled
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
-        console.log('🔧 Final tools for AI:', finalTools ? Object.keys(finalTools) : 'none');
+        logger.info('🔧 Final tools for AI:', { data: finalTools ? Object.keys(finalTools) : 'none' });
 
         const response = await generateText({
             model,
@@ -156,7 +157,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 chunkBuffer.add(chunk);
             },
             onToolCall: toolCall => {
-                console.log('🔧 Tool call:', toolCall.toolName, 'with args:', toolCall.args);
+                logger.info('🔧 Tool call:', { toolName: toolCall.toolName, args: toolCall.args });
                 // Send tool call event to UI
                 events?.update('steps', prev => ({
                     ...prev,
@@ -195,7 +196,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 ]);
             },
             onToolResult: toolResult => {
-                console.log('🔧 Tool result for:', toolResult.toolName, 'result:', toolResult.result);
+                logger.info('🔧 Tool result for:', { toolName: toolResult.toolName, result: toolResult.result });
                 // Send tool result event to UI
                 events?.update('steps', prev => ({
                     ...prev,

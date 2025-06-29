@@ -6,6 +6,7 @@
 
 import { FeatureSlug, PlanConfig, PLANS, PlanSlug } from '../types/subscription';
 import { SubscriptionStatusEnum } from '../types/subscription-status';
+import { logger } from '@repo/shared/logger';
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -168,7 +169,7 @@ export function checkSubscriptionAccess(
 
     // Permission checks are not supported in the new system
     if (permission) {
-        console.warn('Permission checks are not supported in the new subscription system');
+        logger.warn('Permission checks are not supported in the new subscription system');
         return false;
     }
 

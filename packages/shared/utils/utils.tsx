@@ -1,5 +1,6 @@
 import { differenceInDays, format, startOfDay } from 'date-fns';
 import { customAlphabet } from 'nanoid';
+import { logger } from '@repo/shared/logger';
 
 export const getRelativeDate = (date: string | Date) => {
     const today = startOfDay(new Date());
@@ -56,7 +57,7 @@ export const convertFileToBase64 = (
     };
 
     reader.onerror = (error: ProgressEvent<FileReader>) => {
-        console.error('Error: ', error);
+        logger.error('Error: ', { data: error });
         onError?.('Error reading file!');
     };
 

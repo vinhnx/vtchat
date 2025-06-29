@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { useAppStore } from '../store/app.store';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Hook to automatically apply plus defaults when user subscription changes
@@ -40,11 +41,11 @@ export function usePlusDefaults() {
 
             if (currentPlan === PlanSlug.VT_PLUS && previousPlan === PlanSlug.VT_BASE) {
                 // Upgrading to plus - apply plus defaults but preserve user customizations
-                console.log('[Plus Defaults] Upgrading to VT+, applying plus defaults');
+                logger.info('[Plus Defaults] Upgrading to VT+, applying plus defaults');
                 applyPlusDefaults(currentPlan, true);
             } else if (currentPlan === PlanSlug.VT_BASE && previousPlan === PlanSlug.VT_PLUS) {
                 // Downgrading to base - apply base defaults
-                console.log('[Plus Defaults] Downgrading to base, applying base defaults');
+                logger.info('[Plus Defaults] Downgrading to base, applying base defaults');
                 initializeSettingsForPlan(currentPlan);
             }
         }

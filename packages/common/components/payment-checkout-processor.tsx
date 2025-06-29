@@ -5,6 +5,7 @@ import { useToast } from '@repo/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { logger } from '@repo/shared/logger';
 
 // Extend window interface for order details
 declare global {
@@ -53,7 +54,7 @@ export function CreemCheckoutProcessor() {
         // Check all parameters to see if we have a valid Creem redirect
         const allParams = Object.fromEntries(searchParams.entries());
 
-        console.log('[CreemCheckoutProcessor] Extracted parameters:', {
+        logger.info('[CreemCheckoutProcessor] Extracted parameters:', {
             checkoutId,
             orderId,
             packageType,
@@ -73,7 +74,7 @@ export function CreemCheckoutProcessor() {
 
         // Check for valid checkout parameters - be more comprehensive
         if (!checkoutId && !orderId && !customerId && !sessionId && success !== 'true') {
-            console.log('[CreemCheckoutProcessor] No valid checkout parameters found, skipping');
+            logger.info('[CreemCheckoutProcessor] No valid checkout parameters found, skipping');
             return;
         }
 
@@ -98,7 +99,7 @@ export function CreemCheckoutProcessor() {
                     productId === process.env.CREEM_PRODUCT_ID ||
                     packageType === CheckoutPackageType.VT_PLUS; // package === 'vt_plus'
 
-                console.log('[CreemCheckoutProcessor] Processing checkout success:', {
+                logger.info('[CreemCheckoutProcessor] Processing checkout success:', {
                     checkoutId,
                     orderId,
                     packageType,
@@ -211,7 +212,7 @@ export function CreemCheckoutProcessor() {
                             });
                         }
                     } catch (dbError) {
-                        console.error('[CreemCheckoutProcessor] Error updating database:', dbError);
+                        logger.error('[CreemCheckoutProcessor] Error updating database:', { data: dbError });
                         toast({
                             title: 'Database Update Issue',
                             description:
@@ -237,7 +238,7 @@ export function CreemCheckoutProcessor() {
                 }
 
                 if (isVtPlusSubscription) {
-                    console.log('[CreemCheckoutProcessor] VT+ subscription activated');
+                    logger.info('[CreemCheckoutProcessor] VT+ subscription activated');
                 } else {
                     // Invalid purchase type for VT+ only system
                     toast({
@@ -251,7 +252,7 @@ export function CreemCheckoutProcessor() {
                 // This prevents double refresh and ensures clean state
 
                 // Log successful purchase for analytics
-                console.log('[CreemCheckoutProcessor] Purchase completed successfully:', {
+                logger.info('[CreemCheckoutProcessor] Purchase completed successfully:', {
                     checkoutId,
                     orderId,
                     packageType,
@@ -283,7 +284,7 @@ export function CreemCheckoutProcessor() {
                     }
                 }, 2000); // 2 second delay after payment success message
             } catch (error) {
-                console.error('[CreemCheckoutProcessor] Error processing checkout success:', error);
+                logger.error('[CreemCheckoutProcessor] Error processing checkout success:', { data: error });
                 toast({
                     title: 'Processing Issue',
                     description:

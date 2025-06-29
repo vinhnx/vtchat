@@ -1,8 +1,13 @@
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const revalidate = 0;
+
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { resources, embeddings } from '@/lib/database/schema';
 import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@repo/shared/logger';
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -39,7 +44,7 @@ export async function DELETE(request: NextRequest) {
         
         return NextResponse.json({ success: true, message: 'Record deleted successfully' });
     } catch (error) {
-        console.error('Error deleting RAG record:', error);
+        logger.error('Error deleting RAG record:', { data: error });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

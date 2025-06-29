@@ -3,6 +3,7 @@ import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { logger } from '@repo/shared/logger';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -16,7 +17,7 @@ const CheckoutRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
     try {
-        console.log('[Checkout API] Starting checkout process...');
+        logger.info('[Checkout API] Starting checkout process...');
 
         // Check authentication using Better Auth
         const session = await auth.api.getSession({
@@ -26,34 +27,34 @@ export async function POST(request: NextRequest) {
         const user = session?.user;
 
         if (!userId) {
-            console.error('[Checkout API] Authentication failed: No user ID found');
+            logger.error('[Checkout API] Authentication failed: No user ID found');
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }
 
-        console.log(`[Checkout API] User authenticated: ${userId}`);
+        logger.info(`[Checkout API] User authenticated: ${userId}`);
 
         // Parse request body
         const body = await request.json();
-        console.log('[Checkout API] Request body:', body);
+        logger.info('[Checkout API] Request body:', { data: body });
         const validatedData = CheckoutRequestSchema.parse(body);
 
         // Get Creem API key from environment
         const creemApiKey = process.env.CREEM_API_KEY;
         if (!creemApiKey) {
-            console.error('CREEM_API_KEY not configured');
+            logger.error('CREEM_API_KEY not configured');
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 500 });
         }
 
-        console.log('Using Creem.io payment system');
+        logger.info('Using Creem.io payment system');
 
         // Map internal price IDs to our product types using the centralized config
-        console.log('Processing checkout with price ID:', validatedData.priceId);
-        console.log('Available price mappings:', Object.keys(PRICE_ID_MAPPING));
+        logger.info('Processing checkout with price ID:', { data: validatedData.priceId });
+        logger.info('Available price mappings:', { data: Object.keys(PRICE_ID_MAPPING) });
 
         const packageType = PRICE_ID_MAPPING[validatedData.priceId]; // validatedData.priceId is already PlanSlug.VT_PLUS
         if (!packageType) {
             // This check might be redundant if priceId is always VT_PLUS and mapping exists
-            console.error(`Invalid price ID: ${validatedData.priceId}`);
+            logger.error(`Invalid price ID: ${validatedData.priceId}`);
             return NextResponse.json(
                 {
                     error: 'Product configuration error',
@@ -64,13 +65,13 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        console.log('Mapped to package type:', packageType);
+        logger.info('Mapped to package type:', { data: packageType });
 
         // Get user information for checkout
         const userEmail = user?.email;
 
         if (!userEmail) {
-            console.error('No email found for user:', userId);
+            logger.error('No email found for user:', { data: userId });
             return NextResponse.json(
                 {
                     error: 'Email required',
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
 
         // Validate email domain
         if (userEmail.includes('@example.com')) {
-            console.error('Invalid email domain detected:', userEmail);
+            logger.error('Invalid email domain detected:', { data: userEmail });
             return NextResponse.json(
                 {
                     error: 'Invalid email configuration',
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
 
         // For VT+ subscriptions, check if user already has an active subscription
         if (packageType === PlanSlug.VT_PLUS) {
-            console.log('Checking existing subscription status for VT+ checkout...');
+            logger.info('Checking existing subscription status for VT+ checkout...');
 
             try {
                 // Import database utilities and verification function
@@ -115,11 +116,12 @@ export async function POST(request: NextRequest) {
                 );
 
                 if (verification.hasActiveSubscription) {
-                    console.log(
+                    logger.info(
                         `[Checkout API] User ${userId} already has active VT+ subscription:`,
-                        verification.subscriptionDetails?.creemSubscriptionId ||
-                            'legacy/admin-granted',
-                        `Source: ${verification.verificationSource}`
+                        {
+                            subscriptionId: verification.subscriptionDetails?.creemSubscriptionId || 'legacy/admin-granted',
+                            source: verification.verificationSource
+                        }
                     );
 
                     return NextResponse.json(
@@ -136,11 +138,11 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                console.log(
+                logger.info(
                     `[Checkout API] No active VT+ subscription found (${verification.verificationSource}), proceeding with checkout...`
                 );
             } catch (dbError) {
-                console.error('[Checkout API] Error checking existing subscription:', dbError);
+                logger.error('[Checkout API] Error checking existing subscription:', { data: dbError });
                 // Don't block checkout on DB errors, but log for monitoring
             }
         }
@@ -149,10 +151,10 @@ export async function POST(request: NextRequest) {
         let checkout;
         try {
             if (packageType === PlanSlug.VT_PLUS) {
-                console.log('Starting VT+ subscription checkout for user:', userEmail);
+                logger.info('Starting VT+ subscription checkout for user:', { data: userEmail });
                 checkout = await PaymentService.subscribeToVtPlus(userEmail);
             } else {
-                console.error('Invalid package type for VT+ only system:', packageType);
+                logger.error('Invalid package type for VT+ only system:', { data: packageType });
                 return NextResponse.json(
                     {
                         error: 'Product not available',
@@ -163,7 +165,7 @@ export async function POST(request: NextRequest) {
                 );
             }
         } catch (error: any) {
-            console.error('Creem checkout error:', error, error.stack);
+            logger.error('Creem checkout error:', { data: error, stack: error.stack });
             return NextResponse.json(
                 {
                     error: 'Failed to create checkout session',
@@ -180,7 +182,7 @@ export async function POST(request: NextRequest) {
             success: checkout.success,
         });
     } catch (error) {
-        console.error('Checkout error:', error);
+        logger.error('Checkout error:', { data: error });
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(

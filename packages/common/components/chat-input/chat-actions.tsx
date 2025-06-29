@@ -47,6 +47,7 @@ import { useState } from 'react';
 import { BYOKIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config';
+import { logger } from '@repo/shared/logger';
 
 export function AttachmentButton() {
     return (
@@ -253,12 +254,12 @@ export function MathCalculatorButton() {
         }
         if (!hasMathCalculatorAccess) {
             // Show upgrade dialog if user doesn't have access
-            console.log('🧮 Math calculator feature requires VT+ subscription');
+            logger.info('🧮 Math calculator feature requires VT+ subscription');
             return;
         }
-        console.log('🧮 Math calculator button clicked, current state:', mathCalculatorEnabled);
+        logger.info('🧮 Math calculator button clicked, current state:', { data: mathCalculatorEnabled });
         setActiveButton('mathCalculator');
-        console.log('🧮 Math calculator button toggled');
+        logger.info('🧮 Math calculator button toggled');
     };
 
     return (
@@ -323,12 +324,12 @@ export function ChartsButton() {
         }
         if (!hasChartAccess) {
             // Show upgrade dialog if user doesn't have access
-            console.log('📊 Charts feature requires VT+ subscription');
+            logger.info('📊 Charts feature requires VT+ subscription');
             return;
         }
-        console.log('📊 Charts button clicked, current state:', useCharts);
+        logger.info('📊 Charts button clicked, current state:', { data: useCharts });
         setActiveButton('charts');
-        console.log('📊 Charts button toggled');
+        logger.info('📊 Charts button toggled');
     };
 
     return (
@@ -478,7 +479,7 @@ export function BYOKSetupModal({
             onApiKeySaved();
             onClose();
         } catch (error) {
-            console.error('Failed to save API key:', error);
+            logger.error('Failed to save API key:', { data: error });
             // Show error to user
             alert('Failed to save API key. Please try again.');
         } finally {

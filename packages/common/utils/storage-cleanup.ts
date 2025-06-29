@@ -1,3 +1,5 @@
+
+import { logger } from '@repo/shared/logger';
 /**
  * Storage cleanup utilities for handling corrupted localStorage data
  */
@@ -8,7 +10,7 @@
 export function cleanupCorruptedStorage(): void {
     if (typeof window === 'undefined') return;
 
-    console.log('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...');
+    logger.info('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...');
 
     // Get all localStorage keys that match our per-account patterns
     const storageKeys = Object.keys(localStorage);
@@ -41,7 +43,7 @@ export function cleanupCorruptedStorage(): void {
     if (cleanedCount > 0) {
         console.log(`[StorageCleanup] Cleaned up ${cleanedCount} corrupted storage entries`);
     } else {
-        console.log('[StorageCleanup] No corrupted storage entries found');
+        logger.info('[StorageCleanup] No corrupted storage entries found');
     }
 }
 

@@ -4,6 +4,7 @@ import { EventSchemaDefinition, TypedEventEmitter } from './events';
 import { ExecutionContext } from './execution-context';
 import { PersistenceLayer } from './persistence';
 import {
+import { logger } from '@repo/shared/logger';
     EventPayload,
     ParallelTaskRoute,
     TaskConfig,

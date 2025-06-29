@@ -5,6 +5,7 @@ import { monitorAuth } from '@repo/shared/utils/performance-monitor';
 import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Hook to manage thread database switching based on user authentication
@@ -37,7 +38,7 @@ export const useThreadAuth = () => {
                     );
                 })
                 .catch(error => {
-                    console.error('[ThreadAuth] Failed to switch user database:', error);
+                    logger.error('[ThreadAuth] Failed to switch user database:', { data: error });
                 });
 
             // Switch to the appropriate user storage for API keys

@@ -18,6 +18,7 @@ import { useAppStore } from '../store/app.store';
 import { ThemeSwitcher } from './theme-switcher';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { GatedFeatureAlert } from './gated-feature-alert';
+import { logger } from '@repo/shared/logger';
 
 interface UserButtonProps {
     showName?: boolean;
