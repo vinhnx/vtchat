@@ -131,26 +131,10 @@ check_git_status() {
         git status --porcelain
         echo ""
         
-        if [ "$1" != "--auto" ]; then
-            read -p "Do you want to commit these changes? (y/N): " -n 1 -r
-            echo
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                read -p "Enter commit message: " commit_message
-                if [ -z "$commit_message" ]; then
-                    print_error "Commit message cannot be empty!"
-                    exit 1
-                fi
-                git add -A
-                git commit -m "$commit_message"
-                print_status "Changes committed successfully"
-            else
-                print_error "Please commit or stash your changes before deploying"
-                exit 1
-            fi
-        else
-            print_error "Uncommitted changes detected in auto mode. Please commit first."
-            exit 1
-        fi
+        print_info "Auto-committing changes..."
+        git add -A
+        git commit -m "Auto-commit before deployment"
+        print_status "Changes committed successfully"
     else
         print_status "Working directory is clean"
     fi
@@ -159,13 +143,7 @@ check_git_status() {
     current_branch=$(git branch --show-current)
     if [ "$current_branch" != "main" ] && [ "$current_branch" != "master" ]; then
         print_warning "You're not on main/master branch (current: $current_branch)"
-        if [ "$1" != "--auto" ]; then
-            read -p "Continue anyway? (y/N): " -n 1 -r
-            echo
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        fi
+        print_info "Continuing deployment anyway..."
     fi
 }
 
@@ -179,24 +157,9 @@ create_version_tag() {
     local current_version=$(get_current_version)
     print_info "Current version: v$current_version"
     
-    # Determine version type
-    if [ -z "$version_type" ] && [ "$auto_mode" != "--auto" ]; then
-        echo ""
-        echo "Select version bump type:"
-        echo "1) patch (v$current_version -> v$(increment_version $current_version patch))"
-        echo "2) minor (v$current_version -> v$(increment_version $current_version minor))"
-        echo "3) major (v$current_version -> v$(increment_version $current_version major))"
-        echo ""
-        read -p "Enter choice (1-3): " choice
-        
-        case $choice in
-            1) version_type="patch" ;;
-            2) version_type="minor" ;;
-            3) version_type="major" ;;
-            *) print_error "Invalid choice"; exit 1 ;;
-        esac
-    elif [ -z "$version_type" ]; then
-        version_type="patch"  # Default for auto mode
+    # Default to patch version if not specified
+    if [ -z "$version_type" ]; then
+        version_type="patch"
     fi
     
     local new_version=$(increment_version $current_version $version_type)
@@ -212,14 +175,7 @@ Branch: $(git branch --show-current)
 Commit: $(git rev-parse --short HEAD)
 Fly.io App: vtchat"
     
-    if [ "$auto_mode" != "--auto" ]; then
-        read -p "Create tag $tag_name? (Y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            print_error "Tag creation cancelled"
-            exit 1
-        fi
-    fi
+    print_info "Creating tag $tag_name..."
     
     git tag -a "$tag_name" -m "$tag_message"
     print_status "Created tag: $tag_name"
@@ -233,15 +189,6 @@ push_to_remote() {
     local auto_mode=$2
     
     print_step "Pushing to remote repository..."
-    
-    if [ "$auto_mode" != "--auto" ]; then
-        read -p "Push changes and tags to remote? (Y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            print_warning "Skipping remote push"
-            return
-        fi
-    fi
     
     # Push commits and tags
     git push origin $(git branch --show-current)
@@ -266,15 +213,6 @@ deploy_to_fly() {
     print_info "App: $FLY_APP"
     print_info "Version: $tag_name"
     print_info "Config: fly.toml"
-    
-    if [ "$auto_mode" != "--auto" ]; then
-        read -p "Deploy to Fly.io? (Y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            print_warning "Skipping Fly.io deployment"
-            return
-        fi
-    fi
     
     # Check if app exists
     if ! flyctl apps list | grep -q "^$FLY_APP" 2>/dev/null; then
