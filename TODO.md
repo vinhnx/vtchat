@@ -2,6 +2,14 @@
 
 ok go! -> https://vtchat.io.vn/
 
+improve Claude 4 support
+https://ai-sdk.dev/docs/guides/claude-4
+
+--
+twitter oauth
+https://www.better-auth.com/docs/authentication/twitter
+--
+
 --
 fix github action failure
 
