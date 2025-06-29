@@ -478,17 +478,13 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 >
                     {isSidebarOpen ? (
                         <Button
-                            size="sm"
+                            size="lg"
                             variant="ghost"
                             rounded="lg"
                             disabled={isPortalLoading}
                             className={cn(
                                 'group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300',
-                                isPlusSubscriber
-                                    ? // VT+ Subscriber - Premium Gold Style
-                                      'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
-                                    : // Upgrade Button - Attention-grabbing Red to Orange
-                                      'border-[#BF4545]/50 bg-gradient-to-r from-[#BF4545]/90 to-[#D99A4E]/90 text-white hover:from-[#BF4545] hover:to-[#D99A4E] hover:shadow-lg hover:shadow-[#BF4545]/30 dark:border-[#BF4545]/40 dark:from-[#BF4545]/80 dark:to-[#D99A4E]/80 dark:hover:from-[#BF4545]/90 dark:hover:to-[#D99A4E]/90 dark:hover:shadow-[#BF4545]/20'
+                                'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
                             )}
                             onClick={() => {
                                 if (isPlusSubscriber) {
@@ -499,21 +495,17 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                         >
                             <Sparkles
-                                size={16}
+                                size={20}
                                 strokeWidth={2}
                                 className={cn(
-                                    'mr-2 flex-shrink-0 transition-all duration-300 group-hover:scale-110',
-                                    isPlusSubscriber
-                                        ? 'text-[#D99A4E] group-hover:text-[#D99A4E] dark:text-[#BFB38F] dark:group-hover:text-[#BFB38F]'
-                                        : 'text-white drop-shadow-sm group-hover:text-white'
+                                    'mr-3 flex-shrink-0 transition-all duration-300 group-hover:scale-110',
+                                    'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300'
                                 )}
                             />
                             <span
                                 className={cn(
                                     'flex-1 text-left font-medium',
-                                    isPlusSubscriber
-                                        ? 'text-[#262626] dark:text-[#BFB38F]'
-                                        : 'text-white drop-shadow-sm'
+                                    'text-[#262626] dark:text-[#BFB38F]'
                                 )}
                             >
                                 {isPortalLoading
@@ -525,7 +517,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             {isPlusSubscriber && (
                                 <ExternalLink
                                     size={12}
-                                    className="ml-1 flex-shrink-0 text-[#D99A4E] dark:text-[#BFB38F]"
+                                    className="ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80"
                                 />
                             )}
                         </Button>
@@ -542,12 +534,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }
                             tooltipSide="right"
                             className={cn(
-                                'group !m-0 flex items-center justify-center border !p-0 shadow-sm transition-all duration-300',
+                                'group !m-0 flex items-center justify-center !p-0 transition-all duration-300',
                                 isPlusSubscriber
-                                    ? // VT+ Subscriber - Premium Gold Style
-                                      'border-[#D99A4E]/30 bg-gradient-to-br from-[#D99A4E]/20 to-[#BFB38F]/20 hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
-                                    : // Upgrade Button - Attention-grabbing Red to Orange
-                                      'border-[#BF4545]/50 bg-gradient-to-br from-[#BF4545]/90 to-[#D99A4E]/90 hover:from-[#BF4545] hover:to-[#D99A4E] hover:shadow-lg hover:shadow-[#BF4545]/30 dark:border-[#BF4545]/40 dark:from-[#BF4545]/80 dark:to-[#D99A4E]/80 dark:hover:from-[#BF4545]/90 dark:hover:to-[#D99A4E]/90 dark:hover:shadow-[#BF4545]/20'
+                                    ? // VT+ Subscriber - Muted amber style
+                                      'border-amber-200/50 bg-amber-50/50 hover:bg-amber-100/70 hover:shadow-lg hover:shadow-amber-200/30 dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50'
+                                    : // Upgrade Button - Black style
+                                      'border-black/20 bg-black/5 hover:bg-black/10 hover:shadow-lg hover:shadow-black/20 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10'
                             )}
                             onClick={() => {
                                 if (isPlusSubscriber) {
@@ -563,8 +555,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 className={cn(
                                     'm-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110',
                                     isPlusSubscriber
-                                        ? 'text-[#D99A4E] group-hover:text-[#D99A4E] dark:text-[#BFB38F] dark:group-hover:text-[#BFB38F]'
-                                        : 'text-white drop-shadow-sm group-hover:text-white'
+                                        ? 'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300'
+                                        : 'text-black/70 group-hover:text-black dark:text-white/70 dark:group-hover:text-white'
                                 )}
                             />
                         </Button>
