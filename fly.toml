@@ -12,6 +12,7 @@ NEXT_PUBLIC_BASE_URL = "https://vtchat.io.vn"
 NEXT_PUBLIC_APP_URL = "https://vtchat.io.vn"
 NEXT_PUBLIC_COMMON_URL = "https://vtchat.io.vn"
 NEXT_PUBLIC_BETTER_AUTH_URL = "https://vtchat.io.vn"
+DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy"
 
 [env]
 NODE_ENV = 'production'
