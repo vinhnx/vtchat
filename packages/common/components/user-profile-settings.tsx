@@ -33,6 +33,7 @@ export const UserProfileSettings = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: session?.user?.name || '',
+        email: session?.user?.email || '',
     });
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState('');
@@ -79,6 +80,16 @@ export const UserProfileSettings = () => {
     useEffect(() => {
         fetchLinkedAccounts();
     }, [fetchLinkedAccounts]);
+
+    // Update form data when session changes
+    useEffect(() => {
+        if (session?.user) {
+            setFormData({
+                name: session.user.name || '',
+                email: session.user.email || '',
+            });
+        }
+    }, [session]);
 
     // Check for OAuth callback completion and show success feedback
     useEffect(() => {
@@ -143,12 +154,22 @@ export const UserProfileSettings = () => {
         setSuccess('');
 
         try {
+            console.log('[User Profile] Session data:', session?.user);
+            console.log('[User Profile] Form data:', formData);
+            
+            const requestData = {
+                ...formData,
+                email: session.user.email || '',
+            };
+            
+            console.log('[User Profile] Sending update request:', requestData);
+            
             const response = await fetch('/api/auth/update-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(requestData),
             });
 
             if (!response.ok) {
@@ -166,6 +187,7 @@ export const UserProfileSettings = () => {
             // Update local form data with new values
             setFormData({
                 name: formData.name,
+                email: session.user.email || '',
             });
 
             setTimeout(() => setSuccess(''), 3000);
@@ -180,6 +202,7 @@ export const UserProfileSettings = () => {
     const handleCancel = () => {
         setFormData({
             name: session?.user?.name || '',
+            email: session?.user?.email || '',
         });
         setIsEditing(false);
         setError('');
