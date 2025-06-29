@@ -7,6 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
+import { logger } from '@repo/shared/logger';
 
 interface LoginFormContentProps extends React.ComponentProps<'div'> {
     redirectUrl?: string;
@@ -51,7 +52,7 @@ function LoginFormContent({
         } catch (err) {
             setLoading(false);
             setError('An unexpected error occurred');
-            console.error('Login error:', err);
+            logger.error('Login error:', { data: err });
         }
     };
 

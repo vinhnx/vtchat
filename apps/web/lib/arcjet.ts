@@ -1,11 +1,12 @@
 import { createArcjetConfig, createChatArcjet, createAuthArcjet, createAPIArcjet, createFeedbackArcjet } from '@repo/shared/lib/arcjet-config';
 import { ARCJET_ENV_KEYS } from '@repo/shared/constants';
+import { logger } from '@repo/shared/logger';
 
 // Get Arcjet API key from environment
 const ARCJET_KEY = process.env[ARCJET_ENV_KEYS.ARCJET_KEY];
 
 if (!ARCJET_KEY) {
-    console.warn('[Arcjet] ARCJET_KEY environment variable is not set. Security features will be disabled.');
+    logger.warn('[Arcjet] ARCJET_KEY environment variable is not set. Security features will be disabled.');
 }
 
 // Create Arcjet instances for different use cases

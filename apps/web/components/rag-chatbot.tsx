@@ -26,6 +26,7 @@ import { useChat } from 'ai/react';
 import { Database, Eye, Send, Settings, Shield, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { logger } from '@repo/shared/logger';
 
 interface KnowledgeItem {
     id: string;
@@ -83,23 +84,23 @@ export function RAGChatbot() {
             profile,
         },
         onError: error => {
-            console.error('RAG Chat Error:', error);
-            console.log('Error message:', error.message); // Debug log
+            logger.error('RAG Chat Error:', { data: error });
+            logger.info('Error message:', { data: error.message }); // Debug log
             
             // Show user-friendly error message with sonner
             if (error.message.includes('API key is required')) {
-                console.log('Showing API key error toast'); // Debug
+                logger.info('Showing API key error toast'); // Debug
                 toast.error('API Key Required', {
                     description:
                         'Please configure your API keys in Settings to use the Knowledge Assistant.',
                 });
             } else if (error.message.includes('Rate limit')) {
-                console.log('Showing rate limit error toast'); // Debug
+                logger.info('Showing rate limit error toast'); // Debug
                 toast.error('Rate Limit Exceeded', {
                     description: 'Too many requests. Please try again later.',
                 });
             } else {
-                console.log('Showing general error toast'); // Debug
+                logger.info('Showing general error toast'); // Debug
                 toast.error('Chat Error', {
                     description: 'Something went wrong. Please try again.',
                 });
@@ -118,7 +119,7 @@ export function RAGChatbot() {
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
-                console.log('📚 Knowledge Base fetched:', { total: resources.length, data });
+                logger.info('📚 Knowledge Base fetched:', { total: resources.length, data });
                 setKnowledgeBase(resources);
             } else {
                 console.error(
@@ -128,7 +129,7 @@ export function RAGChatbot() {
                 );
             }
         } catch (error) {
-            console.error('Error fetching knowledge base:', error);
+            logger.error('Error fetching knowledge base:', { data: error });
         }
     };
 
@@ -146,7 +147,7 @@ export function RAGChatbot() {
                 reload();
             }
         } catch (error) {
-            console.error('Error clearing knowledge base:', error);
+            logger.error('Error clearing knowledge base:', { data: error });
         } finally {
             setIsClearing(false);
         }
@@ -164,7 +165,7 @@ export function RAGChatbot() {
                 reload();
             }
         } catch (error) {
-            console.error('Error deleting knowledge item:', error);
+            logger.error('Error deleting knowledge item:', { data: error });
         } finally {
             setIsDeleting(false);
         }

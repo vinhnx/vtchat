@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { type EmbeddingModel } from '@repo/shared/config/embedding-models';
 import { type ApiKeys } from '@repo/common/store';
 import { secureContentForEmbedding } from '@/lib/utils/content-security';
+import { logger } from '@repo/shared/logger';
 
 // Schema for validating resource input
 const createResourceSchema = z.object({
@@ -52,7 +53,7 @@ export const createResource = async (input: NewResourceParams, apiKeys: ApiKeys,
 
         return 'Resource successfully created and embedded.';
     } catch (error) {
-        console.error('Error creating resource:', error);
+        logger.error('Error creating resource:', { data: error });
         return error instanceof Error && error.message.length > 0
             ? error.message
             : 'Error, please try again.';

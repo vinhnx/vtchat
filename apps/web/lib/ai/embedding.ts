@@ -11,6 +11,7 @@ import {
 } from '@repo/shared/config/embedding-models';
 import { type ApiKeys } from '@repo/common/store';
 import { maskPII } from '../utils/content-security';
+import { logger } from '@repo/shared/logger';
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
@@ -59,7 +60,7 @@ async function generateEmbeddingWithProvider(
     const result = await geminiModel.embedContent(input);
     const embedding = result.embedding.values || [];
     
-    console.log('🔍 Embedding Debug:', {
+    logger.info('🔍 Embedding Debug:', {
         model: modelConfig.id,
         expectedDimensions: modelConfig.dimensions,
         actualDimensions: embedding.length,
@@ -77,7 +78,7 @@ export const generateEmbeddings = async (
     const chunks = generateChunks(value);
     const embeddingModel = getEmbeddingModel(userModel);
     
-    console.log('🔍 RAG Debug:', {
+    logger.info('🔍 RAG Debug:', {
         userModel,
         resolvedModel: embeddingModel,
         isGemini: isGeminiModel(embeddingModel),
@@ -112,7 +113,7 @@ Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
         } catch (error) {
-            console.error('Error generating embedding for chunk:', error);
+            logger.error('Error generating embedding for chunk:', { data: error });
             throw error;
         }
     }
