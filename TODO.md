@@ -2,9 +2,6 @@
 
 ok go! -> https://vtchat.io.vn/
 
-change shadcn color to neutral?
-
-change darkmode background color to all dark #000000
 --
 final discuss fly.io config for budget and scale with Claude
 # Production fly.toml
