@@ -16,8 +16,8 @@ console.log('HOSTNAME:', HOSTNAME);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('Current directory:', process.cwd());
 
-// Verify server.js exists
-const serverPath = path.join(process.cwd(), 'apps/web/server.js');
+// Verify server.js exists - Next.js standalone generates it at the root in production
+const serverPath = path.join(process.cwd(), 'server.js');
 console.log('Server path:', serverPath);
 
 try {
@@ -39,5 +39,5 @@ process.env.HOSTNAME = HOSTNAME;
 console.log(`Starting Next.js server on ${HOSTNAME}:${PORT}...`);
 console.log('===========================');
 
-// Start the Next.js standalone server
-require('./apps/web/server.js');
+// Start the Next.js standalone server - it's at the root in production
+require('./server.js');
