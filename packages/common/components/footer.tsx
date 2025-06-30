@@ -14,7 +14,7 @@ export const Footer = () => {
         },
         {
             href: '/faq',
-            label: 'FAQs',
+            label: 'Help Center',
         },
         {
             href: 'mailto:hello@vtchat.io.vn',

@@ -786,7 +786,7 @@ export function ChatModeOptions({
             <DropdownMenuContent
                 align="start"
                 side="bottom"
-                className="no-scrollbar max-h-[300px] w-[320px] md:w-[300px] overflow-y-auto"
+                className="no-scrollbar max-h-[300px] w-[320px] md:w-[300px] overflow-y-auto touch-pan-y overscroll-contain"
             >
                 {/* Always show Advanced Mode options regardless of page context */}
                 <DropdownMenuGroup>

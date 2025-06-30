@@ -204,14 +204,36 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="space-y-4">
-                        <div className="animate-pulse">
-                            <div className="mb-2 h-4 w-3/4 rounded bg-gray-200"></div>
-                            <div className="h-2 rounded bg-gray-200"></div>
+                    <div className="min-h-[300px] min-w-[400px] space-y-6">
+                        {/* Usage stats skeleton */}
+                        <div className="space-y-4">
+                            <div className="animate-pulse">
+                                <div className="mb-2 h-5 w-48 rounded bg-gray-200"></div>
+                                <div className="h-3 w-full rounded bg-gray-200"></div>
+                            </div>
+                            <div className="animate-pulse">
+                                <div className="mb-2 h-5 w-40 rounded bg-gray-200"></div>
+                                <div className="h-3 w-full rounded bg-gray-200"></div>
+                            </div>
                         </div>
-                        <div className="animate-pulse">
-                            <div className="mb-2 h-4 w-1/2 rounded bg-gray-200"></div>
-                            <div className="h-2 rounded bg-gray-200"></div>
+                        
+                        {/* Progress circles skeleton */}
+                        <div className="flex justify-around space-x-4">
+                            <div className="flex flex-col items-center space-y-2">
+                                <div className="animate-pulse h-16 w-16 rounded-full bg-gray-200"></div>
+                                <div className="animate-pulse h-4 w-20 rounded bg-gray-200"></div>
+                            </div>
+                            <div className="flex flex-col items-center space-y-2">
+                                <div className="animate-pulse h-16 w-16 rounded-full bg-gray-200"></div>
+                                <div className="animate-pulse h-4 w-20 rounded bg-gray-200"></div>
+                            </div>
+                        </div>
+                        
+                        {/* Additional content skeleton */}
+                        <div className="space-y-3">
+                            <div className="animate-pulse h-4 w-full rounded bg-gray-200"></div>
+                            <div className="animate-pulse h-4 w-3/4 rounded bg-gray-200"></div>
+                            <div className="animate-pulse h-4 w-5/6 rounded bg-gray-200"></div>
                         </div>
                     </div>
                 </CardContent>

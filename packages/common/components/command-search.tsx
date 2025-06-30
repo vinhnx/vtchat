@@ -227,7 +227,7 @@ export const CommandSearch = () => {
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
             </div>
-            <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5">
+            <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5 touch-pan-y overscroll-contain">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     {actions.map(action => {

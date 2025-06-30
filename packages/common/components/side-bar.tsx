@@ -212,8 +212,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => push('/faq')}>
-                                    <HelpCircle size={16} strokeWidth={2} />
-                                    FAQ
+                                <HelpCircle size={16} strokeWidth={2} />
+                                Help Center
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => push('/privacy')}>
                                     <Shield size={16} strokeWidth={2} />

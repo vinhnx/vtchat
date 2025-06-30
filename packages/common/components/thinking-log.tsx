@@ -118,7 +118,7 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                                     </span>
                                 </motion.div>
 
-                                <div className="scrollbar-thin scrollbar-track-[#262626] scrollbar-thumb-[#BFB38F]/30 max-h-96 space-y-4 overflow-y-auto">
+                                <div className="scrollbar-thin scrollbar-track-[#262626] scrollbar-thumb-[#BFB38F]/30 max-h-96 space-y-4 overflow-y-auto touch-pan-y overscroll-contain">
                                     {/* Display legacy reasoning text with markdown */}
                                     {threadItem.reasoning && (
                                         <motion.div

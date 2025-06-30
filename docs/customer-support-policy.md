@@ -46,7 +46,7 @@ In accordance with Creem.io payment processor requirements:
 3. **Website Contact:** Forms available on vtchat.io.vn
 
 #### **Self-Service Options**
-- **FAQ Page:** https://vtchat.io.vn/faq
+- **Help Center:** https://vtchat.io.vn/faq
 - **Documentation:** https://vtchat.io.vn/docs
 - **Customer Portal:** For subscription management, billing, and cancellations
 
@@ -158,7 +158,7 @@ In accordance with Creem.io payment processor requirements:
 - Privacy and security protocols
 
 #### **Knowledge Base**
-- Comprehensive FAQ section
+- Comprehensive Help Center section
 - Step-by-step troubleshooting guides
 - Video tutorials for common tasks
 - Regular updates based on support interactions

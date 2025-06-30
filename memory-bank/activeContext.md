@@ -65,25 +65,25 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Watch mode and UI interface support
         - Monorepo-aware path resolution for all packages
 
-- **Background Fix for Legal Pages:** Fixed background consistency issues on FAQ, Terms, and Privacy pages:
+- **Background Fix for Legal Pages:** Fixed background consistency issues on Help Center, Terms, and Privacy pages:
 
     - Changed header background from `bg-background/80` to `bg-background` for better consistency
     - Added explicit `bg-background` to main content areas to ensure proper background coverage
     - Changed footer background from `bg-muted/20` to `bg-background` for unified appearance
     - All three pages (/faq, /terms, /privacy) now have consistent, solid background styling
     - Improved visual cohesion across all legal/informational pages
-    - **Unified Footer Navigation:** Added FAQ link to Footer component to complete the navigation triad:
-        - Terms of Service | Privacy Policy | FAQs
+    - **Unified Footer Navigation:** Added Help Center link to Footer component to complete the navigation triad:
+- Terms of Service | Privacy Policy | Help Center
         - All three legal pages now have consistent footer navigation between each other
         - Footer component provides unified navigation across the entire application
     - **Full-Width Layout Implementation:** Updated all three pages to use full-width layout:
         - Changed max width from `max-w-screen-lg` to `max-w-7xl` for wider content area
         - Updated header, main content, and footer containers to use full width
         - Improved content presentation and better use of screen real estate
-    - **FAQ Accordion UI Jump Fix:** Improved FAQ page layout to prevent UI jumping:
+    - **Help Center Accordion UI Jump Fix:** Improved Help Center page layout to prevent UI jumping:
         - Restructured layout with centered header and better spacing
         - Improved accordion container sizing and spacing for smoother animations
-        - Enhanced user experience when expanding/collapsing FAQ sections
+        - Enhanced user experience when expanding/collapsing Help Center sections
 
 - **Database Connection Error Fix:** Resolved Neon database connection termination errors (error code 57P01):
 
@@ -104,7 +104,7 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Connected the "Settings" item in the user dropdown to open the settings modal using `setIsSettingsOpen(true)`
     - Maintained the existing functional grouping structure:
         - **Account Management:** Settings (now functional), Profile
-        - **Support & Legal:** FAQ & Help, Terms of Service, Privacy Policy
+        - **Support & Legal:** Help Center, Terms of Service, Privacy Policy
         - **Sign Out:** Logout action
     - Added proper integration between user button and settings modal for better UX
 
@@ -120,7 +120,7 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Added `DropdownMenuLabel` and `DropdownMenuSeparator` components for clear section organization
     - Organized menu items into logical groups:
         - **Account Management:** Settings
-        - **Support & Legal:** FAQ, Privacy Policy, Terms of Service
+        - **Support & Legal:** Help Center, Privacy Policy, Terms of Service
         - **Authentication:** Log in/Sign out
     - Enhanced consistency between user button and sidebar user dropdown interfaces
     - Improved menu width and alignment for better visual presentation

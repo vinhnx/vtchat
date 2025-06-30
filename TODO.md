@@ -49,31 +49,11 @@ primary_region = 'sin'
 revamp login page
 --
 
-duplicated grounding web search on vt+ setting page
-
-update settings vt+ features with latest plus tier benefit
-
---
-
-break line properly welcome message on mobile
-
---
-
-tap close side bar on mobile doesnt work
-
---
-
-
 give Tuan Anh 1 month free discount
 
 -
 
 https://github.com/e2b-dev/fragments
-
---
-fix send chat icon not visible for mobile
-remove top nav bar for mobile
-improve mobile UI/UX
 
 --
 WARNING The app is not listening on the expected address and will not be reachable by fly-proxy.e6fee3248 reached started state
@@ -680,6 +660,14 @@ Fayaz Ahmed
 ·
 Aug 5, 2024
 Launching it on PH as well - Support appreciated - https://producthunt.com/posts/supersaas-1
+--
+
+https://x.com/i/communities/1493446837214187523
+
+--
+
+https://oss.now/early-submission
+
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>

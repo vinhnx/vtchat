@@ -70,7 +70,7 @@ export const TableOfMessages = () => {
                                 transition={{ duration: 0.2, ease: 'easeOut' }}
                                 className="w-full rounded-md bg-white p-1 shadow-2xl"
                             >
-                                <div className="no-scrollbar max-h-60 overflow-y-auto">
+                                <div className="no-scrollbar max-h-60 overflow-y-auto touch-pan-y overscroll-contain">
                                     {allItems.map((item, index) => {
                                         const isActive = activeItemId === item?.id;
                                         return (

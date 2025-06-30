@@ -110,7 +110,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] w-[calc(100vw-0.5rem)] !max-w-[900px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-w-[900px] md:max-h-[700px] md:rounded-xl md:w-auto">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[900px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-w-[900px] md:max-h-[700px] md:min-h-[600px] md:rounded-xl md:w-auto">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     ref={scrollRef}
@@ -173,9 +173,9 @@ export const SettingsModal = () => {
                         <div
                             className="bg-background flex-1 p-2 md:p-6"
                             ref={panelContentRef}
-                            style={{ overflowY: 'auto', maxHeight: 'calc(95vh - 140px)' }}
+                            style={{ overflowY: 'auto', minHeight: '400px', minWidth: '300px', maxHeight: 'calc(95vh - 140px)' }}
                         >
-                            <div className="max-w-full md:max-w-2xl">
+                            <div className="w-full min-w-0 md:min-w-[600px]">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
                             </div>
                         </div>
