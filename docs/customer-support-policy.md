@@ -3,7 +3,7 @@
 ## VT (VTChat) Customer Support Guidelines
 
 **Effective Date:** January 2025
-**Last Updated:** January 2025
+**Last Updated:** June 30, 2025
 
 ### Contact Information
 
