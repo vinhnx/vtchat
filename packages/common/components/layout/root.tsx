@@ -16,9 +16,9 @@ import {
     DropdownMenuTrigger,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, User, Settings } from 'lucide-react';
+import { X, User, Settings, Menu } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 import { Drawer } from 'vaul';
 import { logger } from '@repo/shared/logger';
@@ -41,6 +41,11 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== '/plus';
+
+    // Close mobile sidebar when route changes
+    useEffect(() => {
+        setIsMobileSidebarOpen(false);
+    }, [pathname, setIsMobileSidebarOpen]);
 
     // Render consistent structure during SSR and client hydration
     // Only show complex interactive elements after client is ready
@@ -92,24 +97,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <motion.div className={`flex w-full md:py-1 ${sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'}`}>
                     <AgentProvider>
                         <div className={containerClass}>
-                            {/* Mobile Header */}
-                            <div className="bg-secondary border-border absolute left-0 right-0 top-0 z-50 border-b p-3 md:hidden">
-                                <div className="flex items-center justify-between">
-                                    <div className="w-8" /> {/* Spacer for centering */}
-                                    <div className="text-foreground text-lg font-bold">VT</div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon-sm"
-                                        onClick={() => setIsMobileSidebarOpen(true)}
-                                        className="text-foreground"
-                                    >
-                                        <Menu size={20} strokeWidth={2} />
-                                    </Button>
-                                </div>
-                            </div>
+
 
                             <div className="relative flex h-full w-0 flex-1 flex-row">
-                                <div className="flex w-full flex-col gap-2 overflow-y-auto pt-16 md:pt-0">
+                                <div className="flex w-full flex-col gap-2 overflow-y-auto">
                                     {shouldShowDropShadow && (
                                         <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block"></div>
                                     )}
@@ -151,9 +142,21 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             <SonnerToaster />
 
+            {/* Mobile Floating Menu Button */}
+            <div className="fixed bottom-20 left-4 z-50 md:hidden pb-safe">
+                <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => setIsMobileSidebarOpen(true)}
+                    className="h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
+                >
+                    <Menu size={20} strokeWidth={2} />
+                </Button>
+            </div>
+
             {/* Mobile Floating User Button */}
             {isClient && session && (
-                <div className="fixed bottom-4 right-4 z-50 md:hidden">
+                <div className="fixed bottom-4 right-4 z-50 md:hidden pb-safe">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button

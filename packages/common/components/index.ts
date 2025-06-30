@@ -11,6 +11,7 @@ export * from './chat-input/multi-modal-attachments-display';
 export * from './client-boundary';
 export * from './code-block/code-block';
 export * from './command-search';
+export * from './conditional-footer';
 export * from './custom-schema-builder';
 export * from './document-side-panel';
 export * from './error-boundary';

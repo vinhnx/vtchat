@@ -273,7 +273,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 !isSidebarOpen && 'justify-center px-0'
                             )}
                         >
-                            <Logo className="text-brand size-6 flex-shrink-0" />
+                            <Logo round className="text-brand size-6 flex-shrink-0" />
                             {isSidebarOpen && (
                                 <motion.p
                                     initial={{ opacity: 0, x: -10 }}
@@ -478,13 +478,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 >
                     {isSidebarOpen ? (
                         <Button
-                            size="lg"
+                            size={forceMobile ? 'default' : 'lg'}
                             variant="ghost"
                             rounded="lg"
                             disabled={isPortalLoading}
                             className={cn(
                                 'group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300',
-                                'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10'
+                                'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10',
+                                forceMobile ? 'h-auto min-h-[44px] py-2' : ''
                             )}
                             onClick={() => {
                                 if (isPlusSubscriber) {
@@ -495,17 +496,19 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                         >
                             <Sparkles
-                                size={20}
+                                size={forceMobile ? 16 : 20}
                                 strokeWidth={2}
                                 className={cn(
-                                    'mr-3 flex-shrink-0 transition-all duration-300 group-hover:scale-110',
-                                    'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300'
+                                    'flex-shrink-0 transition-all duration-300 group-hover:scale-110',
+                                    'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300',
+                                    forceMobile ? 'mr-2' : 'mr-3'
                                 )}
                             />
                             <span
                                 className={cn(
-                                    'flex-1 text-left font-medium',
-                                    'text-[#262626] dark:text-[#BFB38F]'
+                                    'flex-1 truncate text-left font-medium',
+                                    'text-[#262626] dark:text-[#BFB38F]',
+                                    forceMobile ? 'text-sm leading-tight' : ''
                                 )}
                             >
                                 {isPortalLoading
@@ -516,8 +519,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </span>
                             {isPlusSubscriber && (
                                 <ExternalLink
-                                    size={12}
-                                    className="ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80"
+                                    size={forceMobile ? 10 : 12}
+                                    className={cn(
+                                        'ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80',
+                                        forceMobile ? 'mt-0.5' : ''
+                                    )}
                                 />
                             )}
                         </Button>

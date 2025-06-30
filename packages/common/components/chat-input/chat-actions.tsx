@@ -786,7 +786,7 @@ export function ChatModeOptions({
             <DropdownMenuContent
                 align="start"
                 side="bottom"
-                className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
+                className="no-scrollbar max-h-[300px] w-[320px] md:w-[300px] overflow-y-auto"
             >
                 {/* Always show Advanced Mode options regardless of page context */}
                 <DropdownMenuGroup>
@@ -990,8 +990,9 @@ export function SendStopButton({
                             onClick={() => {
                                 sendMessage();
                             }}
+                            className="min-w-[36px] min-h-[36px] md:min-w-[32px] md:min-h-[32px]"
                         >
-                            <ArrowUp size={16} strokeWidth={2} />
+                            <ArrowUp size={18} strokeWidth={2} className="md:w-4 md:h-4" />
                         </Button>
                     </motion.div>
                 )}

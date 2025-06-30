@@ -1,6 +1,6 @@
 import { DocumentAttachment } from '@repo/shared/types';
 import { Button, Sheet, SheetContent, SheetTrigger, TypographyH2, TypographyH4 } from '@repo/ui';
-import { FileText } from 'lucide-react';
+import { FileText, Lightbulb } from 'lucide-react';
 import { memo } from 'react';
 import { DocumentDisplay } from './thread/components/document-display';
 
@@ -52,8 +52,9 @@ export const DocumentSidePanel = memo(
                         </div>
 
                         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                            <TypographyH4 className="mb-2 text-sm font-medium text-blue-800">
-                                💡 Document Processing
+                            <TypographyH4 className="mb-2 text-sm font-medium text-blue-800 flex items-center gap-2">
+                                <Lightbulb size={16} />
+                                Document Processing
                             </TypographyH4>
                             <p className="text-xs text-blue-700">
                                 This document is being processed by Gemini AI. You can ask questions

@@ -2,7 +2,7 @@
 
 import { ChartRenderer } from '@repo/ui';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui';
-import { X } from 'lucide-react';
+import { X, BarChart3 } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChartData = {
@@ -25,8 +25,9 @@ export const ChartPopup = ({ chartData, isOpen, onClose }: ChartPopupProps) => {
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
                 <DialogHeader className="flex flex-row items-center justify-between">
-                    <DialogTitle className="text-lg font-semibold">
-                        📊 {chartData.title}
+                    <DialogTitle className="text-lg font-semibold flex items-center gap-2">
+                        <BarChart3 size={18} />
+                        {chartData.title}
                     </DialogTitle>
                     <button
                         onClick={onClose}

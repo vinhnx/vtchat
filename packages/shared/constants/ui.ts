@@ -4,7 +4,7 @@
  */
 
 export const BUTTON_TEXT = {
-    MANAGE_SUBSCRIPTION: 'Manage Subscription',
+    MANAGE_SUBSCRIPTION: 'Subscription Portal',
     MANAGE_BILLING: 'Manage Billing',
     UPGRADE_TO_PLUS: 'Upgrade to VT+',
     LOADING: 'Loading...',
