@@ -2,8 +2,8 @@ import { Thread } from '@repo/common/components';
 import { generateMetadata as genMeta } from '../../lib/seo/metadata-utils';
 
 export const metadata = genMeta({
-    title: 'Chat',
-    description: 'Chat with AI assistants using various models.',
+    title: 'VT',
+    description: 'Minimal AI Chat',
     pathname: '/chat',
 });
 
