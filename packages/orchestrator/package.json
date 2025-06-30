@@ -1,7 +1,10 @@
 {
     "name": "@repo/orchestrator",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "Task orchestration and workflow management utilities",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "main": "./main.ts",
     "scripts": {
         "lint": "oxlint",

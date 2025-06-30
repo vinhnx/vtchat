@@ -1,7 +1,10 @@
 {
     "name": "@repo/common",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "Shared components, hooks, and utilities for VTChat application",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "exports": {
         "./hooks": "./hooks/index.ts",
         "./hooks/use-subscription-access": "./hooks/use-subscription-access.ts",

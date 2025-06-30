@@ -2,11 +2,17 @@
 
 ok go! -> https://vtchat.io.vn/
 
---
-https://next-validate-link.vercel.app/
-next-validate-link v1.5.2
 
-A simple utility to validate links in your Markdown files. Never worry about broken documentation links again.
+--
+build document page and new endpoint/route at /docs
+
+use fumadocs https://fumadocs.dev/docs/ui
+use context7 for fetching fumadocs integration guide
+
+use all /docs folder for documentation structure
+
+-> update readme
+-> add /docs links to footer and add to user menu dropdown items
 --
 
 https://github.com/e2b-dev/fragments
@@ -31,26 +37,6 @@ https://ai-sdk.dev/docs/guides/openai-responses
 
 improve Claude 4 support
 https://ai-sdk.dev/docs/guides/claude-4
-
---
-launch discount promo code:
-
---
-
-https://github.com/vercel/mcp-adapter
-
---
-IMPORTANT verify creem.io LIVE payment
-good luck!
-https://www.creem.io/checkout/prod_1UZhx15bSgbT8ggWTPQNi/ch_4oVL59zbacFQaBIGrGBgug
-
---
-
-localization
-
---
-
-https://docs.creem.io/faq/account-reviews
 
 --
 
@@ -118,8 +104,6 @@ Feedback welcome!
 
 --
 
-gen new launch image https://og.new/
-
 ref https://x.com/fayazara/status/1820354290487083232
 Launch day
 
@@ -140,17 +124,11 @@ Launching it on PH as well - Support appreciated - https://producthunt.com/posts
 
 https://x.com/i/communities/1493446837214187523
 
---
-
-https://oss.now/early-submission
 
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
 
---
-
-Write a final readme, documentation, and any other relevant materials to reflect the current state of the project.
 
 --
 
@@ -163,6 +141,7 @@ Future plan
 + magic link
 + https://supermemory.ai/docs/memory-api/overview
 + mcp
++ localization
 
 --
 

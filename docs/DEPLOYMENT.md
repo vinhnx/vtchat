@@ -1,6 +1,8 @@
-# 🚀 VT Chat - Fly.io Deployment Guide
+# 🚀 VT (VTChat) - Production Deployment Guide
 
 ## 📋 Quick Start
+
+VT is production-ready with automated deployment scripts for both development and production environments.
 
 ```bash
 # Development deployment
@@ -15,11 +17,12 @@
 
 ## 🎯 Prerequisites
 
-1. **Fly.io Account**: [Sign up at fly.io](https://fly.io)
+1. **Fly.io Account**: [Sign up at fly.io](https://fly.io) and install CLI
 2. **Fly CLI**: `curl -L https://fly.io/install.sh | sh`
 3. **Environment Files**: Set up your `.env.development` and `.env.production`
-4. **Database**: Neon PostgreSQL database URLs
-5. **API Keys**: GitHub, Google OAuth, Creem.io, AI providers
+4. **Database**: Neon PostgreSQL database with proper schema
+5. **API Keys**: GitHub, Google OAuth, Creem.io payment, Arcjet security, AI providers
+6. **Domain**: Custom domain configuration (vtchat.io.vn)
 
 ## Environment Configuration
 
@@ -32,12 +35,13 @@
 - **Secrets from**: `apps/web/.env.development`
 
 ### Production (`fly.production.toml`)
-- **App**: `vtchat-prod.fly.dev`
+- **App**: `vtchat` (live at vtchat.io.vn)
 - **NODE_ENV**: `production`
-- **Resources**: 2GB RAM, 2 CPUs
+- **Resources**: 2GB RAM, 2 CPUs (shared)
 - **Auto-scaling**: Suspend when idle, min 1 machine
-- **Health checks**: Every 30s
+- **Health checks**: Every 30s at `/api/health`
 - **Secrets from**: `apps/web/.env.production`
+- **Region**: Singapore (sin) for optimal performance
 
 ## File Structure
 
@@ -61,7 +65,9 @@
 ### Secrets (via fly secrets)
 - `DATABASE_URL`, `BETTER_AUTH_SECRET`
 - `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET`
-- `CREEM_API_KEY`, `JINA_API_KEY`
+- `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_PRODUCT_ID`
+- `ARCJET_KEY` (application security)
+- `GEMINI_API_KEY` (for free tier models)
 - `NEON_PROJECT_ID`, `NEON_API_KEY`
 
 ## Commands
@@ -75,18 +81,18 @@
 
 # Monitor logs
 fly logs -f --app vtchat-dev
-fly logs -f --app vtchat-prod
+fly logs -f --app vtchat
 
 # Check status
 fly status --app vtchat-dev
-fly status --app vtchat-prod
+fly status --app vtchat
 
 # Scale production
-fly scale count 2 --app vtchat-prod
+fly scale count 2 --app vtchat
 
 # Open apps
 fly open --app vtchat-dev
-fly open --app vtchat-prod
+fly open --app vtchat
 ```
 
 ## Health Checks

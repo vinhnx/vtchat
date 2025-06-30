@@ -1,14 +1,27 @@
-## Introduction
+# VTChat
 
-VT (VTChat) is a production-ready, privacy-focused AI chat application that delivers cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+<div align="center">
 
---
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Deployed on Fly.io](https://img.shields.io/badge/Deployed%20on-Fly.io-blueviolet)](https://fly.io)
 
-VT combines enterprise-grade security with user-friendly design, featuring local-first data storage, advanced AI reasoning modes, and seamless subscription management. The application has been optimized for performance with 87% faster compilation times and comprehensive testing coverage.
+**A modern, privacy-first AI chat application with enterprise-grade security**
 
-## Key Features
+[Live Demo](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/guides/arcjet-security.md)
 
-### Advanced AI Capabilities
+</div>
+
+---
+
+## 🚀 Overview
+
+VTChat is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VTChat offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+
+## ✨ Key Features
+
+### 🧠 Advanced AI Capabilities
 - **Reasoning Mode (VT+ exclusive)**: Complete AI SDK reasoning tokens support with transparent thinking process
 - **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, DeepSeek R1, Qwen3 14B)
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
@@ -17,30 +30,30 @@ VT combines enterprise-grade security with user-friendly design, featuring local
 - **Web Search Integration (VT+ exclusive)**: Grounding capabilities with real-time information
 - **Mathematical Calculator**: Advanced functions including trigonometry, logarithms, and arithmetic
 
-### Privacy-First Architecture
+### 🔒 Privacy-First Architecture
 - **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
 - **Enterprise-Grade Security**: Secure authentication with Better Auth
 - **Advanced Application Security**: Arcjet protection with rate limiting, bot detection, email validation, and WAF
 
-### Subscription Tiers
+### 💼 Subscription Tiers
 - **VT_BASE (Free)**: 9 AI models, calculator, basic chat, local privacy
 - **VT_PLUS ($10/month)**: All free features + reasoning mode, dark theme, web search, document upload, structured extraction
 - **Seamless Management**: Creem.io integration with customer portal
 
-### Modern User Experience
+### 🎨 Modern User Experience
 - **Shadcn UI Design System**: Consistent, accessible interface
 - **Dark Mode (VT+ exclusive)**: Premium theming experience
 - **Responsive Design**: Optimized for desktop and mobile
 - **87% Performance Improvement**: Faster compilation and load times
 
-## Architecture
+## 🏗️ Architecture
 
-VT utilizes a Turborepo-managed monorepo structure:
+VTChat utilizes a Turborepo-managed monorepo structure:
 
 ```
-.
+vtchat/
 ├── apps/
 │   └── web/              # Next.js 14 web application (App Router)
 ├── packages/
@@ -52,79 +65,12 @@ VT utilizes a Turborepo-managed monorepo structure:
 │   ├── tailwind-config/  # Shared Tailwind CSS configuration
 │   ├── typescript-config/# Shared TypeScript configurations
 │   └── ui/               # Base UI components (from Shadcn UI)
+├── docs/                 # Documentation and guides
+├── memory-bank/          # Project context and evolution tracking
 └── scripts/              # Utility scripts (e.g., data sync)
 ```
 
-## Workflow Orchestration Example
-
-VT's workflow orchestration enables powerful agentic capabilities. Here's an example of creating a research agent:
-
-### 1. Define Event and Context Types
-
-```typescript
-// packages/ai/workflow/types.ts (Illustrative)
-type AgentEvents = {
-    taskPlanner: { tasks: string[]; query: string };
-    informationGatherer: { searchResults: string[] };
-    informationAnalyzer: { analysis: string; insights: string[] };
-    reportGenerator: { report: string };
-};
-
-type AgentContext = {
-    query: string;
-    tasks: string[];
-    searchResults: string[];
-    analysis: string;
-    insights: string[];
-    report: string;
-};
-```
-
-### 2. Initialize Core Components
-
-```typescript
-// packages/ai/workflow/example.ts (Illustrative)
-import { OpenAI } from 'openai';
-import { createTask } from '@repo/orchestrator'; // Assuming orchestrator path
-import { WorkflowBuilder } from '@repo/orchestrator';
-import { Context } from '@repo/orchestrator';
-import { TypedEventEmitter } from '@repo/orchestrator';
-
-const events = new TypedEventEmitter<AgentEvents>();
-const builder = new WorkflowBuilder<AgentEvents, AgentContext>('research-agent', {
-    events,
-    context: new Context<AgentContext>({
-        /* initial context */
-    }),
-});
-const llm = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-```
-
-### 3. Define Research Tasks (Planning, Gathering, Analysis, Reporting)
-
-(Task definitions for `taskPlanner`, `informationGatherer`, `informationAnalyzer`, `reportGenerator` would follow, similar to the original README example, utilizing the `createTask` utility and interacting with the LLM and context.)
-
-### 4. Build and Execute the Workflow
-
-```typescript
-// packages/ai/workflow/example.ts (Illustrative)
-builder.addTask(taskPlanner);
-builder.addTask(informationGatherer);
-builder.addTask(informationAnalyzer);
-builder.addTask(reportGenerator);
-
-const workflow = builder.build();
-// workflow.start('taskPlanner', { query: 'Research AI impact' });
-export const researchAgent = workflow;
-```
-
-This workflow processes research queries through planning, information gathering, analysis, and report generation, with events updating the UI in real-time.
-
-## Local Storage for Privacy
-
-VT stores all chat history and user-specific data (like API keys if "Bring Your Own Key" is used) in the browser's IndexedDB. This ensures that sensitive conversation data remains on the user's device, enhancing privacy.
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### **Frontend & Core**
 - **Framework**: Next.js 14 (App Router) with TypeScript
@@ -154,44 +100,125 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 - **Document Processing**: Multi-format file analysis
 - **Web Search**: Real-time grounding capabilities
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Bun (JavaScript runtime and package manager)
-- Node.js (for some Turborepo operations, though Bun is primary)
+- **Bun** (JavaScript runtime and package manager) - v1.1.19 or higher
+- **Node.js** (for some Turborepo operations, though Bun is primary)
+- **Git** for version control
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/vinhnx/vtchat.git
+   cd vtchat
+   ```
 
-    ```bash
-    git clone https://github.com/your-repo/vtchat.git # Replace with actual repo URL
-    cd vtchat
-    ```
+2. **Install dependencies**:
+   ```bash
+   bun install
+   ```
 
-2. Install dependencies:
+3. **Set up environment variables**:
+   ```bash
+   cp apps/web/.env.example apps/web/.env.local
+   ```
+   
+   Configure the following required variables in `apps/web/.env.local`:
+   
+   **Essential Services:**
+   - `DATABASE_URL` - Neon PostgreSQL connection string
+   - `BETTER_AUTH_SECRET` - Authentication secret key
+   - `BETTER_AUTH_URL` - Authentication URL (http://localhost:3000 for development)
+   
+   **AI Provider Keys (choose one or more):**
+   - `OPENAI_API_KEY` - OpenAI API access
+   - `ANTHROPIC_API_KEY` - Anthropic Claude API access
+   - `GOOGLE_API_KEY` - Google Gemini API access
+   
+   **Payment & Subscription:**
+   - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
+   - `CREEM_API_KEY` - Creem.io API access
+   - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
+   
+   **Security:**
+   - `ARCJET_KEY` - Application security and rate limiting
+   - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
-    ```bash
-    bun install
-    ```
+4. **Set up the database**:
+   ```bash
+   cd apps/web
+   bun run generate  # Generate database schema
+   ```
 
-3. Set up environment variables:
+5. **Start the development server**:
+   ```bash
+   bun dev
+   ```
 
-    - Copy `apps/web/.env.example` to `apps/web/.env.local`.
-    - Fill in the required API keys and configuration values (e.g., Creem.io keys, LLM provider keys, Arcjet key).
+6. **Open the application**:
+   Navigate to `http://localhost:3000` in your browser.
 
-4. Start the development server:
+### Development Commands
 
-    ```bash
-    bun dev
-    ```
+```bash
+# Development
+bun dev                 # Start development server with Turbopack
+bun build              # Build for production
+bun start              # Start production server
+bun test               # Run tests
+bun test:coverage      # Run tests with coverage
 
-    This command, managed by Turborepo, will typically start the Next.js application.
+# Code Quality
+bun lint               # Lint with oxlint
+bun format             # Format code with Prettier
+bun format:check       # Check code formatting
 
-5. Open your browser and navigate to `http://localhost:3000` (or the port specified by the `dev` script).
+# Database
+cd apps/web
+bun run generate       # Generate Drizzle schema
+```
 
-## Documentation
+## 🔧 Configuration
+
+### Environment Setup
+
+The application requires several environment variables for full functionality. Refer to `apps/web/.env.example` for the complete list. Key configurations include:
+
+- **Database**: Neon PostgreSQL for user data and subscriptions
+- **Authentication**: Better Auth for secure session management
+- **AI Providers**: Support for multiple AI APIs
+- **Payment**: Creem.io for subscription management
+- **Security**: Arcjet for application protection
+
+### Subscription Tiers
+
+VTChat implements a dual-tier system:
+
+- **VT_BASE**: Free tier with access to 9 AI models
+- **VT_PLUS**: Premium tier ($10/month) with advanced features
+
+## 🚢 Deployment
+
+VTChat is production-ready and deployed on Fly.io:
+
+### Production Deployment
+- **URL**: [https://vtchat.io.vn](https://vtchat.io.vn)
+- **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
+- **Performance**: 87% faster compilation, optimized bundle size
+- **Security**: Enterprise-grade security with Arcjet protection
+- **Monitoring**: Comprehensive error tracking and performance monitoring
+
+### Deployment Configuration
+- **Memory**: 1GB RAM per instance
+- **CPU**: 1 shared CPU
+- **Regions**: Asia-Pacific (primary), USA East (secondary)
+- **Health Checks**: HTTP and TCP monitoring
+- **Auto-scaling**: Suspend/resume based on traffic
+
+## 📚 Documentation
 
 ### **Production Readiness**
 - **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Comprehensive pre-deployment verification
@@ -204,19 +231,83 @@ VT stores all chat history and user-specific data (like API keys if "Bring Your 
 - **[Security Guide](docs/guides/arcjet-security.md)**: Comprehensive Arcjet application security implementation
 - **Subscription System**: Plan management, caching, and Creem.io integration
 - **Customer Portal**: User subscription management interface
-- **Webhook Setup**: Creem.io webhook configuration for development
 
 ### **Project Context**
 The `/memory-bank` directory contains contextual documents tracking project evolution, feature implementations, and development insights for continuous improvement.
 
-## Production Deployment
+## 🔐 Security
 
-VT is fully prepared for production deployment with:
+VTChat implements comprehensive security measures:
 
-- **Zero TypeScript Errors**: Complete type safety
-- **Performance Optimized**: 87% faster compilation, optimized bundle size
-- **Security Hardened**: Privacy-first architecture with secure authentication and Arcjet application security
-- **Attack Protection**: Comprehensive defense against bots, rate limiting abuse, and common web attacks
-- **Monitoring Ready**: Error tracking and performance monitoring setup
-- **Documentation Complete**: Comprehensive guides and troubleshooting
-- **Testing Coverage**: Vitest framework with comprehensive test coverage
+- **Privacy-First**: All conversations stored locally in IndexedDB
+- **Authentication**: Better Auth with secure session management
+- **Application Security**: Arcjet protection against bots, DDoS, and attacks
+- **Rate Limiting**: Prevents abuse with intelligent rate limiting
+- **Data Protection**: No server-side storage of sensitive chat data
+- **Secure Communication**: HTTPS enforced, secure headers implemented
+
+## 🧪 Testing
+
+VTChat includes comprehensive testing:
+
+```bash
+# Run all tests
+bun test
+
+# Run tests with UI
+bun test:ui
+
+# Run tests with coverage
+bun test:coverage
+
+# Run specific test suites
+bun test app/tests/rate-limit-simple.test.ts
+```
+
+Testing framework: Vitest with Testing Library for React components.
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these guidelines:
+
+1. **Fork the repository** and create a feature branch
+2. **Follow the coding standards** defined in [AGENT.md](AGENT.md)
+3. **Write tests** for new features
+4. **Update documentation** as needed
+5. **Submit a pull request** with a clear description
+
+### Development Standards
+- Use TypeScript with strict configuration
+- Follow the existing code style and patterns
+- Ensure all tests pass before submitting
+- Update AGENT.md with any significant changes
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 🏆 Achievements
+
+- **Zero TypeScript Errors**: Complete type safety across the codebase
+- **87% Performance Improvement**: Optimized compilation and runtime
+- **Production-Ready**: Deployed and running in production environment
+- **Security Hardened**: Comprehensive protection against common threats
+- **Privacy-First**: Industry-leading approach to user data protection
+
+## 🎯 Roadmap
+
+- [ ] Mobile app development (React Native)
+- [ ] Additional AI provider integrations
+- [ ] Advanced collaboration features
+- [ ] Enhanced document processing capabilities
+- [ ] API access for developers
+
+---
+
+<div align="center">
+
+**[Visit VTChat](https://vtchat.io.vn)** | **[View Documentation](docs/)** | **[Report Issues](https://github.com/vinhnx/vtchat/issues)**
+
+Built with ❤️ by the VTChat team
+
+</div>

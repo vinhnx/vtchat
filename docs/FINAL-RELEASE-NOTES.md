@@ -1,7 +1,7 @@
 # 🚀 VT (VTChat) - Production Release v1.0
 
-**Release Date:** January 2025  
-**Status:** ✅ Production Ready  
+**Release Date:** June 30, 2025  
+**Status:** ✅ Production Ready & Live at [vtchat.io.vn](https://vtchat.io.vn)  
 
 ## 🎯 Executive Summary
 

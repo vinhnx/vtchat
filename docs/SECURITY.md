@@ -1,6 +1,6 @@
-# VTChat Security Overview
+# VT (VTChat) Security Overview
 
-VTChat implements comprehensive security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security.
+VT implements enterprise-grade security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security through Arcjet integration and Better Auth.
 
 ## 🛡️ Security Architecture
 
