@@ -2,6 +2,11 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
+duplicated grounding web search on vt+ setting page
+
+update settings vt+ features with latest plus tier benefit
+
 --
 
 break line properly welcome message on mobile
