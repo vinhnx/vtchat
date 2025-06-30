@@ -1,6 +1,27 @@
 {
     "name": "vtchat",
+    "version": "1.0.0",
+    "description": "An intelligent chat application powered by AI with advanced conversational capabilities",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vinhnx/vtchat.git"
+    },
+    "keywords": [
+        "ai",
+        "chat",
+        "conversation",
+        "nextjs",
+        "react",
+        "typescript",
+        "tailwindcss"
+    ],
+    "homepage": "https://github.com/vinhnx/vtchat#readme",
+    "bugs": {
+        "url": "https://github.com/vinhnx/vtchat/issues"
+    },
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",

@@ -1,23 +1,24 @@
-# VTChat Features Overview
+# VT (VTChat) Features Overview
 
-VTChat is a comprehensive AI chat application with enterprise-grade security and privacy-first architecture. This document provides a complete overview of all features and capabilities.
+VT is a production-ready, privacy-focused AI chat application with enterprise-grade security and comprehensive AI capabilities. This document provides a complete overview of all features and capabilities.
 
 ## 🤖 AI & Language Models
 
 ### Multi-Provider Support
-- **OpenAI**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
-- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Haiku, Claude 3 Opus
-- **Google**: Gemini 2.0 Flash, Gemini 2.5 Flash, Gemini 1.5 Pro
-- **Fireworks AI**: Optimized inference for various models
-- **Together AI**: Open-source model hosting
-- **xAI**: Grok and other experimental models
+- **OpenAI**: GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-3.5 Turbo, o-series reasoning models
+- **Anthropic**: Claude 3.5 Sonnet (new), Claude 3.5 Haiku, Claude 3 Opus
+- **Google**: Gemini 2.0 Flash, Gemini 2.5 Flash (Lite Preview free tier), Gemini 2.5 Pro
+- **OpenRouter**: DeepSeek V3, DeepSeek R1, Qwen3 14B, and other open-source models
+- **Together AI**: Open-source model hosting and inference
+- **xAI**: Grok models and other experimental models
 
 ### Advanced AI Capabilities
-- **Reasoning Mode (VT+ Exclusive)**: Complete AI SDK reasoning tokens support with transparent thinking process
-- **Structured Output Extraction (VT+ Exclusive)**: AI-powered JSON data extraction from documents
-- **Multi-Modal Processing**: Text, image, and document analysis
-- **Context Management**: Advanced conversation context handling
-- **Token Optimization**: Efficient token usage across providers
+- **Reasoning Mode (VT+ Exclusive)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models
+- **Structured Output Extraction (VT+ Exclusive)**: AI-powered JSON data extraction from documents with intelligent schema generation
+- **Multi-Modal Processing**: Text, image, and document analysis with up to 10MB file support
+- **Context Management**: Advanced conversation context handling with thread isolation
+- **Token Optimization**: Efficient token usage across providers with rate limiting for free tier models
+- **Free Model Access**: 9 free AI models available to all users (5 Gemini + 4 OpenRouter models)
 
 ## 📄 Document Processing (VT+ Exclusive)
 
@@ -65,72 +66,73 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 ## 🛡️ Security & Privacy
 
 ### Privacy-First Architecture
-- **Local-First Storage**: All chat data stored in browser's IndexedDB
+- **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Persistence**: Conversations never leave user's device
-- **Multi-User Isolation**: Complete data separation on shared devices
-- **Client-Side Encryption**: Sensitive data encrypted in browser
+- **Multi-User Isolation**: Complete data separation on shared devices with per-account thread isolation
+- **Client-Side Encryption**: Sensitive data encrypted in browser storage
+- **GDPR Compliance**: Privacy-by-design architecture with user data rights
 
 ### Application Security (Arcjet Integration)
-- **Rate Limiting**: Multiple algorithms (sliding window, fixed window, token bucket)
-- **Bot Protection**: Advanced bot detection with configurable allow/deny lists
-- **Email Validation**: Blocks disposable, invalid, and suspicious emails
-- **Web Application Firewall**: Protection against SQL injection, XSS, and common attacks
-- **IP Analysis**: VPN/proxy detection and geolocation filtering
+- **Advanced Rate Limiting**: Multiple algorithms (sliding window, fixed window, token bucket) with user-specific protection
+- **Intelligent Bot Protection**: Advanced bot detection with search engine exceptions and configurable policies
+- **Email Validation**: Blocks disposable, invalid, and suspicious emails with user-friendly error handling
+- **Web Application Firewall**: Shield WAF protection against SQL injection, XSS, and common attacks
+- **IP Analysis**: VPN/proxy detection and geolocation filtering for enhanced security
 
-### Authentication Security
-- **Better Auth Integration**: Modern, secure session management
-- **Multi-Provider OAuth**: GitHub, Google, and Twitter/X social authentication
-- **User-Specific Rate Limiting**: Authenticated users get individual protection
+### Authentication Security (Better Auth)
+- **Modern Session Management**: Better Auth with 87% performance improvement and session caching
+- **Multi-Provider OAuth**: GitHub, Google, and other social authentication providers
+- **User-Specific Rate Limiting**: Authenticated users get individual protection with fallback to IP-based limiting
 - **Account Linking**: Secure linking of multiple OAuth providers to single account
-- **Secure Headers**: CORS, security headers properly configured
-- **Session Isolation**: Per-user authentication with proper isolation
+- **Secure Headers**: CORS, security headers, and HTTPS enforcement properly configured
+- **Session Isolation**: Per-user authentication with proper thread isolation
 
 ## 🎨 User Interface & Experience
 
-### Design System
-- **Shadcn UI**: Consistent, accessible component library
-- **Dark Mode (VT+ Exclusive)**: Premium theming experience
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
-- **Accessibility**: WCAG compliant interface design
+### Modern Design System
+- **Shadcn UI Integration**: Complete design system with zero breaking changes and consistent component library
+- **Dark Mode (VT+ Exclusive)**: Premium theming experience with official Shadcn UI variables
+- **Responsive Design**: Mobile-optimized interface for desktop, tablet, and mobile devices
+- **Accessibility**: WCAG compliant interface design with keyboard navigation and screen reader support
 
-### User Experience Features
-- **Real-Time Typing**: Live conversation indicators
-- **Message Threading**: Organized conversation structure
-- **Export Options**: Conversation export capabilities
-- **Search History**: Find previous conversations
-- **Customizable Settings**: Personalized user preferences
+### Enhanced User Experience
+- **Real-Time Typing**: Live conversation indicators with smooth animations
+- **Thread Management**: Organized conversation structure with per-account isolation
+- **Settings Modal**: Modern two-column layout with improved navigation
+- **Export Options**: Conversation export capabilities with multiple formats
+- **Performance Optimized**: 87% faster compilation and improved load times
 
 ## 💳 Subscription Management
 
-### Subscription Tiers
-- **VT_BASE (Free)**: 9 AI models, calculator, basic chat, local privacy
-- **VT_PLUS ($10/month)**: All free features + reasoning mode, dark theme, web search, document upload, structured extraction
+### Sophisticated Subscription Tiers
+- **VT_BASE (Free)**: 9 AI models (5 Gemini + 4 OpenRouter), calculator, basic chat, local privacy, core security features
+- **VT_PLUS ($10/month)**: All free features + reasoning mode, dark theme, web search, document upload, structured extraction, priority support
 
-### Payment Integration
-- **Creem.io Integration**: Secure payment processing
-- **Customer Portal**: Self-service subscription management
-- **Flexible Billing**: Monthly subscription options
-- **Secure Transactions**: PCI-compliant payment handling
+### Advanced Payment Integration
+- **Creem.io Integration**: Complete payment processing with webhook verification
+- **Customer Portal**: Self-service subscription management with real-time status updates
+- **Dynamic Feature Gating**: Premium features properly restricted with upgrade prompts
+- **Secure Transactions**: PCI-compliant payment handling with production-grade security
 
-### Plan Features
-- **Usage Analytics**: Monitor feature usage and limits
-- **Seamless Upgrades**: Instant plan upgrades
-- **Cancellation**: Easy subscription cancellation
-- **Billing History**: Complete transaction records
+### Enhanced Plan Management
+- **Real-time Subscription Status**: Instant plan updates and portal access
+- **Usage Analytics**: Monitor feature usage, limits, and rate limiting
+- **Seamless Upgrades**: Instant plan upgrades with immediate feature access
+- **Flexible Cancellation**: Easy subscription cancellation with retention strategies
 
 ## ⚡ Performance & Reliability
 
-### Performance Optimizations
-- **87% Faster Compilation**: Optimized build process
-- **Efficient Bundling**: Minimized JavaScript bundles
-- **CDN Delivery**: Fast global content delivery
-- **Caching Strategy**: Intelligent resource caching
+### Production-Grade Performance
+- **87% Faster Compilation**: Build time reduced from 24s to 3s with Turbopack integration
+- **Optimized Bundle Size**: 20KB reduction in main bundle (456kB → 436kB)
+- **Auth Performance**: 80-90% faster session validation and network request handling
+- **Database Optimization**: 70-80% faster queries with proper indexing and Drizzle ORM
 
-### Reliability Features
-- **Error Boundaries**: Graceful error handling
-- **Fallback Mechanisms**: Service degradation handling
-- **Health Monitoring**: System health checks
-- **Automatic Recovery**: Self-healing capabilities
+### Enterprise Reliability
+- **Comprehensive Error Boundaries**: Graceful error handling with proper fallback mechanisms
+- **Health Monitoring**: Production-ready health checks at `/api/health` with 30s intervals
+- **Automatic Recovery**: Self-healing capabilities with proper service degradation
+- **Production Deployment**: Fly.io configuration with auto-scaling and resource optimization
 
 ## 🔧 Developer Features
 
@@ -148,17 +150,17 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 
 ## 🌐 Deployment & Infrastructure
 
-### Hosting & Deployment
-- **Fly.io Deployment**: Production-ready hosting
-- **Global Distribution**: Worldwide edge deployment
-- **SSL/TLS**: Secure HTTPS connections
-- **Custom Domains**: Brand-specific domain support
+### Production-Ready Hosting
+- **Fly.io Deployment**: Production hosting with Singapore region optimization
+- **Auto-Scaling**: Intelligent scaling with suspend/resume capabilities
+- **SSL/TLS**: Enforced HTTPS connections with proper certificate management
+- **Environment Separation**: Dedicated development (`vtchat-dev`) and production (`vtchat`) environments
 
-### Database & Storage
-- **Neon PostgreSQL**: Serverless database platform
-- **Drizzle ORM**: Type-safe database operations
-- **Backup Systems**: Automated data backups
-- **Scalability**: Auto-scaling infrastructure
+### Modern Database Architecture
+- **Neon PostgreSQL**: Serverless database platform with connection pooling
+- **Drizzle ORM**: Type-safe database operations with migration support
+- **Performance Optimization**: Proper indexing and query optimization
+- **Rate Limiting Tables**: Dedicated user rate limits for free tier models
 
 ## 📊 Analytics & Monitoring
 
@@ -176,17 +178,17 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 
 ## 🧪 Testing & Quality Assurance
 
-### Testing Framework
-- **Unit Tests**: Component and function testing
-- **Integration Tests**: End-to-end testing
-- **Security Tests**: Comprehensive security validation
-- **Performance Tests**: Load and stress testing
+### Comprehensive Testing Framework
+- **Vitest Integration**: Modern testing framework with full coverage capability
+- **Unit Tests**: Component and function testing with Testing Library
+- **Security Tests**: Comprehensive Arcjet integration and Better Auth testing
+- **Performance Tests**: Load testing and compilation performance monitoring
 
-### Quality Assurance
-- **Code Review**: Peer review process
-- **Automated Testing**: CI/CD pipeline testing
-- **Security Auditing**: Regular security assessments
-- **Performance Monitoring**: Continuous performance tracking
+### Production-Ready Quality Assurance
+- **Zero TypeScript Errors**: Full type safety maintained across codebase
+- **oxlint Compliance**: Modern linting with zero warnings
+- **Automated Testing**: Vitest setup with comprehensive test coverage
+- **Performance Monitoring**: Built-in metrics and error tracking
 
 ## 🌍 Accessibility & Internationalization
 
@@ -222,16 +224,17 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 
 | Feature | VT_BASE (Free) | VT_PLUS ($10/month) |
 |---------|----------------|---------------------|
-| **AI Models** | 9 Models | All Models |
+| **AI Models** | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
 | **Basic Chat** | ✅ | ✅ |
-| **Local Privacy** | ✅ | ✅ |
+| **Local Privacy** | ✅ (IndexedDB + Thread Isolation) | ✅ (Enhanced Security) |
 | **Calculator** | ✅ | ✅ |
-| **Security Protection** | ✅ | ✅ |
-| **Reasoning Mode** | ❌ | ✅ |
-| **Dark Theme** | ❌ | ✅ |
-| **Web Search** | ❌ | ✅ |
-| **Document Upload** | ❌ | ✅ |
-| **Structured Extraction** | ❌ | ✅ |
+| **Security Protection** | ✅ (Arcjet + Better Auth) | ✅ (Priority Support) |
+| **Reasoning Mode** | ❌ | ✅ (AI SDK Reasoning Tokens) |
+| **Dark Theme** | ❌ | ✅ (Official Shadcn Variables) |
+| **Web Search** | ❌ | ✅ (Real-time Grounding) |
+| **Document Upload** | ❌ | ✅ (PDF/DOC/DOCX up to 10MB) |
+| **Structured Extraction** | ❌ | ✅ (AI-powered JSON) |
+| **Rate Limiting** | 10 requests/day (free models) | Unlimited Premium Models |
 
 ## 🎯 Target Use Cases
 

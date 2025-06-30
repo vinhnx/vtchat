@@ -1,7 +1,10 @@
 {
     "name": "@repo/shared",
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "description": "Shared configuration, utilities, and database layer for VTChat",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "exports": {
         "./config": "./config/index.ts",
         "./config/payment": "./config/payment.ts",

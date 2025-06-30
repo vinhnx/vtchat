@@ -1,7 +1,10 @@
 {
     "name": "@repo/actions",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "Server actions and API utilities for VTChat application",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "scripts": {
         "lint": "oxlint"
     },

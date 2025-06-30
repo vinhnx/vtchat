@@ -1,7 +1,10 @@
 {
     "name": "@repo/ui",
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "description": "Reusable UI components library built with Radix UI and Tailwind CSS",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "main": "./index.ts",
     "types": "./index.ts",
     "scripts": {

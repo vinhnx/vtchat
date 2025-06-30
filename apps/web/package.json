@@ -1,7 +1,10 @@
 {
     "name": "@vtchat/web",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "VTChat web application - AI-powered conversation platform",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",

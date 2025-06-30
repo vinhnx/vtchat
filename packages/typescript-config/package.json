@@ -1,7 +1,10 @@
 {
     "name": "@repo/typescript-config",
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "description": "Shared TypeScript configuration for VTChat monorepo",
     "private": true,
+    "author": "Vinh Nguyen",
+    "license": "MIT",
     "exports": {
         ".": "./base.json",
         "./nextjs": "./nextjs.json",
