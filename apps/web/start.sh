@@ -22,6 +22,15 @@ fi
 export PORT="${PORT:-3000}"
 export HOSTNAME="${HOSTNAME:-0.0.0.0}"
 
-# Start the Next.js standalone server
+# Debug output
+echo "=== SERVER START DEBUG ==="
+echo "Current directory: $(pwd)"
+echo "Server file location: $(ls -la apps/web/server.js 2>/dev/null || echo 'NOT FOUND')"
+echo "PORT: ${PORT}"
+echo "HOSTNAME: ${HOSTNAME}"
+echo "NODE_ENV: ${NODE_ENV}"
+echo "=========================="
+
+# Start the Next.js standalone server with explicit hostname binding
 echo "Starting server on ${HOSTNAME}:${PORT}..."
 exec node apps/web/server.js

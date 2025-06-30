@@ -147,9 +147,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/start.sh ./apps/web/start.sh
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/custom-server.js ./apps/web/custom-server.js
 
-# Make start script executable
-RUN chmod +x ./apps/web/start.sh
+# Make scripts executable
+RUN chmod +x ./apps/web/start.sh ./apps/web/custom-server.js
 
 # Switch to non-root user
 USER nextjs
@@ -159,5 +160,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application using the Node.js standalone server directly
-CMD ["node", "apps/web/server.js"]
+# Start the application using the custom server
+CMD ["node", "./apps/web/custom-server.js"]
