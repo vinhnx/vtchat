@@ -223,7 +223,7 @@ describe('Footer Component', () => {
 
     expect(screen.getByText('Terms of Service')).toBeInTheDocument()
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument()
-    expect(screen.getByText('FAQs')).toBeInTheDocument()
+    expect(screen.getByText('Help Center')).toBeInTheDocument()
   })
 
   it('should have proper link hrefs', () => {
@@ -231,7 +231,7 @@ describe('Footer Component', () => {
 
     const termsLink = screen.getByRole('link', { name: 'Terms of Service' })
     const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' })
-    const faqLink = screen.getByRole('link', { name: 'FAQs' })
+    const faqLink = screen.getByRole('link', { name: 'Help Center' })
 
     expect(termsLink).toHaveAttribute('href', '/terms')
     expect(privacyLink).toHaveAttribute('href', '/privacy')

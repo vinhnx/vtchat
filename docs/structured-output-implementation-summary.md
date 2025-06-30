@@ -20,7 +20,7 @@ The structured output extraction feature has been fully implemented for VTChat w
 - ✅ `packages/common/components/chat-input/input.tsx` - Integration point
 - ✅ `packages/common/store/chat.store.ts` - State management for structured data
 - ✅ `packages/shared/constants/document-upload.ts` - Centralized Gemini model definitions
-- ✅ `apps/web/app/faq/page.tsx` - Documentation updates
+- ✅ `apps/web/app/faq/page.tsx` - Help Center documentation updates
 
 ### Dependencies Added
 
@@ -52,7 +52,7 @@ The structured output extraction feature has been fully implemented for VTChat w
 
 ## 📋 Documentation Updates
 
-### FAQ Section Enhanced
+### Help Center Section Enhanced
 
 - ✅ Structured output explanation with Gemini-only requirements
 - ✅ Web search capabilities documented

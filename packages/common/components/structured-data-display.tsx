@@ -102,7 +102,7 @@ export const StructuredDataDisplay = () => {
             </CardHeader>
             {isExpanded && (
                 <CardContent className="pt-0">
-                    <div className="max-h-96 overflow-y-auto">
+                    <div className="max-h-96 overflow-y-auto touch-pan-y overscroll-contain">
                         {renderData(structuredData.data)}
                     </div>
                 </CardContent>

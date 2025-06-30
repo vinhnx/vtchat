@@ -95,7 +95,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
                 <Link href="/faq" className="w-full">
                     <DropdownMenuItem>
                         <HelpCircle className="mr-2 h-4 w-4" />
-                        FAQ & Help
+                        Help Center
                     </DropdownMenuItem>
                 </Link>
                 <Link href="/terms" className="w-full">

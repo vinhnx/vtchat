@@ -197,7 +197,7 @@ Build:        Turborepo, Turbopack
 - ✅ Subscription Management Guide
 - ✅ Troubleshooting Documentation
 - ✅ Privacy Policy and Terms
-- ✅ FAQ and Support Resources
+- ✅ Help Center and Support Resources
 
 ### **Operational Documentation**
 - ✅ Production Deployment Checklist

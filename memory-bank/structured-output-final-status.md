@@ -131,7 +131,7 @@ All documentation updated to reflect the browser-compatible implementation:
 
 - ✅ Implementation summary
 - ✅ Testing strategy and execution guide
-- ✅ FAQ with feature explanations
+- ✅ Help Center with feature explanations
 - ✅ Technical architecture documentation
 
 ### 🎯 Next Steps

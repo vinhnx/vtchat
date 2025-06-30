@@ -12,13 +12,13 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'FAQ - VT',
+    title: 'Help Center - VT',
     description:
-        'Frequently asked questions about VT features, thread isolation, account management, and privacy-focused AI chat capabilities.',
+        'Help center with questions about VT features, thread isolation, account management, and privacy-focused AI chat capabilities.',
     openGraph: {
-        title: 'FAQ - VT',
+        title: 'Help Center - VT',
         description:
-            'Frequently asked questions about VT features and privacy-focused AI chat capabilities.',
+            'Help center with questions about VT features and privacy-focused AI chat capabilities.',
         type: 'website',
     },
     robots: {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function FAQPage() {
+export default function HelpCenterPage() {
     return (
         <div className="bg-background min-h-screen">
             {/* Header */}
@@ -39,14 +39,14 @@ export default function FAQPage() {
                             Back to VT
                         </Button>
                     </Link>
-                    <div className="text-muted-foreground text-sm">Frequently Asked Questions</div>
+                    <div className="text-muted-foreground text-sm">Help Center</div>
                 </div>
             </header>
 
             {/* Main Content */}
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto max-w-7xl">
-                    <FAQs />
+                    <HelpCenterContent />
                 </div>
             </main>
 
@@ -60,13 +60,13 @@ export default function FAQPage() {
     );
 }
 
-function FAQs() {
+function HelpCenterContent() {
     return (
         <section className="py-8 md:py-16">
             <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
                     <TypographyH2 className="mb-4 text-3xl font-semibold md:text-4xl">
-                        Frequently Asked Questions
+                        Help Center
                     </TypographyH2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
                         Everything you need to know about VT's privacy-focused AI chat features,

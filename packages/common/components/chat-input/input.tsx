@@ -33,6 +33,7 @@ import {
     WebSearchButton,
 } from './chat-actions';
 import { ChatEditor } from './chat-editor';
+import { ChatFooter } from './chat-footer';
 import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
@@ -375,9 +376,9 @@ export const ChatInput = ({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, ease: 'easeOut' }}
-                            className="mb-4 flex w-full flex-col items-center gap-4"
+                            className="mb-2 flex w-full flex-col items-center gap-2"
                         >
-                            <UserTierBadge showUpgradePrompt={true} className="mb-2" />
+                            <UserTierBadge showUpgradePrompt={true} />
                             <PersonalizedGreeting session={session} />
                         </motion.div>
                     )}
@@ -385,7 +386,8 @@ export const ChatInput = ({
                     {renderChatBottom()}
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
 
-                    {/* <ChatFooter /> */}
+                    {/* Show simplified footer only if not logged in */}
+                    {!session && <ChatFooter />}
                 </Flex>
             </div>
             {showLoginPrompt && (
@@ -463,7 +465,7 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
                     }}
                     className="text-center"
                 >
-                    <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
+                    <ShineText className="text-xl font-medium leading-relaxed tracking-tight sm:text-2xl md:text-3xl">
                         {greeting}
                     </ShineText>
                 </motion.div>

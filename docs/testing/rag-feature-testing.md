@@ -195,7 +195,7 @@ Expected: Combines all related information contextually
 
 ## Documentation & Help Testing
 
-### 1. FAQ Section
+### 1. Help Center Section
 - Navigate to `/faq`
 - Find "RAG Knowledge Chat" section
 - Verify comprehensive feature explanation
