@@ -1,8 +1,324 @@
 # TODO
 
 ok go! -> https://vtchat.io.vn/
+
 --
 
+# Launch Plan
+
+https://chatgpt.com/c/6862c1f9-8aa8-8003-a651-414083759701
+
+Below is a concise review of your launch materials against established best practices for each channel (Hacker News, Twitter, Product Hunt, Peerlist). Key recommendations and citations are provided to help you sharpen titles, tone, formatting, and engagement strategies.
+
+## Summary
+
+Your drafts are technically rich and precise, which aligns well with developer audiences. To maximize traction, tighten headlines to avoid marketing‐speak, foreground unique value propositions in hooks, and ensure each post’s formatting follows platform conventions. Below are channel-specific tweaks.
+
+---
+
+## 1. Hacker News – Show HN
+
+### What’s Working
+
+* **Technical depth**: Clear bullets on BYOK, model support, IndexedDB isolation.
+* **Transparency**: Open-source links and live URL immediately visible.
+
+### Tune-Ups
+
+1. **Title clarity & brevity**
+
+   * Drop adjectives like “privacy-first” in title; focus on “what it is” not “feel” ([lucasfcosta.com][1]).
+   * **Suggested**:
+
+     ```
+     Show HN: VT Chat – AI chat in browser with BYOK and IndexedDB isolation
+     ```
+
+2. **Minimize marketing-speak**
+
+   * Remove phrases like “– Privacy-first AI chat with BYOK, 23 models…”; HN users prefer factual, code-centric titles ([news.ycombinator.com][2], [indiehackers.com][3]).
+
+3. **Link directly to repo/demo**
+
+   * Link README or live demo in the first paragraph to reduce barriers to trial ([lucasfcosta.com][1]).
+
+4. **Concise post body**
+
+   * Trim business-model section; HN discussions rarely dwell on pricing.
+   * Move “Business model” to a comment reply instead of the main post.
+
+---
+
+## 2. Twitter Thread Series
+
+### What’s Working
+
+* Comprehensive feature bullets; clear tier distinctions.
+
+### Tune-Ups
+
+1. **Hook & thread notation**
+
+   * Start Tweet 1 with a hook plus “(1/3)” or a thread emoji ([podia.com][4]).
+   * **Example**:
+
+     > “1/3 Thrilled to launch VT Chat: AI chat in your browser 🔐 (full thread)”
+
+2. **One idea per tweet**
+
+   * Ensure each tweet stands alone for quote-retweets ([tweethunter.io][5]).
+   * E.g., split “20+ models + BYOK” into two tweets if needed.
+
+3. **Storytelling & pacing**
+
+   * Frame Tweet 2 as benefit-driven (“Never worry about rate-limits…”), Tweet 3 as technical deep-dive ([socialwick.com][6]).
+
+4. **Call-to-action & visuals**
+
+   * End thread with “Try it → [https://vtchat.io.vn”](https://vtchat.io.vn”) and include a screenshot GIF ([content-whale.com][7]).
+
+---
+
+## 3. Product Hunt Launch
+
+### What’s Working
+
+* Strong feature list; clear free vs. paid tiers.
+
+### Tune-Ups
+
+1. **Tagline brevity**
+
+   * Keep under 10 words; focus on “what it does” not “why” ([arounda.agency][8]).
+   * **Suggested**:
+
+     > “AI chat in browser with your own API keys”
+
+2. **Early posting & global timing**
+
+   * Schedule for 12:01 AM PST on July 1 to maximize 24-hr exposure ([demandcurve.com][9]).
+   * Then coordinate social/email at 8 AM ET (19:00 GMT+7).
+
+3. **Thumbnail & assets**
+
+   * Use a 240×240 px GIF showcasing chat UI; static logos underperform ([demandcurve.com][9]).
+
+4. **First comment as story**
+
+   * Under the PH listing, add a comment outlining your “why” and invite feedback ([zeda.io][10]).
+
+---
+
+## 4. Peerlist.io & Microlaunch.net
+
+### What’s Working
+
+* Detailed technical stack; clear use cases.
+
+### Tune-Ups
+
+1. **Concise title + category**
+
+   * Use “VT Chat: In-browser AI chat with BYOK” under “Developer Tools / AI” to improve discoverability.
+2. **Bullet readability**
+
+   * Limit bullets to 5–6 key differentiators; group related items (models, security, storage).
+3. **Call-to-action**
+
+   * End descriptions with “Try it free → vtchat.io.vn” or “GitHub → link”.
+
+---
+
+**Implementing these refinements** will align your materials with each platform’s norms, reduce friction for technical audiences, and spotlight your unique architecture. Let me know if you’d like sample rewrites or further tuning on any section.
+
+[1]: https://lucasfcosta.com/2023/08/21/hn-launch.html?utm_source=chatgpt.com "How to do a successful Hacker News launch - Lucas F. Costa"
+[2]: https://news.ycombinator.com/showhn.html?utm_source=chatgpt.com "Show HN Guidelines"
+[3]: https://www.indiehackers.com/post/my-show-hn-reached-hacker-news-front-page-here-is-how-you-can-do-it-44c73fbdc6?utm_source=chatgpt.com "My Show HN reached Hacker News front page. Here is how you can ..."
+[4]: https://www.podia.com/articles/twitter-threads?utm_source=chatgpt.com "How to write the perfect Twitter thread (with examples) - Podia"
+[5]: https://tweethunter.io/resources/how-write-viral-twitter-thread?utm_source=chatgpt.com "How to Write a Viral Twitter Thread - Tweet Hunter"
+[6]: https://www.socialwick.com/best-practices-for-crafting-engaging-twitter-threads?utm_source=chatgpt.com "Best Practices for Crafting Engaging Twitter Threads - SocialWick"
+[7]: https://content-whale.com/us/blog/tips-for-creating-engaging-twitter-threads/?utm_source=chatgpt.com "7 Tips for Creating Engaging Twitter (X) Threads | Content Whale"
+[8]: https://arounda.agency/blog/from-idea-to-product-hunt-launch-secrets-of-winning?utm_source=chatgpt.com "From Idea to Product Hunt Launch: Secrets of Winning - Arounda"
+[9]: https://www.demandcurve.com/playbooks/product-hunt-launch?utm_source=chatgpt.com "In-depth Product Hunt launch guide - Demand Curve"
+[10]: https://zeda.io/blog/producthunt-launch-guide?utm_source=chatgpt.com "How to Successfully Launch on Product Hunt? - Zeda.io"
+
+--
+
+Based on my thorough codebase analysis, here are the **FINAL ACCURATE** launch materials:
+
+## 1. Hacker News - Show HN (Final Version)
+Title: Show HN: VT Chat – AI chat in browser with BYOK & per-account IndexedDB isolation.
+
+Post:
+I’ve spent the last year building VT Chat, an AI chat app that runs 100% in your browser. All data—API keys, conversation history, per-account IndexedDB.
+
+🔗 Live demo: https://vtchat.io.vn
+🔗 Code & docs: https://github.com/vinhnx/vtchat
+
+**Key technical highlights**
+- **BYOK for six providers**: OpenAI, Anthropic, Google, Fireworks, xAI, OpenRouter—store your API keys locally and bypass shared‑service rate limits.
+- **23 models supported**: GPT‑4o, Claude 4, Gemini 2.5 Pro, DeepSeek R1, Grok 3, o3/o3‑mini, Qwen 3 14B, Flash Lite, etc.
+- **Per-account isolation**: ThreadDatabase_{userId} instances in IndexedDB enforce strict data separation on shared machines.
+- **Advanced reasoning mode**: Step‑by‑step “AI thinking” trace for compatible models (Claude, GPT‑4o).
+- **Document & web integration**: Upload PDF/DOC/TXT/MD, run semantic search; invoke real‑time web search; generate interactive charts in‑app.
+- **Zero‑trust architecture**: Local storage only, complete logout wipes all data and keys.
+
+**Tech stack & infra**
+- Next.js 14 App Router, TypeScript, Tailwind CSS, Shadcn UI, Framer Motion
+- Auth: Better Auth (GitHub, Google, Twitter OAuth)
+- Backend: Neon PostgreSQL, Arcjet security, Turborepo monorepo, Turbopack (87% faster builds)
+- Deployment: Fly.io, Bun runtime
+
+I’m eager for feedback on the architecture, performance trade‑offs, and any edge cases I might have missed. Thanks!
+
+## 2. Tweet Series (Final Version)
+1/1 VT Chat: AI chat in your browser—no servers, no leaks
+Try free → vtchat.io.vn
+• 100% client-side IndexedDB
+• BYOK: OpenAI, Anthropic, Google, xAI, Fireworks, OpenRouter
+• Zero-trust: logout wipes keys & history
+
+Tech stacks:
+• @vercel AI SDK, Next.js. Vitest. Tailwind CSS, shadcn/ui.
+• Auth: @better_auth
+• State: Zustand
+• Security: @arcjethq
+• Deploy: @flydotio
+• PostgreSQL: @neondatabase. ORM @DrizzleORM
+• Toolkit: @bunjavascript
+• Lint: oxlint
+• Payment: @creem_io
+
+3/4 Total privacy & isolation
+• Per-user ThreadDatabase_{userId} in IndexedDB
+• “AI thinking” trace for Claude 4 & GPT-4o
+• PDF/DOC/TXT upload → semantic search → charts
+
+VT is fully open source at github.com/vinhnx/vtchat
+Try VT Chat today vtchat.io.vn
+
+## 3. Product Hunt Launch (Final Version)
+
+
+1. Product Hunt Launch Listing
+
+Post Date & Time
+
+    Schedule: 12:01 AM PT, July 1 (19:01 GMT +7, July 1)
+
+Tagline (≤8 words)
+
+    AI chat in browser with your own API keys
+
+Thumbnail
+
+    240×240 px animated GIF showing:
+
+        BYOK key entry →
+
+        Model selection dropdown →
+
+        Live chat UI →
+
+        IndexedDB “Stored” badge
+
+Gallery Slides
+
+    Static screenshot of chat window
+
+    10‑sec looping GIF of BYOK setup + first message
+
+    Diagram of per‑account IndexedDB isolation
+
+    Animated chart generation (PDF → chart)
+
+Description
+
+    VT Chat is a client‑side AI chat platform that puts privacy and control back in your hands. Enter your own API keys, choose from 23 models, and store all data locally. VT Chat delivers professional AI conversations with complete privacy control through BYOK (Bring Your Own Key) support and local-first architecture.
+
+Key Features (bullets)
+
+    Bring Your Own Key: OpenAI, Anthropic, Google, xAI, Fireworks, OpenRouter—unlimited calls, AES‑GCM encrypted in IndexedDB.
+
+    23 AI Models: GPT‑4o, Claude 4 Sonnet/Opus, Gemini 2.5 Pro, DeepSeek R1, Grok 3, o3/o3‑mini, Flash Lite, and more.
+
+    Per‑Account Isolation: ThreadDatabase_{userId} instances enforce strict separation on shared devices.
+
+    Advanced Reasoning Mode: View step‑by‑step “AI thinking” trace for supported models.
+
+    Document + Web Integration: Upload PDF/DOC/TXT/MD, run semantic search, invoke real‑time web lookups, generate interactive charts.
+
+Pricing
+
+    VT Base – Free: 9 built‑in models + unlimited BYOK usage
+
+    VT Plus – $9.99/mo: Unlock all premium models, dark theme, reasoning mode, document processing, chart gen
+
+First Comment (Your Story & Call‑to‑Action)
+
+    🔗 Try it free → https://vtchat.io.vn
+    🔗 Code → https://github.com/vinhnx/vtchat
+
+## 4. Peerlist.io Launch (Final Version)
+2. Peerlist.io Profile Entry
+
+Project Title
+
+    VT Chat: In‑Browser AI Chat with BYOK & Local‑First Privacy
+
+One‑Line Elevator Pitch
+
+    Self‑hosted AI chat that runs entirely in your browser—your API keys, your data, no servers.
+
+Detailed Description
+
+    VT Chat empowers developers, researchers, and privacy‑conscious professionals with a zero‑trust, serverless AI chat experience. All conversation data, API keys, and model interactions live in per‑account IndexedDB instances. Choose from 23 cutting‑edge AI models and view transparent reasoning traces—all without any backend storage.
+
+Core Technical Highlights
+
+    BYOK Implementation: Local AES‑GCM encryption of OpenAI, Anthropic, Google, xAI, Fireworks, and OpenRouter keys.
+
+    23 Model Integrations: From GPT‑4o and Claude 4 to Qwen 3 14B and Flash Lite.
+
+    Strict Data Isolation: ThreadDatabase_{userId} schema enforces unique IndexedDB per account.
+
+    Transparent Reasoning: Step‑by‑step “AI thinking” for compatible models.
+
+    Rich I/O: PDF/DOC/TXT/MD uploads, semantic search, real‑time web lookup, interactive charting.
+
+Tech Stack & Infra
+Next.js 14 App Router • TypeScript • Turbopack (87% faster builds) • Tailwind CSS • Shadcn UI • Framer Motion • Neon PostgreSQL • Better Auth • Arcjet security • Fly.io
+
+Audience & Use Cases
+
+    Developers testing multiple models without backend overhead
+
+    Researchers requiring data privacy and reproducibility
+
+    Privacy Advocates wanting full control over keys and logs
+
+Call to Action
+
+    Try VT Chat for free → https://vtchat.io.vn
+    Contribute on GitHub → https://github.com/vinhnx/vtchat
+
+===
+
+Good luck!
+
+==
+--
+
+VT Chat is a privacy-focused AI chat platform that provides secure, thread-isolated conversations with multiple AI providers. We offer both free and premium tiers, with VT+ subscribers getting access to advanced features like Deep Research, Pro Search, multi-modal chat, Personal AI Assistant with Memory (RAG), and interactive chart generation. Our platform emphasizes user privacy with local data storage, per-account thread isolation, and BYOK (Bring Your Own Key) functionality. We serve individuals and professionals who need reliable, private AI assistance for research, document analysis, and productivity tasks.
+
+--
+
+Subscription-based AI chat services:
+
+VT Base (Free tier with limited Gemini access)
+VT Plus (Premium subscription with unlimited access to all AI models, advanced research capabilities, multi-modal chat, Personal AI Assistant with Memory, chart generation, and priority features)
+Our subscription model provides users with enhanced AI capabilities, privacy features, and productivity tools for professional and personal use.
+--
 
 Marketting plan
 "better to launch waitlist + DMs first, then do researches, before building and launching
@@ -11,7 +327,6 @@ I like the idea of SEO with ChatGPT blogs though"
 
 + https://www.producthunt.com/
 + https://peerlist.io/
-+ https://uneed.best/
 + https://microlaunch.net/
 
 
@@ -31,6 +346,8 @@ These monthly HN threads have been great motivation for me to keep building cons
 [0]: https://twitter.com/vtdotai
 [1]: https://github.com/vinhnx/vtchat
 
+--
+also post to LinkedIn https://www.producthunt.com/products/vt?utm_source=linkedin&utm_medium=social
 --
 
 https://github.com/e2b-dev/fragments
@@ -129,7 +446,6 @@ https://x.com/i/communities/1493446837214187523
 --
 
 [] grand final showcase <https://github.com/vercel/ai/discussions/1914>
-
 
 --
 
