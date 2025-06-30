@@ -64,8 +64,8 @@ primary_region = 'sin'
   cpus = 2
 --
 revamp login page
---
 
+--
 give Tuan Anh 1 month free discount
 
 -
@@ -94,12 +94,14 @@ improve openai response api support
 https://ai-sdk.dev/docs/guides/openai-responses
 
 --
+
 improve Claude 4 support
 https://ai-sdk.dev/docs/guides/claude-4
---
 
 --
-launch discount promo code?
+launch discount promo code:
+
+1. VTLAUNCH
 
 --
 
