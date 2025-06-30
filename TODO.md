@@ -2,13 +2,9 @@
 
 ok go! -> https://vtchat.io.vn/
 
---
-[mobile] check when taping user profile button in side bar. the side bar is close -> can not tap any of user dropdown menu items
+change shadcn color to neutral?
 
---
-
-[mobile] increase thread details paragaph margin leading and trailing. 
-
+change darkmode background color to all dark #000000
 --
 final discuss fly.io config for budget and scale with Claude
 # Production fly.toml
@@ -53,19 +49,12 @@ primary_region = 'sin'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 2
---
-revamp login page
 
 --
 give Tuan Anh 1 month free discount
-
 -
 
 https://github.com/e2b-dev/fragments
-
---
-biome
-https://biomejs.dev/guides/getting-started/
 
 --
 
@@ -92,7 +81,7 @@ https://ai-sdk.dev/docs/guides/claude-4
 --
 launch discount promo code:
 
-1. VTLAUNCH
+1. VTLAUNCH - 20% - 10 slots
 
 --
 
