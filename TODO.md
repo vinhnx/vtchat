@@ -3,60 +3,17 @@
 ok go! -> https://vtchat.io.vn/
 
 --
-final discuss fly.io config for budget and scale with Claude
-# Production fly.toml
-app = 'vtchat'
-primary_region = 'sin'
+https://next-validate-link.vercel.app/
+next-validate-link v1.5.2
 
-[build]
-
-[env]
-  NODE_ENV = 'production'
-  BASE_URL = 'https://vtchat.io.vn'
-  BETTER_AUTH_URL = 'https://vtchat.io.vn'
-  NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
-  NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
-  NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
-  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
-  CREEM_ENVIRONMENT = 'production'
-  BETTER_AUTH_ENV = 'production'
-
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = 'suspend'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
-
-[[http_service.checks]]
-  grace_period = "15s"
-  interval = "30s"
-  method = "GET"
-  timeout = "10s"
-  path = "/api/health"
-
-[[http_service.checks]]
-  type = "tcp"
-  grace_period = "5s"
-  interval = "15s"
-  timeout = "2s"
-
-[[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 2
-
+A simple utility to validate links in your Markdown files. Never worry about broken documentation links again.
 --
-give Tuan Anh 1 month free discount
--
 
 https://github.com/e2b-dev/fragments
 
 --
 
 https://ai-sdk.dev/docs/advanced/rendering-ui-with-language-models
-
 ==
 https://ai-sdk.dev/docs/advanced/multiple-streamables
 --
@@ -77,8 +34,6 @@ https://ai-sdk.dev/docs/guides/claude-4
 
 --
 launch discount promo code:
-
-1. VTLAUNCH - 20% - 10 slots
 
 --
 
@@ -127,7 +82,7 @@ https://vtchat.io.vn/ – The privacy-first AI chat platform.
 • DB: Neon Postgres + Drizzle ORM
 • Payments: Creem.io
 
-Launch promo: Use code **VTLAUNCH** for a discount on VT+!
+Launch promo: Use code **{CHECK CHECK CHECK CODE}** for a discount on VT+!
 --
 Product Launch Introduction / Marketing Pitch
 

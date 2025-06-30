@@ -104,5 +104,6 @@
 - You can search the internet using MCP tool `tavily-search`
 - Documentation should be in `docs/` directory
 - **Security Documentation**: Comprehensive Arcjet security implementation documented in `docs/SECURITY.md` and `docs/guides/arcjet-security.md`
+- **Help Center = FAQ**: When user mentions "help center", they mean the FAQ page for end users
 - After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
 - Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.

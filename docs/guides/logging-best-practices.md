@@ -240,6 +240,42 @@ logger.error({
 }, 'User registration failed');
 ```
 
+### Traffic Monitoring (Privacy-Safe)
+
+```typescript
+// middleware.ts - Privacy-safe geographic monitoring
+export default async function middleware(request: NextRequest) {
+  // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
+  const flyRegion = request.headers.get('Fly-Region') || 'unknown';
+  console.log(`[Traffic] Region: ${flyRegion}`);
+  
+  // Rest of middleware logic...
+}
+```
+
+**Privacy Compliance:**
+- ✅ **GDPR Safe**: Region codes are not personal data
+- ✅ **No PII**: Only 3-letter region codes (sin, iad, ams)
+- ✅ **Aggregate Only**: Cannot identify individual users
+- ✅ **Ephemeral**: Logs rotate automatically
+- ✅ **Legitimate Interest**: Infrastructure optimization
+
+**Analysis:**
+```bash
+# View traffic distribution
+fly logs | grep "\[Traffic\]" | sort | uniq -c
+
+# Example output:
+# 45 [Traffic] Region: sin
+# 12 [Traffic] Region: iad  
+# 8 [Traffic] Region: ams
+```
+
+**Scaling Decisions:**
+- Add `iad` region when seeing consistent US traffic
+- Add `ams` region when seeing consistent EU traffic
+- Use data to optimize global infrastructure placement
+
 ## Integration Examples
 
 ### Database Queries

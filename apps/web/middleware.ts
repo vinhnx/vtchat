@@ -6,6 +6,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
+    const flyRegion = request.headers.get('Fly-Region') || 'unknown';
+    console.log(`[Traffic] Region: ${flyRegion}`);
+
     // Skip middleware for static files, API routes with their own protection, and Next.js internals
     if (
         pathname.startsWith('/_next') ||
