@@ -2,6 +2,12 @@
 
 ok go! -> https://vtchat.io.vn/
 
+give Tuan Anh 1 month free discount
+
+-
+
+https://github.com/e2b-dev/fragments
+
 --
 fix send chat icon not visible for mobile 
 
