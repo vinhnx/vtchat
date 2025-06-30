@@ -1,15 +1,17 @@
-# Production fly.toml
+# Production fly.toml - US-focused deployment
 app = 'vtchat'
 primary_region = 'sin'
 
-# Global 3-region setup for optimal coverage
-# sin: Asia-Pacific (primary)
-# iad: USA (Ashburn, Virginia) 
-# ams: Europe (Amsterdam, Netherlands)
+# US-focused 2-region setup
+# sin: Asia-Pacific (primary) 
+# iad: USA (Ashburn, Virginia) - Target market
 
 [build]
 
 [env]
+  # Disable detailed request logging
+  # Only errors/warnings, not requests
+  LOG_LEVEL = "warn"
   NODE_ENV = 'production'
   BASE_URL = 'https://vtchat.io.vn'
   BETTER_AUTH_URL = 'https://vtchat.io.vn'
