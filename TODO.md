@@ -2,6 +2,17 @@
 
 ok go! -> https://vtchat.io.vn/
 
+--
+
+break line properly welcome message on mobile
+
+--
+
+tap close side bar on mobile doesnt work
+
+--
+
+
 give Tuan Anh 1 month free discount
 
 -
