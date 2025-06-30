@@ -146,9 +146,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'bg-sidebar border-sidebar-border relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l transition-all duration-300 ease-in-out',
+                'bg-sidebar border-sidebar-border relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l',
                 'dark:border-gray-800 dark:bg-black/95',
-                isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
+                forceMobile 
+                    ? 'w-[280px]' 
+                    : cn(
+                        'transition-all duration-300 ease-in-out',
+                        isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
+                    )
             )}
         >
             <Flex direction="col" className="w-full flex-1 items-start overflow-hidden">
@@ -292,7 +297,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             tooltip="Close Sidebar"
                             tooltipSide="right"
                             size="icon-sm"
-                            onClick={() => setIsSidebarOpen(prev => !prev)}
+                            onClick={() => forceMobile ? setIsMobileSidebarOpen(false) : setIsSidebarOpen(prev => !prev)}
                             className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />

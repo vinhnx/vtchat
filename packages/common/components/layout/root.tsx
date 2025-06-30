@@ -87,9 +87,20 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             {/* Left Sidebar */}
             {sidebarPlacement === 'left' && (
-                <Flex className="hidden md:flex">
-                    <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-                </Flex>
+                <AnimatePresence>
+                    {isSidebarOpen && (
+                        <motion.div
+                            key="left-sidebar"
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 'auto', opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            className="hidden md:flex overflow-hidden"
+                        >
+                            <Sidebar />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             )}
 
             {/* Main Content */}
@@ -118,9 +129,20 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Right Sidebar */}
             {sidebarPlacement === 'right' && (
-                <Flex className="hidden md:flex">
-                    <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-                </Flex>
+                <AnimatePresence>
+                    {isSidebarOpen && (
+                        <motion.div
+                            key="right-sidebar"
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 'auto', opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            className="hidden md:flex overflow-hidden"
+                        >
+                            <Sidebar />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             )}
 
             <Drawer.Root
@@ -128,12 +150,17 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 direction={sidebarPlacement}
                 shouldScaleBackground
                 onOpenChange={setIsMobileSidebarOpen}
+                dismissible={true}
+                modal={true}
             >
                 <Drawer.Portal>
-                    <Drawer.Overlay className="fixed inset-0 z-30 backdrop-blur-sm" />
-                    <Drawer.Content className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}>
+                    <Drawer.Overlay 
+                        className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300" 
+                        onClick={() => setIsMobileSidebarOpen(false)}
+                    />
+                    <Drawer.Content className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}>
                         <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
-                        <div className="h-full">
+                        <div className="h-full overflow-hidden">
                             <Sidebar forceMobile={true} />
                         </div>
                     </Drawer.Content>

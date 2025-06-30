@@ -33,7 +33,7 @@ export default function Home() {
             <div className="flex flex-1 items-center justify-center p-8">
                 <div className="max-w-2xl space-y-6 text-center">
                     <TypographyH1 className="text-4xl font-bold">VT</TypographyH1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400">
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 break-words px-4">
                         Welcome to VT - Your privacy-focused AI chat platform.
                     </p>
                     <WrapperDisclosure className="mt-4" />
