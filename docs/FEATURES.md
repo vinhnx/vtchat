@@ -79,7 +79,9 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 
 ### Authentication Security
 - **Better Auth Integration**: Modern, secure session management
+- **Multi-Provider OAuth**: GitHub, Google, and Twitter/X social authentication
 - **User-Specific Rate Limiting**: Authenticated users get individual protection
+- **Account Linking**: Secure linking of multiple OAuth providers to single account
 - **Secure Headers**: CORS, security headers properly configured
 - **Session Isolation**: Per-user authentication with proper isolation
 
@@ -255,4 +257,4 @@ VTChat is a comprehensive AI chat application with enterprise-grade security and
 
 *For detailed implementation guides and technical documentation, see our [Documentation Directory](../docs/)*
 
-*Last Updated: January 2025*
+*Last Updated: June 30, 2025*

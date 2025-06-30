@@ -207,4 +207,4 @@ NEXTAUTH_SECRET=your_session_secret    # Session security
 
 **Security Contact**: For security concerns or vulnerability reports, please contact our security team through the appropriate channels outlined in our security policy.
 
-*Last Updated: January 2025*
+*Last Updated: June 30, 2025*
