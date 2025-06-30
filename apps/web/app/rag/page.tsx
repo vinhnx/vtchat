@@ -75,7 +75,6 @@ export default function RAGPage() {
                                     <li>• Build your personal knowledge base</li>
                                     <li>• Store and organize information</li>
                                     <li>• Query your data with AI</li>
-                                    <li>• Intelligent document search</li>
                                 </ul>
                             </div>
                             <div className="space-y-2">
