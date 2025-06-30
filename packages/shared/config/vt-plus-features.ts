@@ -19,21 +19,14 @@ export interface VTPlusFeature {
 export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
         id: FeatureSlug.PRO_SEARCH,
-        name: 'Grounding Web Search - by Gemini',
-        description: '"Web Search: Real-time web-enabled search with advanced grounding features"',
+        name: 'Enhanced Web Search',
+        description: 'AI-powered web search with real-time information and comprehensive topic analysis.',
         enabled: true,
     },
     [FeatureSlug.DARK_THEME]: {
         id: FeatureSlug.DARK_THEME,
         name: 'Dark Theme',
         description: 'Access to dark theme.',
-        enabled: true,
-    },
-    [FeatureSlug.DEEP_RESEARCH]: {
-        id: FeatureSlug.DEEP_RESEARCH,
-        name: 'Grounding Web Search',
-        description:
-            'Grounding Web Search: Comprehensive analysis of complex topics with in-depth exploration.',
         enabled: true,
     },
     [FeatureSlug.STRUCTURED_OUTPUT]: {
@@ -145,12 +138,7 @@ export const VTPlusAccess = {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DARK_THEME);
     },
 
-    /**
-     * Check if user has access to Deep Research
-     */
-    hasDeepResearch: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DEEP_RESEARCH);
-    },
+
 
     /**
      * Check if user has access to Structured Outputs
