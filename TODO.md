@@ -2,6 +2,11 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
+move menu icon to top. currently it overlap chat input
+
+--
+
 increase
 thread padding. currenltly narrow
 
