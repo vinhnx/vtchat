@@ -2,6 +2,11 @@
 app = 'vtchat'
 primary_region = 'sin'
 
+# Global 3-region setup for optimal coverage
+# sin: Asia-Pacific (primary)
+# iad: USA (Ashburn, Virginia) 
+# ams: Europe (Amsterdam, Netherlands)
+
 [build]
 
 [env]
@@ -37,6 +42,6 @@ primary_region = 'sin'
   timeout = "2s"
 
 [[vm]]
-  memory = '512mb'
+  memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
