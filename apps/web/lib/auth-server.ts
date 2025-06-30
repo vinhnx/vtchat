@@ -34,7 +34,7 @@ export const auth = betterAuth({
     account: {
         accountLinking: {
             enabled: true,
-            trustedProviders: ['google', 'github'],
+            trustedProviders: ['google', 'github', 'twitter'],
             allowDifferentEmails: false, // More secure - require same email
         },
     },
@@ -66,6 +66,14 @@ export const auth = betterAuth({
                     image: profile.picture,
                 };
             },
+        },
+        twitter: {
+            clientId: process.env.TWITTER_CLIENT_ID!,
+            clientSecret: process.env.TWITTER_CLIENT_SECRET!,
+            redirectURI:
+                process.env.NODE_ENV === 'production'
+                    ? 'https://vtchat.io.vn/api/auth/callback/twitter'
+                    : 'http://localhost:3000/api/auth/callback/twitter',
         },
     },
     session: {
