@@ -172,6 +172,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
                                         isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
                                     )}
+                                    onClick={(e) => {
+                                        // Prevent clicks on user profile trigger from closing mobile sidebar
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }}
+                                    onTouchEnd={(e) => {
+                                        // Handle iOS touch events specifically
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }}
                                 >
                                     <Avatar
                                         name={user?.name || user?.email || 'User'}
@@ -196,14 +206,39 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     )}
                                 </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="w-56 pl-2">
+                            <DropdownMenuContent 
+                                align="start" 
+                                className="w-56 pl-2"
+                                onClick={(e) => {
+                                    // Prevent clicks inside dropdown from closing mobile sidebar
+                                    e.stopPropagation();
+                                }}
+                                onPointerDownOutside={(e) => {
+                                    // Prevent dropdown from closing when clicking outside on mobile
+                                    if (forceMobile) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                onEscapeKeyDown={(e) => {
+                                    // Allow escape key to close dropdown but not sidebar
+                                    if (forceMobile) {
+                                        e.stopPropagation();
+                                    }
+                                }}
+                            >
                                 {/* Account Management */}
                                 <DropdownMenuLabel>Account</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => push('/profile')}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    push('/profile');
+                                }}>
                                     <User size={16} strokeWidth={2} />
                                     Profile
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsSettingsOpen(true);
+                                }}>
                                     <Settings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
@@ -211,15 +246,24 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => push('/faq')}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    push('/faq');
+                                }}>
                                 <HelpCircle size={16} strokeWidth={2} />
                                 Help Center
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => push('/privacy')}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    push('/privacy');
+                                }}>
                                     <Shield size={16} strokeWidth={2} />
                                     Privacy Policy
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => push('/terms')}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    push('/terms');
+                                }}>
                                     <FileText size={16} strokeWidth={2} />
                                     Terms of Service
                                 </DropdownMenuItem>
@@ -227,7 +271,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Authentication */}
                                 <DropdownMenuItem
-                                    onClick={() => logout()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        logout();
+                                    }}
                                     disabled={isLoggingOut}
                                     className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
                                 >

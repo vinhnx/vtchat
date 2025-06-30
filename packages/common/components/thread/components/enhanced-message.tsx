@@ -79,7 +79,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                 <AttachmentDisplay attachments={threadItem.attachments} />
             )}
 
-            <div className="relative max-w-[85%] sm:max-w-[80%]">
+            <div className="relative max-w-[90%] sm:max-w-[80%]">
                 {/* Enhanced message bubble with premium styling */}
                 <motion.div
                     className={cn(
