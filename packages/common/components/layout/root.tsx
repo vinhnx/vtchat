@@ -170,7 +170,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             <SonnerToaster />
 
             {/* Mobile Floating Menu Button */}
-            <div className="fixed bottom-20 left-4 z-50 md:hidden pb-safe">
+            <div className="fixed top-4 left-4 z-50 md:hidden pt-safe">
                 <Button
                     variant="secondary"
                     size="icon"
@@ -183,7 +183,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Mobile Floating User Button */}
             {isClient && session && (
-                <div className="fixed bottom-4 right-4 z-50 md:hidden pb-safe">
+                <div className="fixed top-4 right-4 z-50 md:hidden pt-safe">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button

@@ -2,21 +2,12 @@
 
 ok go! -> https://vtchat.io.vn/
 
-
-move menu and avatar icon on mobile to top. currently it overlap chat input
+--
+[mobile] check when taping user profile button in side bar. the side bar is close -> can not tap any of user dropdown menu items
 
 --
 
-increase
-thread padding. currenltly narrow
-
---
-
-remove Intelligent document search in rag onboarding
-
---
-
-fix footer on mobile
+[mobile] increase thread details paragaph margin leading and trailing. 
 
 --
 final discuss fly.io config for budget and scale with Claude
