@@ -1,13 +1,13 @@
 'use client';
 
-import { signIn } from '@repo/shared/lib/auth-client';
 import { InlineLoader } from '@repo/common/components';
-import { Alert, AlertDescription, PremiumButton, cn, TypographyH1 } from '@repo/ui';
+import { signIn } from '@repo/shared/lib/auth-client';
+import { logger } from '@repo/shared/logger';
+import { Alert, AlertDescription, cn, PremiumButton, TypographyH1 } from '@repo/ui';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
-import { logger } from '@repo/shared/logger';
 
 interface LoginFormContentProps extends React.ComponentProps<'div'> {
     redirectUrl?: string;
@@ -60,7 +60,7 @@ function LoginFormContent({
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <div className="flex flex-col items-center gap-2 text-center">
                 <TypographyH1 className="scroll-m-20 text-2xl font-bold tracking-tight">
-                    Welcome back
+                    Welcome!
                 </TypographyH1>
                 <p className="text-muted-foreground text-balance text-sm">
                     Sign in to your account using your preferred method

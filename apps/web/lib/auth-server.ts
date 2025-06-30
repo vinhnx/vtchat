@@ -5,7 +5,6 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { multiSession } from 'better-auth/plugins';
 import { db } from './database';
 import * as schema from './database/schema';
-import { logger } from '@repo/shared/logger';
 
 export const auth = betterAuth({
     baseURL:
@@ -110,9 +109,11 @@ export const auth = betterAuth({
         crossSubDomainCookies: {
             enabled: false, // Disable if not needed
         },
-        generateId: () => {
-            // Use faster ID generation for sessions
-            return crypto.randomUUID();
+        database: {
+            generateId: () => {
+                // Use faster ID generation for sessions
+                return crypto.randomUUID();
+            },
         },
     },
 });

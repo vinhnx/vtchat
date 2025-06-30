@@ -56,14 +56,6 @@ give Tuan Anh 1 month free discount
 https://github.com/e2b-dev/fragments
 
 --
-WARNING The app is not listening on the expected address and will not be reachable by fly-proxy.e6fee3248 reached started state
-You can fix this by configuring your app to listen on the following addresses:
-  - 0.0.0.0:3000
-Found these processes inside the machine with open listening sockets:
-  PROCESS        | ADDRESSES
------------------*----------------------------------------
-  /.fly/hallpass | [fdaa:1f:42f5:a7b:3e2:ef18:4f71:2]:22
---
 biome
 https://biomejs.dev/guides/getting-started/
 
@@ -81,9 +73,6 @@ https://ai-sdk.dev/docs/ai-sdk-core/prompt-engineering
 https://ai-sdk.dev/docs/ai-sdk-core/testing
 
 ==
-@vtchat/web:dev: 2025-06-29T13:10:20.116Z WARN [Better Auth]: Your Better Auth config includes advanced.generateId which is deprecated. Please use advanced.database.generateId instead. This will be removed in future releases.
-
---
 improve openai response api support
 https://ai-sdk.dev/docs/guides/openai-responses
 
