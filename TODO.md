@@ -2,6 +2,52 @@
 
 ok go! -> https://vtchat.io.vn/
 
+final discuss fly.io config for budget and scale with Claude
+# Production fly.toml
+app = 'vtchat'
+primary_region = 'sin'
+
+[build]
+
+[env]
+  NODE_ENV = 'production'
+  BASE_URL = 'https://vtchat.io.vn'
+  BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
+  NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
+  CREEM_ENVIRONMENT = 'production'
+  BETTER_AUTH_ENV = 'production'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[http_service.checks]]
+  grace_period = "15s"
+  interval = "30s"
+  method = "GET"
+  timeout = "10s"
+  path = "/api/health"
+
+[[http_service.checks]]
+  type = "tcp"
+  grace_period = "5s"
+  interval = "15s"
+  timeout = "2s"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 2
+--
+revamp login page
+--
 
 duplicated grounding web search on vt+ setting page
 
@@ -25,9 +71,9 @@ give Tuan Anh 1 month free discount
 https://github.com/e2b-dev/fragments
 
 --
-fix send chat icon not visible for mobile 
-
+fix send chat icon not visible for mobile
 remove top nav bar for mobile
+improve mobile UI/UX
 
 --
 WARNING The app is not listening on the expected address and will not be reachable by fly-proxy.e6fee3248 reached started state
