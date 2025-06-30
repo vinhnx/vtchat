@@ -21,6 +21,7 @@ import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
+import { UserTierBadge } from '../user-tier-badge';
 
 import { StructuredDataDisplay } from '../structured-data-display';
 import {
@@ -374,8 +375,9 @@ export const ChatInput = ({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, ease: 'easeOut' }}
-                            className="mb-4 flex w-full flex-col items-center gap-1"
+                            className="mb-4 flex w-full flex-col items-center gap-4"
                         >
+                            <UserTierBadge showUpgradePrompt={true} className="mb-2" />
                             <PersonalizedGreeting session={session} />
                         </motion.div>
                     )}

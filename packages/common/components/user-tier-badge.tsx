@@ -1,12 +1,13 @@
 'use client';
 
 import { useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { PlanSlug, PLANS } from '@repo/shared/types/subscription';
+import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { Badge, cn } from '@repo/ui';
-import { Sparkle } from 'lucide-react';
 
 interface UserTierBadgeProps {
     className?: string;
+    showUpgradePrompt?: boolean;
+    onUpgradeClick?: () => void;
 }
 
 /**
@@ -21,7 +22,11 @@ interface UserTierBadgeProps {
  * clear visual distinction between plan tiers.
  */
 
-export function UserTierBadge({ className }: UserTierBadgeProps) {
+export function UserTierBadge({
+    className,
+    showUpgradePrompt = false,
+    onUpgradeClick,
+}: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
     const { planSlug: rawPlanSlug, isVtPlus } = useCurrentPlan();
 
@@ -37,19 +42,50 @@ export function UserTierBadge({ className }: UserTierBadgeProps) {
     }
     const planName = PLANS[finalPlanSlug].name;
 
+    // Handle upgrade click
+    const handleUpgradeClick = () => {
+        if (onUpgradeClick) {
+            onUpgradeClick();
+        } else {
+            // Default behavior: navigate to upgrade page
+            window.location.href = '/plus';
+        }
+    };
+
+    // Show upgrade prompt for free tier users with minimal shadcn styling
+    if (!isPlus && showUpgradePrompt) {
+        return (
+            <div
+                className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm',
+                    'bg-card border-border text-muted-foreground',
+                    'hover:bg-accent/50 shadow-sm transition-colors duration-200',
+                    className
+                )}
+            >
+                <span className="text-xs font-medium">Free</span>
+                <div className="bg-muted-foreground/40 h-1 w-1 rounded-full" />
+                <button
+                    onClick={handleUpgradeClick}
+                    className="text-primary hover:text-primary/80 text-xs font-medium transition-colors duration-150"
+                >
+                    Upgrade
+                </button>
+            </div>
+        );
+    }
+
     return (
         <Badge
             variant="secondary"
             className={cn(
-                'flex items-center gap-1 transition-colors duration-200',
+                'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors duration-200',
                 isPlus
-                    ? 'bg-[#BFB38F] text-[#262626] hover:bg-[#BFB38F]/90'
-                    : 'bg-zinc-700 text-white hover:bg-zinc-900',
+                    ? 'border-slate-800 bg-[#000000] text-[#D99A4E] hover:bg-slate-900'
+                    : 'bg-muted text-muted-foreground border-muted-foreground/20 hover:bg-muted/80',
                 className
             )}
-            size="sm"
         >
-            {isPlus && <Sparkle size={12} strokeWidth={2} />}
             {planName}
         </Badge>
     );
