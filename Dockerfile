@@ -142,12 +142,15 @@ WORKDIR /app
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
-# Copy built application
+# Copy built application from standalone output
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/start.sh ./apps/web/start.sh
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/custom-server.js ./apps/web/custom-server.js
+
+# Copy the Next.js server.js to the root where custom-server.js expects it
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone/apps/web/server.js ./server.js
 
 # Make scripts executable
 RUN chmod +x ./apps/web/start.sh ./apps/web/custom-server.js
