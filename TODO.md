@@ -1,7 +1,7 @@
 # TODO
 
 ok go! -> https://vtchat.io.vn/
-
+--
 final discuss fly.io config for budget and scale with Claude
 # Production fly.toml
 app = 'vtchat'
@@ -90,10 +90,6 @@ https://ai-sdk.dev/docs/guides/openai-responses
 --
 improve Claude 4 support
 https://ai-sdk.dev/docs/guides/claude-4
---
-twitter oauth
-https://www.better-auth.com/docs/authentication/twitter
-
 --
 
 --
