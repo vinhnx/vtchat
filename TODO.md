@@ -2,6 +2,9 @@
 
 ok go! -> https://vtchat.io.vn/
 
+increase
+thread padding. currenltly narrow
+
 --
 
 remove Intelligent document search in rag onboarding
