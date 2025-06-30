@@ -1,18 +1,36 @@
 # TODO
 
 ok go! -> https://vtchat.io.vn/
+--
 
+
+Marketting plan
+"better to launch waitlist + DMs first, then do researches, before building and launching
+
+I like the idea of SEO with ChatGPT blogs though"
+
++ https://www.producthunt.com/
++ https://peerlist.io/
++ https://uneed.best/
++ https://microlaunch.net/
+
+
+grand final -> show hn, good luck!
+
+-> discuss with Claude.
+-> ask for tagline
 
 --
-build document page and new endpoint/route at /docs
+# Hacker News
+I'm putting the finishing touches on VT[0] - a minimal AI chat client focused on privacy. No tracking, clean interface, with support for deep research, web search grounding, tool calls, and RAG.
 
-use fumadocs https://fumadocs.dev/docs/ui
-use context7 for fetching fumadocs integration guide
+The code is all open source on GitHub[1]. Really close to shipping now - hope to share launch details soon.
 
-use all /docs folder for documentation structure
+These monthly HN threads have been great motivation for me to keep building consistently. Thanks everyone!
 
--> update readme
--> add /docs links to footer and add to user menu dropdown items
+[0]: https://twitter.com/vtdotai
+[1]: https://github.com/vinhnx/vtchat
+
 --
 
 https://github.com/e2b-dev/fragments
@@ -40,23 +58,6 @@ https://ai-sdk.dev/docs/guides/claude-4
 
 --
 
-Marketting plan
-"better to launch waitlist + DMs first, then do researches, before building and launching
-
-I like the idea of SEO with ChatGPT blogs though"
-
-+ https://www.producthunt.com/
-+ https://peerlist.io/
-+ https://uneed.best/
-+ https://microlaunch.net/
-
-
-grand final -> show hn, good luck!
-
--> discuss with Claude.
--> ask for tagline
-
---
 Introducing VT Chat
 
 https://vtchat.io.vn/ – The privacy-first AI chat platform.
