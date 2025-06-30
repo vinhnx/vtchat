@@ -1,7 +1,7 @@
 'use client';
 import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { AgentProvider } from '@repo/common/hooks';
+import { AgentProvider, useLogout } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
@@ -13,10 +13,11 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, User, Settings, Menu } from 'lucide-react';
+import { X, User, Settings, Menu, LogOut, HelpCircle, Shield, FileText } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
@@ -35,6 +36,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const sidebarPlacement = useAppStore(state => state.sidebarPlacement);
     const router = useRouter();
+    const { logout, isLoggingOut } = useLogout();
 
     const containerClass =
         'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';
@@ -150,17 +152,44 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 direction={sidebarPlacement}
                 shouldScaleBackground
                 onOpenChange={setIsMobileSidebarOpen}
-                dismissible={true}
+                dismissible={false}
                 modal={true}
             >
                 <Drawer.Portal>
                     <Drawer.Overlay 
                         className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300" 
-                        onClick={() => setIsMobileSidebarOpen(false)}
+                        onClick={(e) => {
+                            // Check if click target is inside the sidebar content or dropdown
+                            const target = e.target as HTMLElement;
+                            const isInsideSidebar = target.closest('[data-sidebar-content]');
+                            const isInsideDropdown = target.closest('[data-radix-popper-content-wrapper]') || 
+                                                   target.closest('[role="menu"]') ||
+                                                   target.closest('[data-radix-menu-content]') ||
+                                                   target.closest('[data-radix-dropdown-menu-content]');
+                            
+                            // Only close sidebar if clicking on overlay, not sidebar content or dropdown
+                            if (!isInsideSidebar && !isInsideDropdown) {
+                                setIsMobileSidebarOpen(false);
+                            }
+                        }}
+                        onTouchEnd={(e) => {
+                            // Handle iOS touch events specifically
+                            const target = e.target as HTMLElement;
+                            const isInsideSidebar = target.closest('[data-sidebar-content]');
+                            const isInsideDropdown = target.closest('[data-radix-popper-content-wrapper]') || 
+                                                   target.closest('[role="menu"]') ||
+                                                   target.closest('[data-radix-menu-content]') ||
+                                                   target.closest('[data-radix-dropdown-menu-content]');
+                            
+                            // Only close sidebar if touching overlay, not sidebar content or dropdown
+                            if (!isInsideSidebar && !isInsideDropdown) {
+                                setIsMobileSidebarOpen(false);
+                            }
+                        }}
                     />
                     <Drawer.Content className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}>
                         <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
-                        <div className="h-full overflow-hidden">
+                        <div className="h-full overflow-hidden" data-sidebar-content>
                             <Sidebar forceMobile={true} />
                         </div>
                     </Drawer.Content>
@@ -200,13 +229,35 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="mb-2 w-48">
+                            <DropdownMenuItem onClick={() => router.push('/profile')}>
+                                <User size={16} strokeWidth={2} className="mr-2" />
+                                Profile
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
                                 <Settings size={16} strokeWidth={2} className="mr-2" />
                                 Settings
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/profile')}>
-                                <User size={16} strokeWidth={2} className="mr-2" />
-                                Profile
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => router.push('/faq')}>
+                                <HelpCircle size={16} strokeWidth={2} className="mr-2" />
+                                Help Center
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push('/privacy')}>
+                                <Shield size={16} strokeWidth={2} className="mr-2" />
+                                Privacy Policy
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push('/terms')}>
+                                <FileText size={16} strokeWidth={2} className="mr-2" />
+                                Terms of Service
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() => logout()}
+                                disabled={isLoggingOut}
+                                className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                            >
+                                <LogOut size={16} strokeWidth={2} className="mr-2" />
+                                {isLoggingOut ? 'Signing out...' : 'Sign out'}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

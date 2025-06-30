@@ -7,6 +7,7 @@ import {
     ShineText,
 } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
+import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore } from '@repo/common/store';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -53,6 +54,7 @@ export const ChatInput = ({
 }) => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const isPlusTier = useVtPlusAccess();
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [showBYOKDialog, setShowBYOKDialog] = useState(false);
     const [pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
@@ -378,7 +380,7 @@ export const ChatInput = ({
                             transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="mb-2 flex w-full flex-col items-center gap-2"
                         >
-                            <UserTierBadge showUpgradePrompt={true} />
+                            {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />
                         </motion.div>
                     )}
