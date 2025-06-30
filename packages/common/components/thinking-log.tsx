@@ -76,9 +76,10 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                     </span>
                     <motion.span
                         whileHover={{ scale: 1.05 }}
-                        className="rounded-full border border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 px-3 py-1 text-xs font-medium text-[#D99A4E] backdrop-blur-sm"
+                        className="rounded-full border border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 px-3 py-1 text-xs font-medium text-[#D99A4E] backdrop-blur-sm flex items-center gap-1"
                     >
-                        ✨ VT+ Feature
+                        <Sparkles size={12} />
+                        VT+ Feature
                     </motion.span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -158,10 +159,10 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                                                             />
                                                         )}
                                                         {detail.type === 'redacted' && (
-                                                            <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3">
-                                                                <span className="text-sm font-medium text-[#D99A4E]">
-                                                                    🔒 Redacted reasoning content
-                                                                </span>
+                                                            <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3 flex items-center gap-2">
+                                                            <span className="text-sm font-medium text-[#D99A4E]">
+                                                            Redacted reasoning content
+                                                            </span>
                                                             </div>
                                                         )}
                                                     </div>
@@ -196,14 +197,14 @@ export const ThinkingLog = ({ threadItem }: ThinkingLogProps) => {
                                                 </div>
                                             )}
                                             {detail.type === 'redacted' && detail.data && (
-                                                <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3">
-                                                    <span className="text-sm font-medium text-[#D99A4E]">
-                                                        🔒 Redacted:
-                                                    </span>
-                                                    <span className="ml-2 text-sm text-[#BFB38F]/80">
-                                                        {detail.data}
-                                                    </span>
-                                                </div>
+                                            <div className="rounded-md border border-[#D99A4E]/20 bg-[#D99A4E]/10 p-3 flex items-center gap-2">
+                                            <span className="text-sm font-medium text-[#D99A4E]">
+                                            Redacted:
+                                            </span>
+                                            <span className="ml-2 text-sm text-[#BFB38F]/80">
+                                            {detail.data}
+                                            </span>
+                                            </div>
                                             )}
                                         </motion.div>
                                     ))}

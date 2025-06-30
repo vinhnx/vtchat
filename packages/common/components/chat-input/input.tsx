@@ -210,7 +210,7 @@ export const ChatInput = ({
     const renderChatInput = () => (
         <AnimatePresence>
             <motion.div
-                className="w-full px-3"
+                className="w-full px-1 md:px-3"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 key={`chat-input`}
@@ -256,18 +256,18 @@ export const ChatInput = ({
                                     </Flex>
 
                                     <Flex
-                                        className="border-border w-full gap-0 border-t border-dashed px-2 py-2"
-                                        gap="none"
-                                        items="center"
-                                        justify="between"
+                                    className="border-border w-full gap-2 border-t border-dashed px-2 py-2"
+                                    gap="none"
+                                    items="center"
+                                    justify="between"
                                     >
                                         {isGenerating && !isChatPage ? (
                                             <GeneratingStatus />
                                         ) : (
                                             <Flex
-                                                gap="xs"
-                                                items="center"
-                                                className="shrink-0 flex-wrap"
+                                            gap="xs"
+                                            items="center"
+                                            className="flex-1 flex-nowrap overflow-x-auto scrollbar-hide md:flex-wrap"
                                             >
                                                 <ChatModeButton />
 
@@ -304,7 +304,7 @@ export const ChatInput = ({
                                             </Flex>
                                         )}
 
-                                        <Flex gap="sm" items="center">
+                                        <Flex gap="sm" items="center" className="flex-shrink-0 ml-auto">
                                             <SendStopButton
                                                 isGenerating={isGenerating}
                                                 isChatPage={isChatPage}
@@ -351,8 +351,8 @@ export const ChatInput = ({
             className={cn(
                 'bg-secondary w-full',
                 currentThreadId
-                    ? 'absolute bottom-0'
-                    : 'absolute inset-0 flex h-full w-full flex-col items-center justify-center'
+                    ? 'absolute bottom-0 pb-safe'
+                    : 'absolute inset-0 flex h-full w-full flex-col items-center justify-center pb-safe'
             )}
         >
             <div
@@ -360,14 +360,14 @@ export const ChatInput = ({
                     'mx-auto flex w-full max-w-3xl flex-col items-start',
                     !threadItemsLength && 'justify-start',
                     size === 'sm' && 'px-8',
-                    'px-4 md:px-0' // Add mobile padding
+                    'px-2 md:px-0' // Reduced mobile padding for better space usage
                 )}
             >
                 <Flex
                     items="start"
                     justify="start"
                     direction="col"
-                    className={cn('w-full pb-4', threadItemsLength > 0 ? 'mb-0' : 'h-full')}
+                    className={cn('w-full pb-4 md:pb-4 pb-safe', threadItemsLength > 0 ? 'mb-0' : 'h-full')}
                 >
                     {!currentThreadId && showGreeting && (
                         <motion.div

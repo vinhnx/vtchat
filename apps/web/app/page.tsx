@@ -9,9 +9,9 @@ export default function Home() {
     const { data: session, isPending } = useSession();
 
     return (
-        <div className="flex min-h-screen flex-col">
-            <header className="flex items-center justify-between border-b p-4">
-                <TypographyH1 className="text-xl font-semibold">VT</TypographyH1>
+        <div className="flex min-h-dvh flex-col">
+            <header className="flex items-center justify-between border-b p-3 md:p-4">
+                <TypographyH1 className="text-lg font-semibold md:text-xl">VT</TypographyH1>
                 {isPending ? (
                     <Skeleton className="h-8 w-20" />
                 ) : session ? (

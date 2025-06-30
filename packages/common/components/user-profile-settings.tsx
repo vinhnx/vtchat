@@ -562,7 +562,7 @@ export const UserProfileSettings = () => {
                                     <div className="text-muted-foreground text-xs">
                                         {justLinked === 'google' ? (
                                             <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
-                                                ✓ Connection successful!
+                                                Connection successful!
                                             </span>
                                         ) : justUnlinked === 'google' ? (
                                             <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
@@ -676,7 +676,7 @@ export const UserProfileSettings = () => {
                                     <div className="text-muted-foreground text-xs">
                                         {justLinked === 'github' ? (
                                             <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
-                                                ✓ Connection successful!
+                                                Connection successful!
                                             </span>
                                         ) : justUnlinked === 'github' ? (
                                             <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">

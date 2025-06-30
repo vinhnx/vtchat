@@ -2,7 +2,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Alert, AlertDescription, Button, TypographyH1 } from '@repo/ui';
-import { AlertCircle, Info, Key, Settings, Trash } from 'lucide-react';
+import { AlertCircle, Info, Key, Settings, Trash, X } from 'lucide-react';
 
 import {
     Badge,
@@ -110,7 +110,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
-            <DialogContent className="mx-4 h-full max-h-[700px] !max-w-[900px] max-w-[calc(100vw-2rem)] overflow-x-hidden rounded-xl p-0 md:mx-auto md:max-w-[900px]">
+            <DialogContent className="mx-1 h-full max-h-[95vh] w-[calc(100vw-0.5rem)] !max-w-[900px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-w-[900px] md:max-h-[700px] md:rounded-xl md:w-auto">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     ref={scrollRef}
@@ -118,15 +118,23 @@ export const SettingsModal = () => {
                 >
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
-                        <div className="flex items-center justify-between px-4 py-4 md:px-6">
+                        <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
                             <div>
-                                <TypographyH1 className="text-xl font-semibold">
+                                <TypographyH1 className="text-lg font-semibold md:text-xl">
                                     Settings
                                 </TypographyH1>
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-muted-foreground text-xs md:text-sm">
                                     Customize your VT experience and manage your account
                                 </p>
                             </div>
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => setIsSettingsOpen(false)}
+                                className="md:hidden"
+                            >
+                                <X size={18} strokeWidth={2} />
+                            </Button>
                         </div>
                         <div className="border-border border-b" />
                     </div>
@@ -136,20 +144,20 @@ export const SettingsModal = () => {
                         {/* Sidebar Navigation */}
                         <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[280px] md:border-b-0 md:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="flex gap-2 overflow-x-auto p-2 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
+                            <nav className="flex gap-1 overflow-x-auto p-1 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
                                 {settingMenu.map(setting => (
                                     <button
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         className={cn(
-                                            'flex w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
+                                            'flex w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors min-h-[44px] md:w-auto md:whitespace-normal md:p-3 md:min-h-auto',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                     >
-                                        <div className="flex-1 space-y-1">
-                                            <div className="text-sm font-medium md:text-base">
+                                        <div className="flex-1 space-y-0.5">
+                                            <div className="text-xs font-medium md:text-base">
                                                 {setting.title}
                                             </div>
                                             <div className="text-muted-foreground hidden text-xs md:block">
@@ -163,9 +171,9 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="bg-background flex-1 p-4 md:p-6"
+                            className="bg-background flex-1 p-2 md:p-6"
                             ref={panelContentRef}
-                            style={{ overflowY: 'auto', maxHeight: '700px' }}
+                            style={{ overflowY: 'auto', maxHeight: 'calc(95vh - 140px)' }}
                         >
                             <div className="max-w-full md:max-w-2xl">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
@@ -253,29 +261,29 @@ export const ApiKeySettings = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             {/* Header */}
             <div>
-                <TypographyH3>API Keys</TypographyH3>
-                <TypographyMuted>Manage your AI provider API keys securely</TypographyMuted>
+                <TypographyH3 className="text-base md:text-lg">API Keys</TypographyH3>
+                <TypographyMuted className="text-xs md:text-sm">Manage your AI provider API keys securely</TypographyMuted>
             </div>
 
             {/* Security Info Section */}
             <Card>
-                <CardHeader>
-                    <CardTitle className="text-lg font-semibold">Secure Local Storage</CardTitle>
-                    <CardDescription>
+                <CardHeader className="pb-3 md:pb-6">
+                    <CardTitle className="text-sm font-semibold md:text-lg">Secure Local Storage</CardTitle>
+                    <CardDescription className="text-xs md:text-sm">
                         Your API keys are protected and never leave your device
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                <CardContent className="pt-0">
+                    <div className="border-border/50 bg-muted/20 rounded-lg border p-3 md:p-4">
                         <div className="flex items-start gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
                                 <Key className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div className="flex-1">
-                                <div className="text-foreground text-sm font-medium">
+                                <div className="text-foreground text-xs font-medium md:text-sm">
                                     Privacy First
                                 </div>
                                 <div className="text-muted-foreground mt-1 text-xs">
@@ -292,25 +300,25 @@ export const ApiKeySettings = () => {
             {/* Free Gemini Flash Lite Message */}
             {!apiKeys.GEMINI_API_KEY && (
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-blue-600 dark:text-blue-400">
-                            <Info className="h-5 w-5" />
+                    <CardHeader className="pb-3 md:pb-6">
+                        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 md:text-lg">
+                            <Info className="h-4 w-4 md:h-5 md:w-5" />
                             Free Gemini 2.5 Flash Lite Available
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-xs md:text-sm">
                             You're currently using the free Gemini 2.5 Flash Lite with rate limits
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <div className="border-border/50 bg-blue-50 dark:bg-blue-950/20 rounded-lg border p-4">
-                            <div className="space-y-3">
-                                <div className="text-foreground text-sm">
+                    <CardContent className="pt-0">
+                        <div className="border-border/50 bg-blue-50 dark:bg-blue-950/20 rounded-lg border p-3 md:p-4">
+                            <div className="space-y-2 md:space-y-3">
+                                <div className="text-foreground text-xs md:text-sm">
                                     <strong>Current limits:</strong> 10 requests per day, 1 request per minute
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className="text-muted-foreground text-xs md:text-sm">
                                     Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className="text-muted-foreground text-xs md:text-sm">
                                     <strong>Pro tip:</strong> With your own API key, you'll have access to Gemini 2.5 Pro, Gemini 2.0 Flash, and other premium models without restrictions.
                                 </div>
                             </div>
@@ -321,31 +329,31 @@ export const ApiKeySettings = () => {
 
             {/* API Keys Management */}
             <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                        <Settings className="h-5 w-5" />
+                <CardHeader className="pb-3 md:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-sm font-semibold md:text-lg">
+                        <Settings className="h-4 w-4 md:h-5 md:w-5" />
                         Configure Providers
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-xs md:text-sm">
                         Add API keys for the AI providers you want to use
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 pt-0 md:space-y-4">
                     {apiKeyList.map(apiKey => (
                         <div
                             key={apiKey.key}
-                            className="border-border/50 bg-muted/20 space-y-3 rounded-lg border p-4"
+                            className="border-border/50 bg-muted/20 space-y-2 rounded-lg border p-3 md:space-y-3 md:p-4"
                         >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="mb-1 flex items-center gap-2">
-                                        <div className="text-foreground text-sm font-medium">
+                                        <div className="text-foreground text-xs font-medium md:text-sm">
                                             {apiKey.name}
                                         </div>
                                         {apiKey.value && (
                                             <Badge
                                                 variant="secondary"
-                                                className="bg-green-100 text-xs text-green-800 dark:bg-green-900/30 dark:text-green-200"
+                                                className="bg-green-100 text-[10px] text-green-800 dark:bg-green-900/30 dark:text-green-200 md:text-xs"
                                             >
                                                 Configured
                                             </Badge>

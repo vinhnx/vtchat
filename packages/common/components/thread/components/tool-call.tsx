@@ -36,8 +36,8 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     };
 
     const getToolLabel = () => {
-        if (isToolMathTool) return `🧮 ${toolCall.toolName}`;
-        if (isDocumentTool) return `📄 ${toolCall.toolName}`;
+        if (isToolMathTool) return toolCall.toolName;
+        if (isDocumentTool) return toolCall.toolName;
         return toolCall.toolName;
     };
 

@@ -1,7 +1,7 @@
-import { MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 
 import { LoginForm } from '@/components/login-form';
+import { ShineText } from '@repo/common/components';
 
 export default function LoginPage() {
     return (
@@ -9,10 +9,9 @@ export default function LoginPage() {
             <div className="flex flex-col gap-4 p-6 md:p-10">
                 <div className="flex justify-center gap-2 md:justify-start">
                     <a href="/" className="flex items-center gap-2 font-medium">
-                        <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md">
-                            <MessageSquare className="size-4" />
-                        </div>
-                        VT
+                        <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
+                            VT
+                        </ShineText>
                     </a>
                 </div>
                 <div className="flex flex-1 items-center justify-center">

@@ -3,6 +3,7 @@
 import { useSession } from '@repo/shared/lib/auth-client';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { RAGChatbot } from '../../components/rag-chatbot';
+import { Footer } from '@repo/common/components';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle, PremiumButton, Badge } from '@repo/ui';
 import { Database, Lock, Sparkles } from 'lucide-react';
@@ -105,14 +106,14 @@ export default function RAGPage() {
 
     // Show RAG chatbot for plus subscribers
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
-            <div className="container mx-auto px-4 py-8 flex-1 flex flex-col min-h-0">
-                <div className="mb-6 flex-shrink-0">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
+        <div className="h-dvh flex flex-col overflow-hidden">
+            <div className="container mx-auto px-2 py-4 flex-1 flex flex-col min-h-0 md:px-4 md:py-8">
+                <div className="mb-4 flex-shrink-0 md:mb-6">
+                    <h1 className="text-xl font-bold flex items-center gap-2 md:text-2xl">
                         Personal AI Assistant with Memory
                         <Badge variant="secondary">VT+</Badge>
                     </h1>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground md:text-sm">
                         Build and query your personal knowledge base with AI
                     </p>
                 </div>
@@ -120,6 +121,13 @@ export default function RAGPage() {
                     <RAGChatbot />
                 </div>
             </div>
+            
+            {/* Footer */}
+            <footer className="border-border/50 bg-background border-t">
+                <div className="mx-auto max-w-7xl">
+                    <Footer />
+                </div>
+            </footer>
         </div>
     );
 }

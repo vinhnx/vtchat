@@ -270,7 +270,7 @@ export function CreemCheckoutProcessor() {
                     if (isVtPlusSubscription) {
                         // Show welcome toast right before redirect
                         toast({
-                            title: 'Welcome to VT+! 🎉',
+                            title: 'Welcome to VT+!',
                             description: 'Redirecting to chat to enjoy your new features...',
                         });
                         

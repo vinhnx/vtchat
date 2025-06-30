@@ -1,6 +1,6 @@
 'use client';
 
-import { ShineText, UserTierBadge } from '@repo/common/components';
+import { Footer, ShineText, UserTierBadge } from '@repo/common/components';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { BUTTON_TEXT } from '@repo/shared/constants';
@@ -122,18 +122,18 @@ export default function PlusPage() {
     };
 
     return (
-        <div className="relative min-h-screen w-full">
-            <div className="container relative z-10 mx-auto px-4 py-8 pt-16">
+        <div className="relative min-h-dvh w-full">
+            <div className="container relative z-10 mx-auto px-2 py-4 pt-8 md:px-4 md:py-8 md:pt-16">
                 {/* Hero Section */}
-                <div className="mb-8 space-y-3 pt-8 text-center">
-                    <div className="space-y-3">
+                <div className="mb-4 space-y-3 pt-4 text-center md:mb-8 md:pt-8">
+                    <div className="space-y-2 md:space-y-3">
                         <AnimatedBadge>
                             <Sparkles className="mr-2 h-4 w-4" />
                             {PRICING_CONFIG.product.name}
                         </AnimatedBadge>
 
                         <div>
-                            <ShineText className="text-5xl font-bold leading-loose tracking-tight sm:text-6xl">
+                            <ShineText className="text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-loose lg:text-6xl">
                                 Choose your perfect plan
                             </ShineText>
                         </div>
@@ -141,11 +141,11 @@ export default function PlusPage() {
                 </div>
 
                 {/* Pricing Section */}
-                <div id="pricing" className="relative px-6 py-4 sm:py-6 lg:px-8">
+                <div id="pricing" className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8">
                     <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
-                            className={`rounded-3xl rounded-t-3xl bg-white p-8 ring-1 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
+                            className={`rounded-3xl rounded-t-3xl bg-white p-4 ring-1 sm:mx-8 sm:rounded-b-none sm:p-8 md:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
                                 isFreeTier ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
                             }`}
                         >
@@ -339,6 +339,13 @@ export default function PlusPage() {
                     </p>
                 </div>
             </div>
+            
+            {/* Footer */}
+            <footer className="border-border/50 bg-background border-t">
+                <div className="mx-auto max-w-7xl">
+                    <Footer />
+                </div>
+            </footer>
         </div>
     );
 }
