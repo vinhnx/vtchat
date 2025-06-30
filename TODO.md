@@ -2,7 +2,10 @@
 
 ok go! -> https://vtchat.io.vn/
 
-replace all console.* in project with pico logging
+--
+fix send chat icon not visible for mobile 
+
+remove top nav bar for mobile
 
 --
 WARNING The app is not listening on the expected address and will not be reachable by fly-proxy.e6fee3248 reached started state
