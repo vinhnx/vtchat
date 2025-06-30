@@ -1,6 +1,15 @@
 # TODO
 
 ok go! -> https://vtchat.io.vn/
+
+--
+
+remove Intelligent document search in rag onboarding
+
+--
+
+fix footer on mobile
+
 --
 final discuss fly.io config for budget and scale with Claude
 # Production fly.toml
