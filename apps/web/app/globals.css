@@ -76,24 +76,24 @@
     }
 
     .dark {
-        --background: 20 14.3% 4.1%;
+        --background: 0 0% 3%;
         --foreground: 60 9.1% 97.8%;
-        --card: 24 9.8% 10%;
+        --card: 0 0% 5%;
         --card-foreground: 60 9.1% 97.8%;
-        --popover: 24 9.8% 10%;
+        --popover: 0 0% 5%;
         --popover-foreground: 60 9.1% 97.8%;
         --primary: 20 5.9% 90%;
-        --primary-foreground: 24 9.8% 10%;
-        --secondary: 12 6.5% 15.1%;
+        --primary-foreground: 0 0% 3%;
+        --secondary: 0 0% 8%;
         --secondary-foreground: 60 9.1% 97.8%;
-        --muted: 12 6.5% 15.1%;
+        --muted: 0 0% 8%;
         --muted-foreground: 24 5.4% 63.9%;
-        --accent: 12 6.5% 15.1%;
+        --accent: 0 0% 8%;
         --accent-foreground: 60 9.1% 97.8%;
         --destructive: 0 62.8% 30.6%;
         --destructive-foreground: 60 9.1% 97.8%;
-        --border: 12 6.5% 15.1%;
-        --input: 12 6.5% 15.1%;
+        --border: 0 0% 12%;
+        --input: 0 0% 12%;
         --ring: 24 5.4% 63.9%;
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
@@ -104,9 +104,9 @@
         --sidebar-foreground: 60 9.1% 97.8%;
         --sidebar-primary: 220 70% 50%;
         --sidebar-primary-foreground: 60 9.1% 97.8%;
-        --sidebar-accent: 0 0% 8%;
+        --sidebar-accent: 0 0% 6%;
         --sidebar-accent-foreground: 60 9.1% 97.8%;
-        --sidebar-border: 0 0% 12%;
+        --sidebar-border: 0 0% 10%;
         --sidebar-ring: 24 5.4% 63.9%;
 
         /* Custom project variables (mapped to Shadcn variables for compatibility) */
