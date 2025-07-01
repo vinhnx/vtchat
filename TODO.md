@@ -2,53 +2,8 @@
 
 ok go! -> https://vtchat.io.vn/
 
-
 --
-immplmenet more proper vemetric custom event tracking for important user actions
-
- Tracking custom events
-
-Track meaningful user actions by sending custom events with Vemetric.
-
-Per default Vemetric automatically helps you to track pageviews and outbound link clicks without any additional setup.
-
-But to gain better insights into your users’ behavior, Vemetric enables you to send custom events, to track basically any meaningful user action. For example you could track a CheckoutStarted event, or a CTAClicked event, too see how users interact with your product.
-
-You can also send additional meta data for your custom events, like the Subscription Plan when the user sends a SubscriptionCreated event. Later on you can use this meta data to filter and group your events in Vemetric.
-
-Vemetric offers you several ways to track custom events, let’s take a look at the different options.
-Tracking events on the backend
-
-Most of the time it’s best to track custom events on the backend, to gain reliable insights. For example when you get the information from your payment provider that a subscription was created, that’s the best time to also track the SubscriptionCreated event in Vemetric.
-
-On the backend, it’s only possible to track events for identified users, checkout the Docs for User Identification for more infos.
-
-Checkout our Backend SDKs to learn more how to track events on the backend.
-Tracking events on the frontend
-
-Of course you also have the option to track custom events on the frontend, so you can track events as soon as the user interacts with your UI. Checkout our Frontend SDKs to learn more how to track events on the frontend.
-Data Attributes
-
-No matter which SDK you’re using on the frontend, you’re able to track custom events by using specific data attributes on your HTML elements.
-
-Below you can see an example of a button that tracks a custom event when clicked. You can use these attributes on any HTML element.
-
-<button data-vmtrc="MyCustomEvent">Click me</button>
-
-If you want to send additional metadata for the event, you can do it like this:
-
-<button data-vmtrc="MyCustomEvent" data-vmtrc-key1="value1" data-vmtrc-key2="value2">Click me</button>
-
-read: https://vemetric.com/docs/product-analytics/tracking-custom-events or search the docs for vemetric tracking custom events
-
---
-
-when reload page -> for VT+ user, the footer flash before disappear -> fix this.
-
-VT+ don't see footer and badges
-only free users see footer and badges
-
---
+Launch -> good luck!
 https://chatgpt.com/c/6863a358-b270-8003-9115-1bad070e75c9
 
 + post to Reddit

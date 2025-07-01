@@ -6,6 +6,7 @@ import { useChatStore } from '../store/chat.store';
 import { ANALYTICS_EVENTS, AnalyticsUtils } from '../utils/analytics';
 import { TOOL_FEATURES, FEATURE_STATES } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 
 /**
  * Component that tracks chat-related analytics events
