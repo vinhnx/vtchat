@@ -80,6 +80,9 @@ function LoginFormContent({
                     className="w-full"
                     loading={loading}
                     onClick={() => handleSocialSignIn('google')}
+                    data-vmtrc="AuthMethodSelected"
+                    data-vmtrc-provider="google"
+                    data-vmtrc-context="login_form"
                 >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                         <path
@@ -106,6 +109,9 @@ function LoginFormContent({
                     className="w-full"
                     loading={loading}
                     onClick={() => handleSocialSignIn('github')}
+                    data-vmtrc="AuthMethodSelected"
+                    data-vmtrc-provider="github"
+                    data-vmtrc-context="login_form"
                 >
                     <svg
                         className="mr-2 h-4 w-4"
