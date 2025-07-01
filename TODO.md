@@ -2,8 +2,9 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
 --
-https://x.com/pacovitiello/status/1938898985839644921
+fix mobile settings view content width
 
 --
 Launch -> good luck!
