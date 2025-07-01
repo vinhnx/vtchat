@@ -1,8 +1,13 @@
 import { TypographySmall } from '@repo/ui';
 import Link from 'next/link';
 import { AIDisclaimer } from './ai-disclaimer';
+import Image from 'next/image';
 
-export const Footer = () => {
+interface FooterProps {
+    showBadge?: boolean;
+}
+
+export const Footer = ({ showBadge = false }: FooterProps) => {
     const links = [
         {
             href: '/terms',
@@ -35,6 +40,38 @@ export const Footer = () => {
                     </Link>
                 ))}
             </div>
+            {showBadge && (
+                <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-2">
+                    <Link
+                        href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Image
+                            src="https://startupfa.me/badges/featured-badge.webp"
+                            alt="Featured on Startup Fame"
+                            width={128}
+                            height={40}
+                            unoptimized
+                            className="transition-opacity hover:opacity-80 sm:w-44 sm:h-14"
+                        />
+                    </Link>
+                    <Link
+                        href="https://magicbox.tools"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Image
+                            src="https://magicbox.tools/badge.svg"
+                            alt="Featured on MagicBox.tools"
+                            width={128}
+                            height={40}
+                            unoptimized
+                            className="transition-opacity hover:opacity-80 sm:w-44 sm:h-14"
+                        />
+                    </Link>
+                </div>
+            )}
             <AIDisclaimer className="mb-2" />
             <TypographySmall className="text-muted-foreground text-xs">
                 © 2025 VT. All rights reserved.

@@ -388,8 +388,7 @@ export const ChatInput = ({
                     {renderChatBottom()}
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
 
-                    {/* Show simplified footer only if not logged in */}
-                    {!session && <ChatFooter />}
+                    {/* ChatFooter moved to chat layout */}
                 </Flex>
             </div>
             {showLoginPrompt && (

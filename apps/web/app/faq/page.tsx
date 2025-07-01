@@ -53,7 +53,7 @@ export default function HelpCenterPage() {
             {/* Footer */}
             <footer className="border-border/50 bg-background border-t">
                 <div className="mx-auto w-full max-w-7xl">
-                    <Footer />
+                    <Footer showBadge />
                 </div>
             </footer>
         </div>
