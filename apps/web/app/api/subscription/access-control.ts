@@ -24,9 +24,9 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
         );
         return await subscriptionSync.getComprehensiveSubscriptionStatus(userId);
     } catch (importError) {
-        console.warn(
-            'Could not import subscription-sync, falling back to direct database query:',
-            importError
+        logger.warn(
+            { error: importError },
+            'Could not import subscription-sync, falling back to direct database query'
         );
 
         try {

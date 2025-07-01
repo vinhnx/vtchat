@@ -135,11 +135,11 @@ async function findUserByCreemData(customerEmail: string): Promise<string | null
             .limit(1);
 
         if (userByEmail.length > 0) {
-            logger.info(`[Creem Webhook] Found user by email: ${customerEmail}`);
+            logger.info('[Creem Webhook] Found user by email');
             return userByEmail[0].id;
         }
 
-        logger.error(`[Creem Webhook] No user found for email: ${customerEmail}`);
+        logger.error('[Creem Webhook] No user found for email');
         return null;
     } catch (error) {
         logger.error('[Creem Webhook] Error finding user:', { data: error });
@@ -258,9 +258,8 @@ async function invalidateUserSessions(userId: string) {
 async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventSchema>) {
     const { object: data } = event;
 
-    logger.info(`[Creem Webhook] Processing checkout completed:`, {
+    logger.info('[Creem Webhook] Processing checkout completed:', {
         checkoutId: data.id,
-        customerEmail: data.customer.email,
         productName: data.product.name,
         amount: data.order.amount,
         subscriptionId: data.subscription?.id,
@@ -270,9 +269,7 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
     const userId = await findUserByCreemData(data.customer.email);
 
     if (!userId) {
-        logger.error(`[Creem Webhook] No user found for checkout event:`, {
-            email: data.customer.email,
-        });
+        logger.error('[Creem Webhook] No user found for checkout event');
         return;
     }
 
@@ -299,19 +296,17 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
 async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEventSchema>) {
     const { object: data } = event;
 
-    logger.info(`[Creem Webhook] Processing subscription event: ${event.eventType}`, {
+    logger.info('[Creem Webhook] Processing subscription event:', {
+        eventType: event.eventType,
         subscriptionId: data.id,
         status: data.status,
-        customerEmail: data.customer.email,
     });
 
     // Find user by email
     const userId = await findUserByCreemData(data.customer.email);
 
     if (!userId) {
-        logger.error(`[Creem Webhook] No user found for subscription event:`, {
-            email: data.customer.email,
-        });
+        logger.error('[Creem Webhook] No user found for subscription event');
         return;
     }
 
@@ -452,7 +447,6 @@ export async function POST(request: NextRequest) {
         logger.info('[Creem Webhook] Processing event:', {
             eventType: validatedEvent.eventType,
             id: validatedEvent.object?.id,
-            customer: validatedEvent.object?.customer?.email,
         });
 
         // Route to appropriate handler
