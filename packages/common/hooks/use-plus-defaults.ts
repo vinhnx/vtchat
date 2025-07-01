@@ -8,7 +8,7 @@ import { useEffect, useRef } from 'react';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { useAppStore } from '../store/app.store';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * Hook to automatically apply plus defaults when user subscription changes
@@ -28,7 +28,7 @@ export function usePlusDefaults() {
 
         // Initial setup - apply defaults for current plan
         if (!hasInitializedRef.current) {
-            console.log(`[Plus Defaults] Initial setup for plan: ${currentPlan}`);
+            log.info({ plan: currentPlan }, '[Plus Defaults] Initial setup for plan');
             initializeSettingsForPlan(currentPlan);
             hasInitializedRef.current = true;
             previousPlanRef.current = currentPlan;
@@ -37,15 +37,15 @@ export function usePlusDefaults() {
 
         // Handle plan changes (upgrade/downgrade)
         if (previousPlan && previousPlan !== currentPlan) {
-            console.log(`[Plus Defaults] Plan changed from ${previousPlan} to ${currentPlan}`);
+            log.info({ previousPlan, currentPlan }, '[Plus Defaults] Plan changed');
 
             if (currentPlan === PlanSlug.VT_PLUS && previousPlan === PlanSlug.VT_BASE) {
                 // Upgrading to plus - apply plus defaults but preserve user customizations
-                logger.info('[Plus Defaults] Upgrading to VT+, applying plus defaults');
+                log.info('[Plus Defaults] Upgrading to VT+, applying plus defaults');
                 applyPlusDefaults(currentPlan, true);
             } else if (currentPlan === PlanSlug.VT_BASE && previousPlan === PlanSlug.VT_PLUS) {
                 // Downgrading to base - apply base defaults
-                logger.info('[Plus Defaults] Downgrading to base, applying base defaults');
+                log.info('[Plus Defaults] Downgrading to base, applying base defaults');
                 initializeSettingsForPlan(currentPlan);
             }
         }

@@ -14,7 +14,7 @@ import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -87,9 +87,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // For anonymous users, immediately return default free tier without API calls
             if (!userId) {
-                console.log(
-                    `[Subscription Provider] Returning default free tier for anonymous user`
-                );
+                log.info('[Subscription Provider] Returning default free tier for anonymous user');
                 const anonymousStatus: SubscriptionStatus = {
                     plan: PlanSlug.VT_BASE,
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -114,9 +112,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // If there's already a global fetch in progress and not forcing refresh, wait for it
             if (globalFetchPromise && !forceRefresh) {
-                console.log(
-                    `[Subscription Provider] Using existing global fetch for ${userDescription}`
-                );
+                log.info({ userDescription }, '[Subscription Provider] Using existing global fetch');
                 const result = await globalFetchPromise;
                 setSubscriptionStatus(result);
                 setIsLoading(false);
@@ -130,9 +126,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 globalIsLoading = true;
                 globalError = null;
 
-                console.log(
-                    `[Subscription Provider] Starting global fetch for ${userDescription} (trigger: ${trigger})`
-                );
+                log.info({ userDescription, trigger }, '[Subscription Provider] Starting global fetch');
 
                 // Create the global fetch promise with deduplication
                 const requestKey = `subscription-${userId}-${trigger}`;
