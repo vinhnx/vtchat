@@ -6,6 +6,7 @@
 
 import { FeatureSlug, PlanConfig, PLANS, PlanSlug } from '../types/subscription';
 import { SubscriptionStatusEnum } from '../types/subscription-status';
+import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
 import { logger } from '@repo/shared/logger';
 
 // Type for subscription access context
@@ -21,7 +22,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
     planSlug: PlanSlug;
     isActive: boolean; // As reported by the payment provider or metadata
     expiresAt?: string; // ISO string format
-    source: 'creem' | 'none'; // 'creem' indicates data came from a recognized subscription source
+    source: SubscriptionSource; // SUBSCRIPTION_SOURCES.CREEM indicates data came from a recognized subscription source
 } {
     // Try to get user from context or window
     const user =
@@ -37,7 +38,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
                 planSlug: subscription.planSlug || subscription.plan || PlanSlug.VT_BASE,
                 isActive: subscription.isActive === true,
                 expiresAt: subscription.expiresAt, // Expects ISO string
-                source: 'creem',
+                source: SUBSCRIPTION_SOURCES.CREEM,
             };
         }
 
@@ -47,7 +48,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
                 planSlug: user.publicMetadata.planSlug as PlanSlug,
                 isActive: true, // Assume active if planSlug is directly set and no other info
                 expiresAt: undefined, // No expiration info in this case
-                source: 'creem', // Consider this a valid source if planSlug is set
+                source: SUBSCRIPTION_SOURCES.CREEM, // Consider this a valid source if planSlug is set
             };
         }
 
@@ -58,7 +59,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
                 planSlug: subscription.planSlug || subscription.plan || PlanSlug.VT_BASE,
                 isActive: subscription.isActive === true,
                 expiresAt: subscription.expiresAt, // Expects ISO string
-                source: 'creem',
+                source: SUBSCRIPTION_SOURCES.CREEM,
             };
         }
     }
@@ -67,7 +68,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
     return {
         planSlug: PlanSlug.VT_BASE,
         isActive: false, // No active subscription by default
-        source: 'none',
+        source: SUBSCRIPTION_SOURCES.NONE,
     };
 }
 
@@ -81,7 +82,7 @@ export interface UserClientSubscriptionStatus {
     canUpgrade: boolean;
     isActive: boolean; // True if the subscription allows access to features right now
     expiresAt?: Date;
-    source: 'creem' | 'none';
+    source: SubscriptionSource;
 }
 
 /**
@@ -246,7 +247,7 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
         overallIsActive = false; // Overrides provider's status if expired
     } else if (subscriptionData.isActive) {
         status = SubscriptionStatusEnum.ACTIVE;
-    } else if (subscriptionData.source === 'none') {
+    } else if (subscriptionData.source === SUBSCRIPTION_SOURCES.NONE) {
         // No subscription record found
         status = SubscriptionStatusEnum.NONE;
         overallIsActive = false; // Explicitly false if no subscription
@@ -255,8 +256,8 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
         overallIsActive = false;
     }
 
-    // If it's VT_BASE and no specific subscription record (source 'none'), it's effectively active for base features.
-    if (subscriptionData.planSlug === PlanSlug.VT_BASE && subscriptionData.source === 'none') {
+    // If it's VT_BASE and no specific subscription record (source NONE), it's effectively active for base features.
+    if (subscriptionData.planSlug === PlanSlug.VT_BASE && subscriptionData.source === SUBSCRIPTION_SOURCES.NONE) {
         status = SubscriptionStatusEnum.ACTIVE; // Free tier is always 'active'
         overallIsActive = true;
     }

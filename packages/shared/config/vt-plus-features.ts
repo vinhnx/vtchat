@@ -5,6 +5,7 @@
  */
 
 import { FeatureSlug } from '../types/subscription';
+import { CURRENCIES } from '../constants';
 
 export interface VTPlusFeature {
     id: FeatureSlug;
@@ -96,7 +97,7 @@ export const VT_PLUS_PRODUCT_INFO = {
     description: 'For everyday productivity',
     pricing: {
         amount: 9.99,
-        currency: 'USD',
+        currency: CURRENCIES.USD,
         type: 'subscription' as const,
         interval: 'monthly' as const,
         taxIncluded: true,

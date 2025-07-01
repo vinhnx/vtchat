@@ -1,3 +1,5 @@
+import { CURRENCIES } from '@repo/shared/constants';
+
 // Pricing and product configuration
 export const PRICING_CONFIG = {
     // Product information
@@ -11,7 +13,7 @@ export const PRICING_CONFIG = {
     pricing: {
         free: {
             price: 0,
-            currency: 'USD',
+            currency: CURRENCIES.USD,
             interval: 'month',
             features: [
                 {
@@ -43,7 +45,7 @@ export const PRICING_CONFIG = {
         },
         plus: {
             price: parseFloat('9.99'),
-            currency: 'USD',
+            currency: CURRENCIES.USD,
             interval: 'month',
             features: [
                 {

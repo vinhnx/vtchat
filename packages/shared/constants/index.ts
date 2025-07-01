@@ -5,6 +5,7 @@
 
 export * from './arcjet';
 export * from './creem';
+export * from './features';
 export * from './rate-limit-messages';
 export * from './routes';
 export * from './storage';

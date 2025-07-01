@@ -30,6 +30,7 @@
         "@repo/common": "*",
         "@repo/shared": "*",
         "@repo/ui": "*",
+        "@vemetric/react": "^0.5.4",
         "ai": "^4.3.16",
         "better-auth": "^1.2.9",
         "class-variance-authority": "^0.7.1",
