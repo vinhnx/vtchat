@@ -4,24 +4,20 @@ import {
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
+    VemetricAuthProvider,
+    VemetricSettingsTracker,
+    VemetricSubscriptionTracker,
 } from '@repo/common/components';
 import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { RootProvider } from '@repo/common/context';
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
-import { cn, TooltipProvider, SonnerToaster } from '@repo/ui';
+import { cn, SonnerToaster, TooltipProvider } from '@repo/ui';
+import { VemetricScript } from '@vemetric/react';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
-import { Bricolage_Grotesque } from 'next/font/google';
-import { Inter } from 'next/font/google';
-import { VemetricScript } from '@vemetric/react';
-import { 
-    VemetricAuthProvider, 
-    VemetricChatTracker, 
-    VemetricSubscriptionTracker,
-    VemetricSettingsTracker 
-} from '@repo/common/components';
+import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 
@@ -146,14 +142,13 @@ export default function ParentLayout({
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
                                                         <VemetricAuthProvider>
-                                                            <VemetricChatTracker />
                                                             <VemetricSubscriptionTracker />
                                                             <VemetricSettingsTracker />
                                                             {children}
                                                         </VemetricAuthProvider>
                                                     </RootLayout>
-                                                     <SonnerToaster />
-                                                 </RootProvider>
+                                                    <SonnerToaster />
+                                                </RootProvider>
                                             </PlusDefaultsProvider>
                                         </SubscriptionProvider>
                                     </OptimizedAuthProvider>

@@ -506,7 +506,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {!isPlusFromGlobal && (
                                     <Badge
                                         variant="secondary"
-                                        className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#BFB38F]"
+                                        className="vt-plus-glass px-1.5 py-0.5 text-[10px] text-[#D99A4E] border-[#D99A4E]/30"
                                     >
                                         VT+
                                     </Badge>
@@ -629,7 +629,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Thread History Section */}
                 <div
                     className={cn(
-                        'no-scrollbar w-full flex-1 overflow-y-auto transition-all duration-200',
+                        'scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200',
                         isSidebarOpen ? 'flex flex-col gap-4 px-4 pb-6 pt-4' : 'hidden'
                     )}
                 >

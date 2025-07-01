@@ -244,7 +244,7 @@ export function ModelSelector({
           disabled={model.requiresPremium && !userHasPremium}
         >
           {model.name}
-          {model.requiresPremium && <Badge>VT+</Badge>}
+          {model.requiresPremium && <Badge className="vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30">VT+</Badge>}
         </SelectItem>
       ))}
     </Select>

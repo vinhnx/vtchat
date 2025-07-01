@@ -110,7 +110,7 @@ export default function RAGPage() {
                 <div className="mb-4 flex-shrink-0 md:mb-6">
                     <h1 className="text-xl font-bold flex items-center gap-2 md:text-2xl">
                         Personal AI Assistant with Memory
-                        <Badge variant="secondary">VT+</Badge>
+                        <Badge variant="secondary" className="vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30 shadow-lg">VT+</Badge>
                     </h1>
                     <p className="text-xs text-muted-foreground md:text-sm">
                         Build and query your personal knowledge base with AI

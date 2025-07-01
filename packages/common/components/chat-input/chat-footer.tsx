@@ -34,15 +34,7 @@ export const ChatFooter = () => {
                         />
                     </a>
 
-                    <a href="https://magicbox.tools" target="_blank">
-                        <img
-                            src="https://magicbox.tools/badge.svg"
-                            alt="Featured on MagicBox.tools"
-                            width="96"
-                            height="30"
-                            className="transition-opacity hover:opacity-80 sm:h-10 sm:w-32"
-                        />
-                    </a>
+
                 </div>
 
                 {/* Footer Links */}
