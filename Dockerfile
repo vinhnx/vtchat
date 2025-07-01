@@ -149,6 +149,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/start.sh ./apps/web/start.sh
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/custom-server.js ./apps/web/custom-server.js
 
+# Copy workspace packages to ensure they're available for standalone build
+# This ensures monorepo packages are properly included in the standalone runtime
+COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
+
 # Copy the Next.js server.js to the root where custom-server.js expects it
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone/apps/web/server.js ./server.js
 

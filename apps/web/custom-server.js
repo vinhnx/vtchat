@@ -5,7 +5,40 @@
 
 const { execSync } = require('child_process');
 const path = require('path');
-const { log } = require('@repo/shared/logger');
+
+// Simple inline logger to avoid monorepo dependency issues in standalone build
+const log = {
+    info: (msg, obj) => {
+        const timestamp = new Date().toISOString();
+        if (typeof msg === 'object') {
+            console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
+        } else if (obj) {
+            console.log(`[${timestamp}] INFO: ${msg}`, JSON.stringify(obj));
+        } else {
+            console.log(`[${timestamp}] INFO: ${msg}`);
+        }
+    },
+    error: (msg, obj) => {
+        const timestamp = new Date().toISOString();
+        if (typeof msg === 'object') {
+            console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
+        } else if (obj) {
+            console.error(`[${timestamp}] ERROR: ${msg}`, JSON.stringify(obj));
+        } else {
+            console.error(`[${timestamp}] ERROR: ${msg}`);
+        }
+    },
+    warn: (msg, obj) => {
+        const timestamp = new Date().toISOString();
+        if (typeof msg === 'object') {
+            console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
+        } else if (obj) {
+            console.warn(`[${timestamp}] WARN: ${msg}`, JSON.stringify(obj));
+        } else {
+            console.warn(`[${timestamp}] WARN: ${msg}`);
+        }
+    }
+};
 
 // Set environment variables with fallbacks
 const PORT = process.env.PORT || '3000';
