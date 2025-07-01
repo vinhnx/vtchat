@@ -6,6 +6,7 @@ import { useCreemSubscription, useVemetric } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { ANALYTICS_EVENTS } from '@repo/common/utils/analytics';
 import { BUTTON_TEXT, CURRENCIES, PAYMENT_EVENT_TYPES, PAYMENT_SERVICES, SETTINGS_ACTIONS } from '@repo/shared/constants';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { TypographyH2, TypographyH3 } from '@repo/ui';
@@ -72,7 +73,7 @@ export default function PlusPage() {
                 userTier: isCurrentlySubscribed ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE,
                 context: 'subscription_management',
             }).catch(error => {
-                console.error('Failed to track page view:', error);
+                log.error({ error }, 'Failed to track page view');
             });
         }
     }, [isSignedIn, isCurrentlySubscribed, trackEvent]);
@@ -92,7 +93,7 @@ export default function PlusPage() {
                 });
                 await openCustomerPortal();
             } catch (error) {
-                console.error('Analytics tracking failed:', error);
+                log.error({ error }, 'Analytics tracking failed');
                 await openCustomerPortal(); // Continue even if tracking fails
             }
         } else {
@@ -112,7 +113,7 @@ export default function PlusPage() {
 
                 await startVtPlusSubscription();
             } catch (error) {
-                console.error('Analytics tracking failed:', error);
+                log.error({ error }, 'Analytics tracking failed');
                 await startVtPlusSubscription(); // Continue even if tracking fails
             }
         }
