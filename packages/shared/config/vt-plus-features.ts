@@ -4,8 +4,8 @@
  * Defines all features and capabilities available with VT+ subscription
  */
 
-import { FeatureSlug } from '../types/subscription';
 import { CURRENCIES } from '../constants';
+import { FeatureSlug } from '../types/subscription';
 
 export interface VTPlusFeature {
     id: FeatureSlug;
@@ -21,7 +21,8 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
         id: FeatureSlug.PRO_SEARCH,
         name: 'Enhanced Web Search',
-        description: 'AI-powered web search with real-time information and comprehensive topic analysis.',
+        description:
+            'AI-powered web search with real-time information and comprehensive topic analysis.',
         enabled: true,
     },
     [FeatureSlug.DARK_THEME]: {
@@ -96,7 +97,7 @@ export const VT_PLUS_PRODUCT_INFO = {
     productId: process.env.CREEM_PRODUCT_ID, // Use environment variable
     description: 'For everyday productivity',
     pricing: {
-        amount: 9.99,
+        amount: 7.99,
         currency: CURRENCIES.USD,
         type: 'subscription' as const,
         interval: 'monthly' as const,
@@ -138,8 +139,6 @@ export const VTPlusAccess = {
     hasDarkMode: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DARK_THEME);
     },
-
-
 
     /**
      * Check if user has access to Structured Outputs
@@ -193,8 +192,8 @@ export const VTPlusAccess = {
     /**
      * Check if user has access to Personal AI Assistant with Memory
      */
-     hasPersonalAI: (isVTPlusActive: boolean): boolean => {
-     return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
+    hasPersonalAI: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
     },
 
     /**

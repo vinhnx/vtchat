@@ -87,7 +87,7 @@ VT_BASE is our free tier that includes:
 - **BYOK Option**: Unlimited usage with your own API keys as alternative
 
 ### 4.2 VT+ Subscription Features
-VT+ is a monthly subscription service for **$9.99 USD** that includes:
+VT+ is a monthly subscription service for **$7.99 USD** that includes:
 - **Unlimited Access**: No daily limits or rate limiting on all models
 - **Grounding Web Search**: Enhanced search with web integration for real-time information
 - **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration

@@ -100,7 +100,7 @@ CREEM_ENVIRONMENT=sandbox
 # Product Configuration
 PRODUCT_NAME=VT+
 PRODUCT_DESCRIPTION=For everyday productivity
-VT_PLUS_PRICE=9.99
+VT_PLUS_PRICE=7.99
 PRICING_CURRENCY=USD
 PRICING_INTERVAL=monthly
 
@@ -134,7 +134,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ```bash
 # 1. Go to https://neon.tech and create account
-# 2. Create new project: vtchat-dev  
+# 2. Create new project: vtchat-dev
 # 3. Copy database URL from dashboard
 # 4. Add to your .env.local file
 
@@ -432,7 +432,7 @@ Once your local development is working:
 # Deploy to development environment
 ./deploy-fly.sh --dev
 
-# Deploy to production environment  
+# Deploy to production environment
 ./deploy-fly.sh --prod
 ```
 

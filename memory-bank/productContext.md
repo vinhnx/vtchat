@@ -28,7 +28,7 @@ This project aims to refactor and improve an existing web application to enhance
 Name: VT+
 Product ID: Use environment variable CREEM_PRODUCT_ID. Do not hardcode prod_1XIVxekQ92QfjjOqbDVQk6.
 Description: "For everyday productivity"
-Payment: Subscription type, 9.99 USD monthly, price includes tax.
+Payment: Subscription type, 7.99 USD monthly, price includes tax.
 Features:
 Pro Search: "Pro Search: Enhanced search with web integration for real-time information."
 Dark Mode: "Access to dark mode."

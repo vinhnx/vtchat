@@ -27,11 +27,11 @@ All trackers follow strict PII protection:
 
 ```tsx
 // apps/web/app/layout.tsx
-import { 
+import {
   VemetricPaymentTracker,
   VemetricRagTracker,
   VemetricPerformanceTracker,
-  VemetricSecurityTracker 
+  VemetricSecurityTracker
 } from '@repo/common/components';
 
 export default function RootLayout({ children }) {
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
     <html>
       <body>
         {children}
-        
+
         {/* Add trackers - they don't render UI */}
         <VemetricPaymentTracker />
         <VemetricRagTracker />
@@ -59,23 +59,23 @@ import { useVemetricPaymentTracking } from '@repo/common/components';
 
 function PaymentFlow() {
   const { trackPaymentInitiated, trackPaymentSuccess } = useVemetricPaymentTracking();
-  
+
   const handlePayment = async (paymentData) => {
     // Track payment start
     await trackPaymentInitiated({
       tier: 'VT_PLUS',
-      amount: 9.99,
+      amount: 7.99,
       currency: 'USD',
       paymentMethod: 'stripe',
     });
-    
+
     try {
       const result = await processPayment(paymentData);
-      
+
       // Track success
       await trackPaymentSuccess({
         tier: 'VT_PLUS',
-        amount: 9.99,
+        amount: 7.99,
         currency: 'USD',
         paymentMethod: 'stripe',
         processingTime: result.processingTime,
@@ -96,14 +96,14 @@ function PaymentFlow() {
 import { useVemetricPaymentTracking } from '@repo/common/components';
 
 function PaymentComponent() {
-  const { 
+  const {
     trackPaymentInitiated,
     trackPaymentMethodSelected,
     trackPaymentValidationFailed,
     trackPaymentProcessingError,
     trackPaymentSuccess,
     trackSubscriptionCancellation,
-    trackTrialConversion 
+    trackTrialConversion
   } = useVemetricPaymentTracking();
 
   // Track payment method selection
@@ -143,11 +143,11 @@ function PaymentComponent() {
 import { useVemetricRagTracking } from '@repo/common/components';
 
 function DocumentProcessor() {
-  const { 
+  const {
     trackDocumentUpload,
     trackDocumentProcessing,
     trackRagQuery,
-    trackContextRetrieval 
+    trackContextRetrieval
   } = useVemetricRagTracking();
 
   // Track document upload
@@ -162,7 +162,7 @@ function DocumentProcessor() {
     const startTime = Date.now();
     try {
       const result = await processDocument(file);
-      
+
       // Track successful processing
       await trackDocumentProcessing({
         fileName: file.name,
@@ -189,10 +189,10 @@ function DocumentProcessor() {
   // Track RAG queries
   const handleRagQuery = async (query: string) => {
     const startTime = Date.now();
-    
+
     try {
       const results = await executeRagQuery(query);
-      
+
       await trackRagQuery({
         queryType: 'semantic',
         queryLength: query.length, // Length only, not content
@@ -222,21 +222,21 @@ function DocumentProcessor() {
 import { useVemetricPerformanceTracking } from '@repo/common/components';
 
 function ToolsComponent() {
-  const { 
+  const {
     trackWebSearchExecution,
     trackMathCalculationExecution,
     trackApiResponseTime,
     trackRateLimitExceeded,
-    trackFeatureLimitReached 
+    trackFeatureLimitReached
   } = useVemetricPerformanceTracking();
 
   // Track web search
   const handleWebSearch = async (query: string) => {
     const startTime = Date.now();
-    
+
     try {
       const results = await webSearch(query);
-      
+
       await trackWebSearchExecution({
         query, // Only length will be stored
         searchProvider: 'tavily',
@@ -260,10 +260,10 @@ function ToolsComponent() {
   // Track math calculations
   const handleMathCalculation = async (expression: string) => {
     const startTime = Date.now();
-    
+
     try {
       const result = await calculateMath(expression);
-      
+
       await trackMathCalculationExecution({
         calculationType: detectCalculationType(expression),
         complexity: detectComplexity(expression),
@@ -286,10 +286,10 @@ function ToolsComponent() {
   // Track API performance
   const trackApiCall = async (url: string, options: RequestInit) => {
     const startTime = Date.now();
-    
+
     try {
       const response = await fetch(url, options);
-      
+
       await trackApiResponseTime({
         endpoint: url,
         method: options.method || 'GET',
@@ -298,7 +298,7 @@ function ToolsComponent() {
         success: response.ok,
         cacheHit: response.headers.get('x-cache') === 'HIT',
       });
-      
+
       return response;
     } catch (error) {
       await trackApiResponseTime({
@@ -320,20 +320,20 @@ function ToolsComponent() {
 import { useVemetricSecurityTracking } from '@repo/common/components';
 
 function SecurityComponent() {
-  const { 
+  const {
     trackSuspiciousActivity,
     trackAuthenticationAttempt,
     trackPermissionViolation,
-    trackDataAccessAttempt 
+    trackDataAccessAttempt
   } = useVemetricSecurityTracking();
 
   // Track authentication
   const handleAuth = async (method: string, credentials: any) => {
     const startTime = Date.now();
-    
+
     try {
       const result = await authenticate(credentials);
-      
+
       await trackAuthenticationAttempt({
         method,
         success: true,
@@ -439,7 +439,7 @@ const processPayment = async (data) => {
 const processDocument = async (file) => {
   const timer = createTimer();
   const result = await processFile(file);
-  
+
   await trackDocumentProcessing({
     fileName: file.name,
     fileSize: file.size,
@@ -478,7 +478,7 @@ try {
     errorType: error.name,
     recoverable: error.recoverable,
   });
-  
+
   // Don't store error.message (might contain PII)
 }
 ```

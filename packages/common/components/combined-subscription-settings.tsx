@@ -14,6 +14,7 @@ import {
 } from '@repo/shared/config/embedding-models';
 import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT, THINKING_MODE } from '@repo/shared/constants';
+import { logger } from '@repo/shared/logger';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Alert,
@@ -59,7 +60,6 @@ import React, { useState } from 'react';
 import { Combobox } from './combobox';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
-import { logger } from '@repo/shared/logger';
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -313,7 +313,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                         <div className="text-muted-foreground text-sm">
                                             {isVtPlus
-                                                ? '$9.99/month • Renews automatically'
+                                                ? '$7.99/month • Renews automatically'
                                                 : currentPlan.description}
                                         </div>
                                     </div>
@@ -371,7 +371,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                        <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
                                             <Zap className="h-4 w-4" />
                                         </div>
                                         <div>
@@ -407,9 +407,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                                <FileText className="h-4 w-4" />
-                                                </div>
+                                                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                        <FileText className="h-4 w-4" />
+                                                    </div>
                                                     <div>
                                                         <Label
                                                             htmlFor="include-thoughts"
@@ -434,9 +434,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                                <Activity className="h-4 w-4" />
-                                                </div>
+                                                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                        <Activity className="h-4 w-4" />
+                                                    </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
                                                             Thinking Budget: {thinkingMode.budget}
@@ -495,7 +495,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                        <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
                                             <Zap className="h-4 w-4" />
                                         </div>
                                         <div>
@@ -531,8 +531,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                                    <FileText className="h-4 w-4" />
+                                                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                        <FileText className="h-4 w-4" />
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
@@ -570,8 +570,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                                    <Activity className="h-4 w-4" />
+                                                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                        <Activity className="h-4 w-4" />
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
@@ -950,7 +950,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             className="border-border/50 bg-muted/20 rounded-lg border p-4"
                                         >
                                             <div className="flex items-start gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                                                <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
                                                     {details.icon}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
@@ -977,8 +977,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     {/* Current free plan feature */}
                                     <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
                                         <div className="flex items-start gap-3">
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                            <MessageSquare className="h-4 w-4" />
+                                            <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                <MessageSquare className="h-4 w-4" />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <div className="mb-1 flex items-center gap-2">
@@ -1013,8 +1013,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 </div>
 
                                                 <div className="flex items-start gap-3 pr-12">
-                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                                                    {details.icon}
+                                                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                                                        {details.icon}
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <div className="text-foreground mb-1 font-medium">
@@ -1052,7 +1052,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                         <Sparkles className="h-4 w-4" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
-                            <strong>Ready to upgrade?</strong> Get VT+ for $9.99/month and unlock
+                            <strong>Ready to upgrade?</strong> Get VT+ for $7.99/month and unlock
                             advanced AI reasoning, document parsing, and premium tools.
                         </AlertDescription>
                     </Alert>
