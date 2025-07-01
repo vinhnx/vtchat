@@ -1,7 +1,7 @@
 export const privacyPolicy = `
 # Privacy Policy
 
-**Last Updated:** June 14, 2025
+**Last Updated:** July 1, 2025
 
 At **VT**, we are committed to protecting your privacy and being transparent about how we handle your data. This Privacy Policy explains what information we collect, how we use it, and your rights regarding your personal data.
 
@@ -26,9 +26,9 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub)
-- **Free Model Usage:** Daily request counts and rate limiting data for Gemini 2.5 Flash Lite Preview (registered users only)
+- **Free Model Usage:** Daily request counts and rate limiting data for 9 free AI models (5 Gemini + 4 OpenRouter models)
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
-- **Support Communications:** Messages you send to our support team
+- **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
 - **User Preferences:** Settings and configuration choices
 
 **When you use VT anonymously, we collect:**
@@ -58,10 +58,10 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Free Model Management:** Track daily usage limits and rate limiting for Gemini 2.5 Flash Lite Preview
-- **Subscription Management:** Process VT+ subscriptions and billing
-- **Feature Access:** Determine access to premium features based on subscription status
-- **Customer Support:** Respond to support requests and troubleshoot issues
+- **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models
+- **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
+- **Feature Access:** Determine access to premium features (Reasoning Mode, Structured Output, Web Search, Document Processing)
+- **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 
 ### 2.2 Service Improvement & Development
@@ -83,10 +83,10 @@ VT is built with **privacy-first principles** at its core:
 
 ### 3.1 Local Storage (Your Device)
 **Stored locally in your browser:**
-- **Your conversations** - All chat history stored using IndexedDB and Local Storage
+- **Your conversations** - All chat history stored using IndexedDB and Local Storage with Dexie.js
 - **API keys** - Encrypted and stored locally, never transmitted to our servers
 - **Settings and preferences** - User interface preferences and configurations
-- **Thread data** - Local conversation organization and metadata
+- **Thread data** - Local conversation organization with per-account thread isolation
 - **Model configurations** - Your AI provider settings and preferences
 
 **Important:** We cannot access any of this locally stored data. You have complete control over this information.
@@ -98,9 +98,23 @@ VT is built with **privacy-first principles** at its core:
 - **Payment records** (handled securely by Creem.io, not stored on our servers)
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)
+
+### 3.3 Enterprise Security Features
+**Arcjet Application Security:**
+- **Advanced Rate Limiting** - Multiple algorithms (sliding window, fixed window, token bucket) protecting against abuse
+- **Intelligent Bot Protection** - Advanced bot detection with search engine exceptions and configurable policies
+- **Email Validation** - Blocks disposable, invalid, and suspicious emails with user-friendly error handling
+- **Web Application Firewall** - Shield WAF protection against SQL injection, XSS, and common attacks
+- **IP Analysis** - VPN/proxy detection and geolocation filtering for enhanced security
+
+**Better Auth Security:**
+- **Modern Session Management** - 87% performance improvement with session caching
+- **Multi-Provider OAuth** - Secure GitHub, Google, and other social authentication
+- **Account Linking** - Secure linking of multiple OAuth providers to single account
+- **Session Isolation** - Per-user authentication with proper thread isolation
 - **Session tokens** (for authentication, automatically expire)
 
-### 3.3 Security Measures
+### 3.4 Security Measures
 **Data Protection:**
 - **Encryption in transit:** All communications use HTTPS/TLS encryption
 - **Secure authentication:** OAuth 2.0 with Google and GitHub (no password storage)
@@ -314,21 +328,21 @@ VT is built with **privacy-first principles** at its core:
 
 ### 11.1 Privacy Inquiries
 **For privacy-related questions:**
-- **Email:** vtchat.io@gmail.com
+- **Email:** hello@vtchat.io.vn
 - **Subject Line:** "Privacy Policy Inquiry"
 - **Response time:** We aim to respond within 72 hours
 - **Language:** Inquiries in English or Vietnamese
 
 ### 11.2 Data Subject Requests
 **To exercise your privacy rights:**
-- **Email:** vtchat.io@gmail.com
+- **Email:** hello@vtchat.io.vn
 - **Subject Line:** "Data Subject Request"
 - **Identity verification:** May be required for security purposes
 - **Processing time:** Requests fulfilled within 30 days when possible
 
 ### 11.3 Security Incidents
 **To report security concerns:**
-- **Email:** vtchat.io@gmail.com
+- **Email:** hello@vtchat.io.vn
 - **Subject Line:** "Security Issue"
 - **Responsible disclosure:** We appreciate responsible vulnerability reporting
 

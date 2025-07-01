@@ -2,13 +2,6 @@
 
 ok go! -> https://vtchat.io.vn/
 
-
-check replace vtchat.io@gmail.com
-on privacy page
-
---
-fix mobile settings view content width
-
 --
 Launch -> good luck!
 https://chatgpt.com/c/6863a358-b270-8003-9115-1bad070e75c9

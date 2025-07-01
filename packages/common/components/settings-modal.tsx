@@ -171,11 +171,10 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="bg-background scrollbar-thin flex-1 overflow-y-auto p-3 md:p-8"
+                            className="bg-background scrollbar-thin flex-1 overflow-y-auto p-3 md:p-8 flex justify-center"
                             ref={panelContentRef}
                             style={{
                                 minHeight: '500px',
-                                minWidth: '400px',
                                 maxHeight: 'calc(85vh - 120px)',
                             }}
                         >
