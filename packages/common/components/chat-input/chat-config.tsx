@@ -25,11 +25,11 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     // Map model names to ChatMode values - using exact names from models.ts
     const modelToChatModeMap: Record<string, ChatMode> = {
         // Google models
-        'Gemini 2.0 Flash': ChatMode.GEMINI_2_0_FLASH,
         'Gemini 2.0 Flash Lite': ChatMode.GEMINI_2_0_FLASH_LITE,
         'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
         'Gemini 2.5 Flash Lite': ChatMode.GEMINI_2_5_FLASH_LITE,
         'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
+        'Gemini 2.0 Flash': ChatMode.GEMINI_2_0_FLASH,
         // Anthropic models
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
         'Claude 4 Opus': ChatMode.CLAUDE_4_OPUS,
@@ -365,7 +365,7 @@ const allModelOptions = Object.values(modelOptionsByProvider).flat();
 const geminiFlashLiteOption = allModelOptions.find(option => option.value === ChatMode.GEMINI_2_5_FLASH_LITE);
 const otherOptions = allModelOptions.filter(option => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE);
 
-export const modelOptions = geminiFlashLiteOption 
+export const modelOptions = geminiFlashLiteOption
     ? [geminiFlashLiteOption, ...otherOptions]
     : allModelOptions;
 

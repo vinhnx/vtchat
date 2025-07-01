@@ -22,7 +22,7 @@ interface UseVemetricOptions {
  * Provides type-safe event tracking and user identification
  */
 export function useVemetric(options: UseVemetricOptions = {}) {
-    const { debug = false, autoTrack = true } = options;
+    const { debug = false, autoTrack: _autoTrack = true } = options;
     const isInitialized = useRef(false);
     const currentUser = useRef<VemetricUser | null>(null);
 
@@ -130,7 +130,15 @@ export function useVemetric(options: UseVemetricOptions = {}) {
                 AnalyticsUtils.logEvent(eventName, sanitizedData);
             }
         } catch (error) {
-            log.error({ error, eventName, data }, 'Failed to track event');
+            // Silently handle CORS and network errors - don't spam console
+            if (error instanceof TypeError && error.message.includes('NetworkError')) {
+                // CORS/Network error - use fallback analytics if needed
+                if (debug) {
+                    log.debug({ eventName, error: error.message }, 'Vemetric CORS error - using fallback');
+                }
+            } else {
+                log.error({ error, eventName, data }, 'Failed to track event');
+            }
         }
     }, [isEnabled, debug]);
 

@@ -42,6 +42,16 @@ export const REASONING_CONFIG = {
  */
 export const REASONING_BUDGETS = {
     QUICK: 1000,
-    BALANCED: 25000,
+    BALANCED: 15000,
     DEEP: 50000,
+} as const;
+
+/**
+ * Claude 4 specific configuration
+ */
+export const CLAUDE_4_CONFIG = {
+    DEFAULT_THINKING_BUDGET: 15000,
+    BETA_HEADER: 'interleaved-thinking-2025-05-14',
+    BETA_HEADER_KEY: 'anthropic-beta',
+    SUPPORTS_TOOL_THINKING: true,
 } as const;

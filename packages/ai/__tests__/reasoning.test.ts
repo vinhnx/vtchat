@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ReasoningType } from '../constants/reasoning';
-import { getReasoningType, ModelEnum, supportsReasoning } from '../models';
+import { getReasoningType, ModelEnum, supportsReasoning, supportsTools } from '../models';
 
 describe('Reasoning Support', () => {
     describe('supportsReasoning', () => {
@@ -48,8 +48,12 @@ describe('Reasoning Support', () => {
                 ReasoningType.ANTHROPIC_REASONING
             );
             expect(getReasoningType(ModelEnum.CLAUDE_4_OPUS)).toBe(
-                ReasoningType.ANTHROPIC_REASONING
-            );
+            ReasoningType.ANTHROPIC_REASONING
+);
+
+// Ensure Claude 4 models support both reasoning and tools
+expect(supportsTools(ModelEnum.CLAUDE_4_SONNET)).toBe(true);
+expect(supportsTools(ModelEnum.CLAUDE_4_OPUS)).toBe(true);
         });
 
         it('should return none for non-reasoning models', () => {

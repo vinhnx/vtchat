@@ -54,6 +54,12 @@ export const PlusSettings = () => {
         });
     };
 
+    const setThinkingModeClaude4Interleaved = (claude4InterleavedThinking: boolean) => {
+        setThinkingMode({
+            claude4InterleavedThinking,
+        });
+    };
+
     const getFeatureIcon = (featureId: FeatureSlug) => {
         switch (featureId) {
             case FeatureSlug.DOCUMENT_PARSING:
@@ -279,6 +285,33 @@ export const PlusSettings = () => {
                                             id="include-thoughts"
                                             checked={thinkingMode.includeThoughts}
                                             onCheckedChange={setThinkingModeIncludeThoughts}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Claude 4 Interleaved Thinking Toggle */}
+                                <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/20">
+                                                <Brain className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                            </div>
+                                            <div>
+                                                <Label
+                                                    htmlFor="claude4-interleaved"
+                                                    className="cursor-pointer text-sm font-medium"
+                                                >
+                                                    Claude 4 Enhanced Thinking
+                                                </Label>
+                                                <div className="text-muted-foreground text-xs">
+                                                    Enable interleaved thinking for Claude 4 models
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <Switch
+                                            id="claude4-interleaved"
+                                            checked={thinkingMode.claude4InterleavedThinking}
+                                            onCheckedChange={setThinkingModeClaude4Interleaved}
                                         />
                                     </div>
                                 </div>

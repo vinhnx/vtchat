@@ -1,0 +1,14 @@
+{
+  "analytics": false,
+  "webAnalytics": {
+    "enable": false
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "ANALYTICS_PROVIDER": "vemetric"
+  }
+}

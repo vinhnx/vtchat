@@ -2,6 +2,10 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
+--
+https://x.com/pacovitiello/status/1938898985839644921
+
 --
 Launch -> good luck!
 https://chatgpt.com/c/6863a358-b270-8003-9115-1bad070e75c9
@@ -395,9 +399,6 @@ https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
 
 --
 
-improve Claude 4 support
-https://ai-sdk.dev/docs/guides/claude-4
-
 use context7 or fetch the docs
 
 make sure not inferring other providers and workflow. this is Claude 4 specific.
@@ -475,7 +476,7 @@ https://x.com/i/communities/1493446837214187523
 Future plan
 + improve openai response api support https://ai-sdk.dev/docs/guides/openai-responses
 + improve Anthropic support https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
-+ improve Claude 4 support https://ai-sdk.dev/docs/guides/claude-4
++ [done] improve Claude 4 support https://ai-sdk.dev/docs/guides/claude-4
 + Adding username/password login option https://www.better-auth.com/docs/plugins/username
 + forgot password
 + update profile

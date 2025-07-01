@@ -54,6 +54,7 @@ type State = {
         enabled: boolean;
         budget: number;
         includeThoughts: boolean;
+        claude4InterleavedThinking: boolean;
     };
     geminiCaching: {
         enabled: boolean;

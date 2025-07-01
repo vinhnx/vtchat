@@ -8,7 +8,7 @@ import {
 } from 'ai';
 import { format } from 'date-fns';
 import { ZodSchema } from 'zod';
-import { ReasoningType } from '../constants/reasoning';
+import { ReasoningType, CLAUDE_4_CONFIG } from '../constants/reasoning';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
 import {
@@ -117,7 +117,7 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         logger.info('Getting language model for:', { data: model });
-        const selectedModel = getLanguageModel(model, undefined, byokKeys, true);
+        const selectedModel = getLanguageModel(model, undefined, byokKeys, true, undefined, thinkingMode?.claude4InterleavedThinking);
         logger.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
             modelType: typeof selectedModel,
@@ -192,9 +192,12 @@ export const generateTextWithGeminiSearch = async ({
                         break;
 
                     case ReasoningType.ANTHROPIC_REASONING:
-                        // Anthropic Claude 4 models support reasoning through beta features
+                        // Anthropic Claude 4 models support reasoning with extended thinking
                         providerOptions.anthropic = {
-                            reasoning: true,
+                            thinking: { 
+                                type: 'enabled' as const, 
+                                budgetTokens: CLAUDE_4_CONFIG.DEFAULT_THINKING_BUDGET 
+                            },
                         };
                         break;
 
@@ -457,7 +460,7 @@ export const generateText = async ({
             });
         }
 
-        const selectedModel = getLanguageModel(model, middleware, byokKeys, useSearchGrounding);
+        const selectedModel = getLanguageModel(model, middleware, byokKeys, useSearchGrounding, undefined, thinkingMode?.claude4InterleavedThinking);
 
         // Set up provider options based on model's reasoning type
         const providerOptions: any = {};
@@ -629,7 +632,7 @@ export const generateObject = async ({
         // Import reasoning utilities
         const { supportsReasoning, getReasoningType } = await import('../models');
 
-        const selectedModel = getLanguageModel(model, undefined, byokKeys);
+        const selectedModel = getLanguageModel(model, undefined, byokKeys, undefined, undefined, thinkingMode?.claude4InterleavedThinking);
         logger.info('Selected model for generateObject:', {
             hasModel: !!selectedModel,
             modelType: typeof selectedModel,
