@@ -42,20 +42,17 @@ export const Footer = ({ showBadge = false }: FooterProps) => {
             </div>
             {showBadge && (
                 <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-2">
-                    <Link
+                    <a
                         href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
                         target="_blank"
-                        rel="noopener noreferrer"
                     >
-                        <Image
+                        <img
                             src="https://startupfa.me/badges/featured-badge.webp"
                             alt="Featured on Startup Fame"
-                            width={128}
-                            height={40}
-                            unoptimized
-                            className="transition-opacity hover:opacity-80 sm:w-44 sm:h-14"
+                            width="171"
+                            height="54"
                         />
-                    </Link>
+                    </a>
                     <Link
                         href="https://magicbox.tools"
                         target="_blank"
