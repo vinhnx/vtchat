@@ -3,6 +3,7 @@
 import { Model, models } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
+import { log } from '@repo/shared/logger';
 import { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
 import Dexie, { Table } from 'dexie';
 import { nanoid } from 'nanoid';
@@ -10,7 +11,6 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { safeJsonParse } from '../utils/storage-cleanup';
 import { useAppStore } from './app.store';
-import { logger } from '@repo/shared/logger';
 
 class ThreadDatabase extends Dexie {
     threads!: Table<Thread>;
@@ -53,7 +53,7 @@ function getDatabase(): ThreadDatabase | null {
 function initializeUserDatabase(userId: string | null) {
     // Only initialize on client side
     if (typeof window === 'undefined') {
-        logger.warn('[ThreadDB] Database initialization skipped on server side');
+        log.warn('[ThreadDB] Database initialization skipped on server side');
         return null;
     }
 
@@ -67,7 +67,7 @@ function initializeUserDatabase(userId: string | null) {
         // Update config key to be user-specific for better isolation
         CONFIG_KEY = newUserId ? `chat-config-${newUserId}` : 'chat-config-anonymous';
 
-        logger.info({ isAnonymous: !newUserId }, '[ThreadDB] Initialized database for user');
+        log.info({ isAnonymous: !newUserId }, '[ThreadDB] Initialized database for user');
     }
 
     return db;
@@ -348,7 +348,7 @@ const processBatchUpdate = async () => {
             lastItemUpdateTime[item.id] = Date.now();
         });
     } catch (error) {
-        logger.error('Failed to batch update thread items:', { data: error });
+        log.error('Failed to batch update thread items:', { data: error });
         // If bulk update fails, try individual updates to salvage what we can
         for (const item of itemsToUpdate) {
             try {
@@ -408,7 +408,9 @@ const initializeWorker = () => {
                 // Handle different message types
                 switch (message.type) {
                     case 'connected':
-                        logger.info('[ChatStore] Connected to SharedWorker:', { data: message.workerId });
+                        log.info('[ChatStore] Connected to SharedWorker:', {
+                            data: message.workerId,
+                        });
                         break;
 
                     case 'db-operation-result':
@@ -419,12 +421,14 @@ const initializeWorker = () => {
                                 message.requestId
                             );
                         } else {
-                            logger.error('[ChatStore] Database operation failed:', { data: message.error });
+                            log.error('[ChatStore] Database operation failed:', {
+                                data: message.error,
+                            });
                         }
                         break;
 
                     case 'worker-error':
-                        logger.error('[ChatStore] Worker error:', { data: message.error });
+                        log.error('[ChatStore] Worker error:', { data: message.error });
                         // Fallback to localStorage sync on worker errors
                         initializeTabSync();
                         break;
@@ -443,7 +447,7 @@ const initializeWorker = () => {
                                 });
                             }
                         } catch (error) {
-                            logger.error('[ChatStore] Failed to refresh threads:', { data: error });
+                            log.error('[ChatStore] Failed to refresh threads:', { data: error });
                         }
                         break;
 
@@ -457,7 +461,9 @@ const initializeWorker = () => {
                                     .loadThreadItems(message.data.threadId);
                             }
                         } catch (error) {
-                            logger.error('[ChatStore] Failed to refresh thread items:', { data: error });
+                            log.error('[ChatStore] Failed to refresh thread items:', {
+                                data: error,
+                            });
                         }
                         break;
 
@@ -479,7 +485,9 @@ const initializeWorker = () => {
                                 return newState;
                             });
                         } catch (error) {
-                            logger.error('[ChatStore] Failed to handle thread deletion:', { data: error });
+                            log.error('[ChatStore] Failed to handle thread deletion:', {
+                                data: error,
+                            });
                         }
                         break;
 
@@ -514,7 +522,7 @@ const initializeWorker = () => {
                         break;
                 }
             } catch (error) {
-                logger.error('[ChatStore] Error processing worker message:', { data: error });
+                log.error('[ChatStore] Error processing worker message:', { data: error });
             }
         };
 
@@ -540,7 +548,7 @@ const initializeWorker = () => {
             initializeTabSync();
         });
     } catch (error) {
-        logger.error('[ChatStore] Failed to initialize SharedWorker:', { data: error });
+        log.error('[ChatStore] Failed to initialize SharedWorker:', { data: error });
         // Fallback to localStorage method if SharedWorker isn't supported
         initializeTabSync();
     }
@@ -617,7 +625,7 @@ const initializeTabSync = () => {
                     break;
             }
         } catch (error) {
-            logger.error('Error processing sync data:', { data: error });
+            log.error('Error processing sync data:', { data: error });
         }
     });
 
@@ -637,7 +645,7 @@ const initializeTabSync = () => {
             // Trigger the storage event in other tabs
             localStorage.setItem(SYNC_EVENT_KEY, Date.now().toString());
         } catch (error) {
-            logger.error('Error notifying other tabs:', { data: error });
+            log.error('Error notifying other tabs:', { data: error });
         }
     };
 
@@ -666,7 +674,7 @@ const notifyWorker = (type: string, data: any, dbOperation?: any) => {
 
         dbWorker.port.postMessage(message);
     } catch (error) {
-        logger.error('[ChatStore] Error notifying worker:', { data: error });
+        log.error('[ChatStore] Error notifying worker:', { data: error });
 
         // Fallback to localStorage if worker communication fails
         if (typeof window !== 'undefined' && window.notifyTabSync) {
@@ -725,7 +733,9 @@ const performWorkerDatabaseOperation = async (
             }
         });
     } catch (error) {
-        logger.error('[ChatStore] Worker database operation failed, using fallback:', { data: error });
+        log.error('[ChatStore] Worker database operation failed, using fallback:', {
+            data: error,
+        });
         return await fallbackFn();
     }
 };
@@ -736,7 +746,7 @@ const performWorkerDatabaseOperation = async (
 function withDatabase<T>(operation: (db: ThreadDatabase) => T): T | null {
     const database = getDatabase();
     if (!database) {
-        logger.warn('[ThreadDB] Database not available, skipping operation');
+        log.warn('[ThreadDB] Database not available, skipping operation');
         return null;
     }
     return operation(database);
@@ -750,13 +760,13 @@ async function withDatabaseAsync<T>(
 ): Promise<T | null> {
     const database = getDatabase();
     if (!database) {
-        logger.warn('[ThreadDB] Database not available, skipping async operation');
+        log.warn('[ThreadDB] Database not available, skipping async operation');
         return null;
     }
     try {
         return await operation(database);
     } catch (error) {
-        logger.error('[ThreadDB] Database operation failed:', { data: error });
+        log.error('[ThreadDB] Database operation failed:', { data: error });
         return null;
     }
 }
@@ -958,13 +968,13 @@ export const useChatStore = create(
                 } else if (button === 'charts') {
                     // Ensure useCharts is properly initialized
                     if (state.useCharts === undefined) {
-                        logger.info('🔧 useCharts was undefined, initializing to false');
+                        log.info('🔧 useCharts was undefined, initializing to false');
                         state.useCharts = false;
                     }
-                    logger.info('🔧 Before toggle - useCharts:', { data: state.useCharts });
+                    log.info('🔧 Before toggle - useCharts:', { data: state.useCharts });
                     state.activeButton = state.useCharts ? null : 'charts';
                     state.useCharts = !state.useCharts;
-                    logger.info('🔧 After toggle - useCharts:', { data: state.useCharts });
+                    log.info('🔧 After toggle - useCharts:', { data: state.useCharts });
                     if (state.useCharts) {
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
@@ -1028,7 +1038,7 @@ export const useChatStore = create(
                     state.useMathCalculator = false;
                 });
             } catch (error) {
-                logger.error('[ChatStore] Failed to persist chat mode:', { data: error });
+                log.error('[ChatStore] Failed to persist chat mode:', { data: error });
                 // Still update state even if persistence fails
                 set(state => {
                     state.chatMode = chatMode;
@@ -1282,7 +1292,7 @@ export const useChatStore = create(
                     state.model = model;
                 });
             } catch (error) {
-                logger.error('[ChatStore] Failed to persist model:', { data: error });
+                log.error('[ChatStore] Failed to persist model:', { data: error });
                 // Still update state even if persistence fails
                 set(state => {
                     state.model = model;
@@ -1319,7 +1329,7 @@ export const useChatStore = create(
                 // Notify other tabs about the update
                 debouncedNotify('thread-update', { threadId: thread.id });
             } catch (error) {
-                logger.error('Failed to update thread in database:', { data: error });
+                log.error('Failed to update thread in database:', { data: error });
             }
         },
 
@@ -1351,7 +1361,7 @@ export const useChatStore = create(
                     id: threadItem.id,
                 });
             } catch (error) {
-                logger.error('Failed to create thread item:', { data: error });
+                log.error('Failed to create thread item:', { data: error });
                 // Handle error appropriately
             }
         },
@@ -1427,7 +1437,7 @@ export const useChatStore = create(
                 // Non-critical updates that are too soon after the last update
                 // won't be persisted yet, but will be in the UI state
             } catch (error) {
-                logger.error('Error in updateThreadItem:', { data: error });
+                log.error('Error in updateThreadItem:', { data: error });
 
                 // Safety fallback - try to persist directly in case of errors in the main logic
                 try {
@@ -1614,7 +1624,14 @@ export const useChatStore = create(
         // User-specific database management for per-account thread isolation
         switchUserDatabase: async (userId: string | null) => {
             try {
-                logger.info({ isAnonymous: !userId }, '[ThreadDB] Switching to database for user');
+                // Safe logger fallback for browser context
+                try {
+                    log.info({ isAnonymous: !userId }, '[ThreadDB] Switching to database for user');
+                } catch (_logError) {
+                    console.log(
+                        `[ThreadDB] Switching to database for user: ${userId || 'anonymous'}`
+                    );
+                }
 
                 // Initialize the new user-specific database
                 initializeUserDatabase(userId);
@@ -1661,7 +1678,12 @@ export const useChatStore = create(
                     `[ThreadDB] Successfully switched to user database with ${newData.threads.length} threads`
                 );
             } catch (error) {
-                logger.error('[ThreadDB] Error switching user database:', { data: error });
+                // Safe logger fallback for browser context
+                try {
+                    log.error('[ThreadDB] Error switching user database:', { data: error });
+                } catch (_logError) {
+                    console.error('[ThreadDB] Error switching user database:', error);
+                }
                 // On error, ensure we have a clean state
                 set({
                     threads: [],
