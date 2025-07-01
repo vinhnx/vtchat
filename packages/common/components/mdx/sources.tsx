@@ -1,5 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 export function parseSourceTagsFromXML(xmlText: string): string[] {
     if (!xmlText) {
@@ -33,7 +33,7 @@ export function parseSourceTagsFromXML(xmlText: string): string[] {
 
         return Array.from(results);
     } catch (error) {
-        log.error({ error }, 'Failed to parse source tags from XML');
+        console.error(error);
         return [];
     }
 }

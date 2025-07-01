@@ -47,7 +47,7 @@ import { useState } from 'react';
 import { BYOKIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 export function AttachmentButton() {
     return (
@@ -254,12 +254,12 @@ export function MathCalculatorButton() {
         }
         if (!hasMathCalculatorAccess) {
             // Show upgrade dialog if user doesn't have access
-            log.info('🧮 Math calculator feature requires VT+ subscription');
+            logger.info('🧮 Math calculator feature requires VT+ subscription');
             return;
         }
-        log.info({ mathCalculatorEnabled }, '🧮 Math calculator button clicked');
+        logger.info('🧮 Math calculator button clicked, current state:', { data: mathCalculatorEnabled });
         setActiveButton('mathCalculator');
-        log.info('🧮 Math calculator button toggled');
+        logger.info('🧮 Math calculator button toggled');
     };
 
     return (
@@ -324,12 +324,12 @@ export function ChartsButton() {
         }
         if (!hasChartAccess) {
             // Show upgrade dialog if user doesn't have access
-            log.info('📊 Charts feature requires VT+ subscription');
+            logger.info('📊 Charts feature requires VT+ subscription');
             return;
         }
-        log.info({ useCharts }, '📊 Charts button clicked');
+        logger.info('📊 Charts button clicked, current state:', { data: useCharts });
         setActiveButton('charts');
-        log.info('📊 Charts button toggled');
+        logger.info('📊 Charts button toggled');
     };
 
     return (
@@ -471,7 +471,7 @@ export function BYOKSetupModal({
                 const savedKeys = getAllKeys();
                 if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
                 } else {
-                    log.error({ requiredApiKey }, '[BYOK Modal] API key verification failed');
+                    console.error(`[BYOK Modal] API key verification failed for ${requiredApiKey}`);
                 }
             }, 200);
 
@@ -479,7 +479,7 @@ export function BYOKSetupModal({
             onApiKeySaved();
             onClose();
         } catch (error) {
-            log.error({ error }, 'Failed to save API key');
+            logger.error('Failed to save API key:', { data: error });
             // Show error to user
             alert('Failed to save API key. Please try again.');
         } finally {

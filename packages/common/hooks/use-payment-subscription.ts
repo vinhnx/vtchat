@@ -8,7 +8,7 @@ import { useToast } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Hook for interacting with Creem subscriptions
@@ -38,10 +38,10 @@ export function useCreemSubscription() {
      * Opens in new tab due to X-Frame-Options restrictions
      */
     const openCustomerPortal = useCallback(async () => {
-        log.info({}, '[useCreemSubscription] openCustomerPortal called');
+        logger.info('[useCreemSubscription] openCustomerPortal called');
 
         if (!user) {
-            log.info({}, '[useCreemSubscription] User not authenticated, redirecting to login');
+            logger.info('[useCreemSubscription] User not authenticated, redirecting to login');
             router.push('/login');
             return;
         }
@@ -50,7 +50,7 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            log.info({}, '[useCreemSubscription] Requesting customer portal for user');
+            logger.info('[useCreemSubscription] Requesting customer portal for user');
 
             // Call the portal API endpoint
             const response = await fetch('/api/portal', {
@@ -65,7 +65,11 @@ export function useCreemSubscription() {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                log.error({ status: response.status, errorText }, '[useCreemSubscription] Portal API error');
+                console.error(
+                    '[useCreemSubscription] Portal API error:',
+                    response.status,
+                    errorText
+                );
                 throw new Error(
                     `Failed to get portal URL: ${response.status} ${response.statusText}`
                 );
@@ -74,7 +78,7 @@ export function useCreemSubscription() {
             const result = await response.json();
 
             if (result.success && result.url) {
-                log.info({}, '[useCreemSubscription] Opening portal in new tab');
+                logger.info('[useCreemSubscription] Opening portal in new tab');
 
                 // Open portal in new tab
                 const portalWindow = window.open(result.url, '_blank');
@@ -94,7 +98,9 @@ export function useCreemSubscription() {
                             event.data.type === 'PORTAL_CLOSED' ||
                             event.data.type === 'PORTAL_COMPLETE'
                         ) {
-                            log.info({}, '[useCreemSubscription] Portal tab closed, refreshing subscription');
+                            console.log(
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
+                            );
                             setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             window.removeEventListener('message', handleMessage);
@@ -107,7 +113,9 @@ export function useCreemSubscription() {
                     // Also listen for window close (fallback)
                     const checkClosed = setInterval(() => {
                         if (portalWindow.closed) {
-                            log.info({}, '[useCreemSubscription] Portal tab closed, refreshing subscription');
+                            console.log(
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
+                            );
                             setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             clearInterval(checkClosed);
@@ -140,7 +148,7 @@ export function useCreemSubscription() {
                 throw new Error(result.error || 'Failed to get portal URL');
             }
         } catch (err: any) {
-            log.error({ err }, '[useCreemSubscription] Error opening customer portal');
+            logger.error('[useCreemSubscription] Error opening customer portal:', { data: err });
             setError(err.message || 'Failed to open customer portal');
             toast({
                 title: 'Portal Error',
@@ -180,7 +188,7 @@ export function useCreemSubscription() {
                 const errorData = await response.json();
                 const errorMessage =
                     errorData.message || `Failed to start checkout: ${response.statusText}`;
-                log.error({ errorMessage }, 'Error starting subscription checkout (!response.ok)');
+                logger.error('Error starting subscription checkout (!response.ok):', { data: errorMessage });
                 setError(errorMessage);
                 toast({
                     title: 'Subscription Error',
@@ -208,7 +216,10 @@ export function useCreemSubscription() {
                 // Handle cases where response was OK, but the operation wasn't successful according to the payload
                 const errorMessage =
                     result.message || 'Failed to start checkout: Invalid server response.';
-                log.error({ errorMessage }, 'Error starting subscription checkout (result not success)');
+                console.error(
+                    'Error starting subscription checkout (result not success):',
+                    errorMessage
+                );
                 setError(errorMessage);
                 toast({
                     title: 'Subscription Error',
@@ -222,7 +233,7 @@ export function useCreemSubscription() {
             // 1. Network errors before/during fetch.
             // 2. Errors if `response.json()` fails (e.g., if `response.ok` was true but body wasn't valid JSON).
             // 3. Any other unexpected errors in the try block.
-            log.error({ err }, 'Unexpected error during subscription checkout (catch block)');
+            logger.error('Unexpected error during subscription checkout (catch block):', { data: err });
             // Check if err.message exists, otherwise provide a generic message
             const errorMessage =
                 err instanceof Error && err.message

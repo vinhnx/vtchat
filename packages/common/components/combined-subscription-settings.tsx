@@ -59,7 +59,7 @@ import React, { useState } from 'react';
 import { Combobox } from './combobox';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
 import { UserTierBadge } from './user-tier-badge';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -162,7 +162,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 }
             }
         } catch (error) {
-            log.error({ error }, 'Error analyzing knowledge base');
+            logger.error('Error analyzing knowledge base:', { data: error });
         } finally {
             setIsAnalyzing(false);
         }
@@ -266,7 +266,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         try {
             await openCustomerPortal();
         } catch (error) {
-            log.error({ error }, 'Failed to open subscription portal');
+            logger.error('Failed to open subscription portal:', { data: error });
         }
     };
 
@@ -789,7 +789,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     alert('Failed to clear knowledge base');
                                                 }
                                             } catch (error) {
-                                                log.error({ error }, 'Error clearing knowledge base');
+                                                console.error(
+                                                    'Error clearing knowledge base:',
+                                                    error
+                                                );
                                                 alert('Error clearing knowledge base');
                                             }
                                         }
