@@ -3,6 +3,9 @@
 ok go! -> https://vtchat.io.vn/
 
 
+check replace vtchat.io@gmail.com
+on privacy page
+
 --
 fix mobile settings view content width
 
