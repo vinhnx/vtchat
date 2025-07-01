@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
 import { PerformanceEventData, ToolEventData } from '@repo/shared/types/analytics';
 
@@ -34,7 +34,7 @@ export function VemetricPerformanceTracker() {
                     });
                 }
             } catch (error) {
-                logger.error({ error }, 'Failed to track page performance');
+                log.error({ error }, 'Failed to track page performance');
             }
         };
 
@@ -86,7 +86,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.API_RESPONSE_TIME, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track API response time');
+            log.error({ error }, 'Failed to track API response time');
         }
     };
 
@@ -112,13 +112,13 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RESPONSE_TIMEOUT, eventData);
 
-            logger.warn({ 
+            log.warn({ 
                 domain,
                 timeoutDuration: params.timeoutDuration,
                 retryAttempt: params.retryAttempt
             }, 'Response timeout tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track response timeout');
+            log.error({ error }, 'Failed to track response timeout');
         }
     };
 
@@ -146,13 +146,13 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RATE_LIMIT_EXCEEDED, eventData);
 
-            logger.warn({ 
+            log.warn({ 
                 domain,
                 limitType: params.limitType,
                 usagePercentage: eventData.usagePercentage
             }, 'Rate limit exceeded tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track rate limit');
+            log.error({ error }, 'Failed to track rate limit');
         }
     };
 
@@ -178,7 +178,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.QUOTA_EXCEEDED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track quota exceeded');
+            log.error({ error }, 'Failed to track quota exceeded');
         }
     };
 
@@ -213,14 +213,14 @@ export function useVemetricPerformanceTracking() {
                 await trackEvent(ANALYTICS_EVENTS.WEB_SEARCH_FAILED, eventData);
             }
 
-            logger.debug({ 
+            log.debug({ 
                 searchProvider: params.searchProvider,
                 executionTime: params.executionTime,
                 resultCount: params.resultCount,
                 success: params.success
             }, 'Web search execution tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track web search');
+            log.error({ error }, 'Failed to track web search');
         }
     };
 
@@ -248,7 +248,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.MATH_CALCULATION_EXECUTED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track math calculation');
+            log.error({ error }, 'Failed to track math calculation');
         }
     };
 
@@ -276,7 +276,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.CHART_GENERATED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track chart generation');
+            log.error({ error }, 'Failed to track chart generation');
         }
     };
 
@@ -299,13 +299,13 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SERVICE_UNAVAILABLE, eventData);
 
-            logger.error({ 
+            log.error({ 
                 service: params.service,
                 errorCode: params.errorCode,
                 downtime: params.downtime
             }, 'Service unavailable tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track service unavailable');
+            log.error({ error }, 'Failed to track service unavailable');
         }
     };
 
@@ -330,7 +330,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.FEATURE_LIMIT_REACHED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track feature limit reached');
+            log.error({ error }, 'Failed to track feature limit reached');
         }
     };
 
@@ -353,7 +353,7 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PREMIUM_FEATURE_ACCESSED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track premium feature access');
+            log.error({ error }, 'Failed to track premium feature access');
         }
     };
 

@@ -5,7 +5,7 @@
  * using the proper PlanSlug enum
  */
 
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { Creem } from 'creem';
 import { CREEM_API_CONFIG, CreemApiError, CreemCustomerBillingRequest } from '../constants/creem';
 import { PlanSlug } from '../types/subscription';
@@ -145,12 +145,12 @@ export class PaymentService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            logger.info('[PaymentService] Creating checkout session with:', {
+            log.info({
                 productId: request.productId,
                 quantity: request.quantity || 1,
-                email: request.customerEmail,
-                successUrl: request.successUrl,
-            });
+                hasEmail: !!request.customerEmail,
+                hasSuccessUrl: !!request.successUrl,
+            }, '[PaymentService] Creating checkout session');
 
             // Determine if this is for VT+ subscription
             const isSubscription =
@@ -170,7 +170,7 @@ export class PaymentService {
                   ? `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`
                   : `${normalizedBaseUrl}/success?package=${request.productId}&quantity=${request.quantity || 1}`;
 
-            logger.info('[PaymentService] Using success URL:', { data: successUrl });
+            log.info({ successUrl }, '[PaymentService] Using success URL');
 
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
@@ -189,10 +189,10 @@ export class PaymentService {
                 },
             });
 
-            logger.info('[PaymentService] Checkout session created successfully:', {
+            log.info({
                 checkoutId: result.id,
-                checkoutUrl: result.checkoutUrl,
-            });
+                hasCheckoutUrl: !!result.checkoutUrl,
+            }, '[PaymentService] Checkout session created successfully');
 
             if (result && typeof result === 'object' && 'checkoutUrl' in result) {
                 return {
@@ -204,7 +204,7 @@ export class PaymentService {
 
             throw new Error('Invalid checkout response - missing checkout URL');
         } catch (error: any) {
-            logger.error('[PaymentService] Checkout creation failed:', { data: error });
+            log.error({ error: error.message || 'Unknown error' }, '[PaymentService] Checkout creation failed');
             throw new CheckoutError(
                 `Failed to create checkout session: ${error.message || 'Unknown error'}`
             );
@@ -237,10 +237,9 @@ export class PaymentService {
 
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
-                        console.log(
-                            '[PaymentService] Found customer ID in users table:',
-                            userId,
-                            customerId
+                        log.info(
+                            { hasUserId: !!userId },
+                            'Found customer ID in users table'
                         );
                     } else {
                         // Fallback: check user_subscriptions table for creem_customer_id
@@ -255,17 +254,16 @@ export class PaymentService {
                             subscriptionResults[0].creemCustomerId
                         ) {
                             customerId = subscriptionResults[0].creemCustomerId;
-                            console.log(
-                                '[PaymentService] Found customer ID in user_subscriptions table:',
-                                userId,
-                                customerId
+                            log.info(
+                                { hasUserId: !!userId },
+                                'Found customer ID in user_subscriptions table'
                             );
                         }
                     }
                 } catch (dbError) {
-                    console.log(
-                        '[PaymentService] Database lookup failed, proceeding with fallback:',
-                        dbError
+                    log.info(
+                        { error: dbError instanceof Error ? dbError.message : 'Unknown error' },
+                        'Database lookup failed, proceeding with fallback'
                     );
                 }
             }
@@ -275,7 +273,7 @@ export class PaymentService {
                 try {
                     const apiEndpoint = CREEM_API_CONFIG.getCustomerBillingEndpoint();
 
-                    console.log(`[PaymentService] Calling Creem API: ${apiEndpoint}`);
+                    log.info({ endpoint: apiEndpoint }, '[PaymentService] Calling Creem API');
 
                     const requestBody: CreemCustomerBillingRequest = {
                         customer_id: customerId,
@@ -302,7 +300,7 @@ export class PaymentService {
 
                     if (result && typeof result === 'string') {
                         // If the response is directly a URL string
-                        logger.info('[PaymentService] Generated customer portal URL successfully');
+                        log.info({}, '[PaymentService] Generated customer portal URL successfully');
                         return {
                             url: result,
                             success: true,
@@ -320,7 +318,7 @@ export class PaymentService {
                             result.portalUrl ||
                             result.link ||
                             result.customer_portal_link;
-                        logger.info('[PaymentService] Generated customer portal URL successfully');
+                        log.info({}, 'Generated customer portal URL successfully');
                         return {
                             url: portalUrl,
                             success: true,
@@ -331,7 +329,7 @@ export class PaymentService {
                         );
                     }
                 } catch (apiError) {
-                    logger.error('[PaymentService] Creem API call failed:', { data: apiError });
+                    log.error({ error: apiError instanceof Error ? apiError.message : 'Unknown error' }, 'Creem API call failed');
                     if (apiError instanceof CreemApiError) {
                         throw apiError; // Re-throw Creem API errors
                     }
@@ -355,7 +353,7 @@ export class PaymentService {
                 success: true,
             };
         } catch (error) {
-            logger.error('Payment portal error:', { data: error });
+            log.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Payment portal error');
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
@@ -372,7 +370,7 @@ export class PaymentService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        logger.info('[PaymentService] Creating VT+ subscription checkout');
+        log.info({}, 'Creating VT+ subscription checkout');
 
         return this.createCheckout({
             productId: PlanSlug.VT_PLUS,

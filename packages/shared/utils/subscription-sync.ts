@@ -8,7 +8,7 @@ import { users, userSubscriptions } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { and, eq, isNull } from 'drizzle-orm';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export interface SubscriptionSyncResult {
     success: boolean;
@@ -67,7 +67,7 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
             } catch (error) {
                 const errorMsg = `Failed to create subscription for ${user.email}: ${error instanceof Error ? error.message : 'Unknown error'}`;
                 errors.push(errorMsg);
-                console.error(errorMsg);
+                log.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Failed to create subscription for user');
             }
         }
 
@@ -79,7 +79,7 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
         };
     } catch (error) {
         const errorMsg = `Error syncing subscription data: ${error instanceof Error ? error.message : 'Unknown error'}`;
-        console.error(errorMsg);
+        log.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error syncing subscription data');
         return {
             success: false,
             message: errorMsg,
@@ -144,7 +144,7 @@ export async function syncUserPlanSlugFromSubscription(
         };
     } catch (error) {
         const errorMsg = `Error syncing plan_slug for user ${userId}: ${error instanceof Error ? error.message : 'Unknown error'}`;
-        console.error(errorMsg);
+        log.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error syncing plan_slug for user');
         return {
             success: false,
             message: errorMsg,
@@ -215,7 +215,7 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
             needsSync: subscription ? false : userPlanSlug === PlanSlug.VT_PLUS,
         };
     } catch (error) {
-        logger.error('Error getting comprehensive subscription status:', { data: error });
+        log.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Error getting comprehensive subscription status');
         throw error;
     }
 }

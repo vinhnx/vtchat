@@ -7,7 +7,7 @@ import { db } from '@/lib/database';
 import { resources } from '@/lib/database/schema';
 import { eq, desc } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export async function GET(_req: NextRequest) {
     try {
@@ -41,7 +41,7 @@ export async function GET(_req: NextRequest) {
             total: userResources.length
         });
     } catch (error) {
-        logger.error('Error fetching knowledge base:', { data: error });
+        log.error({ error }, 'Error fetching knowledge base');
         return NextResponse.json(
             { error: 'Failed to fetch knowledge base' },
             { status: 500 }

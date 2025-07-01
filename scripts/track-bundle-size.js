@@ -10,6 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { log } = require('@repo/shared/logger');
 
 const BUNDLE_HISTORY_FILE = 'bundle-history.json';
 const WEB_APP_PATH = './apps/web';
@@ -134,12 +135,22 @@ function compareBundles(current, previous) {
 }
 
 function generateReport(stats, comparison) {
+    // CLI output for user - keeping console for readability
     console.log('\n📦 Bundle Size Report\n');
     console.log(`🕐 Timestamp: ${stats.timestamp}`);
     console.log(`📝 Commit: ${stats.commit.substring(0, 8)}`);
     console.log(`📁 Total Files: ${stats.fileCount}`);
     console.log(`📄 Pages: ${stats.pages}`);
     console.log(`💾 Total Bundle Size: ${formatBytes(stats.totalSize)}`);
+
+    // Internal logging
+    log.info({
+        timestamp: stats.timestamp,
+        commit: stats.commit,
+        totalSize: stats.totalSize,
+        fileCount: stats.fileCount,
+        pages: stats.pages
+    }, 'Bundle size report generated');
 
     if (comparison.previousSize) {
         const emoji = comparison.isImprovement
@@ -153,6 +164,13 @@ function generateReport(stats, comparison) {
         );
         console.log(`   Previous: ${comparison.previousSize}`);
         console.log(`   Current:  ${comparison.currentSize}`);
+
+        log.info({
+            sizeDiff: comparison.totalSizeChange,
+            sizeChangePercent: comparison.totalSizeChangePercent,
+            isImprovement: comparison.isImprovement,
+            currentSize: stats.totalSize
+        }, 'Bundle size comparison');
     }
 
     console.log('\n📊 Breakdown:');
@@ -161,8 +179,8 @@ function generateReport(stats, comparison) {
     console.log(`   Pages:  ${formatBytes(stats.breakdown.pages)}`);
 
     console.log('\n🔍 Largest Files:');
-    stats.largestFiles.forEach(({ file, size }, i) => {
-        console.log(`   ${i + 1}. ${file} - ${size}`);
+    stats.largestFiles.forEach(({ file, size }, _i) => {
+        console.log(`   ${_i + 1}. ${file} - ${size}`);
     });
 }
 
@@ -173,6 +191,7 @@ function main() {
         switch (command) {
             case 'track':
                 console.log('📊 Analyzing current bundle...');
+                log.info('Starting bundle size analysis');
                 const stats = getBundleStats();
                 const history = loadBundleHistory();
                 const previous = history[history.length - 1];
@@ -187,11 +206,13 @@ function main() {
                 }
 
                 saveBundleHistory(history);
+                log.info('Bundle history saved');
                 generateReport(stats, comparison);
 
                 // Exit with error code if bundle size increased significantly
                 if (comparison.totalSizeChangePercent > 5) {
                     console.log('\n❌ Bundle size increased by more than 5%!');
+                    log.error({ sizeIncrease: comparison.totalSizeChangePercent }, 'Bundle size increased significantly');
                     process.exit(1);
                 }
                 break;
@@ -204,7 +225,8 @@ function main() {
                 }
 
                 console.log('\n📈 Bundle Size History\n');
-                savedHistory.slice(-10).forEach((entry, i) => {
+                log.info({ historyCount: savedHistory.length }, 'Displaying bundle history');
+                savedHistory.slice(-10).forEach((entry, _i) => {
                     console.log(
                         `${entry.timestamp} | ${entry.commit.substring(0, 8)} | ${formatBytes(entry.totalSize)}`
                     );
@@ -234,6 +256,7 @@ Make sure to run 'bun run build' first.
         }
     } catch (error) {
         console.error('❌ Error:', error.message);
+        log.error({ error: error.message }, 'Bundle size tracking failed');
         process.exit(1);
     }
 }

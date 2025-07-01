@@ -5,8 +5,11 @@
  * Run with: bun scripts/check-vemetric-config.js
  */
 
+const { log } = require('@repo/shared/logger');
+
 function checkVemetricConfig() {
     console.log('🔧 Vemetric Configuration Check\n');
+    log.info('Starting Vemetric configuration check');
 
     const checks = [
         {
@@ -52,9 +55,11 @@ function checkVemetricConfig() {
         console.log('\nIf you\'re still seeing CORS errors:');
         console.log('1. Check Vemetric dashboard domain allowlist');
         console.log('2. Run: bun scripts/test-vemetric-connection.js');
+        log.info('Vemetric configuration check passed');
     } else {
         console.log('❌ Configuration issues detected');
         console.log('Add missing environment variables to your .env.local file');
+        log.warn('Vemetric configuration issues detected');
     }
 }
 

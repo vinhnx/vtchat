@@ -15,7 +15,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Brain, Key, Sparkles, Zap } from 'lucide-react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 interface RagOnboardingProps {
     isOpen: boolean;
@@ -49,7 +49,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
             toast.success('All Set! Your Knowledge Assistant is ready. Start building your personal knowledge base!');
             onComplete();
         } catch (error) {
-            logger.error('Error saving API keys:', { data: error });
+            log.error({ error }, 'Error saving API keys');
             toast.error('Failed to save API keys');
         } finally {
             setIsSubmitting(false);

@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { TaskTiming, WorkflowState } from './types';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export class ExecutionContext {
     private state: WorkflowState;
@@ -65,8 +65,9 @@ export class ExecutionContext {
     }
 
     abortWorkflow(graceful: boolean = false) {
-        console.log(
-            graceful ? '🟡 Gracefully stopping workflow...' : '🚨 Workflow aborted immediately!'
+        log.info(
+            { graceful },
+            graceful ? 'Gracefully stopping workflow...' : 'Workflow aborted immediately!'
         );
         this.aborted = true;
         this.gracefulShutdown = graceful;

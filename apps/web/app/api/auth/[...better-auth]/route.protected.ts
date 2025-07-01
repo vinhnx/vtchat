@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth-server';
 import { arcjetAuth, handleArcjetDecision } from '@/lib/arcjet';
 import { toNextJsHandler } from 'better-auth/next-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // CORS headers for auth endpoints
 const corsHeaders = {
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
         return response;
     } catch (error) {
-        logger.error('[Auth API] GET error:', { data: error });
+        log.error('[Auth API] GET error:', { error });
         return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
             status: 503,
             headers: {
@@ -52,15 +52,15 @@ export async function POST(request: NextRequest) {
     if (arcjetAuth) {
         try {
             const body = await request.json();
-            
+
             const decision = await arcjetAuth.protect(request, {
                 // Email validation for login attempts
                 email: body?.email || undefined,
             });
-            
+
             const denial = handleArcjetDecision(decision);
             if (denial) {
-                return NextResponse.json(denial.body, { 
+                return NextResponse.json(denial.body, {
                     status: denial.status,
                     headers: {
                         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
                 });
             }
         } catch (error) {
-            logger.error('[Auth API] Arcjet protection failed:', { data: error });
+            log.error('[Auth API] Arcjet protection failed:', { error });
             // Continue without Arcjet protection if it fails
         }
     }
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
         return response;
     } catch (error) {
-        logger.error('[Auth API] POST error:', { data: error });
+        log.error('[Auth API] POST error:', { error });
         return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
             status: 503,
             headers: {

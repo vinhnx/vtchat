@@ -280,7 +280,8 @@ export async function getRateLimitStatus(userId: string, modelId: ModelEnum): Pr
 /**
  * Check if it's a new day (UTC)
  */
-function isNewDay(lastReset: Date, now: Date): boolean {
+function isNewDay(lastReset: Date | null, now: Date): boolean {
+    if (!lastReset) return true;
     return now.getUTCDate() !== lastReset.getUTCDate() || 
            now.getUTCMonth() !== lastReset.getUTCMonth() || 
            now.getUTCFullYear() !== lastReset.getUTCFullYear();
@@ -289,7 +290,8 @@ function isNewDay(lastReset: Date, now: Date): boolean {
 /**
  * Check if it's a new minute
  */
-function isNewMinute(lastReset: Date, now: Date): boolean {
+function isNewMinute(lastReset: Date | null, now: Date): boolean {
+    if (!lastReset) return true;
     return Math.floor(now.getTime() / 60000) > Math.floor(lastReset.getTime() / 60000);
 }
 

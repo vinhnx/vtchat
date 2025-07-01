@@ -12,7 +12,7 @@ vi.mock('../store', () => ({
     },
     useAppStore: () => ({
         setSettingTab: mockSetSettingTab,
-        setShowSettings: mockSetShowSettings,
+        setIsSettingsOpen: mockSetShowSettings,
     }),
 }));
 
@@ -59,6 +59,8 @@ describe('RateLimitErrorAlert', () => {
         render(<RateLimitErrorAlert error="You have reached the daily limit of requests" />);
         
         const viewUsageButton = screen.getByText('View Usage');
+        expect(viewUsageButton).toBeInTheDocument();
+        
         fireEvent.click(viewUsageButton);
         
         expect(mockSetSettingTab).toHaveBeenCalledWith('usage');

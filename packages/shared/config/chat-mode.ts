@@ -1,4 +1,4 @@
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscription';
 
@@ -353,7 +353,7 @@ export const ChatModeConfig: Record<
  */
 export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
-        logger.warn('getAvailableChatModes called without a valid context.');
+        log.warn('getAvailableChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !config.requiredFeature && !config.requiredPlan && !config.isAuthRequired;
@@ -385,7 +385,7 @@ export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] 
  */
 export function getRestrictedChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
-        logger.warn('getRestrictedChatModes called without a valid context.');
+        log.warn('getRestrictedChatModes called without a valid context.');
         return Object.values(ChatMode).filter(mode => {
             const config = ChatModeConfig[mode];
             return !!(config.requiredFeature || config.requiredPlan || config.isAuthRequired);

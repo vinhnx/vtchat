@@ -5,7 +5,7 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useState } from 'react';
 import { useVtPlusAccess } from '../hooks/use-subscription-access';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 const themes = [
     {
@@ -42,7 +42,7 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
         (themeKey: 'light' | 'dark' | 'system') => {
             // Block dark mode and system theme for non-VT+ users
             if ((themeKey === 'dark' || themeKey === 'system') && !hasThemeAccess) {
-                logger.warn('Dark theme access blocked: VT+ subscription required');
+                log.warn('Dark theme access blocked: VT+ subscription required');
                 // Fallback to light theme for non-VT+ users
                 setTheme('light');
                 onChange?.('light');

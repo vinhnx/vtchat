@@ -33,15 +33,15 @@ We use [Pino](https://github.com/pinojs/pino) as our structured logging solution
 ### Basic Logging
 
 ```typescript
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Basic log levels
-logger.info('Application started');
-logger.warn('Memory usage high');
-logger.error({ error: err }, 'Database connection failed');
+log.info('Application started');
+log.warn('Memory usage high');
+log.error({ error: err }, 'Database connection failed');
 
 // Structured logging with context
-logger.info({
+log.info({
   userId: '12345',
   action: 'login',
   ip: '192.168.1.1' // Will be redacted automatically
@@ -83,7 +83,7 @@ export default withLogging(handler);
 ### Child Loggers
 
 ```typescript
-import { createChildLogger } from '@repo/shared/logger';
+import { log, createChildLogger } from '@repo/shared/logger';
 
 // Create child logger with persistent context
 const userLogger = createChildLogger({ 
@@ -127,7 +127,7 @@ The following fields are automatically redacted:
 ### Nested Object Redaction
 
 ```typescript
-logger.info({
+log.info({
   user: {
     email: 'user@example.com', // Will be redacted
     name: 'John Doe' // Will be visible
@@ -176,20 +176,20 @@ logger.info({
 
 ```typescript
 // ❌ Avoid string interpolation
-logger.info(`User ${userId} performed ${action}`);
+log.info(`User ${userId} performed ${action}`);
 
 // ✅ Use structured objects
-logger.info({ userId, action }, 'User action performed');
+log.info({ userId, action }, 'User action performed');
 ```
 
 ### 2. Include Context
 
 ```typescript
 // ❌ Minimal context
-logger.error('Database error');
+log.error('Database error');
 
 // ✅ Rich context
-logger.error({
+log.error({
   error: err.message,
   stack: err.stack,
   query: 'SELECT * FROM users',
@@ -202,8 +202,8 @@ logger.error({
 
 ```typescript
 // ❌ Repeating context
-logger.info({ requestId: 'req-123' }, 'Starting process');
-logger.info({ requestId: 'req-123' }, 'Process completed');
+log.info({ requestId: 'req-123' }, 'Starting process');
+log.info({ requestId: 'req-123' }, 'Process completed');
 
 // ✅ Child logger with persistent context
 const requestLogger = createChildLogger({ requestId: 'req-123' });
@@ -218,7 +218,7 @@ requestLogger.info('Process completed');
 const start = Date.now();
 await operation();
 const duration = Date.now() - start;
-logger.info({ duration }, 'Operation completed');
+log.info({ duration }, 'Operation completed');
 
 // ✅ Built-in timer
 const timer = createTimer('operation');
@@ -230,10 +230,10 @@ timer.end({ operationDetails: 'additional context' });
 
 ```typescript
 // ❌ Losing error context
-logger.error('Something went wrong');
+log.error('Something went wrong');
 
 // ✅ Include full error context
-logger.error({
+log.error({
   err: error, // Uses Pino's error serializer
   context: 'user-registration',
   userId: '12345'

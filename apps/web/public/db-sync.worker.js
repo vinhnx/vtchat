@@ -8,6 +8,14 @@ const broadcastChannel = new BroadcastChannel('chat-sync-channel');
 let isInitialized = false;
 let dbInstance = null;
 
+// Simple logger for SharedWorker context (can't use pino directly in web workers)
+const workerLog = {
+    info: (message, data) => console.log(`[SharedWorker] ${message}`, data || ''),
+    error: (message, data) => console.error(`[SharedWorker] ${message}`, data || ''),
+    warn: (message, data) => console.warn(`[SharedWorker] ${message}`, data || ''),
+    debug: (message, data) => console.debug(`[SharedWorker] ${message}`, data || '')
+};
+
 // Initialize IndexedDB in the worker context
 async function initializeDatabase() {
     if (isInitialized && dbInstance) return dbInstance;
@@ -17,14 +25,14 @@ async function initializeDatabase() {
             const request = indexedDB.open('ThreadDatabase', 1);
 
             request.onerror = () => {
-                console.error('[SharedWorker] Database connection failed:', request.error);
+                workerLog.error('Database connection failed', request.error);
                 reject(request.error);
             };
 
             request.onsuccess = () => {
                 dbInstance = request.result;
                 isInitialized = true;
-                console.log('[SharedWorker] Database initialized successfully');
+                workerLog.info('Database initialized successfully');
                 resolve(dbInstance);
             };
 
@@ -48,7 +56,7 @@ async function initializeDatabase() {
             };
         });
     } catch (error) {
-        console.error('[SharedWorker] Failed to initialize database:', error);
+        workerLog.error('Failed to initialize database', error);
         throw error;
     }
 }
@@ -107,7 +115,7 @@ async function performDatabaseOperation(operation, data) {
             transaction.onerror = () => reject(transaction.error);
         });
     } catch (error) {
-        console.error('[SharedWorker] Database operation failed:', error);
+        workerLog.error('Database operation failed', error);
         throw error;
     }
 }
@@ -139,7 +147,7 @@ broadcastChannel.onmessage = event => {
         try {
             port.postMessage(event.data);
         } catch (error) {
-            console.error('[SharedWorker] Failed to post message to port:', error);
+            workerLog.error('Failed to post message to port', error);
             connections.delete(port); // Remove failed connections
         }
     }
@@ -150,7 +158,7 @@ async function handleMessage(message, sourcePort) {
     try {
         // Log the action for debugging
         if (message.type) {
-            console.log(`[SharedWorker] Received ${message.type} event`);
+            workerLog.info(`Received ${message.type} event`);
         }
 
         // Handle database operations directly in the worker
@@ -179,13 +187,13 @@ async function handleMessage(message, sourcePort) {
                         try {
                             port.postMessage(broadcastMessage);
                         } catch (error) {
-                            console.error('[SharedWorker] Failed to broadcast to port:', error);
+                            workerLog.error('Failed to broadcast to port', error);
                             connections.delete(port);
                         }
                     }
                 }
             } catch (error) {
-                console.error('[SharedWorker] Database operation failed:', error);
+                workerLog.error('Database operation failed', error);
                 sourcePort.postMessage({
                     type: 'db-operation-result',
                     requestId: message.requestId,
@@ -209,7 +217,7 @@ async function handleMessage(message, sourcePort) {
                 try {
                     port.postMessage(broadcastMessage);
                 } catch (error) {
-                    console.error('[SharedWorker] Failed to broadcast message:', error);
+                    workerLog.error('Failed to broadcast message', error);
                     connections.delete(port); // Remove failed connections
                 }
             }
@@ -219,10 +227,10 @@ async function handleMessage(message, sourcePort) {
         try {
             broadcastChannel.postMessage(broadcastMessage);
         } catch (error) {
-            console.error('[SharedWorker] Failed to broadcast via BroadcastChannel:', error);
+            workerLog.error('Failed to broadcast via BroadcastChannel', error);
         }
     } catch (error) {
-        console.error('[SharedWorker] Error handling message:', error);
+        workerLog.error('Error handling message', error);
 
         // Send error back to source
         try {
@@ -232,7 +240,7 @@ async function handleMessage(message, sourcePort) {
                 originalMessage: message,
             });
         } catch (postError) {
-            console.error('[SharedWorker] Failed to send error message:', postError);
+            workerLog.error('Failed to send error message', postError);
         }
     }
 }

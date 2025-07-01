@@ -99,7 +99,7 @@ export const auth = betterAuth({
             const { response } = context;
             if (response.status === 429) {
                 const retryAfter = response.headers.get('X-Retry-After');
-                logger.warn({ retryAfterSeconds: retryAfter }, 'Rate limit exceeded');
+                log.warn({ retryAfterSeconds: retryAfter }, 'Rate limit exceeded');
             }
         },
     },

@@ -14,7 +14,7 @@ import {
 import { ExternalLink, Key } from 'lucide-react';
 import { useState } from 'react';
 import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;
@@ -146,7 +146,7 @@ export const ApiKeyPromptModal = ({
             onClose();
             setApiKeyValue('');
         } catch (error) {
-            logger.error('Error saving API key:', { data: error });
+            log.error('Error saving API key:', { data: error });
         } finally {
             setIsLoading(false);
         }

@@ -11,7 +11,7 @@ import {
 } from '@repo/shared/config/embedding-models';
 import { type ApiKeys } from '@repo/common/store';
 import { maskPII } from '../utils/content-security';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
@@ -60,12 +60,12 @@ async function generateEmbeddingWithProvider(
     const result = await geminiModel.embedContent(input);
     const embedding = result.embedding.values || [];
     
-    logger.info('🔍 Embedding Debug:', {
+    log.info({
         model: modelConfig.id,
         expectedDimensions: modelConfig.dimensions,
         actualDimensions: embedding.length,
         inputLength: input.length
-    });
+    }, '🔍 Embedding Debug');
     
     return embedding;
 }
@@ -78,13 +78,13 @@ export const generateEmbeddings = async (
     const chunks = generateChunks(value);
     const embeddingModel = getEmbeddingModel(userModel);
     
-    logger.info('🔍 RAG Debug:', {
+    log.info({
         userModel,
         resolvedModel: embeddingModel,
         isGemini: isGeminiModel(embeddingModel),
         hasGeminiKey: !!apiKeys?.GEMINI_API_KEY,
         availableKeys: Object.keys(apiKeys || {})
-    });
+    }, '🔍 RAG Debug');
 
     // For now, only support Gemini models - simplify logic
     const geminiApiKey = apiKeys?.GEMINI_API_KEY;
@@ -113,7 +113,7 @@ Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
         } catch (error) {
-            logger.error('Error generating embedding for chunk:', { data: error });
+            log.error({ error }, 'Error generating embedding for chunk');
             throw error;
         }
     }

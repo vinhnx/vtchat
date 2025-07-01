@@ -1,5 +1,5 @@
 
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 /**
  * Client-side subscription utilities
  * Utilities for managing subscription state and cache on the client
@@ -20,17 +20,12 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
         });
 
         if (response.ok) {
-            console.log(
-                '[Subscription Utils] Successfully invalidated server-side cache after payment'
-            );
+            log.info('[Subscription Utils] Successfully invalidated server-side cache after payment');
         } else {
-            console.warn(
-                '[Subscription Utils] Failed to invalidate server-side cache:',
-                response.statusText
-            );
+            log.warn({ statusText: response.statusText }, '[Subscription Utils] Failed to invalidate server-side cache');
         }
     } catch (error) {
-        logger.error('[Subscription Utils] Error invalidating server-side cache:', { data: error });
+        log.error({ error }, '[Subscription Utils] Error invalidating server-side cache');
     }
 
     // Also clear localStorage cache
@@ -40,7 +35,7 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
         );
         cacheKeys.forEach(key => {
             localStorage.removeItem(key);
-            console.log(`[Subscription Utils] Cleared client cache: ${key}`);
+            log.info({ key }, '[Subscription Utils] Cleared client cache');
         });
     }
 }
@@ -51,7 +46,7 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
  */
 export async function clearSubscriptionDataOnLogout(): Promise<void> {
     try {
-        logger.info('[Subscription Utils] Clearing subscription data on logout...');
+        log.info('[Subscription Utils] Clearing subscription data on logout...');
 
         // Clear client-side localStorage cache
         if (typeof window !== 'undefined') {
@@ -67,9 +62,7 @@ export async function clearSubscriptionDataOnLogout(): Promise<void> {
                 localStorage.removeItem(key);
             });
 
-            console.log(
-                `[Subscription Utils] Cleared ${subscriptionKeys.length} subscription cache entries`
-            );
+            log.info({ count: subscriptionKeys.length }, '[Subscription Utils] Cleared subscription cache entries');
         }
 
         // Invalidate server-side cache (best effort)
@@ -81,16 +74,13 @@ export async function clearSubscriptionDataOnLogout(): Promise<void> {
                 },
                 body: JSON.stringify({}),
             });
-            logger.info('[Subscription Utils] Successfully invalidated server-side cache');
+            log.info('[Subscription Utils] Successfully invalidated server-side cache');
         } catch (serverError) {
-            console.warn(
-                '[Subscription Utils] Failed to invalidate server-side cache:',
-                serverError
-            );
+            log.warn({ error: serverError }, '[Subscription Utils] Failed to invalidate server-side cache');
             // Non-critical for logout flow
         }
     } catch (error) {
-        logger.error('[Subscription Utils] Error clearing subscription data:', { data: error });
+        log.error({ error }, '[Subscription Utils] Error clearing subscription data');
         throw error; // Re-throw so logout can handle gracefully
     }
 }
@@ -121,14 +111,14 @@ export function setupPaymentReturnDetection(onPaymentReturn: () => void): () => 
 
     // Check immediately if already returning from payment
     if (isReturningFromPayment()) {
-        logger.info('[Subscription Utils] Detected return from payment on page load');
+        log.info('[Subscription Utils] Detected return from payment on page load');
         onPaymentReturn();
     }
 
     // Listen for page visibility changes (user switching back to tab)
     const handleVisibilityChange = () => {
         if (document.visibilityState === 'visible' && isReturningFromPayment()) {
-            logger.info('[Subscription Utils] Detected return from payment on tab focus');
+            log.info('[Subscription Utils] Detected return from payment on tab focus');
             onPaymentReturn();
         }
     };
@@ -136,7 +126,7 @@ export function setupPaymentReturnDetection(onPaymentReturn: () => void): () => 
     // Listen for popstate events (back button)
     const handlePopState = () => {
         if (isReturningFromPayment()) {
-            logger.info('[Subscription Utils] Detected return from payment on navigation');
+            log.info('[Subscription Utils] Detected return from payment on navigation');
             onPaymentReturn();
         }
     };

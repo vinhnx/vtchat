@@ -16,7 +16,7 @@ export class PerformanceMonitor {
     startTimer(operation: string): void {
         this.timers.set(operation, performance.now());
         if (process.env.NODE_ENV === 'development') {
-            console.log(`[Performance] Started: ${operation}`);
+            log.info({ operation }, 'Performance timer started');
         }
     }
 
@@ -24,7 +24,7 @@ export class PerformanceMonitor {
         const startTime = this.timers.get(operation);
         if (!startTime) {
             if (process.env.NODE_ENV === 'development') {
-                console.warn(`[Performance] No start time found for: ${operation}`);
+                log.warn({ operation }, 'Performance timer not found for operation');
             }
             return 0;
         }
@@ -33,13 +33,14 @@ export class PerformanceMonitor {
         this.timers.delete(operation);
 
         if (process.env.NODE_ENV === 'development') {
-            console.log(`[Performance] Completed: ${operation} (${duration.toFixed(2)}ms)`);
+            log.info({ operation, duration: duration.toFixed(2) }, 'Performance timer completed');
         }
 
         // Log slow operations
         if (duration > 2000 && process.env.NODE_ENV === 'development') {
-            console.warn(
-                `[Performance] SLOW OPERATION: ${operation} took ${duration.toFixed(2)}ms`
+            log.warn(
+                { operation, duration: duration.toFixed(2) },
+                'Slow operation detected'
             );
         }
 
@@ -55,7 +56,7 @@ export class PerformanceMonitor {
         } catch (error) {
             this.endTimer(operation);
             if (process.env.NODE_ENV === 'development') {
-                console.error(`[Performance] Failed: ${operation}`, error);
+                log.error({ operation, error: error instanceof Error ? error.message : 'Unknown error' }, 'Performance timer failed');
             }
             throw error;
         }
@@ -64,7 +65,7 @@ export class PerformanceMonitor {
 
 export const perfMonitor = PerformanceMonitor.getInstance();
 
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Auth-specific performance monitoring
 export const monitorAuth = {

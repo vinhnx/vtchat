@@ -22,7 +22,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 import { Drawer } from 'vaul';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export type TRootLayout = {
     children: React.ReactNode;
@@ -300,7 +300,7 @@ export const SideDrawer = () => {
             }
             return String(sideDrawer.title || '');
         } catch (error) {
-            logger.warn('Error rendering sideDrawer title:', { data: error });
+            log.warn({ data: error }, 'Error rendering sideDrawer title');
             return 'Error loading title';
         }
     };
@@ -325,10 +325,10 @@ export const SideDrawer = () => {
                 return content;
             }
             // For other object types, don't render them directly
-            logger.warn('Invalid content type for sideDrawer:', { data: typeof content, content });
+            log.warn({ data: typeof content, content }, 'Invalid content type for sideDrawer');
             return null;
         } catch (error) {
-            logger.warn('Error rendering sideDrawer content:', { data: error });
+            log.warn({ data: error }, 'Error rendering sideDrawer content');
             return <div>Error loading content</div>;
         }
     };

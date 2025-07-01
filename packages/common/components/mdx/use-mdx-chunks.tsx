@@ -1,5 +1,5 @@
 import { createProcessor } from '@mdx-js/mdx';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 //
 // Types
@@ -157,7 +157,7 @@ export const useMdxChunker = () => {
 
             return { chunks };
         } catch (error) {
-            logger.error('Failed to parse and chunk MDX:', { data: error });
+            log.error({ data: error }, 'Failed to parse and chunk MDX');
             return { chunks: [] };
         }
     };

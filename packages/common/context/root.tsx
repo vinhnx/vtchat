@@ -3,7 +3,7 @@ import { initHotjar } from '@repo/shared/utils';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useThreadAuth } from '../hooks';
 import { initializeStorageCleanup } from '../utils/storage-cleanup';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -33,14 +33,14 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
             try {
                 initHotjar();
             } catch (error) {
-                logger.warn('Failed to initialize Hotjar:', { data: error });
+                log.warn({ data: error }, 'Failed to initialize Hotjar');
             }
 
             try {
                 // Initialize storage cleanup to handle corrupted localStorage data
                 initializeStorageCleanup();
             } catch (error) {
-                logger.warn('Failed to initialize storage cleanup:', { data: error });
+                log.warn({ data: error }, 'Failed to initialize storage cleanup');
             }
         }
     }, []);

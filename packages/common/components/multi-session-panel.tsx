@@ -17,7 +17,7 @@ import {
 import { AlertCircle, CheckCircle, Monitor, Smartphone, Tablet, Trash2, Wifi } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 interface DeviceSession {
     sessionToken: string;
@@ -79,7 +79,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                 !authClient.multiSession ||
                 typeof authClient.multiSession.listDeviceSessions !== 'function'
             ) {
-                logger.warn('MultiSession plugin not available or not properly configured');
+                log.warn('MultiSession plugin not available or not properly configured');
 
                 // Fallback: create a current session entry based on the current session data
                 if (session) {
@@ -107,7 +107,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             if (Array.isArray(response)) {
                 setSessions(response);
             } else {
-                logger.warn('listDeviceSessions returned non-array:', { data: response });
+                log.warn('listDeviceSessions returned non-array:', { data: response });
                 // Fallback for current session if multi-session API doesn't work
                 if (session) {
                     const currentSession: DeviceSession = {
@@ -126,7 +126,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                 }
             }
         } catch (err) {
-            logger.error('Fetch sessions error:', { data: err });
+            log.error('Fetch sessions error:', { data: err });
 
             // Fallback: show current session even on error
             if (session) {
@@ -170,7 +170,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             await fetchSessions();
         } catch (err) {
             setError('Failed to set active session');
-            logger.error('Set active session error:', { data: err });
+            log.error('Set active session error:', { data: err });
         } finally {
             setActionLoading(null);
         }
@@ -192,7 +192,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             await fetchSessions();
         } catch (err) {
             setError('Failed to revoke session');
-            logger.error('Revoke session error:', { data: err });
+            log.error('Revoke session error:', { data: err });
         } finally {
             setActionLoading(null);
         }

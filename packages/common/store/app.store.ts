@@ -11,7 +11,7 @@ import {
 } from '@repo/shared/utils/plus-defaults';
 import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
 import { ModelEnum } from '@repo/ai/models';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export const SETTING_TABS = {
     API_KEYS: 'api-keys',
@@ -192,7 +192,7 @@ export const useAppStore = create<State & Actions>()(
                             })
                         );
                     } catch (error) {
-                        logger.warn('Failed to save sidebar state:', { data: error });
+                        log.warn('Failed to save sidebar state:', { data: error });
                     }
                 },
 
@@ -209,7 +209,7 @@ export const useAppStore = create<State & Actions>()(
                             })
                         );
                     } catch (error) {
-                        logger.warn('Failed to save sidebar state:', { data: error });
+                        log.warn('Failed to save sidebar state:', { data: error });
                     }
                 },
 

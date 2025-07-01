@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 type CopyStatus = 'idle' | 'copied' | 'error';
 
@@ -28,7 +28,7 @@ export const useCopyText = () => {
 
             return true;
         } catch (err) {
-            logger.error('Copy to clipboard failed:', { data: err });
+            log.error('Copy to clipboard failed:', { data: err });
             setStatus('error');
             setTimeout(() => setStatus('idle'), 3000);
             return false;
@@ -67,7 +67,7 @@ export const useCopyText = () => {
                 throw new Error('Copy command failed');
             }
         } catch (err) {
-            logger.error('Copy markdown failed:', { data: err });
+            log.error('Copy markdown failed:', { data: err });
             setMarkdownCopyStatus('error');
             setTimeout(() => setMarkdownCopyStatus('idle'), 3000);
         }

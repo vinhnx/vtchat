@@ -26,7 +26,7 @@ import { useChat } from 'ai/react';
 import { Database, Eye, Send, Settings, Shield, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 interface KnowledgeItem {
     id: string;
@@ -84,23 +84,23 @@ export function RAGChatbot() {
             profile,
         },
         onError: error => {
-            logger.error('RAG Chat Error:', { data: error });
-            logger.info('Error message:', { data: error.message }); // Debug log
+            log.error({ error }, 'RAG Chat Error');
+            log.info({ message: error.message }, 'Error message'); // Debug log
             
             // Show user-friendly error message with sonner
             if (error.message.includes('API key is required')) {
-                logger.info('Showing API key error toast'); // Debug
+                log.info({}, 'Showing API key error toast'); // Debug
                 toast.error('API Key Required', {
                     description:
                         'Please configure your API keys in Settings to use the Knowledge Assistant.',
                 });
             } else if (error.message.includes('Rate limit')) {
-                logger.info('Showing rate limit error toast'); // Debug
+                log.info({}, 'Showing rate limit error toast'); // Debug
                 toast.error('Rate Limit Exceeded', {
                     description: 'Too many requests. Please try again later.',
                 });
             } else {
-                logger.info('Showing general error toast'); // Debug
+                log.info({}, 'Showing general error toast'); // Debug
                 toast.error('Chat Error', {
                     description: 'Something went wrong. Please try again.',
                 });
@@ -119,17 +119,16 @@ export function RAGChatbot() {
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
-                logger.info('📚 Knowledge Base fetched:', { total: resources.length, data });
+                log.info({ total: resources.length, data }, '📚 Knowledge Base fetched');
                 setKnowledgeBase(resources);
             } else {
-                console.error(
-                    'Failed to fetch knowledge base:',
-                    response.status,
-                    response.statusText
+                log.error(
+                    { status: response.status, statusText: response.statusText },
+                    'Failed to fetch knowledge base'
                 );
             }
         } catch (error) {
-            logger.error('Error fetching knowledge base:', { data: error });
+            log.error({ error }, 'Error fetching knowledge base');
         }
     };
 
@@ -147,7 +146,7 @@ export function RAGChatbot() {
                 reload();
             }
         } catch (error) {
-            logger.error('Error clearing knowledge base:', { data: error });
+            log.error({ error }, 'Error clearing knowledge base');
         } finally {
             setIsClearing(false);
         }
@@ -165,7 +164,7 @@ export function RAGChatbot() {
                 reload();
             }
         } catch (error) {
-            logger.error('Error deleting knowledge item:', { data: error });
+            log.error({ error }, 'Error deleting knowledge item');
         } finally {
             setIsDeleting(false);
         }

@@ -2,7 +2,7 @@
 
 import { InlineLoader } from '@repo/common/components';
 import { signIn } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { Alert, AlertDescription, cn, PremiumButton, TypographyH1 } from '@repo/ui';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -52,7 +52,7 @@ function LoginFormContent({
         } catch (err) {
             setLoading(false);
             setError('An unexpected error occurred');
-            logger.error('Login error:', { data: err });
+            log.error({ error: err }, 'Login error');
         }
     };
 

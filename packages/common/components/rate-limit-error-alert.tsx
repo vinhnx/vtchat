@@ -23,7 +23,8 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     const isRateLimitError =
         error.toLowerCase().includes('rate limit') ||
         error.toLowerCase().includes('daily limit') ||
-        error.toLowerCase().includes('per minute');
+        error.toLowerCase().includes('per minute') ||
+        error.toLowerCase().includes('minute');
 
     if (!isRateLimitError) {
         return (
@@ -55,7 +56,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                             </Button>
                             <Button
                                 className="group gap-2"
-                                onClick={() => (window.location.href = '/plus')}
+                                onClick={handleUpgrade}
                             >
                                 <Sparkles className="h-4 w-4" />
                                 Upgrade to VT+

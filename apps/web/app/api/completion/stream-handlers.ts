@@ -1,6 +1,6 @@
 import { runWorkflow } from '@repo/ai/workflow';
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { ChatMode } from '@repo/shared/config';
 import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import { Geo } from '@vercel/functions';
@@ -59,10 +59,11 @@ export function sendMessage(
         controller.enqueue(new Uint8Array(0));
     } catch (error) {
         // This is critical - we should log errors in message serialization
-        logger.error('Error serializing message payload', error, {
+        log.error({ 
+            error, 
             payloadType: payload.type,
-            threadId: payload.threadId,
-        });
+            threadId: payload.threadId 
+        }, 'Error serializing message payload');
 
         const errorMessage = `event: done\ndata: ${JSON.stringify({
             type: 'done',
@@ -136,7 +137,7 @@ export async function executeStream({
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-            logger.debug('Starting workflow', { threadId: data.threadId });
+            log.debug('Starting workflow', { threadId: data.threadId });
         }
 
         await workflow.start('router', {
@@ -144,7 +145,7 @@ export async function executeStream({
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-            logger.debug('Workflow completed', { threadId: data.threadId });
+            log.debug('Workflow completed', { threadId: data.threadId });
         }
 
         sendMessage(controller, encoder, {
@@ -160,7 +161,7 @@ export async function executeStream({
         if (abortController.signal.aborted) {
             // Aborts are normal user actions, not errors
             if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-                logger.debug('Workflow aborted', { threadId: data.threadId });
+                log.debug('Workflow aborted', { threadId: data.threadId });
             }
 
             sendMessage(controller, encoder, {
@@ -172,11 +173,12 @@ export async function executeStream({
             });
         } else {
             // Actual errors during workflow execution are important
-            logger.error('Workflow execution error', error, {
+            log.error({ 
+                error,
                 userId,
                 threadId: data.threadId,
                 mode: data.mode,
-            });
+            }, 'Workflow execution error');
 
             sendMessage(controller, encoder, {
                 type: 'done',

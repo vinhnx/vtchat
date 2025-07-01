@@ -3,7 +3,7 @@
 import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks';
 import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT } from '@repo/shared/constants';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Button,
@@ -40,7 +40,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
         try {
             await openCustomerPortal();
         } catch (error) {
-            logger.error('Failed to open subscription portal:', { data: error });
+            log.error({ data: error }, 'Failed to open subscription portal');
         }
     };
 

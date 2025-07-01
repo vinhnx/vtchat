@@ -8,7 +8,7 @@
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from './env';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Types for Creem.io integration
 export enum PriceType {
@@ -101,7 +101,7 @@ export class CreemService {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
-            logger.info('[CreemService] Creating checkout session with:', {
+            log.info('[CreemService] Creating checkout session with:', {
                 productId: request.productId,
                 quantity: request.quantity || 1,
                 email: request.customerEmail,
@@ -124,7 +124,7 @@ export class CreemService {
                     : `${normalizedBaseUrl}${request.successUrl}`
                 : `${normalizedBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`; // Used PlanSlug
 
-            logger.info('[CreemService] Using success URL:', { data: successUrl });
+            log.info('[CreemService] Using success URL:', { data: successUrl });
 
             const result = await this.client.createCheckout({
                 xApiKey: this.API_KEY,
@@ -146,7 +146,7 @@ export class CreemService {
                 },
             });
 
-            logger.info('[CreemService] Checkout session created successfully:', {
+            log.info('[CreemService] Checkout session created successfully:', {
                 checkoutId: result.id,
                 checkoutUrl: result.checkoutUrl,
             });
@@ -162,7 +162,7 @@ export class CreemService {
 
             throw new Error('Invalid checkout response - missing checkout URL');
         } catch (error: any) {
-            logger.error('[CreemService] Checkout creation failed:', { data: error });
+            log.error('[CreemService] Checkout creation failed:', { data: error });
             throw new CheckoutError(
                 `Failed to create checkout session: ${error.message || 'Unknown error'}`
             );
@@ -195,13 +195,13 @@ export class CreemService {
                         .limit(1);
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
-                        logger.info(
+                        log.info(
                             { userId },
                             '[CreemService] Found customer ID for user'
                         );
                     }
                 } catch (dbError) {
-                    logger.info('[CreemService] Database lookup failed, proceeding with fallback');
+                    log.info('[CreemService] Database lookup failed, proceeding with fallback');
                 }
             }
 
@@ -224,7 +224,7 @@ export class CreemService {
                             (result as any).link;
 
                         if (portalUrl) {
-                            logger.info(
+                            log.info(
                                 '[CreemService] Generated customer portal URL successfully'
                             );
                             return {
@@ -234,7 +234,7 @@ export class CreemService {
                         }
                     }
                 } catch (sdkError) {
-                    logger.error(
+                    log.error(
                         { error: sdkError },
                         '[CreemService] Creem SDK generateCustomerLinks failed'
                     );
@@ -260,7 +260,7 @@ export class CreemService {
                 success: true,
             };
         } catch (error) {
-            logger.error('Creem portal error:', { data: error });
+            log.error('Creem portal error:', { data: error });
             // Return fallback URL instead of throwing
             const baseUrl = this.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
@@ -276,7 +276,7 @@ export class CreemService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        logger.info('[CreemService] Creating VT+ subscription checkout');
+        log.info('[CreemService] Creating VT+ subscription checkout');
 
         return this.createCheckout({
             productId: this.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
 import { DocumentEventData, RagEventData } from '@repo/shared/types/analytics';
 
@@ -57,13 +57,13 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.DOCUMENT_UPLOADED, eventData);
 
-            logger.info({ 
+            log.info({ 
                 event: ANALYTICS_EVENTS.DOCUMENT_UPLOADED,
                 fileType: params.fileType,
                 fileSize: params.fileSize
             }, 'Document upload tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track document upload');
+            log.error({ error }, 'Failed to track document upload');
         }
     };
 
@@ -99,14 +99,14 @@ export function useVemetricRagTracking() {
                 await trackEvent(ANALYTICS_EVENTS.DOCUMENT_PROCESSING_FAILED, eventData);
             }
 
-            logger.info({ 
+            log.info({ 
                 event: params.success ? ANALYTICS_EVENTS.DOCUMENT_PROCESSED : ANALYTICS_EVENTS.DOCUMENT_PROCESSING_FAILED,
                 fileType: params.fileType,
                 processingTime: params.processingTime,
                 success: params.success
             }, 'Document processing tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track document processing');
+            log.error({ error }, 'Failed to track document processing');
         }
     };
 
@@ -135,13 +135,13 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RAG_QUERY_EXECUTED, eventData);
 
-            logger.debug({ 
+            log.debug({ 
                 queryType: params.queryType,
                 retrievalTime: params.retrievalTime,
                 documentCount: params.documentCount
             }, 'RAG query tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track RAG query');
+            log.error({ error }, 'Failed to track RAG query');
         }
     };
 
@@ -168,7 +168,7 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RAG_CONTEXT_RETRIEVED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track context retrieval');
+            log.error({ error }, 'Failed to track context retrieval');
         }
     };
 
@@ -198,7 +198,7 @@ export function useVemetricRagTracking() {
             // Using a generic event for now, could add specific embedding event
             await trackEvent(ANALYTICS_EVENTS.DOCUMENT_PROCESSED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track document embedding');
+            log.error({ error }, 'Failed to track document embedding');
         }
     };
 
@@ -228,7 +228,7 @@ export function useVemetricRagTracking() {
                 action: params.operation,
             });
         } catch (error) {
-            logger.error({ error }, 'Failed to track knowledge base update');
+            log.error({ error }, 'Failed to track knowledge base update');
         }
     };
 
@@ -256,7 +256,7 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SEARCH_PERFORMED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track similarity search');
+            log.error({ error }, 'Failed to track similarity search');
         }
     };
 

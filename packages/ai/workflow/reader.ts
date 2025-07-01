@@ -1,6 +1,6 @@
 import { parse } from 'node-html-parser';
 import TurndownService from 'turndown';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 const turndownService = new TurndownService();
 
@@ -65,12 +65,12 @@ const readURL = async (url: string): Promise<TReaderResult> => {
                     markdown: markdown,
                 };
             } else {
-                console.log(`Content too short (${markdown.length} chars). Falling back to Jina.`);
+                log.info({ contentLength: markdown.length }, 'Content too short, falling back to Jina');
             }
         }
         return { success: false };
     } catch (error) {
-        logger.error('Error in readURL:', { data: error });
+        log.error({ error }, 'Error in readURL');
         return { success: false };
     }
 };
@@ -110,7 +110,7 @@ export const readWebPagesWithTimeout = async (
     try {
         const readPromises = urls.map(url => {
             return readURL(url).catch(error => {
-                console.error(`Error reading ${url}:`, error);
+                log.error({ url, error }, `Error reading ${url}`);
                 return { success: false };
             });
         });
@@ -126,9 +126,9 @@ export const readWebPagesWithTimeout = async (
         });
     } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
-            logger.info('Reading operation timed out, returning partial results');
+            log.info('Reading operation timed out, returning partial results');
         } else {
-            logger.error('Error in readWebPagesWithTimeout:', { data: error });
+            log.error({ error }, 'Error in readWebPagesWithTimeout');
         }
         return [];
     } finally {

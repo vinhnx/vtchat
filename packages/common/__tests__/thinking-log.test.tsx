@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ThinkingLog } from '../components/thinking-log';
 import { ThreadItem } from '@repo/shared/types';
@@ -48,11 +48,11 @@ describe('ThinkingLog', () => {
 
         render(<ThinkingLog threadItem={threadItem} />);
 
-        expect(screen.getByText('AI Reasoning Process')).toBeInTheDocument();
+        expect(screen.getByText(/Thinking Steps/)).toBeInTheDocument();
         expect(screen.getByText('Show thoughts')).toBeInTheDocument();
     });
 
-    it('should expand and show reasoning content when clicked', () => {
+    it('should expand and show reasoning content when clicked', async () => {
         const threadItem = createThreadItem({
             reasoning: '# Step-by-step reasoning\n\n1. First, I analyze...\n2. Then, I consider...',
         });
@@ -62,11 +62,13 @@ describe('ThinkingLog', () => {
         const button = screen.getByRole('button');
         fireEvent.click(button);
 
-        expect(screen.getByText('Hide thoughts')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('Hide thoughts')).toBeInTheDocument();
+        });
         expect(screen.getByTestId('markdown-content')).toBeInTheDocument();
     });
 
-    it('should render reasoning details from AI SDK format', () => {
+    it('should render reasoning details from AI SDK format', async () => {
         const threadItem = createThreadItem({
             reasoningDetails: [
                 {
@@ -86,8 +88,10 @@ describe('ThinkingLog', () => {
         const button = screen.getByRole('button');
         fireEvent.click(button);
 
-        expect(screen.getByTestId('markdown-content')).toBeInTheDocument();
-        expect(screen.getByText('🔒 Redacted:')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByTestId('markdown-content')).toBeInTheDocument();
+        });
+        expect(screen.getByText('Redacted:')).toBeInTheDocument();
     });
 
     it('should render reasoning parts from message parts', () => {

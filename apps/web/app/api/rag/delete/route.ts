@@ -7,7 +7,7 @@ import { db } from '@/lib/database';
 import { resources, embeddings } from '@/lib/database/schema';
 import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -44,7 +44,7 @@ export async function DELETE(request: NextRequest) {
         
         return NextResponse.json({ success: true, message: 'Record deleted successfully' });
     } catch (error) {
-        logger.error('Error deleting RAG record:', { data: error });
+        log.error('Error deleting RAG record:', { error });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

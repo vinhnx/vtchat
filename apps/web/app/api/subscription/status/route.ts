@@ -15,7 +15,7 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 async function fetchSubscriptionFromDB(
     userId: string
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
 
             session = await Promise.race([sessionPromise, timeoutPromise]);
         } catch (error) {
-            logger.warn('[Subscription Status API] Session check failed or timed out:', { data: error });
+            log.warn({ error }, '[Subscription Status API] Session check failed or timed out');
             // For session failures, treat as anonymous user
             session = null;
         }
@@ -120,15 +120,15 @@ export async function GET(request: NextRequest) {
         const userId = (session as any)?.user?.id || null;
         const isLoggedIn = !!userId;
 
-        logger.info(`[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'}`, { 
+        log.info({ 
             trigger: refreshTrigger 
-        });
+        }, `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'}`);
         
         // For non-logged-in users, return cached anonymous status or create it
         if (!isLoggedIn) {
             const cached = getSessionSubscriptionStatus(null, refreshTrigger, request);
             if (cached && !forceRefresh) {
-                logger.info('[Subscription Status API] Cache hit for anonymous user');
+                log.info({}, '[Subscription Status API] Cache hit for anonymous user');
                 return NextResponse.json({
                     plan: cached.plan,
                     status: cached.status,
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
             }
 
             // Use deduplication for anonymous users as well
-            logger.info('[Subscription Status API] Cache miss for anonymous user, using deduplication');
+            log.info({}, '[Subscription Status API] Cache miss for anonymous user, using deduplication');
             const cachedResult = await getOrCreateSubscriptionRequest(
                 null,
                 refreshTrigger,
@@ -150,7 +150,7 @@ export async function GET(request: NextRequest) {
                 async () => getAnonymousSubscriptionStatus()
             );
 
-            logger.info('[Subscription Status API] Created anonymous subscription status');
+            log.info({}, '[Subscription Status API] Created anonymous subscription status');
             return NextResponse.json({
                 plan: cachedResult.plan,
                 status: cachedResult.status,
@@ -166,9 +166,9 @@ export async function GET(request: NextRequest) {
         // For logged-in users, check session cache first
         const cached = getSessionSubscriptionStatus(userId, refreshTrigger, request);
         if (cached && !forceRefresh) {
-            logger.info(`[Subscription Status API] Session cache hit for user ${userId}`, { 
+            log.info({ 
                 fetchCount: cached.fetchCount 
-            });
+            }, `[Subscription Status API] Session cache hit for user ${userId}`);
             return NextResponse.json({
                 plan: cached.plan,
                 status: cached.status,
@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        logger.info(`[Subscription Status API] Session cache miss for user ${userId}, using deduplication for DB fetch`, { 
+        log.info(`[Subscription Status API] Session cache miss for user ${userId}, using deduplication for DB fetch`, { 
             trigger: refreshTrigger 
         });
 
@@ -208,7 +208,7 @@ export async function GET(request: NextRequest) {
             lastRefreshTrigger: cachedResult.lastRefreshTrigger,
         });
     } catch (error) {
-        logger.error('[Subscription Status API] Error:', { data: error });
+        log.error('[Subscription Status API] Error:', { error });
         return NextResponse.json(
             {
                 error: 'Internal server error',

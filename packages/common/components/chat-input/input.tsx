@@ -42,7 +42,7 @@ import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
 import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
 
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 
 export const ChatInput = ({
@@ -194,13 +194,13 @@ export const ChatInput = ({
 
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
-        logger.info('threadItems', { data: threadItems });
+        log.info({ data: threadItems }, 'threadItems');
 
-        logger.info('🚀 Sending to handleSubmit with flags:', {
+        log.info({
             useWebSearch,
             useMathCalculator,
             useCharts,
-        });
+        }, '🚀 Sending to handleSubmit with flags');
         handleSubmit({
             formData,
             newThreadId: threadId,

@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth-server';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
             message: `Successfully uploaded ${uploadedAttachments.length} file(s)`,
         });
     } catch (error) {
-        logger.error('Upload error:', { data: error });
+        log.error({ error }, 'Upload error');
         return NextResponse.json(
             { error: 'Failed to process upload' },
             { status: 500 }

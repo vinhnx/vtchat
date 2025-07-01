@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
 import { PaymentEventData } from '@repo/shared/types/analytics';
 
@@ -53,13 +53,13 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_INITIATED, eventData);
 
-            logger.info({ 
+            log.info({ 
                 event: ANALYTICS_EVENTS.PAYMENT_INITIATED,
                 tier: params.tier,
                 amount: params.amount
             }, 'Payment initiation tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track payment initiation');
+            log.error({ error }, 'Failed to track payment initiation');
         }
     };
 
@@ -80,7 +80,7 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_METHOD_SELECTED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track payment method selection');
+            log.error({ error }, 'Failed to track payment method selection');
         }
     };
 
@@ -104,7 +104,7 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_VALIDATION_FAILED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track payment validation failure');
+            log.error({ error }, 'Failed to track payment validation failure');
         }
     };
 
@@ -133,13 +133,13 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_PROCESSING_ERROR, eventData);
 
-            logger.error({ 
+            log.error({ 
                 errorCode: params.errorCode,
                 tier: params.tier,
                 processingTime: params.processingTime
             }, 'Payment processing error tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track payment processing error');
+            log.error({ error }, 'Failed to track payment processing error');
         }
     };
 
@@ -168,14 +168,14 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUBSCRIPTION_CREATED, eventData);
 
-            logger.info({ 
+            log.info({ 
                 tier: params.tier,
                 amount: params.amount,
                 currency: params.currency,
                 processingTime: params.processingTime
             }, 'Payment success tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track payment success');
+            log.error({ error }, 'Failed to track payment success');
         }
     };
 
@@ -199,7 +199,7 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUBSCRIPTION_CANCELLED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track subscription cancellation');
+            log.error({ error }, 'Failed to track subscription cancellation');
         }
     };
 
@@ -224,7 +224,7 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PLAN_UPGRADE_COMPLETED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track trial conversion');
+            log.error({ error }, 'Failed to track trial conversion');
         }
     };
 

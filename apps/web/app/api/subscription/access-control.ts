@@ -10,7 +10,7 @@ import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { NextRequest } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * Get comprehensive subscription status for a user
@@ -24,7 +24,7 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
         );
         return await subscriptionSync.getComprehensiveSubscriptionStatus(userId);
     } catch (importError) {
-        logger.warn(
+        log.warn(
             { error: importError },
             'Could not import subscription-sync, falling back to direct database query'
         );
@@ -102,7 +102,7 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                 };
             }, 'Get user subscription status');
         } catch (dbError) {
-            logger.error('Database query failed, using fallback:', { data: dbError });
+            log.error('Database query failed, using fallback:', { data: dbError });
             // Ultimate fallback - assume free tier access
             return {
                 plan: PlanSlug.VT_BASE,
@@ -161,7 +161,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
             planSlug: subscriptionStatus.plan,
         };
     } catch (error) {
-        logger.error('Failed to check VT+ access:', { data: error });
+        log.error('Failed to check VT+ access:', { error });
         return {
             hasAccess: false,
             reason: 'Failed to verify subscription status',
@@ -238,7 +238,7 @@ export async function enforceVTPlusAccess(request: NextRequest): Promise<{
             accessResult,
         };
     } catch (error) {
-        logger.error('VT+ access enforcement failed:', { data: error });
+        log.error('VT+ access enforcement failed:', { error });
         return {
             success: false,
             response: new Response(

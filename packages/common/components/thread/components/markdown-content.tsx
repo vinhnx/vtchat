@@ -11,7 +11,7 @@ import { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
 import { serialize } from 'next-mdx-remote/serialize';
 import { memo, Suspense, useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export const markdownStyles = {
     'animate-fade-in prose prose-sm min-w-full': true,
@@ -136,7 +136,7 @@ export const MarkdownContent = memo(
                         }
                     }
                 } catch (error) {
-                    logger.error('Error processing MDX chunks:', { data: error });
+                    log.error('Error processing MDX chunks:', { data: error });
                 }
             })();
         }, [content, isCompleted]);
@@ -192,7 +192,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                     setMdx(serialized);
                 }
             } catch (error) {
-                logger.error('Error serializing MDX chunk:', { data: error });
+                log.error('Error serializing MDX chunk:', { data: error });
             }
         })();
 
