@@ -2,6 +2,17 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
+Localize -> Vietnamese, English
+
+--
+
+IMPORTANT review all console.log on vemetric inplementation with pino logging. pii important
+
+=
+
+create new ampcode account before exe: now spawn multiple subagent to completely replace console logs (error, info, warn, debug) with pino logger make sure PII and Sensitive data is not logged.
+
 --
 Launch -> good luck!
 https://chatgpt.com/c/6863a358-b270-8003-9115-1bad070e75c9
