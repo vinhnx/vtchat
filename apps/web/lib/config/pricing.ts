@@ -44,7 +44,7 @@ export const PRICING_CONFIG = {
             ],
         },
         plus: {
-            price: parseFloat('9.99'),
+            price: parseFloat('7.99'),
             currency: CURRENCIES.USD,
             interval: 'month',
             features: [

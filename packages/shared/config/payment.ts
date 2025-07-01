@@ -5,12 +5,12 @@
  * using the proper PlanSlug enum
  */
 
+import { logger } from '@repo/shared/logger';
 import { Creem } from 'creem';
 import { CREEM_API_CONFIG, CreemApiError, CreemCustomerBillingRequest } from '../constants/creem';
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from '../utils/env';
 import { VT_PLUS_PRODUCT_INFO, VTPlusFeature } from './vt-plus-features';
-import { logger } from '@repo/shared/logger';
 
 // Types for payment integration
 export interface PaymentProduct {
@@ -31,7 +31,7 @@ export interface Product {
     planSlug: PlanSlug;
     name: string;
     description: string;
-    price: number; // e.g., 9.99
+    price: number; // e.g., 7.99
     currency: string; // e.g., CURRENCIES.USD
     // interval: 'month' | 'year'; // Assuming monthly for now, can be added if tiers differ
     features: VTPlusFeature[];

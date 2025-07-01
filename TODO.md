@@ -293,7 +293,7 @@ Pricing
 
     VT Base – Free: 9 built‑in models + unlimited BYOK usage
 
-    VT Plus – $9.99/mo: Unlock all premium models, dark theme, reasoning mode, document processing, chart gen
+    VT Plus – $7.99/mo: Unlock all premium models, dark theme, reasoning mode, document processing, chart gen
 
 First Comment (Your Story & Call‑to‑Action)
 

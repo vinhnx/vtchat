@@ -3,6 +3,7 @@
 import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks';
 import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT } from '@repo/shared/constants';
+import { logger } from '@repo/shared/logger';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Button,
@@ -11,14 +12,13 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    Skeleton,
     TypographyH3,
     TypographyMuted,
-    Skeleton,
 } from '@repo/ui';
 import { PaymentRedirectLoader } from './payment-redirect-loader';
-import { UserTierBadge } from './user-tier-badge';
 import { RateLimitMeter } from './rate-limit-meter';
-import { logger } from '@repo/shared/logger';
+import { UserTierBadge } from './user-tier-badge';
 
 interface UsageCreditsSettingsProps {
     onClose?: () => void;
@@ -179,7 +179,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <div className="text-foreground text-sm font-medium">
-                                        $9.99/month • Cancel anytime
+                                        $7.99/month • Cancel anytime
                                     </div>
                                     <Button size="sm" onClick={handleUpgradeToPlus}>
                                         Upgrade Now
@@ -202,7 +202,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         VT+ Monthly Subscription
                                     </h4>
                                     <p className="text-muted-foreground text-sm">
-                                        $9.99/month • Renews automatically
+                                        $7.99/month • Renews automatically
                                     </p>
                                 </div>
                                 <Button
