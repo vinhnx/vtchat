@@ -224,6 +224,7 @@ Tech stacks:
 • Toolkit: @bunjavascript
 • Lint: oxlint
 • Payment: @creem_io
+• Analytics: @VemetricHQ
 
 3/4 Total privacy & isolation
 • Per-user ThreadDatabase_{userId} in IndexedDB
