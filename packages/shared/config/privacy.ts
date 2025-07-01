@@ -370,5 +370,5 @@ For users in the European Union, we process personal data based on:
 
 *This Privacy Policy reflects our commitment to transparent and responsible data handling. Your privacy is fundamental to our service design, and we're here to help if you have any questions or concerns.*
 
-**Last updated:** June 14, 2025
+**Last Updated:** July 1, 2025
 `;
