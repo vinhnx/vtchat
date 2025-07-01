@@ -17,14 +17,14 @@ const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
 
     // Disable Vercel Analytics auto-injection (we use Vemetric)
-    analyticsId: '',
-    
+    // Note: analyticsId is not a valid Next.js config option
+
     // Server-side optimizations - exclude workspace packages from bundling
     serverExternalPackages: ['@repo/ai', '@repo/shared', '@repo/common'],
-    
+
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true,
-    
+
     // Webpack memory optimizations
     experimental: {
         externalDir: true,
@@ -60,19 +60,19 @@ const nextConfig = {
         removeConsole:
             process.env.NODE_ENV === 'production'
                 ? {
-                       exclude: ['error', 'warn'],
-                   }
+                      exclude: ['error', 'warn'],
+                  }
                 : false,
         // Enable SWC minification
         styledComponents: true,
     },
-    
+
     // Image optimization
     images: {
         remotePatterns: [
             { hostname: 'www.google.com' },
             { hostname: 'startupfa.me' },
-            { hostname: 'magicbox.tools' }
+            { hostname: 'producthunt.com' },
         ],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -85,7 +85,9 @@ const nextConfig = {
             // Ensure undici is bundled for standalone production builds
             if (isServer && !dev) {
                 config.externals = config.externals || [];
-                const externals = Array.isArray(config.externals) ? config.externals : [config.externals];
+                const externals = Array.isArray(config.externals)
+                    ? config.externals
+                    : [config.externals];
                 config.externals = externals.filter(external => {
                     if (typeof external === 'function') {
                         return (context, request, callback) => {
@@ -202,9 +204,7 @@ const nextConfig = {
                 headers: [
                     {
                         key: 'Access-Control-Allow-Origin',
-                        value:
-                            process.env.NEXT_PUBLIC_BASE_URL ||
-                            'http://localhost:3000',
+                        value: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
                     },
                     {
                         key: 'Access-Control-Allow-Methods',
@@ -269,7 +269,7 @@ const nextConfig = {
     generateBuildId: async () => {
         return process.env.BUILD_ID || 'development';
     },
-    
+
     // Ensure server binds to all interfaces in production
     ...(process.env.NODE_ENV === 'production' && {
         experimental: {

@@ -216,6 +216,7 @@ const config: any = {
         require('@tailwindcss/typography'),
         require('tailwindcss-animate'),
         require('tailwind-scrollbar-hide'),
+        require('../ui/tailwind-scrollbar-plugin'),
     ],
 };
 

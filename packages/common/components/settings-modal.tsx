@@ -110,11 +110,11 @@ export const SettingsModal = () => {
 
     return (
         <Dialog open={isSettingsOpen} onOpenChange={() => setIsSettingsOpen(false)}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[900px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-w-[900px] md:max-h-[700px] md:min-h-[600px] md:rounded-xl md:w-auto">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] md:max-w-[1200px] md:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     ref={scrollRef}
-                    className="no-scrollbar relative max-w-full overflow-y-auto overflow-x-hidden"
+                    className="scrollbar-thin relative w-full overflow-y-auto overflow-x-hidden"
                 >
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
@@ -142,7 +142,7 @@ export const SettingsModal = () => {
                     {/* Content */}
                     <div className="flex flex-col md:flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[280px] md:border-b-0 md:border-r">
+                        <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[320px] md:border-b-0 md:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
                             <nav className="flex gap-1 overflow-x-auto p-1 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
                                 {settingMenu.map(setting => (
@@ -150,7 +150,7 @@ export const SettingsModal = () => {
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         className={cn(
-                                            'flex w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors min-h-[44px] md:w-auto md:whitespace-normal md:p-3 md:min-h-auto',
+                                            'md:min-h-auto flex min-h-[44px] w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
@@ -171,11 +171,15 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="bg-background flex-1 p-2 md:p-6"
+                            className="bg-background scrollbar-thin flex-1 overflow-y-auto p-3 md:p-8"
                             ref={panelContentRef}
-                            style={{ overflowY: 'auto', minHeight: '400px', minWidth: '300px', maxHeight: 'calc(95vh - 140px)' }}
+                            style={{
+                                minHeight: '500px',
+                                minWidth: '400px',
+                                maxHeight: 'calc(85vh - 120px)',
+                            }}
                         >
-                            <div className="w-full min-w-0 md:min-w-[600px]">
+                            <div className="w-full min-w-0 max-w-none md:min-w-[700px] lg:min-w-[800px]">
                                 {settingMenu.find(setting => setting.key === settingTab)?.component}
                             </div>
                         </div>
@@ -261,17 +265,21 @@ export const ApiKeySettings = () => {
     };
 
     return (
-        <div className="space-y-4 md:space-y-6">
+        <div className="w-full space-y-4 md:space-y-6">
             {/* Header */}
-            <div>
+            <div className="w-full">
                 <TypographyH3 className="text-base md:text-lg">API Keys</TypographyH3>
-                <TypographyMuted className="text-xs md:text-sm">Manage your AI provider API keys securely</TypographyMuted>
+                <TypographyMuted className="text-xs md:text-sm">
+                    Manage your AI provider API keys securely
+                </TypographyMuted>
             </div>
 
             {/* Security Info Section */}
             <Card>
                 <CardHeader className="pb-3 md:pb-6">
-                    <CardTitle className="text-sm font-semibold md:text-lg">Secure Local Storage</CardTitle>
+                    <CardTitle className="text-sm font-semibold md:text-lg">
+                        Secure Local Storage
+                    </CardTitle>
                     <CardDescription className="text-xs md:text-sm">
                         Your API keys are protected and never leave your device
                     </CardDescription>
@@ -301,7 +309,7 @@ export const ApiKeySettings = () => {
             {!apiKeys.GEMINI_API_KEY && (
                 <Card>
                     <CardHeader className="pb-3 md:pb-6">
-                        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 md:text-lg">
+                        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-blue-600 md:text-lg dark:text-blue-400">
                             <Info className="h-4 w-4 md:h-5 md:w-5" />
                             Free Gemini 2.5 Flash Lite Available
                         </CardTitle>
@@ -310,16 +318,20 @@ export const ApiKeySettings = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0">
-                        <div className="border-border/50 bg-blue-50 dark:bg-blue-950/20 rounded-lg border p-3 md:p-4">
+                        <div className="border-border/50 rounded-lg border bg-blue-50 p-3 md:p-4 dark:bg-blue-950/20">
                             <div className="space-y-2 md:space-y-3">
                                 <div className="text-foreground text-xs md:text-sm">
-                                    <strong>Current limits:</strong> 10 requests per day, 1 request per minute
+                                    <strong>Current limits:</strong> 10 requests per day, 1 request
+                                    per minute
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
-                                    Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.
+                                    Add your own Google Gemini API key below to remove rate limits
+                                    and unlock unlimited usage of all Gemini models.
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
-                                    <strong>Pro tip:</strong> With your own API key, you'll have access to Gemini 2.5 Pro, Gemini 2.0 Flash, and other premium models without restrictions.
+                                    <strong>Pro tip:</strong> With your own API key, you'll have
+                                    access to Gemini 2.5 Pro, Gemini 2.0 Flash, and other premium
+                                    models without restrictions.
                                 </div>
                             </div>
                         </div>
@@ -353,7 +365,7 @@ export const ApiKeySettings = () => {
                                         {apiKey.value && (
                                             <Badge
                                                 variant="secondary"
-                                                className="bg-green-100 text-[10px] text-green-800 dark:bg-green-900/30 dark:text-green-200 md:text-xs"
+                                                className="bg-green-100 text-[10px] text-green-800 md:text-xs dark:bg-green-900/30 dark:text-green-200"
                                             >
                                                 Configured
                                             </Badge>
@@ -414,10 +426,10 @@ export const ApiKeySettings = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-3">
-                                        <div className="border-border bg-background flex-1 rounded-lg border px-3 py-2 font-mono text-sm">
+                                    <div className="flex w-full items-center gap-3">
+                                        <div className="border-border bg-background min-w-0 flex-1 rounded-lg border px-3 py-2 font-mono text-sm">
                                             {apiKey.value ? (
-                                                <span className="text-muted-foreground">
+                                                <span className="text-muted-foreground block truncate">
                                                     {getMaskedKey(apiKey.value)}
                                                 </span>
                                             ) : (
@@ -426,25 +438,28 @@ export const ApiKeySettings = () => {
                                                 </span>
                                             )}
                                         </div>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => handleEdit(apiKey.key)}
-                                        >
-                                            {apiKey.value ? 'Update' : 'Add Key'}
-                                        </Button>
-                                        {apiKey.value && (
+                                        <div className="flex gap-2 shrink-0">
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => {
-                                                    setApiKey(apiKey.key, '');
-                                                }}
-                                                className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
+                                                onClick={() => handleEdit(apiKey.key)}
+                                                className="whitespace-nowrap"
                                             >
-                                                <Trash size={14} />
+                                                {apiKey.value ? 'Update' : 'Add Key'}
                                             </Button>
-                                        )}
+                                            {apiKey.value && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setApiKey(apiKey.key, '');
+                                                    }}
+                                                    className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
+                                                >
+                                                    <Trash size={14} />
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -512,9 +527,9 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
     });
 
     return (
-        <div className="space-y-6">
+        <div className="w-full space-y-6">
             {/* Header */}
-            <div>
+            <div className="w-full">
                 <TypographyH3>Preferences</TypographyH3>
                 <TypographyMuted>Customize your VTChat experience and interface</TypographyMuted>
             </div>

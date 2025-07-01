@@ -53,15 +53,7 @@ export const Footer = ({ showBadge = false }: FooterProps) => {
                             className="w-24 h-8 sm:w-32 sm:h-10"
                         />
                     </a>
-                    <a href="https://magicbox.tools" target="_blank">
-                        <img
-                            src="https://magicbox.tools/badge.svg"
-                            alt="Featured on MagicBox.tools"
-                            width="150"
-                            height="40"
-                            className="w-28 h-8 sm:w-36 sm:h-10"
-                        />
-                    </a>
+
                     <a
                         href="https://www.producthunt.com/products/vt?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-vt"
                         target="_blank"

@@ -79,9 +79,9 @@ export function UserTierBadge({
         <Badge
             variant="secondary"
             className={cn(
-                'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors duration-200',
+                'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-300',
                 isPlus
-                    ? 'border-slate-800 bg-[#000000] text-[#D99A4E] hover:bg-slate-900'
+                    ? 'vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30 shadow-lg'
                     : 'bg-muted text-muted-foreground border-muted-foreground/20 hover:bg-muted/80',
                 className
             )}

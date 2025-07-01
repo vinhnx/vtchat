@@ -2,6 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global scrollbar styling */
+html, body {
+    /* Firefox - completely hide scrollbars globally */
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+}
+
+/* WebKit browsers - hide scrollbars globally */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    display: none;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+    display: none;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: transparent;
+    display: none;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner {
+    background: transparent;
+    display: none;
+}
+
+/* Firefox specific - force hide all scrollbars */
+@-moz-document url-prefix() {
+    html, body {
+        scrollbar-width: none !important;
+        scrollbar-color: transparent transparent !important;
+    }
+    
+    * {
+        scrollbar-width: none !important;
+        scrollbar-color: transparent transparent !important;
+    }
+    
+    /* Override any default scrollbar styling */
+    ::-moz-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+    }
+    
+    ::-moz-scrollbar-track {
+        display: none !important;
+    }
+    
+    ::-moz-scrollbar-thumb {
+        display: none !important;
+    }
+}
+
 @keyframes fade458 {
     from {
         opacity: 1;
@@ -174,15 +235,92 @@ html.dark .shiki span {
 
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
-        display: none;
+        width: 0px !important;
+        height: 0px !important;
+        display: none !important;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar-track {
+        display: none !important;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar-thumb {
+        display: none !important;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar-corner {
+        display: none !important;
     }
 
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
-        -ms-overflow-style: none;
+        -ms-overflow-style: none !important;
         /* IE and Edge */
-        scrollbar-width: none;
+        scrollbar-width: none !important;
+        scrollbar-color: transparent transparent !important;
         /* Firefox */
+    }
+
+    /* Custom scrollbar styling */
+    .custom-scrollbar {
+        /* Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: hsl(var(--border)) transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: hsl(var(--border));
+        border-radius: 3px;
+        transition: background-color 0.2s ease;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: hsl(var(--muted-foreground) / 0.5);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    /* Thin scrollbar variant */
+    .thin-scrollbar {
+        /* Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+    }
+
+    .thin-scrollbar::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 2px;
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-thumb {
+        background: hsl(var(--muted-foreground) / 0.3);
+        border-radius: 2px;
+        transition: background-color 0.2s ease;
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: hsl(var(--muted-foreground) / 0.6);
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-corner {
+        background: transparent;
     }
 
     /* Premium Glass Morphism Effect */
@@ -196,6 +334,49 @@ html.dark .shiki span {
         background: rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* VT+ Premium Glass Badge */
+    .vt-plus-glass {
+        background: linear-gradient(135deg, 
+            rgba(217, 154, 78, 0.15) 0%, 
+            rgba(0, 0, 0, 0.8) 50%, 
+            rgba(217, 154, 78, 0.1) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(217, 154, 78, 0.3);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 2px 8px rgba(217, 154, 78, 0.2),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .vt-plus-glass::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(217, 154, 78, 0.2) 50%, 
+            transparent 100%);
+        transition: left 0.6s ease;
+    }
+
+    .vt-plus-glass:hover::before {
+        left: 100%;
+    }
+
+    .vt-plus-glass:hover {
+        border-color: rgba(217, 154, 78, 0.5);
+        box-shadow: 
+            0 12px 40px rgba(0, 0, 0, 0.5),
+            0 4px 12px rgba(217, 154, 78, 0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
     }
 
     /* Premium Glow Effects */
