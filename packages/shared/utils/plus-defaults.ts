@@ -15,6 +15,7 @@ export const PLUS_THINKING_MODE_DEFAULTS = {
     enabled: true, // Enable Thinking Mode by default for plus users
     budget: THINKING_MODE.DEFAULT_BUDGET, // Use default budget
     includeThoughts: true, // Show Thought Process by default for plus users
+    claude4InterleavedThinking: true, // Enable Claude 4 interleaved thinking for plus users
 } as const;
 
 /**
@@ -33,6 +34,7 @@ export const BASE_THINKING_MODE_DEFAULTS = {
     enabled: false,
     budget: THINKING_MODE.DEFAULT_BUDGET,
     includeThoughts: true,
+    claude4InterleavedThinking: false, // Disable Claude 4 interleaved thinking for base users
 } as const;
 
 export const BASE_GEMINI_CACHING_DEFAULTS = {
@@ -49,6 +51,7 @@ export interface PlusDefaultSettings {
         enabled: boolean;
         budget: number;
         includeThoughts: boolean;
+        claude4InterleavedThinking: boolean;
     };
     geminiCaching: {
         enabled: boolean;
@@ -125,6 +128,7 @@ export function mergeWithPlusDefaults(
                 enabled: defaultSettings.thinkingMode.enabled, // Always enable for plus
                 budget: currentSettings.thinkingMode.budget || defaultSettings.thinkingMode.budget,
                 includeThoughts: defaultSettings.thinkingMode.includeThoughts, // Always enable for plus
+                claude4InterleavedThinking: defaultSettings.thinkingMode.claude4InterleavedThinking, // Always enable for plus
             },
             geminiCaching: {
                 enabled: defaultSettings.geminiCaching.enabled, // Always enable for plus

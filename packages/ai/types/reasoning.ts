@@ -48,6 +48,7 @@ export interface ThinkingModeConfig {
     enabled: boolean;
     budget: number;
     includeThoughts: boolean;
+    claude4InterleavedThinking?: boolean;
 }
 
 /**

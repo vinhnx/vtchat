@@ -44,6 +44,13 @@
 - Use promptBoost tools to enhance prompt quality
 - You can use playwright MCP tool to test web components integration
 
+## Analytics
+
+- **Primary Analytics**: Vemetric only (`@vemetric/react`, `@vemetric/node`)
+- **Vercel Analytics**: Explicitly disabled (configured in `next.config.mjs` and `vercel.json`)
+- **Configuration**: See `docs/analytics-setup.md` for complete setup guide
+- **CORS Issues**: Domains must be whitelisted in Vemetric dashboard
+
 ## Testing
 
 - Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`

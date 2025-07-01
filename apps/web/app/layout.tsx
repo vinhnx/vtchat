@@ -116,6 +116,7 @@ export default function ParentLayout({
         >
             <head>
                 <PerformanceOptimizations />
+                {/* Primary Analytics: Vemetric (Vercel Analytics disabled) */}
                 <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN || ''} />
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>

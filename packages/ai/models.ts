@@ -114,22 +114,8 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_2_0_FLASH,
-        name: 'Gemini 2.0 Flash',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
         id: ModelEnum.GEMINI_2_5_FLASH,
         name: 'Gemini 2.5 Flash',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.GEMINI_2_0_FLASH_LITE,
-        name: 'Gemini 2.0 Flash Lite',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
@@ -141,6 +127,20 @@ export const models: Model[] = [
         maxTokens: 65536,
         contextWindow: 65536,
         isFree: true,
+    },
+    {
+        id: ModelEnum.GEMINI_2_0_FLASH,
+        name: 'Gemini 2.0 Flash',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
+    },
+    {
+        id: ModelEnum.GEMINI_2_0_FLASH_LITE,
+        name: 'Gemini 2.0 Flash Lite',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO,
@@ -208,14 +208,14 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.Pro:
             return ModelEnum.GEMINI_2_5_FLASH;
-        case ChatMode.GEMINI_2_0_FLASH:
-            return ModelEnum.GEMINI_2_0_FLASH;
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
-            return ModelEnum.GEMINI_2_0_FLASH_LITE;
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
         case ChatMode.GEMINI_2_5_PRO:
             return ModelEnum.GEMINI_2_5_PRO;
+        case ChatMode.GEMINI_2_0_FLASH:
+            return ModelEnum.GEMINI_2_0_FLASH;
+        case ChatMode.GEMINI_2_0_FLASH_LITE:
+            return ModelEnum.GEMINI_2_0_FLASH_LITE;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.Deepseek_R1;
         case ChatMode.CLAUDE_4_SONNET:
@@ -268,11 +268,11 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Pro:
         case ChatMode.Deep:
-        case ChatMode.GEMINI_2_0_FLASH:
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
         case ChatMode.GEMINI_2_5_PRO:
         case ChatMode.GEMINI_2_5_FLASH:
+        case ChatMode.GEMINI_2_5_FLASH_LITE:
+        case ChatMode.GEMINI_2_0_FLASH:
+        case ChatMode.GEMINI_2_0_FLASH_LITE:
             return 1_048_576;
         case ChatMode.DEEPSEEK_R1:
             return 128_000;

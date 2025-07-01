@@ -1,6 +1,6 @@
+import { logger } from '@repo/shared/logger';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscription';
-import { logger } from '@repo/shared/logger';
 
 export enum ChatMode {
     Pro = 'pro',
@@ -459,16 +459,16 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI o4 mini';
         case ChatMode.DEEPSEEK_R1:
             return 'Fireworks DeepSeek R1';
-        case ChatMode.GEMINI_2_0_FLASH:
-            return 'Google Gemini 2.0 Flash';
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
-            return 'Google Gemini 2.0 Flash Lite';
+        case ChatMode.GEMINI_2_5_PRO:
+            return 'Google Gemini 2.5 Pro';
         case ChatMode.GEMINI_2_5_FLASH:
             return 'Google Gemini 2.5 Flash';
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return 'Google Gemini 2.5 Flash Lite Preview';
-        case ChatMode.GEMINI_2_5_PRO:
-            return 'Google Gemini 2.5 Pro';
+        case ChatMode.GEMINI_2_0_FLASH:
+            return 'Google Gemini 2.0 Flash';
+        case ChatMode.GEMINI_2_0_FLASH_LITE:
+            return 'Google Gemini 2.0 Flash Lite';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:

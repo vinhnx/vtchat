@@ -27,7 +27,7 @@ function getThinkingModeForChatMode(
     if (mode === ChatMode.Pro) {
         return {
             enabled: true,
-            budget: REASONING_BUDGETS.BALANCED, // 25K tokens - high effort
+            budget: REASONING_BUDGETS.BALANCED, // 15K tokens - optimized for Claude 4
             includeThoughts: userThinkingMode?.includeThoughts ?? true,
         };
     }

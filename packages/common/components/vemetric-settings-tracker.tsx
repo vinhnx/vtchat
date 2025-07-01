@@ -6,6 +6,7 @@ import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
 import { SETTINGS_ACTIONS } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 
 /**
  * Component that tracks settings and preference changes

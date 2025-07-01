@@ -10,6 +10,7 @@ import { ChatMode } from '@repo/shared/config';
 import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { ModelEnum, models } from './models';
 import { logger } from '@repo/shared/logger';
+import { CLAUDE_4_CONFIG } from './constants/reasoning';
 
 export const Providers = {
     OPENAI: 'openai',
@@ -75,7 +76,8 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
 export const getProviderInstance = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>,
-    isFreeModel?: boolean
+    isFreeModel?: boolean,
+    claude4InterleavedThinking?: boolean
 ): any => {
     let apiKey = getApiKey(provider, byokKeys);
     
@@ -103,11 +105,18 @@ export const getProviderInstance = (
                     'Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/'
                 );
             }
+            const headers: Record<string, string> = {
+                'anthropic-dangerous-direct-browser-access': 'true',
+            };
+            
+            // Conditionally add Claude 4 interleaved thinking header
+            if (claude4InterleavedThinking) {
+                headers[CLAUDE_4_CONFIG.BETA_HEADER_KEY] = CLAUDE_4_CONFIG.BETA_HEADER;
+            }
+            
             return createAnthropic({
                 apiKey: apiKey,
-                headers: {
-                    'anthropic-dangerous-direct-browser-access': 'true',
-                },
+                headers,
             });
         case 'together':
             if (!apiKey) {
@@ -172,7 +181,8 @@ export const getLanguageModel = (
     middleware?: LanguageModelV1Middleware,
     byokKeys?: Record<string, string>,
     useSearchGrounding?: boolean,
-    cachedContent?: string
+    cachedContent?: string,
+    claude4InterleavedThinking?: boolean
 ) => {
     logger.info('=== getLanguageModel START ===');
     logger.info('Parameters:', {
@@ -198,7 +208,7 @@ export const getLanguageModel = (
 
     try {
         logger.info('Getting provider instance for:', { data: model.provider });
-        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys, model?.isFree);
+        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys, model?.isFree, claude4InterleavedThinking);
         logger.info('Provider instance created:', {
             hasInstance: !!instance,
             instanceType: typeof instance,

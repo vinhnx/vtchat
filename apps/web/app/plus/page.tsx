@@ -105,7 +105,7 @@ export default function PlusPage() {
                 await trackPaymentEvent({
                     event: PAYMENT_EVENT_TYPES.PAYMENT_STARTED,
                     tier: PlanSlug.VT_PLUS,
-                    amount: PRICING_CONFIG.vt_plus.price,
+                    amount: PRICING_CONFIG.pricing.plus.price,
                     currency: CURRENCIES.USD,
                     paymentMethod: PAYMENT_SERVICES.CREEM,
                 });
