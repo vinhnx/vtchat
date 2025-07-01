@@ -101,16 +101,10 @@ if (isTest) {
 }
 
 // Create logger instance
-export const logger: Logger = pino(loggerConfig);
+const logger: Logger = pino(loggerConfig);
 
-// Convenience methods for common log levels
-export const log = {
-    debug: (obj: any, msg?: string) => logger.debug(obj, msg),
-    info: (obj: any, msg?: string) => logger.info(obj, msg),
-    warn: (obj: any, msg?: string) => logger.warn(obj, msg),
-    error: (obj: any, msg?: string) => logger.error(obj, msg),
-    fatal: (obj: any, msg?: string) => logger.fatal(obj, msg),
-};
+// Export as 'log' - this is the ONLY export to use
+export const log = logger;
 
 // Child logger creation helper
 export const createChildLogger = (bindings: Record<string, any>) => {
@@ -123,7 +117,7 @@ export const createTimer = (name: string) => {
     return {
         end: (metadata?: Record<string, any>) => {
             const duration = Date.now() - start;
-            logger.info({ ...metadata, duration, timer: name }, `Timer: ${name} completed`);
+            log.info({ ...metadata, duration, timer: name }, `Timer: ${name} completed`);
             return duration;
         },
     };
@@ -151,7 +145,7 @@ export const withLogging = (handler: any) => {
             const result = await handler(req, res);
             const duration = Date.now() - start;
 
-            logger.info(
+            log.info(
                 {
                     method: req.method,
                     url: req.url,
@@ -166,7 +160,7 @@ export const withLogging = (handler: any) => {
         } catch (error) {
             const duration = Date.now() - start;
 
-            logger.error(
+            log.error(
                 {
                     method: req.method,
                     url: req.url,
@@ -181,5 +175,5 @@ export const withLogging = (handler: any) => {
     };
 };
 
-// Export default logger
-export default logger;
+// Export default logger (same as 'log')
+export default log;

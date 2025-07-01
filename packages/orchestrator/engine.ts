@@ -3,7 +3,7 @@ import { Context, ContextSchemaDefinition } from './context';
 import { EventSchemaDefinition, TypedEventEmitter } from './events';
 import { ExecutionContext } from './execution-context';
 import { PersistenceLayer } from './persistence';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import {
     EventPayload,
     ParallelTaskRoute,
@@ -108,13 +108,13 @@ export class WorkflowEngine<
 
     async executeTask(taskName: string, data?: any) {
         if (this.executionContext.isAborted() && !this.executionContext.isGracefulShutdown()) {
-            logger.info(`⚠️ Task "${taskName}" skipped due to workflow abortion.`);
+            log.info(`⚠️ Task "${taskName}" skipped due to workflow abortion.`);
             return;
         }
 
         const config = this.tasks.get(taskName);
         if (!config) {
-            logger.error(`❌ Task "${taskName}" not found.`);
+            log.error(`❌ Task "${taskName}" not found.`);
             this.executionContext.endTaskTiming(
                 taskName,
                 new Error(`Task "${taskName}" not found.`)
@@ -128,7 +128,7 @@ export class WorkflowEngine<
             config.dependencies &&
             !config.dependencies.every(dep => this.executionContext.isTaskComplete(dep))
         ) {
-            logger.info(
+            log.info(
                 `⏳ Task "${taskName}" is waiting for dependencies: ${config.dependencies.join(', ')}`
             );
             return;
@@ -148,7 +148,7 @@ export class WorkflowEngine<
             ...state,
             runningTasks: state.runningTasks.add(taskName),
         }));
-        logger.info(`🚀 Executing task "${taskName}" (Run #${executionCount + 1})`);
+        log.info(`🚀 Executing task "${taskName}" (Run #${executionCount + 1})`);
 
         this.executionContext.startTaskTiming(taskName);
 
@@ -208,7 +208,7 @@ export class WorkflowEngine<
                     this.executionContext.isAborted() &&
                     !this.executionContext.isGracefulShutdown()
                 ) {
-                    logger.info(`⚠️ Workflow stopped after task "${taskName}".`);
+                    log.info(`⚠️ Workflow stopped after task "${taskName}".`);
                     return result;
                 }
 
@@ -236,7 +236,7 @@ export class WorkflowEngine<
 
                 // Check for special "end" route value
                 if (nextTasks === 'end') {
-                    logger.info(`🏁 Workflow ended after task "${taskName}".`);
+                    log.info(`🏁 Workflow ended after task "${taskName}".`);
                     if (this.persistence) {
                         await this.persistence.saveWorkflow(this.id, this);
                     }
@@ -278,7 +278,7 @@ export class WorkflowEngine<
             } catch (error) {
                 this.executionContext.endTaskTiming(taskName, error as Error);
                 attempt++;
-                logger.error(`❌ Error in task "${taskName}" (Attempt ${attempt}):`, { data: error });
+                log.error(`❌ Error in task "${taskName}" (Attempt ${attempt}):`, { data: error });
 
                 if (config.onError) {
                     try {
@@ -335,7 +335,7 @@ export class WorkflowEngine<
                             return errorResult.result;
                         }
                     } catch (errorHandlerError) {
-                        logger.error(
+                        log.error(
                             `❌ Error handler failed for task "${taskName}":`,
                             { data: errorHandlerError }
                         );
@@ -343,7 +343,7 @@ export class WorkflowEngine<
                 }
 
                 if (attempt > (config.retryCount || 0)) {
-                    logger.error(`⛔ Task "${taskName}" failed after ${attempt} attempts.`);
+                    log.error(`⛔ Task "${taskName}" failed after ${attempt} attempts.`);
                     throw error;
                 }
             }

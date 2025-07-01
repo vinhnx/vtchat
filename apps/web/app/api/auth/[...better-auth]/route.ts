@@ -9,7 +9,7 @@ import arcjet, {
 } from '@arcjet/next';
 import { toNextJsHandler } from 'better-auth/next-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Create Arcjet instance for Better Auth protection
 const aj = arcjet({
@@ -121,7 +121,7 @@ export async function GET(request: Request) {
 
         return response;
     } catch (error) {
-        logger.error('[Auth API] GET error:', { data: error });
+        log.error('[Auth API] GET error:', { error });
         return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
             status: 503,
             headers: {
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
     // Apply Arcjet protection if key is available
     if (process.env.ARCJET_KEY) {
         const decision = await protect(request);
-        logger.info('Arcjet Decision:', { data: decision });
+        log.info('Arcjet Decision:', { data: decision });
 
         if (decision.isDenied()) {
             if (decision.reason.isRateLimit()) {
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
 
         return response;
     } catch (error) {
-        logger.error('[Auth API] POST error:', { data: error });
+        log.error('[Auth API] POST error:', { error });
         return new NextResponse(JSON.stringify({ error: 'Authentication service unavailable' }), {
             status: 503,
             headers: {

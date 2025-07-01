@@ -5,7 +5,7 @@ import { Editor } from '@tiptap/react';
 import { BarChart, Book, HelpCircle, Lightbulb, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export const examplePrompts = {
     howTo: [
@@ -89,7 +89,7 @@ export const ExamplePrompts = () => {
     const editor: Editor | undefined = useChatStore(state => state.editor);
 
     const handleCategoryClick = (category: keyof typeof examplePrompts) => {
-        logger.info('editor', { data: editor });
+        log.info({ data: editor }, 'editor');
         if (!editor) return;
 
         // Check if user is signed in before allowing interaction

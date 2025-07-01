@@ -1,7 +1,7 @@
 import { Button } from '@repo/ui';
 import { Download, Eye, FileText, X } from 'lucide-react';
 import { memo } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 type DocumentDisplayProps = {
     documentAttachment: {
@@ -55,7 +55,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         } catch (error) {
-            logger.error('Error downloading file:', { data: error });
+            log.error('Error downloading file:', { data: error });
         }
     };
 
@@ -73,7 +73,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
                 window.open(url, '_blank');
                 URL.revokeObjectURL(url);
             } catch (error) {
-                logger.error('Error previewing PDF:', { data: error });
+                log.error('Error previewing PDF:', { data: error });
             }
         }
     };

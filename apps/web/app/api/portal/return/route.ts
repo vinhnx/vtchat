@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * Handle return from Creem portal
@@ -7,14 +7,14 @@ import { logger } from '@repo/shared/logger';
  */
 export async function GET(request: NextRequest) {
     try {
-        logger.info('[Portal Return] User returned from portal');
+        log.info('[Portal Return] User returned from portal');
 
         // Get the return URL from query params or default to chat
         const searchParams = request.nextUrl.searchParams;
         const returnTo = searchParams.get('returnTo') || '/chat';
 
         // Log the return for debugging
-        logger.info('[Portal Return] Redirecting to:', { data: returnTo });
+        log.info('[Portal Return] Redirecting to:', { data: returnTo });
 
         // Send a message to the parent window to refresh subscription status
         const html = `
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
                 }, window.location.origin);
                 window.close();
             } catch (e) {
-                logger.info('Could not message parent window:', { data: e });
+                log.info('Could not message parent window:', { data: e });
                 // Fallback: redirect to main app
                 window.location.href = '${returnTo}';
             }
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error) {
-        logger.error('[Portal Return] Error handling return:', { data: error });
+        log.error('[Portal Return] Error handling return:', { error });
 
         // Fallback redirect
         return NextResponse.redirect(new URL('/chat', request.url));

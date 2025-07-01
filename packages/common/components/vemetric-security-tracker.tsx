@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
 import { SecurityEventData } from '@repo/shared/types/analytics';
 
@@ -77,13 +77,13 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
 
-            logger.warn({ 
+            log.warn({ 
                 activityType: params.activityType,
                 severity: params.severity,
                 blocked: params.blocked
             }, 'Suspicious activity tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track suspicious activity');
+            log.error({ error }, 'Failed to track suspicious activity');
         }
     };
 
@@ -106,7 +106,7 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SESSION_EXPIRED, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track session expiration');
+            log.error({ error }, 'Failed to track session expiration');
         }
     };
 
@@ -143,7 +143,7 @@ export function useVemetricSecurityTracking() {
                 });
             }
         } catch (error) {
-            logger.error({ error }, 'Failed to track authentication attempt');
+            log.error({ error }, 'Failed to track authentication attempt');
         }
     };
 
@@ -170,7 +170,7 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track permission violation');
+            log.error({ error }, 'Failed to track permission violation');
         }
     };
 
@@ -208,7 +208,7 @@ export function useVemetricSecurityTracking() {
                 });
             }
         } catch (error) {
-            logger.error({ error }, 'Failed to track data access attempt');
+            log.error({ error }, 'Failed to track data access attempt');
         }
     };
 
@@ -238,7 +238,7 @@ export function useVemetricSecurityTracking() {
                 action: params.operation,
             });
         } catch (error) {
-            logger.error({ error }, 'Failed to track API key usage');
+            log.error({ error }, 'Failed to track API key usage');
         }
     };
 
@@ -266,13 +266,13 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
 
-            logger.warn({ 
+            log.warn({ 
                 domain,
                 bypassMethod: params.bypassMethod,
                 blocked: params.blocked
             }, 'Rate limit bypass attempt tracked');
         } catch (error) {
-            logger.error({ error }, 'Failed to track rate limit bypass');
+            log.error({ error }, 'Failed to track rate limit bypass');
         }
     };
 
@@ -299,7 +299,7 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
         } catch (error) {
-            logger.error({ error }, 'Failed to track content policy violation');
+            log.error({ error }, 'Failed to track content policy violation');
         }
     };
 
@@ -328,7 +328,7 @@ export function useVemetricSecurityTracking() {
                 });
             }
         } catch (error) {
-            logger.error({ error }, 'Failed to track cross-origin request');
+            log.error({ error }, 'Failed to track cross-origin request');
         }
     };
 

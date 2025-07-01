@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 type CustomSignInProps = {
     redirectUrl?: string;
     onClose?: () => void;
@@ -45,7 +45,7 @@ export const CustomSignIn = ({
                 router.push('/chat');
             }
         } catch (error: any) {
-            logger.error({ errorCount: error.errors?.length }, 'Sign-in validation errors');
+            log.error({ errorCount: error.errors?.length }, 'Sign-in validation errors');
             if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
                 try {
                     const result = await signIn.attemptFirstFactor({
@@ -59,14 +59,14 @@ export const CustomSignIn = ({
                     }
                 } catch (error) {
                     if (isClerkAPIResponseError(error)) {
-                        logger.error('Clerk API error during sign-in retry');
+                    log.error({}, 'Clerk API error during sign-in retry');
                     }
 
-                    logger.error('Sign-in error:', { data: error });
+                    log.error({ data: error }, 'Sign-in error');
                     setError('Something went wrong while signing in. Please try again.');
                 }
             } else {
-                logger.error('Verification error:', { data: error });
+                log.error({ data: error }, 'Verification error');
             }
         } finally {
             setIsLoading(null);
@@ -84,7 +84,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            logger.error('Google authentication error:', { data: error });
+            log.error({ data: error }, 'Google authentication error');
         } finally {
             setIsLoading(null);
         }
@@ -101,7 +101,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            logger.error('GitHub authentication error:', { data: error });
+            log.error({ data: error }, 'GitHub authentication error');
         } finally {
             setIsLoading(null);
         }
@@ -118,7 +118,7 @@ export const CustomSignIn = ({
                 redirectUrlComplete: redirectUrl,
             });
         } catch (error) {
-            logger.error('Apple authentication error:', { data: error });
+            log.error('Apple authentication error:', { data: error });
         } finally {
             setIsLoading(null);
         }
@@ -168,7 +168,7 @@ export const CustomSignIn = ({
                         identifier: email,
                     });
 
-                    logger.info('Created sign-in attempt for existing user');
+                    log.info('Created sign-in attempt for existing user');
 
                     // Get the email address ID from the response and prepare the magic link
                     const emailAddressIdObj: any = signInAttempt?.supportedFirstFactors?.find(
@@ -188,16 +188,16 @@ export const CustomSignIn = ({
                         throw new Error('Email address ID not found');
                     }
                 } catch (error: any) {
-                    logger.error('Sign-in attempt failed');
+                    log.error('Sign-in attempt failed');
                     if (error.includes('Incorrect code')) {
                         setError('Incorrect code. Please try again.');
                     } else {
-                        logger.error('Sign-in error:', { data: error });
+                        log.error('Sign-in error:', { data: error });
                         setError('Something went wrong while signing in. Please try again.');
                     }
                 }
             } else {
-                logger.error('Authentication error:', { data: error });
+                log.error('Authentication error:', { data: error });
                 setError(
                     error?.errors?.[0]?.longMessage || 'Authentication failed. Please try again.'
                 );
@@ -252,12 +252,12 @@ export const CustomSignIn = ({
                     }
                 } catch (error) {
                     if (isClerkAPIResponseError(error)) {
-                        logger.error('Error resending code:', { data: error });
+                        log.error('Error resending code:', { data: error });
                     }
                     setError('Failed to resend code. Please try again.');
                 }
             } else {
-                logger.error('Error resending code:', { data: error });
+                log.error('Error resending code:', { data: error });
                 setError('Failed to resend code. Please try again.');
             }
         } finally {

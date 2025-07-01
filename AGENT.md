@@ -92,7 +92,7 @@
 ## Logging
 
 - **NEVER use console.log/error/warn** - Always use Pino logger (`@repo/shared/logger`)
-- **Import**: `import { log } from '@repo/shared/logger'` for basic logging
+- **Import**: `import { log } from '@repo/shared/logger'` for basic logging (use `log` not `logger`)
 - **Usage**: `log.info({ key: value }, 'message')`, `log.error({ error }, 'message')`
 - **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
 - **Structured logging** - Always pass metadata as first parameter, message as second

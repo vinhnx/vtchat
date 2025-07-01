@@ -10,7 +10,7 @@ import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Schema for processing payment success
 const PaymentSuccessSchema = z.object({
@@ -49,7 +49,7 @@ function mapCreemProductToPlan(
 }
 
 export async function POST(request: NextRequest) {
-    logger.info('[Payment Success API] Processing payment success callback...');
+    log.info({}, '[Payment Success API] Processing payment success callback...');
 
     try {
         // Get authenticated user
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            logger.info('[Payment Success API] No authenticated user found');
+            log.info({}, '[Payment Success API] No authenticated user found');
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }
 
@@ -67,11 +67,11 @@ export async function POST(request: NextRequest) {
 
         // Parse request body
         const body = await request.json();
-        logger.info('[Payment Success API] Request body:', { data: body });
+        log.info({ body }, '[Payment Success API] Request body');
 
         // Validate request
         const validatedData = PaymentSuccessSchema.parse(body);
-        logger.info('[Payment Success API] Validated data:', { data: validatedData });
+        log.info('[Payment Success API] Validated data:', { data: validatedData });
 
         // Map plan
         const { planSlug, isSubscription } = mapCreemProductToPlan(
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
             validatedData.package
         );
 
-        logger.info('[Payment Success API] Mapped values:', {
+        log.info('[Payment Success API] Mapped values:', {
             planSlug,
             isSubscription,
         });
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
 
             const currentPlan = currentUser[0]?.planSlug || PlanSlug.VT_BASE;
 
-            logger.info('[Payment Success API] Plan update:', {
+            log.info('[Payment Success API] Plan update:', {
                 currentPlan,
                 newPlan: planSlug,
                 isSubscription,
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
                 })
                 .where(eq(users.id, userId));
 
-            logger.info('[Payment Success API] Updated user record:', {
+            log.info('[Payment Success API] Updated user record:', {
                 userId,
                 customerId: validatedData.customer_id,
                 planSlug,
@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
                         .set(subscriptionData)
                         .where(eq(userSubscriptions.userId, userId));
 
-                    logger.info('[Payment Success API] Updated existing subscription');
+                    log.info('[Payment Success API] Updated existing subscription');
                 } else {
                     // Create new subscription
                     await tx.insert(userSubscriptions).values({
@@ -155,12 +155,12 @@ export async function POST(request: NextRequest) {
                         createdAt: new Date(),
                     });
 
-                    logger.info('[Payment Success API] Created new subscription');
+                    log.info('[Payment Success API] Created new subscription');
                 }
             }
         });
 
-        logger.info('[Payment Success API] Database transaction completed successfully');
+        log.info('[Payment Success API] Database transaction completed successfully');
 
         return NextResponse.json({
             success: true,
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        logger.error('[Payment Success API] Error processing payment success:', { data: error });
+        log.error('[Payment Success API] Error processing payment success:', { error });
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(

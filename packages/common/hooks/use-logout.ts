@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
 import { useAppStore } from '../store/app.store';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * Custom hook for logout functionality that ensures all gated features
@@ -27,25 +27,25 @@ export const useLogout = () => {
 
         try {
             setIsLoggingOut(true);
-            logger.info('[Logout] Starting secure logout process...');
+            log.info('[Logout] Starting secure logout process...');
 
             // 1. First reset theme to light mode (VT+ Dark Theme feature)
             // Force theme change multiple times to ensure it takes effect
             setTheme('light');
             setTimeout(() => setTheme('light'), 100); // Additional safety
-            logger.info('[Logout] ✅ Reset theme to light mode');
+            log.info('[Logout] ✅ Reset theme to light mode');
 
             // 2. Clear all API keys (BYOK security requirement)
             clearAllKeys();
-            logger.info('[Logout] ✅ Cleared all API keys');
+            log.info('[Logout] ✅ Cleared all API keys');
 
             // 3. Clear all threads (user-specific conversation data)
             await clearAllThreads();
-            logger.info('[Logout] ✅ Cleared all threads from local storage');
+            log.info('[Logout] ✅ Cleared all threads from local storage');
 
             // 4. Reset app store user state
             resetUserState();
-            logger.info('[Logout] ✅ Reset app store user state');
+            log.info('[Logout] ✅ Reset app store user state');
 
             // 5. Clear subscription-related localStorage cache
             if (typeof window !== 'undefined') {
@@ -59,8 +59,9 @@ export const useLogout = () => {
                 subscriptionKeys.forEach(key => {
                     localStorage.removeItem(key);
                 });
-                console.log(
-                    `[Logout] ✅ Cleared ${subscriptionKeys.length} subscription cache entries`
+                log.info(
+                    { subscriptionKeysCleared: subscriptionKeys.length },
+                    '[Logout] ✅ Cleared subscription cache entries'
                 );
 
                 // Clear user-specific preferences that might contain gated feature data
@@ -78,7 +79,7 @@ export const useLogout = () => {
                 userDataKeys.forEach(key => {
                     if (localStorage.getItem(key)) {
                         localStorage.removeItem(key);
-                        logger.info('[Logout] ✅ Cleared subscription cache key');
+                        log.info({ key }, '[Logout] ✅ Cleared subscription cache key');
                     }
                 });
 
@@ -93,7 +94,7 @@ export const useLogout = () => {
                 );
                 dynamicKeys.forEach(key => {
                     localStorage.removeItem(key);
-                    logger.info('[Logout] ✅ Cleared dynamic key');
+                    log.info({ key }, '[Logout] ✅ Cleared dynamic key');
                 });
 
                 // Clear next-themes storage (dark mode is a VT+ feature)
@@ -108,7 +109,7 @@ export const useLogout = () => {
                         key.includes('mode')
                 );
                 allThemeKeys.forEach(key => localStorage.removeItem(key));
-                logger.info({ themeKeysCleared: allThemeKeys.length + 1 }, '[Logout] ✅ Cleared theme storage');
+                log.info({ themeKeysCleared: allThemeKeys.length + 1 }, '[Logout] ✅ Cleared theme storage');
 
                 // Clear any remaining VT+ or premium feature caches
                 const premiumKeys = Object.keys(localStorage).filter(
@@ -124,8 +125,9 @@ export const useLogout = () => {
                     localStorage.removeItem(key);
                 });
                 if (premiumKeys.length > 0) {
-                    console.log(
-                        `[Logout] ✅ Cleared ${premiumKeys.length} additional premium cache entries`
+                    log.info(
+                        { premiumKeysCleared: premiumKeys.length },
+                        '[Logout] ✅ Cleared additional premium cache entries'
                     );
                 }
             }
@@ -141,17 +143,17 @@ export const useLogout = () => {
                 });
 
                 if (cacheResponse.ok) {
-                    logger.info('[Logout] ✅ Invalidated server-side subscription cache');
+                    log.info('[Logout] ✅ Invalidated server-side subscription cache');
                 } else {
-                    console.warn(
-                        '[Logout] ⚠️ Server cache invalidation returned:',
-                        cacheResponse.status
+                    log.warn(
+                        { status: cacheResponse.status },
+                        '[Logout] ⚠️ Server cache invalidation returned error'
                     );
                 }
             } catch (cacheError) {
-                console.warn(
-                    '[Logout] ⚠️ Failed to invalidate server cache (non-critical):',
-                    cacheError
+                log.warn(
+                    { error: cacheError },
+                    '[Logout] ⚠️ Failed to invalidate server cache (non-critical)'
                 );
                 // Non-critical, continue with logout
             }
@@ -160,9 +162,9 @@ export const useLogout = () => {
             if (typeof window !== 'undefined') {
                 try {
                     sessionStorage.clear();
-                    logger.info('[Logout] ✅ Cleared session storage');
+                    log.info('[Logout] ✅ Cleared session storage');
                 } catch (sessionError) {
-                    logger.warn('[Logout] ⚠️ Failed to clear session storage:', { data: sessionError });
+                    log.warn({ error: sessionError }, '[Logout] ⚠️ Failed to clear session storage');
                 }
 
                 // Clear any auth-related cookies client-side
@@ -172,23 +174,23 @@ export const useLogout = () => {
                             .replace(/^ +/, '')
                             .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
                     });
-                    logger.info('[Logout] ✅ Cleared cookies');
+                    log.info('[Logout] ✅ Cleared cookies');
                 } catch (cookieError) {
-                    logger.warn('[Logout] ⚠️ Failed to clear cookies:', { data: cookieError });
+                    log.warn({ error: cookieError }, '[Logout] ⚠️ Failed to clear cookies');
                 }
             }
 
             // 8. Finally perform the authentication logout
             await signOut();
-            logger.info('[Logout] ✅ Completed authentication sign out');
+            log.info('[Logout] ✅ Completed authentication sign out');
 
             // 9. Refresh the page to ensure all state is reset
             if (typeof window !== 'undefined') {
                 window.location.reload();
             }
-            logger.info('[Logout] 🔒 Secure logout completed successfully');
+            log.info('[Logout] 🔒 Secure logout completed successfully');
         } catch (error) {
-            logger.error('[Logout] ❌ Error during logout:', { data: error });
+            log.error({ error }, '[Logout] ❌ Error during logout');
 
             // Even if logout fails, ensure security-critical data is cleared
             try {
@@ -208,9 +210,9 @@ export const useLogout = () => {
                 clearAllKeys();
                 await clearAllThreads();
                 resetUserState();
-                logger.info('[Logout] ✅ Emergency cleanup completed');
+                log.info('[Logout] ✅ Emergency cleanup completed');
             } catch (cleanupError) {
-                logger.error('[Logout] ❌ Emergency cleanup failed:', { data: cleanupError });
+                log.error({ error: cleanupError }, '[Logout] ❌ Emergency cleanup failed');
             }
         } finally {
             setIsLoggingOut(false);

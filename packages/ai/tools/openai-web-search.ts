@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * OpenAI Web Search Tool using the Responses API
@@ -42,7 +42,7 @@ export const openaiWebSearchTool = () =>
                     query,
                 };
             } catch (error: any) {
-                logger.error('Error in OpenAI web search:', { data: error });
+                log.error({ error }, 'Error in OpenAI web search');
                 return {
                     success: false,
                     error: error.message || 'Failed to perform web search',
@@ -105,7 +105,7 @@ export const openaiWebSearchWithModel = (modelId: string = 'gpt-4o-mini') =>
                     maxResults,
                 };
             } catch (error: any) {
-                console.error(`Error in OpenAI web search with model ${modelId}:`, error);
+                log.error({ modelId, error }, `Error in OpenAI web search with model ${modelId}`);
                 return {
                     success: false,
                     error: error.message || 'Failed to perform web search',

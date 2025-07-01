@@ -263,4 +263,4 @@ describe('Data Attributes Integration', () => {
     });
 });
 
-console.log('✅ Vemetric tracking tests completed');
+// Note: Test console.log kept for test output visibility

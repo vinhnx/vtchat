@@ -8,11 +8,11 @@ import { db } from '../apps/web/lib/database';
 import { embeddings } from '../apps/web/lib/database/schema';
 import { secureContentForEmbedding } from '../apps/web/lib/utils/content-security';
 import { eq } from 'drizzle-orm';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 async function migrateEmbeddingsContent() {
     try {
-        logger.info('Starting embeddings content security migration...');
+        log.info('Starting embeddings content security migration...');
         
         // Get all embeddings that need to be secured
         const allEmbeddings = await db.select({
@@ -20,7 +20,7 @@ async function migrateEmbeddingsContent() {
             content: embeddings.content,
         }).from(embeddings);
 
-        logger.info(`Found ${allEmbeddings.length} embeddings to secure`);
+        log.info(`Found ${allEmbeddings.length} embeddings to secure`);
 
         let processedCount = 0;
         let securedCount = 0;
@@ -41,7 +41,7 @@ async function migrateEmbeddingsContent() {
                         .where(eq(embeddings.id, embedding.id));
                     
                     securedCount++;
-                    logger.info(`Secured embedding ${embedding.id}`, {
+                    log.info(`Secured embedding ${embedding.id}`, {
                         originalContent,
                         securedContent
                     });
@@ -50,13 +50,13 @@ async function migrateEmbeddingsContent() {
                 processedCount++;
             }
 
-            logger.info(`Processed ${processedCount}/${allEmbeddings.length} embeddings`);
+            log.info(`Processed ${processedCount}/${allEmbeddings.length} embeddings`);
         }
 
-        logger.info(`Migration completed: ${securedCount} embeddings secured out of ${processedCount} total`);
+        log.info(`Migration completed: ${securedCount} embeddings secured out of ${processedCount} total`);
         
     } catch (error) {
-        logger.error('Error during embeddings migration:', error);
+        log.error('Error during embeddings migration:', error);
         throw error;
     }
 }
@@ -65,11 +65,11 @@ async function migrateEmbeddingsContent() {
 if (require.main === module) {
     migrateEmbeddingsContent()
         .then(() => {
-            logger.info('Embeddings security migration completed successfully');
+            log.info('Embeddings security migration completed successfully');
             process.exit(0);
         })
         .catch((error) => {
-            logger.error('Migration failed:', error);
+            log.error('Migration failed:', error);
             process.exit(1);
         });
 }

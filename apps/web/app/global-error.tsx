@@ -1,12 +1,13 @@
 'use client';
 
 import { TypographyH3 } from '@repo/ui';
+import { log } from '@repo/shared/logger';
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
 
 export default function GlobalError({ error }: { error: Error }) {
-    console.error('Global error:', error);
+    log.error({ error }, 'Global error encountered');
     return (
         <html>
             <body>

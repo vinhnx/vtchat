@@ -5,8 +5,8 @@
  * Verifies all critical production environment configurations for VT Chat
  */
 
-import { execSync } from 'child_process';
 import { existsSync } from 'fs';
+import { log } from '@repo/shared/logger';
 
 const CONFIG_VERIFICATION = {
     environment: {
@@ -111,7 +111,8 @@ class ProductionVerifier {
         try {
             new URL(string);
             return true;
-        } catch (_) {
+        } catch (error) {
+            log.debug({ error: error.message }, 'URL validation failed');
             return false;
         }
     }
@@ -203,6 +204,7 @@ class ProductionVerifier {
 
     async verifyAll() {
         console.log('🔍 Verifying Production Configuration...\n');
+        log.info('Starting production configuration verification');
 
         // Check environment variables
         for (const [category, config] of Object.entries(CONFIG_VERIFICATION)) {
@@ -211,13 +213,16 @@ class ProductionVerifier {
                 checks: config.checks.map(check => this.checkEnvironmentVariable(check.name, check))
             };
         }
+        log.info('Environment variables checked');
 
         // Check external connections
         console.log('🔌 Testing External Connections...\n');
+        log.info('Testing external connections');
         
         this.results.database = await this.checkDatabaseConnection();
         this.results.creem = await this.checkCreemConnection();
         this.results.fly = this.checkFlyConfiguration();
+        log.info('External connections tested');
 
         return this.generateReport();
     }
@@ -240,6 +245,12 @@ class ProductionVerifier {
         };
 
         this.printReport(report);
+        log.info({
+            status: report.status,
+            errors: report.summary.errors,
+            warnings: report.summary.warnings,
+            totalChecks: report.summary.total_checks
+        }, 'Production configuration verification completed');
         return report;
     }
 

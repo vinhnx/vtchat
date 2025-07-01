@@ -14,7 +14,7 @@ import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -87,9 +87,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // For anonymous users, immediately return default free tier without API calls
             if (!userId) {
-                console.log(
-                    `[Subscription Provider] Returning default free tier for anonymous user`
-                );
+                log.info('[Subscription Provider] Returning default free tier for anonymous user');
                 const anonymousStatus: SubscriptionStatus = {
                     plan: PlanSlug.VT_BASE,
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -114,9 +112,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // If there's already a global fetch in progress and not forcing refresh, wait for it
             if (globalFetchPromise && !forceRefresh) {
-                console.log(
-                    `[Subscription Provider] Using existing global fetch for ${userDescription}`
-                );
+                log.info({ userDescription }, '[Subscription Provider] Using existing global fetch');
                 const result = await globalFetchPromise;
                 setSubscriptionStatus(result);
                 setIsLoading(false);
@@ -130,9 +126,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 globalIsLoading = true;
                 globalError = null;
 
-                console.log(
-                    `[Subscription Provider] Starting global fetch for ${userDescription} (trigger: ${trigger})`
-                );
+                log.info({ userDescription, trigger }, '[Subscription Provider] Starting global fetch');
 
                 // Create the global fetch promise with deduplication
                 const requestKey = `subscription-${userId}-${trigger}`;
@@ -200,8 +194,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 setSubscriptionStatus(result);
                 setIsLoading(false);
 
-                console.log(
-                    `[Subscription Provider] Global fetch completed for ${userDescription}:`,
+                log.info(
                     result
                         ? {
                               plan: result.plan,
@@ -210,7 +203,8 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                               fetchCount: result.fetchCount,
                               trigger: result.lastRefreshTrigger,
                           }
-                        : 'null result'
+                        : {},
+                    `Global fetch completed for ${userDescription}`
                 );
 
                 // Clear the global promise after a short delay to allow other components to use it
@@ -220,7 +214,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 return result;
             } catch (err) {
-                logger.error('[Subscription Provider] Error fetching subscription status:', { data: err });
+                log.error({ error: err instanceof Error ? err.message : 'Unknown error' }, 'Error fetching subscription status');
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
                 // Update global and local error state
@@ -267,7 +261,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     // Trigger subscription status check when session becomes available or changes
     useEffect(() => {
         if (session?.user) {
-            logger.info('[Subscription Provider] Session detected, refreshing subscription status');
+            log.info({}, 'Session detected, refreshing subscription status');
             fetchSubscriptionStatus('initial', false);
         }
     }, [session?.user, fetchSubscriptionStatus]);
@@ -287,9 +281,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 // Check if we're returning from a payment flow
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
-                    console.log(
-                        '[Subscription Provider] Detected return from payment, refreshing subscription'
-                    );
+                    log.info({}, 'Detected return from payment, refreshing subscription');
                     setIsPortalReturn(true);
                     refreshSubscriptionStatus(true, 'payment');
 
@@ -330,7 +322,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // Refresh when close to expiration (within 1 day) or already expired
             if (daysDiff <= 1) {
-                logger.info('[Subscription Provider] Subscription near expiration, refreshing...');
+                log.info({}, 'Subscription near expiration, refreshing');
                 refreshSubscriptionStatus(true, 'expiration');
             }
         };
@@ -398,6 +390,6 @@ export function useGlobalSubscriptionStatus(): SubscriptionContextType {
  * Wraps the global subscription context
  */
 export function useSubscriptionStatus() {
-    logger.warn('useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
+    log.warn({}, 'useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
     return useGlobalSubscriptionStatus();
 }

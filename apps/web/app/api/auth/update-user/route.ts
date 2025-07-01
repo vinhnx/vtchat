@@ -7,7 +7,7 @@ import { db, withDatabaseErrorHandling } from '@/lib/database';
 import { users } from '@/lib/database/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export async function POST(request: NextRequest) {
     try {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        logger.error('Error updating user:', { data: error });
+        log.error('Error updating user:', { error });
 
         // Return user-friendly error message
         const message = error instanceof Error ? error.message : 'Internal server error';

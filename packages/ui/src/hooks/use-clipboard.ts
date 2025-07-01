@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 type CopiedValue = string | null;
 
@@ -11,7 +11,7 @@ export function useClipboard() {
 
     const copy: CopyFn = useCallback(async text => {
         if (!navigator?.clipboard) {
-            logger.warn('Clipboard not supported');
+            log.warn('Clipboard not supported');
             return false;
         }
         try {
@@ -23,7 +23,7 @@ export function useClipboard() {
             }, 2000);
             return true;
         } catch (error) {
-            logger.warn('Copy failed', { data: error });
+            log.warn('Copy failed', { data: error });
             setCopiedText(null);
             return false;
         }

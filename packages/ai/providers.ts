@@ -9,7 +9,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
 import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { ModelEnum, models } from './models';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { CLAUDE_4_CONFIG } from './constants/reasoning';
 
 export const Providers = {
@@ -85,7 +85,7 @@ export const getProviderInstance = (
     if (isFreeModel && !apiKey && provider === 'google') {
         if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
             apiKey = process.env.GEMINI_API_KEY;
-            logger.info('Using server-side API key for free Gemini model');
+            log.info('Using server-side API key for free Gemini model');
         }
     }
 
@@ -184,8 +184,8 @@ export const getLanguageModel = (
     cachedContent?: string,
     claude4InterleavedThinking?: boolean
 ) => {
-    logger.info('=== getLanguageModel START ===');
-    logger.info('Parameters:', {
+    log.info('=== getLanguageModel START ===');
+    log.info('Parameters:', {
         modelEnum: m,
         hasMiddleware: !!middleware,
         hasByokKeys: !!byokKeys,
@@ -194,7 +194,7 @@ export const getLanguageModel = (
     });
 
     const model = models.find(model => model.id === m);
-    logger.info('Found model:', {
+    log.info('Found model:', {
         found: !!model,
         modelId: model?.id,
         modelName: model?.name,
@@ -202,23 +202,23 @@ export const getLanguageModel = (
     });
 
     if (!model) {
-        logger.error('Model not found:', { data: m });
+        log.error('Model not found:', { data: m });
         throw new Error(`Model ${m} not found`);
     }
 
     try {
-        logger.info('Getting provider instance for:', { data: model.provider });
+        log.info('Getting provider instance for:', { data: model.provider });
         const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys, model?.isFree, claude4InterleavedThinking);
-        logger.info('Provider instance created:', {
+        log.info('Provider instance created:', {
             hasInstance: !!instance,
             instanceType: typeof instance,
         });
 
         // Handle Gemini models with search grounding or caching
         if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
-            logger.info('Creating Gemini model with special options...');
+            log.info('Creating Gemini model with special options...');
             const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-            logger.info('Using model ID:', { data: modelId });
+            log.info('Using model ID:', { data: modelId });
 
             try {
                 const modelOptions: any = {};
@@ -232,7 +232,7 @@ export const getLanguageModel = (
                 }
 
                 const selectedModel = instance(modelId, modelOptions);
-                logger.info('Gemini model created with options:', {
+                log.info('Gemini model created with options:', {
                     hasModel: !!selectedModel,
                     modelType: typeof selectedModel,
                     useSearchGrounding,
@@ -240,7 +240,7 @@ export const getLanguageModel = (
                 });
 
                 if (middleware) {
-                    logger.info('Wrapping model with middleware...');
+                    log.info('Wrapping model with middleware...');
                     return wrapLanguageModel({
                         model: selectedModel,
                         middleware,
@@ -248,37 +248,37 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error: any) {
-                logger.error('Error creating Gemini model with special options:', { data: error });
-                logger.error('Error stack:', { data: error.stack });
+                log.error('Error creating Gemini model with special options:', { data: error });
+                log.error('Error stack:', { data: error.stack });
                 throw error;
             }
         }
 
-        logger.info('Creating standard model...');
+        log.info('Creating standard model...');
         const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-        logger.info('Using model ID:', { data: modelId });
+        log.info('Using model ID:', { data: modelId });
 
         try {
             const selectedModel = instance(modelId);
-            logger.info('Standard model created:', {
+            log.info('Standard model created:', {
                 hasModel: !!selectedModel,
                 modelType: typeof selectedModel,
             });
 
             if (middleware) {
-                logger.info('Wrapping model with middleware...');
+                log.info('Wrapping model with middleware...');
                 return wrapLanguageModel({ model: selectedModel, middleware }) as LanguageModelV1;
             }
-            logger.info('=== getLanguageModel END ===');
+            log.info('=== getLanguageModel END ===');
             return selectedModel as LanguageModelV1;
         } catch (error: any) {
-            logger.error('Error creating standard model:', { data: error });
-            logger.error('Error stack:', { data: error.stack });
+            log.error('Error creating standard model:', { data: error });
+            log.error('Error stack:', { data: error.stack });
             throw error;
         }
     } catch (error: any) {
-        logger.error('Error in getLanguageModel:', { data: error });
-        logger.error('Error stack:', { data: error.stack });
+        log.error('Error in getLanguageModel:', { data: error });
+        log.error('Error stack:', { data: error.stack });
 
         // Re-throw the original error without modification to preserve
         // the clear, actionable error messages from getProviderInstance

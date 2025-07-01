@@ -3,7 +3,7 @@ import { Button, Textarea } from '@repo/ui';
 import { CheckCircle, HelpCircle, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export const FeedbackWidget = () => {
     const { data: session } = useSession();
@@ -32,7 +32,7 @@ export const FeedbackWidget = () => {
                 setIsOpen(false);
             }, 2000);
         } catch (error) {
-            logger.error('Failed to submit feedback:', { data: error });
+            log.error('Failed to submit feedback:', { data: error });
         } finally {
             setIsSubmitting(false);
         }

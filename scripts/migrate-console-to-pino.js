@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { log } = require('@repo/shared/logger');
 
 // Files/directories to exclude from migration
 const EXCLUDE_PATTERNS = [
@@ -38,7 +38,7 @@ const CONSOLE_TO_LOGGER = {
 };
 
 // Import statement to add
-const LOGGER_IMPORT = "import { logger } from '@repo/shared/logger';";
+const LOGGER_IMPORT = "import { log } from '@repo/shared/logger';";
 
 /**
  * Check if file should be excluded from migration
@@ -195,7 +195,7 @@ function findFiles(directory) {
                 }
             }
         } catch (error) {
-            console.warn(`Warning: Could not read directory ${dir}:`, error.message);
+            log.warn({ dir, error: error.message }, 'Could not read directory');
         }
     }
     
@@ -207,7 +207,9 @@ function findFiles(directory) {
  * Main migration function
  */
 function main() {
+    // CLI output for user - keeping console for main workflow status
     console.log('🚀 Starting console.* to Pino logger migration...\n');
+    log.info('Starting console to pino migration');
 
     const rootDir = path.resolve(__dirname, '..');
     const targetDirs = [
@@ -227,10 +229,12 @@ function main() {
     for (const targetDir of targetDirs) {
         if (!fs.existsSync(targetDir)) {
             console.log(`⚠️  Directory ${targetDir} does not exist, skipping...`);
+            log.warn({ targetDir }, 'Directory does not exist, skipping');
             continue;
         }
 
         console.log(`📁 Processing directory: ${targetDir}`);
+        log.info({ targetDir }, 'Processing directory');
         const files = findFiles(targetDir);
         
         for (const file of files) {
@@ -241,6 +245,7 @@ function main() {
                 case 'migrated':
                     stats.migrated++;
                     console.log(`  ✅ ${file}`);
+                    log.info({ file }, 'File migrated successfully');
                     break;
                 case 'excluded':
                     stats.excluded++;
@@ -252,6 +257,7 @@ function main() {
                 case 'write_error':
                     stats.errors++;
                     console.log(`  ❌ ${file}: ${result.error?.message}`);
+                    log.error({ file, error: result.error?.message }, 'File processing failed');
                     break;
             }
         }
@@ -264,6 +270,8 @@ function main() {
     console.log(`⏭️  Files excluded: ${stats.excluded}`);
     console.log(`📝 Files without console statements: ${stats.noConsole}`);
     console.log(`❌ Errors: ${stats.errors}`);
+
+    log.info(stats, 'Migration completed');
 
     if (stats.migrated > 0) {
         console.log('\n🎉 Migration completed successfully!');

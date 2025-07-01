@@ -2,7 +2,7 @@
 
 import React, { type ReactNode } from 'react';
 import { FullPageLoader } from './full-page-loader';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 interface SSRErrorBoundaryProps {
     children: ReactNode;
@@ -16,7 +16,7 @@ export function SSRErrorBoundary({ children, fallback }: SSRErrorBoundaryProps):
         // In production, just render children
         return <>{children}</>;
     } catch (error) {
-        logger.warn('SSR Error Boundary caught an error:', { data: error });
+        log.warn('SSR Error Boundary caught an error:', { data: error });
 
         if (fallback) {
             return <>{fallback}</>;

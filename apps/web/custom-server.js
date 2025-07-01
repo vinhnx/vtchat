@@ -5,29 +5,27 @@
 
 const { execSync } = require('child_process');
 const path = require('path');
+const { log } = require('@repo/shared/logger');
 
 // Set environment variables with fallbacks
 const PORT = process.env.PORT || '3000';
 const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
-console.log('=== CUSTOM SERVER START ===');
-console.log('PORT:', PORT);
-console.log('HOSTNAME:', HOSTNAME);
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('Current directory:', process.cwd());
+log.info('=== CUSTOM SERVER START ===');
+log.info({ PORT, HOSTNAME, NODE_ENV: process.env.NODE_ENV, cwd: process.cwd() }, 'Server environment configured');
 
 // Verify server.js exists - Next.js standalone generates it at the root in production
 const serverPath = path.join(process.cwd(), 'server.js');
-console.log('Server path:', serverPath);
+log.info({ serverPath }, 'Checking for server file');
 
 try {
     require('fs').accessSync(serverPath);
-    console.log('Server file found');
+    log.info('Server file found');
 } catch (error) {
-    console.error('Server file not found:', error.message);
-    console.log('Directory contents:');
+    log.error({ error: error.message }, 'Server file not found');
+    log.info('Directory contents:');
     execSync('ls -la', { stdio: 'inherit' });
-    console.log('apps/web contents:');
+    log.info('apps/web contents:');
     execSync('ls -la apps/web/', { stdio: 'inherit' });
     process.exit(1);
 }
@@ -36,8 +34,8 @@ try {
 process.env.PORT = PORT;
 process.env.HOSTNAME = HOSTNAME;
 
-console.log(`Starting Next.js server on ${HOSTNAME}:${PORT}...`);
-console.log('===========================');
+log.info({ HOSTNAME, PORT }, 'Starting Next.js server');
+log.info('===========================');
 
 // Start the Next.js standalone server - it's at the root in production
 require('./server.js');

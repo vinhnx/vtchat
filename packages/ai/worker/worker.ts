@@ -1,7 +1,7 @@
 import { ChatMode } from '@repo/shared/config';
 import { runWorkflow } from '../workflow/flow';
 import { REASONING_BUDGETS } from '../constants/reasoning';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 // Create context for the worker
 const ctx: Worker = self as any;
 
@@ -61,7 +61,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                     activeWorkflow.abort?.(false);
                     activeWorkflow = null;
                 } catch (e) {
-                    logger.error('[Worker] Error aborting previous workflow:', { data: e });
+                    log.error('[Worker] Error aborting previous workflow:', { data: e });
                 }
             }
 
@@ -154,7 +154,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                     activeWorkflow.abort?.(payload.graceful);
                     activeWorkflow = null;
                 } catch (e) {
-                    logger.error('[Worker] Error aborting workflow:', { data: e });
+                    log.error('[Worker] Error aborting workflow:', { data: e });
                 }
             }
 
@@ -167,7 +167,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
             });
         }
     } catch (error) {
-        logger.error('[Worker] Error in worker:', { data: error });
+        log.error('[Worker] Error in worker:', { data: error });
 
         ctx.postMessage({
             type: 'done',

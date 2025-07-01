@@ -35,7 +35,7 @@ describe('Gemini 2.5 Flash Lite - Implementation Verification', () => {
         // Find the model in the models array
         const geminiLiteModel = models.find(m => m.id === ModelEnum.GEMINI_2_5_FLASH_LITE);
         expect(geminiLiteModel).toBeDefined();
-        expect(geminiLiteModel?.name).toBe('Gemini 2.5 Flash Lite');
+        expect(geminiLiteModel?.name).toBe('Gemini 2.5 Flash Lite Preview 06-17');
         expect(geminiLiteModel?.provider).toBe('google');
         expect(geminiLiteModel?.isFree).toBe(true);
     });

@@ -14,7 +14,7 @@ import {
 } from '@repo/shared/config/embedding-models';
 import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
 import { BUTTON_TEXT, THINKING_MODE } from '@repo/shared/constants';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Alert,
@@ -162,7 +162,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 }
             }
         } catch (error) {
-            logger.error('Error analyzing knowledge base:', { data: error });
+            log.error({ error }, 'Error analyzing knowledge base');
         } finally {
             setIsAnalyzing(false);
         }
@@ -266,7 +266,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         try {
             await openCustomerPortal();
         } catch (error) {
-            logger.error('Failed to open subscription portal:', { data: error });
+            log.error({ error }, 'Failed to open subscription portal');
         }
     };
 
@@ -789,10 +789,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     alert('Failed to clear knowledge base');
                                                 }
                                             } catch (error) {
-                                                console.error(
-                                                    'Error clearing knowledge base:',
-                                                    error
-                                                );
+                                                log.error({ error }, 'Error clearing knowledge base');
                                                 alert('Error clearing knowledge base');
                                             }
                                         }

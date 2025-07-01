@@ -1,8 +1,9 @@
 import { neon } from '@neondatabase/serverless';
+import { log } from '@repo/shared/logger';
 
 async function runMigration() {
     try {
-        console.log('🗄️  Connecting to database...');
+        log.info('🗄️  Connecting to database...');
         
         // Get database URL from environment
         const databaseUrl = process.env.DATABASE_URL;
@@ -12,26 +13,26 @@ async function runMigration() {
         
         const sql = neon(databaseUrl);
         
-        console.log('🗄️  Running migration to fix vector dimensions...');
+        log.info('🗄️  Running migration to fix vector dimensions...');
         
         // Check current table structure
-        console.log('📋 Checking current embeddings table...');
+        log.info('📋 Checking current embeddings table...');
         try {
             const tableInfo = await sql`
                 SELECT column_name, data_type, character_maximum_length 
                 FROM information_schema.columns 
                 WHERE table_name = 'embeddings' AND column_name = 'embedding'
             `;
-            console.log('Current table info:', tableInfo);
+            log.info({ tableInfo }, 'Current table info');
         } catch (e) {
-            console.log('Table might not exist yet:', e.message);
+            log.warn({ error: e.message }, 'Table might not exist yet');
         }
         
         // Drop and recreate the embeddings table with correct dimensions
-        console.log('🗑️  Dropping existing embeddings table...');
+        log.info('🗑️  Dropping existing embeddings table...');
         await sql`DROP TABLE IF EXISTS "embeddings" CASCADE`;
         
-        console.log('📦 Creating embeddings table with vector(768)...');
+        log.info('📦 Creating embeddings table with vector(768)...');
         await sql`
             CREATE TABLE "embeddings" (
                 "id" varchar(191) PRIMARY KEY,
@@ -43,26 +44,26 @@ async function runMigration() {
             )
         `;
         
-        console.log('🚀 Creating HNSW vector index...');
+        log.info('🚀 Creating HNSW vector index...');
         await sql`CREATE INDEX "embedding_index" ON "embeddings" USING hnsw ("embedding" vector_cosine_ops)`;
         
-        console.log('✅ Migration completed successfully!');
-        console.log('📊 New table structure:');
+        log.info('✅ Migration completed successfully!');
+        log.info('📊 New table structure:');
         
         const newTableInfo = await sql`
             SELECT column_name, data_type, character_maximum_length 
             FROM information_schema.columns 
             WHERE table_name = 'embeddings'
         `;
-        console.table(newTableInfo);
+        log.info({ newTableInfo }, 'New table structure');
         
     } catch (error) {
-        console.error('❌ Migration failed:', error);
+        log.error({ error }, '❌ Migration failed');
         process.exit(1);
     }
 }
 
 runMigration().then(() => {
-    console.log('🎉 Migration script completed');
+    log.info('🎉 Migration script completed');
     process.exit(0);
 });

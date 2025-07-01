@@ -4,7 +4,7 @@ import { feedback } from '@/lib/database/schema';
 import { arcjetFeedback, handleArcjetDecision } from '@/lib/arcjet';
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
                 });
             }
         } catch (error) {
-            logger.error('[Feedback] Arcjet protection failed:', { data: error });
+            log.error('[Feedback] Arcjet protection failed:', { error });
             // Continue without Arcjet protection if it fails
         }
     }

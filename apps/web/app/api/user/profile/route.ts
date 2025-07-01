@@ -4,7 +4,7 @@ import { users } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
             success: true,
         });
     } catch (error) {
-        logger.error('Profile error:', { data: error });
+        log.error('Profile error:', { error });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

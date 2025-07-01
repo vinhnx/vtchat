@@ -5,7 +5,7 @@
 
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export interface SessionSubscriptionStatus {
     plan: PlanSlug;
@@ -68,7 +68,7 @@ function getSessionCacheKey(userId: string | null, sessionId: string): string {
         cacheKey = `subscription:user:${userId}`;
     }
 
-    logger.info(
+    log.info(
         { hasUserId: !!userId, hasSessionId: !!sessionId },
         '[Session Cache] Generated cache key'
     );
@@ -102,7 +102,7 @@ function getSessionId(request?: Request): string {
         const hash = simpleHash(sessionData);
         const sessionId = `anon_${hash}`;
 
-        logger.info(
+        log.info(
             '[Session Cache] Generated session ID from request headers'
         );
         return sessionId;
@@ -110,7 +110,7 @@ function getSessionId(request?: Request): string {
 
     // Fallback: generate unique ID for this request
     const fallbackId = `server_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    logger.info('[Session Cache] Using fallback session ID');
+    log.info('[Session Cache] Using fallback session ID');
     return fallbackId;
 }
 
@@ -175,14 +175,14 @@ export function getSessionSubscriptionStatus(
     const cacheKey = getSessionCacheKey(userId, sessionId);
     const cached = sessionSubscriptionCache.get(cacheKey);
 
-    logger.info({ cacheFound: !!cached }, '[Session Cache] Looking for cache');
+    log.info({ cacheFound: !!cached }, '[Session Cache] Looking for cache');
 
     if (!cached) {
         return null;
     }
 
     if (!isSessionCacheValid(cached, request)) {
-        logger.info('[Session Cache] Cache expired');
+        log.info('[Session Cache] Cache expired');
         sessionSubscriptionCache.delete(cacheKey);
         return null;
     }
@@ -194,13 +194,13 @@ export function getSessionSubscriptionStatus(
 
         if (!hasBeenFetched) {
             // First time in session, invalidate cache to get fresh data
-            logger.info('[Session Cache] First page refresh, invalidating cache');
+            log.info('[Session Cache] First page refresh, invalidating cache');
             sessionSubscriptionCache.delete(cacheKey);
             return null;
         }
     }
 
-    logger.info(
+    log.info(
         { fetchCount: cached.fetchCount },
         '[Session Cache] Cache hit'
     );
@@ -243,7 +243,7 @@ export function cacheSessionSubscriptionStatus(
     const userKey = status.userId || 'anonymous';
     sessionFetchTracker.set(userKey, true);
 
-    logger.info(
+    log.info(
         { 
             trigger, 
             expiresInMinutes: Math.round(cacheDuration / 1000 / 60), 
@@ -268,7 +268,7 @@ export function invalidateSessionSubscriptionCache(userId: string | null, reques
     const userKey = userId || 'anonymous';
     sessionFetchTracker.delete(userKey);
 
-    logger.info({ isAnonymous: userKey === 'anonymous' }, '[Session Cache] Invalidated cache');
+    log.info({ isAnonymous: userKey === 'anonymous' }, '[Session Cache] Invalidated cache');
 }
 
 /**
@@ -311,7 +311,7 @@ export function cleanupExpiredSessionCaches(): void {
     }
 
     if (cleanedCount > 0) {
-        logger.info({ cleanedCount }, '[Session Cache] Cleaned up expired cache entries');
+        log.info({ cleanedCount }, '[Session Cache] Cleaned up expired cache entries');
     }
 }
 
@@ -369,22 +369,22 @@ export async function getOrCreateSubscriptionRequest(
     const cacheKey = getSessionCacheKey(userId, sessionId);
     const requestKey = `${cacheKey}:${trigger}`;
 
-    logger.info('[Session Cache] Checking for in-flight request');
+    log.info('[Session Cache] Checking for in-flight request');
 
     // Check if there's already an in-flight request for this user/trigger combination
     const existingRequest = inFlightRequests.get(requestKey);
     if (existingRequest) {
-        logger.info('[Session Cache] Found in-flight request, waiting for completion');
+        log.info('[Session Cache] Found in-flight request, waiting for completion');
         return existingRequest;
     }
 
     // Create new request
     const requestPromise = (async () => {
         try {
-            logger.info('[Session Cache] Starting new request');
+            log.info('[Session Cache] Starting new request');
             const data = await fetchFunction();
             const cached = cacheSessionSubscriptionStatus(data, trigger, request);
-            logger.info('[Session Cache] Request completed and cached');
+            log.info('[Session Cache] Request completed and cached');
             return cached;
         } finally {
             // Clean up in-flight request tracking

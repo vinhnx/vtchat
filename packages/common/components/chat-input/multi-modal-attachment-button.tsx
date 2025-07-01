@@ -8,7 +8,7 @@ import { Paperclip } from 'lucide-react';
 import { FC, useCallback, useRef, useState } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Create a wrapper component for Paperclip to match expected icon prop type
 const PaperclipIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -76,7 +76,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
                 variant: 'success',
             });
         } catch (error) {
-            logger.error('Upload error:', { data: error });
+            log.error({ data: error }, 'Upload error');
             toast({
                 title: error instanceof Error ? error.message : 'Upload failed',
                 variant: 'destructive',

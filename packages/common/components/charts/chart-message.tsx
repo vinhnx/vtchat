@@ -4,7 +4,7 @@ import { ChartPopup, useChartPopup, type ChartData } from './chart-popup';
 import { Button } from '@repo/ui';
 import { BarChart3 } from 'lucide-react';
 import { useMemo } from 'react';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 type ChartMessageProps = {
     content: string;
@@ -21,7 +21,7 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
         try {
             return JSON.parse(chartDataMatch[1]) as ChartData;
         } catch (error) {
-            logger.error('Failed to parse chart data:', { data: error });
+            log.error({ data: error }, 'Failed to parse chart data');
             return null;
         }
     }, [content]);

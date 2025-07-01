@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth-server';
 import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export async function POST(request: NextRequest) {
     try {
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
         invalidateSubscriptionCache(userIdToInvalidate);
 
-        logger.info(
+        log.info(
             { invalidatedUserId: userIdToInvalidate, requestingUserId: userId },
             'Cache invalidated for user'
         );
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
             invalidatedUserId: userIdToInvalidate,
         });
     } catch (error) {
-        logger.error('[Subscription Cache API] Error:', { data: error });
+        log.error({ error }, '[Subscription Cache API] Error');
         return NextResponse.json(
             {
                 success: false,

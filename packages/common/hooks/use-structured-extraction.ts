@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { useChatStore } from '../store';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { isGeminiModel } from '../utils';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 // Dynamic import for pdfjs-dist to handle browser environment
 let pdfjsLib: any = null;
@@ -286,7 +286,7 @@ export const useStructuredExtraction = () => {
 
             return fullText.trim();
         } catch (error) {
-            logger.error('PDF text extraction failed:', { data: error });
+            log.error('PDF text extraction failed:', { data: error });
             throw new Error('Failed to extract text from PDF');
         }
     };
@@ -394,7 +394,7 @@ ${documentText}`,
                     }`,
                 });
             } catch (error) {
-                logger.error('Structured extraction failed:', { data: error });
+                log.error('Structured extraction failed:', { data: error });
                 toast({
                     title: 'Extraction Failed',
                     description:

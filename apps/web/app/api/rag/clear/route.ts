@@ -7,7 +7,7 @@ import { db } from '@/lib/database';
 import { resources, embeddings } from '@/lib/database/schema';
 import { eq, inArray } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export async function DELETE(_req: NextRequest) {
     try {
@@ -47,7 +47,7 @@ export async function DELETE(_req: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
-        logger.error('Error clearing knowledge base:', { data: error });
+        log.error('Error clearing knowledge base:', { error });
         return NextResponse.json(
             { error: 'Failed to clear knowledge base' },
             { status: 500 }

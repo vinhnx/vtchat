@@ -5,7 +5,7 @@
 
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 export interface CachedSubscriptionStatus {
     plan: PlanSlug;
@@ -98,5 +98,5 @@ export function cacheSubscriptionStatus(
 export function invalidateSubscriptionCache(userId: string): void {
     const cacheKey = getCacheKey(userId);
     subscriptionCache.delete(cacheKey);
-    logger.info('[Subscription Cache] Invalidated cache for user');
+    log.info({}, '[Subscription Cache] Invalidated cache for user');
 }

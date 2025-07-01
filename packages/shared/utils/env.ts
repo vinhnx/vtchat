@@ -1,5 +1,5 @@
 import { EnvironmentType } from '../types/environment';
-import { logger } from '@repo/shared/logger';
+import { log } from '@repo/shared/logger';
 
 /**
  * Checks if the current environment is production.
