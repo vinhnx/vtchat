@@ -37,7 +37,7 @@ const log = {
         } else {
             console.warn(`[${timestamp}] WARN: ${msg}`);
         }
-    }
+    },
 };
 
 // Set environment variables with fallbacks
@@ -45,7 +45,10 @@ const PORT = process.env.PORT || '3000';
 const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
 log.info('=== CUSTOM SERVER START ===');
-log.info({ PORT, HOSTNAME, NODE_ENV: process.env.NODE_ENV, cwd: process.cwd() }, 'Server environment configured');
+log.info(
+    { PORT, HOSTNAME, NODE_ENV: process.env.NODE_ENV, cwd: process.cwd() },
+    'Server environment configured'
+);
 
 // Verify server.js exists - Next.js standalone generates it at the root in production
 const serverPath = path.join(process.cwd(), 'server.js');

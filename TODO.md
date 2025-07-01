@@ -2,30 +2,6 @@
 
 ok go! -> https://vtchat.io.vn/
 
-
-the RAG knowledge base viewer is not fetch realtime. need a manually refresh to see the latest data. need to fix this.
-
---
-
-Localize -> Vietnamese, English
-https://lingo.dev/en
-
---
-
-IMPORTANT review all console.log on vemetric inplementation with pino logging. pii important
-
-=
-
-create new ampcode account before exe: now spawn multiple subagent to completely replace console logs (error, info, warn, debug) with pino logger make sure PII and Sensitive data is not logged.
-
---
-Launch -> good luck!
-
-+ post to LinkedIn
-
-also post to LinkedIn https://www.producthunt.com/products/vt?utm_source=linkedin&utm_medium=social
---
-
 https://github.com/e2b-dev/fragments
 
 --
