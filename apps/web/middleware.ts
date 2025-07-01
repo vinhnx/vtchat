@@ -2,13 +2,14 @@ import { auth } from '@/lib/auth-server';
 import { isPublicRoute } from '@repo/shared/constants';
 import { getCookieCache } from 'better-auth/cookies';
 import { NextRequest, NextResponse } from 'next/server';
+import { log } from '@repo/shared/logger';
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
-    const flyRegion = request.headers.get('Fly-Region') || 'unknown';
-    console.log(`[Traffic] Region: ${flyRegion}`);
+    const flyRegion = request.headers.get('Fly-Region') || request.headers.get('fly-region') || 'local';
+    log.info({ region: flyRegion, pathname }, '[Traffic] Request');
 
     // Skip middleware for static files, API routes with their own protection, and Next.js internals
     if (
@@ -52,7 +53,7 @@ export default async function middleware(request: NextRequest) {
                 return NextResponse.redirect(loginUrl);
             }
         } catch (error) {
-            console.warn('[Middleware] Auth check failed:', error);
+            log.warn({ error }, '[Middleware] Auth check failed');
             // On auth failure, redirect to login for protected routes
             const loginUrl = new URL('/login', request.url);
             loginUrl.searchParams.set('redirect_url', pathname);

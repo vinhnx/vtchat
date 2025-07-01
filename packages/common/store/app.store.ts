@@ -151,7 +151,7 @@ export const useAppStore = create<State & Actions>()(
                 settingTab: SETTING_TABS.USAGE_CREDITS,
                 showSignInModal: false,
                 // Default settings - using base plan defaults initially
-                showExamplePrompts: true,
+                showExamplePrompts: false,
                 customInstructions: '',
                 useWebSearch: false,
                 useMathCalculator: false,
@@ -342,7 +342,7 @@ export const useAppStore = create<State & Actions>()(
                         // Reset all user preferences to base plan defaults
                         const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
-                        state.showExamplePrompts = true;
+                        state.showExamplePrompts = false;
                         state.customInstructions = '';
                         state.useWebSearch = false;
                         state.useMathCalculator = false;

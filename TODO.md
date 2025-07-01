@@ -2,6 +2,31 @@
 
 ok go! -> https://vtchat.io.vn/
 
+
+--
+
++ post to Reddit
+
++ post to Indie Hackers [done]
+
++ post to Hacker News
+
+[v] post to Product Hunt https://www.producthunt.com/products/vt
+
+[v] post to Peerlist.io https://peerlist.io/vinhnx/project/vt
+
+[v] post to Microlaunch.net https://microlaunch.net/p/vt
+
++ post to LinkedIn
+
++ post to buildinpublic group twitter
+
++ https://open-launch.com
+
++ https://dailypings.com/
+
++ https://dailypings.com/posts/cmcjynja100sopj09aqbfomsu/comments
+
 --
 
 # Launch Plan
@@ -104,6 +129,13 @@ Your drafts are technically rich and precise, which aligns well with developer a
    * Use a 240×240 px GIF showcasing chat UI; static logos underperform ([demandcurve.com][9]).
 
 4. **First comment as story**
+
+VT began as a weekend experiment and evolved into a year-long journey, taking many forms along the way.
+
+I’ve learned so much from open-source projects, generous write-ups, and builders sharing in public.
+
+Try VT Chat today at https://vtchat.io.vn
+The app is fully open source at https://github.com/vinhnx/vtchat
 
    * Under the PH listing, add a comment outlining your “why” and invite feedback ([zeda.io][10]).
 

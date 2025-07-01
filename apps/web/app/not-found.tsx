@@ -1,12 +1,16 @@
+'use client';
+
 import { Button } from '@repo/ui';
 import { AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@repo/common/components';
+import { useSession } from '@repo/shared/lib/auth-client';
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
 
 export default function NotFound() {
+    const { data: session } = useSession();
     return (
         <main className="bg-background flex min-h-dvh items-center justify-center px-4">
             <div className="bg-card mx-auto w-full max-w-md rounded-xl border p-6 text-center shadow md:p-8">
@@ -29,7 +33,7 @@ export default function NotFound() {
             {/* Footer */}
             <footer className="border-border/50 bg-background border-t">
                 <div className="mx-auto max-w-7xl">
-                    <Footer />
+                    <Footer showBadge={!session} />
                 </div>
             </footer>
         </main>

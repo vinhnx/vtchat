@@ -39,7 +39,7 @@ export default function Home() {
                     <WrapperDisclosure className="mt-4" />
                 </div>
             </div>
-            <Footer />
+            <Footer showBadge={!session} />
         </div>
     );
 }
