@@ -234,6 +234,9 @@ export default function PlusPage() {
                                     <ButtonShadowGradient
                                         onClick={handleTryFree}
                                         className="w-full"
+                                        data-vmtrc="FreePlanSelected"
+                                        data-vmtrc-plan="VT_BASE"
+                                        data-vmtrc-context="pricing_page"
                                     >
                                         {getFreeButtonText()}
                                     </ButtonShadowGradient>
@@ -306,6 +309,10 @@ export default function PlusPage() {
                                                 }
                                             }}
                                             className="flex w-full items-center justify-center"
+                                            data-vmtrc="PremiumPlanSelected"
+                                            data-vmtrc-plan="VT_PLUS"
+                                            data-vmtrc-context="pricing_page"
+                                            data-vmtrc-price="10"
                                         >
                                             {getSubscribeButtonText()}
                                         </ButtonAnimatedGradient>
