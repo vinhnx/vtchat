@@ -1,11 +1,11 @@
 'use client';
 
-import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { useToast } from '@repo/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { logger } from '@repo/shared/logger';
 
 // Extend window interface for order details
 declare global {
@@ -54,38 +54,35 @@ export function CreemCheckoutProcessor() {
         // Check all parameters to see if we have a valid Creem redirect
         const allParams = Object.fromEntries(searchParams.entries());
 
-        log.info(
-            {
-                checkoutId,
-                orderId,
-                packageType,
-                quantity,
-                isPlusSubscription,
-                paymentStatus,
-                customerId,
-                productId,
-                subscriptionId,
-                amount,
-                currency,
-                planParam,
-                sessionId,
-                success,
-                allParams,
-            },
-            '[CreemCheckoutProcessor] Extracted parameters'
-        );
+        logger.info('[CreemCheckoutProcessor] Extracted parameters:', {
+            checkoutId,
+            orderId,
+            packageType,
+            quantity,
+            isPlusSubscription,
+            paymentStatus,
+            customerId,
+            productId,
+            subscriptionId,
+            amount,
+            currency,
+            planParam,
+            sessionId,
+            success,
+            allParams,
+        });
 
         // Check for valid checkout parameters - be more comprehensive
         if (!checkoutId && !orderId && !customerId && !sessionId && success !== 'true') {
-            log.info({}, '[CreemCheckoutProcessor] No valid checkout parameters found, skipping');
+            logger.info('[CreemCheckoutProcessor] No valid checkout parameters found, skipping');
             return;
         }
 
         // If this looks like a Creem success redirect but missing customer_id, log warning
         if ((checkoutId || orderId || success === 'true') && !customerId) {
-            log.warn(
-                { allParams },
-                '[CreemCheckoutProcessor] Creem redirect detected but customer_id missing'
+            console.warn(
+                '[CreemCheckoutProcessor] Creem redirect detected but customer_id missing:',
+                allParams
             );
         }
 
@@ -102,30 +99,26 @@ export function CreemCheckoutProcessor() {
                     productId === process.env.CREEM_PRODUCT_ID ||
                     packageType === CheckoutPackageType.VT_PLUS; // package === 'vt_plus'
 
-                log.info(
-                    {
-                        checkoutId,
-                        orderId,
-                        packageType,
-                        quantity,
-                        isPlusSubscription,
-                        isVtPlusSubscription,
-                        paymentStatus,
-                        customerId,
-                        productId,
-                        subscriptionId,
-                        planParam,
-                        amount,
-                        currency,
-                    },
-                    '[CreemCheckoutProcessor] Processing checkout success'
-                );
+                logger.info('[CreemCheckoutProcessor] Processing checkout success:', {
+                    checkoutId,
+                    orderId,
+                    packageType,
+                    quantity,
+                    isPlusSubscription,
+                    isVtPlusSubscription,
+                    paymentStatus,
+                    customerId,
+                    productId,
+                    subscriptionId,
+                    planParam,
+                    amount,
+                    currency,
+                });
 
                 // Update database with payment success - this is critical as webhook may not fire
                 if (customerId) {
                     try {
-                        log.info(
-                            {},
+                        console.log(
                             '[CreemCheckoutProcessor] Updating database with payment success...'
                         );
 
@@ -144,6 +137,11 @@ export function CreemCheckoutProcessor() {
                             session_id: sessionId || undefined,
                         };
 
+                        console.log(
+                            '[CreemCheckoutProcessor] Sending payment data to API:',
+                            paymentData
+                        );
+
                         const response = await fetch('/api/payment-success', {
                             method: 'POST',
                             headers: {
@@ -152,22 +150,21 @@ export function CreemCheckoutProcessor() {
                             body: JSON.stringify(paymentData),
                         });
 
-                        log.info(
-                            { status: response.status },
-                            '[CreemCheckoutProcessor] API response status'
+                        console.log(
+                            '[CreemCheckoutProcessor] API response status:',
+                            response.status
                         );
 
                         if (response.ok) {
                             const result = await response.json();
-                            log.info(
-                                { result },
-                                '[CreemCheckoutProcessor] Database updated successfully'
+                            console.log(
+                                '[CreemCheckoutProcessor] Database updated successfully:',
+                                result
                             );
 
                             // Invalidate subscription cache to ensure fresh data
                             try {
-                                log.info(
-                                    {},
+                                console.log(
                                     '[CreemCheckoutProcessor] Invalidating subscription cache...'
                                 );
                                 const cacheResponse = await fetch(
@@ -181,12 +178,19 @@ export function CreemCheckoutProcessor() {
                                 );
 
                                 if (cacheResponse.ok) {
-                                    log.info({}, '[CreemCheckoutProcessor] Subscription cache invalidated successfully');
+                                    console.log(
+                                        '[CreemCheckoutProcessor] Subscription cache invalidated successfully'
+                                    );
                                 } else {
-                                    log.warn({}, '[CreemCheckoutProcessor] Failed to invalidate subscription cache');
+                                    console.warn(
+                                        '[CreemCheckoutProcessor] Failed to invalidate subscription cache'
+                                    );
                                 }
                             } catch (cacheError) {
-                                log.error({ cacheError }, '[CreemCheckoutProcessor] Error invalidating cache');
+                                console.error(
+                                    '[CreemCheckoutProcessor] Error invalidating cache:',
+                                    cacheError
+                                );
                             }
 
                             toast({
@@ -196,7 +200,10 @@ export function CreemCheckoutProcessor() {
                             });
                         } else {
                             const error = await response.json();
-                            log.error({ error }, '[CreemCheckoutProcessor] Database update failed');
+                            console.error(
+                                '[CreemCheckoutProcessor] Database update failed:',
+                                error
+                            );
                             toast({
                                 title: 'Account Update Issue',
                                 description:
@@ -205,7 +212,7 @@ export function CreemCheckoutProcessor() {
                             });
                         }
                     } catch (dbError) {
-                        log.error({ dbError }, '[CreemCheckoutProcessor] Error updating database');
+                        logger.error('[CreemCheckoutProcessor] Error updating database:', { data: dbError });
                         toast({
                             title: 'Database Update Issue',
                             description:
@@ -231,7 +238,7 @@ export function CreemCheckoutProcessor() {
                 }
 
                 if (isVtPlusSubscription) {
-                    log.info({}, '[CreemCheckoutProcessor] VT+ subscription activated');
+                    logger.info('[CreemCheckoutProcessor] VT+ subscription activated');
                 } else {
                     // Invalid purchase type for VT+ only system
                     toast({
@@ -245,7 +252,7 @@ export function CreemCheckoutProcessor() {
                 // This prevents double refresh and ensures clean state
 
                 // Log successful purchase for analytics
-                log.info({
+                logger.info('[CreemCheckoutProcessor] Purchase completed successfully:', {
                     checkoutId,
                     orderId,
                     packageType,
@@ -256,7 +263,7 @@ export function CreemCheckoutProcessor() {
                     productId,
                     subscriptionId,
                     timestamp: new Date().toISOString(),
-                }, '[CreemCheckoutProcessor] Purchase completed successfully');
+                });
 
                 // Show welcome toast and redirect after delay
                 setTimeout(() => {
@@ -266,7 +273,7 @@ export function CreemCheckoutProcessor() {
                             title: 'Welcome to VT+!',
                             description: 'Redirecting to chat to enjoy your new features...',
                         });
-
+                        
                         // Redirect after showing welcome toast
                         setTimeout(() => {
                             window.location.href = '/chat';
@@ -277,7 +284,7 @@ export function CreemCheckoutProcessor() {
                     }
                 }, 2000); // 2 second delay after payment success message
             } catch (error) {
-                log.error({ error }, '[CreemCheckoutProcessor] Error processing checkout success');
+                logger.error('[CreemCheckoutProcessor] Error processing checkout success:', { data: error });
                 toast({
                     title: 'Processing Issue',
                     description:

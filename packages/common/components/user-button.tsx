@@ -18,7 +18,7 @@ import { useAppStore } from '../store/app.store';
 import { ThemeSwitcher } from './theme-switcher';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { GatedFeatureAlert } from './gated-feature-alert';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 interface UserButtonProps {
     showName?: boolean;
@@ -80,7 +80,9 @@ export function UserButton({ showName = false }: UserButtonProps) {
                         title="Dark Theme Available in VT+"
                         message="Dark theme is a VT+ feature. Please upgrade your plan to use this feature."
                         onGatedClick={() => {
-                            log.info('User attempted to use dark theme without VT+ subscription');
+                            console.log(
+                                'User attempted to use dark theme without VT+ subscription'
+                            );
                         }}
                     >
                         <ThemeSwitcher className="scale-75" />

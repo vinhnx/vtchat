@@ -9,7 +9,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -165,7 +165,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             const startTime = performance.now();
 
             abortController.signal.addEventListener('abort', () => {
-                log.info({ threadId: body.threadId }, 'Abort controller triggered');
+                logger.info('Abort controller triggered');
                 setIsGenerating(false);
                 updateThreadItem(body.threadId, {
                     id: body.threadItemId,
@@ -210,7 +210,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         error: errorText,
                         persistToDB: true,
                     });
-                    log.error({ errorText, status: response.status }, 'Error response received');
+                    logger.error('Error response:', { data: errorText });
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
@@ -269,45 +269,39 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                     } else if (currentEvent === 'done' && data.type === 'done') {
                                         setIsGenerating(false);
                                         const streamDuration = performance.now() - streamStartTime;
-                                        log.info(
-                                            { 
-                                                eventCount, 
-                                                streamDurationMs: streamDuration.toFixed(2) 
-                                            },
-                                            'done event received'
+                                        console.log(
+                                            'done event received',
+                                            eventCount,
+                                            `Stream duration: ${streamDuration.toFixed(2)}ms`
                                         );
                                         if (data.threadItemId) {
                                             threadItemMap.delete(data.threadItemId);
                                         }
                                         if (data.status === 'error') {
-                                            log.error({ error: data.error }, 'Stream error');
+                                            logger.error('Stream error:', { data: data.error });
                                         }
                                     }
                                 } catch (jsonError) {
-                                    log.warn(
-                                        { 
-                                            rawData: dataMatch[1], 
-                                            error: jsonError 
-                                        },
-                                        'JSON parse error for data'
+                                    console.warn(
+                                        'JSON parse error for data:',
+                                        dataMatch[1],
+                                        jsonError
                                     );
                                 }
                             }
                         }
                     } catch (readError) {
-                        log.error({ error: readError }, 'Error reading from stream');
+                        logger.error('Error reading from stream:', { data: readError });
                         await new Promise(resolve => setTimeout(resolve, 1000));
                         continue;
                     }
                 }
             } catch (streamError: any) {
                 const totalTime = performance.now() - startTime;
-                log.error(
-                    { 
-                        error: streamError, 
-                        totalTimeMs: totalTime.toFixed(2) 
-                    },
-                    'Fatal stream error'
+                console.error(
+                    'Fatal stream error:',
+                    streamError,
+                    `Total time: ${totalTime.toFixed(2)}ms`
                 );
                 setIsGenerating(false);
                 if (streamError.name === 'AbortError') {
@@ -333,7 +327,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 setIsGenerating(false);
 
                 const totalTime = performance.now() - startTime;
-                log.info({ totalTimeMs: totalTime.toFixed(2) }, 'Stream completed');
+                console.info(`Stream completed in ${totalTime.toFixed(2)}ms`);
             }
         },
         [
@@ -368,7 +362,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
-            log.info({ useWebSearch, useMathCalculator, useCharts }, 'Agent provider received flags');
+            logger.info('🔥 Agent provider received flags:', {
+                useWebSearch,
+                useMathCalculator,
+                useCharts,
+            });
             
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
@@ -443,13 +441,17 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 setIsGenerating(true);
 
                 abortController.signal.addEventListener('abort', () => {
-                    log.info({ threadId }, 'Abort signal received');
+                    logger.info('Abort signal received');
                     setIsGenerating(false);
                     abortWorkflow();
                     updateThreadItem(threadId, { id: optimisticAiThreadItemId, status: 'ABORTED' });
                 });
 
-                log.info({ useWebSearch, useMathCalculator, useCharts }, 'About to call startWorkflow');
+                logger.info('🎯 About to call startWorkflow with:', {
+                    useWebSearch,
+                    useMathCalculator,
+                    useCharts,
+                });
                 startWorkflow({
                     mode,
                     question: query,
@@ -515,7 +517,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
     const updateContext = useCallback(
         (threadId: string, data: any) => {
-            log.info({ contextData: data }, 'Updating context');
+            logger.info('Updating context', { data: data });
             updateThreadItem(threadId, {
                 id: data.threadItemId,
                 parentId: data.parentThreadItemId,

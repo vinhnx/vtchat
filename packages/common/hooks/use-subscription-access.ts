@@ -6,7 +6,7 @@ import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { useCallback } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Custom hook for optimized subscription access checking.
@@ -94,9 +94,8 @@ export function useSubscriptionAccess() {
 
             // If permission is provided (legacy or future use)
             if (options.permission) {
-                log.warn(
-                    { permission: options.permission },
-                    'Permission checks are not fully implemented in useSubscriptionAccess'
+                console.warn(
+                    `Permission checks ('${options.permission}') are not fully implemented in useSubscriptionAccess.`
                 );
                 return false;
             }

@@ -5,7 +5,7 @@ import { monitorAuth } from '@repo/shared/utils/performance-monitor';
 import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 /**
  * Hook to manage thread database switching based on user authentication
@@ -24,9 +24,8 @@ export const useThreadAuth = () => {
 
         // Only switch database if user actually changed
         if (currentUserId !== previousUserId) {
-            log.info(
-                { previousUserId: previousUserId || 'anonymous', currentUserId: currentUserId || 'anonymous' },
-                '[ThreadAuth] User changed'
+            console.log(
+                `[ThreadAuth] User changed from ${previousUserId || 'anonymous'} to ${currentUserId || 'anonymous'}`
             );
 
             // Monitor the database switching performance
@@ -34,13 +33,12 @@ export const useThreadAuth = () => {
                 .sessionCheck(async () => {
                     // Switch to the appropriate user database for threads
                     await switchUserDatabase(currentUserId);
-                    log.info(
-                        { userId: currentUserId || 'anonymous' },
-                        '[ThreadAuth] Successfully switched to database for user'
+                    console.log(
+                        `[ThreadAuth] Successfully switched to database for user: ${currentUserId || 'anonymous'}`
                     );
                 })
                 .catch(error => {
-                    log.error({ error }, '[ThreadAuth] Failed to switch user database');
+                    logger.error('[ThreadAuth] Failed to switch user database:', { data: error });
                 });
 
             // Switch to the appropriate user storage for API keys

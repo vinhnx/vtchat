@@ -26,7 +26,7 @@ import {
 import { Github, ExternalLink, Unlink, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { MultiSessionPanel } from './multi-session-panel';
 import { useState, useEffect, useCallback } from 'react';
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
@@ -60,16 +60,15 @@ export const UserProfileSettings = () => {
             // Always fetch from database for most accurate information
             const accounts = await getLinkedAccountsFromDB(session.user.id);
             setLinkedAccounts(accounts);
-            log.info(
-                { accountsCount: accounts.length },
-                '[Account Linking] Fetched linked accounts from database'
+            console.log(
+                `[Account Linking] Fetched ${accounts.length} linked accounts from database`
             );
         } catch (err) {
-            log.error({ error: err }, 'Error fetching linked accounts from database');
+            logger.error('Error fetching linked accounts from database:', { data: err });
             // Fallback to session data if database query fails
             if (session.user.accounts && session.user.accounts.length >= 0) {
                 setLinkedAccounts(session.user.accounts);
-                log.info('[Account Linking] Using session data as fallback');
+                logger.info('[Account Linking] Using session data as fallback');
             } else {
                 setLinkedAccounts([]);
             }
@@ -124,14 +123,12 @@ export const UserProfileSettings = () => {
 
                             // Update the accounts list
                             setLinkedAccounts(accounts);
-                            log.info(
-                                { provider: linkingProvider },
-                                '[Account Linking] Successfully linked account'
+                            console.log(
+                                `[Account Linking] Successfully linked ${linkingProvider} account`
                             );
                         } else {
-                            log.info(
-                                { provider: linkingProvider },
-                                '[Account Linking] Account linking was not completed'
+                            console.log(
+                                `[Account Linking] ${linkingProvider} account linking was not completed`
                             );
                         }
 
@@ -139,7 +136,7 @@ export const UserProfileSettings = () => {
                         setIsLinking(null);
                         localStorage.removeItem('linking_provider');
                     } catch (err) {
-                        log.error({ error: err }, 'Error checking OAuth callback result');
+                        logger.error('Error checking OAuth callback result:', { data: err });
                         setIsLinking(null);
                         localStorage.removeItem('linking_provider');
                     }
@@ -189,7 +186,7 @@ export const UserProfileSettings = () => {
 
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
-            log.error({ error: err }, 'Error updating profile');
+            logger.error('Error updating profile:', { data: err });
             setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setIsUpdating(false);
@@ -227,9 +224,9 @@ export const UserProfileSettings = () => {
             });
 
             // Note: Success feedback will be shown after OAuth callback completion
-            log.info({ provider }, '[Account Linking] Initiated linking process');
+            console.log(`[Account Linking] Initiated ${provider} linking process`);
         } catch (err) {
-            log.error({ error: err, provider }, 'Error linking account');
+            console.error(`Error linking ${provider} account:`, err);
             setError(`Failed to link ${provider} account. Please try again.`);
             localStorage.removeItem('linking_provider');
             setIsLinking(null);
@@ -260,7 +257,7 @@ export const UserProfileSettings = () => {
             await getSessionFresh();
             await fetchLinkedAccounts();
         } catch (err) {
-            log.error({ error: err, provider }, 'Error unlinking account');
+            console.error(`Error unlinking ${provider} account:`, err);
             setError(`Failed to unlink ${provider} account. Please try again.`);
         } finally {
             setIsUnlinking(null);

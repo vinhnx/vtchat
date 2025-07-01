@@ -1,5 +1,5 @@
 
-import { log } from '@repo/shared/logger';
+import { logger } from '@repo/shared/logger';
 /**
  * Storage cleanup utilities for handling corrupted localStorage data
  */
@@ -10,7 +10,7 @@ import { log } from '@repo/shared/logger';
 export function cleanupCorruptedStorage(): void {
     if (typeof window === 'undefined') return;
 
-    log.info('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...');
+    logger.info('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...');
 
     // Get all localStorage keys that match our per-account patterns
     const storageKeys = Object.keys(localStorage);
@@ -31,7 +31,7 @@ export function cleanupCorruptedStorage(): void {
                 JSON.parse(value);
             }
         } catch (error) {
-            log.warn({ key, error }, '[StorageCleanup] Removing corrupted entry');
+            console.warn(`[StorageCleanup] Removing corrupted entry: ${key}`, error);
             localStorage.removeItem(key);
             cleanedCount++;
         }
@@ -41,9 +41,9 @@ export function cleanupCorruptedStorage(): void {
     cleanupDeprecatedRagKeys();
 
     if (cleanedCount > 0) {
-        log.info({ count: cleanedCount }, '[StorageCleanup] Cleaned up corrupted storage entries');
+        console.log(`[StorageCleanup] Cleaned up ${cleanedCount} corrupted storage entries`);
     } else {
-        log.info('[StorageCleanup] No corrupted storage entries found');
+        logger.info('[StorageCleanup] No corrupted storage entries found');
     }
 }
 
@@ -60,7 +60,7 @@ function cleanupDeprecatedRagKeys(): void {
     for (const key of deprecatedKeys) {
         if (localStorage.getItem(key) !== null) {
             localStorage.removeItem(key);
-            log.info({ key }, '[StorageCleanup] Removed deprecated RAG key');
+            console.log(`[StorageCleanup] Removed deprecated RAG key: ${key}`);
         }
     }
 }
@@ -90,7 +90,10 @@ export function safeJsonParse<T>(value: string | null, fallback: T): T {
         !(cleanValue.startsWith('[') && cleanValue.endsWith(']')) &&
         !(cleanValue.startsWith('"') && cleanValue.endsWith('"'))
     ) {
-        log.warn({ value: cleanValue.substring(0, 100) }, '[StorageCleanup] Invalid JSON format, using fallback');
+        console.warn(
+            '[StorageCleanup] Invalid JSON format, using fallback. Value:',
+            cleanValue.substring(0, 100)
+        );
         return fallback;
     }
 
@@ -98,7 +101,12 @@ export function safeJsonParse<T>(value: string | null, fallback: T): T {
         const parsed = JSON.parse(cleanValue);
         return parsed;
     } catch (error) {
-        log.warn({ value: cleanValue.substring(0, 100), error }, '[StorageCleanup] Failed to parse JSON, using fallback');
+        console.warn(
+            '[StorageCleanup] Failed to parse JSON, using fallback. Value:',
+            cleanValue.substring(0, 100),
+            'Error:',
+            error
+        );
         return fallback;
     }
 }
