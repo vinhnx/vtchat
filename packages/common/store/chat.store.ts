@@ -67,7 +67,7 @@ function initializeUserDatabase(userId: string | null) {
         // Update config key to be user-specific for better isolation
         CONFIG_KEY = newUserId ? `chat-config-${newUserId}` : 'chat-config-anonymous';
 
-        console.log(`[ThreadDB] Initialized database for user: ${newUserId || 'anonymous'}`);
+        logger.info({ isAnonymous: !newUserId }, '[ThreadDB] Initialized database for user');
     }
 
     return db;
@@ -1614,7 +1614,7 @@ export const useChatStore = create(
         // User-specific database management for per-account thread isolation
         switchUserDatabase: async (userId: string | null) => {
             try {
-                console.log(`[ThreadDB] Switching to database for user: ${userId || 'anonymous'}`);
+                logger.info({ isAnonymous: !userId }, '[ThreadDB] Switching to database for user');
 
                 // Initialize the new user-specific database
                 initializeUserDatabase(userId);

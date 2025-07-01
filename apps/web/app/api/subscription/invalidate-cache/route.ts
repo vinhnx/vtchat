@@ -39,8 +39,9 @@ export async function POST(request: NextRequest) {
 
         invalidateSubscriptionCache(userIdToInvalidate);
 
-        console.log(
-            `[Subscription Cache API] Cache invalidated for user ${userIdToInvalidate} by ${userId}`
+        logger.info(
+            { invalidatedUserId: userIdToInvalidate, requestingUserId: userId },
+            'Cache invalidated for user'
         );
 
         return NextResponse.json({

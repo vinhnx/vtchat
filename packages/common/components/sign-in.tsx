@@ -45,7 +45,7 @@ export const CustomSignIn = ({
                 router.push('/chat');
             }
         } catch (error: any) {
-            console.log(error.errors);
+            logger.error({ errorCount: error.errors?.length }, 'Sign-in validation errors');
             if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
                 try {
                     const result = await signIn.attemptFirstFactor({
@@ -59,7 +59,7 @@ export const CustomSignIn = ({
                     }
                 } catch (error) {
                     if (isClerkAPIResponseError(error)) {
-                        console.log(error);
+                        logger.error('Clerk API error during sign-in retry');
                     }
 
                     logger.error('Sign-in error:', { data: error });
@@ -168,7 +168,7 @@ export const CustomSignIn = ({
                         identifier: email,
                     });
 
-                    console.log(signInAttempt);
+                    logger.info('Created sign-in attempt for existing user');
 
                     // Get the email address ID from the response and prepare the magic link
                     const emailAddressIdObj: any = signInAttempt?.supportedFirstFactors?.find(
@@ -188,7 +188,7 @@ export const CustomSignIn = ({
                         throw new Error('Email address ID not found');
                     }
                 } catch (error: any) {
-                    console.log(error.message);
+                    logger.error('Sign-in attempt failed');
                     if (error.includes('Incorrect code')) {
                         setError('Incorrect code. Please try again.');
                     } else {

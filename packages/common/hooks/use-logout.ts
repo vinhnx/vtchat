@@ -78,7 +78,7 @@ export const useLogout = () => {
                 userDataKeys.forEach(key => {
                     if (localStorage.getItem(key)) {
                         localStorage.removeItem(key);
-                        console.log(`[Logout] ✅ Cleared ${key}`);
+                        logger.info('[Logout] ✅ Cleared subscription cache key');
                     }
                 });
 
@@ -93,7 +93,7 @@ export const useLogout = () => {
                 );
                 dynamicKeys.forEach(key => {
                     localStorage.removeItem(key);
-                    console.log(`[Logout] ✅ Cleared dynamic key: ${key}`);
+                    logger.info('[Logout] ✅ Cleared dynamic key');
                 });
 
                 // Clear next-themes storage (dark mode is a VT+ feature)
@@ -108,7 +108,7 @@ export const useLogout = () => {
                         key.includes('mode')
                 );
                 allThemeKeys.forEach(key => localStorage.removeItem(key));
-                console.log(`[Logout] ✅ Cleared theme storage (${allThemeKeys.length + 1} keys)`);
+                logger.info({ themeKeysCleared: allThemeKeys.length + 1 }, '[Logout] ✅ Cleared theme storage');
 
                 // Clear any remaining VT+ or premium feature caches
                 const premiumKeys = Object.keys(localStorage).filter(

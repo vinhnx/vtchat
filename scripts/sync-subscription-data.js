@@ -49,7 +49,7 @@ async function syncSubscriptionData() {
             `📋 Found ${usersWithoutSubscriptions.length} users that need subscription records:`
         );
         usersWithoutSubscriptions.forEach(user => {
-            console.log(`   - ${user.email} (${user.id})`);
+            console.log(`   - User ID: ${user.id}`);
         });
 
         // Create subscription records for these users
@@ -69,7 +69,7 @@ async function syncSubscriptionData() {
             };
 
             await db.insert(userSubscriptions).values(subscriptionData);
-            console.log(`✅ Created subscription record for ${user.email}`);
+            console.log(`✅ Created subscription record for user ${user.id}`);
         }
 
         console.log(

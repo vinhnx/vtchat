@@ -98,7 +98,7 @@ export function cacheSubscriptionStatus(
 export function invalidateSubscriptionCache(userId: string): void {
     const cacheKey = getCacheKey(userId);
     subscriptionCache.delete(cacheKey);
-    console.log(`[Subscription Cache] Invalidated cache for user`);
+    logger.info('[Subscription Cache] Invalidated cache for user');
 }
 
 /**
@@ -107,7 +107,7 @@ export function invalidateSubscriptionCache(userId: string): void {
 export function invalidateAllSubscriptionCaches(): void {
     const count = subscriptionCache.size;
     subscriptionCache.clear();
-    console.log(`[Subscription Cache] Invalidated ${count} cache entries`);
+    logger.info({ count }, '[Subscription Cache] Invalidated cache entries');
 }
 
 /**
@@ -150,7 +150,7 @@ export function cleanupExpiredCache(): void {
     }
 
     if (cleanedCount > 0) {
-        console.log(`[Subscription Cache] Cleaned up ${cleanedCount} expired entries`);
+        logger.info({ cleanedCount }, '[Subscription Cache] Cleaned up expired entries');
     }
 }
 

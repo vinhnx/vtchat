@@ -372,7 +372,7 @@ export class PaymentService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        logger.info('[PaymentService] Creating VT+ subscription checkout for:', { data: customerEmail });
+        logger.info('[PaymentService] Creating VT+ subscription checkout');
 
         return this.createCheckout({
             productId: PlanSlug.VT_PLUS,

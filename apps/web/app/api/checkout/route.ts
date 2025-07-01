@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         const userEmail = user?.email;
 
         if (!userEmail) {
-            logger.error('No email found for user:', { data: userId });
+            logger.error('No email found for user:', { userId });
             return NextResponse.json(
                 {
                     error: 'Email required',
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
         // Validate email domain
         if (userEmail.includes('@example.com')) {
-            logger.error('Invalid email domain detected:', { data: userEmail });
+            logger.error('Invalid email domain detected');
             return NextResponse.json(
                 {
                     error: 'Invalid email configuration',
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         let checkout;
         try {
             if (packageType === PlanSlug.VT_PLUS) {
-                logger.info('Starting VT+ subscription checkout for user:', { data: userEmail });
+                logger.info('Starting VT+ subscription checkout for user');
                 checkout = await PaymentService.subscribeToVtPlus(userEmail);
             } else {
                 logger.error('Invalid package type for VT+ only system:', { data: packageType });

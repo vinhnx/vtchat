@@ -1,7 +1,6 @@
 import { TypographySmall } from '@repo/ui';
 import Link from 'next/link';
 import { AIDisclaimer } from './ai-disclaimer';
-import Image from 'next/image';
 
 interface FooterProps {
     showBadge?: boolean;
@@ -41,7 +40,7 @@ export const Footer = ({ showBadge = false }: FooterProps) => {
                 ))}
             </div>
             {showBadge && (
-                <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-2">
                     <a
                         href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
                         target="_blank"
@@ -49,24 +48,32 @@ export const Footer = ({ showBadge = false }: FooterProps) => {
                         <img
                             src="https://startupfa.me/badges/featured-badge.webp"
                             alt="Featured on Startup Fame"
-                            width="171"
-                            height="54"
+                            width="128"
+                            height="40"
+                            className="w-24 h-8 sm:w-32 sm:h-10"
                         />
                     </a>
-                    <Link
-                        href="https://magicbox.tools"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <Image
+                    <a href="https://magicbox.tools" target="_blank">
+                        <img
                             src="https://magicbox.tools/badge.svg"
                             alt="Featured on MagicBox.tools"
-                            width={128}
-                            height={40}
-                            unoptimized
-                            className="transition-opacity hover:opacity-80 sm:w-44 sm:h-14"
+                            width="150"
+                            height="40"
+                            className="w-28 h-8 sm:w-36 sm:h-10"
                         />
-                    </Link>
+                    </a>
+                    <a
+                        href="https://www.producthunt.com/products/vt?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-vt"
+                        target="_blank"
+                    >
+                        <img
+                            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=986116&theme=neutral&t=1751345063856"
+                            alt="VT - AI chat in browser with your own API keys | Product Hunt"
+                            width="180"
+                            height="40"
+                            className="w-32 h-8 sm:w-44 sm:h-10"
+                        />
+                    </a>
                 </div>
             )}
             <AIDisclaimer className="mb-2" />

@@ -195,10 +195,9 @@ export class CreemService {
                         .limit(1);
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
-                        console.log(
-                            '[CreemService] Found customer ID for user:',
-                            userId,
-                            customerId
+                        logger.info(
+                            { userId },
+                            '[CreemService] Found customer ID for user'
                         );
                     }
                 } catch (dbError) {
@@ -225,7 +224,7 @@ export class CreemService {
                             (result as any).link;
 
                         if (portalUrl) {
-                            console.log(
+                            logger.info(
                                 '[CreemService] Generated customer portal URL successfully'
                             );
                             return {
@@ -235,9 +234,9 @@ export class CreemService {
                         }
                     }
                 } catch (sdkError) {
-                    console.error(
-                        '[CreemService] Creem SDK generateCustomerLinks failed:',
-                        sdkError
+                    logger.error(
+                        { error: sdkError },
+                        '[CreemService] Creem SDK generateCustomerLinks failed'
                     );
                     // Fall through to fallback logic
                 }
@@ -277,7 +276,7 @@ export class CreemService {
      * Subscribe to VT+ plan
      */
     static async subscribeToVtPlus(customerEmail?: string) {
-        logger.info('[CreemService] Creating VT+ subscription checkout for:', { data: customerEmail });
+        logger.info('[CreemService] Creating VT+ subscription checkout');
 
         return this.createCheckout({
             productId: this.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
