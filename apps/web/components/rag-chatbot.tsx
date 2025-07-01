@@ -4,7 +4,7 @@ import { models } from '@repo/ai/models';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { RagOnboarding } from './rag-onboarding';
+import { log } from '@repo/shared/logger';
 import {
     Avatar,
     Badge,
@@ -26,7 +26,7 @@ import { useChat } from 'ai/react';
 import { Database, Eye, Send, Settings, Shield, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { log } from '@repo/shared/logger';
+import { RagOnboarding } from './rag-onboarding';
 
 interface KnowledgeItem {
     id: string;
@@ -41,23 +41,23 @@ export function RAGChatbot() {
     const ragChatModel = useAppStore(state => state.ragChatModel);
     const profile = useAppStore(state => state.profile);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    
+
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
     const [isClearing, setIsClearing] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    
+
     // Simple BYOK check - show onboarding if no required API keys
     const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
     const [hasCheckedApiKeys, setHasCheckedApiKeys] = useState(false);
-    
+
     const allApiKeys = getAllKeys();
     const hasGeminiKey = !!allApiKeys['GEMINI_API_KEY'];
     const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
     const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
-    
+
     // Check for required API keys on component mount and when keys change
     useEffect(() => {
         if (!hasCheckedApiKeys) {
@@ -86,28 +86,29 @@ export function RAGChatbot() {
         onError: error => {
             log.error({ error }, 'RAG Chat Error');
             log.info({ message: error.message }, 'Error message'); // Debug log
-            
-            // Show user-friendly error message with sonner
-            if (error.message.includes('API key is required')) {
-                log.info({}, 'Showing API key error toast'); // Debug
-                toast.error('API Key Required', {
-                    description:
-                        'Please configure your API keys in Settings to use the Knowledge Assistant.',
-                });
-            } else if (error.message.includes('Rate limit')) {
-                log.info({}, 'Showing rate limit error toast'); // Debug
-                toast.error('Rate Limit Exceeded', {
-                    description: 'Too many requests. Please try again later.',
-                });
-            } else {
-                log.info({}, 'Showing general error toast'); // Debug
-                toast.error('Chat Error', {
-                    description: 'Something went wrong. Please try again.',
-                });
-            }
-            },
-       
-     });
+
+            // Show user-friendly error message with sonner (deferred to avoid render issues)
+            setTimeout(() => {
+                if (error.message.includes('API key is required')) {
+                    log.info({}, 'Showing API key error toast'); // Debug
+                    toast.error('API Key Required', {
+                        description:
+                            'Please configure your API keys in Settings to use the Knowledge Assistant.',
+                    });
+                } else if (error.message.includes('Rate limit')) {
+                    log.info({}, 'Showing rate limit error toast'); // Debug
+                    toast.error('Rate Limit Exceeded', {
+                        description: 'Too many requests. Please try again later.',
+                    });
+                } else {
+                    log.info({}, 'Showing general error toast'); // Debug
+                    toast.error('Chat Error', {
+                        description: 'Something went wrong. Please try again.',
+                    });
+                }
+            }, 0);
+        },
+    });
 
     // Track if we're currently processing to avoid duplicate indicators
     const isProcessing =
@@ -251,20 +252,20 @@ export function RAGChatbot() {
                                             className="h-8 w-8 shrink-0"
                                         />
                                     ) : (
-                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background border border-primary/20">
-                                    <svg
-                                    width="16"
-                                    height="16"
-                                    viewBox="-7.5 0 32 32"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                    <path
-                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
-                                    fill="currentColor"
-                                    className="text-primary"
-                                    />
-                                    </svg>
-                                    </div>
+                                        <div className="bg-background border-primary/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="-7.5 0 32 32"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
+                                                    fill="currentColor"
+                                                    className="text-primary"
+                                                />
+                                            </svg>
+                                        </div>
                                     )}
                                     <div
                                         className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
@@ -301,7 +302,7 @@ export function RAGChatbot() {
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background border border-primary/20">
+                                <div className="bg-background border-primary/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
                                     <svg
                                         width="16"
                                         height="16"
@@ -358,21 +359,22 @@ export function RAGChatbot() {
                             </div>
                         </div>
                     )}
-                    
+
                     <form onSubmit={handleSubmit} className="flex gap-2">
                         <Input
                             value={input}
                             onChange={handleInputChange}
-                            placeholder={!hasRequiredKeys 
-                                ? "Add API keys to continue chatting..." 
-                                : "Ask anything or share knowledge..."
+                            placeholder={
+                                !hasRequiredKeys
+                                    ? 'Add API keys to continue chatting...'
+                                    : 'Ask anything or share knowledge...'
                             }
                             disabled={isLoading || !hasRequiredKeys}
                             className="flex-1"
                         />
-                        <Button 
-                            type="submit" 
-                            disabled={isLoading || !input.trim() || !hasRequiredKeys} 
+                        <Button
+                            type="submit"
+                            disabled={isLoading || !input.trim() || !hasRequiredKeys}
                             size="icon"
                         >
                             <Send className="h-4 w-4" />
@@ -400,7 +402,12 @@ export function RAGChatbot() {
                                 <div className="flex gap-2">
                                     <Dialog
                                         open={isViewDialogOpen}
-                                        onOpenChange={setIsViewDialogOpen}
+                                        onOpenChange={open => {
+                                            setIsViewDialogOpen(open);
+                                            if (open) {
+                                                fetchKnowledgeBase();
+                                            }
+                                        }}
                                     >
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm" className="flex-1">
@@ -606,7 +613,7 @@ export function RAGChatbot() {
                     </div>
                 </ScrollArea>
             </div>
-            
+
             {/* API Key Dialog */}
             <RagOnboarding
                 isOpen={showApiKeyDialog}
