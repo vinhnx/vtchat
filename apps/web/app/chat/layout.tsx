@@ -18,7 +18,7 @@ const ChatInput = dynamic(
 );
 
 export default function ChatPageLayout({ children }: { children: React.ReactNode }) {
-    const { data: session } = useSession();
+    const { data: session, isPending } = useSession();
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
@@ -30,7 +30,7 @@ export default function ChatPageLayout({ children }: { children: React.ReactNode
             </div>
             
             {/* ChatFooter pinned to bottom with padding for non-logged users */}
-            {!session && (
+            {!isPending && !session && (
                 <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
                     <div className="pointer-events-auto">
                         <ChatFooter />
