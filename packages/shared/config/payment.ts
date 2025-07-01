@@ -32,7 +32,7 @@ export interface Product {
     name: string;
     description: string;
     price: number; // e.g., 9.99
-    currency: string; // e.g., 'USD'
+    currency: string; // e.g., CURRENCIES.USD
     // interval: 'month' | 'year'; // Assuming monthly for now, can be added if tiers differ
     features: VTPlusFeature[];
     paymentProviderProductId: string; // Specific ID for the payment provider

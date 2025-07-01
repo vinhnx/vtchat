@@ -41,7 +41,9 @@ import { ImageUpload } from './image-upload';
 import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
 import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
+import { TOOL_FEATURES } from '@repo/shared/constants';
 import { logger } from '@repo/shared/logger';
+import { useVemetricMessageTracking } from '../vemetric-chat-tracker';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -59,6 +61,9 @@ export const ChatInput = ({
     const [showBYOKDialog, setShowBYOKDialog] = useState(false);
     const [pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
+    
+    // Analytics tracking
+    const { trackMessageSent, trackChatStarted, createTimer } = useVemetricMessageTracking();
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
@@ -138,9 +143,13 @@ export const ChatInput = ({
             // if (!isSignedIn) { setShowLoginPrompt(true); return; }
         }
 
-        if (!editor?.getText()) {
+        const messageText = editor?.getText();
+        if (!messageText) {
             return;
         }
+
+        // Start performance timer
+        const messageTimer = createTimer();
 
         // Check if user has valid API key for the selected chat mode
         // This applies to all users (signed in or not) for modes that require API keys
@@ -204,6 +213,39 @@ export const ChatInput = ({
             useMathCalculator,
             useCharts,
         });
+
+        // Track analytics event
+        try {
+            const isNewThread = !currentThreadId;
+            const toolsUsed = [];
+            if (useWebSearch) toolsUsed.push(TOOL_FEATURES.WEB_SEARCH);
+            if (useMathCalculator) toolsUsed.push(TOOL_FEATURES.MATH_CALCULATOR);
+            if (useCharts) toolsUsed.push(TOOL_FEATURES.CHARTS);
+
+            // Track chat started for new threads
+            if (isNewThread) {
+                trackChatStarted({
+                    modelName: chatMode,
+                    isNewThread: true,
+                    threadId,
+                });
+            }
+
+            // Track message sent
+            trackMessageSent({
+                messageLength: messageText.length,
+                modelName: chatMode,
+                hasAttachments: !!(imageAttachment?.base64 || documentAttachment?.base64 || multiModalAttachments.length > 0),
+                toolsUsed: toolsUsed.length > 0 ? toolsUsed : undefined,
+                threadId,
+            });
+
+            // Track performance
+            messageTimer.end('MessageSendTime', { modelName: chatMode });
+        } catch (error) {
+            logger.error({ error }, 'Failed to track message analytics');
+        }
+
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
         clearImageAttachment();

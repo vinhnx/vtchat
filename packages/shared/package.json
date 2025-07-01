@@ -34,7 +34,8 @@
         "./utils/session-cache": "./utils/session-cache.ts",
         "./utils/ssr-session": "./utils/ssr-session.ts",
         "./utils/plus-defaults": "./utils/plus-defaults.ts",
-        "./lib/arcjet-config": "./lib/arcjet-config.ts"
+        "./lib/arcjet-config": "./lib/arcjet-config.ts",
+        "./types/analytics": "./types/analytics.ts"
     },
     "scripts": {
         "lint": "oxlint",

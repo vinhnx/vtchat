@@ -2,6 +2,11 @@
 
 ok go! -> https://vtchat.io.vn/
 
+--
+
++ Analytics
+
+https://vemetric.com/docs/installation/nextjs
 
 --
 
@@ -184,8 +189,11 @@ Title: Show HN: VT Chat – AI chat in browser with BYOK & per-account IndexedDB
 Post:
 I’ve spent the last year building VT Chat, an AI chat app that runs 100% in your browser. All data—API keys, conversation history, per-account IndexedDB.
 
-🔗 Live demo: https://vtchat.io.vn
-🔗 Code & docs: https://github.com/vinhnx/vtchat
+* Live demo: https://vtchat.io.vn
+* Code & docs: https://github.com/vinhnx/vtchat
+* Twitter: https://twitter.com/vtdotai
+* My Twitter: https://twitter.com/vinhnx
+* Product Hunt: https://www.producthunt.com/products/vt?launch=vt
 
 **Key technical highlights**
 - **BYOK for six providers**: OpenAI, Anthropic, Google, Fireworks, xAI, OpenRouter—store your API keys locally and bypass shared‑service rate limits.
@@ -228,6 +236,7 @@ Tech stacks:
 
 VT is fully open source at github.com/vinhnx/vtchat
 Try VT Chat today vtchat.io.vn
+Use code VTLAUNCH for a discount on VT+ monthly plan!
 
 ## 3. Product Hunt Launch (Final Version)
 
@@ -473,11 +482,6 @@ Launching it on PH as well - Support appreciated - https://producthunt.com/posts
 --
 
 https://x.com/i/communities/1493446837214187523
-
-
---
-
-[] grand final showcase <https://github.com/vercel/ai/discussions/1914>
 
 --
 

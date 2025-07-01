@@ -73,6 +73,7 @@
         "@repo/common": "*",
         "@repo/shared": "*",
         "@repo/ui": "*",
+        "@vemetric/react": "^0.5.4",
         "ai": "^4.3.16",
         "better-auth": "^1.2.9",
         "class-variance-authority": "^0.7.1",
@@ -1057,6 +1058,8 @@
     "@ungap/structured-clone": ["@ungap/structured-clone@1.3.0", "", {}, ""],
 
     "@upstash/redis": ["@upstash/redis@1.35.0", "", { "dependencies": { "uncrypto": "^0.1.3" } }, ""],
+
+    "@vemetric/react": ["@vemetric/react@0.5.4", "", { "peerDependencies": { "react": "^18 || ^19" }, "optionalPeers": ["react"] }, "sha512-xwkBF+uLbB64tfiEdWmHD1IKVDORgxfP6sfN3n2N8ZiiO+NG4gfc5CQb29DaXzTBg31CDAByfzf4Simqgf+tqA=="],
 
     "@vercel/functions": ["@vercel/functions@2.2.0", "", { "peerDependencies": { "@aws-sdk/credential-provider-web-identity": "*" }, "optionalPeers": ["@aws-sdk/credential-provider-web-identity"] }, "sha512-x1Zrc2jOclTSB9+Ic/XNMDinO0SG4ZS5YeV2Xz1m/tuJOM7QtPVU3Epw2czBao0dukefmC8HCNpyUL8ZchJ/Tg=="],
 
@@ -2870,7 +2873,7 @@
 
     "@repo/common/zustand": ["zustand@4.5.7", "", { "dependencies": { "use-sync-external-store": "^1.2.2" }, "peerDependencies": { "@types/react": ">=16.8", "immer": ">=9.0.6", "react": ">=16.8" }, "optionalPeers": ["@types/react", "immer", "react"] }, "sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw=="],
 
-    "@repo/shared/@types/node": ["@types/node@24.0.7", "", { "dependencies": { "undici-types": "~7.8.0" } }, "sha512-YIEUUr4yf8q8oQoXPpSlnvKNVKDQlPMWrmOcgzoduo7kvA2UF0/BwJ/eMKFTiTtkNL17I0M6Xe2tvwFU7be6iw=="],
+    "@repo/shared/@types/node": ["@types/node@24.0.8", "", { "dependencies": { "undici-types": "~7.8.0" } }, "sha512-WytNrFSgWO/esSH9NbpWUfTMGQwCGIKfCmNlmFDNiI5gGhgMmEA+V1AEvKLeBNvvtBnailJtkrEa2OIISwrVAA=="],
 
     "@repo/shared/drizzle-kit": ["drizzle-kit@0.31.4", "", { "dependencies": { "@drizzle-team/brocli": "^0.10.2", "@esbuild-kit/esm-loader": "^2.5.5", "esbuild": "^0.25.4", "esbuild-register": "^3.5.0" }, "bin": { "drizzle-kit": "bin.cjs" } }, "sha512-tCPWVZWZqWVx2XUsVpJRnH9Mx0ClVOf5YUHerZ5so1OKSlqww4zy1R5ksEdGRcO3tM3zj0PYN6V48TbQCL1RfA=="],
 

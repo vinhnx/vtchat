@@ -1,9 +1,12 @@
 'use client';
 
 import { Footer, ShineText, UserTierBadge } from '@repo/common/components';
-import { useCreemSubscription } from '@repo/common/hooks';
+import { useVemetricSubscriptionTracking } from '@repo/common/components/vemetric-subscription-tracker';
+import { useCreemSubscription, useVemetric } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import { BUTTON_TEXT } from '@repo/shared/constants';
+import { ANALYTICS_EVENTS } from '@repo/common/utils/analytics';
+import { BUTTON_TEXT, CURRENCIES, PAYMENT_EVENT_TYPES, PAYMENT_SERVICES, SETTINGS_ACTIONS } from '@repo/shared/constants';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { TypographyH2, TypographyH3 } from '@repo/ui';
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
@@ -34,6 +37,10 @@ export default function PlusPage() {
     } = useCreemSubscription();
     const router = useRouter();
 
+    // Analytics tracking
+    const { trackEvent } = useVemetric();
+    const { trackUpgradeInitiated, trackPaymentEvent } = useVemetricSubscriptionTracking();
+
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
@@ -57,6 +64,19 @@ export default function PlusPage() {
         }
     }, [isSignedIn, refreshSubscriptionStatus, isSubscriptionLoading]);
 
+    // Track page access
+    useEffect(() => {
+        if (isSignedIn) {
+            trackEvent(ANALYTICS_EVENTS.PAGE_VIEWED, {
+                page: 'plus_page',
+                userTier: isCurrentlySubscribed ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE,
+                context: 'subscription_management',
+            }).catch(error => {
+                console.error('Failed to track page view:', error);
+            });
+        }
+    }, [isSignedIn, isCurrentlySubscribed, trackEvent]);
+
     const handleSubscribe = async () => {
         if (!isSignedIn) {
             router.push('/login?redirect_url=/plus');
@@ -65,10 +85,36 @@ export default function PlusPage() {
 
         if (isCurrentlySubscribed) {
             // If already subscribed, open customer portal to manage subscription
-            await openCustomerPortal();
+            try {
+                await trackEvent(ANALYTICS_EVENTS.SETTINGS_CHANGED, {
+                    action: SETTINGS_ACTIONS.MANAGE_SUBSCRIPTION_ACCESSED,
+                    context: 'plus_page',
+                });
+                await openCustomerPortal();
+            } catch (error) {
+                console.error('Analytics tracking failed:', error);
+                await openCustomerPortal(); // Continue even if tracking fails
+            }
         } else {
             // Start new subscription
-            await startVtPlusSubscription();
+            try {
+                // Track upgrade initiation
+                await trackUpgradeInitiated('plus_page');
+
+                // Track payment start
+                await trackPaymentEvent({
+                    event: PAYMENT_EVENT_TYPES.PAYMENT_STARTED,
+                    tier: PlanSlug.VT_PLUS,
+                    amount: PRICING_CONFIG.vt_plus.price,
+                    currency: CURRENCIES.USD,
+                    paymentMethod: PAYMENT_SERVICES.CREEM,
+                });
+
+                await startVtPlusSubscription();
+            } catch (error) {
+                console.error('Analytics tracking failed:', error);
+                await startVtPlusSubscription(); // Continue even if tracking fails
+            }
         }
     };
 
@@ -78,10 +124,6 @@ export default function PlusPage() {
         } else {
             router.push('/chat');
         }
-    };
-
-    const scrollToPricing = () => {
-        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     // Dynamic button text based on user state
@@ -339,7 +381,7 @@ export default function PlusPage() {
                     </p>
                 </div>
             </div>
-            
+
             {/* Footer */}
             <footer className="border-border/50 bg-background border-t">
                 <div className="mx-auto max-w-7xl">

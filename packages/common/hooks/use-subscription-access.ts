@@ -1,5 +1,6 @@
 'use client';
 
+import { SUBSCRIPTION_SOURCES } from '@repo/shared/constants';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
@@ -36,7 +37,7 @@ export function useSubscriptionAccess() {
                 ? SubscriptionStatusEnum.ACTIVE
                 : SubscriptionStatusEnum.NONE,
         planConfig, // Use the actual plan configuration with features
-        source: subscriptionStatus?.hasSubscription ? 'creem' : 'none', // Add missing source
+        source: subscriptionStatus?.hasSubscription ? SUBSCRIPTION_SOURCES.CREEM : SUBSCRIPTION_SOURCES.NONE, // Add missing source
     } as const;
 
     const isLoaded = !isLoading;

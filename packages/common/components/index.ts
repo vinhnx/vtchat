@@ -66,4 +66,13 @@ export * from './tools-panel';
 export * from './usage-credits-settings';
 export * from './rate-limit-error-alert';
 export * from './user-tier-badge';
+export * from './vemetric-auth-provider';
+export * from './vemetric-chat-tracker';
+export * from './vemetric-subscription-tracker';
+export * from './vemetric-settings-tracker';
+// New vemetric trackers for critical operations
+export * from './vemetric-payment-tracker';
+export * from './vemetric-rag-tracker';
+export * from './vemetric-performance-tracker';
+export * from './vemetric-security-tracker';
 export * from './with-client-only';
