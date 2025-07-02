@@ -15,7 +15,7 @@ import {
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
-import { TypographyH2, TypographyH3 } from '@repo/ui';
+import { TypographyH2, TypographyH3, TypographyMuted } from '@repo/ui';
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -295,21 +295,6 @@ export default function PlusPage() {
                                         {PRICING_CONFIG.product.description}
                                     </p>
 
-                                    {/* Free Trial & Cancel Anytime Badge */}
-                                    <div className="mt-4 flex items-center justify-center gap-4 text-sm">
-                                        <div className="flex items-center gap-2 rounded-full bg-green-500/20 px-3 py-1.5">
-                                            <Sparkles className="h-4 w-4 text-green-400" />
-                                            <span className="font-medium text-green-400">
-                                                Free trial included
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1.5">
-                                            <Check className="h-4 w-4 text-blue-400" />
-                                            <span className="font-medium text-blue-400">
-                                                Cancel anytime
-                                            </span>
-                                        </div>
-                                    </div>
                                     <ul
                                         role="list"
                                         className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"
@@ -346,6 +331,11 @@ export default function PlusPage() {
                                         </ButtonAnimatedGradient>
                                     </div>
 
+                                    {/* Free Trial & Cancel Anytime Badge */}
+                                    <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+                                        <TypographyMuted>Free trial included</TypographyMuted>
+                                        <TypographyMuted>Cancel anytime</TypographyMuted>
+                                    </div>
                                     {/* Terms and Privacy Links */}
                                     <div className="mt-4 text-center text-sm text-gray-400">
                                         <span className="text-gray-500">Please review our</span>{' '}
