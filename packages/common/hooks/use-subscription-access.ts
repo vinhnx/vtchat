@@ -22,7 +22,7 @@ export function useSubscriptionAccess() {
 
     // Convert subscriptionStatus to UserClientSubscriptionStatus format
     const convertedStatus: UserClientSubscriptionStatus = useMemo(() => {
-        const currentPlanSlug = (subscriptionStatus?.plan as PlanSlug) || PlanSlug.VT_BASE;
+        const currentPlanSlug = (subscriptionStatus?.plan as PlanSlug) || PlanSlug.ANONYMOUS;
         const planConfig = PLANS[currentPlanSlug]; // Get the actual plan configuration
         const isStatusActive = subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
 
@@ -31,7 +31,7 @@ export function useSubscriptionAccess() {
             isActive: isStatusActive,
             isPremium: subscriptionStatus?.isPlusSubscriber || false,
             isVtPlus: subscriptionStatus?.isPlusSubscriber || false,
-            isVtBase: !subscriptionStatus?.isPlusSubscriber,
+            isVtBase: !subscriptionStatus?.isPlusSubscriber && currentPlanSlug === PlanSlug.VT_BASE,
             canUpgrade: !subscriptionStatus?.isPlusSubscriber,
             status:
                 subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE
@@ -44,7 +44,7 @@ export function useSubscriptionAccess() {
 
     const isLoaded = !isLoading;
     // For logged-in users, isSignedIn is true if we have a user-based subscription status
-    // For anonymous users, we still provide access but with base plan
+    // For anonymous users, isSignedIn is false and they get only anonymous plan access
     const isSignedIn = !subscriptionStatus?.isAnonymous;
 
     const hasAccess = useCallback(
@@ -61,9 +61,13 @@ export function useSubscriptionAccess() {
                 if (plan === PlanSlug.VT_PLUS) {
                     return convertedStatus.isVtPlus;
                 }
-                // If checking for VT_BASE, it's true if current plan is VT_BASE or VT_PLUS (as VT+ includes base)
+                // If checking for VT_BASE, requires authentication and current plan is VT_BASE or VT_PLUS
                 if (plan === PlanSlug.VT_BASE) {
-                    return convertedStatus.isVtBase || convertedStatus.isVtPlus;
+                    return isSignedIn && (convertedStatus.isVtBase || convertedStatus.isVtPlus);
+                }
+                // Anonymous plan is accessible without authentication
+                if (plan === PlanSlug.ANONYMOUS) {
+                    return convertedStatus.currentPlanSlug === PlanSlug.ANONYMOUS;
                 }
                 return false; // Unknown plan
             }
