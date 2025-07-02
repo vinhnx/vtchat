@@ -91,8 +91,8 @@ export const StructuredOutputButton = () => {
     const handleCustomSchemaCreate = (schemaData: { schema: any; type: string }) => {
         if (!hasStructuredOutputAccess) {
             toast({
-                title: 'VT+ Required',
-                description: 'Custom schema creation requires VT+ subscription.',
+                title: 'Sign In Required',
+                description: 'Custom schema creation requires sign in.',
                 variant: 'destructive',
             });
             return;
@@ -253,7 +253,7 @@ export const StructuredOutputButton = () => {
                                     className="flex-1"
                                 >
                                     <Sparkles size={14} className="mr-2" />
-                                    Upgrade to VT+
+                                    Sign In
                                 </Button>
                             </div>
                         ) : (

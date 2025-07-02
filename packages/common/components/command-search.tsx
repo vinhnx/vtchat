@@ -23,7 +23,7 @@ import {
     useToast,
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
-import { Command, Key, MessageCircle, Moon, Palette, Plus, Settings, Trash } from 'lucide-react';
+import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -308,11 +308,11 @@ export const CommandSearch = () => {
             />
 
             <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
-                <DialogContent ariaTitle="VT+ Required" className="max-w-md">
+                <DialogContent ariaTitle="Sign In Required" className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle>VT+ Required</DialogTitle>
+                        <DialogTitle>Sign In Required</DialogTitle>
                         <DialogDescription>
-                            Dark theme is a VT+ exclusive feature. Upgrade to enjoy a better viewing
+                            Dark theme is available to all registered users. Sign in to enjoy a better viewing
                             experience.
                         </DialogDescription>
                     </DialogHeader>

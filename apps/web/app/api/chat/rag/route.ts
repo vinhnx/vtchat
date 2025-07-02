@@ -1,6 +1,7 @@
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { auth } from '@/lib/auth-server';
+import { checkVTPlusAccess } from '../../subscription/access-control';
 import arcjet, { detectBot, shield, slidingWindow } from '@arcjet/next';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
@@ -70,6 +71,19 @@ export async function POST(req: Request) {
 
         if (!session?.user?.id) {
             return new Response('Unauthorized', { status: 401 });
+        }
+
+        // Check VT+ access for RAG feature
+        const vtPlusCheck = await checkVTPlusAccess(session.user.id);
+        if (!vtPlusCheck.hasAccess) {
+            return new Response(JSON.stringify({
+                error: 'VT+ subscription required',
+                message: 'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
+                code: 'VT_PLUS_REQUIRED'
+            }), { 
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
         const { messages, apiKeys, embeddingModel, ragChatModel = ModelEnum.GEMINI_2_5_FLASH, profile } = await req.json();

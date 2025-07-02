@@ -5,7 +5,13 @@ import { useVemetricSubscriptionTracking } from '@repo/common/components/vemetri
 import { useCreemSubscription, useVemetric } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { ANALYTICS_EVENTS } from '@repo/common/utils/analytics';
-import { BUTTON_TEXT, CURRENCIES, PAYMENT_EVENT_TYPES, PAYMENT_SERVICES, SETTINGS_ACTIONS } from '@repo/shared/constants';
+import {
+    BUTTON_TEXT,
+    CURRENCIES,
+    PAYMENT_EVENT_TYPES,
+    PAYMENT_SERVICES,
+    SETTINGS_ACTIONS,
+} from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
@@ -177,8 +183,12 @@ export default function PlusPage() {
 
                         <div>
                             <ShineText className="text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-loose lg:text-6xl">
-                                Choose your perfect plan
+                                Advanced AI features
                             </ShineText>
+                            <p className="mt-4 text-lg text-gray-600 md:text-xl">
+                                Most powerful AI capabilities included free. VT+ adds 3 exclusive
+                                research features.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -218,7 +228,8 @@ export default function PlusPage() {
                                     </span>
                                 </p>
                                 <p className="mt-6 text-base/7 text-gray-600">
-                                    Perfect for getting started with our product.
+                                    Full-featured AI experience with most advanced capabilities
+                                    included - completely free for logged-in users.
                                 </p>
                                 <ul
                                     role="list"
@@ -281,8 +292,24 @@ export default function PlusPage() {
                                         </span>
                                     </p>
                                     <p className="mt-6 text-base/7 text-gray-300">
-                                        {PRICING_CONFIG.product.description.split(':')[0]}
+                                        {PRICING_CONFIG.product.description}
                                     </p>
+
+                                    {/* Free Trial & Cancel Anytime Badge */}
+                                    <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+                                        <div className="flex items-center gap-2 rounded-full bg-green-500/20 px-3 py-1.5">
+                                            <Sparkles className="h-4 w-4 text-green-400" />
+                                            <span className="font-medium text-green-400">
+                                                Free trial included
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1.5">
+                                            <Check className="h-4 w-4 text-blue-400" />
+                                            <span className="font-medium text-blue-400">
+                                                Cancel anytime
+                                            </span>
+                                        </div>
+                                    </div>
                                     <ul
                                         role="list"
                                         className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"

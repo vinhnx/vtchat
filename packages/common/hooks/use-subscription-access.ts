@@ -4,7 +4,7 @@ import { SUBSCRIPTION_SOURCES } from '@repo/shared/constants';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
 import { log } from '@repo/shared/logger';
 
@@ -21,24 +21,26 @@ export function useSubscriptionAccess() {
         useGlobalSubscriptionStatus();
 
     // Convert subscriptionStatus to UserClientSubscriptionStatus format
-    const currentPlanSlug = (subscriptionStatus?.plan as PlanSlug) || PlanSlug.VT_BASE;
-    const planConfig = PLANS[currentPlanSlug]; // Get the actual plan configuration
-    const isStatusActive = subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
+    const convertedStatus: UserClientSubscriptionStatus = useMemo(() => {
+        const currentPlanSlug = (subscriptionStatus?.plan as PlanSlug) || PlanSlug.VT_BASE;
+        const planConfig = PLANS[currentPlanSlug]; // Get the actual plan configuration
+        const isStatusActive = subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
 
-    const convertedStatus: UserClientSubscriptionStatus = {
-        currentPlanSlug,
-        isActive: isStatusActive,
-        isPremium: subscriptionStatus?.isPlusSubscriber || false,
-        isVtPlus: subscriptionStatus?.isPlusSubscriber || false,
-        isVtBase: !subscriptionStatus?.isPlusSubscriber,
-        canUpgrade: !subscriptionStatus?.isPlusSubscriber,
-        status:
-            subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE
-                ? SubscriptionStatusEnum.ACTIVE
-                : SubscriptionStatusEnum.NONE,
-        planConfig, // Use the actual plan configuration with features
-        source: subscriptionStatus?.hasSubscription ? SUBSCRIPTION_SOURCES.CREEM : SUBSCRIPTION_SOURCES.NONE, // Add missing source
-    } as const;
+        return {
+            currentPlanSlug,
+            isActive: isStatusActive,
+            isPremium: subscriptionStatus?.isPlusSubscriber || false,
+            isVtPlus: subscriptionStatus?.isPlusSubscriber || false,
+            isVtBase: !subscriptionStatus?.isPlusSubscriber,
+            canUpgrade: !subscriptionStatus?.isPlusSubscriber,
+            status:
+                subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE
+                    ? SubscriptionStatusEnum.ACTIVE
+                    : SubscriptionStatusEnum.NONE,
+            planConfig, // Use the actual plan configuration with features
+            source: subscriptionStatus?.hasSubscription ? SUBSCRIPTION_SOURCES.CREEM : SUBSCRIPTION_SOURCES.NONE, // Add missing source
+        } as const;
+    }, [subscriptionStatus]);
 
     const isLoaded = !isLoading;
     // For logged-in users, isSignedIn is true if we have a user-based subscription status
@@ -72,21 +74,31 @@ export function useSubscriptionAccess() {
                 if (!convertedStatus.planConfig.features.includes(feature)) {
                     return false;
                 }
-                // Specific logic for VT+ features (already covered by planConfig if set up correctly, but double-check)
+                // Specific logic for VT+ exclusive features
                 const vtPlusExclusiveFeatures = [
-                    FeatureSlug.DARK_THEME,
-                    FeatureSlug.DEEP_RESEARCH,
                     FeatureSlug.PRO_SEARCH,
+                    FeatureSlug.DEEP_RESEARCH,
+                    FeatureSlug.RAG,
+                    FeatureSlug.GROUNDING_WEB_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
-                    FeatureSlug.STRUCTURED_OUTPUT,
-                    FeatureSlug.THINKING_MODE,
-                    FeatureSlug.DOCUMENT_PARSING,
-                    FeatureSlug.THINKING_MODE_TOGGLE,
-                    FeatureSlug.REASONING_CHAIN,
-                    FeatureSlug.CHART_VISUALIZATION,
                 ];
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;
+                }
+                
+                // Features available to all logged-in users (free tier)
+                const freeFeatures = [
+                    FeatureSlug.DARK_THEME,
+                    FeatureSlug.THINKING_MODE_TOGGLE,
+                    FeatureSlug.STRUCTURED_OUTPUT,
+                    FeatureSlug.THINKING_MODE,
+                    FeatureSlug.DOCUMENT_PARSING,
+                    FeatureSlug.REASONING_CHAIN,
+                    FeatureSlug.GEMINI_EXPLICIT_CACHING,
+                    FeatureSlug.CHART_VISUALIZATION,
+                ];
+                if (freeFeatures.includes(feature)) {
+                    return isSignedIn; // Available to all logged-in users
                 }
                 // If it's a base feature and included in their planConfig, they have access.
                 return true;
@@ -103,7 +115,7 @@ export function useSubscriptionAccess() {
 
             return false; // Default to no access if no specific check matches
         },
-        [isLoaded, convertedStatus]
+        [isLoaded, convertedStatus, subscriptionStatus, isSignedIn]
     );
 
     const canAccess = useCallback((feature: FeatureSlug) => hasAccess({ feature }), [hasAccess]);

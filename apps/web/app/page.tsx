@@ -6,7 +6,7 @@ import { WrapperDisclosure, Footer } from '@repo/common/components';
 import Link from 'next/link';
 
 export default function Home() {
-    const { data: session, isPending } = useSession();
+    const { isPending } = useSession();
 
     return (
         <div className="flex min-h-dvh flex-col">
@@ -39,7 +39,7 @@ export default function Home() {
                     <WrapperDisclosure className="mt-4" />
                 </div>
             </div>
-            {!isPending && <Footer showBadge={!session} />}
+            {!isPending && <Footer />}
         </div>
     );
 }

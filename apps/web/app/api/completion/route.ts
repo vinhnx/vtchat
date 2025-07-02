@@ -3,7 +3,7 @@ import { ChatModeConfig, ChatMode } from '@repo/shared/config';
 import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { Geo, geolocation } from '@vercel/functions';
 import { NextRequest } from 'next/server';
-import { checkVTPlusAccess } from '../subscription/access-control';
+import { checkVTPlusAccess, checkSignedInFeatureAccess } from '../subscription/access-control';
 import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
 import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
 import { log } from '@repo/shared/logger';
@@ -152,14 +152,14 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Backend enforcement: Thinking mode is restricted to VT+ users only
+        // Backend enforcement: Thinking mode is now available to all signed-in users
         if (data.thinkingMode?.enabled) {
-            const accessResult = await checkVTPlusAccess({ userId, ip });
+            const accessResult = await checkSignedInFeatureAccess({ userId, ip });
             if (!accessResult.hasAccess) {
                 return new Response(
                     JSON.stringify({
-                        error: 'VT+ subscription required for thinking mode',
-                        reason: 'Thinking mode is a VT+ exclusive feature',
+                        error: 'Sign in required for thinking mode',
+                        reason: 'Thinking mode requires you to be signed in',
                         requiredFeature: 'THINKING_MODE',
                     }),
                     {

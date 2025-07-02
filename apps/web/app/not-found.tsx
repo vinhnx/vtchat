@@ -10,7 +10,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 export const dynamic = 'force-dynamic';
 
 export default function NotFound() {
-    const { data: session, isPending } = useSession();
+    const { isPending } = useSession();
     return (
         <main className="bg-background flex min-h-dvh items-center justify-center px-4">
             <div className="bg-card mx-auto w-full max-w-md rounded-xl border p-6 text-center shadow md:p-8">
@@ -34,7 +34,7 @@ export default function NotFound() {
             {!isPending && (
                 <footer className="border-border/50 bg-background border-t">
                     <div className="mx-auto max-w-7xl">
-                        <Footer showBadge={!session} />
+                        <Footer />
                     </div>
                 </footer>
             )}

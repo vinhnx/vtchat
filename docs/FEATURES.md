@@ -13,14 +13,15 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 - **xAI**: Grok models and other experimental models
 
 ### Advanced AI Capabilities
-- **Reasoning Mode (VT+ Exclusive)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models
-- **Structured Output Extraction (VT+ Exclusive)**: AI-powered JSON data extraction from documents with intelligent schema generation
-- **Multi-Modal Processing**: Text, image, and document analysis with up to 10MB file support
+- **Premium AI Models (VT+ Exclusive)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models - available to all logged-in users
+- **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents with intelligent schema generation - available to all logged-in users
+- **Multi-Modal Processing (Free)**: Text, image, and document analysis with up to 10MB file support - available to all logged-in users
 - **Context Management**: Advanced conversation context handling with thread isolation
 - **Token Optimization**: Efficient token usage across providers with rate limiting for free tier models
 - **Free Model Access**: 9 free AI models available to all users (5 Gemini + 4 OpenRouter models)
 
-## 📄 Document Processing (VT+ Exclusive)
+## 📄 Document Processing
 
 ### Supported Formats
 - **PDF**: Full text extraction and analysis
@@ -91,7 +92,7 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 
 ### Modern Design System
 - **Shadcn UI Integration**: Complete design system with zero breaking changes and consistent component library
-- **Dark Mode (VT+ Exclusive)**: Premium theming experience with official Shadcn UI variables
+- **Dark Mode**: Premium theming experience with official Shadcn UI variables
 - **Responsive Design**: Mobile-optimized interface for desktop, tablet, and mobile devices
 - **Accessibility**: WCAG compliant interface design with keyboard navigation and screen reader support
 
@@ -105,8 +106,8 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 ## 💳 Subscription Management
 
 ### Sophisticated Subscription Tiers
-- **VT_BASE (Free)**: 9 AI models (5 Gemini + 4 OpenRouter), calculator, basic chat, local privacy, core security features
-- **VT_PLUS ($10/month)**: All free features + reasoning mode, dark theme, web search, document upload, structured extraction, priority support
+- **Free Tier**: Most generous free tier in the industry - 9 AI models, Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, unlimited BYOK usage
+- **VT+ ($5.99/month)**: All free features + 3 research-focused exclusives: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), Personal AI Assistant with Memory (RAG)
 
 ### Advanced Payment Integration
 - **Creem.io Integration**: Complete payment processing with webhook verification
@@ -222,18 +223,22 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 
 ## 📋 Feature Comparison Matrix
 
-| Feature | VT_BASE (Free) | VT_PLUS ($10/month) |
-|---------|----------------|---------------------|
-| **AI Models** | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
+| Feature | Free Tier | VT+ ($5.99/month) |
+|---------|-----------|-------------------|
+| **Basic AI Models** | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅ |
+| **Premium AI Models** | ❌ | ✅ (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) |
 | **Basic Chat** | ✅ | ✅ |
 | **Local Privacy** | ✅ (IndexedDB + Thread Isolation) | ✅ (Enhanced Security) |
 | **Calculator** | ✅ | ✅ |
 | **Security Protection** | ✅ (Arcjet + Better Auth) | ✅ (Priority Support) |
-| **Reasoning Mode** | ❌ | ✅ (AI SDK Reasoning Tokens) |
-| **Dark Theme** | ❌ | ✅ (Official Shadcn Variables) |
-| **Web Search** | ❌ | ✅ (Real-time Grounding) |
-| **Document Upload** | ❌ | ✅ (PDF/DOC/DOCX up to 10MB) |
-| **Structured Extraction** | ❌ | ✅ (AI-powered JSON) |
+| **Thinking Mode** | ✅ (AI SDK Reasoning Tokens) | ✅ |
+| **Dark Theme** | ✅ (Official Shadcn Variables) | ✅ |
+| **Document Processing** | ✅ (PDF/DOC/DOCX up to 10MB) | ✅ |
+| **Structured Output** | ✅ (AI-powered JSON) | ✅ |
+| **Chart Visualization** | ✅ | ✅ |
+| **Web Search (PRO_SEARCH)** | ❌ | ✅ (Real-time Grounding) |
+| **Deep Research (DEEP_RESEARCH)** | ❌ | ✅ (Comprehensive Analysis) |
+| **Personal AI Memory (RAG)** | ❌ | ✅ (AI Assistant with Memory) |
 | **Rate Limiting** | 10 requests/day (free models) | Unlimited Premium Models |
 
 ## 🎯 Target Use Cases

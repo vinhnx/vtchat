@@ -59,13 +59,25 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
         slug: PlanSlug.VT_BASE,
         name: 'Base',
         description:
-            'Perfect for getting started with VT - Access to base features with free models and essential tools',
+            'Perfect for getting started with VT - Access to advanced features with free models and essential tools',
         features: [
+            // Base features
             FeatureSlug.ACCESS_CHAT,
             FeatureSlug.BASE_MODELS,
             FeatureSlug.FREE_MODELS,
             FeatureSlug.MATH_CALCULATOR,
             FeatureSlug.BASE_FEATURES,
+            
+            // Advanced features now available for free (logged in users only)
+            FeatureSlug.DARK_THEME,
+            FeatureSlug.THINKING_MODE_TOGGLE,
+            FeatureSlug.STRUCTURED_OUTPUT,
+            FeatureSlug.THINKING_MODE,
+            FeatureSlug.DOCUMENT_PARSING,
+            FeatureSlug.REASONING_CHAIN,
+            FeatureSlug.GEMINI_EXPLICIT_CACHING,
+            FeatureSlug.CHART_VISUALIZATION,
+            FeatureSlug.MULTI_MODAL_CHAT,
         ],
         isDefault: true,
     },
@@ -73,7 +85,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
         slug: PlanSlug.VT_PLUS,
         name: 'VT+',
         description:
-            'Enhanced experience with advanced features and capabilities including document parsing, structured outputs, thinking mode controls, and reasoning chains',
+            'Enhanced experience with premium research capabilities and personal AI assistant with memory',
         features: [
             // All Base plan features
             FeatureSlug.ACCESS_CHAT,
@@ -81,22 +93,22 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.FREE_MODELS,
             FeatureSlug.MATH_CALCULATOR,
             FeatureSlug.BASE_FEATURES,
-
-            // Additional VT+ features
             FeatureSlug.DARK_THEME,
-            FeatureSlug.DEEP_RESEARCH,
-            FeatureSlug.PRO_SEARCH,
-            FeatureSlug.GROUNDING_WEB_SEARCH,
-            FeatureSlug.ADVANCED_CHAT_MODES,
+            FeatureSlug.THINKING_MODE_TOGGLE,
             FeatureSlug.STRUCTURED_OUTPUT,
             FeatureSlug.THINKING_MODE,
             FeatureSlug.DOCUMENT_PARSING,
-            FeatureSlug.THINKING_MODE_TOGGLE,
             FeatureSlug.REASONING_CHAIN,
             FeatureSlug.GEMINI_EXPLICIT_CACHING,
             FeatureSlug.CHART_VISUALIZATION,
             FeatureSlug.MULTI_MODAL_CHAT,
+
+            // VT+ exclusive features
+            FeatureSlug.PRO_SEARCH,
+            FeatureSlug.DEEP_RESEARCH,
             FeatureSlug.RAG,
+            FeatureSlug.GROUNDING_WEB_SEARCH,
+            FeatureSlug.ADVANCED_CHAT_MODES,
         ],
     },
 };

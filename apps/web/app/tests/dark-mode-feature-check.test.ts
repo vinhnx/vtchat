@@ -9,14 +9,13 @@ describe('Dark Mode Feature Configuration', () => {
         expect(Object.values(FeatureSlug)).toContain('dark_theme');
     });
 
-    it('should verify DARK_THEME is configured in VT+ features', async () => {
-        const { VT_PLUS_FEATURES } = await import('@repo/shared/config/vt-plus-features');
+    it('should verify DARK_THEME is available to free tier users', async () => {
+        const { PLANS, PlanSlug } = await import('@repo/shared/types/subscription');
         const { FeatureSlug } = await import('@repo/shared/types/subscription');
         
-        // Verify dark theme is in VT+ features
-        expect(VT_PLUS_FEATURES[FeatureSlug.DARK_THEME]).toBeDefined();
-        expect(VT_PLUS_FEATURES[FeatureSlug.DARK_THEME]?.id).toBe(FeatureSlug.DARK_THEME);
-        expect(VT_PLUS_FEATURES[FeatureSlug.DARK_THEME]?.name).toBe('Dark Theme');
+        // Verify dark theme is in base plan features (available to free tier)
+        const basePlan = PLANS[PlanSlug.VT_BASE];
+        expect(basePlan.features).toContain(FeatureSlug.DARK_THEME);
     });
 
     it('should verify DARK_THEME is included in VT+ plan features', async () => {
@@ -27,17 +26,17 @@ describe('Dark Mode Feature Configuration', () => {
         expect(vtPlusPlan.features).toContain(FeatureSlug.DARK_THEME);
     });
 
-    it('should verify dark mode is listed as VT+ feature in pricing config', async () => {
+    it('should verify dark mode is listed as free tier feature in pricing config', async () => {
         const { PRICING_CONFIG } = await import('@/lib/config/pricing');
         
-        // Check that dark mode is mentioned in VT+ features
-        const plusFeatures = PRICING_CONFIG.pricing.plus.features;
-        const darkModeFeature = plusFeatures.find(feature => 
-            feature.name === 'Dark Mode'
+        // Check that dark mode is mentioned in free tier features
+        const freeFeatures = PRICING_CONFIG.pricing.free.features;
+        const advancedFeaturesItem = freeFeatures.find(feature => 
+            feature.name === 'All Advanced AI Features'
         );
         
-        expect(darkModeFeature).toBeDefined();
-        expect(darkModeFeature?.description).toBe('Access to beautiful dark mode interface');
+        expect(advancedFeaturesItem).toBeDefined();
+        expect(advancedFeaturesItem?.description).toContain('dark mode');
     });
 
     it('should verify useFeatureAccess hook properly handles DARK_THEME', async () => {
@@ -45,8 +44,8 @@ describe('Dark Mode Feature Configuration', () => {
         const { getRequiredPlanForFeature } = await import('@repo/shared/utils/subscription');
         const { FeatureSlug, PlanSlug } = await import('@repo/shared/types/subscription');
         
-        // Verify that DARK_THEME requires VT_PLUS plan
+        // Verify that DARK_THEME requires VT_BASE plan (available to free tier)
         const requiredPlan = getRequiredPlanForFeature(FeatureSlug.DARK_THEME);
-        expect(requiredPlan).toBe(PlanSlug.VT_PLUS);
+        expect(requiredPlan).toBe(PlanSlug.VT_BASE);
     });
 });

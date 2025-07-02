@@ -1,3 +1,5 @@
+import { VT_PLUS_PRICE_FORMATTED } from '../constants';
+
 export const termsMdx = `
 # Terms of Service
 
@@ -79,20 +81,20 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 ## 4. Subscription & Billing (VT+)
 
 ### 4.1 Free Tier Benefits (VT_BASE)
-VT_BASE is our free tier that includes:
+VT_BASE is our free tier for logged-in users that includes:
 - **Free Gemini Model**: Access to Gemini 2.5 Flash Lite Preview with 10 requests per day and 1 request per minute rate limit
 - **Server API Key**: Uses VT's server-side API key for free model access (no BYOK required)
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
-- **Registration Required**: Must be signed in to access free model benefits
+- **Registration Required**: Must be signed in to access free tier benefits
+- **Advanced Features**: Dark Mode, Thinking Mode Toggle, Structured Output, Document Processing, Reasoning Chain, Gemini Explicit Caching, Chart Visualization, Multi-modal Chat
 - **BYOK Option**: Unlimited usage with your own API keys as alternative
 
 ### 4.2 VT+ Subscription Features
-VT+ is a monthly subscription service for **$7.99 USD** that includes:
+VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** with free trial included that includes:
+- **All Free Tier Features**: Complete access to all features available to free tier users
+- **Premium AI Models**: Exclusive access to Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Three Exclusive Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
 - **Unlimited Access**: No daily limits or rate limiting on all models
-- **Grounding Web Search**: Enhanced search with web integration for real-time information
-- **Deep Research**: Comprehensive analysis of complex topics with in-depth exploration
-- **Dark Mode**: Access to dark theme interface
-- **Advanced Chat Modes**: Additional AI model access and capabilities
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

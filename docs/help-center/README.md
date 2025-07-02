@@ -10,26 +10,31 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 ### Key Features
 - **9 Free AI Models**: Access to Gemini and OpenRouter models
 - **Privacy-First**: All conversations stored locally in your browser
-- **Premium Features**: Reasoning mode, dark theme, web search, document upload (VT+ subscription)
+- **Premium Features**: Enhanced web search, deep research, personal AI memory (VT+ subscription)
 - **Security**: Enterprise-grade protection with rate limiting and bot detection
 - **Multi-Device**: Use on desktop, tablet, and mobile devices
 
 ## 💳 Subscription Plans
 
-### VT_BASE (Free)
+### Free Tier (Most Generous in Industry)
+Available to all logged-in users:
 - 9 AI models (5 Gemini + 4 OpenRouter models)
+- **Dark Theme**: Premium dark mode interface
+- **Thinking Mode**: See how AI thinks through problems
+- **Document Processing**: Upload and analyze PDF, Word, and text files (up to 10MB)
+- **Structured Output**: Extract structured data from documents
+- **Chart Visualization**: Create charts and graphs
 - Advanced calculator with mathematical functions
 - Basic chat functionality
 - Local privacy protection
 - Enterprise-grade security
 
-### VT_PLUS ($10/month)
-All free features plus:
-- **Reasoning Mode**: See how AI thinks through problems
-- **Dark Theme**: Premium dark mode interface
-- **Web Search**: AI can search the web for current information
-- **Document Upload**: Upload and analyze PDF, Word, and text files (up to 10MB)
-- **Structured Extraction**: Extract structured data from documents
+### VT+ ($5.99/month)
+All free features plus 3 research-focused exclusives:
+- **Enhanced Web Search (PRO_SEARCH)**: AI can search the web for current information
+- **Deep Research (DEEP_RESEARCH)**: Comprehensive analysis of complex topics
+- **Personal AI Memory (RAG)**: AI assistant with memory capabilities
+- **Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 - **Priority Support**: Faster support response times
 
 ## 🛡️ Privacy & Security

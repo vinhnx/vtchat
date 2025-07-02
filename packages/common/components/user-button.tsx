@@ -77,10 +77,10 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     </div>
                     <GatedFeatureAlert
                         requiredFeature={FeatureSlug.DARK_THEME}
-                        title="Dark Theme Available in VT+"
-                        message="Dark theme is a VT+ feature. Please upgrade your plan to use this feature."
+                        title="Sign In Required"
+                        message="Dark theme is available to all registered users. Please sign in to access this feature."
                         onGatedClick={() => {
-                            log.info('User attempted to use dark theme without VT+ subscription');
+                            log.info('User attempted to use dark theme without signing in');
                         }}
                     >
                         <ThemeSwitcher className="scale-75" />

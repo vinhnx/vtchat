@@ -66,20 +66,25 @@ VT (VTChat) has successfully reached production readiness with all core features
 
 ## 📊 **Feature Comparison**
 
-### **VT_BASE (Free Tier)**
+### **Free Tier (Most Generous in Industry)**
 - 9 AI models (Gemini + OpenRouter)
+- **Dark Mode** interface
+- **Thinking Mode** with reasoning process
+- **Document Processing** (PDF, DOC, images)
+- **Structured Output** extraction
+- **Chart Visualization**
 - Mathematical calculator
 - Basic chat functionality
 - Local storage privacy
-- Core features
+- Unlimited BYOK usage
 
-### **VT_PLUS (Premium Tier)**
+### **VT+ Premium Tier ($5.99/month)**
 - All free features
-- **Reasoning mode** with AI thinking process
-- **Dark theme** support
-- **Web search** capabilities
-- **Document upload** and processing
-- **Structured output** extraction
+- **3 Research-Focused Exclusives:**
+  - **Enhanced Web Search** (PRO_SEARCH)
+  - **Deep Research** (DEEP_RESEARCH)
+  - **Personal AI Memory** (RAG)
+- Premium AI models access
 - Priority support
 
 ## 🏗️ **Architecture Highlights**

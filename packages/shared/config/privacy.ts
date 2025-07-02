@@ -60,7 +60,7 @@ VT is built with **privacy-first principles** at its core:
 - **Account Management:** Create and manage your account, authenticate users
 - **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
-- **Feature Access:** Determine access to premium features (Reasoning Mode, Structured Output, Web Search, Document Processing)
+- **Feature Access:** Determine access to VT+ exclusive features (Pro Search, Deep Research, AI Memory) and premium AI models, while providing free access to advanced features for logged-in users
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 

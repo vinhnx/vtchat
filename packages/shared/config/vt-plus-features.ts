@@ -4,7 +4,7 @@
  * Defines all features and capabilities available with VT+ subscription
  */
 
-import { CURRENCIES } from '../constants';
+import { CURRENCIES, VT_PLUS_PRICE } from '../constants';
 import { FeatureSlug } from '../types/subscription';
 
 export interface VTPlusFeature {
@@ -16,6 +16,7 @@ export interface VTPlusFeature {
 
 /**
  * VT+ Features Configuration
+ * Only includes features that are exclusively available to VT+ subscribers
  */
 export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
@@ -25,59 +26,11 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'AI-powered web search with real-time information and comprehensive topic analysis.',
         enabled: true,
     },
-    [FeatureSlug.DARK_THEME]: {
-        id: FeatureSlug.DARK_THEME,
-        name: 'Dark Theme',
-        description: 'Access to dark theme.',
-        enabled: true,
-    },
-    [FeatureSlug.STRUCTURED_OUTPUT]: {
-        id: FeatureSlug.STRUCTURED_OUTPUT,
-        name: 'Structured Outputs',
+    [FeatureSlug.DEEP_RESEARCH]: {
+        id: FeatureSlug.DEEP_RESEARCH,
+        name: 'Deep Research',
         description:
-            'AI-powered extraction of structured data from documents and advanced output formatting.',
-        enabled: true,
-    },
-    [FeatureSlug.THINKING_MODE]: {
-        id: FeatureSlug.THINKING_MODE,
-        name: 'Thinking Mode',
-        description:
-            'Enhanced AI reasoning with visible thought processes for complex problem solving.',
-        enabled: true,
-    },
-    [FeatureSlug.DOCUMENT_PARSING]: {
-        id: FeatureSlug.DOCUMENT_PARSING,
-        name: 'Document Parsing',
-        description:
-            'Advanced document parsing and analysis for PDFs, Word documents, and various file formats.',
-        enabled: true,
-    },
-    [FeatureSlug.THINKING_MODE_TOGGLE]: {
-        id: FeatureSlug.THINKING_MODE_TOGGLE,
-        name: 'Thinking Mode Toggle',
-        description:
-            'Full control over thinking mode activation for customized AI reasoning experience.',
-        enabled: true,
-    },
-    [FeatureSlug.REASONING_CHAIN]: {
-        id: FeatureSlug.REASONING_CHAIN,
-        name: 'Reasoning Chain',
-        description:
-            'Advanced chain-of-thought reasoning capabilities for complex analysis and problem solving.',
-        enabled: true,
-    },
-    [FeatureSlug.GEMINI_EXPLICIT_CACHING]: {
-        id: FeatureSlug.GEMINI_EXPLICIT_CACHING,
-        name: 'Gemini Explicit Caching',
-        description:
-            'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse.',
-        enabled: true,
-    },
-    [FeatureSlug.CHART_VISUALIZATION]: {
-        id: FeatureSlug.CHART_VISUALIZATION,
-        name: 'Interactive Chart Generation',
-        description:
-            'AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations.',
+            'Advanced research capabilities with comprehensive analysis and detailed insights.',
         enabled: true,
     },
     [FeatureSlug.RAG]: {
@@ -95,9 +48,9 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
 export const VT_PLUS_PRODUCT_INFO = {
     name: 'VT+',
     productId: process.env.CREEM_PRODUCT_ID, // Use environment variable
-    description: 'For everyday productivity',
+    description: 'Premium AI models, research capabilities, and personal AI assistant',
     pricing: {
-        amount: 7.99,
+        amount: VT_PLUS_PRICE,
         currency: CURRENCIES.USD,
         type: 'subscription' as const,
         interval: 'monthly' as const,
@@ -124,80 +77,88 @@ export function getEnabledVTPlusFeatures(): VTPlusFeature[] {
 /**
  * VT+ Feature Access Control
  * Helper functions to check feature access based on subscription status
+ * Note: Many features are now available to free tier users (logged in)
  */
 export const VTPlusAccess = {
     /**
-     * Check if user has access to Grounding Web Search
+     * Check if user has access to Enhanced Web Search (VT+ exclusive)
      */
     hasProSearch: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.PRO_SEARCH);
     },
 
     /**
-     * Check if user has access to Dark Mode
+     * Check if user has access to Deep Research (VT+ exclusive)
      */
-    hasDarkMode: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DARK_THEME);
+    hasDeepResearch: (isVTPlusActive: boolean): boolean => {
+        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DEEP_RESEARCH);
     },
 
     /**
-     * Check if user has access to Structured Outputs
-     */
-    hasStructuredOutput: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.STRUCTURED_OUTPUT);
-    },
-
-    /**
-     * Check if user has access to Thinking Mode
-     */
-    hasThinkingMode: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.THINKING_MODE);
-    },
-
-    /**
-     * Check if user has access to Document Parsing
-     */
-    hasDocumentParsing: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DOCUMENT_PARSING);
-    },
-
-    /**
-     * Check if user has access to Thinking Mode Toggle
-     */
-    hasThinkingModeToggle: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.THINKING_MODE_TOGGLE);
-    },
-
-    /**
-     * Check if user has access to Reasoning Chain
-     */
-    hasReasoningChain: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.REASONING_CHAIN);
-    },
-
-    /**
-     * Check if user has access to Gemini Explicit Caching
-     */
-    hasGeminiExplicitCaching: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.GEMINI_EXPLICIT_CACHING);
-    },
-
-    /**
-     * Check if user has access to Chart Visualization
-     */
-    hasChartVisualization: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.CHART_VISUALIZATION);
-    },
-
-    /**
-     * Check if user has access to Personal AI Assistant with Memory
+     * Check if user has access to Personal AI Assistant with Memory (VT+ exclusive)
      */
     hasPersonalAI: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
     },
 
     /**
-     * Get all accessible features for a user
+     * Check if user has access to Dark Mode (Free for logged in users)
+     */
+    hasDarkMode: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Structured Outputs (Free for logged in users)
+     */
+    hasStructuredOutput: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Thinking Mode (Free for logged in users)
+     */
+    hasThinkingMode: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Document Parsing (Free for logged in users)
+     */
+    hasDocumentParsing: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Thinking Mode Toggle (Free for logged in users)
+     */
+    hasThinkingModeToggle: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Reasoning Chain (Free for logged in users)
+     */
+    hasReasoningChain: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Gemini Explicit Caching (Free for logged in users)
+     */
+    hasGeminiExplicitCaching: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Check if user has access to Chart Visualization (Free for logged in users)
+     */
+    hasChartVisualization: (isSignedIn: boolean): boolean => {
+        return isSignedIn; // Available to all logged in users
+    },
+
+    /**
+     * Get all VT+ exclusive features for a user
      */
     getAccessibleFeatures: (isVTPlusActive: boolean): VTPlusFeature[] => {
         if (!isVTPlusActive) return [];

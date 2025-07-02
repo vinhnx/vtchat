@@ -2,7 +2,7 @@
 
 import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks';
 import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
-import { BUTTON_TEXT } from '@repo/shared/constants';
+import { BUTTON_TEXT, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
 import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
@@ -177,11 +177,11 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         premium AI models.
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="space-y-2">
                                     <div className="text-foreground text-sm font-medium">
-                                        $7.99/month • Cancel anytime
+                                        {VT_PLUS_PRICE_WITH_INTERVAL} • Free trial included • Cancel anytime
                                     </div>
-                                    <Button size="sm" onClick={handleUpgradeToPlus}>
+                                    <Button size="sm" onClick={handleUpgradeToPlus} className="w-full sm:w-auto">
                                         Upgrade Now
                                     </Button>
                                 </div>
@@ -202,7 +202,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                         VT+ Monthly Subscription
                                     </h4>
                                     <p className="text-muted-foreground text-sm">
-                                        $7.99/month • Renews automatically
+                                        {VT_PLUS_PRICE_WITH_INTERVAL} • Renews automatically
                                     </p>
                                 </div>
                                 <Button

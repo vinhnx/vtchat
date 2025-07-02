@@ -7,6 +7,7 @@ import {
     Button,
     TypographyH2,
 } from '@repo/ui';
+import { VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
 import { ArrowLeft } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -53,7 +54,7 @@ export default function HelpCenterPage() {
             {/* Footer */}
             <footer className="border-border/50 bg-background border-t">
                 <div className="mx-auto w-full max-w-7xl">
-                    <Footer showBadge />
+                    <Footer />
                 </div>
             </footer>
         </div>
@@ -217,11 +218,11 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Document Processing:</strong> Upload and analyze
-                                        PDFs, documents, and images with AI models
+                                        PDFs, documents, and images with AI models (Free for all users)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Structured Output:</strong> Extract structured data
-                                        from documents (Gemini models only)
+                                        from documents (Free for all users - Gemini models only)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Math Calculator:</strong> Advanced mathematical
@@ -242,33 +243,37 @@ function HelpCenterContent() {
                         {/* Advanced Features */}
                         <AccordionItem value="advanced-features">
                             <AccordionTrigger className="font-medium">
-                                What are VT's advanced AI capabilities?
+                                What advanced features are free vs VT+ exclusive?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT offers cutting-edge AI features for enhanced productivity:
+                                    Most advanced features are completely free for logged-in users:
                                 </p>
-                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                <h4 className="font-medium mt-4 mb-2 text-foreground">Free Features (Logged-in Users):</h4>
+                                <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Web Search Integration:</strong> Real-time
-                                        information retrieval and grounding for up-to-date responses
+                                        <strong>Advanced UI:</strong> Dark mode, thinking mode toggle, structured output
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Document Upload & Analysis:</strong> Upload PDFs,
-                                        DOCs, TXT files, and images for comprehensive AI analysis
+                                        <strong>Document & Image Processing:</strong> Upload PDFs, images, analyze documents with structured data extraction
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Structured Data Extraction:</strong> Automatically
-                                        extract structured data from PDFs (invoices, resumes,
-                                        contracts) using Gemini models
+                                        <strong>AI Capabilities:</strong> Reasoning chain, thinking mode, Gemini caching, chart visualization
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Mathematical Computing:</strong> Advanced math
-                                        calculations, equation solving, and numerical analysis
+                                        <strong>All Chat Tools:</strong> Mathematical computing, multi-modal processing, productivity tools
+                                    </li>
+                                </ul>
+                                <h4 className="font-medium mt-4 mb-2 text-foreground">VT+ Exclusive Features ({VT_PLUS_PRICE_WITH_INTERVAL}):</h4>
+                                <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Pro Search:</strong> Lightning-fast web search with AI grounding
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Multi-modal Processing:</strong> Combine text,
-                                        images, and documents in a single conversation
+                                        <strong>Deep Research:</strong> Comprehensive multi-step research and analysis
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>AI Memory:</strong> Personal AI assistant with knowledge base (RAG)
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -346,8 +351,7 @@ function HelpCenterContent() {
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Both research modes require a VT+ subscription and the
-                                    DEEP_RESEARCH or PRO_SEARCH features enabled.
+                                    Both research modes are VT+ exclusive features ({VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 3 premium features while everything else is free.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -359,8 +363,8 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Thinking Mode is a VT+ exclusive feature that shows you the AI's
-                                    reasoning process for more transparent and thoughtful responses:
+                                    Thinking Mode shows you the AI's reasoning process for more 
+                                    transparent and thoughtful responses (Free for all users):
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
@@ -368,7 +372,7 @@ function HelpCenterContent() {
                                         only with Google Gemini models that support reasoning
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Feature:</strong> Exclusive to VT+ subscribers
+                                        <strong>Free Feature:</strong> Available to all registered users
                                         with adjustable thinking budget in settings
                                     </li>
                                     <li className="text-muted-foreground">
@@ -398,9 +402,8 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Gemini Explicit Caching is a VT+ exclusive feature that reduces
-                                    API costs by reusing conversation context across multiple
-                                    queries:
+                                    Gemini Explicit Caching reduces API costs by reusing conversation 
+                                    context across multiple queries (Free for all users):
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
@@ -493,7 +496,7 @@ function HelpCenterContent() {
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Upgrade to VT+ for unlimited access to all models and advanced features.
+                                    Upgrade to VT+ for enhanced web search, deep research, and personal AI assistant features.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -501,25 +504,22 @@ function HelpCenterContent() {
                         {/* Subscription Plans */}
                         <AccordionItem value="subscription-plans">
                             <AccordionTrigger className="font-medium">
-                                What's the difference between VT Base and VT Plus?
+                                What's the difference between Free and VT+ tiers?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT offers two subscription tiers:
+                                VT offers generous free features with VT+ focusing on exclusive research capabilities:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
-                                    <li className="text-muted-foreground">
-                                        <strong>VT Base (Free):</strong> Free access to Gemini 2.5 Flash Lite Preview (10 requests/day, 1/minute limit) plus unlimited usage with BYOK
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>VT Plus:</strong> Unlimited access to all models, advanced features, priority support, and no daily limits
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        Both tiers support full thread isolation and local storage
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        VT+ users get unlimited access without rate limiting or daily caps
-                                    </li>
+                                <li className="text-muted-foreground">
+                                <strong>Free tier (logged-in users):</strong> Most advanced features included free - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage. Plus free Gemini 2.5 Flash Lite Preview (10 requests/day).
+                                </li>
+                                <li className="text-muted-foreground">
+                                <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong> Everything free + premium AI models (Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + only 3 exclusive features: Pro Search (fast web search), Deep Research (comprehensive analysis), and AI Memory (personal knowledge base with RAG).
+                                </li>
+                                <li className="text-muted-foreground">
+                                Both tiers include complete privacy with thread isolation and local storage.
+                                </li>
                                 </ul>
                             </AccordionContent>
                         </AccordionItem>
@@ -590,13 +590,13 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT+ subscribers can create beautiful, interactive charts
+                                    All registered users can create beautiful, interactive charts
                                     directly from AI conversations:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+
-                                        subscribers with AI-powered chart generation
+                                        <strong>Free Feature:</strong> Available to all registered users
+                                        with AI-powered chart generation
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Chart Types:</strong> Bar charts, line charts, area
@@ -630,13 +630,13 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT+ subscribers can upload and analyze images and PDF documents
+                                    All registered users can upload and analyze images and PDF documents
                                     alongside text conversations using advanced AI models:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+
-                                        subscribers with supported AI models
+                                        <strong>Free Feature:</strong> Available to all registered users
+                                        with supported AI models
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Supported Models:</strong> GPT-4o, Claude models,

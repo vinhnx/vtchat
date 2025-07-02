@@ -13,7 +13,7 @@ import {
     EMBEDDING_MODEL_CONFIG,
 } from '@repo/shared/config/embedding-models';
 import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
-import { BUTTON_TEXT, THINKING_MODE } from '@repo/shared/constants';
+import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
@@ -313,7 +313,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                         <div className="text-muted-foreground text-sm">
                                             {isVtPlus
-                                                ? '$7.99/month • Renews automatically'
+                                                ? `${VT_PLUS_PRICE_WITH_INTERVAL} • Renews automatically`
                                                 : currentPlan.description}
                                         </div>
                                     </div>
@@ -356,9 +356,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Thinking Mode
                                 <Badge
                                     variant="secondary"
-                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                    className="bg-green-100 px-1.5 py-0.5 text-[10px] text-green-800"
                                 >
-                                    VT+ Active
+                                    Free Feature
                                 </Badge>
                             </CardTitle>
                             <CardDescription>
@@ -480,9 +480,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Gemini Explicit Caching
                                 <Badge
                                     variant="secondary"
-                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                    className="bg-green-100 px-1.5 py-0.5 text-[10px] text-green-800"
                                 >
-                                    VT+ Active
+                                    Free Feature
                                 </Badge>
                             </CardTitle>
                             <CardDescription>
@@ -938,8 +938,48 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <CardContent>
                         <div className="space-y-3">
                             {isVtPlus ? (
-                                // VT+ Features for subscribed users
-                                vtPlusFeatures.map(feature => {
+                                <>
+                                    {/* Free features available to all users */}
+                                    {currentPlan.features
+                                        .filter(f => ![FeatureSlug.PRO_SEARCH, FeatureSlug.DEEP_RESEARCH, FeatureSlug.RAG].includes(f))
+                                        .filter(f => f !== FeatureSlug.ACCESS_CHAT && f !== FeatureSlug.BASE_MODELS && f !== FeatureSlug.FREE_MODELS && f !== FeatureSlug.MATH_CALCULATOR && f !== FeatureSlug.BASE_FEATURES)
+                                        .map(feature => {
+                                            const details = getFeatureDetails(feature);
+                                            return (
+                                                <div
+                                                    key={feature}
+                                                    className="border-border/50 bg-green-50 rounded-lg border p-4"
+                                                >
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="bg-green-100 flex h-8 w-8 items-center justify-center rounded-full">
+                                                            {details.icon}
+                                                        </div>
+                                                        <div className="min-w-0 flex-1">
+                                                            <div className="mb-1 flex items-center gap-2">
+                                                                <div className="text-foreground font-medium">
+                                                                    {details.benefit}
+                                                                </div>
+                                                                <Badge
+                                                                    variant="secondary"
+                                                                    className="bg-green-100 text-xs text-green-800"
+                                                                >
+                                                                    Free for All Users
+                                                                </Badge>
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                            </div>
+                                                            <div className="text-muted-foreground text-xs leading-relaxed">
+                                                                {details.description}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    
+                                    {/* VT+ Exclusive Features */}
+                                    <div className="pt-4">
+                                        <h4 className="text-sm font-medium text-foreground mb-3">VT+ Exclusive Features</h4>
+                                        {vtPlusFeatures.map(feature => {
                                     const details = getFeatureDetails(feature.id);
                                     return (
                                         <div
@@ -953,9 +993,15 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 <div className="min-w-0 flex-1">
                                                     <div className="mb-1 flex items-center gap-2">
                                                         <div className="text-foreground font-medium">
-                                                            {feature.name}
+                                                        {feature.name}
                                                         </div>
-                                                        <Check className="h-4 w-4" />
+                                                        <Badge
+                                            variant="secondary"
+                                            className="bg-blue-100 text-xs text-blue-800"
+                                        >
+                                            VT+ Exclusive
+                                        </Badge>
+                                        <Check className="h-4 w-4" />
                                                     </div>
                                                     <div className="text-muted-foreground mb-2 text-sm">
                                                         {details.benefit}
@@ -967,7 +1013,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             </div>
                                         </div>
                                     );
-                                })
+                                        })}
+                                    </div>
+                                </>
                             ) : (
                                 // Features showcase for free users
                                 <>
@@ -1049,8 +1097,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                         <Sparkles className="h-4 w-4" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
-                            <strong>Ready to upgrade?</strong> Get VT+ for $7.99/month and unlock
-                            advanced AI reasoning, document parsing, and premium tools.
+                            <strong>Ready to upgrade?</strong> Get VT+ for {VT_PLUS_PRICE_WITH_INTERVAL} with free trial included and cancel anytime. Unlock premium AI models, research capabilities, and AI memory.
                         </AlertDescription>
                     </Alert>
                 )}

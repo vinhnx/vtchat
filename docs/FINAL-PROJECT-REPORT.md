@@ -145,20 +145,25 @@ Build:        Turborepo, Turbopack
 
 ## 💰 Business Model Implementation
 
-### **VT_BASE (Free Tier)**
+### **Free Tier (Most Generous in Industry)**
 - 9 AI models access (Gemini + OpenRouter)
+- Dark Mode interface
+- Thinking Mode with reasoning
+- Document Processing
+- Structured Output extraction
+- Chart Visualization
 - Mathematical calculator
 - Basic chat functionality
 - Local storage privacy
 - Essential features
 
-### **VT_PLUS (Premium Tier) - $10/month**
+### **VT+ Premium Tier - $5.99/month**
 - All free tier features
-- Advanced reasoning mode
-- Dark theme support
-- Web search capabilities
-- Document upload processing
-- Structured output extraction
+- 3 Research-Focused Exclusives:
+  - Enhanced Web Search (PRO_SEARCH)
+  - Deep Research (DEEP_RESEARCH)  
+  - Personal AI Memory (RAG)
+- Premium AI models access
 - Priority support
 
 ### **Revenue Integration**
