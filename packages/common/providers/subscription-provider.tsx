@@ -85,11 +85,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             const userId = session?.user?.id || null;
             const userDescription = userId ? `user ${userId}` : 'anonymous user';
 
-            // For anonymous users, immediately return default free tier without API calls
+            // For anonymous users, immediately return basic anonymous tier without API calls
             if (!userId) {
-                log.info('[Subscription Provider] Returning default free tier for anonymous user');
+                log.info('[Subscription Provider] Returning basic anonymous tier for anonymous user');
                 const anonymousStatus: SubscriptionStatus = {
-                    plan: PlanSlug.VT_BASE,
+                    plan: PlanSlug.ANONYMOUS,
                     status: SubscriptionStatusEnum.ACTIVE,
                     isPlusSubscriber: false,
                     hasSubscription: false,

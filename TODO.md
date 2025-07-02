@@ -10,12 +10,6 @@ https://react-scan.com/
 --
 try to do promotion again. good luck!
 --
-finally, make sure non-logged-in users can NOT access the free tier features overall
---
-
-research and offer more benefits for free tier users to attrach users
-
---
 for models tier: keep these models VT+ exlusive
 Claude 4 Sonnet, Claude 4 Opus
 GPT-4.1, O3, O3 Mini, O4 Mini, O1 Mini, O1 Preview
@@ -23,8 +17,6 @@ Gemini 2.5 Pro
 DeepSeek R1
 Grok 3
 --
-
-reduce price?
 --
 
 Tier revamp -> review carefully and update all related VT+ features and codebase and update to new tier revamp requirements

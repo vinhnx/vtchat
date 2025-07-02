@@ -7,6 +7,7 @@
 
 // Plan slug enumerations
 export enum PlanSlug {
+    ANONYMOUS = 'anonymous',
     VT_BASE = 'vt_base',
     VT_PLUS = 'vt_plus',
 }
@@ -55,6 +56,18 @@ export interface FeatureConfig {
 
 // Plan definitions
 export const PLANS: Record<PlanSlug, PlanConfig> = {
+    [PlanSlug.ANONYMOUS]: {
+        slug: PlanSlug.ANONYMOUS,
+        name: 'Anonymous',
+        description: 'Basic chat access for anonymous users',
+        features: [
+            // Only basic chat functionality for anonymous users
+            FeatureSlug.ACCESS_CHAT,
+            FeatureSlug.BASE_MODELS,
+            FeatureSlug.MATH_CALCULATOR,
+        ],
+        isDefault: false,
+    },
     [PlanSlug.VT_BASE]: {
         slug: PlanSlug.VT_BASE,
         name: 'Base',
