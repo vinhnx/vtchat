@@ -4,7 +4,8 @@ import { Tooltip } from '@repo/ui';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useState } from 'react';
-import { useVtPlusAccess } from '../hooks/use-subscription-access';
+import { useFeatureAccess } from '../hooks/use-subscription-access';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import { log } from '@repo/shared/logger';
 
 const themes = [
@@ -35,15 +36,15 @@ export type ThemeSwitcherProps = {
 export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) => {
     const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    // Dark theme is exclusively for VT+ premium subscribers
-    const hasThemeAccess = useVtPlusAccess();
+    // Dark theme is now available to all logged-in users
+    const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
 
     const handleThemeClick = useCallback(
         (themeKey: 'light' | 'dark' | 'system') => {
-            // Block dark mode and system theme for non-VT+ users
+            // Block dark mode and system theme for non-signed-in users
             if ((themeKey === 'dark' || themeKey === 'system') && !hasThemeAccess) {
-                log.warn('Dark theme access blocked: VT+ subscription required');
-                // Fallback to light theme for non-VT+ users
+                log.warn('Dark theme access blocked: Sign in required');
+                // Fallback to light theme for non-signed-in users
                 setTheme('light');
                 onChange?.('light');
                 return;
@@ -81,7 +82,7 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
                 // For system theme, also show the resolved theme icon as a hint
                 const showSystemHint = key === 'system' && theme === 'system' && resolvedTheme;
                 const SystemHintIcon = resolvedTheme === 'dark' ? Moon : Sun;
-                // Check if this theme option is disabled for non-VT+ users
+                // Check if this theme option is disabled for non-signed-in users
                 const isDisabled = (key === 'dark' || key === 'system') && !hasThemeAccess;
 
                 return (
@@ -95,8 +96,8 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
                         }`}
                         onClick={() => handleThemeClick(key as 'light' | 'dark' | 'system')}
                         disabled={isDisabled}
-                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}${isDisabled ? ' (VT+ required)' : ''}`}
-                        title={`${label}${showSystemHint ? ` (currently ${resolvedTheme})` : ''}${isDisabled ? ' - VT+ subscription required' : ''}`}
+                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}${isDisabled ? ' (Sign in required)' : ''}`}
+                        title={`${label}${showSystemHint ? ` (currently ${resolvedTheme})` : ''}${isDisabled ? ' - Sign in required' : ''}`}
                     >
                         {isActive && (
                             <div className="bg-secondary absolute inset-0 rounded-full transition-all duration-200" />
@@ -118,10 +119,10 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
         </div>
     );
 
-    // Show upgrade tooltip for free users
+    // Show sign in tooltip for non-signed-in users
     if (!hasThemeAccess) {
         return (
-            <Tooltip content="Upgrade to VT+ to unlock dark theme and system theme" side="bottom">
+            <Tooltip content="Sign in to unlock dark theme and system theme" side="bottom">
                 {themeSwitcher}
             </Tooltip>
         );

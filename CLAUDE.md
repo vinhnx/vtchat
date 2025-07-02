@@ -38,7 +38,7 @@
 ## Domain Knowledge
 
 - Chat application with AI models (OpenAI, Anthropic, etc.)
-- Subscription tiers: VT_BASE (default) and VT_PLUS
+- Subscription tiers: Most generous free tier in the industry (Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization for logged-in users) and VT+ ($5.99/month) with 3 research-focused exclusives (PRO_SEARCH, DEEP_RESEARCH, RAG)
 - MCP integration for external tools
 - Use promptBoost tools to enhance prompt quality
 - You can use playwright MCP tool to test web components integration

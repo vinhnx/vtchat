@@ -11,6 +11,7 @@ VT uses a dual-source subscription system that maintains consistency between use
 - **Purpose**: Quick access to user's current plan
 - **Values**: `'free'`, `'vt_plus'`
 - **Usage**: Used for fast plan checks and as fallback when subscription records are missing
+- **Note**: Free tier includes advanced features (Dark Mode, Document Processing, Thinking Mode, etc.) for logged-in users
 
 ### 2. User Subscriptions Table (`user_subscriptions`)
 

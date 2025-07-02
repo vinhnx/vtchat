@@ -86,15 +86,28 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         // If no session, no access
         if (!session) return false;
 
-        // VT+ exclusive features
+        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH, RAG)
         if (
-            requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
-            requiredFeature === FeatureSlug.CHART_VISUALIZATION ||
+            requiredFeature === FeatureSlug.RAG ||
             requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;
+        }
+
+        // Features now available to all logged-in users
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME ||
+            requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE ||
+            requiredFeature === FeatureSlug.STRUCTURED_OUTPUT ||
+            requiredFeature === FeatureSlug.THINKING_MODE ||
+            requiredFeature === FeatureSlug.DOCUMENT_PARSING ||
+            requiredFeature === FeatureSlug.REASONING_CHAIN ||
+            requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING ||
+            requiredFeature === FeatureSlug.CHART_VISUALIZATION
+        ) {
+            return true; // Available to all logged-in users
         }
 
         // For base features, always allow access for authenticated users
@@ -192,6 +205,18 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                         </div>
                         <DialogTitle className="text-xl font-bold text-gray-900">{title}</DialogTitle>
                         <DialogDescription className="text-gray-600 leading-relaxed">{defaultMessage}</DialogDescription>
+                        
+                        {/* Free Trial & Cancel Anytime */}
+                        <div className="flex items-center justify-center gap-3 mt-3">
+                            <div className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs">
+                                <Sparkles className="h-3 w-3 text-green-600" />
+                                <span className="font-medium text-green-700">Free trial included</span>
+                            </div>
+                            <div className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs">
+                                <span className="h-3 w-3 text-blue-600">✓</span>
+                                <span className="font-medium text-blue-700">Cancel anytime</span>
+                            </div>
+                        </div>
                     </DialogHeader>
                     <DialogFooter className="gap-3 pt-4">
                         <Button 
@@ -226,15 +251,28 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
     const hasAccess = React.useMemo(() => {
         if (!session) return false;
 
-        // VT+ exclusive features
+        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH, RAG)
         if (
-            requiredFeature === FeatureSlug.DARK_THEME ||
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
-            requiredFeature === FeatureSlug.CHART_VISUALIZATION ||
+            requiredFeature === FeatureSlug.RAG ||
             requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;
+        }
+
+        // Features now available to all logged-in users
+        if (
+            requiredFeature === FeatureSlug.DARK_THEME ||
+            requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE ||
+            requiredFeature === FeatureSlug.STRUCTURED_OUTPUT ||
+            requiredFeature === FeatureSlug.THINKING_MODE ||
+            requiredFeature === FeatureSlug.DOCUMENT_PARSING ||
+            requiredFeature === FeatureSlug.REASONING_CHAIN ||
+            requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING ||
+            requiredFeature === FeatureSlug.CHART_VISUALIZATION
+        ) {
+            return true; // Available to all logged-in users
         }
 
         // For base features, always allow access for authenticated users

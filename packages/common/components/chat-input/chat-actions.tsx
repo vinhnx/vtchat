@@ -253,8 +253,8 @@ export function MathCalculatorButton() {
             return;
         }
         if (!hasMathCalculatorAccess) {
-            // Show upgrade dialog if user doesn't have access
-            log.info('🧮 Math calculator feature requires VT+ subscription');
+            // Show sign-in prompt if user doesn't have access
+            log.info('🧮 Math calculator feature requires sign in');
             return;
         }
         log.info({ mathCalculatorEnabled }, '🧮 Math calculator button clicked');
@@ -266,7 +266,7 @@ export function MathCalculatorButton() {
         <>
             <GatedFeatureAlert
                 requiredFeature={FeatureSlug.MATH_CALCULATOR}
-                message="Math calculator requires VT+ subscription"
+                message="Math calculator requires sign in"
             >
                 <Button
                     size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
@@ -323,8 +323,8 @@ export function ChartsButton() {
             return;
         }
         if (!hasChartAccess) {
-            // Show upgrade dialog if user doesn't have access
-            log.info('📊 Charts feature requires VT+ subscription');
+            // Show sign-in prompt if user doesn't have access
+            log.info('📊 Charts feature requires sign in');
             return;
         }
         log.info({ useCharts }, '📊 Charts button clicked');
@@ -336,7 +336,7 @@ export function ChartsButton() {
         <>
             <GatedFeatureAlert
                 requiredFeature={FeatureSlug.CHART_VISUALIZATION}
-                message="Chart visualization requires VT+ subscription"
+                message="Chart visualization requires sign in"
             >
                 <Button
                     size={useCharts ? 'sm' : 'icon-sm'}

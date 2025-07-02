@@ -123,6 +123,7 @@ export const ChatModeConfig: Record<
         retry: true,
         isNew: true,
         isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GPT_4o_Mini]: {
         webSearch: true,
@@ -137,7 +138,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.CLAUDE_4_SONNET]: {
         webSearch: true,
@@ -161,6 +161,7 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
+        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GEMINI_2_5_FLASH]: {
         webSearch: true,
@@ -216,7 +217,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     // OpenRouter models
     [ChatMode.DEEPSEEK_V3_0324_FREE]: {
@@ -234,7 +234,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.DEEPSEEK_R1_FREE]: {
         webSearch: true,
@@ -259,7 +258,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.QWEN3_32B]: {
         webSearch: true,
@@ -268,7 +266,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.MISTRAL_NEMO]: {
         webSearch: true,
@@ -277,7 +274,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.QWEN3_14B_FREE]: {
         webSearch: true,
@@ -309,7 +305,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06]: {
         webSearch: true,
@@ -317,7 +312,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05]: {
         webSearch: true,
@@ -325,7 +319,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.CLAUDE_3_7_SONNET]: {
         webSearch: true,
@@ -333,7 +326,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.DEEPSEEK_R1_MAIN]: {
         webSearch: true,
@@ -341,7 +333,6 @@ export const ChatModeConfig: Record<
         multiModal: false,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
 };
 

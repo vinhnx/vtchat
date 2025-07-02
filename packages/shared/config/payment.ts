@@ -31,7 +31,7 @@ export interface Product {
     planSlug: PlanSlug;
     name: string;
     description: string;
-    price: number; // e.g., 7.99
+    price: number; // e.g., 5.99
     currency: string; // e.g., CURRENCIES.USD
     // interval: 'month' | 'year'; // Assuming monthly for now, can be added if tiers differ
     features: VTPlusFeature[];
@@ -85,9 +85,15 @@ export const VT_BASE_PRODUCT_INFO = {
     name: 'VT Base',
     slug: PlanSlug.VT_BASE,
     features: [
-        'Access to Free Models',
-        'Mathematical calculation tools providing essential mathematical operations including trigonometric functions, logarithms, exponentials, and basic arithmetic calculations',
-        'Access to base features',
+        'Free access to Gemini 2.5 Flash Lite Preview (10 requests/day)',
+        'Dark Mode interface',
+        'Structured Output extraction',
+        'Thinking Mode with reasoning display',
+        'Document Processing (PDF, DOC, images)',
+        'Chart Visualization',
+        'Gemini Explicit Caching',
+        'Mathematical calculation tools',
+        'Unlimited usage with BYOK',
         'Perfect for getting started with VT',
     ],
     prices: [], // Free tier has no prices in the same way paid tiers do

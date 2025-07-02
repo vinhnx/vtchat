@@ -17,7 +17,7 @@ export const ReasoningModeSettings = () => {
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
 
     // Check if current model supports reasoning
-    const supportsReasoning = useMemo(() => {
+    const _supportsReasoning = useMemo(() => {
         const reasoningModels = [
             // Gemini models with thinking support
             ChatMode.GEMINI_2_5_FLASH,
@@ -87,16 +87,16 @@ export const ReasoningModeSettings = () => {
                             <Brain className="h-8 w-8 text-[#D99A4E]" />
                         </div>
                         <div>
-                            <TypographyH4 className="mb-2 font-semibold text-[#BFB38F]">
-                                VT+ Required
+                            <TypographyH4 className="mb-2 font-semibold text-blue-600">
+                                Sign In Required
                             </TypographyH4>
-                            <p className="mb-4 text-sm text-[#BFB38F]/70">
+                            <p className="mb-4 text-sm text-blue-600/70">
                                 Reasoning Mode reveals the AI's step-by-step thinking process before
-                                generating responses. This advanced feature requires a VT+
-                                subscription.
+                                generating responses. This advanced feature is available to all
+                                registered users.
                             </p>
-                            <Button className="bg-[#BFB38F] hover:bg-[#BFB38F]/90 font-medium text-black border border-[#262626]">
-                                Upgrade to VT+
+                            <Button className="bg-blue-600 hover:bg-blue-600/90 font-medium text-white">
+                                Sign In
                             </Button>
                         </div>
                     </div>

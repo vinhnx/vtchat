@@ -77,7 +77,19 @@ export default function RAGPage() {
                                     <li>• Query your data with AI</li>
                                 </ul>
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-3">
+                                {/* Free Trial & Cancel Anytime */}
+                                <div className="flex items-center justify-center gap-3 text-xs">
+                                    <div className="flex items-center gap-1 rounded-full bg-green-500/20 px-2 py-1">
+                                        <Sparkles className="h-3 w-3 text-green-400" />
+                                        <span className="font-medium text-green-400">Free trial</span>
+                                    </div>
+                                    <div className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-1">
+                                        <span className="h-3 w-3 text-blue-400">✓</span>
+                                        <span className="font-medium text-blue-400">Cancel anytime</span>
+                                    </div>
+                                </div>
+                                
                                 <PremiumButton 
                                     onClick={() => router.push('/plus')}
                                     className="w-full"

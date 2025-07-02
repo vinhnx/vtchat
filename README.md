@@ -22,15 +22,17 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 ## ✨ Key Features
 
 ### 🧠 Advanced AI Capabilities
-- **Reasoning Mode (VT+ exclusive)**: Complete AI SDK reasoning tokens support with transparent thinking process
-- **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, DeepSeek R1, Qwen3 14B)
+
+- **Premium AI Models (VT+ exclusive)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
-- **Document Processing (VT+ exclusive)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB)
-- **Structured Output Extraction (VT+ exclusive)**: AI-powered JSON data extraction from documents
-- **Web Search Integration (VT+ exclusive)**: Grounding capabilities with real-time information
-- **Mathematical Calculator**: Advanced functions including trigonometry, logarithms, and arithmetic
+- **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
+- **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
+- **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process - available to all logged-in users
+- **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - available to all users
 
 ### 🔒 Privacy-First Architecture
+
 - **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
@@ -38,13 +40,15 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Advanced Application Security**: Arcjet protection with rate limiting, bot detection, email validation, and WAF
 
 ### 💼 Subscription Tiers
-- **VT_BASE (Free)**: 9 AI models, calculator, basic chat, local privacy
-- **VT_PLUS ($10/month)**: All free features + reasoning mode, dark theme, web search, document upload, structured extraction
+
+- **Free tier (logged-in users)**: Most advanced features included - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search, Deep Research, and AI Memory (RAG)
 - **Seamless Management**: Creem.io integration with customer portal
 
 ### 🎨 Modern User Experience
+
 - **Shadcn UI Design System**: Consistent, accessible interface
-- **Dark Mode (VT+ exclusive)**: Premium theming experience
+- **Dark Mode**: Premium theming experience for all logged-in users
 - **Responsive Design**: Optimized for desktop and mobile
 - **87% Performance Improvement**: Faster compilation and load times
 
@@ -73,6 +77,7 @@ vtchat/
 ## 🛠️ Tech Stack
 
 ### **Frontend & Core**
+
 - **Framework**: Next.js 14 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + Shadcn UI design system
 - **State Management**: Zustand + React Query
@@ -80,6 +85,7 @@ vtchat/
 - **Icons**: Lucide React
 
 ### **Backend & Infrastructure**
+
 - **Database**: Neon PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth (modern session management)
 - **Application Security**: Arcjet protection (rate limiting, bot detection, attack prevention)
@@ -88,6 +94,7 @@ vtchat/
 - **Deployment**: Fly.io (production-ready)
 
 ### **Development & Build**
+
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
@@ -95,6 +102,7 @@ vtchat/
 - **Type Checking**: TypeScript with strict configuration
 
 ### **AI & Integrations**
+
 - **AI Providers**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI
 - **AI SDK**: Vercel AI SDK with reasoning tokens support
 - **Document Processing**: Multi-format file analysis
@@ -111,52 +119,61 @@ vtchat/
 ### Installation
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/vinhnx/vtchat.git
-   cd vtchat
-   ```
+
+    ```bash
+    git clone https://github.com/vinhnx/vtchat.git
+    cd vtchat
+    ```
 
 2. **Install dependencies**:
-   ```bash
-   bun install
-   ```
+
+    ```bash
+    bun install
+    ```
 
 3. **Set up environment variables**:
-   ```bash
-   cp apps/web/.env.example apps/web/.env.local
-   ```
-   
-   Configure the following required variables in `apps/web/.env.local`:
-   
-   **Essential Services:**
-   - `DATABASE_URL` - Neon PostgreSQL connection string
-   - `BETTER_AUTH_SECRET` - Authentication secret key
-   - `BETTER_AUTH_URL` - Authentication URL (http://localhost:3000 for development)
-   
-   **AI Provider Keys (choose one or more):**
-   - `OPENAI_API_KEY` - OpenAI API access
-   - `ANTHROPIC_API_KEY` - Anthropic Claude API access
-   - `GOOGLE_API_KEY` - Google Gemini API access
-   
-   **Payment & Subscription:**
-   - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
-   - `CREEM_API_KEY` - Creem.io API access
-   - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
-   
-   **Security:**
-   - `ARCJET_KEY` - Application security and rate limiting
-   - `NEXT_PUBLIC_BASE_URL` - Application base URL
+
+    ```bash
+    cp apps/web/.env.example apps/web/.env.local
+    ```
+
+    Configure the following required variables in `apps/web/.env.local`:
+
+    **Essential Services:**
+
+    - `DATABASE_URL` - Neon PostgreSQL connection string
+    - `BETTER_AUTH_SECRET` - Authentication secret key
+    - `BETTER_AUTH_URL` - Authentication URL (http://localhost:3000 for development)
+
+    **AI Provider Keys (choose one or more):**
+
+    - `OPENAI_API_KEY` - OpenAI API access
+    - `ANTHROPIC_API_KEY` - Anthropic Claude API access
+    - `GOOGLE_API_KEY` - Google Gemini API access
+
+    **Payment & Subscription:**
+
+    - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
+    - `CREEM_API_KEY` - Creem.io API access
+    - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
+
+    **Security:**
+
+    - `ARCJET_KEY` - Application security and rate limiting
+    - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
 4. **Set up the database**:
-   ```bash
-   cd apps/web
-   bun run generate  # Generate database schema
-   ```
+
+    ```bash
+    cd apps/web
+    bun run generate  # Generate database schema
+    ```
 
 5. **Start the development server**:
-   ```bash
-   bun dev
-   ```
+
+    ```bash
+    bun dev
+    ```
 
 6. **Open the application**:
    Navigate to `http://localhost:3000` in your browser.
@@ -195,16 +212,17 @@ The application requires several environment variables for full functionality. R
 
 ### Subscription Tiers
 
-VTChat implements a dual-tier system:
+VTChat implements a dual-tier system with the most generous free tier in the industry:
 
-- **VT_BASE**: Free tier with access to 9 AI models
-- **VT_PLUS**: Premium tier ($10/month) with advanced features
+- **Free tier (logged-in users)**: Most advanced features included - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search (fast web search), Deep Research (comprehensive analysis), and AI Memory (personal knowledge base with RAG)
 
 ## 🚢 Deployment
 
 VTChat is production-ready and deployed on Fly.io:
 
 ### Production Deployment
+
 - **URL**: [https://vtchat.io.vn](https://vtchat.io.vn)
 - **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
 - **Performance**: 87% faster compilation, optimized bundle size
@@ -212,6 +230,7 @@ VTChat is production-ready and deployed on Fly.io:
 - **Monitoring**: Comprehensive error tracking and performance monitoring
 
 ### Deployment Configuration
+
 - **Memory**: 1GB RAM per instance
 - **CPU**: 1 shared CPU
 - **Regions**: Asia-Pacific (primary), USA East (secondary)
@@ -221,18 +240,21 @@ VTChat is production-ready and deployed on Fly.io:
 ## 📚 Documentation
 
 ### **Production Readiness**
+
 - **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Comprehensive pre-deployment verification
 - **[Production Monitoring Setup](docs/production-monitoring-setup.md)**: Error tracking, performance monitoring, and alerting
 - **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: Complete feature summary and achievements
 - **[Final Project Report](docs/FINAL-PROJECT-REPORT.md)**: Comprehensive technical and business analysis
 
 ### **Development & Integration**
+
 - **[AGENT.md](AGENT.md)**: Development guidelines and conventions
 - **[Security Guide](docs/guides/arcjet-security.md)**: Comprehensive Arcjet application security implementation
 - **Subscription System**: Plan management, caching, and Creem.io integration
 - **Customer Portal**: User subscription management interface
 
 ### **Project Context**
+
 The `/memory-bank` directory contains contextual documents tracking project evolution, feature implementations, and development insights for continuous improvement.
 
 ## 🔐 Security
@@ -277,6 +299,7 @@ We welcome contributions! Please follow these guidelines:
 5. **Submit a pull request** with a clear description
 
 ### Development Standards
+
 - Use TypeScript with strict configuration
 - Follow the existing code style and patterns
 - Ensure all tests pass before submitting

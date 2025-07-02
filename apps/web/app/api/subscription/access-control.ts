@@ -172,6 +172,47 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
 }
 
 /**
+ * Check if user has access to features available to logged-in users
+ * (Features that used to be VT+ exclusive but are now free for logged-in users)
+ */
+export async function checkSignedInFeatureAccess(identifier: RequestIdentifier): Promise<AccessCheckResult> {
+    const { userId } = identifier;
+
+    // If no user ID, they're anonymous and have no access
+    if (!userId) {
+        return {
+            hasAccess: false,
+            reason: 'Sign in required for this feature',
+            subscriptionStatus: SubscriptionStatusEnum.NONE,
+            planSlug: PlanSlug.VT_BASE,
+        };
+    }
+
+    try {
+        // Get subscription status to determine if user is properly signed in
+        const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
+        
+        // User is signed in, grant access regardless of subscription status
+        return {
+            hasAccess: true,
+            reason: undefined,
+            subscriptionStatus: subscriptionStatus.isActive 
+                ? SubscriptionStatusEnum.ACTIVE 
+                : SubscriptionStatusEnum.NONE,
+            planSlug: subscriptionStatus.plan,
+        };
+    } catch (error) {
+        log.error('Failed to check signed-in feature access:', { error });
+        return {
+            hasAccess: false,
+            reason: 'Failed to verify user status',
+            subscriptionStatus: SubscriptionStatusEnum.NONE,
+            planSlug: PlanSlug.VT_BASE,
+        };
+    }
+}
+
+/**
  * Check access to specific VT+ feature
  */
 export async function checkFeatureAccess(

@@ -103,20 +103,18 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
     const status = getSubscriptionStatus(context);
     if (!status.isActive) return false; // If overall subscription is not active, no features are accessible
 
-    // For VT+ specific features, check if they have an active VT+ plan
+    // VT+ exclusive features - only 3 features remain exclusive
     if (
         [
-            FeatureSlug.DARK_THEME,
             FeatureSlug.DEEP_RESEARCH,
             FeatureSlug.PRO_SEARCH,
-            FeatureSlug.ADVANCED_CHAT_MODES,
-            FeatureSlug.CHART_VISUALIZATION,
+            FeatureSlug.RAG,
         ].includes(feature)
     ) {
         return status.isVtPlus; // isActive check is already done
     }
 
-    // Base features available to all users with active accounts
+    // Features available to all logged-in users (moved from VT+ to free tier)
     if (
         [
             FeatureSlug.ACCESS_CHAT,
@@ -124,6 +122,15 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
             FeatureSlug.FREE_MODELS,
             FeatureSlug.MATH_CALCULATOR,
             FeatureSlug.BASE_FEATURES,
+            FeatureSlug.DARK_THEME,
+            FeatureSlug.THINKING_MODE_TOGGLE,
+            FeatureSlug.STRUCTURED_OUTPUT,
+            FeatureSlug.THINKING_MODE,
+            FeatureSlug.DOCUMENT_PARSING,
+            FeatureSlug.REASONING_CHAIN,
+            FeatureSlug.GEMINI_EXPLICIT_CACHING,
+            FeatureSlug.CHART_VISUALIZATION,
+            FeatureSlug.ADVANCED_CHAT_MODES,
         ].includes(feature)
     ) {
         return true; // Always available to active users

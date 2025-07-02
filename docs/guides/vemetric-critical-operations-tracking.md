@@ -64,7 +64,7 @@ function PaymentFlow() {
     // Track payment start
     await trackPaymentInitiated({
       tier: 'VT_PLUS',
-      amount: 7.99,
+      amount: VT_PLUS_PRICE, // Use constant from @repo/shared/constants
       currency: 'USD',
       paymentMethod: 'stripe',
     });
@@ -75,7 +75,7 @@ function PaymentFlow() {
       // Track success
       await trackPaymentSuccess({
         tier: 'VT_PLUS',
-        amount: 7.99,
+        amount: VT_PLUS_PRICE, // Use constant from @repo/shared/constants
         currency: 'USD',
         paymentMethod: 'stripe',
         processingTime: result.processingTime,
