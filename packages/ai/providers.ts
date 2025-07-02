@@ -53,6 +53,22 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
         if (byokKey) return byokKey;
     }
 
+    // Check server-side environment variables if available
+    if (typeof process !== 'undefined' && process.env) {
+        const envKeyMapping: Record<ProviderEnumType, string> = {
+            [Providers.OPENAI]: process.env.OPENAI_API_KEY || '',
+            [Providers.ANTHROPIC]: process.env.ANTHROPIC_API_KEY || '',
+            [Providers.TOGETHER]: process.env.TOGETHER_API_KEY || '',
+            [Providers.GOOGLE]: process.env.GEMINI_API_KEY || '',
+            [Providers.FIREWORKS]: process.env.FIREWORKS_API_KEY || '',
+            [Providers.XAI]: process.env.XAI_API_KEY || '',
+            [Providers.OPENROUTER]: process.env.OPENROUTER_API_KEY || '',
+        };
+
+        const envKey = envKeyMapping[provider];
+        if (envKey) return envKey;
+    }
+
     // For worker environments (use self)
     if (typeof self !== 'undefined') {
         // Check if AI_API_KEYS exists on self
@@ -81,12 +97,23 @@ export const getProviderInstance = (
 ): any => {
     let apiKey = getApiKey(provider, byokKeys);
     
-    // For free models, try to use server-side API keys if no BYOK key is provided
+    log.info('Provider instance debug:', {
+        provider,
+        isFreeModel,
+        hasApiKey: !!apiKey,
+        hasByokKeys: !!byokKeys,
+        byokKeysKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        apiKeyLength: apiKey ? apiKey.length : 0,
+    });
+    
+    // For free models, provide more helpful error messages if no API key is found
     if (isFreeModel && !apiKey && provider === 'google') {
-        if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
-            apiKey = process.env.GEMINI_API_KEY;
-            log.info('Using server-side API key for free Gemini model');
-        }
+        log.error('No API key found for free Gemini model - checking environment...');
+        log.error('Process env check:', {
+            hasProcess: typeof process !== 'undefined',
+            hasEnv: typeof process !== 'undefined' ? !!process.env : false,
+            hasGeminiKey: typeof process !== 'undefined' ? !!process.env?.GEMINI_API_KEY : false,
+        });
     }
 
     switch (provider) {

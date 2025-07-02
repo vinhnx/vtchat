@@ -11,6 +11,7 @@ export const completionRequestSchema = z.object({
     maxIterations: z.number().optional(),
     webSearch: z.boolean().optional(),
     mathCalculator: z.boolean().optional(),
+    charts: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
     thinkingMode: z

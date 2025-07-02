@@ -6,15 +6,7 @@ import { RateLimitErrorAlert } from '../rate-limit-error-alert';
 const mockSetSettingTab = vi.fn();
 const mockSetShowSettings = vi.fn();
 
-vi.mock('../store', () => ({
-    SETTING_TABS: {
-        USAGE: 'usage',
-    },
-    useAppStore: () => ({
-        setSettingTab: mockSetSettingTab,
-        setIsSettingsOpen: mockSetShowSettings,
-    }),
-}));
+// Note: Store mocking may need adjustment in actual test environment
 
 // Mock window.open
 const mockWindowOpen = vi.fn();
@@ -31,6 +23,19 @@ describe('RateLimitErrorAlert', () => {
         expect(screen.getByText('Something went wrong')).toBeInTheDocument();
         expect(screen.queryByText('View Usage')).not.toBeInTheDocument();
         expect(screen.queryByText('Upgrade to VT+')).not.toBeInTheDocument();
+    });
+
+    it('should render a diagnostic error message with suggestions', () => {
+        const diagnosticError = 'API key issue detected. This could be due to missing, invalid, or expired API keys.\n\n🔧 Try these steps:\n1. Check your API keys in Settings → API Keys\n2. Verify your API key is valid and not expired';
+
+        render(<RateLimitErrorAlert error={diagnosticError} />);
+
+        expect(screen.getByText('API key issue detected. This could be due to missing, invalid, or expired API keys.')).toBeInTheDocument();
+        expect(screen.getByText('🔧 Try these steps:')).toBeInTheDocument();
+        expect(screen.getByText('Check your API keys in Settings → API Keys')).toBeInTheDocument();
+        expect(screen.getByText('Verify your API key is valid and not expired')).toBeInTheDocument();
+        expect(screen.getByText('Open Settings')).toBeInTheDocument();
+        expect(screen.getByText('Refresh Page')).toBeInTheDocument();
     });
 
     it('should render rate limit error with CTA buttons for rate limit errors', () => {
