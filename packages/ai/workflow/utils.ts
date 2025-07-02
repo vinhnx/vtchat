@@ -107,17 +107,38 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        const hasGeminiKey =
-            byokKeys?.GEMINI_API_KEY ||
+        const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+        const hasSystemGeminiKey = 
             (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) ||
             windowApiKey;
 
-        if (!hasGeminiKey) {
-            throw new Error('Gemini API key is required for web search functionality');
+        // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
+        const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        
+        if (!hasUserGeminiKey && !hasSystemGeminiKey) {
+            if (isFreeGeminiModel) {
+                throw new Error('Free Gemini model requires system configuration. Please contact support or upgrade to use your own API key.');
+            } else {
+                throw new Error('Gemini API key is required for web search functionality');
+            }
         }
 
+        // If user has BYOK, use their key (unlimited usage)
+        // If user doesn't have BYOK but using free model, use system key (counted usage)
+        const useSystemKey = !hasUserGeminiKey && isFreeGeminiModel;
+        
+        log.info('API key usage decision:', {
+            hasUserKey: hasUserGeminiKey,
+            hasSystemKey: hasSystemGeminiKey,
+            isFreeModel: isFreeGeminiModel,
+            useSystemKey,
+        });
+
         log.info('Getting language model for:', { data: model });
-        const selectedModel = getLanguageModel(model, undefined, byokKeys, true, undefined, thinkingMode?.claude4InterleavedThinking);
+        
+        // Use system key for free model users without BYOK
+        const effectiveByokKeys = useSystemKey ? undefined : byokKeys;
+        const selectedModel = getLanguageModel(model, undefined, effectiveByokKeys, true, undefined, thinkingMode?.claude4InterleavedThinking);
         log.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
             modelType: typeof selectedModel,

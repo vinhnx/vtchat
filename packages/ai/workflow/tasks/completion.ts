@@ -1,7 +1,7 @@
 import { createTask } from '@repo/orchestrator';
 import { calculatorTools } from '../../../../apps/web/lib/tools/math';
 import { chartTools } from '../../../../apps/web/lib/tools/charts';
-import { getModelFromChatMode, supportsOpenAIWebSearch } from '../../models';
+import { getModelFromChatMode, supportsOpenAIWebSearch, supportsTools } from '../../models';
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
 import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -106,9 +106,13 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         }
 
         if (charts) {
-            log.info({}, '🎨 Charts enabled, adding chart tools...');
+            log.info({ model: model }, '🎨 Charts enabled for model, adding chart tools...');
             const chartToolsObj = chartTools();
-            log.info({ data: Object.keys(chartToolsObj) }, '📊 Available chart tools');
+            log.info({ 
+                chartTools: Object.keys(chartToolsObj),
+                model: model,
+                supportsTools: supportsTools ? supportsTools(model) : 'unknown'
+            }, '📊 Available chart tools for model');
             tools = { ...tools, ...chartToolsObj };
         }
 

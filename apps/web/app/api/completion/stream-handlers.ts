@@ -111,6 +111,7 @@ export async function executeStream({
             customInstructions: data.customInstructions,
             webSearch: data.webSearch || false,
             mathCalculator: data.mathCalculator || false,
+            charts: data.charts || false,
             config: {
                 maxIterations: data.maxIterations || 3,
                 signal,

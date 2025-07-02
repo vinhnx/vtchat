@@ -27,11 +27,63 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
         error.toLowerCase().includes('minute');
 
     if (!isRateLimitError) {
+        // Check if this is a diagnostic message with suggestions
+        const hasSuggestions = error.includes('🔧 Try these steps:');
+        
+        if (hasSuggestions) {
+            const [message, suggestionsSection] = error.split('🔧 Try these steps:');
+            const suggestions = suggestionsSection.trim().split('\n').filter(s => s.trim());
+            
+            return (
+                <Alert variant="destructive" className={className}>
+                    <AlertDescription>
+                        <div className="flex items-start gap-2">
+                            <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
+                            <div className="flex-1">
+                                <p className="mb-3">{message.trim()}</p>
+                                <div className="mb-3">
+                                    <p className="text-sm font-medium mb-2">🔧 Try these steps:</p>
+                                    <ul className="text-sm space-y-1 list-disc pl-4">
+                                        {suggestions.map((suggestion, index) => (
+                                            <li key={index} className="text-gray-300">
+                                                {suggestion.replace(/^\d+\.\s*/, '')}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleOpenUsageSettings}
+                                        className="h-8 text-xs"
+                                    >
+                                        <Settings className="mr-1 h-3 w-3" />
+                                        Open Settings
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => window.location.reload()}
+                                        className="h-8 text-xs"
+                                    >
+                                        Refresh Page
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </AlertDescription>
+                </Alert>
+            );
+        }
+        
         return (
             <Alert variant="destructive" className={className}>
                 <AlertDescription>
-                    <AlertCircle className="mt-0.5 size-3.5" />
-                    {error}
+                    <div className="flex items-start gap-2">
+                        <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
+                        <span>{error}</span>
+                    </div>
                 </AlertDescription>
             </Alert>
         );
