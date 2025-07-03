@@ -18,7 +18,7 @@ import {
     SonnerToaster,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FileText, HelpCircle, LogOut, Menu, Settings, Shield, User, X } from 'lucide-react';
+import { FileText, HelpCircle, Info, LogOut, Menu, Settings, Shield, User, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
@@ -246,6 +246,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 Settings
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => router.push('/about')}>
+                                <Info size={16} strokeWidth={2} className="mr-2" />
+                                About
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push('/faq')}>
                                 <HelpCircle size={16} strokeWidth={2} className="mr-2" />
                                 Help Center

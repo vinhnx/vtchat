@@ -63,7 +63,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onSkip(); }}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Brain className="h-6 w-6 text-muted-foreground" />

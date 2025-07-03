@@ -31,6 +31,7 @@ import {
     ExternalLink,
     FileText,
     HelpCircle,
+    Info,
     LogOut,
     Option,
     PanelLeftClose,
@@ -251,22 +252,31 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        push('/faq');
-                                    }}
+                                onClick={e => {
+                                e.stopPropagation();
+                                push('/about');
+                                }}
                                 >
-                                    <HelpCircle size={16} strokeWidth={2} />
-                                    Help Center
+                                <Info size={16} strokeWidth={2} />
+                                About
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        push('/privacy');
-                                    }}
+                                onClick={e => {
+                                e.stopPropagation();
+                                push('/faq');
+                                }}
                                 >
-                                    <Shield size={16} strokeWidth={2} />
-                                    Privacy Policy
+                                <HelpCircle size={16} strokeWidth={2} />
+                                Help Center
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                onClick={e => {
+                                e.stopPropagation();
+                                push('/privacy');
+                                }}
+                                >
+                                <Shield size={16} strokeWidth={2} />
+                                Privacy Policy
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onClick={e => {
