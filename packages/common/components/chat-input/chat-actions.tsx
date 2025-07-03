@@ -145,7 +145,7 @@ export function ChatModeButton() {
 
             {/* Gated Feature Alert Modal */}
             <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
-                <DialogContent className="mx-4 max-w-md rounded-xl">
+                <DialogContent className="mx-4 max-w-[95vw] sm:max-w-md rounded-xl">
                     <DialogTitle className="sr-only">
                         {showGateAlert?.title || 'Upgrade Required'}
                     </DialogTitle>
@@ -160,7 +160,7 @@ export function ChatModeButton() {
                             </p>
                         </div>
                         <div className="flex gap-2">
-                            <Button variant="outlined" onClick={() => setShowGateAlert(null)}>
+                            <Button variant="outline" onClick={() => setShowGateAlert(null)}>
                                 Cancel
                             </Button>
                             <Button onClick={() => push('/plus')}>Upgrade Now</Button>
@@ -494,7 +494,7 @@ export function BYOKSetupModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="mx-4 max-w-md rounded-xl">
+            <DialogContent className="mx-4 max-w-[95vw] sm:max-w-md rounded-xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <BYOKIcon />
@@ -534,7 +534,7 @@ export function BYOKSetupModal({
                         </a>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outlined" onClick={handleClose} className="flex-1">
+                        <Button variant="outline" onClick={handleClose} className="flex-1">
                             Cancel
                         </Button>
                         <Button
