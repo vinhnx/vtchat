@@ -21,7 +21,7 @@ VT is production-ready with automated deployment scripts for both development an
 2. **Fly CLI**: `curl -L https://fly.io/install.sh | sh`
 3. **Environment Files**: Set up your `.env.development` and `.env.production`
 4. **Database**: Neon PostgreSQL database with proper schema
-5. **API Keys**: GitHub, Google OAuth, Creem.io payment, Arcjet security, AI providers
+5. **API Keys**: GitHub, Google OAuth, Creem.io payment, AI providers
 6. **Domain**: Custom domain configuration (vtchat.io.vn)
 
 ## Environment Configuration
@@ -66,7 +66,7 @@ VT is production-ready with automated deployment scripts for both development an
 - `DATABASE_URL`, `BETTER_AUTH_SECRET`
 - `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET`
 - `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_PRODUCT_ID`
-- `ARCJET_KEY` (application security)
+
 - `GEMINI_API_KEY` (for free tier models)
 - `NEON_PROJECT_ID`, `NEON_API_KEY`
 

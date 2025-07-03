@@ -11,72 +11,50 @@ VT implements enterprise-grade security measures to protect users, data, and inf
 3. **Zero Trust**: All requests are validated and protected regardless of source
 4. **User-Centric Protection**: Security measures that enhance rather than hinder user experience
 
-## 🔒 Application Security (Arcjet Integration)
+## 🔒 Application Security (Bot Detection)
 
-VTChat uses [Arcjet](https://arcjet.com) to provide enterprise-grade application security with comprehensive protection against modern web threats.
+VTChat implements bot detection and secure authentication focused on privacy and user protection.
 
 ### Protection Features
 
 #### 🤖 Bot Protection
-- **Advanced Bot Detection**: Identifies and blocks automated traffic
-- **Smart Allow Lists**: Permits legitimate bots (search engines, monitoring)
-- **Context-Aware Rules**: Different bot policies for different endpoints
-- **Real-Time Blocking**: Immediate protection against malicious automation
+- **Authentication Bot Detection**: Identifies and blocks automated traffic on authentication endpoints
+- **Industry-Standard Detection**: Uses the `isbot` library for reliable bot identification
+- **Focused Protection**: Targeted protection for login and registration endpoints
+- **Privacy-First Approach**: Minimal data collection while maintaining security
 
-#### ⚡ Rate Limiting
-- **Multiple Algorithms**: Sliding window, fixed window, token bucket
-- **User-Specific Limits**: Authenticated users get individual rate limits
-- **Intelligent Fallback**: IP-based limiting for unauthenticated users
-- **Endpoint-Specific Rules**: Tailored limits for different API routes
-
-#### 📧 Email Validation
-- **Disposable Email Blocking**: Prevents temporary/throwaway email addresses
-- **Domain Validation**: Checks for valid MX records and legitimate domains
-- **Format Verification**: Ensures proper email address formatting
-- **User-Friendly Errors**: Clear, helpful error messages for validation failures
-
-#### 🛡️ Web Application Firewall (WAF)
-- **Attack Pattern Detection**: Blocks SQL injection, XSS, and other attacks
-- **Shield Protection**: Automatic defense against common vulnerabilities
-- **Real-Time Monitoring**: Continuous threat detection and response
-- **Zero False Positives**: Carefully tuned rules to avoid blocking legitimate traffic
+#### 🔐 Better Auth Security
+- **Modern Session Management**: Secure session handling with automatic expiration
+- **OAuth Integration**: Secure authentication with Google, GitHub, and other providers
+- **Session Isolation**: Per-user authentication with proper thread isolation
+- **Account Linking**: Secure linking of multiple OAuth providers to single account
 
 ### Route-Specific Protection
 
 #### Authentication Routes (`/api/auth/*`)
 ```typescript
 // Enhanced Better Auth integration
-- User-specific rate limiting (5 attempts per 2 minutes)
-- Email validation for signup protection
-- Bot prevention for auth forms
-- Specialized protectSignup rules
+- Bot detection for authentication endpoints
+- Secure OAuth integration with Google and GitHub
+- Session management with automatic expiration
+- CORS headers for cross-origin protection
 ```
 
-#### Chat API Routes (`/api/chat/*`)
+#### API Routes (General)
 ```typescript
-// Conversation protection
-- 50 requests per hour per user
-- Sliding window rate limiting
-- Bot detection with search engine exceptions
+// Basic protection for all routes
+- HTTPS enforcement for all communications
+- Secure session management through Better Auth
+- Privacy-first data handling
 - User ID + IP tracking
 ```
 
 #### Feedback Routes (`/api/feedback`)
 ```typescript
 // Form submission protection
-- 5 submissions per 10 minutes
-- Email validation enabled
-- Strict bot blocking
-- IP-based rate limiting
-```
-
-#### General API Routes (`/api/*`)
-```typescript
-// Comprehensive API protection
-- Token bucket algorithm (100 capacity, 50 refill/min)
-- Bot detection and blocking
-- Shield WAF protection
-- Flexible rate limiting
+- Authentication required
+- User-specific submission tracking
+- Basic rate limiting through application logic
 ```
 
 ## 🔐 Privacy-First Architecture
@@ -96,10 +74,10 @@ VTChat uses [Arcjet](https://arcjet.com) to provide enterprise-grade application
 ## 🚨 Threat Mitigation
 
 ### Automated Attack Prevention
-- **Brute Force Protection**: Rate limiting on authentication attempts
-- **Credential Stuffing Defense**: Email validation and bot detection
-- **DDoS Mitigation**: Distributed rate limiting and traffic shaping
-- **Scraping Prevention**: Bot detection with intelligent blocking
+- **Brute Force Protection**: Better Auth built-in rate limiting
+- **Bot Prevention**: Detection and blocking of automated requests on auth endpoints
+- **Privacy Protection**: No server-side storage of sensitive conversation data
+- **Secure Communication**: HTTPS enforcement and secure headers
 
 ### Content Security
 - **Input Validation**: All user inputs validated and sanitized
@@ -116,40 +94,36 @@ VTChat uses [Arcjet](https://arcjet.com) to provide enterprise-grade application
 ## 📊 Security Monitoring
 
 ### Real-Time Protection
-- **Arcjet Dashboard**: Live security event monitoring
-- **Decision Logging**: Detailed logs of all security decisions
+- **Application Monitoring**: Basic security event logging
+- **Error Tracking**: Monitoring authentication and access patterns
 - **Performance Metrics**: Security impact on application performance
-- **Alert System**: Immediate notification of security events
+- **Privacy-First Logging**: Minimal data collection focused on security
 
 ### Security Analytics
-- **Attack Pattern Analysis**: Understanding threat landscapes
-- **User Behavior Monitoring**: Detecting anomalous usage patterns
-- **Geographic Insights**: Location-based threat intelligence
+- **Basic Analytics**: Understanding general usage patterns
+- **Privacy-Focused Monitoring**: No personal data collection
+- **Error Analysis**: Identifying potential security issues
 - **Trend Analysis**: Long-term security trend monitoring
 
 ## 🧪 Security Testing
 
 ### Automated Testing
 ```bash
-# Comprehensive security test suite
-bun test tests/arcjet-integration.test.ts      # General security tests
-bun test tests/better-auth-arcjet.test.ts      # Authentication security tests
+# Security test suite
+bun test apps/web/tests/              # Authentication and security tests
+bun run build                         # Build verification
 ```
 
 ### Manual Security Testing
 ```bash
-# Rate limiting verification
+# Bot detection testing on auth endpoints
 curl -X POST http://localhost:3000/api/auth/sign-up \
   -H "Content-Type: application/json" \
+  -H "User-Agent: bot-detection-test" \
   -d '{"email":"test@example.com","password":"test123"}'
 
-# Bot detection testing
+# Authentication testing
 curl -I http://localhost:3000/api/feedback
-
-# Email validation testing
-curl -X POST http://localhost:3000/api/auth/sign-up \
-  -H "Content-Type: application/json" \
-  -d '{"email":"disposable@temp-mail.org","password":"test123"}'
 ```
 
 ## 🔧 Security Configuration
@@ -157,9 +131,9 @@ curl -X POST http://localhost:3000/api/auth/sign-up \
 ### Environment Setup
 ```bash
 # Required security configuration
-ARCJET_KEY=your_arcjet_api_key_here    # Application security
 DATABASE_URL=your_secure_db_url        # Encrypted database connection
-NEXTAUTH_SECRET=your_session_secret    # Session security
+BETTER_AUTH_SECRET=your_session_secret # Session security
+NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 ```
 
 ### Security Headers

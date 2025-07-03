@@ -2,7 +2,6 @@ import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { auth } from '@/lib/auth-server';
 import { checkVTPlusAccess } from '../../subscription/access-control';
-import arcjet, { detectBot, shield, slidingWindow } from '@arcjet/next';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
@@ -14,55 +13,7 @@ import { log } from '@repo/shared/logger';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-// Arcjet protection for chat endpoints
-const aj = arcjet({
-    key: process.env.ARCJET_KEY!,
-    characteristics: ["userId", "ip.src"],
-    rules: [
-        shield({ mode: "LIVE" }),
-        detectBot({
-            mode: "LIVE",
-            allow: ["CATEGORY:SEARCH_ENGINE"],
-        }),
-        slidingWindow({
-            mode: "LIVE",
-            interval: "1h",
-            max: 50,
-        }),
-    ],
-});
-
 export async function POST(req: Request) {
-    // Apply Arcjet protection if key is available
-    if (process.env.ARCJET_KEY) {
-        const decision = await aj.protect(req);
-        
-        if (decision.isDenied()) {
-            if (decision.reason.isRateLimit()) {
-                return new Response(JSON.stringify({ 
-                    error: "Rate limit exceeded", 
-                    message: "Too many requests. Please try again later." 
-                }), { 
-                    status: 429,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } else if (decision.reason.isBot()) {
-                return new Response(JSON.stringify({ 
-                    error: "Bot traffic not allowed" 
-                }), { 
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } else {
-                return new Response(JSON.stringify({ 
-                    error: "Request denied" 
-                }), { 
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            }
-        }
-    }
     try {
         // Check authentication
         const session = await auth.api.getSession({
