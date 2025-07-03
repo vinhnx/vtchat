@@ -9,7 +9,7 @@
 
 **A modern, privacy-first AI chat application with enterprise-grade security**
 
-[Live Demo](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/guides/arcjet-security.md)
+[Live Demo](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/SECURITY.md)
 
 </div>
 
@@ -37,7 +37,7 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
 - **Enterprise-Grade Security**: Secure authentication with Better Auth
-- **Advanced Application Security**: Arcjet protection with rate limiting, bot detection, email validation, and WAF
+- **Privacy-Focused Security**: Bot detection and secure authentication with Better Auth
 
 ### 💼 Subscription Tiers
 
@@ -88,7 +88,7 @@ vtchat/
 
 - **Database**: Neon PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth (modern session management)
-- **Application Security**: Arcjet protection (rate limiting, bot detection, attack prevention)
+- **Application Security**: Bot detection for authentication and secure OAuth integration
 - **Payment Processing**: Creem.io integration
 - **Local Storage**: IndexedDB via Dexie.js
 - **Deployment**: Fly.io (production-ready)
@@ -159,7 +159,7 @@ vtchat/
 
     **Security:**
 
-    - `ARCJET_KEY` - Application security and rate limiting
+    
     - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
 4. **Set up the database**:
@@ -208,7 +208,7 @@ The application requires several environment variables for full functionality. R
 - **Authentication**: Better Auth for secure session management
 - **AI Providers**: Support for multiple AI APIs
 - **Payment**: Creem.io for subscription management
-- **Security**: Arcjet for application protection
+- **Security**: Bot detection and secure authentication
 
 ### Subscription Tiers
 
@@ -226,7 +226,7 @@ VTChat is production-ready and deployed on Fly.io:
 - **URL**: [https://vtchat.io.vn](https://vtchat.io.vn)
 - **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
 - **Performance**: 87% faster compilation, optimized bundle size
-- **Security**: Enterprise-grade security with Arcjet protection
+- **Security**: Privacy-focused security with bot detection
 - **Monitoring**: Comprehensive error tracking and performance monitoring
 
 ### Deployment Configuration
@@ -249,7 +249,7 @@ VTChat is production-ready and deployed on Fly.io:
 ### **Development & Integration**
 
 - **[AGENT.md](AGENT.md)**: Development guidelines and conventions
-- **[Security Guide](docs/guides/arcjet-security.md)**: Comprehensive Arcjet application security implementation
+- **[Security Guide](docs/SECURITY.md)**: Security implementation and privacy features
 - **Subscription System**: Plan management, caching, and Creem.io integration
 - **Customer Portal**: User subscription management interface
 
@@ -263,7 +263,7 @@ VTChat implements comprehensive security measures:
 
 - **Privacy-First**: All conversations stored locally in IndexedDB
 - **Authentication**: Better Auth with secure session management
-- **Application Security**: Arcjet protection against bots, DDoS, and attacks
+- **Application Security**: Bot detection and secure authentication
 - **Rate Limiting**: Prevents abuse with intelligent rate limiting
 - **Data Protection**: No server-side storage of sensitive chat data
 - **Secure Communication**: HTTPS enforced, secure headers implemented

@@ -3,6 +3,8 @@ import { betterAuth } from 'better-auth';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { multiSession } from 'better-auth/plugins';
+import { botDetection } from './bot-detection-plugin';
+import { log } from '@repo/shared/logger';
 import { db } from './database';
 import * as schema from './database/schema';
 
@@ -28,6 +30,10 @@ export const auth = betterAuth({
         emailHarmony(),
         multiSession({
             maximumSessions: 5,
+        }),
+        botDetection({
+            protectedEndpoints: ['/api/auth/*'],
+            errorMessage: 'BOT_DETECTED',
         }),
     ],
     account: {

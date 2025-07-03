@@ -102,16 +102,16 @@ function AboutContent() {
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Enterprise-Grade Security</h3>
+                            <h3 className="text-xl font-semibold mb-4">Security & Privacy</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT implements comprehensive security measures with Arcjet protection:
+                                VT implements security measures focused on privacy and user protection:
                             </p>
                             <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>Advanced Rate Limiting:</strong> Multiple algorithms with user-specific protection</li>
-                                <li><strong>Bot Protection:</strong> Intelligent bot detection with configurable policies</li>
-                                <li><strong>Email Validation:</strong> Blocks disposable and suspicious emails</li>
-                                <li><strong>Web Application Firewall:</strong> Protection against SQL injection and XSS</li>
-                                <li><strong>Better Auth:</strong> Modern session management with 87% performance improvement</li>
+                                <li><strong>Bot Protection:</strong> Intelligent bot detection for authentication endpoints</li>
+                                <li><strong>Better Auth:</strong> Modern session management with secure OAuth integration</li>
+                                <li><strong>Local Storage:</strong> All conversations stored on your device for maximum privacy</li>
+                                <li><strong>Direct API Access:</strong> Messages sent directly to AI providers, never stored on our servers</li>
+                                <li><strong>Encrypted API Keys:</strong> Your API keys are encrypted and stored locally only</li>
                             </ul>
                         </div>
 

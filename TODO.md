@@ -43,6 +43,14 @@ https://github.com/Kinfe123/better-auth-mcp
 
 --
 
+REMEMEBER TO REMOVE arcjet from fly.io when deploy
+
+--
+
+remove arcjet completely from project and codebase
+
+--
+
 replace arcjet w  https://github.com/Kinfe123/better-auth-isbot
 
 --

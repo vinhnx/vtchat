@@ -73,11 +73,11 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 - **Client-Side Encryption**: Sensitive data encrypted in browser storage
 - **GDPR Compliance**: Privacy-by-design architecture with user data rights
 
-### Application Security (Arcjet Integration)
-- **Advanced Rate Limiting**: Multiple algorithms (sliding window, fixed window, token bucket) with user-specific protection
-- **Intelligent Bot Protection**: Advanced bot detection with search engine exceptions and configurable policies
-- **Email Validation**: Blocks disposable, invalid, and suspicious emails with user-friendly error handling
-- **Web Application Firewall**: Shield WAF protection against SQL injection, XSS, and common attacks
+### Application Security (Bot Detection)
+- **Bot Protection**: Intelligent bot detection for authentication endpoints
+- **Better Auth Integration**: Modern session management with secure OAuth
+- **Privacy-First Security**: Minimal data collection with maximum protection
+- **Secure Communication**: HTTPS enforcement and secure headers
 - **IP Analysis**: VPN/proxy detection and geolocation filtering for enhanced security
 
 ### Authentication Security (Better Auth)
@@ -182,7 +182,7 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 ### Comprehensive Testing Framework
 - **Vitest Integration**: Modern testing framework with full coverage capability
 - **Unit Tests**: Component and function testing with Testing Library
-- **Security Tests**: Comprehensive Arcjet integration and Better Auth testing
+- **Security Tests**: Comprehensive authentication and bot detection testing
 - **Performance Tests**: Load testing and compilation performance monitoring
 
 ### Production-Ready Quality Assurance
@@ -230,7 +230,7 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 | **Basic Chat** | ✅ | ✅ |
 | **Local Privacy** | ✅ (IndexedDB + Thread Isolation) | ✅ (Enhanced Security) |
 | **Calculator** | ✅ | ✅ |
-| **Security Protection** | ✅ (Arcjet + Better Auth) | ✅ (Priority Support) |
+| **Security Protection** | ✅ (Bot Detection + Better Auth) | ✅ (Priority Support) |
 | **Thinking Mode** | ✅ (AI SDK Reasoning Tokens) | ✅ |
 | **Dark Theme** | ✅ (Official Shadcn Variables) | ✅ |
 | **Document Processing** | ✅ (PDF/DOC/DOCX up to 10MB) | ✅ |

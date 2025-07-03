@@ -15,7 +15,7 @@
 
 - Make sure no string in #codebase, use enum pattern.
 - Don't hard code values in the codebase.
-- Use environment variables for configuration (e.g., API keys, product IDs, Arcjet keys)
+- Use environment variables for configuration (e.g., API keys, product IDs)
 - Use centralize enum for custom reusable keys.
 - 4-space indentation, single quotes, 100 char line length
 - PascalCase components, camelCase hooks/utils, kebab-case files
@@ -25,7 +25,7 @@
 
 - Next.js 14 with App Router, TypeScript, Tailwind CSS
 - Zustand for state, Drizzle ORM for DB, Better Auth for authentication
-- Arcjet for application security (rate limiting, bot protection, email validation, WAF)
+- Custom bot detection with Better-Auth plugin using isbot library
 - Framer Motion for animations, Radix UI components
 - Shadcn/ui for UI components, Lucide icons, clsx for classnames
 - Payment integration with Creem.io

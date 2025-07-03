@@ -99,13 +99,10 @@ VT is built with **privacy-first principles** at its core:
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)
 
-### 3.3 Enterprise Security Features
-**Arcjet Application Security:**
-- **Advanced Rate Limiting** - Multiple algorithms (sliding window, fixed window, token bucket) protecting against abuse
-- **Intelligent Bot Protection** - Advanced bot detection with search engine exceptions and configurable policies
-- **Email Validation** - Blocks disposable, invalid, and suspicious emails with user-friendly error handling
-- **Web Application Firewall** - Shield WAF protection against SQL injection, XSS, and common attacks
-- **IP Analysis** - VPN/proxy detection and geolocation filtering for enhanced security
+### 3.3 Security Features
+**Authentication Security:**
+- **Bot Protection** - Intelligent bot detection for authentication endpoints using industry-standard detection
+- **Secure OAuth Integration** - Better Auth with GitHub, Google, and social authentication providers
 
 **Better Auth Security:**
 - **Modern Session Management** - 87% performance improvement with session caching

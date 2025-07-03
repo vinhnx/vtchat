@@ -74,9 +74,9 @@ export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
-         * - api/auth (auth endpoints) - these have their own Arcjet protection
-         * - api/chat (chat endpoints) - these have their own Arcjet protection  
-         * - api/feedback (feedback endpoints) - these have their own Arcjet protection
+         * - api/auth (auth endpoints) - these have their own protection
+         * - api/chat (chat endpoints) - these have their own protection  
+         * - api/feedback (feedback endpoints) - these have their own protection
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
