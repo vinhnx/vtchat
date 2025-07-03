@@ -2,13 +2,13 @@
 
 import { ApiRoutes } from '@repo/shared/constants/routes';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { useToast } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
-import { log } from '@repo/shared/logger';
 
 /**
  * Hook for interacting with Creem subscriptions
@@ -59,13 +59,16 @@ export function useCreemSubscription() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    returnUrl: `${window.location.origin}/chat`, // Return to chat page
+                    returnUrl: `${window.location.origin}/`, // Return to chat page
                 }),
             });
 
             if (!response.ok) {
                 const errorText = await response.text();
-                log.error({ status: response.status, errorText }, '[useCreemSubscription] Portal API error');
+                log.error(
+                    { status: response.status, errorText },
+                    '[useCreemSubscription] Portal API error'
+                );
                 throw new Error(
                     `Failed to get portal URL: ${response.status} ${response.statusText}`
                 );
@@ -94,7 +97,10 @@ export function useCreemSubscription() {
                             event.data.type === 'PORTAL_CLOSED' ||
                             event.data.type === 'PORTAL_COMPLETE'
                         ) {
-                            log.info({}, '[useCreemSubscription] Portal tab closed, refreshing subscription');
+                            log.info(
+                                {},
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
+                            );
                             setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             window.removeEventListener('message', handleMessage);
@@ -107,7 +113,10 @@ export function useCreemSubscription() {
                     // Also listen for window close (fallback)
                     const checkClosed = setInterval(() => {
                         if (portalWindow.closed) {
-                            log.info({}, '[useCreemSubscription] Portal tab closed, refreshing subscription');
+                            log.info(
+                                {},
+                                '[useCreemSubscription] Portal tab closed, refreshing subscription'
+                            );
                             setIsPortalReturn(true);
                             refreshSubscriptionStatus(false, 'manual');
                             clearInterval(checkClosed);
@@ -208,7 +217,10 @@ export function useCreemSubscription() {
                 // Handle cases where response was OK, but the operation wasn't successful according to the payload
                 const errorMessage =
                     result.message || 'Failed to start checkout: Invalid server response.';
-                log.error({ errorMessage }, 'Error starting subscription checkout (result not success)');
+                log.error(
+                    { errorMessage },
+                    'Error starting subscription checkout (result not success)'
+                );
                 setError(errorMessage);
                 toast({
                     title: 'Subscription Error',

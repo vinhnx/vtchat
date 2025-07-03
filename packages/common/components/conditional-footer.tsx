@@ -5,14 +5,14 @@ import { Footer } from './footer';
 
 export const ConditionalFooter = () => {
     const pathname = usePathname();
-    
-    // Don't show footer on chat page
-    if (pathname.startsWith('/chat')) {
+
+    // Don't show footer on chat pages (root and thread pages)
+    if (pathname === '/' || pathname.startsWith('/chat/')) {
         return null;
     }
-    
+
     return (
-        <footer className="border-border/50 bg-background border-t mt-auto">
+        <footer className="border-border/50 bg-background mt-auto border-t">
             <div className="mx-auto max-w-7xl">
                 <Footer />
             </div>

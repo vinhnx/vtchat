@@ -4,25 +4,25 @@ import { useRootContext } from '@repo/common/context';
 import { AgentProvider, useLogout } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import {
     Avatar,
     Badge,
     Button,
-    Flex,
-    SonnerToaster,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    Flex,
+    SonnerToaster,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, User, Settings, Menu, LogOut, HelpCircle, Shield, FileText } from 'lucide-react';
+import { FileText, HelpCircle, LogOut, Menu, Settings, Shield, User, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 import { Drawer } from 'vaul';
-import { log } from '@repo/shared/logger';
 
 export type TRootLayout = {
     children: React.ReactNode;
@@ -66,7 +66,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 {sidebarPlacement === 'left' && (
                     <div className="hidden lg:flex">
                         {isSidebarOpen && (
-                            <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
+                            <div className="w-64 flex-shrink-0">
+                                {/* Empty sidebar placeholder */}
+                            </div>
                         )}
                     </div>
                 )}
@@ -77,7 +79,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 {sidebarPlacement === 'right' && (
                     <div className="hidden lg:flex">
                         {isSidebarOpen && (
-                            <div className="w-64 flex-shrink-0">{/* Empty sidebar placeholder */}</div>
+                            <div className="w-64 flex-shrink-0">
+                                {/* Empty sidebar placeholder */}
+                            </div>
                         )}
                     </div>
                 )}
@@ -97,7 +101,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             animate={{ width: 'auto', opacity: 1 }}
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            className="hidden md:flex overflow-hidden"
+                            className="hidden overflow-hidden md:flex"
                         >
                             <Sidebar />
                         </motion.div>
@@ -107,11 +111,11 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Main Content */}
             <Flex className="flex-1 overflow-hidden">
-                <motion.div className={`flex w-full md:py-1 ${sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'}`}>
+                <motion.div
+                    className={`flex w-full md:py-1 ${sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'}`}
+                >
                     <AgentProvider>
                         <div className={containerClass}>
-
-
                             <div className="relative flex h-full w-0 flex-1 flex-row">
                                 <div className="flex w-full flex-col gap-2 overflow-y-auto">
                                     {shouldShowDropShadow && (
@@ -139,7 +143,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             animate={{ width: 'auto', opacity: 1 }}
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            className="hidden md:flex overflow-hidden"
+                            className="hidden overflow-hidden md:flex"
                         >
                             <Sidebar />
                         </motion.div>
@@ -156,38 +160,42 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 modal={true}
             >
                 <Drawer.Portal>
-                    <Drawer.Overlay 
-                        className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300" 
-                        onClick={(e) => {
+                    <Drawer.Overlay
+                        className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300"
+                        onClick={e => {
                             // Check if click target is inside the sidebar content or dropdown
                             const target = e.target as HTMLElement;
                             const isInsideSidebar = target.closest('[data-sidebar-content]');
-                            const isInsideDropdown = target.closest('[data-radix-popper-content-wrapper]') || 
-                                                   target.closest('[role="menu"]') ||
-                                                   target.closest('[data-radix-menu-content]') ||
-                                                   target.closest('[data-radix-dropdown-menu-content]');
-                            
+                            const isInsideDropdown =
+                                target.closest('[data-radix-popper-content-wrapper]') ||
+                                target.closest('[role="menu"]') ||
+                                target.closest('[data-radix-menu-content]') ||
+                                target.closest('[data-radix-dropdown-menu-content]');
+
                             // Only close sidebar if clicking on overlay, not sidebar content or dropdown
                             if (!isInsideSidebar && !isInsideDropdown) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
-                        onTouchEnd={(e) => {
+                        onTouchEnd={e => {
                             // Handle iOS touch events specifically
                             const target = e.target as HTMLElement;
                             const isInsideSidebar = target.closest('[data-sidebar-content]');
-                            const isInsideDropdown = target.closest('[data-radix-popper-content-wrapper]') || 
-                                                   target.closest('[role="menu"]') ||
-                                                   target.closest('[data-radix-menu-content]') ||
-                                                   target.closest('[data-radix-dropdown-menu-content]');
-                            
+                            const isInsideDropdown =
+                                target.closest('[data-radix-popper-content-wrapper]') ||
+                                target.closest('[role="menu"]') ||
+                                target.closest('[data-radix-menu-content]') ||
+                                target.closest('[data-radix-dropdown-menu-content]');
+
                             // Only close sidebar if touching overlay, not sidebar content or dropdown
                             if (!isInsideSidebar && !isInsideDropdown) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
                     />
-                    <Drawer.Content className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}>
+                    <Drawer.Content
+                        className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}
+                    >
                         <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
                         <div className="h-full overflow-hidden" data-sidebar-content>
                             <Sidebar forceMobile={true} />
@@ -199,7 +207,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             <SonnerToaster />
 
             {/* Mobile Floating Menu Button */}
-            <div className="fixed top-4 left-4 z-50 md:hidden pt-safe">
+            <div className="pt-safe fixed left-4 top-4 z-50 md:hidden">
                 <Button
                     variant="secondary"
                     size="icon"
@@ -212,7 +220,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Mobile Floating User Button */}
             {isClient && session && (
-                <div className="fixed top-4 right-4 z-50 md:hidden pt-safe">
+                <div className="pt-safe fixed right-4 top-4 z-50 md:hidden">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -276,7 +284,16 @@ export const SideDrawer = () => {
         stiffness: 1,
         damping: 0,
     });
-    const isThreadPage = pathname.startsWith('/chat/');
+    const isThreadPage =
+        pathname !== '/' &&
+        pathname !== '/recent' &&
+        pathname !== '/settings' &&
+        pathname !== '/plus' &&
+        pathname !== '/about' &&
+        pathname !== '/login' &&
+        pathname !== '/privacy' &&
+        pathname !== '/terms' &&
+        pathname !== '/faq';
 
     // Don't render during SSR to prevent hydration issues
     if (!isClient) {
@@ -349,12 +366,17 @@ export const SideDrawer = () => {
                     }}
                     className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
                 >
-                    <div className="bg-background/95 backdrop-blur-sm border-muted/50 shadow-lg flex h-full w-full flex-col overflow-hidden rounded-xl">
-                        <div className="border-muted/50 flex flex-row items-center justify-between gap-3 border-b px-4 py-3 bg-muted/20">
+                    <div className="bg-background/95 border-muted/50 flex h-full w-full flex-col overflow-hidden rounded-xl shadow-lg backdrop-blur-sm">
+                        <div className="border-muted/50 bg-muted/20 flex flex-row items-center justify-between gap-3 border-b px-4 py-3">
                             <div className="flex items-center gap-2">
-                                <div className="text-sm font-medium text-foreground">{renderTitle()}</div>
+                                <div className="text-foreground text-sm font-medium">
+                                    {renderTitle()}
+                                </div>
                                 {sideDrawer.badge && (
-                                    <Badge variant="secondary" className="bg-muted/30 text-muted-foreground border-muted-foreground/20">
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-muted/30 text-muted-foreground border-muted-foreground/20"
+                                    >
                                         {sideDrawer.badge}
                                     </Badge>
                                 )}
@@ -380,7 +402,6 @@ export const SideDrawer = () => {
                     </div>
                 </motion.div>
             )}
-
         </AnimatePresence>
     );
 };

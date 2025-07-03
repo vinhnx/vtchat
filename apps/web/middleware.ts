@@ -11,6 +11,12 @@ export default async function middleware(request: NextRequest) {
     const flyRegion = request.headers.get('Fly-Region') || request.headers.get('fly-region') || 'local';
     log.info({ region: flyRegion, pathname }, '[Traffic] Request');
 
+    // Redirect '/chat' to '/' (keep '/chat/{threadid}' intact)
+    // Only redirect exact '/chat' path, not '/chat/' or '/chat/anything'
+    if (pathname === '/chat') {
+        return NextResponse.redirect(new URL('/', request.url), 301);
+    }
+
     // Skip middleware for static files, API routes with their own protection, and Next.js internals
     if (
         pathname.startsWith('/_next') ||

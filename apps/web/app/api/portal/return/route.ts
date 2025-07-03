@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { log } from '@repo/shared/logger';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Handle return from Creem portal
@@ -9,9 +9,9 @@ export async function GET(request: NextRequest) {
     try {
         log.info('[Portal Return] User returned from portal');
 
-        // Get the return URL from query params or default to chat
+        // Get the return URL from query params or default to home
         const searchParams = request.nextUrl.searchParams;
-        const returnTo = searchParams.get('returnTo') || '/chat';
+        const returnTo = searchParams.get('returnTo') || '/';
 
         // Log the return for debugging
         log.info('[Portal Return] Redirecting to:', { data: returnTo });
@@ -62,6 +62,6 @@ export async function GET(request: NextRequest) {
         log.error('[Portal Return] Error handling return:', { error });
 
         // Fallback redirect
-        return NextResponse.redirect(new URL('/chat', request.url));
+        return NextResponse.redirect(new URL('/', request.url));
     }
 }

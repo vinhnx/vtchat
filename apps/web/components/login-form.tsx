@@ -23,7 +23,7 @@ function LoginFormContent({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const searchParams = useSearchParams();
-    const redirectUrl = propRedirectUrl || searchParams.get('redirect_url') || '/chat';
+    const redirectUrl = propRedirectUrl || searchParams.get('redirect_url') || '/';
 
     const handleSocialSignIn = async (provider: 'google' | 'github' | 'twitter') => {
         setLoading(true);

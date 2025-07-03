@@ -19,7 +19,7 @@ import { CommandItem } from 'cmdk';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Create a wrapper component for Trash2 to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -188,7 +188,7 @@ export default function ThreadsPage() {
                                         Start a new conversation to create a thread
                                     </TypographyMuted>
                                 </div>
-                                <Button variant="default" size="sm" onClick={() => push('/chat')}>
+                                <Button variant="default" size="sm" onClick={() => push('/')}>
                                     <Plus size={14} strokeWidth={2} />
                                     New Thread
                                 </Button>

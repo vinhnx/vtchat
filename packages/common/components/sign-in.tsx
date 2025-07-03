@@ -1,11 +1,11 @@
 import { useSignIn, useSignUp } from '@clerk/nextjs';
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
+import { log } from '@repo/shared/logger';
 import { Button, InputOTP, InputOTPGroup, InputOTPSlot, TypographyH2 } from '@repo/ui';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
-import { log } from '@repo/shared/logger';
 type CustomSignInProps = {
     redirectUrl?: string;
     onClose?: () => void;
@@ -42,7 +42,7 @@ export const CustomSignIn = ({
 
             if (result.status === 'complete') {
                 setActive({ session: result.createdSessionId });
-                router.push('/chat');
+                router.push('/');
             }
         } catch (error: any) {
             log.error({ errorCount: error.errors?.length }, 'Sign-in validation errors');
@@ -55,11 +55,11 @@ export const CustomSignIn = ({
 
                     if (result.status === 'complete') {
                         setActive({ session: result.createdSessionId });
-                        router.push('/chat');
+                        router.push('/');
                     }
                 } catch (error) {
                     if (isClerkAPIResponseError(error)) {
-                    log.error({}, 'Clerk API error during sign-in retry');
+                        log.error({}, 'Clerk API error during sign-in retry');
                     }
 
                     log.error({ data: error }, 'Sign-in error');

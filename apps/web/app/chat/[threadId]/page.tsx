@@ -1,12 +1,28 @@
 'use client';
-import { TableOfMessages, Thread } from '@repo/common/components';
+import { ChatFooter, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { use, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
+
+// Dynamically import ChatInput to avoid SSR issues
+const ChatInput = dynamic(
+    () => import('@repo/common/components').then(mod => ({ default: mod.ChatInput })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
+        ),
+    }
+);
 
 const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) => {
     const router = useRouter();
+    const { data: session, isPending } = useSession();
     const isGenerating = useChatStore(state => state.isGenerating);
     const hasScrolledToBottom = useRef(false);
     const { scrollRef, contentRef } = useStickToBottom({
@@ -17,8 +33,14 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     const switchThread = useChatStore(state => state.switchThread);
     const getThread = useChatStore(state => state.getThread);
 
-    // Handle the async params with React.use()
-    const { threadId } = use(params);
+    // Handle async params with React 18 pattern
+    const [threadId, setThreadId] = useState<string | null>(null);
+
+    useEffect(() => {
+        params.then(resolvedParams => {
+            setThreadId(resolvedParams.threadId);
+        });
+    }, [params]);
 
     // Scroll to bottom when thread loads or content changes
     const scrollToBottom = useCallback(() => {
@@ -28,6 +50,8 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
+        if (!threadId) return;
+
         getThread(threadId).then(thread => {
             if (thread?.id) {
                 switchThread(thread.id);
@@ -39,7 +63,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
                     hasScrolledToBottom.current = true;
                 }, 100);
             } else {
-                router.push('/chat');
+                router.push('/'); // Redirect to root instead of /chat
             }
         });
     }, [threadId, getThread, switchThread, router, scrollToBottom]);
@@ -60,16 +84,44 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
         }
     }, [threadItems, scrollToBottom]);
 
+    // Show loading while threadId is being resolved
+    if (!threadId) {
+        return (
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
+        );
+    }
+
     return (
-        <div
-            className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
-            ref={scrollRef}
-        >
-            <div className="mx-auto w-[95%] max-w-3xl px-4 pb-[200px] pt-2 md:w-full" ref={contentRef}>
-                <Thread />
+        <div className="relative flex h-dvh w-full flex-col">
+            <div className="flex-1 overflow-hidden">
+                <div
+                    className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
+                    ref={scrollRef}
+                >
+                    <div
+                        className="mx-auto w-[95%] max-w-3xl px-4 pb-[200px] pt-2 md:w-full"
+                        ref={contentRef}
+                    >
+                        <Thread />
+                    </div>
+
+                    <TableOfMessages />
+                </div>
+            </div>
+            <div className="flex-shrink-0">
+                <ChatInput />
             </div>
 
-            <TableOfMessages />
+            {/* ChatFooter pinned to bottom with padding for non-logged users */}
+            {!isPending && !session && (
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
+                    <div className="pointer-events-auto">
+                        <ChatFooter />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

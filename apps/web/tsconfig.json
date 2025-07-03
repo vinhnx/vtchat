@@ -1,22 +1,37 @@
 {
-    "extends": "@repo/typescript-config/nextjs",
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts",
-        "tailwind.config.ts"
-    ],
-    "compilerOptions": {
-        "paths": {
-            "@repo/shared/types": ["./lib/types"],
-            "@/hooks": ["./lib/hooks"],
-            "@/libs/*": ["./lib/*"],
-            "@/config/*": ["./config/*"],
-            "@/context": ["./lib/context"],
-            "@/services/*": ["./lib/services/*"],
-            "@/*": ["./*"]
-        },
-        "baseUrl": "."
-    }
+  "extends": "@repo/typescript-config/nextjs",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "tailwind.config.ts",
+    ".next-dev/types/**/*.ts"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@repo/shared/types": [
+        "./lib/types"
+      ],
+      "@/hooks": [
+        "./lib/hooks"
+      ],
+      "@/libs/*": [
+        "./lib/*"
+      ],
+      "@/config/*": [
+        "./config/*"
+      ],
+      "@/context": [
+        "./lib/context"
+      ],
+      "@/services/*": [
+        "./lib/services/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "baseUrl": "."
+  }
 }

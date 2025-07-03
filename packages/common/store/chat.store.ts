@@ -1542,9 +1542,9 @@ export const useChatStore = create(
                     state.currentThread = state.threads[0] || null;
                 });
 
-                // Redirect to /chat page
+                // Redirect to chat page
                 if (typeof window !== 'undefined') {
-                    window.location.href = '/chat';
+                    window.location.href = '/';
                 }
             }
         },

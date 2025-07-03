@@ -12,6 +12,7 @@ import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/c
 import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Badge,
@@ -47,7 +48,6 @@ import { useState } from 'react';
 import { BYOKIcon } from '../icons';
 import { LoginRequiredDialog } from '../login-required-dialog';
 import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config';
-import { log } from '@repo/shared/logger';
 
 export function AttachmentButton() {
     return (
@@ -570,7 +570,16 @@ export function ChatModeOptions({
     const isSignedIn = !!session;
 
     const apiKeys = useApiKeysStore(state => state.getAllKeys());
-    const _isChatPage = usePathname().startsWith('/chat');
+    const _isChatPage =
+        usePathname() !== '/' &&
+        usePathname() !== '/recent' &&
+        usePathname() !== '/settings' &&
+        usePathname() !== '/plus' &&
+        usePathname() !== '/about' &&
+        usePathname() !== '/login' &&
+        usePathname() !== '/privacy' &&
+        usePathname() !== '/terms' &&
+        usePathname() !== '/faq';
     const { push } = useRouter();
 
     // Login prompt state
@@ -786,7 +795,7 @@ export function ChatModeOptions({
             <DropdownMenuContent
                 align="start"
                 side="bottom"
-                className="no-scrollbar max-h-[300px] w-[320px] md:w-[300px] overflow-y-auto touch-pan-y overscroll-contain"
+                className="no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]"
             >
                 {/* Always show Advanced Mode options regardless of page context */}
                 <DropdownMenuGroup>
@@ -990,9 +999,9 @@ export function SendStopButton({
                             onClick={() => {
                                 sendMessage();
                             }}
-                            className="min-w-[36px] min-h-[36px] md:min-w-[32px] md:min-h-[32px]"
+                            className="min-h-[36px] min-w-[36px] md:min-h-[32px] md:min-w-[32px]"
                         >
-                            <ArrowUp size={18} strokeWidth={2} className="md:w-4 md:h-4" />
+                            <ArrowUp size={18} strokeWidth={2} className="md:h-4 md:w-4" />
                         </Button>
                     </motion.div>
                 )}
