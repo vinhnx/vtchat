@@ -23,7 +23,7 @@ export const ChartPopup = ({ chartData, isOpen, onClose }: ChartPopupProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
+            <DialogContent className="max-h-[80vh] max-w-[95vw] sm:max-w-2xl lg:max-w-4xl overflow-y-auto">
                 <DialogHeader className="flex flex-row items-center justify-between">
                     <DialogTitle className="text-lg font-semibold flex items-center gap-2">
                         <BarChart3 size={18} />
