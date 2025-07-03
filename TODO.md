@@ -2,9 +2,13 @@
 
 ok go! -> https://vtchat.io.vn/
 
+replace arcjet w  https://github.com/Kinfe123/better-auth-isbot
+
+--
 research and optimize app performance
 
 --
+
 https://react-scan.com/
 
 --
