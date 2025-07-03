@@ -2,6 +2,10 @@
 
 ok go! -> https://vtchat.io.vn/
 
+https://github.com/Kinfe123/better-auth-mcp
+
+--
+
 replace arcjet w  https://github.com/Kinfe123/better-auth-isbot
 
 --
