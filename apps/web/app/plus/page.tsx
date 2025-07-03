@@ -127,9 +127,9 @@ export default function PlusPage() {
 
     const handleTryFree = () => {
         if (!isSignedIn) {
-            router.push('/login?redirect_url=/chat');
+            router.push('/login?redirect_url=/');
         } else {
-            router.push('/chat');
+            router.push('/');
         }
     };
 

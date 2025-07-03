@@ -1,4 +1,4 @@
-import { FullPageLoader, HistoryItem } from '@repo/common/components';
+import { HistoryItem } from '@repo/common/components';
 import { UserButton } from '@repo/common/components/user-button';
 import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
@@ -15,7 +15,7 @@ export const Sidebar = () => {
     const pathname = usePathname();
     const { setIsCommandSearchOpen } = useRootContext();
     const { push } = useRouter();
-    const isChatPage = pathname.startsWith('/chat');
+    const isChatPage = pathname === '/' || pathname.startsWith('/chat/');
     const threads = useChatStore(state => state.threads);
     const { data: session, isPending: isAuthLoading } = useSession();
     const isSignedIn = !!session;
@@ -98,7 +98,7 @@ export const Sidebar = () => {
                         tooltip={isSidebarOpen ? undefined : 'New Thread'}
                         tooltipSide="right"
                         className={cn('relative w-full shadow-sm', 'justify-center')}
-                        onClick={() => !isChatPage && push('/chat')}
+                        onClick={() => !isChatPage && push('/')}
                     >
                         <Plus
                             size={16}

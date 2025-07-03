@@ -13,7 +13,7 @@ test.describe('Footer Flash Fix', () => {
             // Mock the session loading state
             window.__TEST_SESSION_LOADING__ = true;
             window.__TEST_SESSION_DATA__ = { user: { id: '123', plan: 'vt_plus' } };
-            
+
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
             }, 100); // Simulate async session loading
@@ -37,7 +37,7 @@ test.describe('Footer Flash Fix', () => {
         await page.addInitScript(() => {
             window.__TEST_SESSION_LOADING__ = true;
             window.__TEST_SESSION_DATA__ = null;
-            
+
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
             }, 100);
@@ -61,13 +61,13 @@ test.describe('Footer Flash Fix', () => {
         await page.addInitScript(() => {
             window.__TEST_SESSION_LOADING__ = true;
             window.__TEST_SESSION_DATA__ = { user: { id: '123', plan: 'vt_plus' } };
-            
+
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
             }, 100);
         });
 
-        await page.goto('/chat');
+        await page.goto('/');
 
         // Chat footer should not be visible initially or after session loads
         const chatFooter = page.locator('[data-testid="chat-footer"]').first();

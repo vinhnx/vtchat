@@ -4,6 +4,8 @@ import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 
+import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Button,
     cn,
@@ -27,11 +29,9 @@ import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'luc
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
-import { FeatureSlug } from '@repo/shared/types/subscription';
-import { useFeatureAccess } from '../hooks/use-subscription-access';
-import { log } from '@repo/shared/logger';
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -85,7 +85,7 @@ export const CommandSearch = () => {
     });
 
     useEffect(() => {
-        router.prefetch('/chat');
+        router.prefetch('/');
     }, [isCommandSearchOpen, threads, router]);
 
     useEffect(() => {
@@ -111,12 +111,12 @@ export const CommandSearch = () => {
 
                 // Show toast notification
                 toast({
-                    title: "New Chat",
-                    description: "Starting a new conversation...",
+                    title: 'New Chat',
+                    description: 'Starting a new conversation...',
                     duration: 2000,
                 });
 
-                router.push('/chat');
+                router.push('/');
                 return;
             }
         };
@@ -137,7 +137,7 @@ export const CommandSearch = () => {
             name: 'New Thread',
             icon: Plus,
             action: () => {
-                router.push('/chat');
+                router.push('/');
                 onClose();
             },
         },
@@ -153,7 +153,7 @@ export const CommandSearch = () => {
                 const thread = await getThread(currentThreadId as string);
                 if (thread) {
                     removeThread(thread.id);
-                    router.push('/chat');
+                    router.push('/');
                     onClose();
                 }
             },
@@ -208,7 +208,7 @@ export const CommandSearch = () => {
             icon: Trash,
             action: () => {
                 clearThreads();
-                router.push('/chat');
+                router.push('/');
                 onClose();
             },
         },
@@ -227,7 +227,7 @@ export const CommandSearch = () => {
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
             </div>
-            <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5 touch-pan-y overscroll-contain">
+            <CommandList className="max-h-[420px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     {actions.map(action => {
@@ -312,8 +312,8 @@ export const CommandSearch = () => {
                     <DialogHeader>
                         <DialogTitle>Sign In Required</DialogTitle>
                         <DialogDescription>
-                            Dark theme is available to all registered users. Sign in to enjoy a better viewing
-                            experience.
+                            Dark theme is available to all registered users. Sign in to enjoy a
+                            better viewing experience.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="gap-3">

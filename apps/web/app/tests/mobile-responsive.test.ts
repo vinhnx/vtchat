@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const MOBILE_VIEWPORT = { width: 375, height: 667 }; // iPhone SE
 const TABLET_VIEWPORT = { width: 768, height: 1024 }; // iPad
@@ -52,7 +52,7 @@ test.describe('Mobile Responsive Design', () => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Navigate to chat page
-        await page.goto('/chat');
+        await page.goto('/');
 
         // Check chat input exists and is properly sized
         const chatInput = page.locator('textarea, [contenteditable="true"]').first();
@@ -170,7 +170,7 @@ test.describe('Mobile Responsive Design', () => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Navigate to chat to test interactions
-        await page.goto('/chat');
+        await page.goto('/');
 
         // Test tap interactions instead of hover
         const buttons = page.locator('button').first();

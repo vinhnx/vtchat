@@ -8,8 +8,8 @@ export default function Page() {
 
     useEffect(() => {
         // Better Auth handles OAuth redirects automatically
-        // Redirect to chat page or wherever the user was going
-        router.push('/chat');
+        // Redirect to home page (which is now the chat interface)
+        router.push('/');
     }, [router]);
 
     return (

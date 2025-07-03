@@ -1,15 +1,22 @@
 'use client';
 
-import { useSession } from '@repo/shared/lib/auth-client';
-import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import { RAGChatbot } from '../../components/rag-chatbot';
 import { Footer } from '@repo/common/components';
+import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle, PremiumButton, Badge } from '@repo/ui';
+import {
+    Badge,
+    PremiumButton,
+    PremiumCard,
+    PremiumCardContent,
+    PremiumCardHeader,
+    PremiumCardTitle,
+} from '@repo/ui';
 import { Database, Lock, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { PRICING_CONFIG } from '../../lib/config/pricing';
 import { useEffect } from 'react';
+import { RAGChatbot } from '../../components/rag-chatbot';
+import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export default function RAGPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
@@ -38,7 +45,7 @@ export default function RAGPage() {
         return (
             <div className="flex min-h-screen items-center justify-center">
                 <div className="text-center">
-                    <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+                    <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
                     <p className="text-muted-foreground">Loading...</p>
                 </div>
             </div>
@@ -57,8 +64,8 @@ export default function RAGPage() {
                 <div className="flex min-h-[60vh] items-center justify-center">
                     <PremiumCard className="w-full max-w-md text-center" variant="elevated">
                         <PremiumCardHeader>
-                            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                                <Lock className="h-8 w-8 text-primary" />
+                            <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                                <Lock className="text-primary h-8 w-8" />
                             </div>
                             <PremiumCardTitle className="flex items-center justify-center gap-2">
                                 <Database className="h-5 w-5" />
@@ -67,11 +74,12 @@ export default function RAGPage() {
                         </PremiumCardHeader>
                         <PremiumCardContent className="space-y-4">
                             <p className="text-muted-foreground">
-                                This feature is available exclusively for {PRICING_CONFIG.product.name} subscribers.
+                                This feature is available exclusively for{' '}
+                                {PRICING_CONFIG.product.name} subscribers.
                             </p>
-                            <div className="rounded-lg bg-muted p-4">
-                                <h4 className="font-medium text-sm mb-2">What you'll get:</h4>
-                                <ul className="text-sm text-muted-foreground space-y-1">
+                            <div className="bg-muted rounded-lg p-4">
+                                <h4 className="mb-2 text-sm font-medium">What you'll get:</h4>
+                                <ul className="text-muted-foreground space-y-1 text-sm">
                                     <li>• Build your personal knowledge base</li>
                                     <li>• Store and organize information</li>
                                     <li>• Query your data with AI</li>
@@ -82,15 +90,19 @@ export default function RAGPage() {
                                 <div className="flex items-center justify-center gap-3 text-xs">
                                     <div className="flex items-center gap-1 rounded-full bg-green-500/20 px-2 py-1">
                                         <Sparkles className="h-3 w-3 text-green-400" />
-                                        <span className="font-medium text-green-400">Free trial</span>
+                                        <span className="font-medium text-green-400">
+                                            Free trial
+                                        </span>
                                     </div>
                                     <div className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-1">
                                         <span className="h-3 w-3 text-blue-400">✓</span>
-                                        <span className="font-medium text-blue-400">Cancel anytime</span>
+                                        <span className="font-medium text-blue-400">
+                                            Cancel anytime
+                                        </span>
                                     </div>
                                 </div>
-                                
-                                <PremiumButton 
+
+                                <PremiumButton
                                     onClick={() => router.push('/plus')}
                                     className="w-full"
                                     size="lg"
@@ -100,8 +112,8 @@ export default function RAGPage() {
                                     <Sparkles className="mr-2 h-4 w-4" />
                                     Upgrade to {PRICING_CONFIG.product.name}
                                 </PremiumButton>
-                                <PremiumButton 
-                                    onClick={() => router.push('/chat')}
+                                <PremiumButton
+                                    onClick={() => router.push('/')}
                                     variant="outline"
                                     className="w-full"
                                 >
@@ -117,22 +129,27 @@ export default function RAGPage() {
 
     // Show RAG chatbot for plus subscribers
     return (
-        <div className="h-dvh flex flex-col overflow-hidden">
-            <div className="container mx-auto px-2 py-4 flex-1 flex flex-col min-h-0 md:px-4 md:py-8">
+        <div className="flex h-dvh flex-col overflow-hidden">
+            <div className="container mx-auto flex min-h-0 flex-1 flex-col px-2 py-4 md:px-4 md:py-8">
                 <div className="mb-4 flex-shrink-0 md:mb-6">
-                    <h1 className="text-xl font-bold flex items-center gap-2 md:text-2xl">
+                    <h1 className="flex items-center gap-2 text-xl font-bold md:text-2xl">
                         Personal AI Assistant with Memory
-                        <Badge variant="secondary" className="vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30 shadow-lg">VT+</Badge>
+                        <Badge
+                            variant="secondary"
+                            className="vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] shadow-lg"
+                        >
+                            VT+
+                        </Badge>
                     </h1>
-                    <p className="text-xs text-muted-foreground md:text-sm">
+                    <p className="text-muted-foreground text-xs md:text-sm">
                         Build and query your personal knowledge base with AI
                     </p>
                 </div>
-                <div className="flex-1 min-h-0">
+                <div className="min-h-0 flex-1">
                     <RAGChatbot />
                 </div>
             </div>
-            
+
             {/* Footer */}
             <footer className="border-border/50 bg-background border-t">
                 <div className="mx-auto max-w-7xl">

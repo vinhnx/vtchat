@@ -1,45 +1,46 @@
 'use client';
 
+import { ChatFooter, InlineLoader, Thread } from '@repo/common/components';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { PremiumButton, TypographyH1, Skeleton } from '@repo/ui';
-import { WrapperDisclosure, Footer } from '@repo/common/components';
-import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
-export default function Home() {
-    const { isPending } = useSession();
+// Dynamically import ChatInput to avoid SSR issues
+const ChatInput = dynamic(
+    () => import('@repo/common/components').then(mod => ({ default: mod.ChatInput })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
+        ),
+    }
+);
+
+export default function HomePage() {
+    const { data: session, isPending } = useSession();
 
     return (
-        <div className="flex min-h-dvh flex-col">
-            <header className="flex items-center justify-between border-b p-3 md:p-4">
-                <TypographyH1 className="text-lg font-semibold md:text-xl">VT</TypographyH1>
-                {isPending ? (
-                    <Skeleton className="h-8 w-20" />
-                ) : session ? (
-                    <Link href="/chat">
-                        {/* @ts-ignore - Type compatibility issue between React versions */}
-                        <PremiumButton variant="premium" size="sm" shimmer>
-                            Go to Chat
-                        </PremiumButton>
-                    </Link>
-                ) : (
-                    <Link href="/login">
-                        {/* @ts-ignore - Type compatibility issue between React versions */}
-                        <PremiumButton variant="outline" size="sm">
-                            Sign In
-                        </PremiumButton>
-                    </Link>
-                )}
-            </header>
-            <div className="flex flex-1 items-center justify-center p-8">
-                <div className="max-w-2xl space-y-6 text-center">
-                    <TypographyH1 className="text-4xl font-bold">VT</TypographyH1>
-                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 break-words px-4">
-                        Welcome to VT - Your privacy-focused AI chat platform.
-                    </p>
-                    <WrapperDisclosure className="mt-4" />
+        <div className="relative flex h-dvh w-full flex-col">
+            <div className="flex-1 overflow-hidden">
+                <div className="flex h-full flex-col">
+                    <div className="flex-1 overflow-y-auto">
+                        <Thread />
+                    </div>
                 </div>
             </div>
-            {!isPending && <Footer />}
+            <div className="flex-shrink-0">
+                <ChatInput />
+            </div>
+
+            {/* ChatFooter pinned to bottom with padding for non-logged users */}
+            {!isPending && !session && (
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
+                    <div className="pointer-events-auto">
+                        <ChatFooter />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

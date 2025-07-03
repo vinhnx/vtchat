@@ -34,7 +34,6 @@ import {
     WebSearchButton,
 } from './chat-actions';
 import { ChatEditor } from './chat-editor';
-import { ChatFooter } from './chat-footer';
 import { DocumentAttachment } from './document-attachment';
 import { DocumentUploadButton } from './document-upload-button';
 import { ImageUpload } from './image-upload';
@@ -43,7 +42,6 @@ import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display'
 import { StructuredOutputButton } from './structured-output-button';
 
 import { log } from '@repo/shared/logger';
-
 
 export const ChatInput = ({
     showGreeting = true,
@@ -61,8 +59,6 @@ export const ChatInput = ({
     const [showBYOKDialog, setShowBYOKDialog] = useState(false);
     const [pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
-    
-
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
@@ -93,7 +89,16 @@ export const ChatInput = ({
     const useCharts = useChatStore(state => state.useCharts);
 
     const isGenerating = useChatStore(state => state.isGenerating);
-    const isChatPage = usePathname().startsWith('/chat');
+    const isChatPage =
+        usePathname() !== '/' &&
+        usePathname() !== '/recent' &&
+        usePathname() !== '/settings' &&
+        usePathname() !== '/plus' &&
+        usePathname() !== '/about' &&
+        usePathname() !== '/login' &&
+        usePathname() !== '/privacy' &&
+        usePathname() !== '/terms' &&
+        usePathname() !== '/faq';
     const imageAttachment = useChatStore(state => state.imageAttachment);
     const documentAttachment = useChatStore(state => state.documentAttachment);
     const clearImageAttachment = useChatStore(state => state.clearImageAttachment);
@@ -147,8 +152,6 @@ export const ChatInput = ({
             return;
         }
 
-
-
         // Check if user has valid API key for the selected chat mode
         // This applies to all users (signed in or not) for modes that require API keys
         if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
@@ -196,11 +199,14 @@ export const ChatInput = ({
 
         log.info({ data: threadItems }, 'threadItems');
 
-        log.info({
-            useWebSearch,
-            useMathCalculator,
-            useCharts,
-        }, '🚀 Sending to handleSubmit with flags');
+        log.info(
+            {
+                useWebSearch,
+                useMathCalculator,
+                useCharts,
+            },
+            '🚀 Sending to handleSubmit with flags'
+        );
         handleSubmit({
             formData,
             newThreadId: threadId,
@@ -211,8 +217,6 @@ export const ChatInput = ({
             useMathCalculator,
             useCharts,
         });
-
-
 
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
@@ -270,18 +274,18 @@ export const ChatInput = ({
                                     </Flex>
 
                                     <Flex
-                                    className="border-border w-full gap-2 border-t border-dashed px-2 py-2"
-                                    gap="none"
-                                    items="center"
-                                    justify="between"
+                                        className="border-border w-full gap-2 border-t border-dashed px-2 py-2"
+                                        gap="none"
+                                        items="center"
+                                        justify="between"
                                     >
                                         {isGenerating && !isChatPage ? (
                                             <GeneratingStatus />
                                         ) : (
                                             <Flex
-                                            gap="xs"
-                                            items="center"
-                                            className="flex-1 flex-nowrap overflow-x-auto scrollbar-hide md:flex-wrap"
+                                                gap="xs"
+                                                items="center"
+                                                className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
                                             >
                                                 <ChatModeButton />
 
@@ -318,7 +322,11 @@ export const ChatInput = ({
                                             </Flex>
                                         )}
 
-                                        <Flex gap="sm" items="center" className="flex-shrink-0 ml-auto">
+                                        <Flex
+                                            gap="sm"
+                                            items="center"
+                                            className="ml-auto flex-shrink-0"
+                                        >
                                             <SendStopButton
                                                 isGenerating={isGenerating}
                                                 isChatPage={isChatPage}
@@ -365,8 +373,8 @@ export const ChatInput = ({
             className={cn(
                 'bg-secondary w-full',
                 currentThreadId
-                    ? 'absolute bottom-0 pb-safe'
-                    : 'absolute inset-0 flex h-full w-full flex-col items-center justify-center pb-safe'
+                    ? 'pb-safe absolute bottom-0'
+                    : 'pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center'
             )}
         >
             <div
@@ -381,7 +389,10 @@ export const ChatInput = ({
                     items="start"
                     justify="start"
                     direction="col"
-                    className={cn('w-full pb-4 md:pb-4 pb-safe', threadItemsLength > 0 ? 'mb-0' : 'h-full')}
+                    className={cn(
+                        'pb-safe w-full pb-4 md:pb-4',
+                        threadItemsLength > 0 ? 'mb-0' : 'h-full'
+                    )}
                 >
                     {!currentThreadId && showGreeting && (
                         <motion.div

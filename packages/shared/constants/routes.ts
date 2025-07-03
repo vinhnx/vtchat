@@ -21,7 +21,6 @@ export enum PublicRoutes {
  * These routes will redirect to login if user is not authenticated
  */
 export enum ProtectedRoutes {
-    CHAT = '/chat',
     RECENT = '/recent',
     SETTINGS = '/settings',
     PLUS = '/plus', // VT+ subscription page - requires login

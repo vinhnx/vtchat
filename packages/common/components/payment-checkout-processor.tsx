@@ -181,12 +181,21 @@ export function CreemCheckoutProcessor() {
                                 );
 
                                 if (cacheResponse.ok) {
-                                    log.info({}, '[CreemCheckoutProcessor] Subscription cache invalidated successfully');
+                                    log.info(
+                                        {},
+                                        '[CreemCheckoutProcessor] Subscription cache invalidated successfully'
+                                    );
                                 } else {
-                                    log.warn({}, '[CreemCheckoutProcessor] Failed to invalidate subscription cache');
+                                    log.warn(
+                                        {},
+                                        '[CreemCheckoutProcessor] Failed to invalidate subscription cache'
+                                    );
                                 }
                             } catch (cacheError) {
-                                log.error({ cacheError }, '[CreemCheckoutProcessor] Error invalidating cache');
+                                log.error(
+                                    { cacheError },
+                                    '[CreemCheckoutProcessor] Error invalidating cache'
+                                );
                             }
 
                             toast({
@@ -245,18 +254,21 @@ export function CreemCheckoutProcessor() {
                 // This prevents double refresh and ensures clean state
 
                 // Log successful purchase for analytics
-                log.info({
-                    checkoutId,
-                    orderId,
-                    packageType,
-                    quantity,
-                    isPlusSubscription,
-                    isVtPlusSubscription,
-                    customerId,
-                    productId,
-                    subscriptionId,
-                    timestamp: new Date().toISOString(),
-                }, '[CreemCheckoutProcessor] Purchase completed successfully');
+                log.info(
+                    {
+                        checkoutId,
+                        orderId,
+                        packageType,
+                        quantity,
+                        isPlusSubscription,
+                        isVtPlusSubscription,
+                        customerId,
+                        productId,
+                        subscriptionId,
+                        timestamp: new Date().toISOString(),
+                    },
+                    '[CreemCheckoutProcessor] Purchase completed successfully'
+                );
 
                 // Show welcome toast and redirect after delay
                 setTimeout(() => {
@@ -269,7 +281,7 @@ export function CreemCheckoutProcessor() {
 
                         // Redirect after showing welcome toast
                         setTimeout(() => {
-                            window.location.href = '/chat';
+                            window.location.href = '/';
                         }, 1500); // Short delay to show welcome message
                     } else {
                         // Force full page reload to ensure all state is fresh

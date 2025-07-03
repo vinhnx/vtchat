@@ -148,12 +148,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
             className={cn(
                 'bg-sidebar border-sidebar-border relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l',
                 'dark:border-gray-800 dark:bg-black/95',
-                forceMobile 
-                    ? 'w-[280px]' 
+                forceMobile
+                    ? 'w-[280px]'
                     : cn(
-                        'transition-all duration-300 ease-in-out',
-                        isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
-                    )
+                          'transition-all duration-300 ease-in-out',
+                          isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
+                      )
             )}
         >
             <Flex direction="col" className="w-full flex-1 items-start overflow-hidden">
@@ -172,12 +172,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
                                         isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
                                     )}
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         // Prevent clicks on user profile trigger from closing mobile sidebar
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
-                                    onTouchEnd={(e) => {
+                                    onTouchEnd={e => {
                                         // Handle iOS touch events specifically
                                         e.stopPropagation();
                                         e.preventDefault();
@@ -206,20 +206,20 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     )}
                                 </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent 
-                                align="start" 
+                            <DropdownMenuContent
+                                align="start"
                                 className="w-56 pl-2"
-                                onClick={(e) => {
+                                onClick={e => {
                                     // Prevent clicks inside dropdown from closing mobile sidebar
                                     e.stopPropagation();
                                 }}
-                                onPointerDownOutside={(e) => {
+                                onPointerDownOutside={e => {
                                     // Prevent dropdown from closing when clicking outside on mobile
                                     if (forceMobile) {
                                         e.preventDefault();
                                     }
                                 }}
-                                onEscapeKeyDown={(e) => {
+                                onEscapeKeyDown={e => {
                                     // Allow escape key to close dropdown but not sidebar
                                     if (forceMobile) {
                                         e.stopPropagation();
@@ -228,17 +228,21 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             >
                                 {/* Account Management */}
                                 <DropdownMenuLabel>Account</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    push('/profile');
-                                }}>
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        push('/profile');
+                                    }}
+                                >
                                     <User size={16} strokeWidth={2} />
                                     Profile
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsSettingsOpen(true);
-                                }}>
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        setIsSettingsOpen(true);
+                                    }}
+                                >
                                     <Settings size={16} strokeWidth={2} />
                                     Settings
                                 </DropdownMenuItem>
@@ -246,24 +250,30 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    push('/faq');
-                                }}>
-                                <HelpCircle size={16} strokeWidth={2} />
-                                Help Center
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        push('/faq');
+                                    }}
+                                >
+                                    <HelpCircle size={16} strokeWidth={2} />
+                                    Help Center
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    push('/privacy');
-                                }}>
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        push('/privacy');
+                                    }}
+                                >
                                     <Shield size={16} strokeWidth={2} />
                                     Privacy Policy
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    push('/terms');
-                                }}>
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        push('/terms');
+                                    }}
+                                >
                                     <FileText size={16} strokeWidth={2} />
                                     Terms of Service
                                 </DropdownMenuItem>
@@ -271,7 +281,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Authentication */}
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         logout();
                                     }}
@@ -315,7 +325,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         isSidebarOpen ? 'mb-4 px-4 py-3' : 'mb-2 px-2 py-2'
                     )}
                 >
-                    <Link href="/chat" className="w-full">
+                    <Link href="/" className="w-full">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -344,7 +354,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             tooltip="Close Sidebar"
                             tooltipSide="right"
                             size="icon-sm"
-                            onClick={() => forceMobile ? setIsMobileSidebarOpen(false) : setIsSidebarOpen(prev => !prev)}
+                            onClick={() =>
+                                forceMobile
+                                    ? setIsMobileSidebarOpen(false)
+                                    : setIsSidebarOpen(prev => !prev)
+                            }
                             className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />
@@ -380,8 +394,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 duration: 2000,
                             });
 
-                            // Navigate to /chat to start a new conversation
-                            push('/chat');
+                            // Navigate to / to start a new conversation
+                            push('/');
                             // Close mobile drawer if open
                             if (forceMobile) {
                                 setIsMobileSidebarOpen(false);
@@ -506,7 +520,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {!isPlusFromGlobal && (
                                     <Badge
                                         variant="secondary"
-                                        className="vt-plus-glass px-1.5 py-0.5 text-[10px] text-[#D99A4E] border-[#D99A4E]/30"
+                                        className="vt-plus-glass border-[#D99A4E]/30 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
                                     >
                                         VT+
                                     </Badge>

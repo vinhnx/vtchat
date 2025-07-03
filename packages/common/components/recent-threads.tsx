@@ -15,7 +15,7 @@ export const RecentThreads = () => {
         threads.forEach(thread => {
             router.prefetch(`/chat/${thread.id}`);
         });
-    }, [threads]);
+    }, [threads, router]);
 
     if (threads.length === 0) {
         return null;

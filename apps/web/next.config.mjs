@@ -103,15 +103,21 @@ const nextConfig = {
 
             // Optimize for development speed
             if (dev) {
-                config.cache = {
-                    type: 'filesystem',
-                    buildDependencies: {
-                        config: [__filename],
-                    },
-                };
-
+                // Disable webpack cache in development to prevent bloating
+                config.cache = false;
+                
                 // Reduce module resolution overhead
                 config.resolve.symlinks = false;
+                
+                // Disable optimizations that slow down dev builds
+                config.optimization.minimize = false;
+                config.optimization.splitChunks = {
+                    chunks: 'async',
+                    cacheGroups: {
+                        default: false,
+                        vendors: false,
+                    },
+                };
             }
 
             // Optimize bundle splitting
@@ -260,7 +266,7 @@ const nextConfig = {
     },
 
     async redirects() {
-        return [{ source: '/', destination: '/chat', permanent: true }];
+        return [];
     },
 
     // Fly.io-specific configuration for deployment

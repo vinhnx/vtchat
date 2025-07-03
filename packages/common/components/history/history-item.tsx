@@ -54,7 +54,7 @@ export const HistoryItem = ({
 
         deleteThread(thread.id);
         if (currentThreadId === thread.id) {
-            push('/chat');
+            push('/');
         }
     };
 
