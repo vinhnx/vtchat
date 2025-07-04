@@ -4,26 +4,30 @@
 
 ### ✅ useSession Runtime Error Fix
 
-**Date**: Current Session (July 4, 2025)  
+**Date**: Current Session (July 4, 2025)
 **Status**: Completed
 
 **Problem**:
+
 - Runtime error: `Error: useSession is not defined` in ChatFooter component
 - Application failing to render properly due to authentication hook usage in server components
 
 **Root Cause**:
+
 - Multiple React components were missing `'use client'` directive
 - These components used `useSession` or `useUser` hooks but were being server-side rendered
 - Authentication hooks can only be used in client components in Next.js App Router
 
 **Components Fixed**:
+
 1. `packages/common/components/chat-input/chat-footer.tsx`
-2. `packages/common/components/chat-input/structured-output-button.tsx` 
+2. `packages/common/components/chat-input/structured-output-button.tsx`
 3. `packages/common/components/chat-input/document-upload-button.tsx`
 4. `packages/common/components/chat-input/multi-modal-attachment-button.tsx`
 5. `packages/common/components/chat-input/image-upload.tsx`
 
 **Actions Taken**:
+
 - Added `'use client';` directive to all affected components
 - Verified application runs without runtime errors
 - Created documentation in `docs/fixes/use-session-runtime-error-fix.md`
@@ -34,7 +38,7 @@
 
 ### ✅ Twitter/X OAuth Documentation Update
 
-**Date**: Current Session  
+**Date**: Current Session
 **Status**: Completed
 
 **Findings**:
