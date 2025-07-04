@@ -5,6 +5,10 @@ ok go! -> https://vtchat.io.vn/
 
 --
 
+https://million.dev/
+
+--
+
 https://ai-sdk.dev/providers/ai-sdk-providers/groq
 
 ## https://console.groq.com/docs/ai-sdk -> offer free

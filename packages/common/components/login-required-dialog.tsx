@@ -56,52 +56,54 @@ export interface LoginRequiredDialogProps {
  * />
  * ```
  */
-export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
-    isOpen,
-    onClose,
-    title = 'Sign in to Continue',
-    description = 'Join VTChat to unlock all features and save your conversations. It only takes a moment!',
-    redirectUrl,
-    cancelText = 'Not Now',
-    loginText = 'Sign In',
-    showCancel = true,
-}) => {
-    const router = useRouter();
+export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.memo(
+    ({
+        isOpen,
+        onClose,
+        title = 'Sign in to Continue',
+        description = 'Join VTChat to unlock all features and save your conversations. It only takes a moment!',
+        redirectUrl,
+        cancelText = 'Not Now',
+        loginText = 'Sign In',
+        showCancel = true,
+    }) => {
+        const router = useRouter();
 
-    const handleLogin = () => {
-        onClose();
-        const loginUrl = redirectUrl
-            ? `/login?redirect_url=${encodeURIComponent(redirectUrl)}`
-            : '/login';
-        router.push(loginUrl);
-    };
+        const handleLogin = () => {
+            onClose();
+            const loginUrl = redirectUrl
+                ? `/login?redirect_url=${encodeURIComponent(redirectUrl)}`
+                : '/login';
+            router.push(loginUrl);
+        };
 
-    const handleCancel = () => {
-        onClose();
-    };
+        const handleCancel = () => {
+            onClose();
+        };
 
-    return (
-        <Dialog onOpenChange={onClose} open={isOpen}>
-            <DialogContent ariaTitle={title} className="max-w-md">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
-                </DialogHeader>
-                <DialogFooter className="gap-3">
-                    {showCancel && (
-                        <Button onClick={handleCancel} variant="outline">
-                            {cancelText}
+        return (
+            <Dialog onOpenChange={onClose} open={isOpen}>
+                <DialogContent ariaTitle={title} className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>{title}</DialogTitle>
+                        <DialogDescription>{description}</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="gap-3">
+                        {showCancel && (
+                            <Button onClick={handleCancel} variant="outline">
+                                {cancelText}
+                            </Button>
+                        )}
+                        <Button className="gap-2" onClick={handleLogin}>
+                            <LogIn size={16} />
+                            {loginText}
                         </Button>
-                    )}
-                    <Button className="gap-2" onClick={handleLogin}>
-                        <LogIn size={16} />
-                        {loginText}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
-};
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+);
 
 /**
  * Hook for managing login requirement state
