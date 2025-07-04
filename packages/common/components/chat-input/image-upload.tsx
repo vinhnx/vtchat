@@ -1,3 +1,5 @@
+'use client';
+
 import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
 import { ChatModeConfig } from '@repo/shared/config';

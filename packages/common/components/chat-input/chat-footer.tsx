@@ -1,3 +1,5 @@
+'use client';
+
 import { useUser } from '@repo/shared/lib/auth-client';
 import { Flex } from '@repo/ui';
 import Link from 'next/link';

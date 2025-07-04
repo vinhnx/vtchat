@@ -1,3 +1,5 @@
+'use client';
+
 import { useDocumentAttachment } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
