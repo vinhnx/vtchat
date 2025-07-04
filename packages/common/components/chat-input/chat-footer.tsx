@@ -14,20 +14,7 @@ export const ChatFooter = () => {
                 {/* Badges for non-logged in users only */}
                 {!isLoggedIn && (
                     <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
-                        <Link
-                            href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:opacity-80 transition-opacity"
-                        >
-                            <img
-                                src="https://startupfa.me/badges/featured-badge-small.webp"
-                                alt="Featured on Startup Fame"
-                                width="224"
-                                height="36"
-                                className="w-28 h-4 sm:w-56 sm:h-9"
-                            />
-                        </Link>
+                        <a href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn" target="_blank"><img src="https://startupfa.me/badges/featured/light-rounded.webp" alt="Featured on Startup Fame" width="171" height="54" /></a>
                         <Link
                             href="https://peerlist.io/vinhnx/project/vt"
                             target="_blank"
