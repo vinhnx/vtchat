@@ -29,6 +29,8 @@ const nextConfig = {
     experimental: {
         externalDir: true,
         webpackMemoryOptimizations: true,
+        webpackBuildWorker: true,
+        preloadEntriesOnStart: false,
         optimizePackageImports: [
             'lucide-react',
             '@radix-ui/react-icons',
@@ -77,6 +79,7 @@ const nextConfig = {
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         formats: ['image/webp', 'image/avif'],
+        minimumCacheTTL: 2678400, // 31 days
     },
 
     // Webpack optimizations (only when not using Turbopack)
@@ -118,6 +121,13 @@ const nextConfig = {
                         vendors: false,
                     },
                 };
+            } else {
+                // Production memory optimization: disable webpack cache
+                if (config.cache && !dev) {
+                    config.cache = Object.freeze({
+                        type: 'memory',
+                    });
+                }
             }
 
             // Optimize bundle splitting
@@ -276,10 +286,12 @@ const nextConfig = {
         return process.env.BUILD_ID || 'development';
     },
 
-    // Ensure server binds to all interfaces in production
+    // Production-specific optimizations
     ...(process.env.NODE_ENV === 'production' && {
+        productionBrowserSourceMaps: false,
         experimental: {
             serverMinification: false,
+            serverSourceMaps: false,
         },
     }),
 
