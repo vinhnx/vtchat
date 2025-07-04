@@ -15,16 +15,18 @@ export const ChatFooter = () => {
                 {!isLoggedIn && (
                     <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
                         <a
-                            href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
-                            target="_blank"
-                        >
-                            <img
-                                src="https://startupfa.me/badges/featured/light-rounded.webp"
-                                alt="Featured on Startup Fame"
-                                width="171"
-                                height="54"
-                            />
-                        </a>
+                        href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
+                        target="_blank"
+                    >
+                        <img
+                            src="https://startupfa.me/badges/featured-badge.webp"
+                            alt="Featured on Startup Fame"
+                            width="96"
+                            height="30"
+                            className="transition-opacity hover:opacity-80 sm:h-10 sm:w-32"
+                        />
+                    </a>
+
                         <Link
                             href="https://peerlist.io/vinhnx/project/vt"
                             target="_blank"
