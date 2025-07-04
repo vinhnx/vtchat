@@ -21,7 +21,7 @@ test.describe('ChatFooter useSession Fix', () => {
         await page.waitForTimeout(2000);
 
         // Verify no "useSession is not defined" errors occurred
-        const useSessionErrors = errors.filter(error =>
+        const useSessionErrors = errors.filter((error) =>
             error.includes('useSession is not defined')
         );
 
