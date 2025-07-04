@@ -1,3 +1,5 @@
+'use client';
+
 import { useStructuredExtraction } from '@repo/common/hooks';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';

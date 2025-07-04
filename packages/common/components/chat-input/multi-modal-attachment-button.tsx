@@ -1,3 +1,5 @@
+'use client';
+
 import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
 import { supportsMultiModal } from '@repo/shared/config';
@@ -7,7 +9,6 @@ import type { Attachment } from '@repo/shared/types';
 import { Button, Tooltip, useToast } from '@repo/ui';
 import { Paperclip } from 'lucide-react';
 import { type FC, useCallback, useRef, useState } from 'react';
-import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
 // Create a wrapper component for Paperclip to match expected icon prop type

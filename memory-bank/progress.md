@@ -2,6 +2,36 @@
 
 ## Latest Session - January 2025
 
+### ✅ useSession Runtime Error Fix
+
+**Date**: Current Session (July 4, 2025)  
+**Status**: Completed
+
+**Problem**:
+- Runtime error: `Error: useSession is not defined` in ChatFooter component
+- Application failing to render properly due to authentication hook usage in server components
+
+**Root Cause**:
+- Multiple React components were missing `'use client'` directive
+- These components used `useSession` or `useUser` hooks but were being server-side rendered
+- Authentication hooks can only be used in client components in Next.js App Router
+
+**Components Fixed**:
+1. `packages/common/components/chat-input/chat-footer.tsx`
+2. `packages/common/components/chat-input/structured-output-button.tsx` 
+3. `packages/common/components/chat-input/document-upload-button.tsx`
+4. `packages/common/components/chat-input/multi-modal-attachment-button.tsx`
+5. `packages/common/components/chat-input/image-upload.tsx`
+
+**Actions Taken**:
+- Added `'use client';` directive to all affected components
+- Verified application runs without runtime errors
+- Created documentation in `docs/fixes/use-session-runtime-error-fix.md`
+
+**Result**: Application now loads and renders correctly without authentication-related runtime errors.
+
+---
+
 ### ✅ Twitter/X OAuth Documentation Update
 
 **Date**: Current Session  
@@ -628,7 +658,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **Enhanced Benefit Descriptions**:
 
-- **Free Tier**: Updated to include all 5 free Gemini models
+- **Free Tier**: Updated to include all Gemini models
 - **Plus Tier**: Added "All Benefits from Base Plan" for clear hierarchy
 - **Comprehensive Documentation**: Updated README and docs
 
@@ -1465,7 +1495,7 @@ When switching from anonymous to logged-in user (or between different accounts):
     - Created `.env.fly.development` for Fly.io development environment
 
 - Created `.env.fly.production` for Fly.io production environment
-- Updated `.env.fly` to serve as template with clear instructions
+    - Updated `.env.fly` to serve as template with clear instructions
     - Configured proper URLs for each environment:
         - Local: `http://localhost:3000`
         - Development: `https://vtchat-web-development.fly.dev`
@@ -1911,172 +1941,6 @@ Fixed the critical bug where VT+ subscribers were getting 403 errors when trying
 - Server-side subscription verification is now accurate and reliable
 - Consistent subscription status between client and server
 
-### ✅ Fixed React Fragment onClick Error
-
-**Status:** Completed
-**Date:** January 15, 2025
-
-Fixed a React console error where an invalid `onClick` prop was being supplied to `React.Fragment`.
-
-#### Problem
-
-- Console showed: "Invalid prop `onClick` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props."
-- Error was occurring in ChatInput component's chat-actions.tsx file
-- Issue was related to conditional rendering inside DropdownMenuTrigger with asChild prop
-
-#### Root Cause
-
-- In the ChatModeButton component, there was conditional rendering inside `DropdownMenuTrigger asChild`
-- When `isCurrentModeGated` was false, it rendered a variable `dropdownTrigger` instead of direct JSX
-- The `asChild` prop causes the DropdownMenuTrigger to pass its props to its child
-- This was causing props to be incorrectly passed to a React Fragment
-
-#### Solution
-
-- Removed the `dropdownTrigger` variable that was causing the issue
-- Inlined the Button component directly in both branches of the conditional
-- This ensures props are passed correctly to Button components, not Fragments
-
-#### Technical Changes:
-
-```tsx
-// Before (causing Fragment error):
-{
-    isCurrentModeGated ? (
-        <Button>...</Button>
-    ) : (
-        dropdownTrigger // This variable could cause Fragment issues
-    );
-}
-
-// After (fixed):
-{
-    isCurrentModeGated ? (
-        <Button>...</Button>
-    ) : (
-        <Button>...</Button> // Direct JSX prevents Fragment issues
-    );
-}
-```
-
-#### Impact
-
-- React console errors eliminated
-- Chat mode dropdown functions correctly
-- No more Fragment-related prop warnings
-- Component renders properly in all states
-
-### Chat Mode Thread Creation Enhancement ✅
-
-**Date:** June 15, 2025
-**Status:** ✅ COMPLETED
-
-**Overview:** Implemented automatic new thread creation when users switch between specific chat modes to improve user experience and workflow separation.
-
-**Features Implemented:**
-
-1. **Deep Research ↔ Pro Search Mode Switching**
-
-    - When user switches from "Deep Research" to "Pro Search" mode (or vice versa)
-    - Automatically creates a new chat thread with proper thread title
-    - Preserves mode-specific workflow context separation
-
-2. **Research Mode to Custom Model Switching**
-
-    - When user switches from either "Deep Research" or "Pro Search" to any custom model
-    - Creates new thread to maintain clear separation between research workflows and regular chat
-    - Custom models include: GPT 4o Mini, GPT 4.1 series, Claude 4 series, Gemini models, etc.
-
-3. **Web Search Button Hide Enhancement**
-    - Fixed WebSearchButton logic to properly hide when Deep Research or Pro Search modes are selected
-    - Improved conditional rendering with separate conditions instead of combined AND logic
-    - Button now correctly respects `webSearch: false` configuration for research modes
-
-**Technical Implementation:**
-
-- **File Modified:** `packages/common/components/chat-input/chat-actions.tsx`
-- **Logic Added:** Enhanced `handleModeSelect` function with thread creation detection
-- **Navigation:** Uses Next.js router to navigate to new thread with generated nanoid
-- **Thread Management:** Integrates with useChatStore's `createThread` method
-- **Mode Setting:** Implements delayed mode setting after navigation (100ms timeout)
-
-**Test Cases Created:**
-
-- Created test file: `apps/web/app/tests/test-chat-mode-thread-creation.js`
-- Documented expected behaviors for all switching scenarios
-- Manual test scenarios for verification
-
-**User Experience Improvements:**
-
-- Clear workflow separation between research modes and regular chat
-- Automatic thread organization prevents mode confusion
-- Seamless transitions with proper navigation and state management
-- Thread titles automatically set to "{Mode} Chat" for easy identification
-
-**Result:** Users now experience better workflow organization with automatic thread creation when switching between research modes or from research modes to custom models, while the Web Search button is properly hidden for research modes that have built-in search capabilities.
-
-### Legacy webSearchTask Removal ✅
-
-**Date:** June 15, 2025
-**Status:** ✅ COMPLETED
-
-- ✅ **Deprecated Task Analysis**: Confirmed `webSearchTask` in `packages/ai/workflow/tasks/web-search.ts` throws error and is no longer used
-- ✅ **Workflow Routing Update**: Updated `reflectorTask` to route to `'gemini-web-search'` instead of `'web-search'`
-- ✅ **Import Cleanup**: Removed `webSearchTask` import from `packages/ai/workflow/flow.ts`
-- ✅ **Task Registration Cleanup**: Removed `webSearchTask` from workflow builder tasks array
-- ✅ **Export Cleanup**: Removed `webSearchTask` export from `packages/ai/workflow/tasks/index.ts`
-- ✅ **File Removal**: Deleted deprecated `packages/ai/workflow/tasks/web-search.ts` file
-- ✅ **Reference Verification**: Confirmed no remaining references to deprecated task in active code paths
-
-**Background:**
-The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` which provides better web search capabilities using Gemini models. The old task only threw an error directing users to use Gemini models instead.
-
-**Current Workflow Routing:**
-
-- Deep Research mode → `refine-query` → `reflector` → `gemini-web-search` → `analysis`
-- Pro Search mode → `gemini-web-search` → `reflector` → `gemini-web-search` → `analysis`
-- Planner mode → `gemini-web-search` → routing continues based on results
-
-**Files Modified:**
-
-- `packages/ai/workflow/tasks/reflector.ts` - Updated routing from 'web-search' to 'gemini-web-search'
-- `packages/ai/workflow/flow.ts` - Removed webSearchTask import and registration
-- `packages/ai/workflow/tasks/index.ts` - Removed webSearchTask export
-- `packages/ai/workflow/tasks/web-search.ts` - File deleted
-
-**Result:** Workflow system is now cleaner with only active, functional tasks. All web search operations now consistently use the modern Gemini-based implementation.
-
-### Subscription Access Control Fix ✅
-
-**Date:** June 15, 2025
-**Status:** ✅ COMPLETED
-
-- ✅ **Fixed Temporary Implementation**: Replaced disabled subscription status function with robust solution
-- ✅ **Dynamic Import System**: Added dynamic imports to avoid build-time drizzle dependency issues
-- ✅ **Multi-Layer Fallback**: Implemented 3-tier fallback system:
-    1. Primary: subscription-sync module import
-    2. Secondary: Direct database queries
-    3. Tertiary: Safe defaults (free tier)
-- ❌ **Rate Limiting Removed**: Eliminated Redis-based rate limiting system
-    - Removed FREE_TIER_DAILY_LIMIT environment variable
-    - Removed all KV/Redis dependencies and configurations
-    - No more usage restrictions for free tier users
-- ✅ **Improved Error Handling**: Comprehensive error logging with graceful degradation
-- ✅ **Subscription Status Logic**: Proper handling of multiple data sources (subscription table vs user plan_slug)
-- ✅ **Production Ready**: No more temporary implementations, fully functional access control
-
-**Files Modified:**
-
-- `apps/web/app/api/subscription/access-control.ts` - Complete rewrite of subscription status function
-- `ACCESS-CONTROL-FIX-SUMMARY.md` - Detailed documentation of changes
-
-**Benefits:**
-
-- Production-ready subscription enforcement
-- Redis-based rate limiting for scalability
-- Fault-tolerant design with multiple fallbacks
-- Proper VT+ feature access control
-
 ### Dockerfile Server Path Fix ✅
 
 **Date:** June 16, 2025
@@ -2113,51 +1977,3 @@ The legacy `webSearchTask` was deprecated in favor of `geminiWebSearchTask` whic
 2. ⏳ Test auth endpoints (200/302 responses, not 404)
 3. ⏳ Verify CORS headers working correctly
 4. ⏳ Confirm login functionality works end-to-end
-
-### GitHub Actions & Fly.io Configuration Updates ✅
-
-**COMPLETED**: Updated branch-based deployment strategy and Fly.io configuration
-
-**IMPLEMENTATION**:
-
-1. **Branch Strategy Implementation**:
-
-    - ✅ `dev` branch → triggers Fly.io `development` environment deployment
-
-- ✅ `main` branch → triggers Fly.io `production` environment deployment
-    - ✅ Updated all references from `railway-deployment` to `dev` branch
-
-2. **GitHub Actions Workflows**:
-
-    - ✅ **Fly.io Deploy Workflow** (`.github/workflows/fly-deploy.yml`):
-        - Automatic deployment to development on `dev` branch push
-        - Automatic deployment to production on `main` branch push
-        - Build validation for all PRs
-    - ✅ **PR Management Workflow** (`.github/workflows/pr-management.yml`):
-        - Creates preview environments for PRs targeting `main` or `dev`
-        - Automatic cleanup when PRs are closed
-        - Environment-specific commenting and URL generation
-
-3. **Fly.io Configuration Updates**:
-
-    - ✅ Updated fly configuration with environment-specific configurations
-
-- ✅ Updated `fly.toml` with environment-specific health check settings
-    - ✅ Development environment: 180s health check timeout
-    - ✅ Production environment: 300s health check timeout
-
-4. **Documentation Review**:
-    - ✅ Used Context7 to review Fly.io best practices
-
-- ✅ Verified branch-based deployment patterns align with Fly.io recommendations
-    - ✅ Confirmed environment-specific configuration support
-
-**WORKFLOW STRUCTURE**:
-
-```yaml
-GitHub Events:
-    - Push to `dev` → Railway Development Environment
-    - Push to `main` → Railway Production Environment
-    - PR to `dev/main` → Preview Environment + Build Validation
-    - PR closed → Preview Environment Cleanup
-```
