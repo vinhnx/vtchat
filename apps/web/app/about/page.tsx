@@ -259,9 +259,9 @@ function AboutContent() {
                                 comprehensive test coverage for reliability.
                             </p>
                             <div className="mt-6 flex flex-wrap items-center gap-4">
-                                <a 
-                                    href="https://vtchat.io.vn" 
-                                    target="_blank" 
+                                <a
+                                    href="https://vtchat.io.vn"
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >

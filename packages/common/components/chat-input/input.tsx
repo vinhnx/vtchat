@@ -462,13 +462,11 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
         // Update the greeting if the component is mounted during a time transition
         const interval = setInterval(() => {
             const newGreeting = getTimeBasedGreeting();
-            if (newGreeting !== greeting) {
-                setGreeting(newGreeting);
-            }
+            setGreeting((prev) => (prev !== newGreeting ? newGreeting : prev));
         }, 60_000); // Check every minute
 
         return () => clearInterval(interval);
-    }, [greeting, session]);
+    }, [session]); // Removed greeting from dependency array
 
     return (
         <Flex

@@ -51,13 +51,13 @@ export function ReactScan() {
                     // Log slow renders in development for debugging
                     if (REACT_SCAN_CONFIG.log && renders.length > 0) {
                         const slowRenders = renders.filter(
-                            render => (render.time ?? 0) > REACT_SCAN_CONFIG.slowRenderThreshold
+                            (render) => (render.time ?? 0) > REACT_SCAN_CONFIG.slowRenderThreshold
                         );
 
                         if (slowRenders.length > 0) {
                             console.debug('[React Scan] Slow renders detected:', {
                                 component: fiber.type?.name || fiber.type || 'Unknown',
-                                slowRenders: slowRenders.map(r => ({
+                                slowRenders: slowRenders.map((r) => ({
                                     time: r.time,
                                     phase: r.phase,
                                 })),
@@ -73,7 +73,11 @@ export function ReactScan() {
                 onPaintStart: (outlines) => {
                     // Track when render highlighting starts
                     if (REACT_SCAN_CONFIG.log && outlines.length > 5) {
-                        console.debug('[React Scan] Heavy render cycle detected:', outlines.length, 'components');
+                        console.debug(
+                            '[React Scan] Heavy render cycle detected:',
+                            outlines.length,
+                            'components'
+                        );
                     }
                 },
 

@@ -30,6 +30,3 @@ if (REACT_SCAN_CONFIG.shouldRun) {
 } else {
     console.log('\n🔴 React Scan BLOCKED in this environment (as expected)');
 }
-
-export { };
-

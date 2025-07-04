@@ -6,37 +6,48 @@
 
 export const REACT_SCAN_CONFIG = {
     // Enable React Scan ONLY in development mode - never in production
-    enabled: process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
+    enabled:
+        process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
 
     // Force enable in all environments (STRONGLY not recommended and disabled by default)
-    forceEnabledInProduction: process.env.REACT_SCAN_FORCE_PRODUCTION === 'true' && process.env.NODE_ENV === 'development',
+    forceEnabledInProduction:
+        process.env.REACT_SCAN_FORCE_PRODUCTION === 'true' &&
+        process.env.NODE_ENV === 'development',
 
     // Enable console logging (can impact performance) - only in development
     log: process.env.REACT_SCAN_LOG === 'true' && process.env.NODE_ENV === 'development',
 
     // Show the React Scan toolbar - only in development
-    showToolbar: process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
+    showToolbar:
+        process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
 
     // Animation speed for highlighting renders
     animationSpeed: 'fast' as const,
 
     // Track unnecessary renders (can add overhead) - only in development
-    trackUnnecessaryRenders: process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
+    trackUnnecessaryRenders:
+        process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.FLY_APP_NAME,
 
     // Render time threshold for logging slow renders (in milliseconds)
     slowRenderThreshold: parseInt(process.env.REACT_SCAN_SLOW_THRESHOLD || '10', 10),
 
     // Additional safety checks for deployment environments
-    isDeployment: !!(process.env.VERCEL || process.env.FLY_APP_NAME || process.env.NETLIFY || process.env.RENDER),
+    isDeployment: !!(
+        process.env.VERCEL ||
+        process.env.FLY_APP_NAME ||
+        process.env.NETLIFY ||
+        process.env.RENDER
+    ),
 
     // Final safety check - must be development AND not in any deployment environment
-    shouldRun: process.env.NODE_ENV === 'development' &&
-               !process.env.VERCEL &&
-               !process.env.FLY_APP_NAME &&
-               !process.env.NETLIFY &&
-               !process.env.RENDER &&
-               !process.env.RAILWAY_ENVIRONMENT &&
-               !process.env.HEROKU_APP_NAME,
+    shouldRun:
+        process.env.NODE_ENV === 'development' &&
+        !process.env.VERCEL &&
+        !process.env.FLY_APP_NAME &&
+        !process.env.NETLIFY &&
+        !process.env.RENDER &&
+        !process.env.RAILWAY_ENVIRONMENT &&
+        !process.env.HEROKU_APP_NAME,
 } as const;
 
 /**
