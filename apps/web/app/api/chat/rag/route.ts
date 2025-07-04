@@ -1,14 +1,14 @@
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
+import { ModelEnum } from '@repo/ai/models';
+import { log } from '@repo/shared/logger';
+import { streamText, tool } from 'ai';
+import { z } from 'zod';
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { auth } from '@/lib/auth-server';
 import { checkVTPlusAccess } from '../../subscription/access-control';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { streamText, tool } from 'ai';
-import { z } from 'zod';
-import { ModelEnum } from '@repo/ai/models';
-import { log } from '@repo/shared/logger';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     try {
         // Check authentication
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then(m => m.headers()),
+            headers: await import('next/headers').then((m) => m.headers()),
         });
 
         if (!session?.user?.id) {
@@ -27,21 +27,33 @@ export async function POST(req: Request) {
         // Check VT+ access for RAG feature
         const vtPlusCheck = await checkVTPlusAccess(session.user.id);
         if (!vtPlusCheck.hasAccess) {
-            return new Response(JSON.stringify({
-                error: 'VT+ subscription required',
-                message: 'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
-                code: 'VT_PLUS_REQUIRED'
-            }), { 
-                status: 403,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return new Response(
+                JSON.stringify({
+                    error: 'VT+ subscription required',
+                    message:
+                        'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
+                    code: 'VT_PLUS_REQUIRED',
+                }),
+                {
+                    status: 403,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
         }
 
-        const { messages, apiKeys, embeddingModel, ragChatModel = ModelEnum.GEMINI_2_5_FLASH, profile } = await req.json();
-        
+        const {
+            messages,
+            apiKeys,
+            embeddingModel,
+            ragChatModel = ModelEnum.GEMINI_2_5_FLASH,
+            profile,
+        } = await req.json();
+
         // Validate API keys are provided
         if (!apiKeys || typeof apiKeys !== 'object') {
-            return new Response('API keys are required for RAG functionality', { status: 400 });
+            return new Response('API keys are required for RAG functionality', {
+                status: 400,
+            });
         }
 
         // Configure model based on user selection
@@ -49,16 +61,20 @@ export async function POST(req: Request) {
         if (ragChatModel.startsWith('gpt-')) {
             const openaiApiKey = apiKeys['OPENAI_API_KEY'];
             if (!openaiApiKey) {
-                return new Response('OpenAI API key is required for GPT models', { status: 400 });
+                return new Response('OpenAI API key is required for GPT models', {
+                    status: 400,
+                });
             }
             const openaiProvider = createOpenAI({ apiKey: openaiApiKey });
             model = openaiProvider(ragChatModel);
         } else if (ragChatModel.startsWith('claude-')) {
             const anthropicApiKey = apiKeys['ANTHROPIC_API_KEY'];
             if (!anthropicApiKey) {
-                return new Response('Anthropic API key is required for Claude models', { status: 400 });
+                return new Response('Anthropic API key is required for Claude models', {
+                    status: 400,
+                });
             }
-            const anthropicProvider = createAnthropic({ 
+            const anthropicProvider = createAnthropic({
                 apiKey: anthropicApiKey,
                 headers: {
                     'anthropic-dangerous-direct-browser-access': 'true',
@@ -68,7 +84,9 @@ export async function POST(req: Request) {
         } else if (ragChatModel.startsWith('gemini-')) {
             const geminiApiKey = apiKeys['GEMINI_API_KEY'];
             if (!geminiApiKey) {
-                return new Response('Gemini API key is required for Gemini models', { status: 400 });
+                return new Response('Gemini API key is required for Gemini models', {
+                    status: 400,
+                });
             }
             const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
             model = googleProvider(ragChatModel);
@@ -77,13 +95,14 @@ export async function POST(req: Request) {
         }
 
         // Build personalized system prompt based on profile
-        const profileContext = profile?.name || profile?.workDescription 
-        ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ''}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ''}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
-             : '';
+        const profileContext =
+            profile?.name || profile?.workDescription
+                ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ''}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ''}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
+                : '';
 
-         const result = streamText({
-             model,
-             system: `You are a friendly and encouraging AI assistant helping users build their personal knowledge repository! 🧠✨${profileContext}
+        const result = streamText({
+            model,
+            system: `You are a friendly and encouraging AI assistant helping users build their personal knowledge repository! 🧠✨${profileContext}
 
              Your mission is to help users create their own intelligent knowledge base by:
 
@@ -113,29 +132,29 @@ export async function POST(req: Request) {
             maxSteps: 5,
             tools: {
                 addResource: tool({
-                    description: `Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.`,
+                    description:
+                        'Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.',
                     parameters: z.object({
                         content: z
                             .string()
                             .describe('the content or resource to add to the knowledge base'),
                     }),
-                    execute: async ({ content }) => createResource(
-                        { content }, 
-                        apiKeys, 
-                        embeddingModel 
-                    ),
+                    execute: async ({ content }) =>
+                        createResource({ content }, apiKeys, embeddingModel),
                 }),
                 getInformation: tool({
-                    description: `Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.`,
+                    description:
+                        'Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.',
                     parameters: z.object({
                         question: z.string().describe('the users question to search for'),
                     }),
-                    execute: async ({ question }) => findRelevantContent(
-                        question, 
-                        apiKeys, 
-                        embeddingModel,
-                        session.user.id // CRITICAL: Pass user ID for data isolation
-                    ),
+                    execute: async ({ question }) =>
+                        findRelevantContent(
+                            question,
+                            apiKeys,
+                            embeddingModel,
+                            session.user.id // CRITICAL: Pass user ID for data isolation
+                        ),
                 }),
             },
         });

@@ -1,5 +1,5 @@
-import { ChatMode } from '@repo/shared/config';
-import { CoreAssistantMessage, CoreUserMessage } from 'ai';
+import type { ChatMode } from '@repo/shared/config';
+import type { CoreAssistantMessage, CoreUserMessage } from 'ai';
 import { useEffect, useRef, useState } from 'react';
 
 export type WorkflowConfig = {
@@ -88,7 +88,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
             });
 
             // Set up message handler
-            workerRef.current.onmessage = event => {
+            workerRef.current.onmessage = (event) => {
                 const data = event.data;
                 if (onMessageRef.current) {
                     onMessageRef.current(data);
@@ -158,7 +158,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                 });
 
                 // Set up message handler
-                workerRef.current.onmessage = event => {
+                workerRef.current.onmessage = (event) => {
                     const data = event.data;
                     if (onMessageRef.current) {
                         onMessageRef.current(data);
@@ -195,7 +195,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         }
     };
 
-    const abortWorkflow = (graceful: boolean = false) => {
+    const abortWorkflow = (graceful = false) => {
         if (!workerRef.current) {
             return;
         }

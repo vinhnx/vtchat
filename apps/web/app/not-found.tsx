@@ -11,18 +11,18 @@ export const dynamic = 'force-dynamic';
 export default function NotFound() {
     const { isPending } = useSession();
     return (
-        <div className="min-h-dvh flex flex-col">
+        <div className="flex min-h-dvh flex-col">
             <main className="flex flex-1 items-center justify-center px-4">
                 <div className="w-full max-w-md text-center">
                     <div className="mb-8">
-                        <h1 className="text-4xl font-bold text-foreground mb-2">404</h1>
-                        <h2 className="text-xl font-medium text-foreground mb-3">Page Not Found</h2>
+                        <h1 className="text-foreground mb-2 text-4xl font-bold">404</h1>
+                        <h2 className="text-foreground mb-3 text-xl font-medium">Page Not Found</h2>
                         <p className="text-muted-foreground text-sm">
                             Sorry, we couldn't find the page you're looking for.
                         </p>
                     </div>
                     <Link href="/">
-                        <Button variant="default" size="sm">
+                        <Button size="sm" variant="default">
                             Go back home
                         </Button>
                     </Link>
@@ -31,7 +31,7 @@ export default function NotFound() {
 
             {/* Footer */}
             {!isPending && (
-                <footer className="border-t border-border/50 bg-background/50">
+                <footer className="border-border/50 bg-background/50 border-t">
                     <div className="mx-auto max-w-7xl">
                         <Footer />
                     </div>

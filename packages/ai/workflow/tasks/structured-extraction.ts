@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
+import { log } from '@repo/shared/logger';
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import { log } from '@repo/shared/logger';
 
 // Common schemas for structured extraction
 export const InvoiceSchema = z.object({
@@ -111,7 +111,10 @@ export const GenericDocumentSchema = z.object({
 });
 
 // Helper to detect document type and select appropriate schema
-export function getSchemaForDocument(text: string): { schema: z.ZodSchema; type: string } {
+export function getSchemaForDocument(text: string): {
+    schema: z.ZodSchema;
+    type: string;
+} {
     const lowerText = text.toLowerCase();
 
     if (
@@ -141,10 +144,7 @@ export function getSchemaForDocument(text: string): { schema: z.ZodSchema; type:
     return { schema: GenericDocumentSchema, type: 'document' };
 }
 
-export async function extractStructuredData(
-    documentText: string,
-    model: string = 'gemini-2.0-flash'
-) {
+export async function extractStructuredData(documentText: string, model = 'gemini-2.0-flash') {
     const { schema, type } = getSchemaForDocument(documentText);
 
     try {

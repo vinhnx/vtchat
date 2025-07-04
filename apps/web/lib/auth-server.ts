@@ -1,10 +1,10 @@
+import { log } from '@repo/shared/logger';
 import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
-import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { multiSession } from 'better-auth/plugins';
+import { emailHarmony } from 'better-auth-harmony';
 import { botDetection } from './bot-detection-plugin';
-import { log } from '@repo/shared/logger';
 import { db } from './database';
 import * as schema from './database/schema';
 
@@ -52,7 +52,7 @@ export const auth = betterAuth({
                     ? 'https://vtchat.io.vn/api/auth/callback/github'
                     : 'http://localhost:3000/api/auth/callback/github',
             scope: ['read:user', 'user:email'],
-            mapProfileToUser: profile => {
+            mapProfileToUser: (profile) => {
                 return {
                     image: profile.avatar_url,
                 };
@@ -66,7 +66,7 @@ export const auth = betterAuth({
                     ? 'https://vtchat.io.vn/api/auth/callback/google'
                     : 'http://localhost:3000/api/auth/callback/google',
             scope: ['openid', 'email', 'profile'],
-            mapProfileToUser: profile => {
+            mapProfileToUser: (profile) => {
                 return {
                     image: profile.picture,
                 };
@@ -100,7 +100,7 @@ export const auth = betterAuth({
         'http://127.0.0.1:3000',
     ],
     fetchOptions: {
-        timeout: 10000, // 10 second timeout
+        timeout: 10_000, // 10 second timeout
         onError: async (context: { response: Response; request: Request }) => {
             const { response } = context;
             if (response.status === 429) {

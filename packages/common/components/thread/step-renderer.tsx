@@ -1,5 +1,5 @@
 import { SearchResultsList, StepStatus } from '@repo/common/components';
-import { Step } from '@repo/shared/types';
+import type { Step } from '@repo/shared/types';
 import { Badge, Label } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
@@ -13,9 +13,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
         if (step?.text) {
             return (
                 <motion.p
+                    animate={{ opacity: 1, y: 0 }}
                     className="text-muted-foreground text-sm"
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
                 >
                     {step.text}
@@ -29,9 +29,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
         if (step?.steps && 'search' in step.steps) {
             return (
                 <motion.div
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col gap-1"
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                 >
                     <div className="flex flex-col gap-2">
@@ -43,13 +43,13 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                             {Array.isArray(step.steps?.search?.data) &&
                                 step.steps?.search?.data?.map((query: string, index: number) => (
                                     <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 5 }}
                                         animate={{ opacity: 1, y: 0 }}
+                                        initial={{ opacity: 0, y: 5 }}
+                                        key={index}
                                         transition={{ duration: 0.2, delay: 0.1 + index * 0.05 }}
                                     >
                                         <Badge>
-                                            <Search size={12} className="opacity-50" />
+                                            <Search className="opacity-50" size={12} />
                                             {query}
                                         </Badge>
                                     </motion.div>
@@ -65,9 +65,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
         if (step?.steps && 'read' in step.steps) {
             return (
                 <motion.div
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col gap-2"
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                 >
                     <div className="w-[100px]">
@@ -89,9 +89,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
 
             return (
                 <motion.div
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col gap-2"
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.4 }}
                 >
                     <div className="w-[100px]">
@@ -99,7 +99,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     </div>
                     <div className="text-muted-foreground text-sm">
                         {reasoningData.split('\n\n').map((line: string, index: number) => (
-                            <div key={index} className="mb-4 last:mb-0">
+                            <div className="mb-4 last:mb-0" key={index}>
                                 {line}
                             </div>
                         ))}
@@ -114,9 +114,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
         if (step?.steps && 'wrapup' in step.steps) {
             return (
                 <motion.div
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col gap-2"
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.5 }}
                 >
                     <div className="w-[100px]">
@@ -137,16 +137,16 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     <StepStatus status={step.status} />
                 </div>
                 <motion.div
+                    animate={{ height: '100%' }}
                     className="border-border min-h-full w-[1px] flex-1 border-l border-dashed"
                     initial={{ height: 0 }}
-                    animate={{ height: '100%' }}
                     transition={{ duration: 0.5 }}
                 />
             </div>
             <motion.div
+                animate={{ opacity: 1, y: 0 }}
                 className="flex w-full flex-1 flex-col gap-4 overflow-hidden pb-2 pr-2"
                 initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
             >
                 {renderWrapupStep()}

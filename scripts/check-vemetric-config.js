@@ -15,33 +15,32 @@ function checkVemetricConfig() {
         {
             name: 'NEXT_PUBLIC_VEMETRIC_TOKEN',
             value: process.env.NEXT_PUBLIC_VEMETRIC_TOKEN,
-            required: true
+            required: true,
         },
         {
             name: 'VEMETRIC_TOKEN (backend)',
             value: process.env.VEMETRIC_TOKEN,
-            required: false
+            required: false,
         },
         {
             name: 'VEMETRIC_HOST',
             value: process.env.VEMETRIC_HOST,
             required: false,
-            default: 'https://hub.vemetric.com'
-        }
+            default: 'https://hub.vemetric.com',
+        },
     ];
 
     let allGood = true;
 
-    checks.forEach(check => {
+    checks.forEach((check) => {
         console.log(`${check.name}:`);
-        
+
         if (check.value) {
-            const masked = check.value.length > 8 
-                ? `${check.value.substring(0, 8)}...` 
-                : check.value;
+            const masked =
+                check.value.length > 8 ? `${check.value.substring(0, 8)}...` : check.value;
             console.log(`  ✅ Set: ${masked}`);
         } else if (check.required) {
-            console.log(`  ❌ Missing (required)`);
+            console.log('  ❌ Missing (required)');
             allGood = false;
         } else {
             const defaultText = check.default ? ` (using default: ${check.default})` : '';
@@ -52,7 +51,7 @@ function checkVemetricConfig() {
 
     if (allGood) {
         console.log('✅ Configuration looks good!');
-        console.log('\nIf you\'re still seeing CORS errors:');
+        console.log("\nIf you're still seeing CORS errors:");
         console.log('1. Check Vemetric dashboard domain allowlist');
         console.log('2. Run: bun scripts/test-vemetric-connection.js');
         log.info('Vemetric configuration check passed');

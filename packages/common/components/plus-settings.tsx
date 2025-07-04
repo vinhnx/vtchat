@@ -39,8 +39,8 @@ import {
 
 export const PlusSettings = () => {
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
-    const thinkingMode = useAppStore(state => state.thinkingMode);
-    const setThinkingMode = useAppStore(state => state.setThinkingMode);
+    const thinkingMode = useAppStore((state) => state.thinkingMode);
+    const setThinkingMode = useAppStore((state) => state.setThinkingMode);
 
     const setThinkingModeEnabled = (enabled: boolean) => {
         setThinkingMode({
@@ -143,10 +143,10 @@ export const PlusSettings = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-4">
-                            {Object.values(VT_PLUS_FEATURES).map(feature => (
+                            {Object.values(VT_PLUS_FEATURES).map((feature) => (
                                 <div
-                                    key={feature.id}
                                     className="border-border/50 bg-muted/20 hover:bg-muted/30 group relative overflow-hidden rounded-lg border p-4 transition-all"
+                                    key={feature.id}
                                 >
                                     {/* Lock overlay */}
                                     <div className="bg-background/80 absolute right-3 top-3 rounded-full p-1.5 backdrop-blur-sm">
@@ -167,7 +167,7 @@ export const PlusSettings = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <div className="h-1 w-1 rounded-full bg-green-500"></div>
+                                                <div className="h-1 w-1 rounded-full bg-green-500" />
                                                 <span className="text-muted-foreground text-xs">
                                                     {getFeatureBenefit(feature.id)}
                                                 </span>
@@ -214,8 +214,8 @@ export const PlusSettings = () => {
                         <Brain className="h-5 w-5 text-purple-500" />
                         Thinking Mode
                         <Badge
-                            variant="secondary"
                             className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                            variant="secondary"
                         >
                             VT+ Active
                         </Badge>
@@ -235,8 +235,8 @@ export const PlusSettings = () => {
                                 </div>
                                 <div>
                                     <Label
-                                        htmlFor="thinking-mode"
                                         className="cursor-pointer text-sm font-medium"
+                                        htmlFor="thinking-mode"
                                     >
                                         Enable Thinking Mode
                                     </Label>
@@ -246,8 +246,8 @@ export const PlusSettings = () => {
                                 </div>
                             </div>
                             <Switch
-                                id="thinking-mode"
                                 checked={thinkingMode.enabled}
+                                id="thinking-mode"
                                 onCheckedChange={setThinkingModeEnabled}
                             />
                         </div>
@@ -256,11 +256,11 @@ export const PlusSettings = () => {
                     <AnimatePresence mode="wait">
                         {thinkingMode.enabled && (
                             <motion.div
-                                initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.2 }}
                                 className="space-y-4"
+                                exit={{ opacity: 0, height: 0 }}
+                                initial={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 {/* Include Thoughts Toggle */}
                                 <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
@@ -271,8 +271,8 @@ export const PlusSettings = () => {
                                             </div>
                                             <div>
                                                 <Label
-                                                    htmlFor="include-thoughts"
                                                     className="cursor-pointer text-sm font-medium"
+                                                    htmlFor="include-thoughts"
                                                 >
                                                     Show Thought Process
                                                 </Label>
@@ -282,8 +282,8 @@ export const PlusSettings = () => {
                                             </div>
                                         </div>
                                         <Switch
-                                            id="include-thoughts"
                                             checked={thinkingMode.includeThoughts}
+                                            id="include-thoughts"
                                             onCheckedChange={setThinkingModeIncludeThoughts}
                                         />
                                     </div>
@@ -298,8 +298,8 @@ export const PlusSettings = () => {
                                             </div>
                                             <div>
                                                 <Label
-                                                    htmlFor="claude4-interleaved"
                                                     className="cursor-pointer text-sm font-medium"
+                                                    htmlFor="claude4-interleaved"
                                                 >
                                                     Claude 4 Enhanced Thinking
                                                 </Label>
@@ -309,8 +309,8 @@ export const PlusSettings = () => {
                                             </div>
                                         </div>
                                         <Switch
-                                            id="claude4-interleaved"
                                             checked={thinkingMode.claude4InterleavedThinking}
+                                            id="claude4-interleaved"
                                             onCheckedChange={setThinkingModeClaude4Interleaved}
                                         />
                                     </div>
@@ -333,16 +333,16 @@ export const PlusSettings = () => {
                                             </div>
                                         </div>
                                         <Slider
-                                            value={[thinkingMode.budget]}
+                                            className="w-full"
+                                            max={THINKING_MODE.MAX_BUDGET}
+                                            min={THINKING_MODE.MIN_BUDGET}
                                             onValueChange={([value]) =>
                                                 setThinkingMode({
                                                     budget: value,
                                                 })
                                             }
-                                            min={THINKING_MODE.MIN_BUDGET}
-                                            max={THINKING_MODE.MAX_BUDGET}
                                             step={1000}
-                                            className="w-full"
+                                            value={[thinkingMode.budget]}
                                         />
                                         <div className="text-muted-foreground flex justify-between text-xs">
                                             <span>Quick ({THINKING_MODE.MIN_BUDGET})</span>
@@ -369,10 +369,10 @@ export const PlusSettings = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-3 sm:grid-cols-2">
-                        {Object.values(VT_PLUS_FEATURES).map(feature => (
+                        {Object.values(VT_PLUS_FEATURES).map((feature) => (
                             <div
-                                key={feature.id}
                                 className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
+                                key={feature.id}
                             >
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
                                     <Check className="h-3 w-3 text-green-600 dark:text-green-400" />

@@ -2,18 +2,18 @@
  * Hook for managing Gemini explicit caching for VT+ users
  */
 
-import { useFeatureAccess } from './use-subscription-access';
-import { useAppStore } from '../store';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { useAppStore } from '../store';
+import { useFeatureAccess } from './use-subscription-access';
 
 /**
  * Hook to manage Gemini explicit caching settings and access
  */
 export function useGeminiCaching() {
     const hasAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
-    const geminiCaching = useAppStore(state => state.geminiCaching);
-    const setGeminiCaching = useAppStore(state => state.setGeminiCaching);
+    const geminiCaching = useAppStore((state) => state.geminiCaching);
+    const setGeminiCaching = useAppStore((state) => state.setGeminiCaching);
 
     const isEnabled = hasAccess && geminiCaching.enabled;
 

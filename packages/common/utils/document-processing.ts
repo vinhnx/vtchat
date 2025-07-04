@@ -1,4 +1,4 @@
-import { ChatMode } from '@repo/shared/config';
+import type { ChatMode } from '@repo/shared/config';
 import { GEMINI_MODELS } from '@repo/shared/constants/document-upload';
 
 /**
@@ -16,7 +16,7 @@ export const hasDocumentProcessingToolCalls = (toolCalls?: Record<string, any>):
     if (!toolCalls) return false;
 
     return Object.values(toolCalls).some(
-        toolCall =>
+        (toolCall) =>
             toolCall.toolName &&
             (toolCall.toolName.includes('document') ||
                 toolCall.toolName.includes('file') ||
@@ -32,7 +32,7 @@ export const hasCompletedDocumentProcessing = (toolResults?: Record<string, any>
     if (!toolResults) return false;
 
     return Object.values(toolResults).some(
-        result =>
+        (result) =>
             result.toolName &&
             (result.toolName.includes('document') ||
                 result.toolName.includes('file') ||

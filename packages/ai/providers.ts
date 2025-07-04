@@ -2,15 +2,15 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { createFireworks } from '@ai-sdk/fireworks';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
-import { LanguageModelV1 } from '@ai-sdk/provider';
+import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
-import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
-import { ModelEnum, models } from './models';
 import { log } from '@repo/shared/logger';
+import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { CLAUDE_4_CONFIG } from './constants/reasoning';
+import { type ModelEnum, models } from './models';
 
 export const Providers = {
     OPENAI: 'openai',
@@ -95,8 +95,8 @@ export const getProviderInstance = (
     isFreeModel?: boolean,
     claude4InterleavedThinking?: boolean
 ): any => {
-    let apiKey = getApiKey(provider, byokKeys);
-    
+    const apiKey = getApiKey(provider, byokKeys);
+
     log.info('Provider instance debug:', {
         provider,
         isFreeModel,
@@ -105,7 +105,7 @@ export const getProviderInstance = (
         byokKeysKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         apiKeyLength: apiKey ? apiKey.length : 0,
     });
-    
+
     // For free models, provide more helpful error messages if no API key is found
     if (isFreeModel && !apiKey && provider === 'google') {
         log.error('No API key found for free Gemini model - checking environment...');
@@ -124,9 +124,9 @@ export const getProviderInstance = (
                 );
             }
             return createOpenAI({
-                apiKey: apiKey,
+                apiKey,
             });
-        case 'anthropic':
+        case 'anthropic': {
             if (!apiKey) {
                 throw new Error(
                     'Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/'
@@ -135,16 +135,17 @@ export const getProviderInstance = (
             const headers: Record<string, string> = {
                 'anthropic-dangerous-direct-browser-access': 'true',
             };
-            
+
             // Conditionally add Claude 4 interleaved thinking header
             if (claude4InterleavedThinking) {
                 headers[CLAUDE_4_CONFIG.BETA_HEADER_KEY] = CLAUDE_4_CONFIG.BETA_HEADER;
             }
-            
+
             return createAnthropic({
-                apiKey: apiKey,
+                apiKey,
                 headers,
             });
+        }
         case 'together':
             if (!apiKey) {
                 throw new Error(
@@ -152,7 +153,7 @@ export const getProviderInstance = (
                 );
             }
             return createTogetherAI({
-                apiKey: apiKey,
+                apiKey,
             });
         case 'google':
             if (!apiKey) {
@@ -161,7 +162,7 @@ export const getProviderInstance = (
                 );
             }
             return createGoogleGenerativeAI({
-                apiKey: apiKey,
+                apiKey,
             });
         case 'fireworks':
             if (!apiKey) {
@@ -170,7 +171,7 @@ export const getProviderInstance = (
                 );
             }
             return createFireworks({
-                apiKey: apiKey,
+                apiKey,
             });
         case 'xai':
             if (!apiKey) {
@@ -179,7 +180,7 @@ export const getProviderInstance = (
                 );
             }
             return createXai({
-                apiKey: apiKey,
+                apiKey,
             });
         case 'openrouter':
             if (!apiKey) {
@@ -188,7 +189,7 @@ export const getProviderInstance = (
                 );
             }
             return createOpenRouter({
-                apiKey: apiKey,
+                apiKey,
             });
         default:
             if (!apiKey) {
@@ -198,7 +199,7 @@ export const getProviderInstance = (
             }
             // Default to OpenAI-compatible for unknown providers
             return createOpenAI({
-                apiKey: apiKey,
+                apiKey,
             });
     }
 };
@@ -220,7 +221,7 @@ export const getLanguageModel = (
         useSearchGrounding,
     });
 
-    const model = models.find(model => model.id === m);
+    const model = models.find((model) => model.id === m);
     log.info('Found model:', {
         found: !!model,
         modelId: model?.id,
@@ -235,7 +236,12 @@ export const getLanguageModel = (
 
     try {
         log.info('Getting provider instance for:', { data: model.provider });
-        const instance = getProviderInstance(model?.provider as ProviderEnumType, byokKeys, model?.isFree, claude4InterleavedThinking);
+        const instance = getProviderInstance(
+            model?.provider as ProviderEnumType,
+            byokKeys,
+            model?.isFree,
+            claude4InterleavedThinking
+        );
         log.info('Provider instance created:', {
             hasInstance: !!instance,
             instanceType: typeof instance,
@@ -275,7 +281,9 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error: any) {
-                log.error('Error creating Gemini model with special options:', { data: error });
+                log.error('Error creating Gemini model with special options:', {
+                    data: error,
+                });
                 log.error('Error stack:', { data: error.stack });
                 throw error;
             }
@@ -294,7 +302,10 @@ export const getLanguageModel = (
 
             if (middleware) {
                 log.info('Wrapping model with middleware...');
-                return wrapLanguageModel({ model: selectedModel, middleware }) as LanguageModelV1;
+                return wrapLanguageModel({
+                    model: selectedModel,
+                    middleware,
+                }) as LanguageModelV1;
             }
             log.info('=== getLanguageModel END ===');
             return selectedModel as LanguageModelV1;

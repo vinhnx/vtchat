@@ -1,6 +1,6 @@
+import { log } from '@repo/shared/logger';
 import { parse } from 'node-html-parser';
 import TurndownService from 'turndown';
-import { log } from '@repo/shared/logger';
 
 const turndownService = new TurndownService();
 
@@ -60,13 +60,12 @@ const readURL = async (url: string): Promise<TReaderResult> => {
             if (markdown.length >= MIN_CONTENT_LENGTH) {
                 return {
                     success: true,
-                    title: title,
-                    url: url,
-                    markdown: markdown,
+                    title,
+                    url,
+                    markdown,
                 };
-            } else {
-                log.info({ contentLength: markdown.length }, 'Content too short, falling back to Jina');
             }
+            log.info({ contentLength: markdown.length }, 'Content too short, falling back to Jina');
         }
         return { success: false };
     } catch (error) {
@@ -102,14 +101,14 @@ function extractMainContent(root: any): string {
 
 export const readWebPagesWithTimeout = async (
     urls: string[],
-    timeoutMs = 60000
+    timeoutMs = 60_000
 ): Promise<TReaderResult[]> => {
     const timeoutController = new AbortController();
     const timeoutId = setTimeout(() => timeoutController.abort(), timeoutMs);
 
     try {
-        const readPromises = urls.map(url => {
-            return readURL(url).catch(error => {
+        const readPromises = urls.map((url) => {
+            return readURL(url).catch((error) => {
                 log.error({ url, error }, `Error reading ${url}`);
                 return { success: false };
             });
@@ -117,12 +116,11 @@ export const readWebPagesWithTimeout = async (
 
         const results = await Promise.allSettled(readPromises);
 
-        return results.map(result => {
+        return results.map((result) => {
             if (result.status === 'fulfilled') {
                 return result.value;
-            } else {
-                return { success: false };
             }
+            return { success: false };
         });
     } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {

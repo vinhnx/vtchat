@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS "user_rate_limits" (
 );
 
 -- Add foreign key constraint
-ALTER TABLE "user_rate_limits" 
-ADD CONSTRAINT "user_rate_limits_user_id_users_id_fk" 
+ALTER TABLE "user_rate_limits"
+ADD CONSTRAINT "user_rate_limits_user_id_users_id_fk"
 FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 
 -- Add index for performance

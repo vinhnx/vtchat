@@ -1,9 +1,9 @@
-import { auth } from '@/lib/auth-server';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { auth } from '@/lib/auth-server';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -48,8 +48,12 @@ export async function POST(request: NextRequest) {
         log.info('Using Creem.io payment system');
 
         // Map internal price IDs to our product types using the centralized config
-        log.info('Processing checkout with price ID:', { data: validatedData.priceId });
-        log.info('Available price mappings:', { data: Object.keys(PRICE_ID_MAPPING) });
+        log.info('Processing checkout with price ID:', {
+            data: validatedData.priceId,
+        });
+        log.info('Available price mappings:', {
+            data: Object.keys(PRICE_ID_MAPPING),
+        });
 
         const packageType = PRICE_ID_MAPPING[validatedData.priceId]; // validatedData.priceId is already PlanSlug.VT_PLUS
         if (!packageType) {
@@ -116,13 +120,12 @@ export async function POST(request: NextRequest) {
                 );
 
                 if (verification.hasActiveSubscription) {
-                    log.info(
-                        `[Checkout API] User ${userId} already has active VT+ subscription:`,
-                        {
-                            subscriptionId: verification.subscriptionDetails?.creemSubscriptionId || 'legacy/admin-granted',
-                            source: verification.verificationSource
-                        }
-                    );
+                    log.info(`[Checkout API] User ${userId} already has active VT+ subscription:`, {
+                        subscriptionId:
+                            verification.subscriptionDetails?.creemSubscriptionId ||
+                            'legacy/admin-granted',
+                        source: verification.verificationSource,
+                    });
 
                     return NextResponse.json(
                         {
@@ -142,7 +145,9 @@ export async function POST(request: NextRequest) {
                     `[Checkout API] No active VT+ subscription found (${verification.verificationSource}), proceeding with checkout...`
                 );
             } catch (dbError) {
-                log.error('[Checkout API] Error checking existing subscription:', { data: dbError });
+                log.error('[Checkout API] Error checking existing subscription:', {
+                    data: dbError,
+                });
                 // Don't block checkout on DB errors, but log for monitoring
             }
         }
@@ -154,7 +159,9 @@ export async function POST(request: NextRequest) {
                 log.info('Starting VT+ subscription checkout for user');
                 checkout = await PaymentService.subscribeToVtPlus(userEmail);
             } else {
-                log.error('Invalid package type for VT+ only system:', { data: packageType });
+                log.error('Invalid package type for VT+ only system:', {
+                    data: packageType,
+                });
                 return NextResponse.json(
                     {
                         error: 'Product not available',

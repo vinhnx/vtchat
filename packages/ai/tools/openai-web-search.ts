@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
+import { log } from '@repo/shared/logger';
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
-import { log } from '@repo/shared/logger';
 
 /**
  * OpenAI Web Search Tool using the Responses API
@@ -69,7 +69,7 @@ export const supportsOpenAIWebSearch = (modelId: string): boolean => {
 /**
  * Advanced web search with custom model selection for Responses API
  */
-export const openaiWebSearchWithModel = (modelId: string = 'gpt-4o-mini') =>
+export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
     tool({
         description: `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
         parameters: z.object({

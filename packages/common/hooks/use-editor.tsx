@@ -7,7 +7,7 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Placeholder } from '@tiptap/extension-placeholder';
 import { Text } from '@tiptap/extension-text';
 
-import { Editor, useEditor } from '@tiptap/react';
+import { type Editor, useEditor } from '@tiptap/react';
 import { useEffect } from 'react';
 import { useChatStore } from '../store';
 
@@ -19,7 +19,7 @@ export const useChatEditor = (editorProps: {
     onInit?: (props: { editor: Editor }) => void;
     onUpdate?: (props: { editor: Editor }) => void;
 }) => {
-    const setEditor = useChatStore(state => state.setEditor);
+    const setEditor = useChatStore((state) => state.setEditor);
     const editor = useEditor({
         extensions: [
             Document,
@@ -29,9 +29,9 @@ export const useChatEditor = (editorProps: {
                 placeholder: editorProps?.placeholder || 'Ask anything',
             }),
             CharacterCount.configure({
-                limit: editorProps?.charLimit || 400000,
+                limit: editorProps?.charLimit || 400_000,
             }),
-            ...(!editorProps?.enableEnter ? [ShiftEnterToLineBreak, DisableEnter] : []),
+            ...(editorProps?.enableEnter ? [] : [ShiftEnterToLineBreak, DisableEnter]),
             Highlight.configure({
                 HTMLAttributes: {
                     class: 'prompt-highlight',

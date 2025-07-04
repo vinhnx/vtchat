@@ -39,24 +39,24 @@ function TextShimmerComponent({
 
     const styleProps = {
         '--spread': `${dynamicSpread}px`,
-        backgroundImage: `var(--bg), linear-gradient(var(--base-color), var(--base-color))`,
+        backgroundImage: 'var(--bg), linear-gradient(var(--base-color), var(--base-color))',
     } as React.CSSProperties;
 
     return (
         <MotionComponent
+            animate={isClient ? { backgroundPosition: '0% center' } : false}
             className={baseStyles}
             initial={isClient ? { backgroundPosition: '100% center' } : false}
-            animate={isClient ? { backgroundPosition: '0% center' } : false}
+            style={styleProps}
             transition={
                 isClient
                     ? {
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           duration,
                           ease: 'linear',
                       }
                     : undefined
             }
-            style={styleProps}
         >
             {textContent}
         </MotionComponent>

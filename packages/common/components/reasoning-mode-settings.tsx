@@ -2,7 +2,7 @@
 
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useChatStore, useAppStore } from '@repo/common/store';
+import { useAppStore, useChatStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Label, Slider, Switch, TypographyH3, TypographyH4 } from '@repo/ui';
@@ -11,9 +11,9 @@ import { Brain, Sparkles, Zap } from 'lucide-react';
 import { useMemo } from 'react';
 
 export const ReasoningModeSettings = () => {
-    const thinkingMode = useAppStore(state => state.thinkingMode);
-    const setThinkingMode = useAppStore(state => state.setThinkingMode);
-    const chatMode = useChatStore(state => state.chatMode);
+    const thinkingMode = useAppStore((state) => state.thinkingMode);
+    const setThinkingMode = useAppStore((state) => state.setThinkingMode);
+    const chatMode = useChatStore((state) => state.chatMode);
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
 
     // Check if current model supports reasoning
@@ -39,7 +39,7 @@ export const ReasoningModeSettings = () => {
             ChatMode.O1_MINI,
             ChatMode.O1_PREVIEW,
         ];
-        return reasoningModels.some(model => chatMode.includes(model.replace(/-/g, '_')));
+        return reasoningModels.some((model) => chatMode.includes(model.replace(/-/g, '_')));
     }, [chatMode]);
 
     const handleToggleEnabled = (enabled: boolean) => {
@@ -78,9 +78,9 @@ export const ReasoningModeSettings = () => {
                 </div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
+                    initial={{ opacity: 0, y: 10 }}
                 >
                     <div className="space-y-4 text-center">
                         <div className="mx-auto w-fit rounded-full bg-[#D99A4E]/10 p-4">
@@ -95,7 +95,7 @@ export const ReasoningModeSettings = () => {
                                 generating responses. This advanced feature is available to all
                                 registered users.
                             </p>
-                            <Button className="bg-blue-600 hover:bg-blue-600/90 font-medium text-white">
+                            <Button className="bg-blue-600 font-medium text-white hover:bg-blue-600/90">
                                 Sign In
                             </Button>
                         </div>
@@ -109,8 +109,8 @@ export const ReasoningModeSettings = () => {
         <div className="space-y-6">
             <div className="flex items-center gap-3">
                 <motion.div
-                    whileHover={{ scale: 1.05 }}
                     className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 p-3"
+                    whileHover={{ scale: 1.05 }}
                 >
                     <Sparkles className="h-6 w-6 text-[#D99A4E]" />
                 </motion.div>
@@ -127,15 +127,15 @@ export const ReasoningModeSettings = () => {
             <div className="space-y-6">
                 {/* Enable Reasoning Mode */}
                 <motion.div
-                    whileHover={{ scale: 1.01 }}
                     className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
+                    whileHover={{ scale: 1.01 }}
                 >
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
                             <div className="flex items-center gap-2">
                                 <Label
-                                    htmlFor="reasoning-enabled"
                                     className="text-base font-medium text-[#BFB38F]"
+                                    htmlFor="reasoning-enabled"
                                 >
                                     Enable Reasoning Mode
                                 </Label>
@@ -146,10 +146,10 @@ export const ReasoningModeSettings = () => {
                             </p>
                         </div>
                         <Switch
-                            id="reasoning-enabled"
                             checked={thinkingMode.enabled}
-                            onCheckedChange={handleToggleEnabled}
                             className="data-[state=checked]:bg-[#D99A4E]"
+                            id="reasoning-enabled"
+                            onCheckedChange={handleToggleEnabled}
                         />
                     </div>
                 </motion.div>
@@ -157,21 +157,21 @@ export const ReasoningModeSettings = () => {
                 <AnimatePresence>
                     {thinkingMode.enabled && (
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
                             className="space-y-6"
+                            exit={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 20 }}
                         >
                             {/* Include Reasoning Details */}
                             <motion.div
-                                whileHover={{ scale: 1.01 }}
                                 className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
+                                whileHover={{ scale: 1.01 }}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
                                         <Label
-                                            htmlFor="include-thoughts"
                                             className="text-base font-medium text-[#BFB38F]"
+                                            htmlFor="include-thoughts"
                                         >
                                             Show Reasoning Details
                                         </Label>
@@ -180,24 +180,24 @@ export const ReasoningModeSettings = () => {
                                         </p>
                                     </div>
                                     <Switch
-                                        id="include-thoughts"
                                         checked={thinkingMode.includeThoughts}
-                                        onCheckedChange={handleToggleIncludeThoughts}
                                         className="data-[state=checked]:bg-[#D99A4E]"
+                                        id="include-thoughts"
+                                        onCheckedChange={handleToggleIncludeThoughts}
                                     />
                                 </div>
                             </motion.div>
 
                             {/* Reasoning Budget */}
                             <motion.div
-                                whileHover={{ scale: 1.01 }}
                                 className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
+                                whileHover={{ scale: 1.01 }}
                             >
                                 <div className="space-y-4">
                                     <div>
                                         <Label
-                                            htmlFor="reasoning-budget"
                                             className="text-base font-medium text-[#BFB38F]"
+                                            htmlFor="reasoning-budget"
                                         >
                                             Reasoning Budget: {thinkingMode.budget.toLocaleString()}{' '}
                                             tokens
@@ -209,13 +209,13 @@ export const ReasoningModeSettings = () => {
                                     </div>
                                     <div className="space-y-3">
                                         <Slider
+                                            className="[&_.bg-primary]:bg-[#D99A4E] [&_[role=slider]]:border-[#D99A4E] [&_[role=slider]]:bg-[#D99A4E]"
                                             id="reasoning-budget"
-                                            min={REASONING_BUDGETS.QUICK}
                                             max={REASONING_BUDGETS.DEEP}
+                                            min={REASONING_BUDGETS.QUICK}
+                                            onValueChange={handleBudgetChange}
                                             step={1000}
                                             value={[thinkingMode.budget]}
-                                            onValueChange={handleBudgetChange}
-                                            className="[&_.bg-primary]:bg-[#D99A4E] [&_[role=slider]]:border-[#D99A4E] [&_[role=slider]]:bg-[#D99A4E]"
                                         />
                                         <div className="flex justify-between text-xs text-[#BFB38F]/60">
                                             <span>Quick ({REASONING_BUDGETS.QUICK / 1000}K)</span>
@@ -230,10 +230,10 @@ export const ReasoningModeSettings = () => {
 
                             {/* Reasoning Tips */}
                             <motion.div
-                                initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
                                 className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/5 to-[#BFB38F]/5 p-6"
+                                initial={{ opacity: 0 }}
+                                transition={{ delay: 0.3 }}
                             >
                                 <div className="flex items-start gap-3">
                                     <Brain className="mt-0.5 h-5 w-5 text-[#D99A4E]" />

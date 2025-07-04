@@ -13,14 +13,14 @@ export function FeaturesAccordion() {
 
     return (
         <Accordion
-            type="single"
-            collapsible
             className="mx-auto w-full max-w-2xl"
+            collapsible
+            defaultValue={plusFeatures.length > 0 ? 'item-0' : undefined}
             // Set default open to the first feature if features exist
-            defaultValue={plusFeatures.length > 0 ? `item-0` : undefined}
+            type="single"
         >
             {plusFeatures.map((feature: FeatureItem, index: number) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border-border">
+                <AccordionItem className="border-border" key={index} value={`item-${index}`}>
                     <AccordionTrigger className="text-foreground text-left text-base font-medium hover:text-[#BFB38F]">
                         {feature.name}
                     </AccordionTrigger>

@@ -1,8 +1,8 @@
-import { VariantProps, cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import React from 'react';
 
-const typeVariants = cva('text flex !my-0', {
+const typeVariants = cva('text !my-0 flex', {
     variants: {
         size: {
             xxs: 'text-xs',

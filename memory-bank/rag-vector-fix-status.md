@@ -7,13 +7,15 @@ Successfully fixed the RAG (Retrieval-Augmented Generation) system vector databa
 ## Problem Description
 
 The RAG system was throwing the following error when trying to store Gemini embeddings:
+
 ```
 error: invalid input syntax for type vector: "{-0.008400089,0.02095867,...}"
 Vector contents must start with "[".
 ```
 
 The system was correctly:
-- ✅ Using Gemini API for embeddings  
+
+- ✅ Using Gemini API for embeddings
 - ✅ Generating 768-dimensional vectors
 - ✅ Detecting API keys properly
 - ❌ But failing to store vectors in PostgreSQL due to format mismatch
@@ -42,10 +44,10 @@ const vector = customType<{ data: number[]; notNull: false; default: false }>({
         return `vector(${config?.dimensions ?? 768})`;
     },
     toDriver(value: number[]) {
-        return `[${value.join(',')}]`;  // Convert array to [x,y,z] format
+        return `[${value.join(',')}]`; // Convert array to [x,y,z] format
     },
     fromDriver(value: string) {
-        return value.slice(1, -1).split(',').map(Number);  // Parse back to array
+        return value.slice(1, -1).split(',').map(Number); // Parse back to array
     },
 });
 ```
@@ -58,6 +60,7 @@ const vector = customType<{ data: number[]; notNull: false; default: false }>({
 ### 3. Database Migration Required
 
 Created migration file `apps/web/lib/database/migrations/0005_fix_vector_type.sql`:
+
 - Drops existing embeddings table (since this affects the core data type)
 - Recreates table with proper vector(768) type
 - Adds HNSW index for efficient similarity search
@@ -65,11 +68,13 @@ Created migration file `apps/web/lib/database/migrations/0005_fix_vector_type.sq
 ## Testing Results
 
 ### Vector Format Validation ✅
+
 - ✅ Arrays correctly convert to `[x,y,z,...]` format
-- ✅ Driver format correctly parses back to number arrays  
+- ✅ Driver format correctly parses back to number arrays
 - ✅ Handles 768-dimensional Gemini vectors properly
 
 ### RAG System Validation ✅
+
 - ✅ Default embedding model: `gemini-exp`
 - ✅ Only Gemini models available (OpenAI removed)
 - ✅ Proper error handling for missing API keys
@@ -91,6 +96,7 @@ Created migration file `apps/web/lib/database/migrations/0005_fix_vector_type.sq
 ## Testing Infrastructure
 
 Created comprehensive test suite:
+
 - `apps/web/app/tests/test-rag-gemini-embedding.js` - RAG system tests
 - `apps/web/app/tests/test-vector-format.js` - Vector format validation
 
@@ -99,6 +105,7 @@ Created comprehensive test suite:
 ### Additional Discovery & Fix
 
 After the initial fix, discovered that different Gemini embedding models have different dimensions:
+
 - **`text-embedding-004`**: 768 dimensions ✅ (now default)
 - **`gemini-embedding-exp-03-07`**: 3072 dimensions
 - **`embedding-001`**: 768 dimensions
@@ -106,18 +113,20 @@ After the initial fix, discovered that different Gemini embedding models have di
 ### Final Changes Made
 
 1. **Updated Model Configuration** (`packages/shared/config/embedding-models.ts`)
-   - Fixed `gemini-exp` model to correctly specify 3072 dimensions
-   - Changed default model from `gemini-exp` to `gemini-004` (768 dimensions)
-   - This ensures compatibility with our vector(768) database schema
+
+    - Fixed `gemini-exp` model to correctly specify 3072 dimensions
+    - Changed default model from `gemini-exp` to `gemini-004` (768 dimensions)
+    - This ensures compatibility with our vector(768) database schema
 
 2. **Applied Database Migration** ✅
-   - Successfully migrated from vector(1536) to vector(768)
-   - Recreated embeddings table with proper HNSW index
-   - Verified migration completed successfully
+
+    - Successfully migrated from vector(1536) to vector(768)
+    - Recreated embeddings table with proper HNSW index
+    - Verified migration completed successfully
 
 3. **Added Debug Logging**
-   - Added embedding dimension validation in `generateEmbeddingWithProvider()`
-   - Logs actual vs expected dimensions for debugging
+    - Added embedding dimension validation in `generateEmbeddingWithProvider()`
+    - Logs actual vs expected dimensions for debugging
 
 ## Impact
 

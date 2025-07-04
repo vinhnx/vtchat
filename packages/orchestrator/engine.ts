@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
-import { Context, ContextSchemaDefinition } from './context';
-import { EventSchemaDefinition, TypedEventEmitter } from './events';
-import { ExecutionContext } from './execution-context';
-import { PersistenceLayer } from './persistence';
 import { log } from '@repo/shared/logger';
-import {
+import { EventEmitter } from 'events';
+import type { Context, ContextSchemaDefinition } from './context';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import { ExecutionContext } from './execution-context';
+import type { PersistenceLayer } from './persistence';
+import type {
     EventPayload,
     ParallelTaskRoute,
     TaskConfig,
@@ -126,7 +126,7 @@ export class WorkflowEngine<
 
         if (
             config.dependencies &&
-            !config.dependencies.every(dep => this.executionContext.isTaskComplete(dep))
+            !config.dependencies.every((dep) => this.executionContext.isTaskComplete(dep))
         ) {
             log.info(
                 `⏳ Task "${taskName}" is waiting for dependencies: ${config.dependencies.join(', ')}`
@@ -144,7 +144,7 @@ export class WorkflowEngine<
         }
 
         const executionCount = this.executionContext.getTaskExecutionCount(taskName);
-        this.executionContext.setState(state => ({
+        this.executionContext.setState((state) => ({
             ...state,
             runningTasks: state.runningTasks.add(taskName),
         }));
@@ -164,7 +164,7 @@ export class WorkflowEngine<
 
                 const taskResult = config.timeoutMs
                     ? await this.executeTaskWithTimeout(
-                          params => config.execute({ ...params, redirectTo }),
+                          (params) => config.execute({ ...params, redirectTo }),
                           data,
                           config.timeoutMs
                       )
@@ -252,7 +252,7 @@ export class WorkflowEngine<
                         ) {
                             // Handle ParallelTaskRoute[] format
                             await Promise.all(
-                                (nextTasks as ParallelTaskRoute[]).map(route =>
+                                (nextTasks as ParallelTaskRoute[]).map((route) =>
                                     this.executeTask(
                                         route.task,
                                         route.data !== undefined ? route.data : result
@@ -262,7 +262,7 @@ export class WorkflowEngine<
                         } else {
                             // Handle string[] format (all tasks get the same data)
                             await Promise.all(
-                                (nextTasks as string[]).map(nextTask =>
+                                (nextTasks as string[]).map((nextTask) =>
                                     this.executeTask(nextTask, result)
                                 )
                             );
@@ -278,7 +278,9 @@ export class WorkflowEngine<
             } catch (error) {
                 this.executionContext.endTaskTiming(taskName, error as Error);
                 attempt++;
-                log.error(`❌ Error in task "${taskName}" (Attempt ${attempt}):`, { data: error });
+                log.error(`❌ Error in task "${taskName}" (Attempt ${attempt}):`, {
+                    data: error,
+                });
 
                 if (config.onError) {
                     try {
@@ -293,10 +295,8 @@ export class WorkflowEngine<
                             signal: this.signal,
                         });
 
-                        if (errorResult.retry) {
-                            if (attempt <= (config.retryCount || 0)) {
-                                continue;
-                            }
+                        if (errorResult.retry && attempt <= (config.retryCount || 0)) {
+                            continue;
                         }
 
                         if (errorResult.result !== undefined) {
@@ -309,7 +309,7 @@ export class WorkflowEngine<
                                 if (Array.isArray(errorResult.next)) {
                                     if (typeof errorResult.next[0] === 'object') {
                                         await Promise.all(
-                                            (errorResult.next as ParallelTaskRoute[]).map(route =>
+                                            (errorResult.next as ParallelTaskRoute[]).map((route) =>
                                                 this.executeTask(
                                                     route.task,
                                                     route.data !== undefined
@@ -320,7 +320,7 @@ export class WorkflowEngine<
                                         );
                                     } else {
                                         await Promise.all(
-                                            (errorResult.next as string[]).map(nextTask =>
+                                            (errorResult.next as string[]).map((nextTask) =>
                                                 this.executeTask(nextTask, errorResult.result)
                                             )
                                         );
@@ -335,10 +335,9 @@ export class WorkflowEngine<
                             return errorResult.result;
                         }
                     } catch (errorHandlerError) {
-                        log.error(
-                            `❌ Error handler failed for task "${taskName}":`,
-                            { data: errorHandlerError }
-                        );
+                        log.error(`❌ Error handler failed for task "${taskName}":`, {
+                            data: errorHandlerError,
+                        });
                     }
                 }
 
@@ -367,7 +366,7 @@ export class WorkflowEngine<
     task(options: TaskOptions): void {
         this.addTask(options.name, {
             execute: options.execute,
-            route: options.route || (() => undefined),
+            route: options.route || (() => {}),
             dependencies: options.dependencies,
             retryCount: options.retryCount || 0,
             timeoutMs: options.timeoutMs,
@@ -375,7 +374,7 @@ export class WorkflowEngine<
         });
     }
 
-    abort(graceful: boolean = false) {
+    abort(graceful = false) {
         this.executionContext.abortWorkflow(graceful);
         if (this.persistence) {
             this.persistence.saveWorkflow(this.id, this);

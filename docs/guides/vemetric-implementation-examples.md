@@ -23,64 +23,60 @@ import { useVemetricMessageTracking } from '../vemetric-chat-tracker';
 import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';
 
-export function EnhancedSendButton({ 
-  onSend, 
-  disabled, 
-  messageText 
+export function EnhancedSendButton({
+    onSend,
+    disabled,
+    messageText,
 }: {
-  onSend: () => Promise<void>;
-  disabled: boolean;
-  messageText: string;
+    onSend: () => Promise<void>;
+    disabled: boolean;
+    messageText: string;
 }) {
-  const { trackMessageSent, createTimer } = useVemetricMessageTracking();
-  const chatMode = useChatStore(state => state.chatMode);
-  const useWebSearch = useChatStore(state => state.useWebSearch);
-  const useMathCalculator = useChatStore(state => state.useMathCalculator);
+    const { trackMessageSent, createTimer } = useVemetricMessageTracking();
+    const chatMode = useChatStore(state => state.chatMode);
+    const useWebSearch = useChatStore(state => state.useWebSearch);
+    const useMathCalculator = useChatStore(state => state.useMathCalculator);
 
-  const handleSend = async () => {
-    if (!messageText.trim()) return;
+    const handleSend = async () => {
+        if (!messageText.trim()) return;
 
-    const timer = createTimer();
-    
-    try {
-      // Send the message
-      await onSend();
+        const timer = createTimer();
 
-      // Track analytics after successful send
-      const toolsUsed = [];
-      if (useWebSearch) toolsUsed.push('webSearch');
-      if (useMathCalculator) toolsUsed.push('mathCalculator');
+        try {
+            // Send the message
+            await onSend();
 
-      await trackMessageSent({
-        messageLength: messageText.length,
-        modelName: chatMode,
-        toolsUsed: toolsUsed.length > 0 ? toolsUsed : undefined,
-      });
+            // Track analytics after successful send
+            const toolsUsed = [];
+            if (useWebSearch) toolsUsed.push('webSearch');
+            if (useMathCalculator) toolsUsed.push('mathCalculator');
 
-      // Track performance
-      timer.end('MessageSendTime', { 
-        modelName: chatMode,
-        success: true 
-      });
+            await trackMessageSent({
+                messageLength: messageText.length,
+                modelName: chatMode,
+                toolsUsed: toolsUsed.length > 0 ? toolsUsed : undefined,
+            });
 
-    } catch (error) {
-      // Track performance even on failure
-      timer.end('MessageSendTime', { 
-        modelName: chatMode,
-        success: false 
-      });
-      throw error;
-    }
-  };
+            // Track performance
+            timer.end('MessageSendTime', {
+                modelName: chatMode,
+                success: true,
+            });
+        } catch (error) {
+            // Track performance even on failure
+            timer.end('MessageSendTime', {
+                modelName: chatMode,
+                success: false,
+            });
+            throw error;
+        }
+    };
 
-  return (
-    <Button 
-      onClick={handleSend} 
-      disabled={disabled || !messageText.trim()}
-    >
-      Send
-    </Button>
-  );
+    return (
+        <Button onClick={handleSend} disabled={disabled || !messageText.trim()}>
+            Send
+        </Button>
+    );
 }
 ```
 
@@ -97,55 +93,51 @@ import { useVemetricSettingsTracking } from '@repo/common/components/vemetric-se
 import { Button } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 
-export function UpgradeButton({ 
-  context = 'general',
-  feature,
-  className 
+export function UpgradeButton({
+    context = 'general',
+    feature,
+    className,
 }: {
-  context?: string;
-  feature?: string;
-  className?: string;
+    context?: string;
+    feature?: string;
+    className?: string;
 }) {
-  const { trackUpgradeInitiated, trackFeatureGateEncountered } = useVemetricSubscriptionTracking();
-  const { trackExternalLinkClicked } = useVemetricSettingsTracking();
-  const router = useRouter();
+    const { trackUpgradeInitiated, trackFeatureGateEncountered } =
+        useVemetricSubscriptionTracking();
+    const { trackExternalLinkClicked } = useVemetricSettingsTracking();
+    const router = useRouter();
 
-  const handleUpgrade = async () => {
-    try {
-      // Track the upgrade initiation
-      await trackUpgradeInitiated(context);
+    const handleUpgrade = async () => {
+        try {
+            // Track the upgrade initiation
+            await trackUpgradeInitiated(context);
 
-      // Track feature gate if specific feature triggered this
-      if (feature) {
-        await trackFeatureGateEncountered({
-          featureName: feature,
-          requiredTier: 'VT_PLUS',
-          context,
-        });
-      }
+            // Track feature gate if specific feature triggered this
+            if (feature) {
+                await trackFeatureGateEncountered({
+                    featureName: feature,
+                    requiredTier: 'VT_PLUS',
+                    context,
+                });
+            }
 
-      // Track external link click (if going to payment processor)
-      await trackExternalLinkClicked('https://payment.vtchat.io', 'upgrade_button');
+            // Track external link click (if going to payment processor)
+            await trackExternalLinkClicked('https://payment.vtchat.io', 'upgrade_button');
 
-      // Navigate to upgrade page
-      router.push('/plus');
-      
-    } catch (error) {
-      console.error('Failed to track upgrade action:', error);
-      // Still navigate even if analytics fails
-      router.push('/plus');
-    }
-  };
+            // Navigate to upgrade page
+            router.push('/plus');
+        } catch (error) {
+            console.error('Failed to track upgrade action:', error);
+            // Still navigate even if analytics fails
+            router.push('/plus');
+        }
+    };
 
-  return (
-    <Button 
-      onClick={handleUpgrade}
-      className={className}
-      variant="default"
-    >
-      Upgrade to VT+
-    </Button>
-  );
+    return (
+        <Button onClick={handleUpgrade} className={className} variant="default">
+            Upgrade to VT+
+        </Button>
+    );
 }
 ```
 
@@ -155,34 +147,29 @@ export function UpgradeButton({
 // components/gated-feature-alert.tsx
 import { UpgradeButton } from './subscription/upgrade-button';
 
-export function GatedFeatureAlert({ 
-  featureName, 
-  message, 
-  children 
+export function GatedFeatureAlert({
+    featureName,
+    message,
+    children,
 }: {
-  featureName: string;
-  message: string;
-  children: React.ReactNode;
+    featureName: string;
+    message: string;
+    children: React.ReactNode;
 }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Upgrade Required</DialogTitle>
-          <DialogDescription>{message}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <UpgradeButton 
-            context="feature_gate"
-            feature={featureName}
-          />
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+    return (
+        <Dialog>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Upgrade Required</DialogTitle>
+                    <DialogDescription>{message}</DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <UpgradeButton context="feature_gate" feature={featureName} />
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }
 ```
 
@@ -198,57 +185,61 @@ import { useVemetricSubscriptionTracking } from '@repo/common/components/vemetri
 import { useVemetric } from '@repo/common/hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '@repo/common/utils/analytics';
 
-export function ModelSelector({ 
-  models, 
-  selectedModel, 
-  onModelSelect 
+export function ModelSelector({
+    models,
+    selectedModel,
+    onModelSelect,
 }: {
-  models: Model[];
-  selectedModel: string;
-  onModelSelect: (model: string) => void;
+    models: Model[];
+    selectedModel: string;
+    onModelSelect: (model: string) => void;
 }) {
-  const { trackEvent } = useVemetric();
-  const { trackFeatureGateEncountered } = useVemetricSubscriptionTracking();
+    const { trackEvent } = useVemetric();
+    const { trackFeatureGateEncountered } = useVemetricSubscriptionTracking();
 
-  const handleModelSelect = async (model: Model) => {
-    // Check if model requires premium access
-    if (model.requiresPremium && !userHasPremium) {
-      // Track feature gate encounter
-      await trackFeatureGateEncountered({
-        featureName: model.id,
-        requiredTier: 'VT_PLUS',
-        context: 'model_selection',
-      });
-      
-      // Show upgrade modal instead of selecting
-      showUpgradeModal();
-      return;
-    }
+    const handleModelSelect = async (model: Model) => {
+        // Check if model requires premium access
+        if (model.requiresPremium && !userHasPremium) {
+            // Track feature gate encounter
+            await trackFeatureGateEncountered({
+                featureName: model.id,
+                requiredTier: 'VT_PLUS',
+                context: 'model_selection',
+            });
 
-    // Track successful model selection
-    await trackEvent(ANALYTICS_EVENTS.MODEL_SELECTED, {
-      modelName: model.id,
-      previousModel: selectedModel,
-      context: 'dropdown_selection',
-    });
+            // Show upgrade modal instead of selecting
+            showUpgradeModal();
+            return;
+        }
 
-    onModelSelect(model.id);
-  };
+        // Track successful model selection
+        await trackEvent(ANALYTICS_EVENTS.MODEL_SELECTED, {
+            modelName: model.id,
+            previousModel: selectedModel,
+            context: 'dropdown_selection',
+        });
 
-  return (
-    <Select value={selectedModel} onValueChange={handleModelSelect}>
-      {models.map(model => (
-        <SelectItem 
-          key={model.id} 
-          value={model.id}
-          disabled={model.requiresPremium && !userHasPremium}
-        >
-          {model.name}
-          {model.requiresPremium && <Badge className="vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30">VT+</Badge>}
-        </SelectItem>
-      ))}
-    </Select>
-  );
+        onModelSelect(model.id);
+    };
+
+    return (
+        <Select value={selectedModel} onValueChange={handleModelSelect}>
+            {models.map(model => (
+                <SelectItem
+                    key={model.id}
+                    value={model.id}
+                    disabled={model.requiresPremium && !userHasPremium}
+                >
+                    {model.name}
+                    {model.requiresPremium && (
+                        <Badge className="vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E]">
+                            VT+
+                        </Badge>
+                    )}
+                </SelectItem>
+            ))}
+        </Select>
+    );
 }
 ```
 
@@ -265,32 +256,32 @@ import { useVemetricSettingsTracking } from '@repo/common/components/vemetric-se
 import { useEffect, useRef } from 'react';
 
 export function ThemeSelector() {
-  const { theme, setTheme } = useTheme();
-  const { trackSettingChanged } = useVemetricSettingsTracking();
-  const prevTheme = useRef(theme);
+    const { theme, setTheme } = useTheme();
+    const { trackSettingChanged } = useVemetricSettingsTracking();
+    const prevTheme = useRef(theme);
 
-  const handleThemeChange = async (newTheme: string) => {
-    const previousTheme = theme;
-    
-    // Change the theme
-    setTheme(newTheme);
+    const handleThemeChange = async (newTheme: string) => {
+        const previousTheme = theme;
 
-    // Track the change
-    await trackSettingChanged({
-      setting: 'theme',
-      newValue: newTheme,
-      previousValue: previousTheme,
-      category: 'appearance',
-    });
-  };
+        // Change the theme
+        setTheme(newTheme);
 
-  return (
-    <Select value={theme} onValueChange={handleThemeChange}>
-      <SelectItem value="light">Light</SelectItem>
-      <SelectItem value="dark">Dark</SelectItem>
-      <SelectItem value="system">System</SelectItem>
-    </Select>
-  );
+        // Track the change
+        await trackSettingChanged({
+            setting: 'theme',
+            newValue: newTheme,
+            previousValue: previousTheme,
+            category: 'appearance',
+        });
+    };
+
+    return (
+        <Select value={theme} onValueChange={handleThemeChange}>
+            <SelectItem value="light">Light</SelectItem>
+            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+        </Select>
+    );
 }
 ```
 
@@ -304,42 +295,42 @@ import { useVemetricSettingsTracking } from '@repo/common/components/vemetric-se
 import { useState, useEffect } from 'react';
 import { Textarea } from '@repo/ui';
 
-export function CustomInstructions({ 
-  initialValue, 
-  onSave 
+export function CustomInstructions({
+    initialValue,
+    onSave,
 }: {
-  initialValue: string;
-  onSave: (value: string) => void;
+    initialValue: string;
+    onSave: (value: string) => void;
 }) {
-  const [value, setValue] = useState(initialValue);
-  const { trackSettingChanged } = useVemetricSettingsTracking();
+    const [value, setValue] = useState(initialValue);
+    const { trackSettingChanged } = useVemetricSettingsTracking();
 
-  const handleSave = async () => {
-    const hasInstructions = value.trim().length > 0;
-    const hadInstructions = initialValue.trim().length > 0;
+    const handleSave = async () => {
+        const hasInstructions = value.trim().length > 0;
+        const hadInstructions = initialValue.trim().length > 0;
 
-    // Save the instructions
-    onSave(value);
+        // Save the instructions
+        onSave(value);
 
-    // Track the change (without storing actual content)
-    await trackSettingChanged({
-      setting: 'customInstructions',
-      newValue: hasInstructions ? 'enabled' : 'disabled',
-      previousValue: hadInstructions ? 'enabled' : 'disabled',
-      category: 'chat_behavior',
-    });
-  };
+        // Track the change (without storing actual content)
+        await trackSettingChanged({
+            setting: 'customInstructions',
+            newValue: hasInstructions ? 'enabled' : 'disabled',
+            previousValue: hadInstructions ? 'enabled' : 'disabled',
+            category: 'chat_behavior',
+        });
+    };
 
-  return (
-    <div>
-      <Textarea 
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter custom instructions..."
-      />
-      <Button onClick={handleSave}>Save Instructions</Button>
-    </div>
-  );
+    return (
+        <div>
+            <Textarea
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                placeholder="Enter custom instructions..."
+            />
+            <Button onClick={handleSave}>Save Instructions</Button>
+        </div>
+    );
 }
 ```
 
@@ -352,31 +343,31 @@ export function CustomInstructions({
 import { useVemetricSettingsTracking } from '@repo/common/components/vemetric-settings-tracker';
 
 export function useApiErrorHandler() {
-  const { trackErrorEncountered } = useVemetricSettingsTracking();
+    const { trackErrorEncountered } = useVemetricSettingsTracking();
 
-  const handleApiError = async (error: Error, context: string) => {
-    // Extract error information
-    const errorType = error.name || 'UnknownError';
-    const errorCode = (error as any).status || (error as any).code;
-    const isRecoverable = !errorType.includes('Fatal') && errorCode !== 500;
+    const handleApiError = async (error: Error, context: string) => {
+        // Extract error information
+        const errorType = error.name || 'UnknownError';
+        const errorCode = (error as any).status || (error as any).code;
+        const isRecoverable = !errorType.includes('Fatal') && errorCode !== 500;
 
-    // Track the error
-    await trackErrorEncountered({
-      errorType,
-      errorCode,
-      context,
-      recoverable: isRecoverable,
-    });
+        // Track the error
+        await trackErrorEncountered({
+            errorType,
+            errorCode,
+            context,
+            recoverable: isRecoverable,
+        });
 
-    // Handle the error appropriately
-    if (isRecoverable) {
-      showRetryableErrorToast(error.message);
-    } else {
-      showFatalErrorDialog(error.message);
-    }
-  };
+        // Handle the error appropriately
+        if (isRecoverable) {
+            showRetryableErrorToast(error.message);
+        } else {
+            showFatalErrorDialog(error.message);
+        }
+    };
 
-  return { handleApiError };
+    return { handleApiError };
 }
 ```
 
@@ -387,27 +378,27 @@ export function useApiErrorHandler() {
 import { useApiErrorHandler } from '../utils/api-error-handler';
 
 export function useChatAPI() {
-  const { handleApiError } = useApiErrorHandler();
+    const { handleApiError } = useApiErrorHandler();
 
-  const sendMessage = async (message: string) => {
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        body: JSON.stringify({ message }),
-      });
+    const sendMessage = async (message: string) => {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                body: JSON.stringify({ message }),
+            });
 
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
 
-      return await response.json();
-    } catch (error) {
-      await handleApiError(error as Error, 'chat_api');
-      throw error;
-    }
-  };
+            return await response.json();
+        } catch (error) {
+            await handleApiError(error as Error, 'chat_api');
+            throw error;
+        }
+    };
 
-  return { sendMessage };
+    return { sendMessage };
 }
 ```
 
@@ -423,66 +414,66 @@ import { useVemetricMessageTracking } from '../vemetric-chat-tracker';
 import { useVemetricSettingsTracking } from '../vemetric-settings-tracker';
 
 export function FileUploadButton({ onUpload }: { onUpload: (file: File) => void }) {
-  const { createTimer } = useVemetricMessageTracking();
-  const { trackErrorEncountered } = useVemetricSettingsTracking();
+    const { createTimer } = useVemetricMessageTracking();
+    const { trackErrorEncountered } = useVemetricSettingsTracking();
 
-  const handleFileUpload = async (file: File) => {
-    const uploadTimer = createTimer();
+    const handleFileUpload = async (file: File) => {
+        const uploadTimer = createTimer();
 
-    try {
-      // Validate file
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        throw new Error('File too large');
-      }
+        try {
+            // Validate file
+            if (file.size > 10 * 1024 * 1024) {
+                // 10MB limit
+                throw new Error('File too large');
+            }
 
-      // Track file upload start
-      const processingTimer = createTimer();
+            // Track file upload start
+            const processingTimer = createTimer();
 
-      // Process the file
-      await processFile(file);
+            // Process the file
+            await processFile(file);
 
-      // Track successful upload
-      uploadTimer.end('FileUploadTime', {
-        fileType: file.type,
-        fileSize: file.size,
-        success: true,
-      });
+            // Track successful upload
+            uploadTimer.end('FileUploadTime', {
+                fileType: file.type,
+                fileSize: file.size,
+                success: true,
+            });
 
-      processingTimer.end('FileProcessingTime', {
-        fileType: file.type,
-        success: true,
-      });
+            processingTimer.end('FileProcessingTime', {
+                fileType: file.type,
+                success: true,
+            });
 
-      onUpload(file);
+            onUpload(file);
+        } catch (error) {
+            // Track failed upload
+            uploadTimer.end('FileUploadTime', {
+                fileType: file.type,
+                fileSize: file.size,
+                success: false,
+            });
 
-    } catch (error) {
-      // Track failed upload
-      uploadTimer.end('FileUploadTime', {
-        fileType: file.type,
-        fileSize: file.size,
-        success: false,
-      });
+            // Track the error
+            await trackErrorEncountered({
+                errorType: 'FileUploadError',
+                context: 'file_upload_button',
+                recoverable: true,
+            });
 
-      // Track the error
-      await trackErrorEncountered({
-        errorType: 'FileUploadError',
-        context: 'file_upload_button',
-        recoverable: true,
-      });
+            throw error;
+        }
+    };
 
-      throw error;
-    }
-  };
-
-  return (
-    <input 
-      type="file" 
-      onChange={(e) => {
-        const file = e.target.files?.[0];
-        if (file) handleFileUpload(file);
-      }}
-    />
-  );
+    return (
+        <input
+            type="file"
+            onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file);
+            }}
+        />
+    );
 }
 ```
 
@@ -496,29 +487,29 @@ import { useEffect } from 'react';
 import { useVemetric } from '@repo/common/hooks/use-vemetric';
 
 export function PagePerformanceTracker({ pageName }: { pageName: string }) {
-  const { trackPerformance } = useVemetric();
+    const { trackPerformance } = useVemetric();
 
-  useEffect(() => {
-    // Track page load performance
-    const startTime = performance.now();
+    useEffect(() => {
+        // Track page load performance
+        const startTime = performance.now();
 
-    const trackPageLoad = () => {
-      trackPerformance('PageLoadTime', startTime, {
-        pageName,
-        navigationTiming: performance.getEntriesByType('navigation')[0],
-      });
-    };
+        const trackPageLoad = () => {
+            trackPerformance('PageLoadTime', startTime, {
+                pageName,
+                navigationTiming: performance.getEntriesByType('navigation')[0],
+            });
+        };
 
-    // Track when page is fully loaded
-    if (document.readyState === 'complete') {
-      trackPageLoad();
-    } else {
-      window.addEventListener('load', trackPageLoad);
-      return () => window.removeEventListener('load', trackPageLoad);
-    }
-  }, [pageName, trackPerformance]);
+        // Track when page is fully loaded
+        if (document.readyState === 'complete') {
+            trackPageLoad();
+        } else {
+            window.addEventListener('load', trackPageLoad);
+            return () => window.removeEventListener('load', trackPageLoad);
+        }
+    }, [pageName, trackPerformance]);
 
-  return null;
+    return null;
 }
 ```
 

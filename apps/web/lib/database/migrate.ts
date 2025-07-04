@@ -1,7 +1,7 @@
+import { log } from '@repo/shared/logger';
 import { config } from 'dotenv';
 import { migrate } from 'drizzle-orm/neon-serverless/migrator';
 import { db } from './index';
-import { log } from '@repo/shared/logger';
 
 // Load environment variables
 config({ path: '.env.local' });

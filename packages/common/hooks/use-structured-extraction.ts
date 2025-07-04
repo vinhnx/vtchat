@@ -1,4 +1,5 @@
 import { getProviderInstance, Providers } from '@repo/ai/providers';
+import { log } from '@repo/shared/logger';
 import { useToast } from '@repo/ui';
 import { generateObject } from 'ai';
 import { useCallback } from 'react';
@@ -6,7 +7,6 @@ import { z } from 'zod';
 import { useChatStore } from '../store';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { isGeminiModel } from '../utils';
-import { log } from '@repo/shared/logger';
 
 // Dynamic import for pdfjs-dist to handle browser environment
 let pdfjsLib: any = null;
@@ -130,7 +130,7 @@ export const createCustomSchema = (
 ) => {
     const schemaFields: Record<string, any> = {};
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
         let zodType;
         switch (field.type) {
             case 'string':
@@ -255,11 +255,11 @@ function getSchemaForDocument(text: string): {
 }
 
 export const useStructuredExtraction = () => {
-    const chatMode = useChatStore(state => state.chatMode);
-    const documentAttachment = useChatStore(state => state.documentAttachment);
-    const setStructuredData = useChatStore(state => state.setStructuredData);
-    const clearStructuredData = useChatStore(state => state.clearStructuredData);
-    const getAllKeys = useApiKeysStore(state => state.getAllKeys());
+    const chatMode = useChatStore((state) => state.chatMode);
+    const documentAttachment = useChatStore((state) => state.documentAttachment);
+    const setStructuredData = useChatStore((state) => state.setStructuredData);
+    const clearStructuredData = useChatStore((state) => state.clearStructuredData);
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys());
     const { toast } = useToast();
 
     const extractTextFromPDF = async (file: File): Promise<string> => {

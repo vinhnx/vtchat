@@ -38,10 +38,7 @@ export class PerformanceMonitor {
 
         // Log slow operations
         if (duration > 2000 && process.env.NODE_ENV === 'development') {
-            log.warn(
-                { operation, duration: duration.toFixed(2) },
-                'Slow operation detected'
-            );
+            log.warn({ operation, duration: duration.toFixed(2) }, 'Slow operation detected');
         }
 
         return duration;
@@ -56,7 +53,13 @@ export class PerformanceMonitor {
         } catch (error) {
             this.endTimer(operation);
             if (process.env.NODE_ENV === 'development') {
-                log.error({ operation, error: error instanceof Error ? error.message : 'Unknown error' }, 'Performance timer failed');
+                log.error(
+                    {
+                        operation,
+                        error: error instanceof Error ? error.message : 'Unknown error',
+                    },
+                    'Performance timer failed'
+                );
             }
             throw error;
         }

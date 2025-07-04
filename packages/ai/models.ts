@@ -1,7 +1,7 @@
 import { ChatMode } from '@repo/shared/config';
-import { CoreMessage } from 'ai';
+import type { CoreMessage } from 'ai';
 import { ReasoningTagName, ReasoningType } from './constants/reasoning';
-import { ProviderEnumType } from './providers';
+import type { ProviderEnumType } from './providers';
 
 export enum ModelEnum {
     CLAUDE_4_SONNET = 'claude-4-sonnet-20250514',
@@ -124,8 +124,8 @@ export const models: Model[] = [
         id: ModelEnum.GEMINI_2_5_FLASH_LITE,
         name: 'Gemini 2.5 Flash Lite Preview 06-17',
         provider: 'google',
-        maxTokens: 65536,
-        contextWindow: 65536,
+        maxTokens: 65_536,
+        contextWindow: 65_536,
         isFree: true,
     },
     {
@@ -175,14 +175,14 @@ export const models: Model[] = [
         id: ModelEnum.QWEN3_235B_A22B,
         name: 'Qwen3 235B A22B',
         provider: 'openrouter',
-        maxTokens: 8_192,
+        maxTokens: 8192,
         contextWindow: 40_960,
     },
     {
         id: ModelEnum.QWEN3_32B,
         name: 'Qwen3 32B',
         provider: 'openrouter',
-        maxTokens: 8_192,
+        maxTokens: 8192,
         contextWindow: 40_960,
     },
     {
@@ -196,7 +196,7 @@ export const models: Model[] = [
         id: ModelEnum.QWEN3_14B_FREE,
         name: 'Qwen3 14B',
         provider: 'openrouter',
-        maxTokens: 8_192,
+        maxTokens: 8192,
         contextWindow: 40_960,
         isFree: true,
     },
@@ -372,7 +372,7 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 
     const latestMessage = trimmedMessages.pop()!;
 
-    const messageSizes = trimmedMessages.map(msg => {
+    const messageSizes = trimmedMessages.map((msg) => {
         const tokens =
             typeof msg.content === 'string'
                 ? estimateTokensByWordCount(msg.content)
@@ -409,7 +409,7 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
         }
     }
 
-    trimmedMessages = messageSizes.map(item => item.message);
+    trimmedMessages = messageSizes.map((item) => item.message);
     trimmedMessages.push(latestMessage);
 
     return { trimmedMessages, tokenCount: totalTokens };

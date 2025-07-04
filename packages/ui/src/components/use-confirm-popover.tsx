@@ -1,6 +1,6 @@
 'use client';
 
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from './button';
 import { Flex } from './flex';
@@ -28,31 +28,31 @@ export const PopOverConfirmProvider = ({
 
     const Icon = confirmIcon;
     return (
-        <Popover open={openConfirm} onOpenChange={setOpenConfirm}>
+        <Popover onOpenChange={setOpenConfirm} open={openConfirm}>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
             <PopoverContent className="z-[1000]" side="bottom">
                 <p className="pb-4 text-sm font-medium">{title}</p>
                 <Flex gap="sm">
                     <Button
-                        variant={confimBtnVariant}
-                        size="sm"
-                        onClick={e => {
+                        onClick={(e) => {
                             onConfirm(() => setOpenConfirm(false));
                             e.stopPropagation();
                         }}
+                        size="sm"
+                        variant={confimBtnVariant}
                     >
                         {Icon && <Icon size={14} strokeWidth={2} />}
 
                         {confimBtnText}
                     </Button>
                     <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={e => {
+                        onClick={(e) => {
                             onCancel?.();
                             setOpenConfirm(false);
                             e.stopPropagation();
                         }}
+                        size="sm"
+                        variant="secondary"
                     >
                         Cancel
                     </Button>

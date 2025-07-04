@@ -1,6 +1,16 @@
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { boolean, json, pgTable, text, timestamp, uuid, varchar, index, customType } from 'drizzle-orm/pg-core';
+import {
+    boolean,
+    customType,
+    index,
+    json,
+    pgTable,
+    text,
+    timestamp,
+    uuid,
+    varchar,
+} from 'drizzle-orm/pg-core';
 
 // Custom vector type for pgvector
 const vector = customType<{ data: number[]; notNull: false; default: false }>({
@@ -102,7 +112,9 @@ export const feedback = pgTable('feedback', {
 
 // Resources table for RAG knowledge base
 export const resources = pgTable('resources', {
-    id: varchar('id', { length: 191 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    id: varchar('id', { length: 191 })
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
     userId: text('user_id')
         .notNull()
         .references(() => users.id, { onDelete: 'cascade' }),
@@ -115,7 +127,9 @@ export const resources = pgTable('resources', {
 export const embeddings = pgTable(
     'embeddings',
     {
-        id: varchar('id', { length: 191 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+        id: varchar('id', { length: 191 })
+            .primaryKey()
+            .$defaultFn(() => crypto.randomUUID()),
         resourceId: varchar('resource_id', { length: 191 })
             .notNull()
             .references(() => resources.id, { onDelete: 'cascade' }),
@@ -125,9 +139,9 @@ export const embeddings = pgTable(
     (table) => ({
         embeddingIndex: index('embedding_index').using(
             'hnsw',
-            table.embedding.op('vector_cosine_ops'),
+            table.embedding.op('vector_cosine_ops')
         ),
-    }),
+    })
 );
 
 export type User = typeof users.$inferSelect;
@@ -143,22 +157,28 @@ export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
 export type Feedback = typeof feedback.$inferSelect;
 export type NewFeedback = typeof feedback.$inferInsert;
 // User rate limits table for free model usage tracking
-export const userRateLimits = pgTable('user_rate_limits', {
-    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
-    userId: text('user_id')
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' })
-        .unique(),
-    modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
-    dailyRequestCount: text('daily_request_count').notNull().default('0'),
-    minuteRequestCount: text('minute_request_count').notNull().default('0'),
-    lastDailyReset: timestamp('last_daily_reset').notNull().defaultNow(),
-    lastMinuteReset: timestamp('last_minute_reset').notNull().defaultNow(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-    userModelIndex: index('user_model_index').on(table.userId, table.modelId),
-}));
+export const userRateLimits = pgTable(
+    'user_rate_limits',
+    {
+        id: text('id')
+            .primaryKey()
+            .$defaultFn(() => crypto.randomUUID()),
+        userId: text('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' })
+            .unique(),
+        modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
+        dailyRequestCount: text('daily_request_count').notNull().default('0'),
+        minuteRequestCount: text('minute_request_count').notNull().default('0'),
+        lastDailyReset: timestamp('last_daily_reset').notNull().defaultNow(),
+        lastMinuteReset: timestamp('last_minute_reset').notNull().defaultNow(),
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        userModelIndex: index('user_model_index').on(table.userId, table.modelId),
+    })
+);
 
 export type Resource = typeof resources.$inferSelect;
 export type NewResource = typeof resources.$inferInsert;

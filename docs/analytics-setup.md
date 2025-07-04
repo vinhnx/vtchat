@@ -8,9 +8,9 @@ VTChat uses **Vemetric** as the primary and only analytics solution. Vercel Web 
 
 - **Status**: Disabled in `next.config.mjs` and `vercel.json`
 - **Reason**: Using Vemetric as the single analytics solution
-- **Files**: 
-  - `apps/web/next.config.mjs` - `analyticsId: ''`
-  - `apps/web/vercel.json` - `"analytics": false`
+- **Files**:
+    - `apps/web/next.config.mjs` - `analyticsId: ''`
+    - `apps/web/vercel.json` - `"analytics": false`
 
 ### 2. Vemetric Analytics - ENABLED ✅
 
@@ -19,6 +19,7 @@ VTChat uses **Vemetric** as the primary and only analytics solution. Vercel Web 
 - **Configuration**: `packages/common/lib/analytics-config.ts`
 
 #### Environment Variables Required:
+
 ```env
 # Frontend tracking (required)
 NEXT_PUBLIC_VEMETRIC_TOKEN=your_vemetric_token
@@ -31,6 +32,7 @@ VEMETRIC_HOST=https://hub.vemetric.com
 ```
 
 #### Features Enabled:
+
 - ✅ Page view tracking
 - ✅ User event tracking
 - ✅ Performance monitoring
@@ -42,6 +44,7 @@ VEMETRIC_HOST=https://hub.vemetric.com
 ## Implementation
 
 ### Frontend Components
+
 ```tsx
 // Layout integration
 <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN} />
@@ -53,6 +56,7 @@ VEMETRIC_HOST=https://hub.vemetric.com
 ```
 
 ### Backend Service
+
 ```typescript
 import { vemetricBackend } from '@repo/common/services/vemetric-backend';
 
@@ -69,6 +73,7 @@ If experiencing CORS issues with Vemetric:
 3. **Verify Config**: Run `bun scripts/check-vemetric-config.js`
 
 ### Required Domains:
+
 ```
 localhost:3000
 localhost:3001
@@ -80,17 +85,19 @@ yourapp.com
 
 ### Common Issues:
 
-1. **CORS Errors**: 
-   - Solution: Add domains to Vemetric allowlist
-   - Fallback: Errors are silently handled in production
+1. **CORS Errors**:
+
+    - Solution: Add domains to Vemetric allowlist
+    - Fallback: Errors are silently handled in production
 
 2. **Missing Token**:
-   - Check `NEXT_PUBLIC_VEMETRIC_TOKEN` is set
-   - Verify token is valid in Vemetric dashboard
+
+    - Check `NEXT_PUBLIC_VEMETRIC_TOKEN` is set
+    - Verify token is valid in Vemetric dashboard
 
 3. **Failed Requests**:
-   - Use debug mode: `useVemetric({ debug: true })`
-   - Check network tab for request details
+    - Use debug mode: `useVemetric({ debug: true })`
+    - Check network tab for request details
 
 ## Migration from Vercel Analytics
 

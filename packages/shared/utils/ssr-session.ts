@@ -3,8 +3,8 @@
  */
 
 import type { Session } from '@repo/shared/lib/auth-client';
-import { headers } from 'next/headers';
 import { log } from '@repo/shared/logger';
+import { headers } from 'next/headers';
 
 // For server-side components only
 export async function getServerSession(): Promise<Session | null> {
@@ -45,7 +45,9 @@ export async function getServerSessionFresh(): Promise<Session | null> {
 
         return session;
     } catch (error) {
-        log.warn('[SSR Session] Failed to get fresh server session:', { data: error });
+        log.warn('[SSR Session] Failed to get fresh server session:', {
+            data: error,
+        });
         return null;
     }
 }

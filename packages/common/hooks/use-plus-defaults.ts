@@ -4,11 +4,11 @@
  * Automatically applies plus user default settings when subscription status changes
  */
 
-import { useEffect, useRef } from 'react';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { useAppStore } from '../store/app.store';
-import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
 import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { useEffect, useRef } from 'react';
+import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { useAppStore } from '../store/app.store';
 
 /**
  * Hook to automatically apply plus defaults when user subscription changes

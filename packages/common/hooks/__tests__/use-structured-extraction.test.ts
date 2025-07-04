@@ -70,7 +70,9 @@ describe('useStructuredExtraction', () => {
     });
 
     it('should detect document attachment correctly', () => {
-        const mockFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+        const mockFile = new File(['content'], 'test.pdf', {
+            type: 'application/pdf',
+        });
         const mockStore = createMockStore({
             documentAttachment: { file: mockFile, fileName: 'test.pdf' },
         });
@@ -141,7 +143,9 @@ describe('useStructuredExtraction', () => {
     });
 
     it('should successfully extract structured data from PDF', async () => {
-        const mockFile = new File(['pdf content'], 'resume.pdf', { type: 'application/pdf' });
+        const mockFile = new File(['pdf content'], 'resume.pdf', {
+            type: 'application/pdf',
+        });
         const mockStore = createMockStore({
             chatMode: 'gemini-1.5-pro',
             documentAttachment: { file: mockFile, fileName: 'resume.pdf' },
@@ -206,7 +210,9 @@ describe('useStructuredExtraction', () => {
     });
 
     it('should handle PDF parsing errors', async () => {
-        const mockFile = new File(['invalid pdf'], 'test.pdf', { type: 'application/pdf' });
+        const mockFile = new File(['invalid pdf'], 'test.pdf', {
+            type: 'application/pdf',
+        });
         const mockStore = createMockStore({
             chatMode: 'gemini-1.5-pro',
             documentAttachment: { file: mockFile, fileName: 'test.pdf' },
@@ -228,7 +234,9 @@ describe('useStructuredExtraction', () => {
     });
 
     it('should handle AI generation errors', async () => {
-        const mockFile = new File(['pdf content'], 'test.pdf', { type: 'application/pdf' });
+        const mockFile = new File(['pdf content'], 'test.pdf', {
+            type: 'application/pdf',
+        });
         const mockStore = createMockStore({
             chatMode: 'gemini-1.5-pro',
             documentAttachment: { file: mockFile, fileName: 'test.pdf' },

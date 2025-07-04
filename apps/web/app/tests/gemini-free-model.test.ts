@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { ModelEnum } from '@repo/ai/models';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the database BEFORE importing the service
 const mockDb = {
@@ -18,7 +18,9 @@ vi.mock('drizzle-orm', () => ({
 }));
 
 // Import service after mocks are set up
-const { checkRateLimit, recordRequest, getRateLimitStatus, RATE_LIMITS } = await import('@/lib/services/rate-limit');
+const { checkRateLimit, recordRequest, getRateLimitStatus, RATE_LIMITS } = await import(
+    '@/lib/services/rate-limit'
+);
 
 describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
     const testUserId1 = 'user-account-1';
@@ -38,8 +40,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
     describe('Rate Limit Constants', () => {
         it('should enforce correct per-account limits for Gemini 2.5 Flash Lite', () => {
             expect(RATE_LIMITS.GEMINI_2_5_FLASH_LITE).toEqual({
-                DAILY_LIMIT: 10,  // 10 requests per day PER USER
-                MINUTE_LIMIT: 1,  // 1 request per minute PER USER
+                DAILY_LIMIT: 10, // 10 requests per day PER USER
+                MINUTE_LIMIT: 1, // 1 request per minute PER USER
                 MODEL_ID: ModelEnum.GEMINI_2_5_FLASH_LITE,
             });
         });
@@ -48,10 +50,10 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
     describe('Per-Account Rate Limiting Logic', () => {
         it('should allow unlimited requests for paid models', async () => {
             const result = await checkRateLimit(testUserId1, paidModelId);
-            
+
             expect(result.allowed).toBe(true);
-            expect(result.remainingDaily).toBe(Infinity);
-            expect(result.remainingMinute).toBe(Infinity);
+            expect(result.remainingDaily).toBe(Number.POSITIVE_INFINITY);
+            expect(result.remainingMinute).toBe(Number.POSITIVE_INFINITY);
             expect(mockDb.select).not.toHaveBeenCalled();
         });
 
@@ -213,7 +215,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             // Start at 23:59 UTC
             const beforeMidnight = new Date('2024-01-01T23:59:00Z');
             const afterMidnight = new Date('2024-01-02T00:01:00Z');
-            
+
             vi.setSystemTime(beforeMidnight);
 
             const mockRecord = {
@@ -280,7 +282,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
 
             // Should create separate records for each user
             expect(mockInsert).toHaveBeenCalledTimes(2);
-            
+
             expect(mockInsert).toHaveBeenCalledWith(
                 expect.objectContaining({
                     userId: testUserId1,
@@ -440,7 +442,9 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
                 }),
             });
 
-            await expect(checkRateLimit(testUserId1, freeModelId)).rejects.toThrow('Database error');
+            await expect(checkRateLimit(testUserId1, freeModelId)).rejects.toThrow(
+                'Database error'
+            );
         });
 
         it('should handle missing user records correctly', async () => {

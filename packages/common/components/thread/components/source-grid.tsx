@@ -1,6 +1,6 @@
 import { SourceList } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
-import { Source } from '@repo/shared/types';
+import type { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
 import { LinkFavicon } from '@repo/ui';
 
@@ -9,14 +9,14 @@ type SourceGridProps = {
 };
 
 export const SourceGrid = ({ sources }: SourceGridProps) => {
-    const openSideDrawer = useAppStore(state => state.openSideDrawer);
-    if (!sources || !Array.isArray(sources) || sources?.length === 0) {
+    const openSideDrawer = useAppStore((state) => state.openSideDrawer);
+    if (!(sources && Array.isArray(sources)) || sources?.length === 0) {
         return null;
     }
 
     // Filter out invalid sources and ensure they have required properties
     const validSources = sources.filter(
-        source =>
+        (source) =>
             source &&
             typeof source.title === 'string' &&
             typeof source.link === 'string' &&
@@ -34,11 +34,11 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
         <div className="grid grid-cols-4 gap-2 pb-8 pt-2">
             {sortedSources.slice(0, 3).map((source, index) => (
                 <div
+                    className="bg-quaternary/60 hover:bg-quaternary flex cursor-pointer flex-col justify-between rounded-md p-2"
                     key={index}
                     onClick={() => {
                         window?.open(source?.link, '_blank');
                     }}
-                    className="bg-quaternary/60 hover:bg-quaternary flex cursor-pointer flex-col justify-between rounded-md p-2"
                 >
                     {source?.link && (
                         <div className="flex flex-row items-center gap-1 pb-1">
@@ -53,8 +53,8 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
             ))}
             {sortedSources.length > 3 && (
                 <div
-                    key={4}
                     className="bg-quaternary/60 hover:bg-quaternary flex cursor-pointer flex-col items-start gap-1 rounded-md p-2"
+                    key={4}
                     onClick={() => {
                         openSideDrawer({
                             title: 'Sources',
@@ -68,7 +68,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                             .slice(3)
                             .slice(0, 5)
                             .map((source, index) => (
-                                <div key={index} className="flex flex-row items-center gap-1">
+                                <div className="flex flex-row items-center gap-1" key={index}>
                                     <LinkFavicon link={source?.link} size="sm" />
                                 </div>
                             ))}

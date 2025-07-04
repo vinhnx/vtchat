@@ -25,9 +25,9 @@ export const Avatar = ({ name, src, size = 'md', className }: TAvatar) => {
         >
             {src && (
                 <AvatarPrimitive.Image
+                    alt={name}
                     className="aspect-square h-full w-full object-cover"
                     src={src}
-                    alt={name}
                 />
             )}
             <AvatarPrimitive.Fallback

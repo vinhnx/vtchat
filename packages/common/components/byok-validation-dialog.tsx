@@ -1,20 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { useApiKeysStore } from '../store/api-keys.store';
 import { log } from '@repo/shared/logger';
 import {
+    Button,
     Dialog,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    Button,
     Input,
     Label,
 } from '@repo/ui';
+import { useState } from 'react';
+import { useApiKeysStore } from '../store/api-keys.store';
 
 type ProviderKeyMapping = {
     [K in ChatMode]: keyof ReturnType<typeof useApiKeysStore.getState>['keys'] | null;
@@ -83,7 +83,7 @@ export function BYOKValidationDialog({
     const chatModeDisplayName = ChatModeConfig[chatMode]?.name || chatMode;
 
     const handleSave = async () => {
-        if (!apiKey.trim() || !requiredKeyType) return;
+        if (!(apiKey.trim() && requiredKeyType)) return;
 
         setIsLoading(true);
         try {
@@ -115,7 +115,7 @@ export function BYOKValidationDialog({
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog onOpenChange={onClose} open={isOpen}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>API Key Required</DialogTitle>
@@ -129,28 +129,28 @@ export function BYOKValidationDialog({
                     <div className="grid gap-2">
                         <Label htmlFor="api-key">{providerName} API Key</Label>
                         <Input
+                            autoFocus
                             id="api-key"
-                            type="password"
-                            placeholder={`Enter your ${providerName} API key`}
-                            value={apiKey}
-                            onChange={e => setApiKey(e.target.value)}
-                            onKeyDown={e => {
+                            onChange={(e) => setApiKey(e.target.value)}
+                            onKeyDown={(e) => {
                                 if (e.key === 'Enter' && apiKey.trim()) {
                                     handleSave();
                                 }
                             }}
-                            autoFocus
+                            placeholder={`Enter your ${providerName} API key`}
+                            type="password"
+                            value={apiKey}
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
+                    <Button disabled={isLoading} onClick={handleCancel} variant="outline">
                         Cancel
                     </Button>
                     <Button
-                        onClick={handleSave}
-                        disabled={!apiKey.trim() || isLoading}
                         className="min-w-[80px]"
+                        disabled={!apiKey.trim() || isLoading}
+                        onClick={handleSave}
                     >
                         {isLoading ? 'Saving...' : 'Save & Continue'}
                     </Button>

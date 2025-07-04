@@ -9,21 +9,25 @@ We use [Pino](https://github.com/pinojs/pino) as our structured logging solution
 ## Features
 
 ### ✅ Automatic PII Redaction
+
 - Sensitive fields like email, password, tokens are automatically redacted
 - Works for nested objects and arrays
 - Configurable redaction paths
 
 ### ✅ Next.js Compatibility
+
 - Optimized configuration that avoids worker thread issues
 - Works seamlessly with Next.js bundling
 - No pino-pretty transport in production to avoid errors
 
 ### ✅ Request Tracing
+
 - Built-in request ID generation and tracking
 - Child logger support for scoped logging
 - Performance timing utilities
 
 ### ✅ Environment-Specific Configuration
+
 - Development: Pretty printing (when not in Next.js)
 - Production: Structured JSON logging
 - Test: Silent mode
@@ -41,11 +45,14 @@ log.warn('Memory usage high');
 log.error({ error: err }, 'Database connection failed');
 
 // Structured logging with context
-log.info({
-  userId: '12345',
-  action: 'login',
-  ip: '192.168.1.1' // Will be redacted automatically
-}, 'User login attempt');
+log.info(
+    {
+        userId: '12345',
+        action: 'login',
+        ip: '192.168.1.1', // Will be redacted automatically
+    },
+    'User login attempt'
+);
 ```
 
 ### Request Scoped Logging
@@ -65,16 +72,16 @@ requestLogger.error({ error }, 'Request failed');
 import { withLogging } from '@repo/shared/logger';
 
 const handler = async (req, res) => {
-  req.log.info('Processing API request');
-  
-  try {
-    const result = await processRequest();
-    req.log.info({ result }, 'Request successful');
-    res.json(result);
-  } catch (error) {
-    req.log.error({ error }, 'Request failed');
-    res.status(500).json({ error: 'Internal server error' });
-  }
+    req.log.info('Processing API request');
+
+    try {
+        const result = await processRequest();
+        req.log.info({ result }, 'Request successful');
+        res.json(result);
+    } catch (error) {
+        req.log.error({ error }, 'Request failed');
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 export default withLogging(handler);
@@ -86,12 +93,12 @@ export default withLogging(handler);
 import { log, createChildLogger } from '@repo/shared/logger';
 
 // Create child logger with persistent context
-const userLogger = createChildLogger({ 
-  userId: '12345',
-  service: 'auth' 
+const userLogger = createChildLogger({
+    userId: '12345',
+    service: 'auth',
 });
 
-userLogger.info('User logged in'); 
+userLogger.info('User logged in');
 // Output: {"userId":"12345","service":"auth","msg":"User logged in",...}
 ```
 
@@ -104,9 +111,9 @@ const timer = createTimer('database-query');
 
 // ... perform operation
 
-timer.end({ 
-  query: 'SELECT * FROM users',
-  recordCount: 150 
+timer.end({
+    query: 'SELECT * FROM users',
+    recordCount: 150,
 });
 // Output: {"duration":45,"timer":"database-query","query":"SELECT * FROM users","recordCount":150,...}
 ```
@@ -127,16 +134,19 @@ The following fields are automatically redacted:
 ### Nested Object Redaction
 
 ```typescript
-log.info({
-  user: {
-    email: 'user@example.com', // Will be redacted
-    name: 'John Doe' // Will be visible
-  },
-  headers: {
-    authorization: 'Bearer token123' // Will be redacted
-  },
-  publicData: 'This is safe' // Will be visible
-}, 'User data logged');
+log.info(
+    {
+        user: {
+            email: 'user@example.com', // Will be redacted
+            name: 'John Doe', // Will be visible
+        },
+        headers: {
+            authorization: 'Bearer token123', // Will be redacted
+        },
+        publicData: 'This is safe', // Will be visible
+    },
+    'User data logged'
+);
 
 // Output:
 // {
@@ -157,16 +167,19 @@ log.info({
 ### Development vs Production
 
 **Development:**
+
 - Default level: `debug`
 - Pretty printing (when not in Next.js)
 - Colorized output
 
 **Production:**
+
 - Default level: `info`
 - Structured JSON output
 - Optimized for log aggregation
 
 **Test:**
+
 - Level: `silent`
 - No output to avoid test noise
 
@@ -189,13 +202,16 @@ log.info({ userId, action }, 'User action performed');
 log.error('Database error');
 
 // ✅ Rich context
-log.error({
-  error: err.message,
-  stack: err.stack,
-  query: 'SELECT * FROM users',
-  params: { limit: 50 },
-  duration: 1234
-}, 'Database query failed');
+log.error(
+    {
+        error: err.message,
+        stack: err.stack,
+        query: 'SELECT * FROM users',
+        params: { limit: 50 },
+        duration: 1234,
+    },
+    'Database query failed'
+);
 ```
 
 ### 3. Use Child Loggers for Scoping
@@ -233,11 +249,14 @@ timer.end({ operationDetails: 'additional context' });
 log.error('Something went wrong');
 
 // ✅ Include full error context
-log.error({
-  err: error, // Uses Pino's error serializer
-  context: 'user-registration',
-  userId: '12345'
-}, 'User registration failed');
+log.error(
+    {
+        err: error, // Uses Pino's error serializer
+        context: 'user-registration',
+        userId: '12345',
+    },
+    'User registration failed'
+);
 ```
 
 ### Traffic Monitoring (Privacy-Safe)
@@ -245,15 +264,16 @@ log.error({
 ```typescript
 // middleware.ts - Privacy-safe geographic monitoring
 export default async function middleware(request: NextRequest) {
-  // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
-  const flyRegion = request.headers.get('Fly-Region') || 'unknown';
-  console.log(`[Traffic] Region: ${flyRegion}`);
-  
-  // Rest of middleware logic...
+    // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
+    const flyRegion = request.headers.get('Fly-Region') || 'unknown';
+    console.log(`[Traffic] Region: ${flyRegion}`);
+
+    // Rest of middleware logic...
 }
 ```
 
 **Privacy Compliance:**
+
 - ✅ **GDPR Safe**: Region codes are not personal data
 - ✅ **No PII**: Only 3-letter region codes (sin, iad, ams)
 - ✅ **Aggregate Only**: Cannot identify individual users
@@ -261,17 +281,19 @@ export default async function middleware(request: NextRequest) {
 - ✅ **Legitimate Interest**: Infrastructure optimization
 
 **Analysis:**
+
 ```bash
 # View traffic distribution
 fly logs | grep "\[Traffic\]" | sort | uniq -c
 
 # Example output:
 # 45 [Traffic] Region: sin
-# 12 [Traffic] Region: iad  
+# 12 [Traffic] Region: iad
 # 8 [Traffic] Region: ams
 ```
 
 **Scaling Decisions:**
+
 - Add `iad` region when seeing consistent US traffic
 - Add `ams` region when seeing consistent EU traffic
 - Use data to optimize global infrastructure placement
@@ -285,14 +307,14 @@ const queryLogger = createChildLogger({ service: 'database' });
 
 const timer = createTimer('user-query');
 try {
-  const users = await db.query('SELECT * FROM users WHERE active = ?', [true]);
-  timer.end({ recordCount: users.length });
-  queryLogger.info({ recordCount: users.length }, 'Users fetched successfully');
-  return users;
+    const users = await db.query('SELECT * FROM users WHERE active = ?', [true]);
+    timer.end({ recordCount: users.length });
+    queryLogger.info({ recordCount: users.length }, 'Users fetched successfully');
+    return users;
 } catch (error) {
-  timer.end({ error: error.message });
-  queryLogger.error({ err: error, query: 'users-active' }, 'Database query failed');
-  throw error;
+    timer.end({ error: error.message });
+    queryLogger.error({ err: error, query: 'users-active' }, 'Database query failed');
+    throw error;
 }
 ```
 
@@ -301,20 +323,23 @@ try {
 ```typescript
 // middleware/logging.ts
 export function loggingMiddleware(req: NextRequest) {
-  const requestId = req.headers.get('x-request-id') || generateRequestId();
-  
-  // Add request logger to headers for downstream use
-  req.headers.set('x-request-logger', JSON.stringify({ requestId }));
-  
-  const requestLogger = withRequestId(requestId);
-  requestLogger.info({
-    method: req.method,
-    url: req.url,
-    userAgent: req.headers.get('user-agent'),
-    ip: req.ip
-  }, 'Request started');
-  
-  return NextResponse.next();
+    const requestId = req.headers.get('x-request-id') || generateRequestId();
+
+    // Add request logger to headers for downstream use
+    req.headers.set('x-request-logger', JSON.stringify({ requestId }));
+
+    const requestLogger = withRequestId(requestId);
+    requestLogger.info(
+        {
+            method: req.method,
+            url: req.url,
+            userAgent: req.headers.get('user-agent'),
+            ip: req.ip,
+        },
+        'Request started'
+    );
+
+    return NextResponse.next();
 }
 ```
 

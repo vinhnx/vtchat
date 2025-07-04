@@ -1,10 +1,10 @@
 'use client';
 
-import { useRateLimit } from '@repo/common/hooks';
 import { ModelEnum } from '@repo/ai/models';
+import { useRateLimit } from '@repo/common/hooks';
 import { cn } from '@repo/ui';
-import { Clock, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { AlertTriangle, Clock } from 'lucide-react';
 
 interface RateLimitIndicatorProps {
     modelId: ModelEnum;
@@ -12,7 +12,11 @@ interface RateLimitIndicatorProps {
     compact?: boolean;
 }
 
-export function RateLimitIndicator({ modelId, className, compact = false }: RateLimitIndicatorProps) {
+export function RateLimitIndicator({
+    modelId,
+    className,
+    compact = false,
+}: RateLimitIndicatorProps) {
     const { status, isLoading } = useRateLimit(modelId);
 
     // Only show for rate-limited models
@@ -22,7 +26,7 @@ export function RateLimitIndicator({ modelId, className, compact = false }: Rate
 
     if (isLoading) {
         return (
-            <div className={cn('animate-pulse text-xs text-muted-foreground', className)}>
+            <div className={cn('text-muted-foreground animate-pulse text-xs', className)}>
                 Loading...
             </div>
         );
@@ -33,9 +37,9 @@ export function RateLimitIndicator({ modelId, className, compact = false }: Rate
 
     if (compact) {
         return (
-            <div className={cn('flex items-center gap-1 text-xs text-muted-foreground', className)}>
+            <div className={cn('text-muted-foreground flex items-center gap-1 text-xs', className)}>
                 {isNearDailyLimit || isNearMinuteLimit ? (
-                    <AlertTriangle size={12} className="text-amber-500" />
+                    <AlertTriangle className="text-amber-500" size={12} />
                 ) : (
                     <Clock size={12} />
                 )}
@@ -50,21 +54,26 @@ export function RateLimitIndicator({ modelId, className, compact = false }: Rate
         <div className={cn('space-y-1 text-xs', className)}>
             <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Daily usage:</span>
-                <span className={cn(
-                    'font-medium',
-                    isNearDailyLimit ? 'text-amber-600' : 'text-green-600'
-                )}>
+                <span
+                    className={cn(
+                        'font-medium',
+                        isNearDailyLimit ? 'text-amber-600' : 'text-green-600'
+                    )}
+                >
                     {status.remainingDaily}/{status.dailyLimit}
                 </span>
             </div>
-            
+
             {isNearMinuteLimit && (
                 <div className="flex items-center gap-1 text-amber-600">
                     <Clock size={12} />
-                    <span>Rate limited • Resets {formatDistanceToNow(status.resetTime.minute, { addSuffix: true })}</span>
+                    <span>
+                        Rate limited • Resets{' '}
+                        {formatDistanceToNow(status.resetTime.minute, { addSuffix: true })}
+                    </span>
                 </div>
             )}
-            
+
             {isNearDailyLimit && !isNearMinuteLimit && (
                 <div className="flex items-center gap-1 text-amber-600">
                     <AlertTriangle size={12} />

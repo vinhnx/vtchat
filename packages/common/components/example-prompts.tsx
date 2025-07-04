@@ -1,11 +1,11 @@
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { ButtonWithIcon } from '@repo/ui';
-import { Editor } from '@tiptap/react';
+import type { Editor } from '@tiptap/react';
 import { BarChart, Book, HelpCircle, Lightbulb, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';
-import { log } from '@repo/shared/logger';
 
 export const examplePrompts = {
     howTo: [
@@ -75,7 +75,11 @@ export const getRandomPrompt = (category?: keyof typeof examplePrompts) => {
 // Map of category to icon component
 const categoryIcons = {
     howTo: { name: 'How to', icon: HelpCircle, color: '!text-gray-600' },
-    explainConcepts: { name: 'Explain Concepts', icon: Lightbulb, color: '!text-gray-600' },
+    explainConcepts: {
+        name: 'Explain Concepts',
+        icon: Lightbulb,
+        color: '!text-gray-600',
+    },
     creative: { name: 'Creative', icon: Pencil, color: '!text-gray-600' },
     advice: { name: 'Advice', icon: Book, color: '!text-gray-600' },
     analysis: { name: 'Analysis', icon: BarChart, color: '!text-gray-600' },
@@ -85,8 +89,8 @@ export const ExamplePrompts = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-    const showExamplePrompts = useAppStore(state => state.showExamplePrompts);
-    const editor: Editor | undefined = useChatStore(state => state.editor);
+    const showExamplePrompts = useAppStore((state) => state.showExamplePrompts);
+    const editor: Editor | undefined = useChatStore((state) => state.editor);
 
     const handleCategoryClick = (category: keyof typeof examplePrompts) => {
         log.info({ data: editor }, 'editor');
@@ -113,12 +117,12 @@ export const ExamplePrompts = () => {
             <div className="animate-fade-in mb-8 flex w-full flex-wrap justify-center gap-2 p-6 transition-all duration-1000">
                 {Object.entries(categoryIcons).map(([category, value], index) => (
                     <ButtonWithIcon
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
                         className="hover:bg-accent/80 transition-all hover:opacity-90"
-                        icon={<value.icon size={16} className={value.color} />}
+                        icon={<value.icon className={value.color} size={16} />}
+                        key={index}
+                        onClick={() => handleCategoryClick(category as keyof typeof examplePrompts)}
+                        size="sm"
+                        variant="outline"
                     >
                         {value.name}
                     </ButtonWithIcon>
@@ -128,10 +132,10 @@ export const ExamplePrompts = () => {
             {/* Login prompt dialog */}
             {showLoginPrompt && (
                 <LoginRequiredDialog
+                    description="Please log in to use example prompts and start chatting."
                     isOpen={showLoginPrompt}
                     onClose={() => setShowLoginPrompt(false)}
                     title="Login Required"
-                    description="Please log in to use example prompts and start chatting."
                 />
             )}
         </>

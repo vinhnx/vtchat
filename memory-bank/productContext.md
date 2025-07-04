@@ -38,7 +38,9 @@ RAG: "Personal AI Assistant with Memory: AI memory system for personalized assis
 ## New Tier System (Updated July 2025)
 
 ### Free Tier (Most generous free tier in the industry)
+
 Available to all logged-in users:
+
 - Dark Mode interface
 - Thinking Mode with reasoning display
 - Document Processing (PDF, DOC, images up to 10MB)
@@ -50,7 +52,9 @@ Available to all logged-in users:
 - Unlimited usage with BYOK
 
 ### VT+ Tier ($5.99/month)
+
 All free tier features PLUS 3 exclusive research-focused features:
+
 - PRO_SEARCH (Enhanced Web Search)
 - DEEP_RESEARCH (Deep Research capabilities)
 - RAG (Personal AI Assistant with Memory)

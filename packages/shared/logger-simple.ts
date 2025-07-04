@@ -43,13 +43,13 @@ const PII_FIELDS = [
 // Create redaction paths for nested objects
 const redactPaths = [
     ...PII_FIELDS,
-    ...PII_FIELDS.map(field => `*.${field}`),
-    ...PII_FIELDS.map(field => `headers.${field}`),
-    ...PII_FIELDS.map(field => `body.${field}`),
-    ...PII_FIELDS.map(field => `data.${field}`),
-    ...PII_FIELDS.map(field => `user.${field}`),
-    ...PII_FIELDS.map(field => `request.${field}`),
-    ...PII_FIELDS.map(field => `response.${field}`),
+    ...PII_FIELDS.map((field) => `*.${field}`),
+    ...PII_FIELDS.map((field) => `headers.${field}`),
+    ...PII_FIELDS.map((field) => `body.${field}`),
+    ...PII_FIELDS.map((field) => `data.${field}`),
+    ...PII_FIELDS.map((field) => `user.${field}`),
+    ...PII_FIELDS.map((field) => `request.${field}`),
+    ...PII_FIELDS.map((field) => `response.${field}`),
     // Special header fields
     'headers["x-api-key"]',
     'headers["X-API-Key"]',
@@ -75,7 +75,7 @@ const loggerConfig = {
             const serialized = pino.stdSerializers.req(req);
             if (serialized.headers) {
                 const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'x-auth-token'];
-                sensitiveHeaders.forEach(header => {
+                sensitiveHeaders.forEach((header) => {
                     if (serialized.headers[header]) {
                         serialized.headers[header] = '[REDACTED]';
                     }

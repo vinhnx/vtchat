@@ -1,4 +1,3 @@
-
 import { log } from '@repo/shared/logger';
 /**
  * Database queries for account linking using Neon MCP
@@ -52,9 +51,9 @@ export async function getLinkedAccountsFromDB(userId: string): Promise<LinkedAcc
 export async function isProviderLinked(userId: string, providerId: string): Promise<boolean> {
     try {
         const linkedAccounts = await getLinkedAccountsFromDB(userId);
-        return linkedAccounts.some(account => account.providerId === providerId);
+        return linkedAccounts.some((account) => account.providerId === providerId);
     } catch (error) {
-        log.error({ error, providerId }, `Error checking if provider is linked`);
+        log.error({ error, providerId }, 'Error checking if provider is linked');
         return false;
     }
 }
@@ -68,10 +67,10 @@ export async function getAccountIdForProvider(
 ): Promise<string | null> {
     try {
         const linkedAccounts = await getLinkedAccountsFromDB(userId);
-        const account = linkedAccounts.find(acc => acc.providerId === providerId);
+        const account = linkedAccounts.find((acc) => acc.providerId === providerId);
         return account?.accountId || null;
     } catch (error) {
-        log.error({ error, providerId }, `Error getting account ID for provider`);
+        log.error({ error, providerId }, 'Error getting account ID for provider');
         return null;
     }
 }

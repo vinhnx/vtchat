@@ -36,11 +36,11 @@ interface KnowledgeItem {
 
 export function RAGChatbot() {
     const { data: session } = useSession();
-    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
-    const embeddingModel = useAppStore(state => state.embeddingModel);
-    const ragChatModel = useAppStore(state => state.ragChatModel);
-    const profile = useAppStore(state => state.profile);
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
+    const embeddingModel = useAppStore((state) => state.embeddingModel);
+    const ragChatModel = useAppStore((state) => state.ragChatModel);
+    const profile = useAppStore((state) => state.profile);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -65,7 +65,7 @@ export function RAGChatbot() {
             if (!hasRequiredKeys) {
                 setShowApiKeyDialog(true);
             }
-        } else if (!hasRequiredKeys && !showApiKeyDialog) {
+        } else if (!(hasRequiredKeys || showApiKeyDialog)) {
             // Only show dialog if keys were removed and dialog isn't already open
             setShowApiKeyDialog(true);
         }
@@ -83,7 +83,7 @@ export function RAGChatbot() {
             ragChatModel,
             profile,
         },
-        onError: error => {
+        onError: (error) => {
             log.error({ error }, 'RAG Chat Error');
             log.info({ message: error.message }, 'Error message'); // Debug log
 
@@ -112,7 +112,7 @@ export function RAGChatbot() {
 
     // Track if we're currently processing to avoid duplicate indicators
     const isProcessing =
-        isLoading || messages.some(msg => msg.role === 'assistant' && !msg.content.trim());
+        isLoading || messages.some((msg) => msg.role === 'assistant' && !msg.content.trim());
 
     const fetchKnowledgeBase = async () => {
         try {
@@ -160,7 +160,7 @@ export function RAGChatbot() {
                 method: 'DELETE',
             });
             if (response.ok) {
-                setKnowledgeBase(prev => prev.filter(item => item.id !== id));
+                setKnowledgeBase((prev) => prev.filter((item) => item.id !== id));
                 setDeleteItemId(null);
                 reload();
             }
@@ -187,7 +187,7 @@ export function RAGChatbot() {
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
-    const currentRagChatModel = models.find(m => m.id === ragChatModel);
+    const currentRagChatModel = models.find((m) => m.id === ragChatModel);
 
     return (
         <div className="flex h-full gap-6">
@@ -238,31 +238,31 @@ export function RAGChatbot() {
                         )}
 
                         {messages
-                            .filter(message => message.content && message.content.trim())
+                            .filter((message) => message.content && message.content.trim())
                             .map((message, index) => (
                                 <div
-                                    key={index}
                                     className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                    key={index}
                                 >
                                     {message.role === 'user' ? (
                                         <Avatar
-                                            name={session?.user?.name || 'User'}
-                                            src={session?.user?.image ?? undefined}
-                                            size="md"
                                             className="h-8 w-8 shrink-0"
+                                            name={session?.user?.name || 'User'}
+                                            size="md"
+                                            src={session?.user?.image ?? undefined}
                                         />
                                     ) : (
-                                        <div className="bg-background border-primary/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
+                                        <div className="border-primary/20 bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
                                             <svg
-                                                width="16"
                                                 height="16"
                                                 viewBox="-7.5 0 32 32"
+                                                width="16"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
                                                 <path
+                                                    className="text-primary"
                                                     d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
                                                     fill="currentColor"
-                                                    className="text-primary"
                                                 />
                                             </svg>
                                         </div>
@@ -302,17 +302,17 @@ export function RAGChatbot() {
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="bg-background border-primary/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
+                                <div className="border-primary/20 bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
                                     <svg
-                                        width="16"
                                         height="16"
                                         viewBox="-7.5 0 32 32"
+                                        width="16"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
+                                            className="text-primary"
                                             d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
                                             fill="currentColor"
-                                            className="text-primary"
                                         />
                                     </svg>
                                 </div>
@@ -320,9 +320,9 @@ export function RAGChatbot() {
                                     <div className="bg-muted max-w-[80%] rounded-lg p-3">
                                         <div className="text-muted-foreground flex items-center gap-2 text-sm">
                                             <div className="flex items-center gap-1">
-                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]"></div>
-                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]"></div>
-                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current"></div>
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                                                <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
                                             </div>
                                             <span className="ml-2">AI is thinking...</span>
                                         </div>
@@ -349,10 +349,10 @@ export function RAGChatbot() {
                                     Please add your API keys to use the Knowledge Assistant
                                 </span>
                                 <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setShowApiKeyDialog(true)}
                                     className="text-xs"
+                                    onClick={() => setShowApiKeyDialog(true)}
+                                    size="sm"
+                                    variant="outline"
                                 >
                                     Add API Keys
                                 </Button>
@@ -360,22 +360,22 @@ export function RAGChatbot() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="flex gap-2">
+                    <form className="flex gap-2" onSubmit={handleSubmit}>
                         <Input
-                            value={input}
+                            className="flex-1"
+                            disabled={isLoading || !hasRequiredKeys}
                             onChange={handleInputChange}
                             placeholder={
-                                !hasRequiredKeys
-                                    ? 'Add API keys to continue chatting...'
-                                    : 'Ask anything or share knowledge...'
+                                hasRequiredKeys
+                                    ? 'Ask anything or share knowledge...'
+                                    : 'Add API keys to continue chatting...'
                             }
-                            disabled={isLoading || !hasRequiredKeys}
-                            className="flex-1"
+                            value={input}
                         />
                         <Button
-                            type="submit"
                             disabled={isLoading || !input.trim() || !hasRequiredKeys}
                             size="icon"
+                            type="submit"
                         >
                             <Send className="h-4 w-4" />
                         </Button>
@@ -393,7 +393,7 @@ export function RAGChatbot() {
                                 <CardTitle className="flex items-center gap-2 text-base">
                                     <Database className="h-4 w-4" />
                                     Knowledge Base
-                                    <Badge variant="secondary" className="ml-auto">
+                                    <Badge className="ml-auto" variant="secondary">
                                         {knowledgeBase.length}
                                     </Badge>
                                 </CardTitle>
@@ -401,16 +401,16 @@ export function RAGChatbot() {
                             <CardContent className="space-y-3">
                                 <div className="flex gap-2">
                                     <Dialog
-                                        open={isViewDialogOpen}
-                                        onOpenChange={open => {
+                                        onOpenChange={(open) => {
                                             setIsViewDialogOpen(open);
                                             if (open) {
                                                 fetchKnowledgeBase();
                                             }
                                         }}
+                                        open={isViewDialogOpen}
                                     >
                                         <DialogTrigger asChild>
-                                            <Button variant="outline" size="sm" className="flex-1">
+                                            <Button className="flex-1" size="sm" variant="outline">
                                                 <Eye className="mr-2 h-3 w-3" />
                                                 View
                                             </Button>
@@ -432,10 +432,10 @@ export function RAGChatbot() {
                                                             to build your knowledge base!
                                                         </div>
                                                     ) : (
-                                                        knowledgeBase.map(item => (
+                                                        knowledgeBase.map((item) => (
                                                             <div
-                                                                key={item.id}
                                                                 className="flex items-start justify-between gap-3 rounded-lg border p-3"
+                                                                key={item.id}
                                                             >
                                                                 <div className="min-w-0 flex-1">
                                                                     <p className="break-words text-sm">
@@ -448,12 +448,12 @@ export function RAGChatbot() {
                                                                     </p>
                                                                 </div>
                                                                 <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
+                                                                    className="text-destructive hover:text-destructive"
                                                                     onClick={() =>
                                                                         setDeleteItemId(item.id)
                                                                     }
-                                                                    className="text-destructive hover:text-destructive"
+                                                                    size="sm"
+                                                                    variant="ghost"
                                                                 >
                                                                     <Trash2 className="h-3 w-3" />
                                                                 </Button>
@@ -466,11 +466,11 @@ export function RAGChatbot() {
                                     </Dialog>
 
                                     <Dialog
-                                        open={isClearDialogOpen}
                                         onOpenChange={setIsClearDialogOpen}
+                                        open={isClearDialogOpen}
                                     >
                                         <DialogTrigger asChild>
-                                            <Button variant="outline" size="sm" className="flex-1">
+                                            <Button className="flex-1" size="sm" variant="outline">
                                                 <Trash2 className="mr-2 h-3 w-3" />
                                                 Clear
                                             </Button>
@@ -486,15 +486,15 @@ export function RAGChatbot() {
                                             </DialogHeader>
                                             <div className="flex justify-end gap-2">
                                                 <Button
-                                                    variant="outline"
                                                     onClick={() => setIsClearDialogOpen(false)}
+                                                    variant="outline"
                                                 >
                                                     Cancel
                                                 </Button>
                                                 <Button
-                                                    variant="destructive"
-                                                    onClick={clearKnowledgeBase}
                                                     disabled={isClearing}
+                                                    onClick={clearKnowledgeBase}
+                                                    variant="destructive"
                                                 >
                                                     {isClearing ? 'Clearing...' : 'Clear All'}
                                                 </Button>
@@ -505,8 +505,8 @@ export function RAGChatbot() {
 
                                 {/* Individual Delete Confirmation Dialog */}
                                 <Dialog
-                                    open={!!deleteItemId}
                                     onOpenChange={() => setDeleteItemId(null)}
+                                    open={!!deleteItemId}
                                 >
                                     <DialogContent>
                                         <DialogHeader>
@@ -518,18 +518,18 @@ export function RAGChatbot() {
                                         </DialogHeader>
                                         <div className="flex justify-end gap-2">
                                             <Button
-                                                variant="outline"
                                                 onClick={() => setDeleteItemId(null)}
+                                                variant="outline"
                                             >
                                                 Cancel
                                             </Button>
                                             <Button
-                                                variant="destructive"
+                                                disabled={isDeleting}
                                                 onClick={() =>
                                                     deleteItemId &&
                                                     deleteKnowledgeItem(deleteItemId)
                                                 }
-                                                disabled={isDeleting}
+                                                variant="destructive"
                                             >
                                                 {isDeleting ? 'Deleting...' : 'Delete'}
                                             </Button>
@@ -569,10 +569,10 @@ export function RAGChatbot() {
                                     </div>
                                 </div>
                                 <Button
-                                    variant="outline"
-                                    size="sm"
                                     className="mt-3 w-full"
                                     onClick={() => setIsSettingsOpen(true)}
+                                    size="sm"
+                                    variant="outline"
                                 >
                                     <Settings className="mr-2 h-3 w-3" />
                                     Open VT+ Settings

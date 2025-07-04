@@ -1,15 +1,17 @@
 import { Footer } from '@repo/common/components';
 import { Button, TypographyH2 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'About VT',
-    description: 'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security and advanced AI capabilities.',
+    description:
+        'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security and advanced AI capabilities.',
     openGraph: {
         title: 'About VT',
-        description: 'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security.',
+        description:
+            'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security.',
         type: 'website',
     },
     robots: {
@@ -25,7 +27,7 @@ export default function AboutPage() {
             <header className="border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4">
                     <Link href="/">
-                        <Button variant="ghost" size="sm" className="gap-2">
+                        <Button className="gap-2" size="sm" variant="ghost">
                             <ArrowLeft size={16} />
                             Back to VT
                         </Button>
@@ -60,69 +62,127 @@ function AboutContent() {
                         About VT
                     </TypographyH2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                        VT is a modern, privacy-first AI chat application with enterprise-grade security and advanced AI capabilities.
+                        VT is a modern, privacy-first AI chat application with enterprise-grade
+                        security and advanced AI capabilities.
                     </p>
                 </div>
 
                 <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <div className="space-y-8">
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Our Mission</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                VT delivers cutting-edge AI capabilities through a sophisticated dual-tier subscription system while maintaining a privacy-first architecture. We believe in providing the most generous free tier in the industry while offering premium research capabilities for power users.
+                                VT delivers cutting-edge AI capabilities through a sophisticated
+                                dual-tier subscription system while maintaining a privacy-first
+                                architecture. We believe in providing the most generous free tier in
+                                the industry while offering premium research capabilities for power
+                                users.
                             </p>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Privacy-First Architecture</h3>
+                            <h3 className="mb-4 text-xl font-semibold">
+                                Privacy-First Architecture
+                            </h3>
                             <p className="text-muted-foreground mb-4">
-                                Your privacy is our top priority. VT implements a local-first storage approach where all your conversations are stored directly in your browser's IndexedDB via Dexie.js.
+                                Your privacy is our top priority. VT implements a local-first
+                                storage approach where all your conversations are stored directly in
+                                your browser's IndexedDB via Dexie.js.
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>Zero Server Storage:</strong> Your conversations never leave your device</li>
-                                <li><strong>Multi-User Isolation:</strong> Complete data separation on shared devices</li>
-                                <li><strong>Thread Isolation:</strong> Each user account gets completely separate storage</li>
-                                <li><strong>Client-Side Encryption:</strong> API keys are encrypted and stored locally</li>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>Zero Server Storage:</strong> Your conversations never
+                                    leave your device
+                                </li>
+                                <li>
+                                    <strong>Multi-User Isolation:</strong> Complete data separation
+                                    on shared devices
+                                </li>
+                                <li>
+                                    <strong>Thread Isolation:</strong> Each user account gets
+                                    completely separate storage
+                                </li>
+                                <li>
+                                    <strong>Client-Side Encryption:</strong> API keys are encrypted
+                                    and stored locally
+                                </li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Advanced AI Capabilities</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Advanced AI Capabilities</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT integrates with multiple leading AI providers to offer comprehensive AI capabilities:
+                                VT integrates with multiple leading AI providers to offer
+                                comprehensive AI capabilities:
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>Multi-Provider Support:</strong> OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI</li>
-                                <li><strong>Premium AI Models:</strong> Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3</li>
-                                <li><strong>Free AI Models:</strong> 9 models including Gemini 2.0/2.5 Flash and OpenRouter models</li>
-                                <li><strong>Thinking Mode:</strong> AI SDK reasoning tokens with transparent thinking process</li>
-                                <li><strong>Document Processing:</strong> Upload and analyze PDFs, documents, and images</li>
-                                <li><strong>Structured Output:</strong> Extract structured data from documents</li>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>Multi-Provider Support:</strong> OpenAI, Anthropic,
+                                    Google, Fireworks, Together AI, and xAI
+                                </li>
+                                <li>
+                                    <strong>Premium AI Models:</strong> Claude 4, GPT-4.1, O3
+                                    series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+                                </li>
+                                <li>
+                                    <strong>Free AI Models:</strong> 9 models including Gemini
+                                    2.0/2.5 Flash and OpenRouter models
+                                </li>
+                                <li>
+                                    <strong>Thinking Mode:</strong> AI SDK reasoning tokens with
+                                    transparent thinking process
+                                </li>
+                                <li>
+                                    <strong>Document Processing:</strong> Upload and analyze PDFs,
+                                    documents, and images
+                                </li>
+                                <li>
+                                    <strong>Structured Output:</strong> Extract structured data from
+                                    documents
+                                </li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Security & Privacy</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Security & Privacy</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT implements security measures focused on privacy and user protection:
+                                VT implements security measures focused on privacy and user
+                                protection:
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>Bot Protection:</strong> Intelligent bot detection for authentication endpoints</li>
-                                <li><strong>Better Auth:</strong> Modern session management with secure OAuth integration</li>
-                                <li><strong>Local Storage:</strong> All conversations stored on your device for maximum privacy</li>
-                                <li><strong>Direct API Access:</strong> Messages sent directly to AI providers, never stored on our servers</li>
-                                <li><strong>Encrypted API Keys:</strong> Your API keys are encrypted and stored locally only</li>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>Bot Protection:</strong> Intelligent bot detection for
+                                    authentication endpoints
+                                </li>
+                                <li>
+                                    <strong>Better Auth:</strong> Modern session management with
+                                    secure OAuth integration
+                                </li>
+                                <li>
+                                    <strong>Local Storage:</strong> All conversations stored on your
+                                    device for maximum privacy
+                                </li>
+                                <li>
+                                    <strong>Direct API Access:</strong> Messages sent directly to AI
+                                    providers, never stored on our servers
+                                </li>
+                                <li>
+                                    <strong>Encrypted API Keys:</strong> Your API keys are encrypted
+                                    and stored locally only
+                                </li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Subscription Tiers</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT offers the most generous free tier in the industry with only 3 premium features. Upgrade to VT+ for enhanced research capabilities and premium AI models.
+                                VT offers the most generous free tier in the industry with only 3
+                                premium features. Upgrade to VT+ for enhanced research capabilities
+                                and premium AI models.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">
-                                    <Button size="lg" className="gap-2">
+                                    <Button className="gap-2" size="lg">
                                         View Subscription Plans
                                     </Button>
                                 </Link>
@@ -130,43 +190,79 @@ function AboutContent() {
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Technology Stack</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Technology Stack</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT is built with modern web technologies for optimal performance and reliability:
+                                VT is built with modern web technologies for optimal performance and
+                                reliability:
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>Frontend:</strong> Next.js 14 with App Router, TypeScript, Tailwind CSS</li>
-                                <li><strong>UI Components:</strong> Shadcn UI with Radix UI primitives</li>
-                                <li><strong>Database:</strong> Neon PostgreSQL with Drizzle ORM</li>
-                                <li><strong>Authentication:</strong> Better Auth with secure session management</li>
-                                <li><strong>Deployment:</strong> Fly.io with Singapore region optimization</li>
-                                <li><strong>Build System:</strong> Turborepo monorepo with 87% faster compilation</li>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>Frontend:</strong> Next.js 14 with App Router,
+                                    TypeScript, Tailwind CSS
+                                </li>
+                                <li>
+                                    <strong>UI Components:</strong> Shadcn UI with Radix UI
+                                    primitives
+                                </li>
+                                <li>
+                                    <strong>Database:</strong> Neon PostgreSQL with Drizzle ORM
+                                </li>
+                                <li>
+                                    <strong>Authentication:</strong> Better Auth with secure session
+                                    management
+                                </li>
+                                <li>
+                                    <strong>Deployment:</strong> Fly.io with Singapore region
+                                    optimization
+                                </li>
+                                <li>
+                                    <strong>Build System:</strong> Turborepo monorepo with 87%
+                                    faster compilation
+                                </li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Performance & Reliability</h3>
+                            <h3 className="mb-4 text-xl font-semibold">
+                                Performance & Reliability
+                            </h3>
                             <p className="text-muted-foreground mb-4">
-                                VT is production-ready with enterprise-grade performance optimization:
+                                VT is production-ready with enterprise-grade performance
+                                optimization:
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                                <li><strong>87% Faster Compilation:</strong> Build time reduced from 24s to 3s</li>
-                                <li><strong>Auth Performance:</strong> 80-90% faster session validation</li>
-                                <li><strong>Database Optimization:</strong> 70-80% faster queries with proper indexing</li>
-                                <li><strong>Production Deployment:</strong> Auto-scaling with health monitoring</li>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>87% Faster Compilation:</strong> Build time reduced from
+                                    24s to 3s
+                                </li>
+                                <li>
+                                    <strong>Auth Performance:</strong> 80-90% faster session
+                                    validation
+                                </li>
+                                <li>
+                                    <strong>Database Optimization:</strong> 70-80% faster queries
+                                    with proper indexing
+                                </li>
+                                <li>
+                                    <strong>Production Deployment:</strong> Auto-scaling with health
+                                    monitoring
+                                </li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Open Source & Community</h3>
+                            <h3 className="mb-4 text-xl font-semibold">Open Source & Community</h3>
                             <p className="text-muted-foreground">
-                                VT is built with transparency and community in mind. We believe in open development practices and welcome contributions from the community. Our codebase maintains zero TypeScript errors and comprehensive test coverage for reliability.
+                                VT is built with transparency and community in mind. We believe in
+                                open development practices and welcome contributions from the
+                                community. Our codebase maintains zero TypeScript errors and
+                                comprehensive test coverage for reliability.
                             </p>
                         </div>
 
-                        <div className="text-center pt-8">
+                        <div className="pt-8 text-center">
                             <Link href="/">
-                                <Button size="lg" className="gap-2">
+                                <Button className="gap-2" size="lg">
                                     Get Started with VT
                                 </Button>
                             </Link>

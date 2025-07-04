@@ -1,7 +1,7 @@
 import { createTask } from '@repo/orchestrator';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     generateObject,
     getHumanizedDate,
@@ -116,9 +116,9 @@ Current date: ${getHumanizedDate()}
 
         const newStepId = stepId + 1;
 
-        context?.update('queries', current => [...(current ?? []), ...(object?.queries ?? [])]);
+        context?.update('queries', (current) => [...(current ?? []), ...(object?.queries ?? [])]);
 
-        if (!!object?.reasoning) {
+        if (object?.reasoning) {
             updateStep({
                 stepId: newStepId,
                 stepStatus: 'PENDING',
@@ -129,7 +129,7 @@ Current date: ${getHumanizedDate()}
             });
         }
 
-        if (!object?.queries?.length || !object?.reasoning) {
+        if (!(object?.queries?.length && object?.reasoning)) {
             redirectTo('analysis');
         }
 

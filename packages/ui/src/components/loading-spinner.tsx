@@ -1,11 +1,11 @@
 'use client';
 
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { cn } from '../lib/utils';
 
 // Loading spinner variants
-const spinnerVariants = cva('animate-spin rounded-full border-solid border-current', {
+const spinnerVariants = cva('animate-spin rounded-full border-current border-solid', {
     variants: {
         size: {
             sm: 'h-4 w-4 border-2',
@@ -83,12 +83,12 @@ const PulseLoader = React.forwardRef<HTMLDivElement, PulseLoaderProps>(
             <div className={cn('space-y-2', className)} ref={ref} {...props}>
                 {Array.from({ length: lines }).map((_, i) => (
                     <div
-                        key={i}
                         className={cn(
                             'bg-muted animate-pulse rounded',
                             heights[height],
                             i === lines - 1 ? 'w-3/4' : 'w-full'
                         )}
+                        key={i}
                         style={{
                             animationDelay: `${i * 0.1}s`,
                         }}
@@ -123,14 +123,14 @@ const DotsLoader = React.forwardRef<HTMLDivElement, DotsLoaderProps>(
 
         return (
             <div className={cn('flex items-center space-x-1', className)} ref={ref} {...props}>
-                {[0, 1, 2].map(i => (
+                {[0, 1, 2].map((i) => (
                     <div
-                        key={i}
                         className={cn(
                             'animate-bounce rounded-full',
                             sizeMap[size],
                             colorMap[color]
                         )}
+                        key={i}
                         style={{
                             animationDelay: `${i * 0.1}s`,
                             animationDuration: '0.6s',
@@ -154,27 +154,38 @@ export interface PremiumSkeletonProps extends React.HTMLAttributes<HTMLDivElemen
 }
 
 const PremiumSkeleton = React.forwardRef<HTMLDivElement, PremiumSkeletonProps>(
-    ({ className, variant = 'default', shimmer = true, lines = 1, height = 20, width = '100%', ...props }, ref) => {
+    (
+        {
+            className,
+            variant = 'default',
+            shimmer = true,
+            lines = 1,
+            height = 20,
+            width = '100%',
+            ...props
+        },
+        ref
+    ) => {
         const variants = {
             default: 'rounded-md',
             rounded: 'rounded-lg',
             circle: 'rounded-full',
         };
 
-        const shimmerClass = shimmer 
+        const shimmerClass = shimmer
             ? 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent'
             : '';
 
         if (lines === 1) {
             return (
                 <div
-                    ref={ref}
                     className={cn(
                         'bg-muted animate-pulse',
                         variants[variant],
                         shimmerClass,
                         className
                     )}
+                    ref={ref}
                     style={{ height, width }}
                     {...props}
                 />
@@ -185,13 +196,13 @@ const PremiumSkeleton = React.forwardRef<HTMLDivElement, PremiumSkeletonProps>(
             <div className={cn('space-y-2', className)} ref={ref} {...props}>
                 {Array.from({ length: lines }).map((_, i) => (
                     <div
-                        key={i}
                         className={cn(
                             'bg-muted animate-pulse',
                             variants[variant],
                             shimmerClass,
                             i === lines - 1 ? 'w-3/4' : 'w-full'
                         )}
+                        key={i}
                         style={{
                             height,
                             animationDelay: `${i * 0.1}s`,
@@ -215,7 +226,15 @@ export interface CircularProgressProps extends React.HTMLAttributes<HTMLDivEleme
 
 const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(
     (
-        { className, progress = 0, size = 40, strokeWidth = 4, showPercentage = false, gradient = false, ...props },
+        {
+            className,
+            progress = 0,
+            size = 40,
+            strokeWidth = 4,
+            showPercentage = false,
+            gradient = false,
+            ...props
+        },
         ref
     ) => {
         const radius = (size - strokeWidth) / 2;
@@ -226,14 +245,14 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
         return (
             <div
                 className={cn('relative inline-flex items-center justify-center', className)}
-                style={{ width: size, height: size }}
                 ref={ref}
+                style={{ width: size, height: size }}
                 {...props}
             >
-                <svg className="-rotate-90 transform" width={size} height={size}>
+                <svg className="-rotate-90 transform" height={size} width={size}>
                     {gradient && (
                         <defs>
-                            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <linearGradient id={gradientId} x1="0%" x2="100%" y1="0%" y2="0%">
                                 <stop offset="0%" stopColor="rgb(59, 130, 246)" />
                                 <stop offset="50%" stopColor="rgb(147, 51, 234)" />
                                 <stop offset="100%" stopColor="rgb(219, 39, 119)" />
@@ -242,31 +261,33 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
                     )}
                     {/* Background circle */}
                     <circle
+                        className="text-muted/30"
                         cx={size / 2}
                         cy={size / 2}
+                        fill="none"
                         r={radius}
                         stroke="currentColor"
                         strokeWidth={strokeWidth}
-                        fill="none"
-                        className="text-muted/30"
                     />
                     {/* Progress circle */}
                     <circle
+                        className={cn(
+                            'transition-all duration-500 ease-out',
+                            gradient ? '' : 'text-primary'
+                        )}
                         cx={size / 2}
                         cy={size / 2}
-                        r={radius}
-                        stroke={gradient ? `url(#${gradientId})` : "currentColor"}
-                        strokeWidth={strokeWidth}
                         fill="none"
+                        r={radius}
+                        stroke={gradient ? `url(#${gradientId})` : 'currentColor'}
                         strokeDasharray={circumference}
                         strokeDashoffset={offset}
                         strokeLinecap="round"
-                        className={cn(
-                            "transition-all duration-500 ease-out",
-                            gradient ? "" : "text-primary"
-                        )}
+                        strokeWidth={strokeWidth}
                         style={{
-                            filter: gradient ? 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.3))' : undefined
+                            filter: gradient
+                                ? 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.3))'
+                                : undefined,
                         }}
                     />
                 </svg>
@@ -282,4 +303,11 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
 
 CircularProgress.displayName = 'CircularProgress';
 
-export { LoadingSpinner, PulseLoader, DotsLoader, CircularProgress, PremiumSkeleton, spinnerVariants };
+export {
+    LoadingSpinner,
+    PulseLoader,
+    DotsLoader,
+    CircularProgress,
+    PremiumSkeleton,
+    spinnerVariants,
+};

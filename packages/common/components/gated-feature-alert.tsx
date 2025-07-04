@@ -135,7 +135,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         if (requiredFeature) {
             const featureName = requiredFeature
                 .replace(/_/g, ' ')
-                .replace(/\b\w/g, l => l.toUpperCase());
+                .replace(/\b\w/g, (l) => l.toUpperCase());
             return `Unlock ${featureName} with VT+! Upgrade now to enjoy enhanced AI capabilities and unlock your potential.`;
         }
 
@@ -171,7 +171,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     }
 
     // If no fallback and no alert, return null
-    if (!fallback && !showAlert) {
+    if (!(fallback || showAlert)) {
         return null;
     }
 
@@ -197,20 +197,29 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     return (
         <>
             {gatedChildren}
-            <Dialog open={showUpgradeAlert} onOpenChange={setShowUpgradeAlert}>
-                <DialogContent ariaTitle={title} className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl">
-                    <DialogHeader className="text-center pb-4">
+            <Dialog onOpenChange={setShowUpgradeAlert} open={showUpgradeAlert}>
+                <DialogContent
+                    ariaTitle={title}
+                    className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl"
+                >
+                    <DialogHeader className="pb-4 text-center">
                         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg">
-                            <Sparkles size={24} className="text-white" />
+                            <Sparkles className="text-white" size={24} />
                         </div>
-                        <DialogTitle className="text-xl font-bold text-gray-900">{title}</DialogTitle>
-                        <DialogDescription className="text-gray-600 leading-relaxed">{defaultMessage}</DialogDescription>
-                        
+                        <DialogTitle className="text-xl font-bold text-gray-900">
+                            {title}
+                        </DialogTitle>
+                        <DialogDescription className="leading-relaxed text-gray-600">
+                            {defaultMessage}
+                        </DialogDescription>
+
                         {/* Free Trial & Cancel Anytime */}
-                        <div className="flex items-center justify-center gap-3 mt-3">
+                        <div className="mt-3 flex items-center justify-center gap-3">
                             <div className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs">
                                 <Sparkles className="h-3 w-3 text-green-600" />
-                                <span className="font-medium text-green-700">Free trial included</span>
+                                <span className="font-medium text-green-700">
+                                    Free trial included
+                                </span>
                             </div>
                             <div className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs">
                                 <span className="h-3 w-3 text-blue-600">✓</span>
@@ -219,16 +228,16 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                         </div>
                     </DialogHeader>
                     <DialogFooter className="gap-3 pt-4">
-                        <Button 
-                            variant="outline" 
-                            onClick={() => setShowUpgradeAlert(false)}
+                        <Button
                             className="border-gray-200 text-gray-600 hover:bg-gray-50"
+                            onClick={() => setShowUpgradeAlert(false)}
+                            variant="outline"
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            onClick={handleUpgrade} 
-                            className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg font-semibold"
+                        <Button
+                            className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg hover:from-amber-600 hover:to-orange-600"
+                            onClick={handleUpgrade}
                         >
                             <Sparkles size={16} />
                             UPGRADE TO VT+

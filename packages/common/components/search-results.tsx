@@ -1,6 +1,6 @@
 'use client';
 import { LinkPreviewPopover } from '@repo/common/components';
-import { Source } from '@repo/shared/types';
+import type { Source } from '@repo/shared/types';
 import { getHost, getHostname } from '@repo/shared/utils';
 import { Badge, Flex, LinkFavicon } from '@repo/ui';
 
@@ -14,17 +14,17 @@ export const SearchResultsList = ({ sources }: SearchResultsType) => {
     }
 
     return (
-        <Flex direction="col" gap="md" className="w-full">
+        <Flex className="w-full" direction="col" gap="md">
             {Array.isArray(sources) && (
-                <Flex gap="xs" className="mb-4 w-full flex-wrap overflow-x-hidden" items="stretch">
+                <Flex className="mb-4 w-full flex-wrap overflow-x-hidden" gap="xs" items="stretch">
                     {sources.map((source, index) => (
-                        <LinkPreviewPopover source={source} key={`source-${source.link}-${index}`}>
+                        <LinkPreviewPopover key={`source-${source.link}-${index}`} source={source}>
                             <Badge
-                                size="md"
-                                variant="default"
                                 onClick={() => {
                                     window?.open(source?.link, '_blank');
                                 }}
+                                size="md"
+                                variant="default"
                             >
                                 <LinkFavicon link={getHost(source.link)} />
                                 {getHostname(source.link)}

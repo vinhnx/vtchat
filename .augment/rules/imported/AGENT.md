@@ -1,5 +1,5 @@
 ---
-type: "manual"
+type: 'manual'
 ---
 
 # AGENT.md - Development Guidelines

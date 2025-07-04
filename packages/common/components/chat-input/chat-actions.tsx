@@ -9,7 +9,7 @@ import {
 } from '@repo/ai/models';
 import { GatedFeatureAlert, MotionSkeleton, RateLimitIndicator } from '@repo/common/components';
 import { useSubscriptionAccess, useWebSearch as useWebSearchHook } from '@repo/common/hooks';
-import { useApiKeysStore, useChatStore, type ApiKeys } from '@repo/common/store';
+import { type ApiKeys, useApiKeysStore, useChatStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
@@ -52,21 +52,21 @@ import { chatOptions, modelOptions, modelOptionsByProvider } from './chat-config
 export function AttachmentButton() {
     return (
         <Button
+            className="gap-2"
+            disabled
+            rounded="full"
             size="icon"
             tooltip="Attachment (coming soon)"
             variant="ghost"
-            className="gap-2"
-            rounded="full"
-            disabled
         >
-            <Paperclip size={18} strokeWidth={2} className="text-muted-foreground" />
+            <Paperclip className="text-muted-foreground" size={18} strokeWidth={2} />
         </Button>
     );
 }
 
 export function ChatModeButton() {
-    const chatMode = useChatStore(state => state.chatMode);
-    const setChatMode = useChatStore(state => state.setChatMode);
+    const chatMode = useChatStore((state) => state.chatMode);
+    const setChatMode = useChatStore((state) => state.setChatMode);
     const [isChatModeOpen, setIsChatModeOpen] = useState(false);
     const { push } = useRouter();
     const [showGateAlert, setShowGateAlert] = useState<{
@@ -80,7 +80,7 @@ export function ChatModeButton() {
     const { hasAccess, isLoaded } = useSubscriptionAccess();
 
     const selectedOption =
-        [...chatOptions, ...modelOptions].find(option => option.value === chatMode) ??
+        [...chatOptions, ...modelOptions].find((option) => option.value === chatMode) ??
         modelOptions[0];
 
     const currentModeConfig = ChatModeConfig[chatMode];
@@ -89,7 +89,7 @@ export function ChatModeButton() {
     const isCurrentModeGated = (() => {
         if (!isLoaded) return false; // Don't show as gated while loading
 
-        if (!currentModeConfig?.requiredFeature && !currentModeConfig?.requiredPlan) {
+        if (!(currentModeConfig?.requiredFeature || currentModeConfig?.requiredPlan)) {
             return false; // Not gated if no requirements
         }
 
@@ -102,7 +102,9 @@ export function ChatModeButton() {
         }
 
         if (currentModeConfig.requiredPlan && hasRequiredAccess) {
-            hasRequiredAccess = hasAccess({ plan: currentModeConfig.requiredPlan as PlanSlug });
+            hasRequiredAccess = hasAccess({
+                plan: currentModeConfig.requiredPlan as PlanSlug,
+            });
         }
 
         return !hasRequiredAccess;
@@ -120,16 +122,16 @@ export function ChatModeButton() {
 
     return (
         <>
-            <DropdownMenu open={isChatModeOpen} onOpenChange={setIsChatModeOpen}>
+            <DropdownMenu onOpenChange={setIsChatModeOpen} open={isChatModeOpen}>
                 <DropdownMenuTrigger asChild>
                     {isCurrentModeGated ? (
-                        <Button variant={'secondary'} size="xs" className="opacity-70">
+                        <Button className="opacity-70" size="xs" variant={'secondary'}>
                             {selectedOption?.icon}
                             {selectedOption?.label} (VT+)
                             <ChevronDown size={14} strokeWidth={2} />
                         </Button>
                     ) : (
-                        <Button variant={'secondary'} size="xs">
+                        <Button size="xs" variant={'secondary'}>
                             {selectedOption?.icon}
                             {selectedOption?.label}
                             <ChevronDown size={14} strokeWidth={2} />
@@ -138,20 +140,20 @@ export function ChatModeButton() {
                 </DropdownMenuTrigger>
                 <ChatModeOptions
                     chatMode={chatMode}
-                    setChatMode={setChatMode}
                     onGatedFeature={handleGatedFeature}
+                    setChatMode={setChatMode}
                 />
             </DropdownMenu>
 
             {/* Gated Feature Alert Modal */}
-            <Dialog open={!!showGateAlert} onOpenChange={open => !open && setShowGateAlert(null)}>
-                <DialogContent className="mx-4 max-w-[95vw] sm:max-w-md rounded-xl">
+            <Dialog onOpenChange={(open) => !open && setShowGateAlert(null)} open={!!showGateAlert}>
+                <DialogContent className="mx-4 max-w-[95vw] rounded-xl sm:max-w-md">
                     <DialogTitle className="sr-only">
                         {showGateAlert?.title || 'Upgrade Required'}
                     </DialogTitle>
                     <div className="flex flex-col items-center gap-4 p-6 text-center">
                         <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <ArrowUp size={24} className="text-purple-600 dark:text-purple-400" />
+                            <ArrowUp className="text-purple-600 dark:text-purple-400" size={24} />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">{showGateAlert?.title}</h3>
@@ -160,7 +162,7 @@ export function ChatModeButton() {
                             </p>
                         </div>
                         <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setShowGateAlert(null)}>
+                            <Button onClick={() => setShowGateAlert(null)} variant="outline">
                                 Cancel
                             </Button>
                             <Button onClick={() => push('/plus')}>Upgrade Now</Button>
@@ -173,9 +175,9 @@ export function ChatModeButton() {
 }
 
 export function WebSearchButton() {
-    const useWebSearch = useChatStore(state => state.useWebSearch);
+    const useWebSearch = useChatStore((state) => state.useWebSearch);
     const { webSearchType } = useWebSearchHook();
-    const setActiveButton = useChatStore(state => state.setActiveButton);
+    const setActiveButton = useChatStore((state) => state.setActiveButton);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -193,6 +195,8 @@ export function WebSearchButton() {
     return (
         <>
             <Button
+                className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
+                onClick={handleWebSearchToggle}
                 size={useWebSearch ? 'sm' : 'icon-sm'}
                 tooltip={
                     useWebSearch
@@ -206,13 +210,11 @@ export function WebSearchButton() {
                         : 'Native Web Search'
                 }
                 variant={useWebSearch ? 'secondary' : 'ghost'}
-                className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
-                onClick={handleWebSearchToggle}
             >
                 <Globe
+                    className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
                     size={16}
                     strokeWidth={2}
-                    className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
                 />
                 {useWebSearch && (
                     <p className="text-xs">
@@ -227,18 +229,18 @@ export function WebSearchButton() {
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to use web search functionality."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to use web search functionality."
             />
         </>
     );
 }
 
 export function MathCalculatorButton() {
-    const mathCalculatorEnabled = useChatStore(state => state.useMathCalculator);
-    const setActiveButton = useChatStore(state => state.setActiveButton);
+    const mathCalculatorEnabled = useChatStore((state) => state.useMathCalculator);
+    const setActiveButton = useChatStore((state) => state.setActiveButton);
     const { canAccess } = useSubscriptionAccess();
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -265,29 +267,29 @@ export function MathCalculatorButton() {
     return (
         <>
             <GatedFeatureAlert
-                requiredFeature={FeatureSlug.MATH_CALCULATOR}
                 message="Math calculator requires sign in"
+                requiredFeature={FeatureSlug.MATH_CALCULATOR}
             >
                 <Button
+                    className={cn(
+                        'gap-2',
+                        mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500'
+                    )}
+                    disabled={!hasMathCalculatorAccess}
+                    onClick={handleMathCalculatorToggle}
                     size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
                     tooltip={
                         mathCalculatorEnabled ? 'Math Calculator - Enabled' : 'Math Calculator'
                     }
                     variant={mathCalculatorEnabled ? 'secondary' : 'ghost'}
-                    className={cn(
-                        'gap-2',
-                        mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500'
-                    )}
-                    onClick={handleMathCalculatorToggle}
-                    disabled={!hasMathCalculatorAccess}
                 >
                     <Calculator
-                        size={16}
-                        strokeWidth={2}
                         className={cn(
                             mathCalculatorEnabled ? '!text-orange-500' : 'text-muted-foreground',
                             !hasMathCalculatorAccess && 'opacity-50'
                         )}
+                        size={16}
+                        strokeWidth={2}
                     />
                     {mathCalculatorEnabled && hasMathCalculatorAccess && (
                         <p className="text-xs">Calculator</p>
@@ -297,18 +299,18 @@ export function MathCalculatorButton() {
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to use math calculator functionality."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to use math calculator functionality."
             />
         </>
     );
 }
 
 export function ChartsButton() {
-    const useCharts = useChatStore(state => state.useCharts);
-    const setActiveButton = useChatStore(state => state.setActiveButton);
+    const useCharts = useChatStore((state) => state.useCharts);
+    const setActiveButton = useChatStore((state) => state.setActiveButton);
     const { canAccess } = useSubscriptionAccess();
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -335,24 +337,24 @@ export function ChartsButton() {
     return (
         <>
             <GatedFeatureAlert
-                requiredFeature={FeatureSlug.CHART_VISUALIZATION}
                 message="Chart visualization requires sign in"
+                requiredFeature={FeatureSlug.CHART_VISUALIZATION}
             >
                 <Button
+                    className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
+                    disabled={!hasChartAccess}
+                    onClick={handleChartsToggle}
                     size={useCharts ? 'sm' : 'icon-sm'}
                     tooltip={useCharts ? 'Charts & Graphs - Enabled' : 'Charts & Graphs'}
                     variant={useCharts ? 'secondary' : 'ghost'}
-                    className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
-                    onClick={handleChartsToggle}
-                    disabled={!hasChartAccess}
                 >
                     <BarChart3
-                        size={16}
-                        strokeWidth={2}
                         className={cn(
                             useCharts ? '!text-purple-500' : 'text-muted-foreground',
                             !hasChartAccess && 'opacity-50'
                         )}
+                        size={16}
+                        strokeWidth={2}
                     />
                     {useCharts && hasChartAccess && <p className="text-xs">Charts</p>}
                 </Button>
@@ -360,17 +362,17 @@ export function ChartsButton() {
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to use charts and graphs functionality."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to use charts and graphs functionality."
             />
         </>
     );
 }
 
 export function NewLineIndicator() {
-    const editor = useChatStore(state => state.editor);
+    const editor = useChatStore((state) => state.editor);
     const hasTextInput = !!editor?.getText();
 
     if (!hasTextInput) return null;
@@ -404,8 +406,8 @@ export function BYOKSetupModal({
     modelName: string;
     onApiKeySaved: () => void;
 }) {
-    const setApiKey = useApiKeysStore(state => state.setKey);
-    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
+    const setApiKey = useApiKeysStore((state) => state.setKey);
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const [apiKeyValue, setApiKeyValue] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
@@ -493,8 +495,8 @@ export function BYOKSetupModal({
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="mx-4 max-w-[95vw] sm:max-w-md rounded-xl">
+        <Dialog onOpenChange={handleClose} open={isOpen}>
+            <DialogContent className="mx-4 max-w-[95vw] rounded-xl sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <BYOKIcon />
@@ -517,30 +519,30 @@ export function BYOKSetupModal({
                         <div className="space-y-2">
                             <label className="text-sm font-medium">{provider.name} API Key</label>
                             <Input
-                                type="password"
-                                placeholder={provider.placeholder}
-                                value={apiKeyValue}
-                                onChange={e => setApiKeyValue(e.target.value)}
                                 className="font-mono"
+                                onChange={(e) => setApiKeyValue(e.target.value)}
+                                placeholder={provider.placeholder}
+                                type="password"
+                                value={apiKeyValue}
                             />
                         </div>
                         <a
-                            href={provider.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-xs text-blue-500 underline-offset-2 hover:text-blue-600 hover:underline"
+                            href={provider.url}
+                            rel="noopener noreferrer"
+                            target="_blank"
                         >
                             Get {provider.name} API key →
                         </a>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" onClick={handleClose} className="flex-1">
+                        <Button className="flex-1" onClick={handleClose} variant="outline">
                             Cancel
                         </Button>
                         <Button
-                            onClick={handleSave}
-                            disabled={!apiKeyValue.trim() || isSaving}
                             className="flex-1"
+                            disabled={!apiKeyValue.trim() || isSaving}
+                            onClick={handleSave}
                         >
                             {isSaving ? 'Saving...' : 'Save & Continue'}
                         </Button>
@@ -569,7 +571,7 @@ export function ChatModeOptions({
     const { data: session } = useSession();
     const isSignedIn = !!session;
 
-    const apiKeys = useApiKeysStore(state => state.getAllKeys());
+    const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const _isChatPage =
         usePathname() !== '/' &&
         usePathname() !== '/recent' &&
@@ -598,8 +600,8 @@ export function ChatModeOptions({
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
-        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
-        const modelOption = modelOptions.find(opt => opt.value === mode);
+        const option = [...chatOptions, ...modelOptions].find((opt) => opt.value === mode);
+        const modelOption = modelOptions.find((opt) => opt.value === mode);
 
         // Check if user is signed in for any model selection
         if (!isSignedIn) {
@@ -658,7 +660,9 @@ export function ChatModeOptions({
 
                 // Check plan access
                 if (config.requiredPlan && hasRequiredAccess) {
-                    hasRequiredAccess = hasAccess({ plan: config.requiredPlan as PlanSlug });
+                    hasRequiredAccess = hasAccess({
+                        plan: config.requiredPlan as PlanSlug,
+                    });
                 }
 
                 // If user doesn't have access, show gated feature dialog
@@ -696,7 +700,7 @@ export function ChatModeOptions({
         if (!isLoaded) return true; // Show as gated while loading to prevent unauthorized access
 
         const config = ChatModeConfig[mode];
-        if (!config?.requiredFeature && !config?.requiredPlan) {
+        if (!(config?.requiredFeature || config?.requiredPlan)) {
             return false; // Not gated if no requirements
         }
 
@@ -722,7 +726,9 @@ export function ChatModeOptions({
         let hasRequiredAccess = true;
 
         if (config.requiredFeature) {
-            hasRequiredAccess = hasAccess({ feature: config.requiredFeature as FeatureSlug });
+            hasRequiredAccess = hasAccess({
+                feature: config.requiredFeature as FeatureSlug,
+            });
         }
 
         if (config.requiredPlan && hasRequiredAccess) {
@@ -746,12 +752,12 @@ export function ChatModeOptions({
                         ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                         : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
-                if (!hasVtPlusAccess || !hasFeatureAccess) {
+                if (!(hasVtPlusAccess && hasFeatureAccess)) {
                     // Block access - show gated feature dialog
                     const option = [
                         ...chatOptions,
                         ...Object.values(modelOptionsByProvider).flat(),
-                    ].find(opt => opt.value === mode);
+                    ].find((opt) => opt.value === mode);
 
                     onGatedFeature({
                         feature:
@@ -774,7 +780,7 @@ export function ChatModeOptions({
                 const option = [
                     ...chatOptions,
                     ...Object.values(modelOptionsByProvider).flat(),
-                ].find(opt => opt.value === mode);
+                ].find((opt) => opt.value === mode);
 
                 onGatedFeature({
                     feature: config.requiredFeature,
@@ -794,18 +800,18 @@ export function ChatModeOptions({
         <>
             <DropdownMenuContent
                 align="start"
-                side="bottom"
                 className="no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]"
+                side="bottom"
             >
                 {/* Always show Advanced Mode options regardless of page context */}
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => {
+                    {chatOptions.map((option) => {
                         return (
                             <DropdownMenuItem
+                                className="h-auto"
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
-                                className="h-auto"
                             >
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
@@ -817,8 +823,8 @@ export function ChatModeOptions({
                                             {(option.value === ChatMode.Deep ||
                                                 option.value === ChatMode.Pro) && (
                                                 <Badge
-                                                    variant="secondary"
                                                     className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                                    variant="secondary"
                                                 >
                                                     VT+
                                                 </Badge>
@@ -833,8 +839,8 @@ export function ChatModeOptions({
                                     <div className="flex-1" />
                                     {supportsReasoning(getModelFromChatMode(option.value)) && (
                                         <Brain
-                                            size={14}
                                             className="text-purple-500"
+                                            size={14}
                                             title="Reasoning Model"
                                         />
                                     )}
@@ -850,14 +856,14 @@ export function ChatModeOptions({
                             <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
                                 {providerName}
                             </DropdownMenuLabel>
-                            {options.map(option => {
+                            {options.map((option) => {
                                 const isFreeModel = option.value === ChatMode.GEMINI_2_5_FLASH_LITE;
 
                                 return (
                                     <DropdownMenuItem
+                                        className="h-auto pl-4"
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
-                                        className="h-auto pl-4"
                                     >
                                         <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
                                             <div className="flex flex-col gap-0">
@@ -871,9 +877,9 @@ export function ChatModeOptions({
                                                 )}
                                                 {isFreeModel && isSignedIn && (
                                                     <RateLimitIndicator
-                                                        modelId={ModelEnum.GEMINI_2_5_FLASH_LITE}
-                                                        compact
                                                         className="mt-1"
+                                                        compact
+                                                        modelId={ModelEnum.GEMINI_2_5_FLASH_LITE}
                                                     />
                                                 )}
                                             </div>
@@ -890,22 +896,22 @@ export function ChatModeOptions({
                                                         <>
                                                             {supportsTools(model) && (
                                                                 <Wrench
-                                                                    size={12}
                                                                     className="text-gray-500"
+                                                                    size={12}
                                                                     title="Supports Tools"
                                                                 />
                                                             )}
                                                             {supportsReasoning(model) && (
                                                                 <Brain
-                                                                    size={12}
                                                                     className="text-purple-500"
+                                                                    size={12}
                                                                     title="Reasoning Model"
                                                                 />
                                                             )}
                                                             {supportsWebSearch(model) && (
                                                                 <Globe
-                                                                    size={12}
                                                                     className="text-blue-500"
+                                                                    size={12}
                                                                     title="Web Search"
                                                                 />
                                                             )}
@@ -932,19 +938,19 @@ export function ChatModeOptions({
             {pendingMode && (
                 <BYOKSetupModal
                     isOpen={byokModalOpen}
-                    onClose={handleBYOKClose}
-                    requiredApiKey={pendingMode.requiredApiKey}
                     modelName={pendingMode.modelName}
                     onApiKeySaved={handleBYOKSaved}
+                    onClose={handleBYOKClose}
+                    requiredApiKey={pendingMode.requiredApiKey}
                 />
             )}
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to select and use different AI models."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to select and use different AI models."
             />
         </>
     );
@@ -965,43 +971,43 @@ export function SendStopButton({
 }) {
     return (
         <div className="flex flex-row items-center gap-2">
-            <AnimatePresence mode="wait" initial={false}>
+            <AnimatePresence initial={false} mode="wait">
                 {isGenerating && !isChatPage ? (
                     <motion.div
-                        key="stop-button"
-                        initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        key="stop-button"
                         transition={{ duration: 0.2 }}
                     >
                         <Button
-                            size="icon-sm"
-                            variant="default"
                             onClick={stopGeneration}
+                            size="icon-sm"
                             tooltip="Stop Generation"
+                            variant="default"
                         >
                             <Square size={14} strokeWidth={2} />
                         </Button>
                     </motion.div>
                 ) : (
                     <motion.div
-                        key="send-button"
-                        initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        key="send-button"
                         transition={{ duration: 0.2 }}
                     >
                         <Button
-                            size="icon-sm"
-                            tooltip="Send Message"
-                            variant={hasTextInput ? 'default' : 'secondary'}
+                            className="min-h-[36px] min-w-[36px] md:min-h-[32px] md:min-w-[32px]"
                             disabled={!hasTextInput || isGenerating}
                             onClick={() => {
                                 sendMessage();
                             }}
-                            className="min-h-[36px] min-w-[36px] md:min-h-[32px] md:min-w-[32px]"
+                            size="icon-sm"
+                            tooltip="Send Message"
+                            variant={hasTextInput ? 'default' : 'secondary'}
                         >
-                            <ArrowUp size={18} strokeWidth={2} className="md:h-4 md:w-4" />
+                            <ArrowUp className="md:h-4 md:w-4" size={18} strokeWidth={2} />
                         </Button>
                     </motion.div>
                 )}

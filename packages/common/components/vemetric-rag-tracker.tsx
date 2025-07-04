@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
+import type { DocumentEventData, RagEventData } from '@repo/shared/types/analytics';
+import { useEffect, useRef } from 'react';
+import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
-import { DocumentEventData, RagEventData } from '@repo/shared/types/analytics';
 
 /**
  * Comprehensive RAG and document processing tracking
@@ -33,7 +33,7 @@ export function useVemetricRagTracking() {
             .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[email]') // Remove emails
             .replace(/\b\d{4}-\d{2}-\d{2}\b/g, '[date]') // Remove dates
             .replace(/\b\w+\s+\w+\b/g, '[name]'); // Replace potential names
-        
+
         return extension ? `[document].${extension}` : '[document]';
     };
 
@@ -43,7 +43,7 @@ export function useVemetricRagTracking() {
         fileType: string;
         uploadMethod?: 'drag_drop' | 'click_upload' | 'paste';
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: DocumentEventData = {
@@ -57,11 +57,14 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.DOCUMENT_UPLOADED, eventData);
 
-            log.info({ 
-                event: ANALYTICS_EVENTS.DOCUMENT_UPLOADED,
-                fileType: params.fileType,
-                fileSize: params.fileSize
-            }, 'Document upload tracked');
+            log.info(
+                {
+                    event: ANALYTICS_EVENTS.DOCUMENT_UPLOADED,
+                    fileType: params.fileType,
+                    fileSize: params.fileSize,
+                },
+                'Document upload tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track document upload');
         }
@@ -78,7 +81,7 @@ export function useVemetricRagTracking() {
         success: boolean;
         errorType?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: DocumentEventData = {
@@ -99,12 +102,17 @@ export function useVemetricRagTracking() {
                 await trackEvent(ANALYTICS_EVENTS.DOCUMENT_PROCESSING_FAILED, eventData);
             }
 
-            log.info({ 
-                event: params.success ? ANALYTICS_EVENTS.DOCUMENT_PROCESSED : ANALYTICS_EVENTS.DOCUMENT_PROCESSING_FAILED,
-                fileType: params.fileType,
-                processingTime: params.processingTime,
-                success: params.success
-            }, 'Document processing tracked');
+            log.info(
+                {
+                    event: params.success
+                        ? ANALYTICS_EVENTS.DOCUMENT_PROCESSED
+                        : ANALYTICS_EVENTS.DOCUMENT_PROCESSING_FAILED,
+                    fileType: params.fileType,
+                    processingTime: params.processingTime,
+                    success: params.success,
+                },
+                'Document processing tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track document processing');
         }
@@ -119,7 +127,7 @@ export function useVemetricRagTracking() {
         success: boolean;
         errorType?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: RagEventData = {
@@ -135,11 +143,14 @@ export function useVemetricRagTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RAG_QUERY_EXECUTED, eventData);
 
-            log.debug({ 
-                queryType: params.queryType,
-                retrievalTime: params.retrievalTime,
-                documentCount: params.documentCount
-            }, 'RAG query tracked');
+            log.debug(
+                {
+                    queryType: params.queryType,
+                    retrievalTime: params.retrievalTime,
+                    documentCount: params.documentCount,
+                },
+                'RAG query tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track RAG query');
         }
@@ -153,7 +164,7 @@ export function useVemetricRagTracking() {
         reranked?: boolean;
         cacheHit?: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: RagEventData = {
@@ -181,7 +192,7 @@ export function useVemetricRagTracking() {
         success: boolean;
         errorType?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -209,7 +220,7 @@ export function useVemetricRagTracking() {
         indexingTime?: number;
         success: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -240,7 +251,7 @@ export function useVemetricRagTracking() {
         similarityThreshold: number;
         success: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {

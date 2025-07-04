@@ -2,15 +2,15 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { users, userSubscriptions } from '@/lib/database/schema';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { log } from '@repo/shared/logger';
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
+import { userSubscriptions, users } from '@/lib/database/schema';
 
 // Schema for processing payment success
 const PaymentSuccessSchema = z.object({
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         });
 
         // Start database transaction
-        await db.transaction(async tx => {
+        await db.transaction(async (tx) => {
             // Get current user to determine current plan
             const currentUser = await tx
                 .select({ planSlug: users.planSlug })
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
                 .update(users)
                 .set({
                     creemCustomerId: validatedData.customer_id,
-                    planSlug: planSlug,
+                    planSlug,
                     updatedAt: new Date(),
                 })
                 .where(eq(users.id, userId));
@@ -174,7 +174,9 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        log.error('[Payment Success API] Error processing payment success:', { error });
+        log.error('[Payment Success API] Error processing payment success:', {
+            error,
+        });
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(

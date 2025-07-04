@@ -58,7 +58,7 @@ export function UserTierBadge({
             <div
                 className={cn(
                     'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm',
-                    'bg-card border-border text-muted-foreground',
+                    'border-border bg-card text-muted-foreground',
                     'hover:bg-accent/50 shadow-sm transition-colors duration-200',
                     className
                 )}
@@ -66,8 +66,8 @@ export function UserTierBadge({
                 <span className="text-xs font-medium">Free</span>
                 <div className="bg-muted-foreground/40 h-1 w-1 rounded-full" />
                 <button
-                    onClick={handleUpgradeClick}
                     className="text-primary hover:text-primary/80 text-xs font-medium transition-colors duration-150"
+                    onClick={handleUpgradeClick}
                 >
                     Upgrade
                 </button>
@@ -77,14 +77,14 @@ export function UserTierBadge({
 
     return (
         <Badge
-            variant="secondary"
             className={cn(
                 'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-300',
                 isPlus
-                    ? 'vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30 shadow-lg'
-                    : 'bg-muted text-muted-foreground border-muted-foreground/20 hover:bg-muted/80',
+                    ? 'vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] shadow-lg'
+                    : 'border-muted-foreground/20 bg-muted text-muted-foreground hover:bg-muted/80',
                 className
             )}
+            variant="secondary"
         >
             {planName}
         </Badge>

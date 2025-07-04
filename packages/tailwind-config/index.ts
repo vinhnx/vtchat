@@ -65,7 +65,7 @@ const config: any = {
             },
             borderRadius: {
                 xs: '0.25rem',
-                sm: '0.375rem', 
+                sm: '0.375rem',
                 md: '0.5rem',
                 lg: '0.625rem',
                 xl: '0.75rem',
@@ -198,12 +198,12 @@ const config: any = {
                 'glow-sm': '0 0 10px rgba(59, 130, 246, 0.3)',
                 'glow-md': '0 0 20px rgba(59, 130, 246, 0.4)',
                 'glow-lg': '0 0 30px rgba(59, 130, 246, 0.5)',
-                'premium': '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
+                premium: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
                 'premium-lg': '0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1)',
             },
             spacing: {
                 '18': '4.5rem',
-                '22': '5.5rem', 
+                '22': '5.5rem',
                 '26': '6.5rem',
                 '30': '7.5rem',
                 '34': '8.5rem',

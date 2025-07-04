@@ -1,6 +1,6 @@
+import { log } from '@repo/shared/logger';
 import { differenceInDays, format, startOfDay } from 'date-fns';
 import { customAlphabet } from 'nanoid';
-import { log } from '@repo/shared/logger';
 
 export const getRelativeDate = (date: string | Date) => {
     const today = startOfDay(new Date());
@@ -18,8 +18,8 @@ export const getRelativeDate = (date: string | Date) => {
 };
 
 export function formatNumber(number: number) {
-    if (number >= 1000000) {
-        return `${(number / 1000000).toFixed(0)}M`;
+    if (number >= 1_000_000) {
+        return `${(number / 1_000_000).toFixed(0)}M`;
     }
     if (number >= 1000) {
         return `${(number / 1000).toFixed(0)}K`;
@@ -90,7 +90,7 @@ export async function imageUrlToBase64(imageUrl: string): Promise<string> {
             }`;
             resolve(base64Url);
         };
-        reader.onerror = error => reject(error);
+        reader.onerror = (error) => reject(error);
         reader.readAsDataURL(blob);
     });
 }

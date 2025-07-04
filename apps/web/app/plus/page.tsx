@@ -12,6 +12,8 @@ import {
     PAYMENT_SERVICES,
     SETTINGS_ACTIONS,
 } from '@repo/shared/constants';
+// import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
+import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
@@ -24,8 +26,6 @@ import { ButtonAnimatedGradient } from '../../components/button-animated-gradien
 import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
 import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
 import { FeaturesAccordion } from '../../components/features-accordion';
-// import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
-import { useSession } from '@repo/shared/lib/auth-client';
 import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export default function PlusPage() {
@@ -78,7 +78,7 @@ export default function PlusPage() {
                 page: 'plus_page',
                 userTier: isCurrentlySubscribed ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE,
                 context: 'subscription_management',
-            }).catch(error => {
+            }).catch((error) => {
                 log.error({ error }, 'Failed to track page view');
             });
         }
@@ -126,10 +126,10 @@ export default function PlusPage() {
     };
 
     const handleTryFree = () => {
-        if (!isSignedIn) {
-            router.push('/login?redirect_url=/');
-        } else {
+        if (isSignedIn) {
             router.push('/');
+        } else {
+            router.push('/login?redirect_url=/');
         }
     };
 
@@ -194,7 +194,7 @@ export default function PlusPage() {
                 </div>
 
                 {/* Pricing Section */}
-                <div id="pricing" className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8">
+                <div className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8" id="pricing">
                     <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2">
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
@@ -205,8 +205,8 @@ export default function PlusPage() {
                             <div>
                                 <div className="flex items-center justify-between">
                                     <TypographyH3
-                                        id="tier-free"
                                         className="text-lg font-bold text-[#BFB38F]"
+                                        id="tier-free"
                                     >
                                         Free
                                     </TypographyH3>
@@ -232,11 +232,11 @@ export default function PlusPage() {
                                     included - completely free for logged-in users.
                                 </p>
                                 <ul
-                                    role="list"
                                     className="mt-8 space-y-3 text-sm/6 text-gray-600 sm:mt-10"
+                                    role="list"
                                 >
                                     {PRICING_CONFIG.pricing.free.features.map((feature, index) => (
-                                        <li key={index} className="flex gap-x-3">
+                                        <li className="flex gap-x-3" key={index}>
                                             <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
                                             {typeof feature === 'string' ? feature : feature.name}
                                         </li>
@@ -244,11 +244,11 @@ export default function PlusPage() {
                                 </ul>
                                 <div className="mt-8 sm:mt-10">
                                     <ButtonShadowGradient
-                                        onClick={handleTryFree}
                                         className="w-full"
                                         data-vmtrc="FreePlanSelected"
-                                        data-vmtrc-plan="VT_BASE"
                                         data-vmtrc-context="pricing_page"
+                                        data-vmtrc-plan="VT_BASE"
+                                        onClick={handleTryFree}
                                     >
                                         {getFreeButtonText()}
                                     </ButtonShadowGradient>
@@ -269,8 +269,8 @@ export default function PlusPage() {
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <TypographyH3
-                                            id="tier-vt-plus"
                                             className="text-lg font-bold text-[#BFB38F]"
+                                            id="tier-vt-plus"
                                         >
                                             {PRICING_CONFIG.product.name}
                                         </TypographyH3>
@@ -296,12 +296,12 @@ export default function PlusPage() {
                                     </p>
 
                                     <ul
-                                        role="list"
                                         className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"
+                                        role="list"
                                     >
                                         {PRICING_CONFIG.pricing.plus.features.map(
                                             (feature, index) => (
-                                                <li key={index} className="flex gap-x-3">
+                                                <li className="flex gap-x-3" key={index}>
                                                     <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
                                                     <div className="flex items-center gap-2">
                                                         <span>
@@ -316,16 +316,16 @@ export default function PlusPage() {
                                     </ul>
                                     <div className="mt-8 sm:mt-10">
                                         <ButtonAnimatedGradient
+                                            className="flex w-full items-center justify-center"
+                                            data-vmtrc="PremiumPlanSelected"
+                                            data-vmtrc-context="pricing_page"
+                                            data-vmtrc-plan="VT_PLUS"
+                                            data-vmtrc-price="10"
                                             onClick={() => {
                                                 if (!(isPortalLoading || isPaymentLoading)) {
                                                     handleSubscribe();
                                                 }
                                             }}
-                                            className="flex w-full items-center justify-center"
-                                            data-vmtrc="PremiumPlanSelected"
-                                            data-vmtrc-plan="VT_PLUS"
-                                            data-vmtrc-context="pricing_page"
-                                            data-vmtrc-price="10"
                                         >
                                             {getSubscribeButtonText()}
                                         </ButtonAnimatedGradient>
@@ -340,15 +340,15 @@ export default function PlusPage() {
                                     <div className="mt-4 text-center text-sm text-gray-400">
                                         <span className="text-gray-500">Please review our</span>{' '}
                                         <a
-                                            href="/terms"
                                             className="underline transition-colors hover:text-[#BFB38F]"
+                                            href="/terms"
                                         >
                                             Terms of Service
                                         </a>{' '}
                                         <span>and</span>{' '}
                                         <a
-                                            href="/privacy"
                                             className="underline transition-colors hover:text-[#BFB38F]"
+                                            href="/privacy"
                                         >
                                             Privacy Policy
                                         </a>{' '}
@@ -381,12 +381,12 @@ export default function PlusPage() {
                     </TypographyH2>
                     <div className="mx-auto max-w-md pt-4">
                         <ButtonAnimatedGradient
+                            className="flex w-full items-center justify-center"
                             onClick={() => {
                                 if (!(isPortalLoading || isPaymentLoading)) {
                                     handleSubscribe();
                                 }
                             }}
-                            className="flex w-full items-center justify-center"
                         >
                             {getCTAButtonText()}
                         </ButtonAnimatedGradient>
@@ -398,8 +398,8 @@ export default function PlusPage() {
                     <p className="text-base text-gray-600">
                         Have questions? Get in touch:{' '}
                         <a
-                            href="mailto:hello@vtchat.io.vn"
                             className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
+                            href="mailto:hello@vtchat.io.vn"
                         >
                             hello@vtchat.io.vn
                         </a>

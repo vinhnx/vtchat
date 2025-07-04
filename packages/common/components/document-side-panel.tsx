@@ -1,4 +1,4 @@
-import { DocumentAttachment } from '@repo/shared/types';
+import type { DocumentAttachment } from '@repo/shared/types';
 import { Button, Sheet, SheetContent, SheetTrigger, TypographyH2, TypographyH4 } from '@repo/ui';
 import { FileText, Lightbulb } from 'lucide-react';
 import { memo } from 'react';
@@ -13,15 +13,15 @@ type DocumentSidePanelProps = {
 export const DocumentSidePanel = memo(
     ({ documentAttachment, isOpen, onOpenChange }: DocumentSidePanelProps) => {
         return (
-            <Sheet open={isOpen} onOpenChange={onOpenChange}>
+            <Sheet onOpenChange={onOpenChange} open={isOpen}>
                 <SheetTrigger asChild>
-                    <Button variant="outlined" size="sm" className="flex items-center gap-2">
+                    <Button className="flex items-center gap-2" size="sm" variant="outlined">
                         <FileText size={16} />
                         View Document
                     </Button>
                 </SheetTrigger>
 
-                <SheetContent width="md" className="p-6" title="Document Attachment Details">
+                <SheetContent className="p-6" title="Document Attachment Details" width="md">
                     <div className="mb-6 flex items-center gap-2">
                         <FileText size={20} />
                         <TypographyH2 className="text-lg font-semibold">
@@ -52,7 +52,7 @@ export const DocumentSidePanel = memo(
                         </div>
 
                         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                            <TypographyH4 className="mb-2 text-sm font-medium text-blue-800 flex items-center gap-2">
+                            <TypographyH4 className="mb-2 flex items-center gap-2 text-sm font-medium text-blue-800">
                                 <Lightbulb size={16} />
                                 Document Processing
                             </TypographyH4>

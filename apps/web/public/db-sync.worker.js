@@ -13,7 +13,7 @@ const workerLog = {
     info: (message, data) => console.log(`[SharedWorker] ${message}`, data || ''),
     error: (message, data) => console.error(`[SharedWorker] ${message}`, data || ''),
     warn: (message, data) => console.warn(`[SharedWorker] ${message}`, data || ''),
-    debug: (message, data) => console.debug(`[SharedWorker] ${message}`, data || '')
+    debug: (message, data) => console.debug(`[SharedWorker] ${message}`, data || ''),
 };
 
 // Initialize IndexedDB in the worker context
@@ -36,19 +36,23 @@ async function initializeDatabase() {
                 resolve(dbInstance);
             };
 
-            request.onupgradeneeded = event => {
+            request.onupgradeneeded = (event) => {
                 const db = event.target.result;
 
                 // Create object stores if they don't exist
                 if (!db.objectStoreNames.contains('threads')) {
-                    const threadsStore = db.createObjectStore('threads', { keyPath: 'id' });
+                    const threadsStore = db.createObjectStore('threads', {
+                        keyPath: 'id',
+                    });
                     threadsStore.createIndex('createdAt', 'createdAt');
                     threadsStore.createIndex('pinned', 'pinned');
                     threadsStore.createIndex('pinnedAt', 'pinnedAt');
                 }
 
                 if (!db.objectStoreNames.contains('threadItems')) {
-                    const itemsStore = db.createObjectStore('threadItems', { keyPath: 'id' });
+                    const itemsStore = db.createObjectStore('threadItems', {
+                        keyPath: 'id',
+                    });
                     itemsStore.createIndex('threadId', 'threadId');
                     itemsStore.createIndex('parentId', 'parentId');
                     itemsStore.createIndex('createdAt', 'createdAt');
@@ -93,9 +97,9 @@ async function performDatabaseOperation(operation, data) {
                         request = store.getAll();
                     }
                     break;
-                case 'bulkPut':
+                case 'bulkPut': {
                     // Handle bulk operations
-                    const promises = data.items.map(item => {
+                    const promises = data.items.map((item) => {
                         return new Promise((res, rej) => {
                             const req = store.put(item);
                             req.onsuccess = () => res(req.result);
@@ -104,6 +108,7 @@ async function performDatabaseOperation(operation, data) {
                     });
                     Promise.all(promises).then(resolve).catch(reject);
                     return;
+                }
                 default:
                     reject(new Error(`Unknown operation type: ${operation.type}`));
                     return;
@@ -121,11 +126,11 @@ async function performDatabaseOperation(operation, data) {
 }
 
 // Handle messages from individual tabs
-self.onconnect = event => {
+self.onconnect = (event) => {
     const port = event.ports[0];
     connections.add(port);
 
-    port.onmessage = async e => {
+    port.onmessage = async (e) => {
         await handleMessage(e.data, port);
     };
 
@@ -141,7 +146,7 @@ self.onconnect = event => {
 };
 
 // Handle broadcast channel messages (alternative approach)
-broadcastChannel.onmessage = event => {
+broadcastChannel.onmessage = (event) => {
     // Forward messages to all connected tabs
     for (const port of Array.from(connections)) {
         try {
@@ -170,7 +175,7 @@ async function handleMessage(message, sourcePort) {
                 sourcePort.postMessage({
                     type: 'db-operation-result',
                     requestId: message.requestId,
-                    result: result,
+                    result,
                     success: true,
                 });
 

@@ -36,7 +36,7 @@ export function CreemCheckoutProcessor() {
         const checkoutId = searchParams.get('checkout_id');
         const orderId = searchParams.get('order_id');
         const packageType = searchParams.get('package');
-        const quantity = parseInt(searchParams.get('quantity') || '1', 10);
+        const quantity = Number.parseInt(searchParams.get('quantity') || '1', 10);
         const isPlusSubscription = searchParams.get('plan') === PlanSlug.VT_PLUS;
         const paymentStatus = searchParams.get('status') || searchParams.get('payment_status');
         const customerId = searchParams.get('customer_id') || searchParams.get('customerId');
@@ -76,7 +76,7 @@ export function CreemCheckoutProcessor() {
         );
 
         // Check for valid checkout parameters - be more comprehensive
-        if (!checkoutId && !orderId && !customerId && !sessionId && success !== 'true') {
+        if (!(checkoutId || orderId || customerId || sessionId) && success !== 'true') {
             log.info({}, '[CreemCheckoutProcessor] No valid checkout parameters found, skipping');
             return;
         }
@@ -139,7 +139,7 @@ export function CreemCheckoutProcessor() {
                             package: packageType || undefined,
                             quantity,
                             status: paymentStatus || 'completed',
-                            amount: amount ? parseFloat(amount) : undefined,
+                            amount: amount ? Number.parseFloat(amount) : undefined,
                             currency: currency || undefined,
                             session_id: sessionId || undefined,
                         };

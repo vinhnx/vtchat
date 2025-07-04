@@ -1,4 +1,4 @@
-import { NextApiRequest } from 'next';
+import type { NextApiRequest } from 'next';
 
 export function sanitizePayloadForJSON(payload: any): any {
     if (payload === null || payload === undefined) {
@@ -10,7 +10,7 @@ export function sanitizePayloadForJSON(payload: any): any {
     }
 
     if (Array.isArray(payload)) {
-        return payload.map(item => sanitizePayloadForJSON(item));
+        return payload.map((item) => sanitizePayloadForJSON(item));
     }
 
     const sanitized: Record<string, any> = {};

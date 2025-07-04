@@ -15,6 +15,7 @@
 ## Pre-Deployment Verification
 
 ### Environment Variables ✅
+
 - [ ] `BETTER_AUTH_SECRET` - 32-character production secret generated
 - [ ] `BETTER_AUTH_URL` - Set to production domain
 - [ ] `BETTER_AUTH_ENV` - Set to "production"
@@ -24,6 +25,7 @@
 - [ ] `BASE_URL` - Server-side production URL
 
 ### AI Service Configuration ✅
+
 - [ ] `OPENAI_API_KEY` - Valid OpenAI API key with sufficient credits
 - [ ] `ANTHROPIC_API_KEY` - Valid Anthropic API key
 - [ ] `GEMINI_API_KEY` - Valid Google Gemini API key
@@ -31,11 +33,13 @@
 - [ ] `JINA_API_KEY` - Valid Jina API key for embeddings
 
 ### Payment Integration (Optional) ✅
+
 - [ ] `CREEM_API_KEY` - Production Creem API key
 - [ ] `CREEM_PRODUCT_ID` - Production product ID
 - [ ] `CREEM_ENVIRONMENT` - Set to "production"
 
 ### OAuth Configuration (Optional) ✅
+
 - [ ] `GITHUB_CLIENT_ID` - GitHub OAuth app client ID
 - [ ] `GITHUB_CLIENT_SECRET` - GitHub OAuth app secret
 - [ ] `GOOGLE_CLIENT_ID` - Google OAuth client ID
@@ -43,6 +47,7 @@
 - [ ] Google Auth published (not in test mode)
 
 ## Database Verification ✅
+
 - [ ] Database connection test successful
 - [ ] All migrations applied
 - [ ] Database backup created
@@ -50,6 +55,7 @@
 - [ ] Performance monitoring enabled
 
 ## Security Checklist ✅
+
 - [ ] All secrets properly stored (not in code)
 - [ ] HTTPS enabled for all endpoints
 - [ ] CORS configured for production domains
@@ -58,6 +64,7 @@
 - [ ] Authentication flows tested
 
 ## Performance & Monitoring ✅
+
 - [ ] Monitoring dashboard configured
 - [ ] Error tracking enabled (Sentry/similar)
 - [ ] Performance metrics collection
@@ -66,6 +73,7 @@
 - [ ] Uptime monitoring active
 
 ## Testing Verification ✅
+
 - [ ] All core features tested in production environment
 - [ ] Authentication flows verified
 - [ ] AI model integrations tested
@@ -74,6 +82,7 @@
 - [ ] Cross-browser compatibility checked
 
 ## Domain & DNS ✅
+
 - [ ] Domain purchased and configured (vtchat.io.vn)
 - [ ] DNS records properly set
 - [ ] SSL certificate active
@@ -81,6 +90,7 @@
 - [ ] Redirect rules configured
 
 ## Deployment Platform ✅
+
 - [ ] Build process verified
 - [ ] Auto-deployment configured
 - [ ] Health checks passing
@@ -89,6 +99,7 @@
 - [ ] Backup strategy implemented
 
 ## Post-Deployment ✅
+
 - [ ] Smoke tests completed
 - [ ] User acceptance testing
 - [ ] Performance benchmarks met
@@ -97,6 +108,7 @@
 - [ ] Documentation updated
 
 ## Rollback Plan ✅
+
 - [ ] Previous version tagged
 - [ ] Rollback procedure documented
 - [ ] Database rollback strategy
@@ -105,7 +117,7 @@
 
 ---
 
-**Deployment Date:** _____
-**Deployed By:** _____
-**Version:** _____
-**Sign-off:** _____
+**Deployment Date:** **\_**
+**Deployed By:** **\_**
+**Version:** **\_**
+**Sign-off:** **\_**

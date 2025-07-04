@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 const isValidUrl = (url: string) => {
     try {
         new URL(url);
@@ -47,14 +48,14 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
                     if (isValidUrl(url) && favIcon) {
                         return (
                             <div
-                                key={index}
                                 className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border"
+                                key={index}
                             >
                                 <Image
-                                    src={favIcon}
                                     alt={host ?? ''}
-                                    fill
                                     className="not-prose absolute inset-0 h-full w-full object-cover"
+                                    fill
+                                    src={favIcon}
                                 />
                             </div>
                         );

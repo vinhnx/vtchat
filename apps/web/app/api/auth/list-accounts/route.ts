@@ -1,9 +1,9 @@
+import { log } from '@repo/shared/logger';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { accounts } from '@/lib/database/schema';
-import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -35,12 +35,15 @@ export async function GET(request: NextRequest) {
             .from(accounts)
             .where(eq(accounts.userId, userId));
 
-        log.info({ linkedAccountsCount: linkedAccounts.length, userId }, 'Found linked accounts for user');
+        log.info(
+            { linkedAccountsCount: linkedAccounts.length, userId },
+            'Found linked accounts for user'
+        );
 
         return NextResponse.json({
             success: true,
             accounts: linkedAccounts,
-            userId: userId,
+            userId,
         });
     } catch (error) {
         log.error('[List Accounts API] Error:', { error });

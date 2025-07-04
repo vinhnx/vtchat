@@ -5,12 +5,12 @@
  * for VT+ features and capabilities
  */
 
-import { auth } from '@/lib/auth-server';
 import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { NextRequest } from 'next/server';
-import { log } from '@repo/shared/logger';
+import type { NextRequest } from 'next/server';
+import { auth } from '@/lib/auth-server';
 
 /**
  * Get comprehensive subscription status for a user
@@ -175,7 +175,9 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
  * Check if user has access to features available to logged-in users
  * (Features that used to be VT+ exclusive but are now free for logged-in users)
  */
-export async function checkSignedInFeatureAccess(identifier: RequestIdentifier): Promise<AccessCheckResult> {
+export async function checkSignedInFeatureAccess(
+    identifier: RequestIdentifier
+): Promise<AccessCheckResult> {
     const { userId } = identifier;
 
     // If no user ID, they're anonymous and have no access
@@ -191,13 +193,13 @@ export async function checkSignedInFeatureAccess(identifier: RequestIdentifier):
     try {
         // Get subscription status to determine if user is properly signed in
         const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
-        
+
         // User is signed in, grant access regardless of subscription status
         return {
             hasAccess: true,
             reason: undefined,
-            subscriptionStatus: subscriptionStatus.isActive 
-                ? SubscriptionStatusEnum.ACTIVE 
+            subscriptionStatus: subscriptionStatus.isActive
+                ? SubscriptionStatusEnum.ACTIVE
                 : SubscriptionStatusEnum.NONE,
             planSlug: subscriptionStatus.plan,
         };

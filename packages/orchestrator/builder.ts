@@ -1,8 +1,8 @@
-import { Context, ContextSchemaDefinition } from './context';
+import type { Context, ContextSchemaDefinition } from './context';
 import { WorkflowEngine } from './engine';
-import { EventSchemaDefinition, TypedEventEmitter } from './events';
-import { PersistenceLayer } from './persistence';
-import { TaskDefinition, WorkflowConfig } from './types';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import type { PersistenceLayer } from './persistence';
+import type { TaskDefinition, WorkflowConfig } from './types';
 
 export type WorkflowBuilderOptions<
     TEvent extends EventSchemaDefinition = any,

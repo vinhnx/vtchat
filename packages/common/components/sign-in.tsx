@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+
 type CustomSignInProps = {
     redirectUrl?: string;
     onClose?: () => void;
@@ -23,7 +24,7 @@ export const CustomSignIn = ({
     const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
     const [code, setCode] = useState('');
     const [resending, setResending] = useState(false);
-    if (!isSignUpLoaded || !isLoaded) return null;
+    if (!(isSignUpLoaded && isLoaded)) return null;
     const router = useRouter();
 
     const handleVerify = async () => {
@@ -35,7 +36,7 @@ export const CustomSignIn = ({
 
         setIsLoading('verify');
         try {
-            if (!isLoaded || !signIn) return;
+            if (!(isLoaded && signIn)) return;
             const result = await signUp.attemptEmailAddressVerification({
                 code,
             });
@@ -77,7 +78,7 @@ export const CustomSignIn = ({
         setIsLoading('google');
 
         try {
-            if (!isLoaded || !signIn) return;
+            if (!(isLoaded && signIn)) return;
             await signIn.authenticateWithRedirect({
                 strategy: 'oauth_google',
                 redirectUrl,
@@ -94,7 +95,7 @@ export const CustomSignIn = ({
         setIsLoading('github');
 
         try {
-            if (!isLoaded || !signIn) return;
+            if (!(isLoaded && signIn)) return;
             await signIn.authenticateWithRedirect({
                 strategy: 'oauth_github',
                 redirectUrl,
@@ -111,7 +112,7 @@ export const CustomSignIn = ({
         setIsLoading('apple');
 
         try {
-            if (!isLoaded || !signIn) return;
+            if (!(isLoaded && signIn)) return;
             await signIn.authenticateWithRedirect({
                 strategy: 'oauth_apple',
                 redirectUrl,
@@ -137,7 +138,8 @@ export const CustomSignIn = ({
             setError('Email is required');
             setIsLoading(null);
             return;
-        } else if (!validateEmail(email)) {
+        }
+        if (!validateEmail(email)) {
             setError('Please enter a valid email');
             setIsLoading(null);
             return;
@@ -272,7 +274,7 @@ export const CustomSignIn = ({
         return (
             <div className="flex w-[300px] flex-col items-center gap-4">
                 <div className="flex flex-col items-center gap-1">
-                    <TypographyH2 className="font-clash text-foreground !text-brand text-center text-[24px] font-semibold leading-tight">
+                    <TypographyH2 className="!text-brand font-clash text-foreground text-center text-[24px] font-semibold leading-tight">
                         Check your email
                     </TypographyH2>
                     <p className="text-muted-foreground text-center text-sm">
@@ -281,11 +283,11 @@ export const CustomSignIn = ({
                     </p>
                 </div>
                 <InputOTP
-                    maxLength={6}
                     autoFocus
-                    value={code}
+                    maxLength={6}
                     onChange={setCode}
                     onComplete={handleVerify}
+                    value={code}
                 >
                     <InputOTPGroup>
                         <InputOTPSlot index={0} />
@@ -299,7 +301,7 @@ export const CustomSignIn = ({
                 <p className="text-muted-foreground text-center text-sm">
                     Didn't receive an email?{' '}
                     <span
-                        className={`hover:text-brand text-brand cursor-pointer underline ${
+                        className={`text-brand hover:text-brand cursor-pointer underline ${
                             resending ? 'pointer-events-none opacity-70' : ''
                         }`}
                         onClick={handleSendCode}
@@ -308,7 +310,7 @@ export const CustomSignIn = ({
                     </span>
                 </p>
 
-                <div id="clerk-captcha"></div>
+                <div id="clerk-captcha" />
                 <div className="text-muted-foreground text-center text-sm">
                     {error && <p className="text-rose-400">{error}</p>}
                     {resending && <p className="text-brand">Sending verification code...</p>}
@@ -320,12 +322,12 @@ export const CustomSignIn = ({
     return (
         <>
             <Button
+                className="absolute right-2 top-2"
                 onClick={() => {
                     onClose?.();
                 }}
-                variant="ghost"
                 size="icon-sm"
-                className="absolute right-2 top-2"
+                variant="ghost"
             >
                 <X className="h-4 w-4" />
             </Button>
@@ -336,12 +338,12 @@ export const CustomSignIn = ({
 
                 <div className="flex w-[300px] flex-col space-y-1.5">
                     <Button
-                        onClick={handleGoogleAuth}
                         disabled={isLoading === 'google'}
+                        onClick={handleGoogleAuth}
                         variant="bordered"
                     >
                         {isLoading === 'google' ? (
-                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                         ) : (
                             <FaGoogle className=" size-3" />
                         )}
@@ -349,12 +351,12 @@ export const CustomSignIn = ({
                     </Button>
 
                     <Button
-                        onClick={handleGithubAuth}
                         disabled={isLoading === 'github'}
+                        onClick={handleGithubAuth}
                         variant="bordered"
                     >
                         {isLoading === 'github' ? (
-                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                         ) : (
                             <FaGithub className=" size-3" />
                         )}
@@ -365,15 +367,15 @@ export const CustomSignIn = ({
                     <span className="text-muted-foreground/50">
                         By using this app, you agree to the{' '}
                     </span>
-                    <a href="/terms" className="hover:text-foreground underline">
+                    <a className="hover:text-foreground underline" href="/terms">
                         Terms of Service
                     </a>{' '}
                     and{' '}
-                    <a href="/privacy" className="hover:text-foreground underline">
+                    <a className="hover:text-foreground underline" href="/privacy">
                         Privacy Policy
                     </a>
                 </div>
-                <Button variant="ghost" size="sm" className="w-full" onClick={onClose}>
+                <Button className="w-full" onClick={onClose} size="sm" variant="ghost">
                     Close
                 </Button>
             </div>

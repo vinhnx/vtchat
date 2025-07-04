@@ -26,16 +26,16 @@ export const AttachmentDisplay = memo(({ attachments, className }: AttachmentDis
 
         if (isImage) {
             return (
-                <div key={index} className="relative group">
+                <div className="group relative" key={index}>
                     <Image
-                        src={attachment.url}
                         alt={attachment.name}
-                        width={300}
+                        className="rounded-lg border border-gray-200 object-cover shadow-sm dark:border-gray-700"
                         height={200}
-                        className="rounded-lg object-cover shadow-sm border border-gray-200 dark:border-gray-700"
+                        src={attachment.url}
                         style={{ maxHeight: '200px', width: 'auto' }}
+                        width={300}
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs p-2 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-black bg-opacity-60 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                         {attachment.name}
                     </div>
                 </div>
@@ -44,24 +44,25 @@ export const AttachmentDisplay = memo(({ attachments, className }: AttachmentDis
 
         if (isPDF) {
             return (
-                <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                <div
+                    className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800"
+                    key={index}
+                >
                     <div className="flex items-center space-x-3">
                         <FileText className="h-8 w-8 text-red-500" />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                        <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                                 {attachment.name}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PDF Document
-                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">PDF Document</p>
                         </div>
                     </div>
-                    
+
                     {/* PDF Preview using iframe */}
                     <div className="mt-3">
                         <iframe
+                            className="h-96 w-full rounded border border-gray-300 dark:border-gray-600"
                             src={attachment.url}
-                            className="w-full h-96 border border-gray-300 dark:border-gray-600 rounded"
                             title={attachment.name}
                         />
                     </div>

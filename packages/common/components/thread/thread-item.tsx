@@ -1,4 +1,5 @@
 import {
+    ChartComponent,
     CitationProvider,
     DocumentSidePanel,
     MarkdownContent,
@@ -12,18 +13,17 @@ import {
     ThinkingLog,
     ToolsPanel,
 } from '@repo/common/components';
-import { ChartComponent } from '@repo/common/components';
-import { isMathTool } from '@repo/common/constants/math-tools';
 import { isChartTool } from '@repo/common/constants/chart-tools';
+import { isMathTool } from '@repo/common/constants/math-tools';
 import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { ThreadItem as ThreadItemType } from '@repo/shared/types';
+import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
 import { AlertCircle, Book } from 'lucide-react';
-import { RateLimitErrorAlert } from '../rate-limit-error-alert';
-import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
+import { RateLimitErrorAlert } from '../rate-limit-error-alert';
 
 export const ThreadItem = memo(
     ({
@@ -40,18 +40,18 @@ export const ThreadItem = memo(
             threadItem.answer?.text || '',
             isLast && isGenerating
         );
-        const setCurrentSources = useChatStore(state => state.setCurrentSources);
+        const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
 
         // Check if there are active math tool calls
-        const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some(toolCall =>
+        const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some((toolCall) =>
             isMathTool(toolCall.toolName)
         );
 
         // Only show calculating indicator if generating AND there are no completed math results yet
-        const hasCompletedMathResults = Object.values(threadItem?.toolResults || {}).some(result =>
-            isMathTool(result.toolName)
+        const hasCompletedMathResults = Object.values(threadItem?.toolResults || {}).some(
+            (result) => isMathTool(result.toolName)
         );
 
         const isCalculatingMath =
@@ -62,7 +62,7 @@ export const ThreadItem = memo(
             !hasCompletedMathResults;
 
         // Check for chart tool results
-        const chartToolResults = Object.values(threadItem?.toolResults || {}).filter(result =>
+        const chartToolResults = Object.values(threadItem?.toolResults || {}).filter((result) =>
             isChartTool(result.toolName)
         );
 
@@ -78,10 +78,10 @@ export const ThreadItem = memo(
             const sources =
                 Object.values(threadItem.steps || {})
                     ?.filter(
-                        step =>
+                        (step) =>
                             step.steps && 'read' in step.steps && !!step.steps?.read?.data?.length
                     )
-                    .flatMap(step => step.steps?.read?.data?.map((result: any) => result.link))
+                    .flatMap((step) => step.steps?.read?.data?.map((result: any) => result.link))
                     .filter((link): link is string => link !== undefined) || [];
             return setCurrentSources(sources);
         }, [threadItem, setCurrentSources]);
@@ -109,7 +109,7 @@ export const ThreadItem = memo(
         const validSources = useMemo(() => {
             const sources = threadItem.sources || [];
             return sources.filter(
-                source =>
+                (source) =>
                     source &&
                     typeof source.title === 'string' &&
                     typeof source.link === 'string' &&
@@ -119,12 +119,12 @@ export const ThreadItem = memo(
         }, [threadItem.sources]);
         return (
             <CitationProvider sources={validSources}>
-                <div className="w-full" ref={inViewRef} id={`thread-item-${threadItem.id}`}>
+                <div className="w-full" id={`thread-item-${threadItem.id}`} ref={inViewRef}>
                     <div className={cn('flex w-full flex-col items-start gap-3 pt-4')}>
                         {threadItem.query && (
                             <Message
-                                message={threadItem.query}
                                 imageAttachment={threadItem?.imageAttachment}
+                                message={threadItem.query}
                                 threadItem={threadItem}
                             />
                         )}
@@ -135,7 +135,7 @@ export const ThreadItem = memo(
                         </div>
 
                         {threadItem.steps && <Steps steps={steps} threadItem={threadItem} />}
-                        
+
                         <ToolsPanel threadItem={threadItem} />
 
                         {isCalculatingMath && <MathCalculatorIndicator isCalculating={true} />}
@@ -149,7 +149,7 @@ export const ThreadItem = memo(
                             </div>
                         )}
 
-                        <div ref={messageRef} className="w-full">
+                        <div className="w-full" ref={messageRef}>
                             {hasAnswer && threadItem.answer?.text && (
                                 <div className="flex flex-col">
                                     <SourceGrid sources={validSources} />
@@ -158,31 +158,33 @@ export const ThreadItem = memo(
                                     {(threadItem.reasoning ||
                                         threadItem.reasoningDetails?.length ||
                                         threadItem.parts?.some(
-                                            part => part.type === 'reasoning'
+                                            (part) => part.type === 'reasoning'
                                         )) && <ThinkingLog threadItem={threadItem} />}
 
                                     <MarkdownContent
                                         content={animatedText || ''}
-                                        key={`answer-${threadItem.id}`}
                                         isCompleted={['COMPLETED', 'ERROR', 'ABORTED'].includes(
                                             threadItem.status || ''
                                         )}
+                                        isLast={isLast}
+                                        key={`answer-${threadItem.id}`}
                                         shouldAnimate={
                                             !['COMPLETED', 'ERROR', 'ABORTED'].includes(
                                                 threadItem.status || ''
                                             )
                                         }
-                                        isLast={isLast}
                                     />
                                 </div>
                             )}
                         </div>
                         <QuestionPrompt threadItem={threadItem} />
                         {threadItem.error && (
-                            <RateLimitErrorAlert 
-                                error={typeof threadItem.error === 'string'
-                                    ? threadItem.error
-                                    : getErrorDiagnosticMessage(threadItem.error)}
+                            <RateLimitErrorAlert
+                                error={
+                                    typeof threadItem.error === 'string'
+                                        ? threadItem.error
+                                        : getErrorDiagnosticMessage(threadItem.error)
+                                }
                             />
                         )}
 
@@ -202,18 +204,18 @@ export const ThreadItem = memo(
                                 !isGenerating) && (
                                 <div className="flex flex-col gap-3">
                                     <MessageActions
-                                        threadItem={threadItem}
-                                        ref={messageRef}
                                         isLast={isLast}
+                                        ref={messageRef}
+                                        threadItem={threadItem}
                                     />
 
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
                                         <div className="mt-4 space-y-4">
-                                            {chartToolResults.map(toolResult => (
+                                            {chartToolResults.map((toolResult) => (
                                                 <ChartComponent
-                                                    key={toolResult.toolCallId}
                                                     chartData={toolResult.result}
+                                                    key={toolResult.toolCallId}
                                                 />
                                             ))}
                                         </div>

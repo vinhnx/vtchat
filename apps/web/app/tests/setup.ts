@@ -5,15 +5,15 @@ import '@testing-library/jest-dom/vitest';
 beforeEach(() => {
     // Clear all mocks between tests
     vi.clearAllMocks();
-    
+
     // Reset system time
     vi.useRealTimers();
-    
+
     // Mock environment variables
     process.env.NODE_ENV = 'test';
     process.env.GEMINI_API_KEY = 'test-gemini-key';
     process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
-    
+
     // Mock crypto.randomUUID for consistent test IDs
     if (!global.crypto) {
         global.crypto = {

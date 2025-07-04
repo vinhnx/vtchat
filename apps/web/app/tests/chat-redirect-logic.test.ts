@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('Chat Route Redirect Logic', () => {
     // Test the redirect logic pattern without importing middleware
@@ -33,7 +33,7 @@ describe('Chat Route Redirect Logic', () => {
             '/chat/very-long-thread-id-with-many-characters',
         ];
 
-        testCases.forEach(path => {
+        testCases.forEach((path) => {
             expect(shouldRedirectChat(path)).toBe(false);
         });
     });

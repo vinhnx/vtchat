@@ -4,7 +4,7 @@ export {
     supportsOpenAIWebSearch,
 } from './openai-web-search';
 
-import { ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
+import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
 import { openaiWebSearchTool } from './openai-web-search';
 
 /**

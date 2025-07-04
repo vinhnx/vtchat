@@ -1,4 +1,4 @@
-import { DocumentAttachment, ThreadItem, Attachment } from '@repo/shared/types';
+import type { Attachment, DocumentAttachment, ThreadItem } from '@repo/shared/types';
 
 export const buildCoreMessagesFromThreadItems = ({
     messages,
@@ -13,7 +13,7 @@ export const buildCoreMessagesFromThreadItems = ({
     documentAttachment?: DocumentAttachment;
     attachments?: Attachment[];
 }) => {
-    const threadMessages = (messages || []).flatMap(item => {
+    const threadMessages = (messages || []).flatMap((item) => {
         const content: any[] = [{ type: 'text', text: item.query || '' }];
 
         if (item.imageAttachment) {
@@ -33,7 +33,7 @@ export const buildCoreMessagesFromThreadItems = ({
 
         // Add multi-modal attachments
         if (item.attachments) {
-            item.attachments.forEach(attachment => {
+            item.attachments.forEach((attachment) => {
                 if (attachment.contentType.startsWith('image/')) {
                     content.push({ type: 'image', image: attachment.url });
                 } else if (attachment.contentType === 'application/pdf') {
@@ -81,7 +81,7 @@ export const buildCoreMessagesFromThreadItems = ({
 
     // Add current multi-modal attachments
     if (attachments) {
-        attachments.forEach(attachment => {
+        attachments.forEach((attachment) => {
             if (attachment.contentType.startsWith('image/')) {
                 currentContent.push({ type: 'image', image: attachment.url });
             } else if (attachment.contentType === 'application/pdf') {

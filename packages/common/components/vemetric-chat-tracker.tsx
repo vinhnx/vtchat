@@ -1,12 +1,12 @@
 'use client';
 
+import { FEATURE_STATES, TOOL_FEATURES } from '@repo/shared/constants';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { useEffect, useRef } from 'react';
 import { useVemetric } from '../hooks/use-vemetric';
 import { useChatStore } from '../store/chat.store';
 import { ANALYTICS_EVENTS, AnalyticsUtils } from '../utils/analytics';
-import { TOOL_FEATURES, FEATURE_STATES } from '@repo/shared/constants';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
 
 /**
  * Component that tracks chat-related analytics events
@@ -15,14 +15,14 @@ import { log } from '@repo/shared/logger';
 export function VemetricChatTracker() {
     const { trackEvent, isEnabled } = useVemetric();
     const { data: session } = useSession();
-    
+
     // Store selectors
-    const chatMode = useChatStore(state => state.chatMode);
-    const useWebSearch = useChatStore(state => state.useWebSearch);
-    const useMathCalculator = useChatStore(state => state.useMathCalculator);
-    const useCharts = useChatStore(state => state.useCharts);
-    const currentThreadId = useChatStore(state => state.currentThreadId);
-    
+    const chatMode = useChatStore((state) => state.chatMode);
+    const useWebSearch = useChatStore((state) => state.useWebSearch);
+    const useMathCalculator = useChatStore((state) => state.useMathCalculator);
+    const useCharts = useChatStore((state) => state.useCharts);
+    const currentThreadId = useChatStore((state) => state.currentThreadId);
+
     // Refs to track previous values
     const prevChatMode = useRef(chatMode);
     const prevUseWebSearch = useRef(useWebSearch);
@@ -32,7 +32,7 @@ export function VemetricChatTracker() {
 
     // Track model selection changes
     useEffect(() => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         if (prevChatMode.current !== chatMode) {
             // Only track if this isn't the initial load
@@ -49,11 +49,12 @@ export function VemetricChatTracker() {
 
     // Track feature toggles
     useEffect(() => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         if (prevUseWebSearch.current !== useWebSearch) {
             if (prevUseWebSearch.current !== undefined) {
-                trackEvent(ANALYTICS_EVENTS.TOOL_USED, 
+                trackEvent(
+                    ANALYTICS_EVENTS.TOOL_USED,
                     AnalyticsUtils.createFeatureEventData({
                         featureName: TOOL_FEATURES.WEB_SEARCH,
                         context: useWebSearch ? FEATURE_STATES.ENABLED : FEATURE_STATES.DISABLED,
@@ -65,14 +66,17 @@ export function VemetricChatTracker() {
     }, [useWebSearch, trackEvent, isEnabled, session]);
 
     useEffect(() => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         if (prevUseMathCalculator.current !== useMathCalculator) {
             if (prevUseMathCalculator.current !== undefined) {
-                trackEvent(ANALYTICS_EVENTS.TOOL_USED,
+                trackEvent(
+                    ANALYTICS_EVENTS.TOOL_USED,
                     AnalyticsUtils.createFeatureEventData({
                         featureName: TOOL_FEATURES.MATH_CALCULATOR,
-                        context: useMathCalculator ? FEATURE_STATES.ENABLED : FEATURE_STATES.DISABLED,
+                        context: useMathCalculator
+                            ? FEATURE_STATES.ENABLED
+                            : FEATURE_STATES.DISABLED,
                     })
                 );
             }
@@ -81,11 +85,12 @@ export function VemetricChatTracker() {
     }, [useMathCalculator, trackEvent, isEnabled, session]);
 
     useEffect(() => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         if (prevUseCharts.current !== useCharts) {
             if (prevUseCharts.current !== undefined) {
-                trackEvent(ANALYTICS_EVENTS.TOOL_USED,
+                trackEvent(
+                    ANALYTICS_EVENTS.TOOL_USED,
                     AnalyticsUtils.createFeatureEventData({
                         featureName: TOOL_FEATURES.CHARTS,
                         context: useCharts ? FEATURE_STATES.ENABLED : FEATURE_STATES.DISABLED,
@@ -98,7 +103,7 @@ export function VemetricChatTracker() {
 
     // Track thread creation
     useEffect(() => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         if (prevThreadId.current !== currentThreadId) {
             if (currentThreadId && prevThreadId.current !== undefined) {
@@ -112,7 +117,16 @@ export function VemetricChatTracker() {
             }
             prevThreadId.current = currentThreadId;
         }
-    }, [currentThreadId, trackEvent, isEnabled, session, chatMode, useWebSearch, useMathCalculator, useCharts]);
+    }, [
+        currentThreadId,
+        trackEvent,
+        isEnabled,
+        session,
+        chatMode,
+        useWebSearch,
+        useMathCalculator,
+        useCharts,
+    ]);
 
     return null; // This component doesn't render anything
 }
@@ -132,7 +146,7 @@ export function useVemetricMessageTracking() {
         toolsUsed?: string[];
         threadId?: string | number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = AnalyticsUtils.createChatEventData({
@@ -145,11 +159,14 @@ export function useVemetricMessageTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.MESSAGE_SENT, eventData);
 
-            log.debug({ 
-                event: ANALYTICS_EVENTS.MESSAGE_SENT,
-                modelName: params.modelName,
-                messageLength: params.messageLength
-            }, 'Message sent event tracked');
+            log.debug(
+                {
+                    event: ANALYTICS_EVENTS.MESSAGE_SENT,
+                    modelName: params.modelName,
+                    messageLength: params.messageLength,
+                },
+                'Message sent event tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track message sent event');
         }
@@ -162,7 +179,7 @@ export function useVemetricMessageTracking() {
         threadId?: string | number;
         wasSuccessful: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = AnalyticsUtils.createChatEventData({
@@ -186,7 +203,7 @@ export function useVemetricMessageTracking() {
         isNewThread: boolean;
         threadId?: string | number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             await trackEvent(ANALYTICS_EVENTS.CHAT_STARTED, {
@@ -204,7 +221,7 @@ export function useVemetricMessageTracking() {
         messageLength: number;
         timeSinceSignup?: number; // In days
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             await trackEvent(ANALYTICS_EVENTS.FIRST_MESSAGE_SENT, {
@@ -237,10 +254,11 @@ export function useVemetricUserJourney() {
     const { data: session } = useSession();
 
     const trackOnboardingStep = async (step: string, value?: number) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
-            await trackEvent(ANALYTICS_EVENTS.ONBOARDING_STARTED, 
+            await trackEvent(
+                ANALYTICS_EVENTS.ONBOARDING_STARTED,
                 AnalyticsUtils.createUserJourneyEventData({
                     step,
                     value,
@@ -253,10 +271,11 @@ export function useVemetricUserJourney() {
     };
 
     const trackFeatureDiscovery = async (featureName: string, context?: string) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
-            await trackEvent(ANALYTICS_EVENTS.FEATURE_DISCOVERED,
+            await trackEvent(
+                ANALYTICS_EVENTS.FEATURE_DISCOVERED,
                 AnalyticsUtils.createFeatureEventData({
                     featureName,
                     context,
@@ -268,7 +287,7 @@ export function useVemetricUserJourney() {
     };
 
     const trackHelpAccessed = async (section: string) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             await trackEvent(ANALYTICS_EVENTS.HELP_ACCESSED, {

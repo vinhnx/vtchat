@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock environment for testing
 process.env.NODE_ENV = 'test';
@@ -29,7 +29,7 @@ vi.mock('drizzle-orm', () => ({
 vi.mock('@/lib/database/schema', () => ({
     userRateLimits: {
         id: 'id',
-        userId: 'userId', 
+        userId: 'userId',
         modelId: 'modelId',
         dailyRequestCount: 'dailyRequestCount',
         minuteRequestCount: 'minuteRequestCount',
@@ -40,8 +40,8 @@ vi.mock('@/lib/database/schema', () => ({
     },
 }));
 
-import { checkRateLimit, recordRequest, getRateLimitStatus } from '@/lib/services/rate-limit';
 import { ModelEnum } from '@repo/ai/models';
+import { checkRateLimit, getRateLimitStatus, recordRequest } from '@/lib/services/rate-limit';
 
 describe('Gemini 2.5 Flash Lite - Database Integration', () => {
     const testUserId = 'db-test-user-123';
@@ -173,7 +173,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
     describe('Concurrent User Handling', () => {
         it('should handle multiple users accessing database simultaneously', async () => {
             const user1 = 'concurrent-user-1';
-            const user2 = 'concurrent-user-2'; 
+            const user2 = 'concurrent-user-2';
             const user3 = 'concurrent-user-3';
 
             // Mock different states for each user
@@ -273,23 +273,24 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 updatedAt: new Date(),
             });
 
-            mockDb.select
-                .mockReturnValue({
-                    from: vi.fn().mockReturnValue({
-                        where: vi.fn().mockReturnValue({
-                            limit: vi.fn().mockReturnValue({
-                                then: vi.fn((callback) => {
-                                    // Simulate different users getting their own records
-                                    if (callback) {
-                                        const currentCall = mockDb.select.mock.calls.length - 1;
-                                        return Promise.resolve([createRecord(`transaction-user-${currentCall + 1}`)]);
-                                    }
-                                    return Promise.resolve([]);
-                                }),
+            mockDb.select.mockReturnValue({
+                from: vi.fn().mockReturnValue({
+                    where: vi.fn().mockReturnValue({
+                        limit: vi.fn().mockReturnValue({
+                            then: vi.fn((callback) => {
+                                // Simulate different users getting their own records
+                                if (callback) {
+                                    const currentCall = mockDb.select.mock.calls.length - 1;
+                                    return Promise.resolve([
+                                        createRecord(`transaction-user-${currentCall + 1}`),
+                                    ]);
+                                }
+                                return Promise.resolve([]);
                             }),
                         }),
                     }),
-                });
+                }),
+            });
 
             // Both should be allowed as they each have their own limits
             const [result1, result2] = await Promise.all([
@@ -316,8 +317,9 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 }),
             });
 
-            await expect(checkRateLimit(testUserId, freeModelId))
-                .rejects.toThrow('Connection timeout');
+            await expect(checkRateLimit(testUserId, freeModelId)).rejects.toThrow(
+                'Connection timeout'
+            );
         });
 
         it('should handle insert failures gracefully', async () => {
@@ -335,8 +337,9 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 values: vi.fn().mockRejectedValue(new Error('Unique constraint violation')),
             });
 
-            await expect(checkRateLimit(testUserId, freeModelId))
-                .rejects.toThrow('Unique constraint violation');
+            await expect(checkRateLimit(testUserId, freeModelId)).rejects.toThrow(
+                'Unique constraint violation'
+            );
         });
 
         it('should handle update failures', async () => {
@@ -368,8 +371,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 }),
             });
 
-            await expect(recordRequest(testUserId, freeModelId))
-                .rejects.toThrow('Update failed');
+            await expect(recordRequest(testUserId, freeModelId)).rejects.toThrow('Update failed');
         });
     });
 
@@ -379,7 +381,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
             vi.setSystemTime(now);
 
             // Simulate a sequence of operations
-            let recordState = {
+            const recordState = {
                 id: 'consistency-test',
                 userId: testUserId,
                 modelId: freeModelId,
@@ -401,11 +403,13 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([{
-                                ...recordState,
-                                dailyRequestCount: stateTracker.dailyCount.toString(),
-                                minuteRequestCount: stateTracker.minuteCount.toString(),
-                            }]),
+                            then: vi.fn().mockResolvedValue([
+                                {
+                                    ...recordState,
+                                    dailyRequestCount: stateTracker.dailyCount.toString(),
+                                    minuteRequestCount: stateTracker.minuteCount.toString(),
+                                },
+                            ]),
                         }),
                     }),
                 }),
@@ -416,10 +420,10 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                     where: vi.fn().mockImplementation(() => {
                         // Update our state tracker
                         if (updates.dailyRequestCount) {
-                            stateTracker.dailyCount = parseInt(updates.dailyRequestCount);
+                            stateTracker.dailyCount = Number.parseInt(updates.dailyRequestCount);
                         }
                         if (updates.minuteRequestCount) {
-                            stateTracker.minuteCount = parseInt(updates.minuteRequestCount);
+                            stateTracker.minuteCount = Number.parseInt(updates.minuteRequestCount);
                         }
                         return Promise.resolve();
                     }),
@@ -433,7 +437,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 expect(rateLimitResult.remainingDaily).toBe(10 - (i - 1));
 
                 await recordRequest(testUserId, freeModelId);
-                
+
                 // Verify state consistency
                 expect(stateTracker.dailyCount).toBe(i);
                 expect(stateTracker.minuteCount).toBe(1); // Reset each minute
@@ -507,8 +511,8 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                         limit: vi.fn().mockReturnValue({
                             then: vi.fn().mockImplementation(() => {
                                 // Check which user is being queried
-                                const isUser1Query = mockEq.mock.calls.some(call => 
-                                    call[1] === user1
+                                const isUser1Query = mockEq.mock.calls.some(
+                                    (call) => call[1] === user1
                                 );
                                 return Promise.resolve(isUser1Query ? [user1Record] : []);
                             }),

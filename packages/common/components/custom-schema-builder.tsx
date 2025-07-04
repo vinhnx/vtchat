@@ -55,12 +55,12 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
 
     const removeField = (id: string) => {
         if (fields.length > 1) {
-            setFields(fields.filter(f => f.id !== id));
+            setFields(fields.filter((f) => f.id !== id));
         }
     };
 
     const updateField = (id: string, updates: Partial<SchemaField>) => {
-        setFields(fields.map(f => (f.id === id ? { ...f, ...updates } : f)));
+        setFields(fields.map((f) => (f.id === id ? { ...f, ...updates } : f)));
     };
 
     const createSchema = () => {
@@ -68,14 +68,14 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
             return;
         }
 
-        const validFields = fields.filter(f => f.name.trim());
+        const validFields = fields.filter((f) => f.name.trim());
         if (validFields.length === 0) {
             return;
         }
 
         const schemaFields: Record<string, any> = {};
 
-        validFields.forEach(field => {
+        validFields.forEach((field) => {
             let zodType;
             switch (field.type) {
                 case 'string':
@@ -109,14 +109,17 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
         });
 
         const schema = z.object(schemaFields);
-        onSchemaCreate({ schema, type: schemaName.toLowerCase().replace(/\s+/g, '_') });
+        onSchemaCreate({
+            schema,
+            type: schemaName.toLowerCase().replace(/\s+/g, '_'),
+        });
     };
 
     const generatePreview = () => {
-        const validFields = fields.filter(f => f.name.trim());
+        const validFields = fields.filter((f) => f.name.trim());
         const preview: Record<string, any> = {};
 
-        validFields.forEach(field => {
+        validFields.forEach((field) => {
             let example;
             switch (field.type) {
                 case 'string':
@@ -155,14 +158,14 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                     <CardTitle className="text-lg">Custom Schema Builder</CardTitle>
                     <div className="flex gap-2">
                         <Button
+                            onClick={() => setShowPreview(!showPreview)}
                             size="sm"
                             variant="ghost"
-                            onClick={() => setShowPreview(!showPreview)}
                         >
                             {showPreview ? <EyeOff size={16} /> : <Eye size={16} />}
                             Preview
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={onClose}>
+                        <Button onClick={onClose} size="sm" variant="ghost">
                             Cancel
                         </Button>
                     </div>
@@ -172,45 +175,45 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                 <div>
                     <label className="text-sm font-medium">Schema Name</label>
                     <Input
-                        value={schemaName}
-                        onChange={e => setSchemaName(e.target.value)}
-                        placeholder="e.g., Financial Report, Meeting Notes"
                         className="mt-1"
+                        onChange={(e) => setSchemaName(e.target.value)}
+                        placeholder="e.g., Financial Report, Meeting Notes"
+                        value={schemaName}
                     />
                 </div>
 
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <label className="text-sm font-medium">Fields</label>
-                        <Button size="sm" variant="outlined" onClick={addField}>
-                            <Plus size={14} className="mr-1" />
+                        <Button onClick={addField} size="sm" variant="outlined">
+                            <Plus className="mr-1" size={14} />
                             Add Field
                         </Button>
                     </div>
 
-                    {fields.map(field => (
-                        <div key={field.id} className="space-y-2 rounded-lg border p-3">
+                    {fields.map((field) => (
+                        <div className="space-y-2 rounded-lg border p-3" key={field.id}>
                             <div className="flex items-center gap-2">
                                 <div className="flex-1">
                                     <Input
-                                        value={field.name}
-                                        onChange={e =>
+                                        className="text-sm"
+                                        onChange={(e) =>
                                             updateField(field.id, { name: e.target.value })
                                         }
                                         placeholder="Field name"
-                                        className="text-sm"
+                                        value={field.name}
                                     />
                                 </div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outlined" size="sm" className="w-24">
-                                            {typeOptions.find(opt => opt.value === field.type)
+                                        <Button className="w-24" size="sm" variant="outlined">
+                                            {typeOptions.find((opt) => opt.value === field.type)
                                                 ?.label || 'Text'}
-                                            <ChevronDown size={14} className="ml-1" />
+                                            <ChevronDown className="ml-1" size={14} />
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        {typeOptions.map(option => (
+                                        {typeOptions.map((option) => (
                                             <DropdownMenuItem
                                                 key={option.value}
                                                 onClick={() =>
@@ -226,32 +229,32 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                                 </DropdownMenu>
                                 <label className="flex items-center text-sm">
                                     <input
-                                        type="checkbox"
                                         checked={field.optional}
-                                        onChange={e =>
+                                        className="mr-1"
+                                        onChange={(e) =>
                                             updateField(field.id, { optional: e.target.checked })
                                         }
-                                        className="mr-1"
+                                        type="checkbox"
                                     />
                                     Optional
                                 </label>
                                 {fields.length > 1 && (
                                     <Button
+                                        onClick={() => removeField(field.id)}
                                         size="icon-sm"
                                         variant="ghost"
-                                        onClick={() => removeField(field.id)}
                                     >
                                         <Trash2 size={14} />
                                     </Button>
                                 )}
                             </div>
                             <Input
-                                value={field.description}
-                                onChange={e =>
+                                className="text-sm"
+                                onChange={(e) =>
                                     updateField(field.id, { description: e.target.value })
                                 }
                                 placeholder="Description (helps AI understand what to extract)"
-                                className="text-sm"
+                                value={field.description}
                             />
                         </div>
                     ))}
@@ -267,12 +270,12 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                 )}
 
                 <div className="flex justify-end gap-2 pt-4">
-                    <Button variant="outlined" onClick={onClose}>
+                    <Button onClick={onClose} variant="outlined">
                         Cancel
                     </Button>
                     <Button
+                        disabled={!(schemaName.trim() && fields.some((f) => f.name.trim()))}
                         onClick={createSchema}
-                        disabled={!schemaName.trim() || !fields.some(f => f.name.trim())}
                     >
                         Create & Extract
                     </Button>

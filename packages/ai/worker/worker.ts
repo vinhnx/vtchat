@@ -1,7 +1,8 @@
 import { ChatMode } from '@repo/shared/config';
-import { runWorkflow } from '../workflow/flow';
-import { REASONING_BUDGETS } from '../constants/reasoning';
 import { log } from '@repo/shared/logger';
+import { REASONING_BUDGETS } from '../constants/reasoning';
+import { runWorkflow } from '../workflow/flow';
+
 // Create context for the worker
 const ctx: Worker = self as any;
 
@@ -20,7 +21,11 @@ let activeWorkflow: ReturnType<typeof runWorkflow> | null = null;
  */
 function getThinkingModeForChatMode(
     mode: ChatMode,
-    userThinkingMode?: { enabled: boolean; budget: number; includeThoughts: boolean }
+    userThinkingMode?: {
+        enabled: boolean;
+        budget: number;
+        includeThoughts: boolean;
+    }
 ) {
     // Auto-enable reasoning for research modes with high budgets
     if (mode === ChatMode.Deep) {
@@ -119,7 +124,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
             // Forward workflow events to the main thread
             activeWorkflow.onAll((event, payload) => {
                 ctx.postMessage({
-                    event: event,
+                    event,
                     threadId,
                     threadItemId,
                     parentThreadItemId,

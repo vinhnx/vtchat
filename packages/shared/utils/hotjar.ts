@@ -5,7 +5,7 @@ const hotjarVersion = process.env.NEXT_PUBLIC_HOTJAR_VERSION;
 
 const initHotjar = () => {
     if (siteId && hotjarVersion) {
-        Hotjar.init(parseInt(siteId), parseInt(hotjarVersion));
+        Hotjar.init(Number.parseInt(siteId), Number.parseInt(hotjarVersion));
     }
 };
 

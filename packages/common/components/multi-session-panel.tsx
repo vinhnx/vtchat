@@ -1,7 +1,7 @@
 'use client';
 
-import { authClient } from '@repo/shared/lib/auth-client';
-import { useSession } from '@repo/shared/lib/auth-client';
+import { authClient, useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import {
     Alert,
     AlertDescription,
@@ -15,9 +15,7 @@ import {
     Separator,
 } from '@repo/ui';
 import { AlertCircle, CheckCircle, Monitor, Smartphone, Tablet, Trash2, Wifi } from 'lucide-react';
-
 import { useEffect, useState } from 'react';
-import { log } from '@repo/shared/logger';
 
 interface DeviceSession {
     sessionToken: string;
@@ -34,7 +32,7 @@ interface MultiSessionPanelProps {
     className?: string;
 }
 
-const getDeviceIcon = (userAgent: string = '') => {
+const getDeviceIcon = (userAgent = '') => {
     const ua = userAgent.toLowerCase();
     if (ua.includes('mobile') || ua.includes('android') || ua.includes('iphone')) {
         return Smartphone;
@@ -45,7 +43,7 @@ const getDeviceIcon = (userAgent: string = '') => {
     return Monitor;
 };
 
-const formatUserAgent = (userAgent: string = '') => {
+const formatUserAgent = (userAgent = '') => {
     if (!userAgent) return 'Unknown Device';
 
     // Extract browser and OS info
@@ -244,7 +242,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
                         <h3 className="text-sm font-medium">Device Sessions</h3>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge className="text-xs" variant="secondary">
                             {Array.isArray(sessions) ? sessions.length : 0} active
                         </Badge>
                     </div>
@@ -257,19 +255,19 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                         </div>
                     ) : (
                         <div className="space-y-3">
-                            {sessions.map(session => {
+                            {sessions.map((session) => {
                                 const DeviceIcon = getDeviceIcon(session.userAgent);
                                 const isCurrentSession = session.isActive;
                                 const isExpired = new Date(session.expiresAt) < new Date();
 
                                 return (
                                     <div
-                                        key={session.sessionToken}
                                         className={`flex items-center justify-between rounded-lg border p-3 ${
                                             isCurrentSession
                                                 ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
                                                 : ''
                                         }`}
+                                        key={session.sessionToken}
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400">
@@ -282,16 +280,16 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                                     </p>
                                                     {isCurrentSession && (
                                                         <Badge
-                                                            variant="secondary"
                                                             className="text-xs"
+                                                            variant="secondary"
                                                         >
                                                             Current
                                                         </Badge>
                                                     )}
                                                     {isExpired && (
                                                         <Badge
-                                                            variant="destructive"
                                                             className="text-xs"
+                                                            variant="destructive"
                                                         >
                                                             Expired
                                                         </Badge>
@@ -320,16 +318,16 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            {!isCurrentSession && !isExpired && (
+                                            {!(isCurrentSession || isExpired) && (
                                                 <Button
-                                                    variant="outline"
-                                                    size="sm"
                                                     disabled={
                                                         actionLoading === session.sessionToken
                                                     }
                                                     onClick={() =>
                                                         handleSetActive(session.sessionToken)
                                                     }
+                                                    size="sm"
+                                                    variant="outline"
                                                 >
                                                     {actionLoading === session.sessionToken ? (
                                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -340,15 +338,15 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                             )}
                                             {!isCurrentSession && (
                                                 <Button
-                                                    variant="outline"
-                                                    size="sm"
+                                                    className="text-destructive hover:text-destructive"
                                                     disabled={
                                                         actionLoading === session.sessionToken
                                                     }
                                                     onClick={() =>
                                                         handleRevokeSession(session.sessionToken)
                                                     }
-                                                    className="text-destructive hover:text-destructive"
+                                                    size="sm"
+                                                    variant="outline"
                                                 >
                                                     {actionLoading === session.sessionToken ? (
                                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

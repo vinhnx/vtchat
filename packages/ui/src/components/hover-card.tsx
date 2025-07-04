@@ -1,13 +1,13 @@
 'use client';
 
 import {
+    FloatingPortal,
     flip,
     offset,
     shift,
     useFloating,
     useHover,
     useInteractions,
-    FloatingPortal,
 } from '@floating-ui/react';
 import * as React from 'react';
 import { cn } from '../lib/utils';
@@ -78,7 +78,7 @@ const HoverCardTrigger = React.forwardRef<HTMLSpanElement, HoverCardTriggerProps
 
         return (
             <span
-                ref={node => {
+                ref={(node) => {
                     refs.setReference(node);
                     if (typeof ref === 'function') {
                         ref(node);
@@ -108,7 +108,7 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
         return (
             <FloatingPortal>
                 <div
-                    ref={node => {
+                    ref={(node) => {
                         refs.setFloating(node);
                         if (typeof ref === 'function') {
                             ref(node);
@@ -120,7 +120,7 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
                     {...getFloatingProps()}
                     className={cn(
                         'bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-none',
-                        'animate-in fade-in-0 zoom-in-95',
+                        'fade-in-0 zoom-in-95 animate-in',
                         className
                     )}
                     {...props}

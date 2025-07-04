@@ -1,6 +1,6 @@
-import { Context, ContextSchemaDefinition } from './context';
-import { EventSchemaDefinition, TypedEventEmitter } from './events';
-import { ExecutionContext } from './execution-context';
+import type { Context, ContextSchemaDefinition } from './context';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import type { ExecutionContext } from './execution-context';
 
 export type WorkflowConfig = {
     maxIterations?: number;
@@ -42,7 +42,11 @@ export type TaskExecutionFunction<
     TEvent extends EventSchemaDefinition = any,
     TContext extends ContextSchemaDefinition = any,
     TWorkflow extends WorkflowDefinition<TEvent, TContext> = WorkflowDefinition<TEvent, TContext>,
-> = (params: Omit<TaskParams<TEvent, TContext>, 'signal'> & { signal?: AbortSignal }) => Promise<
+> = (
+    params: Omit<TaskParams<TEvent, TContext>, 'signal'> & {
+        signal?: AbortSignal;
+    }
+) => Promise<
     | {
           result: any;
           next?:

@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { getErrorDiagnosticMessage, generateErrorDiagnostic } from '../../../../packages/common/utils/error-diagnostics';
+import { describe, expect, it } from 'vitest';
+import {
+    generateErrorDiagnostic,
+    getErrorDiagnosticMessage,
+} from '../../../../packages/common/utils/error-diagnostics';
 
 describe('Error Diagnostic Integration', () => {
     describe('Thread Item Error Handling', () => {
@@ -8,32 +11,34 @@ describe('Error Diagnostic Integration', () => {
             const testErrors = [
                 // API key error
                 new Error('Invalid API key provided'),
-                
+
                 // Network error
                 { message: 'Network timeout occurred', code: 'NETWORK_ERROR' },
-                
+
                 // Model error
                 'Model gemini-2.5-flash-lite-preview-06-17 is not available',
-                
+
                 // Generic object error
                 { status: 500, error: 'Internal server error' },
-                
+
                 // String error
                 'Something unexpected happened',
             ];
 
-            testErrors.forEach(error => {
+            testErrors.forEach((error) => {
                 const diagnosticMessage = getErrorDiagnosticMessage(error);
-                
+
                 // Should not be the old generic message
-                expect(diagnosticMessage).not.toBe('Something went wrong while processing your request. Please try again.');
-                
+                expect(diagnosticMessage).not.toBe(
+                    'Something went wrong while processing your request. Please try again.'
+                );
+
                 // Should contain diagnostic elements
                 expect(diagnosticMessage).toContain('🔧 Try these steps:');
-                
+
                 // Should have numbered suggestions
                 expect(diagnosticMessage).toMatch(/\d+\./);
-                
+
                 // Should be longer and more helpful than generic message
                 expect(diagnosticMessage.length).toBeGreaterThan(50);
             });
@@ -82,9 +87,9 @@ describe('Error Diagnostic Integration', () => {
 
             categoryTests.forEach(({ error, expectedSuggestions }) => {
                 const diagnostic = generateErrorDiagnostic(error);
-                
-                expectedSuggestions.forEach(expectedSuggestion => {
-                    const hasSuggestion = diagnostic.suggestions.some(suggestion =>
+
+                expectedSuggestions.forEach((expectedSuggestion) => {
+                    const hasSuggestion = diagnostic.suggestions.some((suggestion) =>
                         suggestion.toLowerCase().includes(expectedSuggestion.toLowerCase())
                     );
                     expect(hasSuggestion).toBe(true);
@@ -93,23 +98,15 @@ describe('Error Diagnostic Integration', () => {
         });
 
         it('should handle edge cases gracefully', () => {
-            const edgeCases = [
-                null,
-                undefined,
-                '',
-                {},
-                [],
-                0,
-                false,
-            ];
+            const edgeCases = [null, undefined, '', {}, [], 0, false];
 
-            edgeCases.forEach(edgeCase => {
+            edgeCases.forEach((edgeCase) => {
                 const diagnosticMessage = getErrorDiagnosticMessage(edgeCase);
-                
+
                 // Should still provide a helpful message
                 expect(diagnosticMessage).toContain('🔧 Try these steps:');
                 expect(diagnosticMessage.length).toBeGreaterThan(0);
-                
+
                 // Should not crash or return empty
                 expect(typeof diagnosticMessage).toBe('string');
             });
@@ -122,17 +119,19 @@ describe('Error Diagnostic Integration', () => {
                 'Daily quota exhausted',
             ];
 
-            rateLimitErrors.forEach(error => {
+            rateLimitErrors.forEach((error) => {
                 const diagnostic = generateErrorDiagnostic(error);
-                
+
                 // Rate limit errors should keep their original message
                 expect(diagnostic.message).toBe(error);
                 expect(diagnostic.category).toBe('rate_limit');
-                
+
                 // Should still provide upgrade suggestions
-                expect(diagnostic.suggestions.some(s => 
-                    s.includes('upgrading to VT+') || s.includes('own API key')
-                )).toBe(true);
+                expect(
+                    diagnostic.suggestions.some(
+                        (s) => s.includes('upgrading to VT+') || s.includes('own API key')
+                    )
+                ).toBe(true);
             });
         });
     });
@@ -141,15 +140,15 @@ describe('Error Diagnostic Integration', () => {
         it('should format messages consistently', () => {
             const error = 'API key error';
             const message = getErrorDiagnosticMessage(error);
-            
+
             // Should have proper structure
             const parts = message.split('\n\n🔧 Try these steps:\n');
             expect(parts).toHaveLength(2);
-            
+
             const [errorMessage, suggestionsList] = parts;
             expect(errorMessage.trim().length).toBeGreaterThan(0);
             expect(suggestionsList.trim().length).toBeGreaterThan(0);
-            
+
             // Suggestions should be numbered
             const suggestions = suggestionsList.split('\n');
             suggestions.forEach((suggestion, index) => {

@@ -4,10 +4,10 @@
  * Client-side utilities for checking subscription access.
  */
 
-import { FeatureSlug, PlanConfig, PLANS, PlanSlug } from '../types/subscription';
-import { SubscriptionStatusEnum } from '../types/subscription-status';
-import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
 import { log } from '@repo/shared/logger';
+import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
+import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from '../types/subscription';
+import { SubscriptionStatusEnum } from '../types/subscription-status';
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -104,13 +104,7 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
     if (!status.isActive) return false; // If overall subscription is not active, no features are accessible
 
     // VT+ exclusive features - only 3 features remain exclusive
-    if (
-        [
-            FeatureSlug.DEEP_RESEARCH,
-            FeatureSlug.PRO_SEARCH,
-            FeatureSlug.RAG,
-        ].includes(feature)
-    ) {
+    if ([FeatureSlug.DEEP_RESEARCH, FeatureSlug.PRO_SEARCH, FeatureSlug.RAG].includes(feature)) {
         return status.isVtPlus; // isActive check is already done
     }
 
@@ -264,7 +258,10 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
     }
 
     // If it's VT_BASE and no specific subscription record (source NONE), it's effectively active for base features.
-    if (subscriptionData.planSlug === PlanSlug.VT_BASE && subscriptionData.source === SUBSCRIPTION_SOURCES.NONE) {
+    if (
+        subscriptionData.planSlug === PlanSlug.VT_BASE &&
+        subscriptionData.source === SUBSCRIPTION_SOURCES.NONE
+    ) {
         status = SubscriptionStatusEnum.ACTIVE; // Free tier is always 'active'
         overallIsActive = true;
     }

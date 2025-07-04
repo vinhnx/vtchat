@@ -1,10 +1,10 @@
 'use client';
 
-import { ChartPopup, useChartPopup, type ChartData } from './chart-popup';
+import { log } from '@repo/shared/logger';
 import { Button } from '@repo/ui';
 import { BarChart3 } from 'lucide-react';
 import { useMemo } from 'react';
-import { log } from '@repo/shared/logger';
+import { type ChartData, ChartPopup, useChartPopup } from './chart-popup';
 
 type ChartMessageProps = {
     content: string;
@@ -46,10 +46,10 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
             {chartData && (
                 <div className="flex justify-start">
                     <Button
-                        onClick={handleViewChart}
-                        variant="outline"
-                        size="sm"
                         className="gap-2 border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100"
+                        onClick={handleViewChart}
+                        size="sm"
+                        variant="outline"
                     >
                         <BarChart3 size={16} />
                         View Chart

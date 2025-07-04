@@ -1,8 +1,8 @@
 import { createTask } from '@repo/orchestrator';
-import { getModelFromChatMode, ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
 import { log } from '@repo/shared/logger';
+import { getModelFromChatMode, ModelEnum } from '../../models';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'gemini-web-search',
@@ -76,7 +76,7 @@ Please include:
 
             // Update sources if available
             if (result.sources && result.sources.length > 0) {
-                context?.update('sources', current => {
+                context?.update('sources', (current) => {
                     const existingSources = current ?? [];
                     const newSources = result.sources
                         ?.filter(
@@ -85,7 +85,7 @@ Please include:
                                 source.url &&
                                 typeof source.url === 'string' &&
                                 source.url.trim() !== '' &&
-                                !existingSources.some(existing => existing.link === source.url)
+                                !existingSources.some((existing) => existing.link === source.url)
                         )
                         .map((source: any, index: number) => ({
                             title: source.title || 'Web Search Result',
@@ -97,7 +97,7 @@ Please include:
                 });
             }
 
-            context?.update('summaries', current => [...(current ?? []), result.text]);
+            context?.update('summaries', (current) => [...(current ?? []), result.text]);
 
             // Mark step as completed
             if (stepId !== undefined) {
@@ -138,43 +138,45 @@ Please include:
             // Provide more user-friendly error messages based on model and API key status
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
             const hasUserApiKey = context?.get('apiKeys')?.['GEMINI_API_KEY'];
-            
+
             if (error.message?.includes('Free Gemini model requires system configuration')) {
                 // System configuration issue for free model
                 throw new Error(
                     'Web search is temporarily unavailable for the free Gemini model. Please try again later or upgrade to use your own API key for unlimited access.'
                 );
-            } else if (error.message?.includes('API key')) {
+            }
+            if (error.message?.includes('API key')) {
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Web search requires an API key. You can either:\n1. Add your own Gemini API key in settings for unlimited usage\n2. Try again later if you\'ve reached the daily limit for free usage'
-                    );
-                } else {
-                    throw new Error(
-                        'Gemini API key is required for web search. Please configure your API key in settings.'
+                        "Web search requires an API key. You can either:\n1. Add your own Gemini API key in settings for unlimited usage\n2. Try again later if you've reached the daily limit for free usage"
                     );
                 }
-            } else if (error.message?.includes('unauthorized') || error.message?.includes('401')) {
+                throw new Error(
+                    'Gemini API key is required for web search. Please configure your API key in settings.'
+                );
+            }
+            if (error.message?.includes('unauthorized') || error.message?.includes('401')) {
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
                         'Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.'
                     );
-                } else {
-                    throw new Error('Invalid Gemini API key. Please check your API key in settings.');
                 }
-            } else if (error.message?.includes('forbidden') || error.message?.includes('403')) {
+                throw new Error('Invalid Gemini API key. Please check your API key in settings.');
+            }
+            if (error.message?.includes('forbidden') || error.message?.includes('403')) {
                 throw new Error('Gemini API access denied. Please check your API key permissions.');
-            } else if (error.message?.includes('rate limit') || error.message?.includes('429')) {
+            }
+            if (error.message?.includes('rate limit') || error.message?.includes('429')) {
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
                         'Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.'
                     );
-                } else {
-                    throw new Error(
-                        'Gemini API rate limit exceeded. Please try again in a few moments.'
-                    );
                 }
-            } else if (error.message?.includes('undefined to object')) {
+                throw new Error(
+                    'Gemini API rate limit exceeded. Please try again in a few moments.'
+                );
+            }
+            if (error.message?.includes('undefined to object')) {
                 throw new Error(
                     'Web search configuration error. Please try using a different model or check your settings.'
                 );

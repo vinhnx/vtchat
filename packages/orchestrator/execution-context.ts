@@ -1,6 +1,6 @@
-import { EventEmitter } from 'events';
-import { TaskTiming, WorkflowState } from './types';
 import { log } from '@repo/shared/logger';
+import type { EventEmitter } from 'events';
+import type { TaskTiming, WorkflowState } from './types';
 
 export class ExecutionContext {
     private state: WorkflowState;
@@ -64,7 +64,7 @@ export class ExecutionContext {
         return this.state.taskData.get(taskName);
     }
 
-    abortWorkflow(graceful: boolean = false) {
+    abortWorkflow(graceful = false) {
         log.info(
             { graceful },
             graceful ? 'Gracefully stopping workflow...' : 'Workflow aborted immediately!'
@@ -138,13 +138,13 @@ export class ExecutionContext {
 
         const formatDuration = (ms: number): string => {
             if (ms < 1000) return `${ms}ms`;
-            if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
-            return `${(ms / 60000).toFixed(1)}m`;
+            if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
+            return `${(ms / 60_000).toFixed(1)}m`;
         };
 
         this.taskTimings.forEach((timings, taskName) => {
-            const failures = timings.filter(t => t.status === 'failed').length;
-            const completedTimings = timings.filter(t => t.duration !== undefined);
+            const failures = timings.filter((t) => t.status === 'failed').length;
+            const completedTimings = timings.filter((t) => t.duration !== undefined);
             const totalDuration = completedTimings.reduce((sum, t) => sum + (t.duration ?? 0), 0);
             const validAttempts = completedTimings.length;
 
@@ -163,8 +163,8 @@ export class ExecutionContext {
 
     parseDurationToMs(duration: string): number {
         const [value, unit] = duration.split(' ');
-        const multiplier = unit === 'ms' ? 1 : unit === 's' ? 1000 : 60000;
-        return parseFloat(value) * multiplier;
+        const multiplier = unit === 'ms' ? 1 : unit === 's' ? 1000 : 60_000;
+        return Number.parseFloat(value) * multiplier;
     }
 
     getMainTimingSummary(): {
@@ -183,7 +183,7 @@ export class ExecutionContext {
         let totalRuns = 0;
         let totalFailures = 0;
         let totalDurationMs = 0;
-        let totalTasks = Object.keys(taskSummary).length;
+        const totalTasks = Object.keys(taskSummary).length;
         let failedTasks = 0;
         let slowestTask = { name: '', duration: 0 };
         let highestFailureTask = { name: '', failures: 0 };
@@ -211,8 +211,8 @@ export class ExecutionContext {
 
         const formatDuration = (ms: number): string => {
             if (ms < 1000) return `${ms}ms`;
-            if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
-            return `${(ms / 60000).toFixed(1)}m`;
+            if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
+            return `${(ms / 60_000).toFixed(1)}m`;
         };
 
         return {

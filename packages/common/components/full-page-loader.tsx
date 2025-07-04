@@ -14,9 +14,7 @@ export const FullPageLoader = ({ label }: FullPageLoaderProps) => {
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-4 w-1/2" />
                 </div>
-                {label && (
-                    <p className="text-sm text-muted-foreground">{label}</p>
-                )}
+                {label && <p className="text-muted-foreground text-sm">{label}</p>}
             </div>
         </div>
     );

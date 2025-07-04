@@ -3,9 +3,9 @@
  * Handles caching of subscription status to minimize database calls
  */
 
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { log } from '@repo/shared/logger';
+import type { PlanSlug } from '@repo/shared/types/subscription';
+import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 
 export interface CachedSubscriptionStatus {
     plan: PlanSlug;

@@ -80,7 +80,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.FREE_MODELS,
             FeatureSlug.MATH_CALCULATOR,
             FeatureSlug.BASE_FEATURES,
-            
+
             // Advanced features now available for free (logged in users only)
             FeatureSlug.DARK_THEME,
             FeatureSlug.THINKING_MODE_TOGGLE,

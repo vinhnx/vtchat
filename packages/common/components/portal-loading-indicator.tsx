@@ -17,17 +17,17 @@ export function PortalLoadingIndicator({ isVisible }: PortalLoadingIndicatorProp
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm"
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                 >
                     <Card className="flex items-center gap-4 p-6 shadow-xl">
                         <div className="relative">
-                            <Loader2 size={24} className="animate-spin text-blue-500" />
+                            <Loader2 className="animate-spin text-blue-500" size={24} />
                             <ExternalLink
-                                size={12}
                                 className="text-muted-foreground absolute -right-1 -top-1"
+                                size={12}
                             />
                         </div>
                         <div className="flex flex-col">

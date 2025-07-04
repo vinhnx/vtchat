@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { useLogout } from '../use-logout';
 
 // Mock the dependencies
@@ -67,7 +67,7 @@ describe('useLogout loading state', () => {
 
         // Wait for logout to complete
         await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 100));
         });
 
         // Should not be logging out after completion

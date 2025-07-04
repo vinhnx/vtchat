@@ -54,7 +54,7 @@ export const PROTECTED_ROUTES_ARRAY = Object.values(ProtectedRoutes);
  * @returns true if the pathname is a public route
  */
 export function isPublicRoute(pathname: string): boolean {
-    return PUBLIC_ROUTES_ARRAY.some(route => pathname.startsWith(route));
+    return PUBLIC_ROUTES_ARRAY.some((route) => pathname.startsWith(route));
 }
 
 /**
@@ -63,5 +63,5 @@ export function isPublicRoute(pathname: string): boolean {
  * @returns true if the pathname is a protected route
  */
 export function isProtectedRoute(pathname: string): boolean {
-    return PROTECTED_ROUTES_ARRAY.some(route => pathname.startsWith(route));
+    return PROTECTED_ROUTES_ARRAY.some((route) => pathname.startsWith(route));
 }

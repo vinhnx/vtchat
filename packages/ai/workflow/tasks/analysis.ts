@@ -1,7 +1,7 @@
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { getModelFromChatMode, ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     ChunkBuffer,
     generateText,
@@ -84,10 +84,10 @@ ${s}
             signal,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
-            onReasoning: reasoning => {
+            onReasoning: (reasoning) => {
                 chunkBuffer.add(reasoning);
             },
-            onReasoningDetails: details => {
+            onReasoningDetails: (details) => {
                 updateStep({
                     stepId,
                     stepStatus: 'COMPLETED',

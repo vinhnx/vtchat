@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
+import type { PaymentEventData } from '@repo/shared/types/analytics';
+import { useEffect, useRef } from 'react';
+import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
-import { PaymentEventData } from '@repo/shared/types/analytics';
 
 /**
  * Comprehensive payment tracking for critical operations
@@ -38,7 +38,7 @@ export function useVemetricPaymentTracking() {
         currency?: string;
         paymentMethod?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: PaymentEventData = {
@@ -53,11 +53,14 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_INITIATED, eventData);
 
-            log.info({ 
-                event: ANALYTICS_EVENTS.PAYMENT_INITIATED,
-                tier: params.tier,
-                amount: params.amount
-            }, 'Payment initiation tracked');
+            log.info(
+                {
+                    event: ANALYTICS_EVENTS.PAYMENT_INITIATED,
+                    tier: params.tier,
+                    amount: params.amount,
+                },
+                'Payment initiation tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track payment initiation');
         }
@@ -68,7 +71,7 @@ export function useVemetricPaymentTracking() {
         tier: string;
         previousMethod?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: PaymentEventData = {
@@ -90,7 +93,7 @@ export function useVemetricPaymentTracking() {
         errorType?: string;
         tier: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: PaymentEventData = {
@@ -116,7 +119,7 @@ export function useVemetricPaymentTracking() {
         processingTime?: number;
         retryAttempt?: number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: PaymentEventData = {
@@ -133,11 +136,14 @@ export function useVemetricPaymentTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.PAYMENT_PROCESSING_ERROR, eventData);
 
-            log.error({ 
-                errorCode: params.errorCode,
-                tier: params.tier,
-                processingTime: params.processingTime
-            }, 'Payment processing error tracked');
+            log.error(
+                {
+                    errorCode: params.errorCode,
+                    tier: params.tier,
+                    processingTime: params.processingTime,
+                },
+                'Payment processing error tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track payment processing error');
         }
@@ -151,7 +157,7 @@ export function useVemetricPaymentTracking() {
         processingTime: number;
         subscriptionId?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: PaymentEventData = {
@@ -161,19 +167,24 @@ export function useVemetricPaymentTracking() {
                 currency: params.currency,
                 processingTime: params.processingTime,
                 // Hash subscription ID for privacy
-                subscriptionId: params.subscriptionId ? hashSensitiveData(params.subscriptionId) : undefined,
+                subscriptionId: params.subscriptionId
+                    ? hashSensitiveData(params.subscriptionId)
+                    : undefined,
                 success: true,
                 timestamp: Date.now(),
             };
 
             await trackEvent(ANALYTICS_EVENTS.SUBSCRIPTION_CREATED, eventData);
 
-            log.info({ 
-                tier: params.tier,
-                amount: params.amount,
-                currency: params.currency,
-                processingTime: params.processingTime
-            }, 'Payment success tracked');
+            log.info(
+                {
+                    tier: params.tier,
+                    amount: params.amount,
+                    currency: params.currency,
+                    processingTime: params.processingTime,
+                },
+                'Payment success tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track payment success');
         }
@@ -185,7 +196,7 @@ export function useVemetricPaymentTracking() {
         subscriptionAge?: number; // days
         immediateCancel?: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -209,7 +220,7 @@ export function useVemetricPaymentTracking() {
         conversionTime: number; // ms from trial start to conversion
         touchpoints?: string[]; // Which features were used during trial
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {

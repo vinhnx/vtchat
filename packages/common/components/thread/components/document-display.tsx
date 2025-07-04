@@ -1,7 +1,7 @@
+import { log } from '@repo/shared/logger';
 import { Button } from '@repo/ui';
 import { Download, Eye, FileText, X } from 'lucide-react';
 import { memo } from 'react';
-import { log } from '@repo/shared/logger';
 
 type DocumentDisplayProps = {
     documentAttachment: {
@@ -17,15 +17,15 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
 
     const getFileIcon = () => {
         if (mimeType === 'application/pdf') {
-            return <FileText size={16} className="text-red-500" />;
+            return <FileText className="text-red-500" size={16} />;
         }
         if (mimeType.includes('word') || mimeType.includes('document')) {
-            return <FileText size={16} className="text-blue-500" />;
+            return <FileText className="text-blue-500" size={16} />;
         }
         if (mimeType === 'text/plain' || mimeType === 'text/markdown') {
-            return <FileText size={16} className="text-gray-500" />;
+            return <FileText className="text-gray-500" size={16} />;
         }
-        return <FileText size={16} className="text-gray-500" />;
+        return <FileText className="text-gray-500" size={16} />;
     };
 
     const getFileSize = () => {
@@ -79,7 +79,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
     };
 
     return (
-        <div className="bg-background border-border flex items-center gap-3 rounded-lg border p-3">
+        <div className="border-border bg-background flex items-center gap-3 rounded-lg border p-3">
             <div className="flex-shrink-0">{getFileIcon()}</div>
 
             <div className="min-w-0 flex-1">
@@ -92,21 +92,21 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             <div className="flex items-center gap-1">
                 {mimeType === 'application/pdf' && (
                     <Button
-                        variant="ghost"
-                        size="icon-sm"
                         onClick={handlePreview}
+                        size="icon-sm"
                         tooltip="Preview"
+                        variant="ghost"
                     >
                         <Eye size={14} />
                     </Button>
                 )}
 
-                <Button variant="ghost" size="icon-sm" onClick={handleDownload} tooltip="Download">
+                <Button onClick={handleDownload} size="icon-sm" tooltip="Download" variant="ghost">
                     <Download size={14} />
                 </Button>
 
                 {onRemove && (
-                    <Button variant="ghost" size="icon-sm" onClick={onRemove} tooltip="Remove">
+                    <Button onClick={onRemove} size="icon-sm" tooltip="Remove" variant="ghost">
                         <X size={14} />
                     </Button>
                 )}

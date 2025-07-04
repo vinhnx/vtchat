@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { DropzoneState } from 'react-dropzone';
+import type { FC } from 'react';
+import type { DropzoneState } from 'react-dropzone';
 import { ImageDropzone } from './image-dropzone';
 
 export type IImageDropzoneRootProps = {

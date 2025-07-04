@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import { log } from '@repo/shared/logger';
+import { useCallback, useState } from 'react';
 
 type CopyStatus = 'idle' | 'copied' | 'error';
 
@@ -46,7 +46,7 @@ export const useCopyText = () => {
                 setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
                 return;
             }
-            
+
             // Fallback to legacy method
             const textArea = document.createElement('textarea');
             textArea.value = text;
@@ -56,10 +56,10 @@ export const useCopyText = () => {
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
-            
+
             const successful = document.execCommand('copy');
             document.body.removeChild(textArea);
-            
+
             if (successful) {
                 setMarkdownCopyStatus('copied');
                 setTimeout(() => setMarkdownCopyStatus('idle'), 2000);

@@ -7,20 +7,20 @@
 export const ANALYTICS_CONFIG = {
     // Primary analytics provider
     provider: 'vemetric' as const,
-    
+
     // Vercel Analytics disabled
     vercel: {
         enabled: false,
         webAnalytics: false,
     },
-    
+
     // Vemetric configuration
     vemetric: {
         enabled: true,
         frontendToken: process.env.NEXT_PUBLIC_VEMETRIC_TOKEN,
         backendToken: process.env.VEMETRIC_TOKEN,
         host: process.env.VEMETRIC_HOST || 'https://hub.vemetric.com',
-        
+
         // Auto-tracking features
         autoTrack: {
             pageViews: true,
@@ -28,14 +28,14 @@ export const ANALYTICS_CONFIG = {
             forms: false, // We handle forms manually
             performance: true,
         },
-        
+
         // Data collection settings
         privacy: {
             respectDoNotTrack: true,
             anonymizeIPs: true,
             cookieConsent: true,
         },
-        
+
         // Error handling
         errorHandling: {
             silentCorsErrors: true,
@@ -43,7 +43,7 @@ export const ANALYTICS_CONFIG = {
             fallbackLogging: true,
         },
     },
-    
+
     // Feature flags
     features: {
         userJourney: true,
@@ -60,10 +60,7 @@ export type AnalyticsProvider = typeof ANALYTICS_CONFIG.provider;
  * Check if analytics is properly configured
  */
 export function isAnalyticsConfigured(): boolean {
-    return !!(
-        ANALYTICS_CONFIG.vemetric.enabled &&
-        ANALYTICS_CONFIG.vemetric.frontendToken
-    );
+    return !!(ANALYTICS_CONFIG.vemetric.enabled && ANALYTICS_CONFIG.vemetric.frontendToken);
 }
 
 /**

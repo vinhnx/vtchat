@@ -2,8 +2,8 @@
 
 import { LOADING_MESSAGES } from '@repo/shared/constants';
 import { Card } from '@repo/ui';
-import { Check, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Check, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface PortalReturnIndicatorProps {
@@ -42,15 +42,15 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
                     className="fixed right-4 top-4 z-50"
+                    exit={{ opacity: 0, y: -50 }}
+                    initial={{ opacity: 0, y: 50 }}
                 >
                     <Card className="flex items-center gap-3 p-4 shadow-lg">
                         {stage === 'loading' ? (
                             <>
-                                <Loader2 size={20} className="animate-spin text-blue-500" />
+                                <Loader2 className="animate-spin text-blue-500" size={20} />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">
                                         {LOADING_MESSAGES.SYNCING_SUBSCRIPTION}
@@ -62,7 +62,7 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
                             </>
                         ) : (
                             <>
-                                <Check size={20} className="text-green-500" />
+                                <Check className="text-green-500" size={20} />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">
                                         {LOADING_MESSAGES.SUBSCRIPTION_UPDATED}

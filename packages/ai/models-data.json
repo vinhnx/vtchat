@@ -1,9 +1,7 @@
 {
     "openai": {
         "id": "openai",
-        "env": [
-            "OPENAI_API_KEY"
-        ],
+        "env": ["OPENAI_API_KEY"],
         "npm": "@ai-sdk/openai",
         "name": "OpenAI",
         "doc": "https://platform.openai.com/docs/models",
@@ -16,13 +14,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.4,
                     "output": 1.6,
@@ -47,12 +40,8 @@
                 "temperature": true,
                 "tool_call": false,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 15,
                     "output": 60,
@@ -77,12 +66,8 @@
                 "temperature": false,
                 "tool_call": false,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.1,
                     "output": 4.4,
@@ -107,13 +92,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 75,
                     "output": 150,
@@ -138,13 +118,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 150,
                     "output": 600
@@ -169,12 +144,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.1,
                     "output": 4.4,
@@ -199,13 +170,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 8,
@@ -230,13 +196,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 8,
@@ -262,13 +223,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.15,
                     "output": 0.6,
@@ -293,13 +249,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 20,
                     "output": 80
@@ -324,12 +275,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.5,
                     "output": 6,
@@ -354,13 +301,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.4,
@@ -385,13 +327,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.1,
                     "output": 4.4,
@@ -417,13 +354,8 @@
                 "temperature": false,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 15,
                     "output": 60,
@@ -449,12 +381,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-04",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 10,
                     "output": 30
@@ -477,13 +405,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-12",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 10,
                     "output": 30
@@ -507,13 +430,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-10",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2.5,
                     "output": 10,
@@ -534,9 +452,7 @@
     },
     "deepseek": {
         "id": "deepseek",
-        "env": [
-            "DEEPSEEK_API_KEY"
-        ],
+        "env": ["DEEPSEEK_API_KEY"],
         "npm": "@ai-sdk/openai",
         "name": "DeepSeek",
         "doc": "https://platform.deepseek.com/api-docs/pricing",
@@ -549,12 +465,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.55,
                     "output": 2.19,
@@ -579,12 +491,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.27,
                     "output": 1.1,
@@ -605,9 +513,7 @@
     },
     "anthropic": {
         "id": "anthropic",
-        "env": [
-            "ANTHROPIC_API_KEY"
-        ],
+        "env": ["ANTHROPIC_API_KEY"],
         "npm": "@ai-sdk/anthropic",
         "name": "Anthropic",
         "doc": "https://docs.anthropic.com/en/docs/about-claude/models",
@@ -620,13 +526,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.25,
                     "output": 1.25,
@@ -652,13 +553,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 15,
                     "output": 75,
@@ -684,13 +580,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.8,
                     "output": 4,
@@ -716,13 +607,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -749,13 +635,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-08-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -781,13 +662,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04-30",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -813,13 +689,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 15,
                     "output": 75,
@@ -846,13 +717,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04-30",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -878,13 +744,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10-31",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -907,9 +768,7 @@
     },
     "vercel": {
         "id": "vercel",
-        "env": [
-            "V0_API_KEY"
-        ],
+        "env": ["V0_API_KEY"],
         "npm": "@ai-sdk/vercel",
         "name": "Vercel",
         "doc": "https://sdk.vercel.ai/providers/ai-sdk-providers/vercel",
@@ -921,13 +780,8 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 15,
                     "output": 75
@@ -951,13 +805,8 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15
@@ -981,13 +830,8 @@
                 "reasoning": true,
                 "temperature": true,
                 "tool_call": true,
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15
@@ -1008,9 +852,7 @@
     },
     "mistral": {
         "id": "mistral",
-        "env": [
-            "MISTRAL_API_KEY"
-        ],
+        "env": ["MISTRAL_API_KEY"],
         "npm": "@ai-sdk/mistral",
         "name": "Mistral",
         "doc": "https://docs.mistral.ai/getting-started/models/",
@@ -1023,12 +865,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.1
@@ -1051,12 +889,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-01",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.7,
                     "output": 0.7
@@ -1079,12 +913,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2023-12",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.25,
                     "output": 0.25
@@ -1107,13 +937,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-09",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.15,
                     "output": 0.15
@@ -1137,13 +962,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-05",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.4,
                     "output": 2
@@ -1166,12 +986,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 6
@@ -1194,13 +1010,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 6
@@ -1224,12 +1035,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-05",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.3
@@ -1252,12 +1059,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-07",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.15,
                     "output": 0.15
@@ -1280,12 +1083,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-06",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 5
@@ -1309,12 +1108,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.3,
                     "output": 0.9
@@ -1337,12 +1132,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-10",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.04,
                     "output": 0.04
@@ -1365,12 +1156,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 6
@@ -1393,12 +1180,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-06",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.5,
                     "output": 1.5
@@ -1422,13 +1205,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-03",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.3
@@ -1447,9 +1225,7 @@
     },
     "xai": {
         "id": "xai",
-        "env": [
-            "XAI_API_KEY"
-        ],
+        "env": ["XAI_API_KEY"],
         "npm": "@ai-sdk/xai",
         "name": "xAI",
         "doc": "https://docs.x.ai/docs/models",
@@ -1462,12 +1238,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1492,12 +1264,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.3,
                     "output": 0.5,
@@ -1523,13 +1291,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1555,12 +1318,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 5,
                     "output": 25,
@@ -1585,12 +1344,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.6,
                     "output": 4,
@@ -1616,12 +1371,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.6,
                     "output": 4,
@@ -1647,12 +1398,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1677,12 +1424,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1707,13 +1450,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1739,12 +1477,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 5,
                     "output": 15,
@@ -1769,12 +1503,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 5,
                     "output": 25,
@@ -1799,13 +1529,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 5,
                     "output": 15,
@@ -1831,12 +1556,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -1861,12 +1582,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.3,
                     "output": 0.5,
@@ -1892,13 +1609,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 2,
                     "output": 10,
@@ -1924,12 +1636,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 3,
                     "output": 15,
@@ -1950,11 +1658,7 @@
     },
     "amazon-bedrock": {
         "id": "amazon-bedrock",
-        "env": [
-            "AWS_ACCESS_KEY_ID",
-            "AWS_SECRET_ACCESS_KEY",
-            "AWS_REGION"
-        ],
+        "env": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"],
         "npm": "@ai-sdk/amazon-bedrock",
         "name": "Amazon Bedrock",
         "doc": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
@@ -2662,9 +2366,7 @@
     },
     "groq": {
         "id": "groq",
-        "env": [
-            "GROQ_API_KEY"
-        ],
+        "env": ["GROQ_API_KEY"],
         "npm": "@ai-sdk/groq",
         "name": "Groq",
         "doc": "https://console.groq.com/docs/models",
@@ -2935,9 +2637,7 @@
     },
     "morph": {
         "id": "morph",
-        "env": [
-            "MORPH_API_KEY"
-        ],
+        "env": ["MORPH_API_KEY"],
         "npm": "@ai-sdk/openai-compatible",
         "api": "https://api.morphllm.com/v1",
         "name": "Morph",
@@ -3007,9 +2707,7 @@
     },
     "llama": {
         "id": "llama",
-        "env": [
-            "LLAMA_API_KEY"
-        ],
+        "env": ["LLAMA_API_KEY"],
         "npm": "@ai-sdk/openai-compatible",
         "api": "https://api.llama.com/compat/v1/",
         "name": "Llama",
@@ -3023,12 +2721,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3051,13 +2745,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3081,12 +2770,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-12",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3109,12 +2794,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3137,12 +2818,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3165,12 +2842,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-12",
-                "input_modalities": [
-                    "text"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3193,13 +2866,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2025-01",
-                "input_modalities": [
-                    "text",
-                    "image"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0,
                     "output": 0
@@ -3219,10 +2887,7 @@
     },
     "azure": {
         "id": "azure",
-        "env": [
-            "AZURE_RESOURCE_NAME",
-            "AZURE_API_KEY"
-        ],
+        "env": ["AZURE_RESOURCE_NAME", "AZURE_API_KEY"],
         "npm": "@ai-sdk/azure",
         "name": "Azure",
         "doc": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
@@ -3648,9 +3313,7 @@
     },
     "google": {
         "id": "google",
-        "env": [
-            "GOOGLE_GENERATIVE_AI_API_KEY"
-        ],
+        "env": ["GOOGLE_GENERATIVE_AI_API_KEY"],
         "npm": "@ai-sdk/google",
         "name": "Google",
         "doc": "https://ai.google.dev/gemini-api/docs/pricing",
@@ -3663,16 +3326,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video",
-                    "pdf"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video", "pdf"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.25,
                     "output": 10,
@@ -3698,16 +3353,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video",
-                    "pdf"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video", "pdf"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.25,
                     "output": 10,
@@ -3733,16 +3380,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video",
-                    "pdf"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video", "pdf"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.25,
                     "output": 10,
@@ -3768,15 +3407,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.4,
@@ -3802,15 +3434,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.075,
                     "output": 0.3
@@ -3834,15 +3459,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 1.25,
                     "output": 5,
@@ -3867,15 +3485,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.15,
                     "output": 0.6,
@@ -3901,15 +3512,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.0375,
                     "output": 0.15,
@@ -3934,15 +3538,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.15,
                     "output": 0.6,
@@ -3968,15 +3565,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-08",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.1,
                     "output": 0.4,
@@ -4001,15 +3591,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-11",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.3,
                     "output": 2.5,
@@ -4035,15 +3618,8 @@
                 "temperature": true,
                 "tool_call": true,
                 "knowledge": "2024-04",
-                "input_modalities": [
-                    "text",
-                    "image",
-                    "audio",
-                    "video"
-                ],
-                "output_modalities": [
-                    "text"
-                ],
+                "input_modalities": ["text", "image", "audio", "video"],
+                "output_modalities": ["text"],
                 "cost": {
                     "input": 0.075,
                     "output": 0.3,

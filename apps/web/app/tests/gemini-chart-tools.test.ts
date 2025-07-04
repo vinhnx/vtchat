@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { ModelEnum } from '@repo/ai/models';
+import { describe, expect, it } from 'vitest';
 import { chartTools } from '@/lib/tools/charts';
 
 describe('Gemini Chart Tools Integration', () => {
@@ -7,21 +7,21 @@ describe('Gemini Chart Tools Integration', () => {
         it('should be marked as supporting charts in models data', () => {
             const testModel = ModelEnum.GEMINI_2_5_FLASH_LITE;
             expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
-            
+
             // This model should support charts according to the models-data.json
             // "charts": true is set for this model
         });
 
         it('should have chart tools available', () => {
             const tools = chartTools();
-            
+
             // Verify all expected chart tools are available
             expect(tools.barChart).toBeDefined();
             expect(tools.lineChart).toBeDefined();
             expect(tools.areaChart).toBeDefined();
             expect(tools.pieChart).toBeDefined();
             expect(tools.radarChart).toBeDefined();
-            
+
             // Check tool structure
             expect(typeof tools.barChart?.description).toBe('string');
             expect(typeof tools.barChart?.parameters).toBe('object');
@@ -30,7 +30,7 @@ describe('Gemini Chart Tools Integration', () => {
 
         it('should execute chart tools correctly', async () => {
             const tools = chartTools();
-            
+
             // Test bar chart execution
             const barChartResult = await tools.barChart?.execute?.({
                 title: 'Test Chart',
@@ -74,7 +74,7 @@ describe('Gemini Chart Tools Integration', () => {
     describe('Chart Tool Parameters Validation', () => {
         it('should validate chart data schema', () => {
             const tools = chartTools();
-            
+
             // The parameters should include proper Zod schemas
             expect(tools.barChart?.parameters).toBeDefined();
             expect(tools.lineChart?.parameters).toBeDefined();
@@ -85,7 +85,7 @@ describe('Gemini Chart Tools Integration', () => {
 
         it('should support multi-series data for appropriate charts', async () => {
             const tools = chartTools();
-            
+
             // Test line chart with multi-series data
             const lineChartResult = await tools.lineChart?.execute?.({
                 title: 'Multi-Series Test',

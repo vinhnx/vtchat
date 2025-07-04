@@ -1,7 +1,7 @@
 import { Pool } from '@neondatabase/serverless';
+import { log } from '@repo/shared/logger';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
-import { log } from '@repo/shared/logger';
 
 if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL environment variable is required');
@@ -16,14 +16,14 @@ try {
         // Improved serverless optimizations
         max: 3, // Allow more connections for concurrent requests
         min: 0, // Start with no connections
-        idleTimeoutMillis: 30000, // 30 seconds idle timeout (prevent indefinite connections)
-        connectionTimeoutMillis: 10000, // 10 second connection timeout
+        idleTimeoutMillis: 30_000, // 30 seconds idle timeout (prevent indefinite connections)
+        connectionTimeoutMillis: 10_000, // 10 second connection timeout
         // Add retry and reconnection logic
         allowExitOnIdle: true, // Allow process to exit when idle
         // Enable statement timeout to prevent hanging queries
-        statement_timeout: 60000, // 60 seconds
+        statement_timeout: 60_000, // 60 seconds
         // Add connection validation
-        query_timeout: 60000, // 60 seconds query timeout
+        query_timeout: 60_000, // 60 seconds query timeout
     });
 
     // Add error handling for connection pool
@@ -53,24 +53,29 @@ export const db = drizzle(pool, {
 // Helper function to handle database connection errors gracefully
 export const withDatabaseErrorHandling = async <T>(
     operation: () => Promise<T>,
-    operationName: string = 'Database operation'
+    operationName = 'Database operation'
 ): Promise<T> => {
     try {
         return await operation();
     } catch (error: any) {
-        log.error({
-            error: error.message,
-            code: error.code,
-            severity: error.severity,
-            detail: error.detail,
-        }, `${operationName} failed`);
+        log.error(
+            {
+                error: error.message,
+                code: error.code,
+                severity: error.severity,
+                detail: error.detail,
+            },
+            `${operationName} failed`
+        );
 
         // Handle specific Neon/PostgreSQL error codes
         if (error.code === '57P01') {
             throw new Error('Database connection was terminated. Please try again.');
-        } else if (error.code === 'ECONNRESET' || error.code === 'ETIMEDOUT') {
+        }
+        if (error.code === 'ECONNRESET' || error.code === 'ETIMEDOUT') {
             throw new Error('Database connection timeout. Please try again.');
-        } else if (error.code === '53300') {
+        }
+        if (error.code === '53300') {
             throw new Error('Too many database connections. Please try again in a moment.');
         }
 

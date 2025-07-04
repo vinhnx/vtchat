@@ -69,19 +69,19 @@ import { VemetricScript } from '@vemetric/react';
 import { VemetricAuthProvider, VemetricChatTracker } from '@repo/common/components';
 
 export default function Layout({ children }) {
-  return (
-    <html>
-      <head>
-        <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN} />
-      </head>
-      <body>
-        <VemetricAuthProvider>
-          <VemetricChatTracker />
-          {children}
-        </VemetricAuthProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html>
+            <head>
+                <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN} />
+            </head>
+            <body>
+                <VemetricAuthProvider>
+                    <VemetricChatTracker />
+                    {children}
+                </VemetricAuthProvider>
+            </body>
+        </html>
+    );
 }
 ```
 
@@ -94,14 +94,14 @@ The `VemetricAuthProvider` automatically handles user identification:
 ```tsx
 // Automatically identifies users when they sign in
 const vemetricUser = {
-  identifier: session.user.id,
-  displayName: session.user.name || session.user.email?.split('@')[0],
-  subscriptionTier: session.user.subscriptionTier || 'VT_BASE',
-  allowCookies: true, // For authenticated users
-  data: {
-    accountAge: calculateAccountAge(session.user.createdAt),
-    authProvider: session.user.accounts?.[0]?.providerId,
-  },
+    identifier: session.user.id,
+    displayName: session.user.name || session.user.email?.split('@')[0],
+    subscriptionTier: session.user.subscriptionTier || 'VT_BASE',
+    allowCookies: true, // For authenticated users
+    data: {
+        accountAge: calculateAccountAge(session.user.createdAt),
+        authProvider: session.user.accounts?.[0]?.providerId,
+    },
 };
 ```
 
@@ -111,16 +111,16 @@ User properties are automatically updated and include:
 
 ```typescript
 interface UserProperties {
-  subscriptionTier: 'VT_BASE' | 'VT_PLUS';
-  accountAge?: number; // Days since registration
-  messageCount?: number;
-  preferredModel?: string;
-  themePreference?: 'light' | 'dark' | 'system';
-  timezone?: string;
-  locale?: string;
-  deviceType?: 'desktop' | 'mobile' | 'tablet';
-  browserName?: string;
-  referralSource?: string;
+    subscriptionTier: 'VT_BASE' | 'VT_PLUS';
+    accountAge?: number; // Days since registration
+    messageCount?: number;
+    preferredModel?: string;
+    themePreference?: 'light' | 'dark' | 'system';
+    timezone?: string;
+    locale?: string;
+    deviceType?: 'desktop' | 'mobile' | 'tablet';
+    browserName?: string;
+    referralSource?: string;
 }
 ```
 
@@ -129,12 +129,14 @@ interface UserProperties {
 ### Core Events
 
 #### Authentication Events
+
 - `UserSignedIn` - User successfully signs in
 - `UserSignedOut` - User signs out
 - `UserRegistered` - New user registration
 - `AuthMethodSelected` - OAuth provider selection
 
 #### Chat Events
+
 - `MessageSent` - User sends a message
 - `ChatStarted` - New chat/thread created
 - `ModelSelected` - AI model changed
@@ -143,6 +145,7 @@ interface UserProperties {
 - `ThreadDeleted` - Thread removed
 
 #### Feature Usage
+
 - `FileUploaded` - File attachment uploaded
 - `ToolUsed` - Feature toggle (web search, calculator, charts)
 - `SettingsChanged` - User preferences modified
@@ -150,12 +153,14 @@ interface UserProperties {
 - `PromptBoostUsed` - Prompt enhancement feature used
 
 #### Subscription Events
+
 - `SubscriptionCreated` - New paid subscription
 - `SubscriptionCancelled` - Subscription cancelled
 - `PlanUpgradeInitiated` - User starts upgrade process
 - `PlanUpgradeCompleted` - Upgrade successful
 
 #### User Journey Events
+
 - `OnboardingStarted` - User begins onboarding
 - `FirstMessageSent` - User's first interaction
 - `FeatureDiscovered` - User finds new feature
@@ -196,12 +201,12 @@ Monitors subscription tier changes:
 import { VemetricSubscriptionTracker } from '@repo/common/components';
 
 function App() {
-  return (
-    <div>
-      <VemetricSubscriptionTracker />
-      {/* Your app content */}
-    </div>
-  );
+    return (
+        <div>
+            <VemetricSubscriptionTracker />
+            {/* Your app content */}
+        </div>
+    );
 }
 ```
 
@@ -213,12 +218,12 @@ Tracks theme and preference changes:
 import { VemetricSettingsTracker } from '@repo/common/components';
 
 function SettingsPage() {
-  return (
-    <div>
-      <VemetricSettingsTracker />
-      {/* Settings UI */}
-    </div>
-  );
+    return (
+        <div>
+            <VemetricSettingsTracker />
+            {/* Settings UI */}
+        </div>
+    );
 }
 ```
 
@@ -232,18 +237,18 @@ Main analytics hook for custom tracking:
 import { useVemetric } from '@repo/common/hooks/use-vemetric';
 
 function MyComponent() {
-  const { trackEvent, identifyUser, isEnabled } = useVemetric();
+    const { trackEvent, identifyUser, isEnabled } = useVemetric();
 
-  const handleCustomAction = async () => {
-    if (isEnabled) {
-      await trackEvent('CustomAction', {
-        context: 'button_click',
-        value: 100,
-      });
-    }
-  };
+    const handleCustomAction = async () => {
+        if (isEnabled) {
+            await trackEvent('CustomAction', {
+                context: 'button_click',
+                value: 100,
+            });
+        }
+    };
 
-  return <button onClick={handleCustomAction}>Custom Action</button>;
+    return <button onClick={handleCustomAction}>Custom Action</button>;
 }
 ```
 
@@ -255,24 +260,24 @@ Specialized hook for chat interactions:
 import { useVemetricMessageTracking } from '@repo/common/components/vemetric-chat-tracker';
 
 function ChatInput() {
-  const { trackMessageSent, createTimer } = useVemetricMessageTracking();
+    const { trackMessageSent, createTimer } = useVemetricMessageTracking();
 
-  const sendMessage = async (text: string) => {
-    const timer = createTimer();
-    
-    // Send message logic here
-    await sendToAPI(text);
-    
-    // Track the event
-    await trackMessageSent({
-      messageLength: text.length,
-      modelName: selectedModel,
-      hasAttachments: hasFiles,
-    });
-    
-    // Track performance
-    timer.end('MessageSendTime', { modelName: selectedModel });
-  };
+    const sendMessage = async (text: string) => {
+        const timer = createTimer();
+
+        // Send message logic here
+        await sendToAPI(text);
+
+        // Track the event
+        await trackMessageSent({
+            messageLength: text.length,
+            modelName: selectedModel,
+            hasAttachments: hasFiles,
+        });
+
+        // Track performance
+        timer.end('MessageSendTime', { modelName: selectedModel });
+    };
 }
 ```
 
@@ -284,12 +289,12 @@ For subscription-related events:
 import { useVemetricSubscriptionTracking } from '@repo/common/components/vemetric-subscription-tracker';
 
 function UpgradeButton() {
-  const { trackUpgradeInitiated } = useVemetricSubscriptionTracking();
+    const { trackUpgradeInitiated } = useVemetricSubscriptionTracking();
 
-  const handleUpgrade = async () => {
-    await trackUpgradeInitiated('pricing_page');
-    // Redirect to payment...
-  };
+    const handleUpgrade = async () => {
+        await trackUpgradeInitiated('pricing_page');
+        // Redirect to payment...
+    };
 }
 ```
 
@@ -302,15 +307,16 @@ All data is automatically sanitized before sending:
 ```typescript
 // PII patterns are automatically removed
 const sanitized = AnalyticsUtils.sanitizeData({
-  email: 'user@example.com', // Becomes '[email]'
-  message: 'Call me at 555-1234', // Becomes 'Call me at [phone]'
-  apiKey: 'sk-1234567890', // Removed entirely
+    email: 'user@example.com', // Becomes '[email]'
+    message: 'Call me at 555-1234', // Becomes 'Call me at [phone]'
+    apiKey: 'sk-1234567890', // Removed entirely
 });
 ```
 
 ### No PII Collection
 
 The system is designed to never collect:
+
 - Email addresses
 - Real names
 - Phone numbers
@@ -339,24 +345,26 @@ const { trackEvent } = useVemetric({ debug: true });
 ### Verification Steps
 
 1. **Check Event Tracking**:
-   ```typescript
-   // Events are logged in development
-   console.log('Analytics event tracked:', eventName, eventData);
-   ```
+
+    ```typescript
+    // Events are logged in development
+    console.log('Analytics event tracked:', eventName, eventData);
+    ```
 
 2. **Verify User Identification**:
-   ```typescript
-   // Check if user is properly identified
-   const { currentUser } = useVemetric();
-   console.log('Current user:', currentUser);
-   ```
+
+    ```typescript
+    // Check if user is properly identified
+    const { currentUser } = useVemetric();
+    console.log('Current user:', currentUser);
+    ```
 
 3. **Test Privacy Compliance**:
-   ```typescript
-   // Ensure no PII in event data
-   const eventData = AnalyticsUtils.sanitizeData(rawData);
-   console.log('Sanitized data:', eventData);
-   ```
+    ```typescript
+    // Ensure no PII in event data
+    const eventData = AnalyticsUtils.sanitizeData(rawData);
+    console.log('Sanitized data:', eventData);
+    ```
 
 ### Manual Testing Checklist
 
@@ -377,63 +385,67 @@ const { trackEvent } = useVemetric({ debug: true });
 #### Events Not Tracking
 
 1. Check environment variable is set:
-   ```bash
-   echo $NEXT_PUBLIC_VEMETRIC_TOKEN
-   ```
+
+    ```bash
+    echo $NEXT_PUBLIC_VEMETRIC_TOKEN
+    ```
 
 2. Verify user is authenticated:
-   ```typescript
-   const { data: session } = useSession();
-   console.log('Session:', session);
-   ```
+
+    ```typescript
+    const { data: session } = useSession();
+    console.log('Session:', session);
+    ```
 
 3. Check Vemetric initialization:
-   ```typescript
-   const { isEnabled, isInitialized } = useVemetric();
-   console.log('Vemetric status:', { isEnabled, isInitialized });
-   ```
+    ```typescript
+    const { isEnabled, isInitialized } = useVemetric();
+    console.log('Vemetric status:', { isEnabled, isInitialized });
+    ```
 
 #### User Not Identified
 
 1. Check auth provider is working:
-   ```typescript
-   // Should see user identification in logs
-   console.log('Identifying user:', userId);
-   ```
+
+    ```typescript
+    // Should see user identification in logs
+    console.log('Identifying user:', userId);
+    ```
 
 2. Verify session data:
-   ```typescript
-   const { data: session } = useSession();
-   console.log('User ID:', session?.user?.id);
-   ```
+    ```typescript
+    const { data: session } = useSession();
+    console.log('User ID:', session?.user?.id);
+    ```
 
 #### Performance Issues
 
 1. Check if events are being batched:
-   ```typescript
-   // Use batch tracking for multiple events
-   const { trackEvents } = useVemetric();
-   await trackEvents([
-     { name: 'Event1', data: { ... } },
-     { name: 'Event2', data: { ... } }
-   ]);
-   ```
+
+    ```typescript
+    // Use batch tracking for multiple events
+    const { trackEvents } = useVemetric();
+    await trackEvents([
+      { name: 'Event1', data: { ... } },
+      { name: 'Event2', data: { ... } }
+    ]);
+    ```
 
 2. Verify timers are being ended:
-   ```typescript
-   const timer = createTimer();
-   // ... operation ...
-   timer.end('OperationName'); // Don't forget this!
-   ```
+    ```typescript
+    const timer = createTimer();
+    // ... operation ...
+    timer.end('OperationName'); // Don't forget this!
+    ```
 
 ### Debug Mode
 
 Enable comprehensive logging:
 
 ```typescript
-const vemetric = useVemetric({ 
-  debug: process.env.NODE_ENV === 'development',
-  autoTrack: true 
+const vemetric = useVemetric({
+    debug: process.env.NODE_ENV === 'development',
+    autoTrack: true,
 });
 ```
 
@@ -443,10 +455,10 @@ All analytics calls are wrapped in try-catch blocks and won't break the applicat
 
 ```typescript
 try {
-  await trackEvent('MyEvent', eventData);
+    await trackEvent('MyEvent', eventData);
 } catch (error) {
-  log.error({ error }, 'Analytics tracking failed');
-  // Application continues normally
+    log.error({ error }, 'Analytics tracking failed');
+    // Application continues normally
 }
 ```
 

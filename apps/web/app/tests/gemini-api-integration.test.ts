@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { NextRequest } from 'next/server';
 import { ModelEnum } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
+import type { NextRequest } from 'next/server';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the auth module
 const mockAuth = {
@@ -40,7 +40,7 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        
+
         // Mock getModelFromChatMode
         const { getModelFromChatMode } = require('@repo/ai/models');
         getModelFromChatMode.mockImplementation((mode: string) => {
@@ -85,19 +85,19 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
             const response = await POST(request);
 
             expect(response.status).toBe(401);
-            
+
             const responseData = await response.json();
             expect(responseData).toEqual({
                 error: 'Authentication required',
                 message: 'Please register to use the free Gemini 2.5 Flash Lite model.',
-                redirect: '/auth/login'
+                redirect: '/auth/login',
             });
         });
 
         it('should allow authenticated users to access free model (within limits)', async () => {
             // Mock authenticated user
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
 
             // Mock rate limit check - allow request
@@ -171,7 +171,7 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
         beforeEach(() => {
             // Mock authenticated user for all rate limit tests
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
         });
 
@@ -203,23 +203,24 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
             const response = await POST(request);
 
             expect(response.status).toBe(429);
-            
+
             const responseData = await response.json();
             expect(responseData).toEqual({
                 error: 'Rate limit exceeded',
-                message: 'You have reached the daily limit of requests. Please try again tomorrow or use your own API key. Upgrade to VT+ for unlimited usage and advanced features!',
+                message:
+                    'You have reached the daily limit of requests. Please try again tomorrow or use your own API key. Upgrade to VT+ for unlimited usage and advanced features!',
                 limitType: 'daily_limit_exceeded',
                 remainingDaily: 0,
                 remainingMinute: 1,
                 resetTime: '2024-01-02T00:00:00.000Z',
-                upgradeUrl: '/plus'
+                upgradeUrl: '/plus',
             });
 
             expect(response.headers.get('Retry-After')).toBeTruthy();
         });
 
         it('should reject requests when per-minute limit is exceeded', async () => {
-            const nextMinuteReset = new Date(Date.now() + 45000); // 45 seconds from now
+            const nextMinuteReset = new Date(Date.now() + 45_000); // 45 seconds from now
 
             mockRateLimit.checkRateLimit.mockResolvedValue({
                 allowed: false,
@@ -248,23 +249,24 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
             const response = await POST(request);
 
             expect(response.status).toBe(429);
-            
+
             const responseData = await response.json();
             expect(responseData).toEqual({
                 error: 'Rate limit exceeded',
-                message: 'You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.',
+                message:
+                    'You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.',
                 limitType: 'minute_limit_exceeded',
                 remainingDaily: 5,
                 remainingMinute: 0,
                 resetTime: nextMinuteReset.toISOString(),
-                upgradeUrl: '/plus'
+                upgradeUrl: '/plus',
             });
 
             // Should include Retry-After header
             const retryAfter = response.headers.get('Retry-After');
             expect(retryAfter).toBeTruthy();
-            expect(parseInt(retryAfter!)).toBeGreaterThan(0);
-            expect(parseInt(retryAfter!)).toBeLessThanOrEqual(45);
+            expect(Number.parseInt(retryAfter!)).toBeGreaterThan(0);
+            expect(Number.parseInt(retryAfter!)).toBeLessThanOrEqual(45);
         });
 
         it('should provide detailed error information for upgrade decisions', async () => {
@@ -310,7 +312,7 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
     describe('Request Recording', () => {
         beforeEach(() => {
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
 
             mockRateLimit.checkRateLimit.mockResolvedValue({
@@ -356,12 +358,15 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
     describe('Error Handling', () => {
         it('should handle missing request body gracefully', async () => {
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
 
-            const request = createMockRequest({}, {
-                'x-forwarded-for': '127.0.0.1',
-            });
+            const request = createMockRequest(
+                {},
+                {
+                    'x-forwarded-for': '127.0.0.1',
+                }
+            );
 
             // Mock JSON parsing failure
             request.json = vi.fn().mockRejectedValue(new Error('Invalid JSON'));
@@ -375,7 +380,7 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
 
         it('should handle missing IP address', async () => {
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
 
             const requestBody = {
@@ -399,7 +404,7 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
 
         it('should handle rate limit service errors', async () => {
             mockAuth.api.getSession.mockResolvedValue({
-                user: { id: authenticatedUserId }
+                user: { id: authenticatedUserId },
             });
 
             mockRateLimit.checkRateLimit.mockRejectedValue(new Error('Database connection failed'));
@@ -460,13 +465,17 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
             };
 
             // User 1 request - should be blocked
-            const request1 = createMockRequest(requestBody, { 'x-forwarded-for': '127.0.0.1' });
+            const request1 = createMockRequest(requestBody, {
+                'x-forwarded-for': '127.0.0.1',
+            });
             const response1 = await POST(request1);
             expect(response1.status).toBe(429);
 
             // User 2 request - should be allowed
-            const request2 = createMockRequest(requestBody, { 'x-forwarded-for': '127.0.0.1' });
-            
+            const request2 = createMockRequest(requestBody, {
+                'x-forwarded-for': '127.0.0.1',
+            });
+
             try {
                 await POST(request2);
             } catch (error) {
@@ -474,8 +483,14 @@ describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
             }
 
             // Verify separate rate limit checks
-            expect(mockRateLimit.checkRateLimit).toHaveBeenCalledWith(user1, ModelEnum.GEMINI_2_5_FLASH_LITE);
-            expect(mockRateLimit.checkRateLimit).toHaveBeenCalledWith(user2, ModelEnum.GEMINI_2_5_FLASH_LITE);
+            expect(mockRateLimit.checkRateLimit).toHaveBeenCalledWith(
+                user1,
+                ModelEnum.GEMINI_2_5_FLASH_LITE
+            );
+            expect(mockRateLimit.checkRateLimit).toHaveBeenCalledWith(
+                user2,
+                ModelEnum.GEMINI_2_5_FLASH_LITE
+            );
         });
     });
 });

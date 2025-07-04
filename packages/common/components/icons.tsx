@@ -6,7 +6,7 @@ export const ToolIcon = ({ className }: { className?: string }) => {
         <div
             className={`flex size-5 items-center justify-center rounded-md border border-yellow-900 bg-yellow-800 p-0.5 ${className}`}
         >
-            <Wrench size={20} strokeWidth={2} className="text-yellow-400" />
+            <Wrench className="text-yellow-400" size={20} strokeWidth={2} />
         </div>
     );
 };
@@ -14,13 +14,13 @@ export const ToolIcon = ({ className }: { className?: string }) => {
 export const ToolResultIcon = () => {
     return (
         <div className="flex size-5 items-center justify-center rounded-md border border-yellow-900 bg-yellow-800 p-0.5">
-            <Code size={20} strokeWidth={2} className="text-yellow-400" />
+            <Code className="text-yellow-400" size={20} strokeWidth={2} />
         </div>
     );
 };
 
 export const DeepResearchIcon = () => {
-    return <Loader size={20} strokeWidth={2} className="text-muted-foreground" />;
+    return <Loader className="text-muted-foreground" size={20} strokeWidth={2} />;
 };
 
 export const BYOKIcon = () => {
@@ -53,7 +53,7 @@ export const CreditIcon = ({
                 variant === 'muted' && 'border-none'
             )}
         >
-            <Zap size={14} strokeWidth={2} className="text-muted-foreground" /> {credits}
+            <Zap className="text-muted-foreground" size={14} strokeWidth={2} /> {credits}
         </div>
     );
 };

@@ -1,14 +1,15 @@
-import { auth } from '@/lib/auth-server';
 import { isPublicRoute } from '@repo/shared/constants';
-import { getCookieCache } from 'better-auth/cookies';
-import { NextRequest, NextResponse } from 'next/server';
 import { log } from '@repo/shared/logger';
+import { getCookieCache } from 'better-auth/cookies';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
-    const flyRegion = request.headers.get('Fly-Region') || request.headers.get('fly-region') || 'local';
+    const flyRegion =
+        request.headers.get('Fly-Region') || request.headers.get('fly-region') || 'local';
     log.info({ region: flyRegion, pathname }, '[Traffic] Request');
 
     // Redirect '/chat' to '/' (keep '/chat/{threadid}' intact)
@@ -75,7 +76,7 @@ export const config = {
         /*
          * Match all request paths except for the ones starting with:
          * - api/auth (auth endpoints) - these have their own protection
-         * - api/chat (chat endpoints) - these have their own protection  
+         * - api/chat (chat endpoints) - these have their own protection
          * - api/feedback (feedback endpoints) - these have their own protection
          * - _next/static (static files)
          * - _next/image (image optimization files)

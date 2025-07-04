@@ -25,16 +25,16 @@ const EXCLUDE_PATTERNS = [
     'tailwind.config.',
     'vitest.config.',
     '.min.js',
-    'bundle-history.json'
+    'bundle-history.json',
 ];
 
 // Mapping of console methods to logger methods
 const CONSOLE_TO_LOGGER = {
     'console.log': 'logger.info',
-    'console.info': 'logger.info', 
+    'console.info': 'logger.info',
     'console.warn': 'logger.warn',
     'console.error': 'logger.error',
-    'console.debug': 'logger.debug'
+    'console.debug': 'logger.debug',
 };
 
 // Import statement to add
@@ -44,7 +44,7 @@ const LOGGER_IMPORT = "import { log } from '@repo/shared/logger';";
  * Check if file should be excluded from migration
  */
 function shouldExcludeFile(filePath) {
-    return EXCLUDE_PATTERNS.some(pattern => filePath.includes(pattern));
+    return EXCLUDE_PATTERNS.some((pattern) => filePath.includes(pattern));
 }
 
 /**
@@ -72,7 +72,7 @@ function addLoggerImport(content) {
     // Find the last import statement
     const lines = content.split('\n');
     let lastImportIndex = -1;
-    
+
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].trim().startsWith('import ') && !lines[i].includes('type ')) {
             lastImportIndex = i;
@@ -92,7 +92,7 @@ function addLoggerImport(content) {
             break;
         }
     }
-    
+
     lines.splice(insertIndex, 0, '', LOGGER_IMPORT);
     return lines.join('\n');
 }
@@ -102,25 +102,27 @@ function addLoggerImport(content) {
  */
 function replaceConsoleStatements(content) {
     let updatedContent = content;
-    
+
     // Replace simple console statements
     Object.entries(CONSOLE_TO_LOGGER).forEach(([consoleFn, loggerFn]) => {
         // Handle simple cases: console.log('message')
         const simplePattern = new RegExp(`${consoleFn}\\((['"][^'"]*['"])\\)`, 'g');
         updatedContent = updatedContent.replace(simplePattern, `${loggerFn}($1)`);
-        
+
         // Handle cases with variables: console.log('message', variable)
-        const withVariablePattern = new RegExp(`${consoleFn}\\((['"][^'"]*['"])[,\\s]+([^)]+)\\)`, 'g');
+        const withVariablePattern = new RegExp(
+            `${consoleFn}\\((['"][^'"]*['"])[,\\s]+([^)]+)\\)`,
+            'g'
+        );
         updatedContent = updatedContent.replace(withVariablePattern, (match, message, variable) => {
             // Convert to structured logging format
             const cleanMessage = message.replace(/['"]$/, '').replace(/^['"]/, '');
             if (variable.trim().startsWith('{')) {
                 return `${loggerFn}('${cleanMessage}', ${variable})`;
-            } else {
-                return `${loggerFn}('${cleanMessage}', { data: ${variable} })`;
             }
+            return `${loggerFn}('${cleanMessage}', { data: ${variable} })`;
         });
-        
+
         // Handle object-only cases: console.log({ key: value })
         const objectOnlyPattern = new RegExp(`${consoleFn}\\(\\s*\\{[^}]+\\}\\s*\\)`, 'g');
         updatedContent = updatedContent.replace(objectOnlyPattern, (match) => {
@@ -153,7 +155,7 @@ function processFile(filePath) {
 
     // Add logger import if needed
     let updatedContent = addLoggerImport(content);
-    
+
     // Replace console statements
     updatedContent = replaceConsoleStatements(updatedContent);
 
@@ -175,30 +177,32 @@ function processFile(filePath) {
  */
 function findFiles(directory) {
     const files = [];
-    
+
     function walk(dir) {
         try {
             const items = fs.readdirSync(dir);
-            
+
             for (const item of items) {
                 const fullPath = path.join(dir, item);
                 const stat = fs.statSync(fullPath);
-                
+
                 if (stat.isDirectory()) {
                     if (!item.startsWith('.') && item !== 'node_modules') {
                         walk(fullPath);
                     }
-                } else if (stat.isFile()) {
-                    if (/\.(ts|tsx|js|jsx)$/.test(item) && !item.endsWith('.d.ts')) {
-                        files.push(fullPath);
-                    }
+                } else if (
+                    stat.isFile() &&
+                    /\.(ts|tsx|js|jsx)$/.test(item) &&
+                    !item.endsWith('.d.ts')
+                ) {
+                    files.push(fullPath);
                 }
             }
         } catch (error) {
             log.warn({ dir, error: error.message }, 'Could not read directory');
         }
     }
-    
+
     walk(directory);
     return files;
 }
@@ -214,16 +218,16 @@ function main() {
     const rootDir = path.resolve(__dirname, '..');
     const targetDirs = [
         path.join(rootDir, 'apps/web/app/api'),
-        path.join(rootDir, 'apps/web/components'), 
+        path.join(rootDir, 'apps/web/components'),
         path.join(rootDir, 'apps/web/lib'),
-        path.join(rootDir, 'packages')
+        path.join(rootDir, 'packages'),
     ];
     const stats = {
         total: 0,
         migrated: 0,
         excluded: 0,
         noConsole: 0,
-        errors: 0
+        errors: 0,
     };
 
     for (const targetDir of targetDirs) {
@@ -236,11 +240,11 @@ function main() {
         console.log(`📁 Processing directory: ${targetDir}`);
         log.info({ targetDir }, 'Processing directory');
         const files = findFiles(targetDir);
-        
+
         for (const file of files) {
             stats.total++;
             const result = processFile(file);
-            
+
             switch (result.reason) {
                 case 'migrated':
                     stats.migrated++;

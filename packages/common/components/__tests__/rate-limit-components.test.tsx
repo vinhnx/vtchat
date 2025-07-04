@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { ModelEnum } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the hooks
 const mockUseSession = vi.fn();
@@ -32,7 +32,7 @@ import { RateLimitMeter } from '../rate-limit-meter';
 
 describe('Rate Limit UI Components', () => {
     const authenticatedUser = {
-        user: { id: 'user-123', email: 'user@test.com' }
+        user: { id: 'user-123', email: 'user@test.com' },
     };
 
     const mockRateLimitStatus = {
@@ -44,7 +44,7 @@ describe('Rate Limit UI Components', () => {
         remainingMinute: 1,
         resetTime: {
             daily: new Date('2024-01-02T00:00:00Z'),
-            minute: new Date(Date.now() + 300000), // 5 minutes from now
+            minute: new Date(Date.now() + 300_000), // 5 minutes from now
         },
     };
 
@@ -65,9 +65,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            const { container } = render(
-                <RateLimitIndicator modelId={ModelEnum.GPT_4o} />
-            );
+            const { container } = render(<RateLimitIndicator modelId={ModelEnum.GPT_4o} />);
 
             expect(container.firstChild).toBeNull();
         });
@@ -108,12 +106,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(
-                <RateLimitIndicator 
-                    modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} 
-                    compact={true} 
-                />
-            );
+            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
             expect(screen.getByText('5/10 today')).toBeInTheDocument();
         });
@@ -132,20 +125,15 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(
-                <RateLimitIndicator 
-                    modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} 
-                    compact={true} 
-                />
-            );
+            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
             // Should show warning icon and text color
             const indicator = screen.getByText('8/10 today');
             expect(indicator).toBeInTheDocument();
-            
+
             // Check for warning icon (AlertTriangle)
-            const warningIcon = screen.getByTestId('alert-triangle') || 
-                               screen.getByRole('img', { hidden: true });
+            const warningIcon =
+                screen.getByTestId('alert-triangle') || screen.getByRole('img', { hidden: true });
             expect(warningIcon).toBeInTheDocument();
         });
 
@@ -207,8 +195,10 @@ describe('Rate Limit UI Components', () => {
             render(<RateLimitMeter />);
 
             expect(screen.getByText('Free Model Usage')).toBeInTheDocument();
-            expect(screen.getByText(/Track your personal daily and per-minute limits/)).toBeInTheDocument();
-            
+            expect(
+                screen.getByText(/Track your personal daily and per-minute limits/)
+            ).toBeInTheDocument();
+
             // Should show skeleton loaders
             const skeletons = screen.getAllByTestId('skeleton');
             expect(skeletons.length).toBeGreaterThan(0);
@@ -225,7 +215,9 @@ describe('Rate Limit UI Components', () => {
             render(<RateLimitMeter />);
 
             expect(screen.getByText('Free Model Usage')).toBeInTheDocument();
-            expect(screen.getByText('Unable to load your personal usage information')).toBeInTheDocument();
+            expect(
+                screen.getByText('Unable to load your personal usage information')
+            ).toBeInTheDocument();
         });
 
         it('should display current usage statistics', () => {
@@ -241,7 +233,9 @@ describe('Rate Limit UI Components', () => {
             // Check daily usage display
             expect(screen.getByText('Daily requests')).toBeInTheDocument();
             expect(screen.getByText('5 / 10')).toBeInTheDocument();
-            expect(screen.getByText(/5 requests remaining • Resets in 5 minutes/)).toBeInTheDocument();
+            expect(
+                screen.getByText(/5 requests remaining • Resets in 5 minutes/)
+            ).toBeInTheDocument();
 
             // Check per-minute status
             expect(screen.getByText('Per-minute rate limit')).toBeInTheDocument();
@@ -338,7 +332,9 @@ describe('Rate Limit UI Components', () => {
             render(<RateLimitMeter />);
 
             expect(screen.getByText('Low on daily requests')).toBeInTheDocument();
-            expect(screen.getByText(/Consider upgrading to VT\+ for unlimited access/)).toBeInTheDocument();
+            expect(
+                screen.getByText(/Consider upgrading to VT\+ for unlimited access/)
+            ).toBeInTheDocument();
         });
 
         it('should display success state with check icon when limits are healthy', () => {
@@ -368,10 +364,10 @@ describe('Rate Limit UI Components', () => {
     describe('Component Integration', () => {
         it('should handle real-time updates correctly', async () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
-            
+
             // Start with initial status
             const { rerender } = render(<RateLimitMeter />);
-            
+
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
                 isLoading: false,
@@ -407,20 +403,14 @@ describe('Rate Limit UI Components', () => {
             });
 
             const { rerender } = render(
-                <RateLimitIndicator 
-                    modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} 
-                    compact={false} 
-                />
+                <RateLimitIndicator compact={false} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />
             );
 
             expect(screen.getByText('Daily usage:')).toBeInTheDocument();
 
             // Switch to compact mode
             rerender(
-                <RateLimitIndicator 
-                    modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} 
-                    compact={true} 
-                />
+                <RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />
             );
 
             expect(screen.getByText('5/10 today')).toBeInTheDocument();
@@ -470,7 +460,9 @@ describe('Rate Limit UI Components', () => {
             render(<RateLimitMeter />);
 
             // Check for descriptive text
-            expect(screen.getByText(/Track your personal daily and per-minute limits/)).toBeInTheDocument();
+            expect(
+                screen.getByText(/Track your personal daily and per-minute limits/)
+            ).toBeInTheDocument();
             expect(screen.getByText(/requests remaining/)).toBeInTheDocument();
         });
     });

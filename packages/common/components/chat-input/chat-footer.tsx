@@ -1,6 +1,6 @@
+import { useUser } from '@repo/shared/lib/auth-client';
 import { Flex } from '@repo/ui';
 import Link from 'next/link';
-import { useUser } from '@repo/shared/lib/auth-client';
 
 export const ChatFooter = () => {
     const user = useUser();

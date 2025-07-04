@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { ChatMode } from '@repo/shared/config';
 import { getModelFromChatMode, models } from '@repo/ai/models';
+import { ChatMode } from '@repo/shared/config';
+import { describe, expect, it } from 'vitest';
 
 // Test API key prompt modal functionality
 const getRequiredApiKeyForMode = (chatMode: ChatMode): string | null => {
@@ -41,20 +41,20 @@ describe('Gemini 2.5 Flash Lite Free Model', () => {
 
     it('should be marked as free model', () => {
         const modelEnum = getModelFromChatMode(ChatMode.GEMINI_2_5_FLASH_LITE);
-        const model = models.find(m => m.id === modelEnum);
+        const model = models.find((m) => m.id === modelEnum);
         expect(model).toBeDefined();
         expect(model?.isFree).toBe(true);
     });
 
     it('should have correct model configuration', () => {
         const modelEnum = getModelFromChatMode(ChatMode.GEMINI_2_5_FLASH_LITE);
-        const model = models.find(m => m.id === modelEnum);
+        const model = models.find((m) => m.id === modelEnum);
         expect(model).toMatchObject({
             name: 'Gemini 2.5 Flash Lite Preview 06-17',
             provider: 'google',
             isFree: true,
-            maxTokens: 65536,
-            contextWindow: 65536,
+            maxTokens: 65_536,
+            contextWindow: 65_536,
         });
     });
 

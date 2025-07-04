@@ -9,7 +9,10 @@ import { useStickToBottom } from 'use-stick-to-bottom';
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
-    () => import('@repo/common/components').then(mod => ({ default: mod.ChatInput })),
+    () =>
+        import('@repo/common/components').then((mod) => ({
+            default: mod.ChatInput,
+        })),
     {
         ssr: false,
         loading: () => (
@@ -23,21 +26,21 @@ const ChatInput = dynamic(
 const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) => {
     const router = useRouter();
     const { data: session, isPending } = useSession();
-    const isGenerating = useChatStore(state => state.isGenerating);
+    const isGenerating = useChatStore((state) => state.isGenerating);
     const hasScrolledToBottom = useRef(false);
     const { scrollRef, contentRef } = useStickToBottom({
         stiffness: 1,
         damping: 0,
         enabled: isGenerating, // Only auto-scroll when generating
     });
-    const switchThread = useChatStore(state => state.switchThread);
-    const getThread = useChatStore(state => state.getThread);
+    const switchThread = useChatStore((state) => state.switchThread);
+    const getThread = useChatStore((state) => state.getThread);
 
     // Handle async params with React 18 pattern
     const [threadId, setThreadId] = useState<string | null>(null);
 
     useEffect(() => {
-        params.then(resolvedParams => {
+        params.then((resolvedParams) => {
             setThreadId(resolvedParams.threadId);
         });
     }, [params]);
@@ -52,7 +55,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     useEffect(() => {
         if (!threadId) return;
 
-        getThread(threadId).then(thread => {
+        getThread(threadId).then((thread) => {
             if (thread?.id) {
                 switchThread(thread.id);
                 // Reset scroll flag when switching threads
@@ -69,7 +72,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     }, [threadId, getThread, switchThread, router, scrollToBottom]);
 
     // Get thread items to trigger scroll when content changes
-    const threadItems = useChatStore(state => state.threadItems);
+    const threadItems = useChatStore((state) => state.threadItems);
 
     // Scroll to bottom when thread items change (for initial load)
     useEffect(() => {
@@ -115,7 +118,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
             </div>
 
             {/* ChatFooter pinned to bottom with padding for non-logged users */}
-            {!isPending && !session && (
+            {!(isPending || session) && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
                     <div className="pointer-events-auto">
                         <ChatFooter />

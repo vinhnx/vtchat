@@ -98,7 +98,7 @@ vtchat/
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
-- **Linting**: oxlint (faster than ESLint)
+- **Code Quality**: Biome (formatting & linting) + oxlint (comprehensive linting)
 - **Type Checking**: TypeScript with strict configuration
 
 ### **AI & Integrations**
@@ -159,7 +159,6 @@ vtchat/
 
     **Security:**
 
-    
     - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
 4. **Set up the database**:
@@ -190,8 +189,8 @@ bun test:coverage      # Run tests with coverage
 
 # Code Quality
 bun lint               # Lint with oxlint
-bun format             # Format code with Prettier
-bun format:check       # Check code formatting
+bun run biome:format   # Format code with Biome
+bun run biome:check    # Check code formatting with Biome
 
 # Database
 cd apps/web

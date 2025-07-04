@@ -1,14 +1,14 @@
 import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from '@repo/common/components';
 import { isValidUrl } from '@repo/shared/utils';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { ComponentProps, ReactElement, useContext } from 'react';
+import type { MDXRemote } from 'next-mdx-remote/rsc';
+import { type ComponentProps, type ReactElement, useContext } from 'react';
 
 export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
     Source: ({ children }) => {
         const { getSourceByIndex } = useContext(CitationProviderContext);
         const index = children as string;
 
-        const source = getSourceByIndex(parseInt(index));
+        const source = getSourceByIndex(Number.parseInt(index));
 
         const url = source?.link;
 
@@ -51,7 +51,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
     code: ({ children, className }) => {
         if (!className) {
             return (
-                <code className="border-brand/20 !bg-brand/10 text-brand rounded-md border px-1.5 py-0.5 font-mono text-sm">
+                <code className="!bg-brand/10 border-brand/20 text-brand rounded-md border px-1.5 py-0.5 font-mono text-sm">
                     {children}
                 </code>
             );

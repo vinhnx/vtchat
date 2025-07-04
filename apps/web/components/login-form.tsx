@@ -43,7 +43,7 @@ function LoginFormContent({
                         setLoading(false);
                         onClose?.();
                     },
-                    onError: ctx => {
+                    onError: (ctx) => {
                         setLoading(false);
                         setError(ctx.error.message || `Failed to sign in with ${provider}`);
                     },
@@ -76,13 +76,13 @@ function LoginFormContent({
 
             <div className="grid gap-4">
                 <PremiumButton
-                    variant="outline"
                     className="w-full"
+                    data-vmtrc="AuthMethodSelected"
+                    data-vmtrc-context="login_form"
+                    data-vmtrc-provider="google"
                     loading={loading}
                     onClick={() => handleSocialSignIn('google')}
-                    data-vmtrc="AuthMethodSelected"
-                    data-vmtrc-provider="google"
-                    data-vmtrc-context="login_form"
+                    variant="outline"
                 >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                         <path
@@ -105,13 +105,13 @@ function LoginFormContent({
                     Continue with Google
                 </PremiumButton>
                 <PremiumButton
-                    variant="outline"
                     className="w-full"
+                    data-vmtrc="AuthMethodSelected"
+                    data-vmtrc-context="login_form"
+                    data-vmtrc-provider="github"
                     loading={loading}
                     onClick={() => handleSocialSignIn('github')}
-                    data-vmtrc="AuthMethodSelected"
-                    data-vmtrc-provider="github"
-                    data-vmtrc-context="login_form"
+                    variant="outline"
                 >
                     <svg
                         className="mr-2 h-4 w-4"
@@ -124,10 +124,10 @@ function LoginFormContent({
                     Continue with GitHub
                 </PremiumButton>
                 <PremiumButton
-                    variant="outline"
                     className="w-full"
                     loading={loading}
                     onClick={() => handleSocialSignIn('twitter')}
+                    variant="outline"
                 >
                     <svg
                         className="mr-2 h-4 w-4"
@@ -142,13 +142,13 @@ function LoginFormContent({
             </div>
             <div className="text-muted-foreground text-center text-xs">
                 By continuing, you agree to our{' '}
-                <Link href="/terms" className="hover:text-foreground underline underline-offset-4">
+                <Link className="hover:text-foreground underline underline-offset-4" href="/terms">
                     Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link
-                    href="/privacy"
                     className="hover:text-foreground underline underline-offset-4"
+                    href="/privacy"
                 >
                     Privacy Policy
                 </Link>
@@ -162,8 +162,8 @@ export function LoginForm({ className, redirectUrl, onClose, ...props }: LoginFo
         <Suspense fallback={<InlineLoader />}>
             <LoginFormContent
                 className={className}
-                redirectUrl={redirectUrl}
                 onClose={onClose}
+                redirectUrl={redirectUrl}
                 {...props}
             />
         </Suspense>

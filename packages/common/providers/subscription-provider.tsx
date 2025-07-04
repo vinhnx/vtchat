@@ -8,13 +8,14 @@
  */
 
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Corrected import
 import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import type React from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
-import { log } from '@repo/shared/logger';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -87,7 +88,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // For anonymous users, immediately return basic anonymous tier without API calls
             if (!userId) {
-                log.info('[Subscription Provider] Returning basic anonymous tier for anonymous user');
+                log.info(
+                    '[Subscription Provider] Returning basic anonymous tier for anonymous user'
+                );
                 const anonymousStatus: SubscriptionStatus = {
                     plan: PlanSlug.ANONYMOUS,
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -112,7 +115,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // If there's already a global fetch in progress and not forcing refresh, wait for it
             if (globalFetchPromise && !forceRefresh) {
-                log.info({ userDescription }, '[Subscription Provider] Using existing global fetch');
+                log.info(
+                    { userDescription },
+                    '[Subscription Provider] Using existing global fetch'
+                );
                 const result = await globalFetchPromise;
                 setSubscriptionStatus(result);
                 setIsLoading(false);
@@ -126,7 +132,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 globalIsLoading = true;
                 globalError = null;
 
-                log.info({ userDescription, trigger }, '[Subscription Provider] Starting global fetch');
+                log.info(
+                    { userDescription, trigger },
+                    '[Subscription Provider] Starting global fetch'
+                );
 
                 // Create the global fetch promise with deduplication
                 const requestKey = `subscription-${userId}-${trigger}`;
@@ -141,7 +150,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => {
                         controller.abort();
-                    }, 10000); // 10 second timeout
+                    }, 10_000); // 10 second timeout
 
                     try {
                         const response = await fetch(`/api/subscription/status?${params}`, {
@@ -214,7 +223,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 return result;
             } catch (err) {
-                log.error({ error: err instanceof Error ? err.message : 'Unknown error' }, 'Error fetching subscription status');
+                log.error(
+                    { error: err instanceof Error ? err.message : 'Unknown error' },
+                    'Error fetching subscription status'
+                );
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
                 // Update global and local error state

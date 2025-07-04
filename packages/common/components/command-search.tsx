@@ -8,13 +8,13 @@ import { log } from '@repo/shared/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Button,
-    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
+    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -26,8 +26,8 @@ import {
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
-import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
@@ -36,15 +36,15 @@ import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
     const { isCommandSearchOpen, setIsCommandSearchOpen } = useRootContext();
-    const threads = useChatStore(state => state.threads);
-    const getThread = useChatStore(state => state.getThread);
-    const removeThread = useChatStore(state => state.deleteThread);
-    const switchThread = useChatStore(state => state.switchThread);
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore(state => state.setSettingTab);
+    const threads = useChatStore((state) => state.threads);
+    const getThread = useChatStore((state) => state.getThread);
+    const removeThread = useChatStore((state) => state.deleteThread);
+    const switchThread = useChatStore((state) => state.switchThread);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore((state) => state.setSettingTab);
     const router = useRouter();
     const { theme, setTheme } = useTheme();
-    const clearThreads = useChatStore(state => state.clearAllThreads);
+    const clearThreads = useChatStore((state) => state.clearAllThreads);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
@@ -69,7 +69,7 @@ export const CommandSearch = () => {
         previousMonths: 'Previous Months',
     };
 
-    threads.forEach(thread => {
+    threads.forEach((thread) => {
         const createdAt = new Date(thread.createdAt);
         if (isToday(createdAt)) {
             groupedThreads.today.push(thread);
@@ -215,14 +215,14 @@ export const CommandSearch = () => {
     ];
 
     return (
-        <CommandDialog open={isCommandSearchOpen} onOpenChange={setIsCommandSearchOpen}>
+        <CommandDialog onOpenChange={setIsCommandSearchOpen} open={isCommandSearchOpen}>
             <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
                 <div className="flex-1 [&_[cmdk-input-wrapper]]:border-b-0">
                     <CommandInput placeholder="Search..." />
                 </div>
                 <div className="flex shrink-0 items-center gap-1 px-2">
                     <Kbd className="h-5 w-5">
-                        <Command size={12} strokeWidth={2} className="shrink-0" />
+                        <Command className="shrink-0" size={12} strokeWidth={2} />
                     </Kbd>
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
@@ -230,18 +230,18 @@ export const CommandSearch = () => {
             <CommandList className="max-h-[420px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                    {actions.map(action => {
+                    {actions.map((action) => {
                         const actionItem = (
                             <CommandItem
-                                key={action.name}
                                 className="gap-"
-                                value={action.name}
+                                key={action.name}
                                 onSelect={action.action}
+                                value={action.name}
                             >
                                 <action.icon
+                                    className="text-muted-foreground flex-shrink-0"
                                     size={14}
                                     strokeWidth="2"
-                                    className="text-muted-foreground flex-shrink-0"
                                 />
                                 {action.name}
                             </CommandItem>
@@ -252,9 +252,9 @@ export const CommandSearch = () => {
                             return (
                                 <GatedFeatureAlert
                                     key={action.name}
-                                    title="Login Required"
                                     message={`Please sign in to ${action.name.toLowerCase()}.`}
                                     showAlert={true}
+                                    title="Login Required"
                                 >
                                     {actionItem}
                                 </GatedFeatureAlert>
@@ -268,24 +268,24 @@ export const CommandSearch = () => {
                     ([key, threads]) =>
                         threads.length > 0 && (
                             <CommandGroup
-                                key={key}
                                 heading={groupsNames[key as keyof typeof groupsNames]}
+                                key={key}
                             >
-                                {threads.map(thread => (
+                                {threads.map((thread) => (
                                     <CommandItem
-                                        key={thread.id}
-                                        value={`${thread.id}/${thread.title}`}
                                         className={cn('w-full gap-3')}
+                                        key={thread.id}
                                         onSelect={() => {
                                             switchThread(thread.id);
                                             router.push(`/chat/${thread.id}`);
                                             onClose();
                                         }}
+                                        value={`${thread.id}/${thread.title}`}
                                     >
                                         <MessageCircle
+                                            className="text-muted-foreground/50"
                                             size={16}
                                             strokeWidth={2}
-                                            className="text-muted-foreground/50"
                                         />
                                         <span className="w-full truncate font-normal">
                                             {thread.title}
@@ -301,13 +301,13 @@ export const CommandSearch = () => {
             </CommandList>
 
             <LoginRequiredDialog
+                description="Please sign in to access this feature."
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
                 title="Login Required"
-                description="Please sign in to access this feature."
             />
 
-            <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+            <Dialog onOpenChange={setShowSubscriptionDialog} open={showSubscriptionDialog}>
                 <DialogContent ariaTitle="Sign In Required" className="max-w-md">
                     <DialogHeader>
                         <DialogTitle>Sign In Required</DialogTitle>
@@ -317,16 +317,16 @@ export const CommandSearch = () => {
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="gap-3">
-                        <Button variant="outline" onClick={() => setShowSubscriptionDialog(false)}>
+                        <Button onClick={() => setShowSubscriptionDialog(false)} variant="outline">
                             Cancel
                         </Button>
                         <Button
+                            className="gap-2"
                             onClick={() => {
                                 router.push('/plus');
                                 setShowSubscriptionDialog(false);
                                 onClose();
                             }}
-                            className="gap-2"
                         >
                             <Plus size={16} />
                             Upgrade to VT+

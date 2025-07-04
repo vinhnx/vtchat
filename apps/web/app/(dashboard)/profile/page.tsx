@@ -6,8 +6,8 @@ import { useEffect } from 'react';
 
 export default function ProfilePage() {
     const router = useRouter();
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore(state => state.setSettingTab);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore((state) => state.setSettingTab);
 
     useEffect(() => {
         // Open settings modal with Profile tab

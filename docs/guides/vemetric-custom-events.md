@@ -21,7 +21,7 @@ Add `data-vmtrc` attributes to HTML elements for automatic event tracking:
 <button data-vmtrc="ButtonClicked">Click me</button>
 
 // Event with metadata
-<button 
+<button
     data-vmtrc="SubscriptionSelected"
     data-vmtrc-plan="VT_PLUS"
     data-vmtrc-price="10"
@@ -64,7 +64,7 @@ await vemetricHelpers.trackMessageSent({
     modelName: 'gpt-4',
     messageLength: 150,
     hasAttachments: true,
-    toolsUsed: ['web_search']
+    toolsUsed: ['web_search'],
 });
 
 // Track feature usage
@@ -84,20 +84,16 @@ Use the backend service for server-side tracking:
 import { vemetricBackend } from '@repo/common/services/vemetric-backend';
 
 // Track custom event
-await vemetricBackend.trackEvent(
-    userId,
-    'PaymentProcessed',
-    {
-        amount: 10,
-        currency: 'USD',
-        tier: 'VT_PLUS'
-    }
-);
+await vemetricBackend.trackEvent(userId, 'PaymentProcessed', {
+    amount: 10,
+    currency: 'USD',
+    tier: 'VT_PLUS',
+});
 
 // Update user properties
 await vemetricBackend.updateUser(userId, {
     subscriptionTier: 'VT_PLUS',
-    messageCount: 50
+    messageCount: 50,
 });
 ```
 
@@ -110,7 +106,7 @@ import {
     trackPaymentSuccess,
     trackUserRegistration,
     trackSubscriptionCreated,
-    trackPremiumFeatureUsage
+    trackPremiumFeatureUsage,
 } from '@/lib/vemetric-integrations';
 
 // Payment webhook handler
@@ -120,7 +116,7 @@ export async function handlePaymentSuccess(paymentData) {
         currency: 'USD',
         subscriptionTier: 'VT_PLUS',
         paymentMethod: 'card',
-        subscriptionId: 'sub_123'
+        subscriptionId: 'sub_123',
     });
 }
 
@@ -128,7 +124,7 @@ export async function handlePaymentSuccess(paymentData) {
 export async function handleUserRegistration(userData) {
     await trackUserRegistration(userId, {
         provider: 'google',
-        referralSource: 'organic'
+        referralSource: 'organic',
     });
 }
 
@@ -137,7 +133,7 @@ export async function handlePremiumFeature(userId: string) {
     await trackPremiumFeatureUsage(userId, {
         featureName: 'advanced_rag',
         context: 'api_call',
-        processingTime: 1500
+        processingTime: 1500,
     });
 }
 ```
@@ -162,14 +158,14 @@ Create custom events following the naming convention:
 
 ```typescript
 // Good: PascalCase, descriptive
-'DocumentProcessed'
-'AdvancedSearchUsed'
-'ExportCompleted'
+'DocumentProcessed';
+'AdvancedSearchUsed';
+'ExportCompleted';
 
 // Avoid: generic names
-'Event'
-'Action'
-'Click'
+'Event';
+'Action';
+'Click';
 ```
 
 ## Data Attributes Reference
@@ -179,46 +175,38 @@ Create custom events following the naming convention:
 ```html
 <!-- Event name only -->
 <element data-vmtrc="EventName">
-
-<!-- Event with metadata -->
-<element 
-    data-vmtrc="EventName"
-    data-vmtrc-key1="value1"
-    data-vmtrc-key2="value2"
->
+    <!-- Event with metadata -->
+    <element data-vmtrc="EventName" data-vmtrc-key1="value1" data-vmtrc-key2="value2"></element
+></element>
 ```
 
 ### Common Patterns
 
 ```html
 <!-- Subscription buttons -->
-<button 
+<button
     data-vmtrc="PlanSelected"
     data-vmtrc-plan="VT_PLUS"
     data-vmtrc-price="10"
     data-vmtrc-context="pricing_page"
 >
-
-<!-- Authentication buttons -->
-<button 
-    data-vmtrc="AuthMethodSelected"
-    data-vmtrc-provider="google"
-    data-vmtrc-context="login_form"
->
-
-<!-- Feature usage -->
-<button 
-    data-vmtrc="FeatureUsed"
-    data-vmtrc-feature="file_upload"
-    data-vmtrc-context="chat_interface"
->
-
-<!-- Navigation -->
-<a 
-    data-vmtrc="PageVisited"
-    data-vmtrc-page="pricing"
-    data-vmtrc-source="navbar"
->
+    <!-- Authentication buttons -->
+    <button
+        data-vmtrc="AuthMethodSelected"
+        data-vmtrc-provider="google"
+        data-vmtrc-context="login_form"
+    >
+        <!-- Feature usage -->
+        <button
+            data-vmtrc="FeatureUsed"
+            data-vmtrc-feature="file_upload"
+            data-vmtrc-context="chat_interface"
+        >
+            <!-- Navigation -->
+            <a data-vmtrc="PageVisited" data-vmtrc-page="pricing" data-vmtrc-source="navbar"></a>
+        </button>
+    </button>
+</button>
 ```
 
 ## Privacy & Security
@@ -230,8 +218,15 @@ All data is automatically sanitized to remove PII:
 ```typescript
 // Automatically redacted fields
 const sensitiveFields = [
-    'apiKey', 'api_key', 'token', 'password', 'secret',
-    'email', 'phone', 'ssn', 'credit_card'
+    'apiKey',
+    'api_key',
+    'token',
+    'password',
+    'secret',
+    'email',
+    'phone',
+    'ssn',
+    'credit_card',
 ];
 
 // URLs are sanitized to domain only
@@ -265,14 +260,14 @@ import { trackPaymentSuccess, trackPaymentFailure } from '@/lib/vemetric-integra
 
 export async function POST(request: Request) {
     const payload = await request.json();
-    
+
     if (payload.type === 'payment.succeeded') {
         await trackPaymentSuccess(payload.customer.id, {
             amount: payload.amount,
             currency: payload.currency,
             subscriptionTier: 'VT_PLUS',
             paymentMethod: payload.payment_method.type,
-            subscriptionId: payload.subscription.id
+            subscriptionId: payload.subscription.id,
         });
     }
 }
@@ -287,7 +282,7 @@ import { vemetricHelpers } from '@repo/common/hooks/use-vemetric';
 export function ChatInput() {
     const handleSendMessage = async (message: string) => {
         // Send message logic...
-        
+
         // Track the event
         await vemetricHelpers.trackMessageSent({
             modelName: selectedModel,
@@ -298,7 +293,7 @@ export function ChatInput() {
     };
 
     return (
-        <button 
+        <button
             onClick={handleSendMessage}
             data-vmtrc="MessageSent"
             data-vmtrc-context="chat_interface"
@@ -324,11 +319,11 @@ export function PremiumFeature({ user }: { user: User }) {
                 context: 'feature_attempt',
                 actionTaken: 'blocked'
             });
-            
+
             // Show upgrade modal
             return;
         }
-        
+
         // Allow feature access
         await trackPremiumFeatureUsage(user.id, {
             featureName: 'advanced_rag',
@@ -337,7 +332,7 @@ export function PremiumFeature({ user }: { user: User }) {
     };
 
     return (
-        <button 
+        <button
             onClick={handleFeatureAccess}
             data-vmtrc="PremiumFeatureAccessed"
             data-vmtrc-feature="advanced_rag"
@@ -367,7 +362,7 @@ Check events in browser console and server logs:
 # Frontend events
 # Check browser dev tools console for event confirmations
 
-# Backend events  
+# Backend events
 bun run dev
 # Look for: "Backend event tracked" log messages
 ```

@@ -1,6 +1,6 @@
-import { auth } from '@/lib/auth-server';
-import { NextRequest, NextResponse } from 'next/server';
 import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -38,7 +38,9 @@ export async function POST(request: NextRequest) {
             // Validate file type
             if (!ALLOWED_TYPES.includes(file.type)) {
                 return NextResponse.json(
-                    { error: `File type ${file.type} is not supported. Supported types: images and PDFs.` },
+                    {
+                        error: `File type ${file.type} is not supported. Supported types: images and PDFs.`,
+                    },
                     { status: 400 }
                 );
             }
@@ -62,10 +64,7 @@ export async function POST(request: NextRequest) {
         });
     } catch (error) {
         log.error({ error }, 'Upload error');
-        return NextResponse.json(
-            { error: 'Failed to process upload' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Failed to process upload' }, { status: 500 });
     }
 }
 

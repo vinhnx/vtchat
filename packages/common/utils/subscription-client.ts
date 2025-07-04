@@ -1,4 +1,3 @@
-
 import { log } from '@repo/shared/logger';
 /**
  * Client-side subscription utilities
@@ -20,9 +19,14 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
         });
 
         if (response.ok) {
-            log.info('[Subscription Utils] Successfully invalidated server-side cache after payment');
+            log.info(
+                '[Subscription Utils] Successfully invalidated server-side cache after payment'
+            );
         } else {
-            log.warn({ statusText: response.statusText }, '[Subscription Utils] Failed to invalidate server-side cache');
+            log.warn(
+                { statusText: response.statusText },
+                '[Subscription Utils] Failed to invalidate server-side cache'
+            );
         }
     } catch (error) {
         log.error({ error }, '[Subscription Utils] Error invalidating server-side cache');
@@ -30,10 +34,10 @@ export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
 
     // Also clear localStorage cache
     if (typeof window !== 'undefined') {
-        const cacheKeys = Object.keys(localStorage).filter(key =>
+        const cacheKeys = Object.keys(localStorage).filter((key) =>
             key.startsWith('subscription_status_')
         );
-        cacheKeys.forEach(key => {
+        cacheKeys.forEach((key) => {
             localStorage.removeItem(key);
             log.info({ key }, '[Subscription Utils] Cleared client cache');
         });
@@ -51,18 +55,21 @@ export async function clearSubscriptionDataOnLogout(): Promise<void> {
         // Clear client-side localStorage cache
         if (typeof window !== 'undefined') {
             const subscriptionKeys = Object.keys(localStorage).filter(
-                key =>
+                (key) =>
                     key.startsWith('subscription_status_') ||
                     key.startsWith('creem_') ||
                     key.startsWith('vt_plus_') ||
                     key.includes('subscription')
             );
 
-            subscriptionKeys.forEach(key => {
+            subscriptionKeys.forEach((key) => {
                 localStorage.removeItem(key);
             });
 
-            log.info({ count: subscriptionKeys.length }, '[Subscription Utils] Cleared subscription cache entries');
+            log.info(
+                { count: subscriptionKeys.length },
+                '[Subscription Utils] Cleared subscription cache entries'
+            );
         }
 
         // Invalidate server-side cache (best effort)
@@ -76,7 +83,10 @@ export async function clearSubscriptionDataOnLogout(): Promise<void> {
             });
             log.info('[Subscription Utils] Successfully invalidated server-side cache');
         } catch (serverError) {
-            log.warn({ error: serverError }, '[Subscription Utils] Failed to invalidate server-side cache');
+            log.warn(
+                { error: serverError },
+                '[Subscription Utils] Failed to invalidate server-side cache'
+            );
             // Non-critical for logout flow
         }
     } catch (error) {

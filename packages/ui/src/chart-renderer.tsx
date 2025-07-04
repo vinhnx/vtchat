@@ -1,27 +1,27 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 import {
-    Bar,
-    BarChart,
-    Line,
-    LineChart,
     Area,
     AreaChart,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Legend,
+    Line,
+    LineChart,
     Pie,
     PieChart,
-    Cell,
+    PolarAngleAxis,
+    PolarGrid,
+    PolarRadiusAxis,
     Radar,
     RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    PolarRadiusAxis,
+    ResponsiveContainer,
     XAxis,
     YAxis,
-    CartesianGrid,
-    ResponsiveContainer,
-    Legend,
 } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 
 interface BaseChartData {
     name: string;
@@ -87,7 +87,12 @@ interface RadarChartProps {
     maxValue?: number;
 }
 
-export type ChartProps = BarChartProps | LineChartProps | AreaChartProps | PieChartProps | RadarChartProps;
+export type ChartProps =
+    | BarChartProps
+    | LineChartProps
+    | AreaChartProps
+    | PieChartProps
+    | RadarChartProps;
 
 // Color palettes
 const chartColors = {
@@ -108,13 +113,13 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
     return (
         <text
-            x={x}
-            y={y}
-            fill="white"
-            textAnchor={x > cx ? 'start' : 'end'}
             dominantBaseline="central"
+            fill="white"
             fontSize={12}
             fontWeight="500"
+            textAnchor={x > cx ? 'start' : 'end'}
+            x={x}
+            y={y}
         >
             {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -126,10 +131,10 @@ export function ChartRenderer(props: ChartProps) {
 
     const renderChart = () => {
         switch (type) {
-            case 'barChart':
+            case 'barChart': {
                 const colors = chartColors[(props as any).color] || chartColors.default;
                 return (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer height={300} width="100%">
                         <BarChart data={props.data}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
@@ -138,84 +143,87 @@ export function ChartRenderer(props: ChartProps) {
                         </BarChart>
                     </ResponsiveContainer>
                 );
+            }
 
-            case 'lineChart':
+            case 'lineChart': {
                 const lineColors = chartColors.default;
                 return (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer height={300} width="100%">
                         <LineChart data={props.data}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Line
-                                type="monotone"
                                 dataKey="series1"
+                                dot={{ fill: lineColors[0] }}
                                 stroke={lineColors[0]}
                                 strokeWidth={2}
-                                dot={{ fill: lineColors[0] }}
+                                type="monotone"
                             />
-                            {props.data.some(d => d.series2 !== undefined) && (
+                            {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
-                                    type="monotone"
                                     dataKey="series2"
+                                    dot={{ fill: lineColors[1] }}
                                     stroke={lineColors[1]}
                                     strokeWidth={2}
-                                    dot={{ fill: lineColors[1] }}
+                                    type="monotone"
                                 />
                             )}
                         </LineChart>
                     </ResponsiveContainer>
                 );
+            }
 
-            case 'areaChart':
+            case 'areaChart': {
                 const areaColors = chartColors.default;
                 return (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer height={300} width="100%">
                         <AreaChart data={props.data}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Area
-                                type="monotone"
                                 dataKey="series1"
-                                stackId={props.stacked ? '1' : undefined}
-                                stroke={areaColors[0]}
                                 fill={areaColors[0]}
                                 fillOpacity={0.6}
+                                stackId={props.stacked ? '1' : undefined}
+                                stroke={areaColors[0]}
+                                type="monotone"
                             />
-                            {props.data.some(d => d.series2 !== undefined) && (
+                            {props.data.some((d) => d.series2 !== undefined) && (
                                 <Area
-                                    type="monotone"
                                     dataKey="series2"
-                                    stackId={props.stacked ? '1' : undefined}
-                                    stroke={areaColors[1]}
                                     fill={areaColors[1]}
                                     fillOpacity={0.6}
+                                    stackId={props.stacked ? '1' : undefined}
+                                    stroke={areaColors[1]}
+                                    type="monotone"
                                 />
                             )}
                         </AreaChart>
                     </ResponsiveContainer>
                 );
+            }
 
-            case 'pieChart':
+            case 'pieChart': {
                 const pieColors = chartColors.default;
                 return (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer height={300} width="100%">
                         <PieChart>
                             <Pie
-                                data={props.data}
                                 cx="50%"
                                 cy="50%"
-                                labelLine={false}
-                                label={props.showLabels ? renderCustomizedLabel : false}
-                                outerRadius={80}
-                                fill="#8884d8"
+                                data={props.data}
                                 dataKey="value"
+                                fill="#8884d8"
+                                label={props.showLabels ? renderCustomizedLabel : false}
+                                labelLine={false}
+                                outerRadius={80}
                             >
                                 {props.data.map((entry, index) => (
                                     <Cell
-                                        key={`cell-${index}`}
                                         fill={pieColors[index % pieColors.length]}
+                                        key={`cell-${index}`}
                                     />
                                 ))}
                             </Pie>
@@ -223,20 +231,21 @@ export function ChartRenderer(props: ChartProps) {
                         </PieChart>
                     </ResponsiveContainer>
                 );
+            }
 
             case 'radarChart':
                 return (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer height={300} width="100%">
                         <RadarChart data={props.data}>
                             <PolarGrid />
                             <PolarAngleAxis dataKey="category" />
                             <PolarRadiusAxis angle={90} domain={[0, props.maxValue || 100]} />
                             <Radar
-                                name="Value"
                                 dataKey="value"
-                                stroke={chartColors.default[0]}
                                 fill={chartColors.default[0]}
                                 fillOpacity={0.3}
+                                name="Value"
+                                stroke={chartColors.default[0]}
                             />
                         </RadarChart>
                     </ResponsiveContainer>

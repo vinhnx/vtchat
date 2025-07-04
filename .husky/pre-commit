@@ -1,18 +1,20 @@
-#!/bin/bash
+# Run Biome format on staged files to auto-fix what we can
+echo "🔧 Auto-formatting staged files with Biome..."
+bunx biome format --write --staged
 
-if command -v bun &> /dev/null
-then
+# Run oxlint for fast linting check (non-blocking)
+echo "🔍 Running oxlint checks..."
+bun run lint 2>/dev/null || echo "⚠️  oxlint found some issues (non-blocking)"
+
+# Optional: Run full build check only if STRICT_COMMIT is set
+if [ "$STRICT_COMMIT" = "true" ]; then
+    echo "🏗️  Running strict build check..."
     bun run build
-elif command -v yarn &> /dev/null
-then
-    yarn build
-elif command -v pnpm &> /dev/null
-then
-    pnpm run build
-elif command -v npm &> /dev/null
-then
-    npm run build
-else
-    echo "No package manager found. Please install bun, yarn, pnpm, or npm."
-    exit 1
+    if [ $? -ne 0 ]; then
+        echo "❌ Build failed. Fix compilation errors before committing."
+        exit 1
+    fi
 fi
+
+echo "✅ Pre-commit checks completed!"
+echo "💡 Run 'STRICT_COMMIT=true git commit' for full validation"

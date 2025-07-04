@@ -1,7 +1,7 @@
 import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Thread } from '@repo/shared/types';
+import type { Thread } from '@repo/shared/types';
 import {
     Button,
     cn,
@@ -35,12 +35,12 @@ export const HistoryItem = ({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
-    const deleteThread = useChatStore(state => state.deleteThread);
-    const switchThread = useChatStore(state => state.switchThread);
+    const deleteThread = useChatStore((state) => state.deleteThread);
+    const switchThread = useChatStore((state) => state.switchThread);
     const [openOptions, setOpenOptions] = useState(false);
 
     const containerClasses = cn(
-        'gap-2 w-full group relative flex flex-row items-center py-2 px-3 rounded-lg transition-all duration-200 hover:bg-accent/70',
+        'group relative flex w-full flex-row items-center gap-2 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-accent/70',
         // Removed border for borderless look
         isActive ? 'bg-accent shadow-sm' : '',
         isPinned && 'border-l-2 border-l-amber-400 dark:border-l-amber-500'
@@ -59,10 +59,10 @@ export const HistoryItem = ({
     };
 
     return (
-        <div key={thread.id} className={containerClasses}>
+        <div className={containerClasses} key={thread.id}>
             <Link
-                href={`/chat/${thread.id}`}
                 className="flex min-w-0 flex-1 items-center"
+                href={`/chat/${thread.id}`}
                 onClick={() => switchThread(thread.id)}
             >
                 <div className="flex-1 overflow-hidden">
@@ -78,31 +78,31 @@ export const HistoryItem = ({
                     </p>
                 </div>
             </Link>
-            <DropdownMenu open={openOptions} onOpenChange={setOpenOptions}>
+            <DropdownMenu onOpenChange={setOpenOptions} open={openOptions}>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        variant="ghost"
-                        size="icon-sm" // fixed from icon-xs
                         className={cn(
                             'shrink-0 transition-all duration-200',
                             'opacity-0 group-hover:opacity-100',
-                            'bg-background/80 hover:bg-accent border-border/30 absolute right-2 border'
+                            'border-border/30 bg-background/80 hover:bg-accent absolute right-2 border'
                         )}
-                        onClick={e => {
+                        onClick={(e) => {
                             e.stopPropagation();
                             setOpenOptions(!openOptions);
-                        }}
+                        }} // fixed from icon-xs
+                        size="icon-sm"
+                        variant="ghost"
                     >
                         <MoreHorizontal
+                            className="text-muted-foreground hover:text-foreground"
                             size={14}
                             strokeWidth="2"
-                            className="text-muted-foreground hover:text-foreground"
                         />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" side="right">
                     <DropdownMenuItem
-                        onClick={e => {
+                        onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteConfirm();
                         }}
@@ -122,10 +122,10 @@ export const HistoryItem = ({
             </DropdownMenu>
 
             <LoginRequiredDialog
+                description="Please sign in to delete chat threads."
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
                 title="Login Required"
-                description="Please sign in to delete chat threads."
             />
         </div>
     );

@@ -42,13 +42,13 @@ export const CardSpotlightPricing = ({ children, className = '' }: CardSpotlight
 
     return (
         <div
-            ref={divRef}
-            onMouseMove={handleMouseMove}
-            onFocus={handleFocus}
+            className={`relative overflow-hidden transition-all duration-300 ${className}`}
             onBlur={handleBlur}
+            onFocus={handleFocus}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={`relative overflow-hidden transition-all duration-300 ${className}`}
+            onMouseMove={handleMouseMove}
+            ref={divRef}
         >
             <div
                 className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"

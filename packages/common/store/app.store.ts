@@ -1,17 +1,17 @@
 'use client';
 
-import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
-import { persist } from 'zustand/middleware';
+import { ModelEnum } from '@repo/ai/models';
+import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import {
     getDefaultSettingsForPlan,
     mergeWithPlusDefaults,
-    PlusDefaultSettings,
+    type PlusDefaultSettings,
 } from '@repo/shared/utils/plus-defaults';
-import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
-import { ModelEnum } from '@repo/ai/models';
-import { log } from '@repo/shared/logger';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 export const SETTING_TABS = {
     API_KEYS: 'api-keys',
@@ -65,14 +65,14 @@ type State = {
     ragChatModel: ModelEnum;
     // Profile settings for Personal AI Assistant
     profile: {
-    name: string;
-    workDescription: string;
+        name: string;
+        workDescription: string;
     };
-     // Customer portal state
-     portalState: {
-         isOpen: boolean;
-         url: string | null;
-     };
+    // Customer portal state
+    portalState: {
+        isOpen: boolean;
+        url: string | null;
+    };
 };
 
 type Actions = {
@@ -100,8 +100,8 @@ type Actions = {
     setEmbeddingModel: (model: EmbeddingModel) => void;
     setRagChatModel: (model: ModelEnum) => void;
     // Profile settings actions
-     setProfile: (profile: Partial<State['profile']>) => void;
-     // Plus user settings actions
+    setProfile: (profile: Partial<State['profile']>) => void;
+    // Plus user settings actions
     applyPlusDefaults: (plan: PlanSlug, preserveUserChanges?: boolean) => void;
     initializeSettingsForPlan: (plan: PlanSlug) => void;
     // Reset actions
@@ -163,10 +163,10 @@ export const useAppStore = create<State & Actions>()(
                 embeddingModel: DEFAULT_EMBEDDING_MODEL,
                 ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
                 profile: {
-                     name: '',
-                     workDescription: '',
-                 },
-                 sideDrawer: {
+                    name: '',
+                    workDescription: '',
+                },
+                sideDrawer: {
                     open: false,
                     badge: undefined,
                     title: '',
@@ -178,7 +178,7 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 // Actions
-                setIsSidebarOpen: open => {
+                setIsSidebarOpen: (open) => {
                     const newState = typeof open === 'function' ? open(get().isSidebarOpen) : open;
                     set({ isSidebarOpen: newState });
 
@@ -196,7 +196,7 @@ export const useAppStore = create<State & Actions>()(
                     }
                 },
 
-                setSidebarAnimationDisabled: disabled => {
+                setSidebarAnimationDisabled: (disabled) => {
                     set({ sidebarAnimationDisabled: disabled });
 
                     // Save to localStorage
@@ -213,22 +213,22 @@ export const useAppStore = create<State & Actions>()(
                     }
                 },
 
-                setSidebarPlacement: placement => {
+                setSidebarPlacement: (placement) => {
                     set({ sidebarPlacement: placement });
                 },
 
-                setIsSourcesOpen: open => {
+                setIsSourcesOpen: (open) => {
                     const newState = typeof open === 'function' ? open(get().isSourcesOpen) : open;
                     set({ isSourcesOpen: newState });
                 },
 
-                setIsSettingsOpen: open => set({ isSettingsOpen: open }),
+                setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
 
-                setSettingTab: tab => set({ settingTab: tab }),
+                setSettingTab: (tab) => set({ settingTab: tab }),
 
-                setShowSignInModal: show => set({ showSignInModal: show }),
+                setShowSignInModal: (show) => set({ showSignInModal: show }),
 
-                openSideDrawer: props => {
+                openSideDrawer: (props) => {
                     set({
                         sideDrawer: {
                             open: true,
@@ -239,8 +239,8 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
-                updateSideDrawer: props => {
-                    set(state => {
+                updateSideDrawer: (props) => {
+                    set((state) => {
                         Object.assign(state.sideDrawer, props);
                     });
                 },
@@ -256,7 +256,7 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
-                setShowExamplePrompts: show => {
+                setShowExamplePrompts: (show) => {
                     set({ showExamplePrompts: show });
                 },
 
@@ -281,13 +281,13 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 setThinkingMode: (mode: Partial<State['thinkingMode']>) => {
-                    set(state => {
+                    set((state) => {
                         state.thinkingMode = { ...state.thinkingMode, ...mode };
                     });
                 },
 
                 setGeminiCaching: (caching: Partial<State['geminiCaching']>) => {
-                    set(state => {
+                    set((state) => {
                         state.geminiCaching = { ...state.geminiCaching, ...caching };
                     });
                 },
@@ -297,17 +297,17 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 setRagChatModel: (model: ModelEnum) => {
-                set({ ragChatModel: model });
+                    set({ ragChatModel: model });
                 },
 
                 setProfile: (profile: Partial<State['profile']>) => {
-                     set(state => {
-                         state.profile = { ...state.profile, ...profile };
-                     });
-                 },
+                    set((state) => {
+                        state.profile = { ...state.profile, ...profile };
+                    });
+                },
 
-                 applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
-                    set(state => {
+                applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
+                    set((state) => {
                         const currentSettings: PlusDefaultSettings = {
                             thinkingMode: state.thinkingMode,
                             geminiCaching: state.geminiCaching,
@@ -326,10 +326,11 @@ export const useAppStore = create<State & Actions>()(
 
                 initializeSettingsForPlan: (plan: PlanSlug) => {
                     const defaults = getDefaultSettingsForPlan(plan);
-                    set(state => {
+                    set((state) => {
                         // Only apply defaults if current settings are still at base defaults
-                        const isUsingBaseDefaults =
-                            !state.thinkingMode.enabled && !state.geminiCaching.enabled;
+                        const isUsingBaseDefaults = !(
+                            state.thinkingMode.enabled || state.geminiCaching.enabled
+                        );
 
                         if (isUsingBaseDefaults || plan === PlanSlug.VT_PLUS) {
                             state.thinkingMode = defaults.thinkingMode;
@@ -339,7 +340,7 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 resetUserState: () => {
-                    set(state => {
+                    set((state) => {
                         // Reset all user preferences to base plan defaults
                         const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
@@ -370,11 +371,11 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
-                setPortalState: state => {
+                setPortalState: (state) => {
                     set({ portalState: state });
                 },
 
-                openPortal: url => {
+                openPortal: (url) => {
                     set({
                         portalState: {
                             isOpen: true,
@@ -395,7 +396,7 @@ export const useAppStore = create<State & Actions>()(
         }),
         {
             name: 'vtchat-settings',
-            partialize: state => ({
+            partialize: (state) => ({
                 sidebarPlacement: state.sidebarPlacement,
                 showExamplePrompts: state.showExamplePrompts,
                 customInstructions: state.customInstructions,
@@ -407,7 +408,7 @@ export const useAppStore = create<State & Actions>()(
                 geminiCaching: state.geminiCaching,
                 embeddingModel: state.embeddingModel,
                 ragChatModel: state.ragChatModel,
-                 profile: state.profile,
+                profile: state.profile,
             }),
         }
     )

@@ -5,14 +5,15 @@
 This implementation automatically enables default settings for VT+ subscribers, specifically:
 
 1. **Thinking Mode Settings** (enabled by default for plus users):
-   - Enable Thinking Mode: `true`
-   - Show Thought Process: `true` 
-   - Thinking Budget: `2048` tokens (default)
+
+    - Enable Thinking Mode: `true`
+    - Show Thought Process: `true`
+    - Thinking Budget: `2048` tokens (default)
 
 2. **Gemini Explicit Caching Settings** (enabled by default for plus users):
-   - Enable Explicit Caching: `true`
-   - Cache Duration: `3600` seconds (1 hour)
-   - Max Cached Conversations: `1`
+    - Enable Explicit Caching: `true`
+    - Cache Duration: `3600` seconds (1 hour)
+    - Max Cached Conversations: `1`
 
 ## Implementation Details
 
@@ -34,6 +35,7 @@ This implementation automatically enables default settings for VT+ subscribers, 
 ### Context7 Integration
 
 The implementation follows Context7 patterns for:
+
 - Configuration-based defaults
 - Feature-specific settings
 - Subscription-aware behavior
@@ -44,9 +46,9 @@ The implementation works automatically through the provider hierarchy:
 
 ```tsx
 <SubscriptionProvider>
-  <PlusDefaultsProvider>
-    <YourApp />
-  </PlusDefaultsProvider>
+    <PlusDefaultsProvider>
+        <YourApp />
+    </PlusDefaultsProvider>
 </SubscriptionProvider>
 ```
 
@@ -65,6 +67,7 @@ The implementation works automatically through the provider hierarchy:
 ## Testing
 
 The implementation has been tested with:
+
 - Build verification (`bun run build`)
 - Code formatting (`bun run format`)
 - Type checking for core functionality

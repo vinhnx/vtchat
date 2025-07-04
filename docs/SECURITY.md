@@ -18,12 +18,14 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ### Protection Features
 
 #### 🤖 Bot Protection
+
 - **Authentication Bot Detection**: Identifies and blocks automated traffic on authentication endpoints
 - **Industry-Standard Detection**: Uses the `isbot` library for reliable bot identification
 - **Focused Protection**: Targeted protection for login and registration endpoints
 - **Privacy-First Approach**: Minimal data collection while maintaining security
 
 #### 🔐 Better Auth Security
+
 - **Modern Session Management**: Secure session handling with automatic expiration
 - **OAuth Integration**: Secure authentication with Google, GitHub, and other providers
 - **Session Isolation**: Per-user authentication with proper thread isolation
@@ -32,6 +34,7 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ### Route-Specific Protection
 
 #### Authentication Routes (`/api/auth/*`)
+
 ```typescript
 // Enhanced Better Auth integration
 - Bot detection for authentication endpoints
@@ -41,6 +44,7 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ```
 
 #### API Routes (General)
+
 ```typescript
 // Basic protection for all routes
 - HTTPS enforcement for all communications
@@ -50,6 +54,7 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ```
 
 #### Feedback Routes (`/api/feedback`)
+
 ```typescript
 // Form submission protection
 - Authentication required
@@ -60,12 +65,14 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ## 🔐 Privacy-First Architecture
 
 ### Local Data Storage
+
 - **IndexedDB Storage**: All conversations stored locally in browser
 - **Zero Server Persistence**: Chat history never leaves user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
 - **Client-Side Encryption**: Sensitive data encrypted in browser storage
 
 ### Authentication Security
+
 - **Better Auth Integration**: Modern, secure session management
 - **Secure Headers**: CORS, security headers properly configured
 - **Session Isolation**: Per-user authentication with proper isolation
@@ -74,18 +81,21 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ## 🚨 Threat Mitigation
 
 ### Automated Attack Prevention
+
 - **Brute Force Protection**: Better Auth built-in rate limiting
 - **Bot Prevention**: Detection and blocking of automated requests on auth endpoints
 - **Privacy Protection**: No server-side storage of sensitive conversation data
 - **Secure Communication**: HTTPS enforcement and secure headers
 
 ### Content Security
+
 - **Input Validation**: All user inputs validated and sanitized
 - **Output Encoding**: Proper encoding to prevent XSS attacks
 - **SQL Injection Prevention**: Parameterized queries and ORM protection
 - **File Upload Security**: Restricted file types and size limits
 
 ### Infrastructure Security
+
 - **Secure Deployment**: Fly.io with proper security configurations
 - **Environment Isolation**: Separate development, staging, production
 - **Secret Management**: Secure handling of API keys and credentials
@@ -94,12 +104,14 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ## 📊 Security Monitoring
 
 ### Real-Time Protection
+
 - **Application Monitoring**: Basic security event logging
 - **Error Tracking**: Monitoring authentication and access patterns
 - **Performance Metrics**: Security impact on application performance
 - **Privacy-First Logging**: Minimal data collection focused on security
 
 ### Security Analytics
+
 - **Basic Analytics**: Understanding general usage patterns
 - **Privacy-Focused Monitoring**: No personal data collection
 - **Error Analysis**: Identifying potential security issues
@@ -108,6 +120,7 @@ VTChat implements bot detection and secure authentication focused on privacy and
 ## 🧪 Security Testing
 
 ### Automated Testing
+
 ```bash
 # Security test suite
 bun test apps/web/tests/              # Authentication and security tests
@@ -115,6 +128,7 @@ bun run build                         # Build verification
 ```
 
 ### Manual Security Testing
+
 ```bash
 # Bot detection testing on auth endpoints
 curl -X POST http://localhost:3000/api/auth/sign-up \
@@ -129,6 +143,7 @@ curl -I http://localhost:3000/api/feedback
 ## 🔧 Security Configuration
 
 ### Environment Setup
+
 ```bash
 # Required security configuration
 DATABASE_URL=your_secure_db_url        # Encrypted database connection
@@ -137,6 +152,7 @@ NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 ```
 
 ### Security Headers
+
 - **CORS Configuration**: Proper cross-origin resource sharing
 - **Content Security Policy**: XSS and injection prevention
 - **Security Headers**: HSTS, X-Frame-Options, etc.
@@ -145,12 +161,14 @@ NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 ## 📋 Security Compliance
 
 ### Data Protection
+
 - **GDPR Compliance**: User data rights and privacy protection
 - **Data Minimization**: Only collect necessary information
 - **Consent Management**: Clear user consent for data usage
 - **Right to Deletion**: User data removal capabilities
 
 ### Security Standards
+
 - **OWASP Guidelines**: Following web application security best practices
 - **Secure Development**: Security-first development methodology
 - **Regular Updates**: Continuous security dependency updates
@@ -159,12 +177,14 @@ NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 ## 🚀 Security in Production
 
 ### Deployment Security
+
 - **Secure CI/CD**: Protected deployment pipelines
 - **Environment Separation**: Isolated production environment
 - **Secret Rotation**: Regular API key and credential rotation
 - **Backup Security**: Encrypted backups with access controls
 
 ### Incident Response
+
 - **Security Monitoring**: 24/7 automated threat detection
 - **Incident Procedures**: Defined response protocols
 - **Recovery Plans**: Comprehensive disaster recovery
@@ -181,4 +201,4 @@ NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 
 **Security Contact**: For security concerns or vulnerability reports, please contact our security team through the appropriate channels outlined in our security policy.
 
-*Last Updated: June 30, 2025*
+_Last Updated: June 30, 2025_
