@@ -100,6 +100,7 @@ vtchat/
 - **Testing**: Vitest with Testing Library
 - **Code Quality**: Biome (formatting & linting) + oxlint (comprehensive linting)
 - **Type Checking**: TypeScript with strict configuration
+- **Performance Monitoring**: React Scan for development performance optimization
 
 ### **AI & Integrations**
 
