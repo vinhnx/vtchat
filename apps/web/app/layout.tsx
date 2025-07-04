@@ -19,6 +19,7 @@ import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
+import { ReactScan } from '../components/react-scan';
 
 // Force dynamic rendering to prevent SSR issues during build
 export const dynamic = 'force-dynamic';
@@ -138,6 +139,8 @@ export default function ParentLayout({
                                         <SubscriptionProvider>
                                             <PlusDefaultsProvider>
                                                 <RootProvider>
+                                                    {/* React Scan for performance monitoring in development */}
+                                                    <ReactScan />
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
                                                         <VemetricAuthProvider>

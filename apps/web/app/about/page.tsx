@@ -252,12 +252,22 @@ function AboutContent() {
 
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Open Source & Community</h3>
-                            <p className="text-muted-foreground">
+                            <p className="text-muted-foreground mb-4">
                                 VT is built with transparency and community in mind. We believe in
                                 open development practices and welcome contributions from the
                                 community. Our codebase maintains zero TypeScript errors and
                                 comprehensive test coverage for reliability.
                             </p>
+                            <div className="mt-6 flex flex-wrap items-center gap-4">
+                                <a 
+                                    href="https://vtchat.io.vn" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                >
+                                    🚀 Verified Startup
+                                </a>
+                            </div>
                         </div>
 
                         <div className="pt-8 text-center">
