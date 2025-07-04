@@ -1,13 +1,13 @@
+import { ModelEnum } from '@repo/ai/models';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/lib/database';
 import { userRateLimits } from '@/lib/database/schema';
-import { ModelEnum } from '@repo/ai/models';
-import { eq, and } from 'drizzle-orm';
 
 // Rate limit constants - PER USER ACCOUNT
 export const RATE_LIMITS = {
     GEMINI_2_5_FLASH_LITE: {
-        DAILY_LIMIT: 10,      // 10 requests per day PER USER
-        MINUTE_LIMIT: 1,      // 1 request per minute PER USER
+        DAILY_LIMIT: 10, // 10 requests per day PER USER
+        MINUTE_LIMIT: 1, // 1 request per minute PER USER
         MODEL_ID: ModelEnum.GEMINI_2_5_FLASH_LITE,
     },
 } as const;
@@ -45,8 +45,8 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
     if (modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE) {
         return {
             allowed: true,
-            remainingDaily: Infinity,
-            remainingMinute: Infinity,
+            remainingDaily: Number.POSITIVE_INFINITY,
+            remainingMinute: Number.POSITIVE_INFINITY,
             resetTime: {
                 daily: new Date(),
                 minute: new Date(),
@@ -56,14 +56,14 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
 
     const config = RATE_LIMITS.GEMINI_2_5_FLASH_LITE;
     const now = new Date();
-    
+
     // Get or create user rate limit record
     let rateLimitRecord = await db
         .select()
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         // Create new record
@@ -86,8 +86,8 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteCount = parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount);
+    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount);
 
     if (needsDailyReset) {
         dailyCount = 0;
@@ -153,14 +153,14 @@ export async function recordRequest(userId: string, modelId: ModelEnum): Promise
     }
 
     const now = new Date();
-    
+
     // Get current record
     const rateLimitRecord = await db
         .select()
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         // Create new record with count of 1
@@ -182,8 +182,8 @@ export async function recordRequest(userId: string, modelId: ModelEnum): Promise
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteCount = parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount);
+    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount);
     let lastDailyReset = rateLimitRecord.lastDailyReset;
     let lastMinuteReset = rateLimitRecord.lastMinuteReset;
 
@@ -217,7 +217,10 @@ export async function recordRequest(userId: string, modelId: ModelEnum): Promise
 /**
  * Get current rate limit status for a user and model
  */
-export async function getRateLimitStatus(userId: string, modelId: ModelEnum): Promise<RateLimitStatus | null> {
+export async function getRateLimitStatus(
+    userId: string,
+    modelId: ModelEnum
+): Promise<RateLimitStatus | null> {
     // Only provide status for free models
     if (modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE) {
         return null;
@@ -225,13 +228,13 @@ export async function getRateLimitStatus(userId: string, modelId: ModelEnum): Pr
 
     const config = RATE_LIMITS.GEMINI_2_5_FLASH_LITE;
     const now = new Date();
-    
+
     const rateLimitRecord = await db
         .select()
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         return {
@@ -252,8 +255,8 @@ export async function getRateLimitStatus(userId: string, modelId: ModelEnum): Pr
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyUsed = parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteUsed = parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyUsed = Number.parseInt(rateLimitRecord.dailyRequestCount);
+    let minuteUsed = Number.parseInt(rateLimitRecord.minuteRequestCount);
 
     if (needsDailyReset) {
         dailyUsed = 0;
@@ -282,9 +285,11 @@ export async function getRateLimitStatus(userId: string, modelId: ModelEnum): Pr
  */
 function isNewDay(lastReset: Date | null, now: Date): boolean {
     if (!lastReset) return true;
-    return now.getUTCDate() !== lastReset.getUTCDate() || 
-           now.getUTCMonth() !== lastReset.getUTCMonth() || 
-           now.getUTCFullYear() !== lastReset.getUTCFullYear();
+    return (
+        now.getUTCDate() !== lastReset.getUTCDate() ||
+        now.getUTCMonth() !== lastReset.getUTCMonth() ||
+        now.getUTCFullYear() !== lastReset.getUTCFullYear()
+    );
 }
 
 /**
@@ -292,7 +297,7 @@ function isNewDay(lastReset: Date | null, now: Date): boolean {
  */
 function isNewMinute(lastReset: Date | null, now: Date): boolean {
     if (!lastReset) return true;
-    return Math.floor(now.getTime() / 60000) > Math.floor(lastReset.getTime() / 60000);
+    return Math.floor(now.getTime() / 60_000) > Math.floor(lastReset.getTime() / 60_000);
 }
 
 /**

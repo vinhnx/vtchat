@@ -1,17 +1,17 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { ThinkingLog } from '../components/thinking-log';
-import { ThreadItem } from '@repo/shared/types';
 import { ChatMode } from '@repo/shared/config';
+import type { ThreadItem } from '@repo/shared/types';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { ThinkingLog } from '../components/thinking-log';
 
 // Mock the stores and hooks
 vi.mock('@repo/common/store', () => ({
-    useChatStore: vi.fn(selector => {
+    useChatStore: vi.fn((selector) => {
         return selector({
             thinkingMode: {
                 enabled: true,
                 includeThoughts: true,
-                budget: 10000,
+                budget: 10_000,
             },
         });
     }),
@@ -138,12 +138,12 @@ describe('ThinkingLog', () => {
 
     it('should not render when thinking mode is disabled', () => {
         // Mock disabled thinking mode
-        vi.mocked(require('@repo/common/store').useChatStore).mockImplementation(selector => {
+        vi.mocked(require('@repo/common/store').useChatStore).mockImplementation((selector) => {
             return selector({
                 thinkingMode: {
                     enabled: false,
                     includeThoughts: true,
-                    budget: 10000,
+                    budget: 10_000,
                 },
             });
         });

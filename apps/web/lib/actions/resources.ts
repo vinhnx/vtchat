@@ -1,14 +1,14 @@
 'use server';
 
-import { db } from '../database';
-import { resources, embeddings } from '../database/schema';
+import type { ApiKeys } from '@repo/common/store';
+import type { EmbeddingModel } from '@repo/shared/config/embedding-models';
+import { log } from '@repo/shared/logger';
+import { z } from 'zod';
+import { secureContentForEmbedding } from '@/lib/utils/content-security';
 import { generateEmbeddings } from '../ai/embedding';
 import { auth } from '../auth-server';
-import { z } from 'zod';
-import { type EmbeddingModel } from '@repo/shared/config/embedding-models';
-import { type ApiKeys } from '@repo/common/store';
-import { secureContentForEmbedding } from '@/lib/utils/content-security';
-import { log } from '@repo/shared/logger';
+import { db } from '../database';
+import { embeddings, resources } from '../database/schema';
 
 // Schema for validating resource input
 const createResourceSchema = z.object({
@@ -17,11 +17,15 @@ const createResourceSchema = z.object({
 
 export type NewResourceParams = z.infer<typeof createResourceSchema>;
 
-export const createResource = async (input: NewResourceParams, apiKeys: ApiKeys, embeddingModel?: EmbeddingModel) => {
+export const createResource = async (
+    input: NewResourceParams,
+    apiKeys: ApiKeys,
+    embeddingModel?: EmbeddingModel
+) => {
     try {
         // Get the current user
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then(m => m.headers()),
+            headers: await import('next/headers').then((m) => m.headers()),
         });
 
         if (!session?.user?.id) {
@@ -33,7 +37,7 @@ export const createResource = async (input: NewResourceParams, apiKeys: ApiKeys,
         // Create the resource
         const [resource] = await db
             .insert(resources)
-            .values({ 
+            .values({
                 content,
                 userId: session.user.id,
             })
@@ -41,14 +45,14 @@ export const createResource = async (input: NewResourceParams, apiKeys: ApiKeys,
 
         // Generate embeddings for the content
         const embeddingResults = await generateEmbeddings(content, apiKeys, embeddingModel);
-        
+
         // Save embeddings to database with secure content
         await db.insert(embeddings).values(
-            embeddingResults.map(embedding => ({
+            embeddingResults.map((embedding) => ({
                 resourceId: resource.id,
                 content: secureContentForEmbedding(embedding.content),
                 embedding: embedding.embedding, // Array should be properly handled by Drizzle
-            })),
+            }))
         );
 
         return 'Resource successfully created and embedded.';

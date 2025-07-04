@@ -1,12 +1,18 @@
-import { StepRenderer, StepStatus, ToolCallStep, ToolResultStep } from '@repo/common/components';
+import {
+    MotionSkeleton,
+    StepRenderer,
+    StepStatus,
+    ToolCallStep,
+    ToolResultStep,
+} from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
-import { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
+import type { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
 import { Badge, Card } from '@repo/ui';
+import { motion } from 'framer-motion';
 import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
 import { memo, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { MotionSkeleton } from '@repo/common/components';
+
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
         return 'Research';
@@ -22,12 +28,12 @@ const getTitle = (threadItem: ThreadItem) => {
 
 const getIcon = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
-        return <Atom size={16} strokeWidth={2} className="text-muted-foreground" />;
+        return <Atom className="text-muted-foreground" size={16} strokeWidth={2} />;
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return <Star size={16} strokeWidth={2} className="text-muted-foreground" />;
+        return <Star className="text-muted-foreground" size={16} strokeWidth={2} />;
     }
-    return <ListChecks size={16} strokeWidth={2} className="text-muted-foreground" />;
+    return <ListChecks className="text-muted-foreground" size={16} strokeWidth={2} />;
 };
 
 const getNote = (threadItem: ThreadItem) => {
@@ -67,13 +73,13 @@ const ToolStep = memo(({ toolCall, toolResult }: ToolStepProps) => (
 ));
 
 export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: ThreadItem }) => {
-    const openSideDrawer = useAppStore(state => state.openSideDrawer);
-    const dismissSideDrawer = useAppStore(state => state.dismissSideDrawer);
-    const updateSideDrawer = useAppStore(state => state.updateSideDrawer);
+    const openSideDrawer = useAppStore((state) => state.openSideDrawer);
+    const dismissSideDrawer = useAppStore((state) => state.dismissSideDrawer);
+    const updateSideDrawer = useAppStore((state) => state.updateSideDrawer);
 
     const isStopped = threadItem.status === 'ABORTED' || threadItem.status === 'ERROR';
 
-    const isLoading = steps.some(step => step.status === 'PENDING') && !isStopped;
+    const isLoading = steps.some((step) => step.status === 'PENDING') && !isStopped;
     const hasAnswer =
         !!threadItem?.answer?.text &&
         (threadItem.status === 'COMPLETED' ||
@@ -176,14 +182,14 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
 
     return (
         <>
-            <Card className="w-full border-muted/50 bg-muted/20 transition-all duration-200 hover:bg-muted/30 cursor-pointer">
+            <Card className="border-muted/50 bg-muted/20 hover:bg-muted/30 w-full cursor-pointer transition-all duration-200">
                 <motion.div
                     className="flex w-full flex-row items-center gap-3 p-3"
                     onClick={handleClick}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                 >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
                         {isLoading ? (
                             <MotionSkeleton className="h-4 w-4 rounded" />
                         ) : (
@@ -191,25 +197,24 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                         )}
                     </div>
                     <div className="flex flex-col gap-1">
-                        <div className="text-sm font-medium text-foreground">
+                        <div className="text-foreground text-sm font-medium">
                             {getTitle(threadItem)}
                         </div>
                         {!hasAnswer && (
-                            <div className="text-xs text-muted-foreground">{getNote(threadItem)}</div>
+                            <div className="text-muted-foreground text-xs">
+                                {getNote(threadItem)}
+                            </div>
                         )}
                     </div>
                     <div className="flex-1" />
-                    <Badge 
-                        variant="secondary" 
-                        className="bg-muted/30 text-muted-foreground border-muted-foreground/20 text-xs"
+                    <Badge
+                        className="border-muted-foreground/20 bg-muted/30 text-muted-foreground text-xs"
+                        variant="secondary"
                     >
                         {stepCounts} {stepCounts === 1 ? 'Step' : 'Steps'}
                     </Badge>
-                    <motion.div
-                        className="rounded-md p-1 hover:bg-muted/60"
-                        whileHover={{ x: 2 }}
-                    >
-                        <ChevronRight size={14} strokeWidth={2} className="text-muted-foreground" />
+                    <motion.div className="hover:bg-muted/60 rounded-md p-1" whileHover={{ x: 2 }}>
+                        <ChevronRight className="text-muted-foreground" size={14} strokeWidth={2} />
                     </motion.div>
                 </motion.div>
             </Card>

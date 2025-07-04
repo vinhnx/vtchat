@@ -1,6 +1,7 @@
 'use client';
 
 import { useApiKeysStore } from '@repo/common/store';
+import { log } from '@repo/shared/logger';
 import {
     Button,
     Card,
@@ -10,12 +11,11 @@ import {
     DialogHeader,
     DialogTitle,
     Input,
-    Label
+    Label,
 } from '@repo/ui';
+import { Brain, Key, Sparkles, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Brain, Key, Sparkles, Zap } from 'lucide-react';
-import { log } from '@repo/shared/logger';
 
 interface RagOnboardingProps {
     isOpen: boolean;
@@ -32,7 +32,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
     const { setKey } = useApiKeysStore();
 
     const handleSubmitKeys = async () => {
-        if (!geminiKey && !openaiKey) {
+        if (!(geminiKey || openaiKey)) {
             toast.error('Please enter at least one API key');
             return;
         }
@@ -46,7 +46,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                 setKey('OPENAI_API_KEY', openaiKey);
             }
 
-            toast.success('All Set! Your Knowledge Assistant is ready. Start building your personal knowledge base!');
+            toast.success(
+                'All Set! Your Knowledge Assistant is ready. Start building your personal knowledge base!'
+            );
             onComplete();
         } catch (error) {
             log.error({ error }, 'Error saving API keys');
@@ -62,25 +64,32 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onSkip(); }}>
+        <Dialog
+            onOpenChange={(open) => {
+                if (!open) onSkip();
+            }}
+            open={isOpen}
+        >
             <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                        <Brain className="h-6 w-6 text-muted-foreground" />
+                        <Brain className="text-muted-foreground h-6 w-6" />
                         Welcome to Knowledge Assistant
                     </DialogTitle>
                 </DialogHeader>
 
                 {step === 'welcome' && (
                     <div className="space-y-6">
-                        <div className="text-center space-y-4">
-                            <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                                <Sparkles className="h-8 w-8 text-muted-foreground" />
+                        <div className="space-y-4 text-center">
+                            <div className="bg-muted mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+                                <Sparkles className="text-muted-foreground h-8 w-8" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-semibold mb-2">Setup Your API Keys</h3>
+                                <h3 className="mb-2 text-xl font-semibold">Setup Your API Keys</h3>
                                 <p className="text-muted-foreground">
-                                    To use the Knowledge Assistant, you need to provide your own API keys. This ensures your data stays private and you have full control.
+                                    To use the Knowledge Assistant, you need to provide your own API
+                                    keys. This ensures your data stays private and you have full
+                                    control.
                                 </p>
                             </div>
                         </div>
@@ -89,11 +98,15 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                             <Card className="border-border bg-muted/30">
                                 <CardContent className="pt-4">
                                     <div className="flex items-start gap-3">
-                                        <Key className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                        <Key className="text-muted-foreground mt-0.5 h-5 w-5" />
                                         <div>
-                                            <h4 className="font-medium">Get Started with Your API Keys</h4>
-                                            <p className="text-sm text-muted-foreground">
-                                                Connect your Gemini or OpenAI API keys to start using the Knowledge Assistant with your personal data.
+                                            <h4 className="font-medium">
+                                                Get Started with Your API Keys
+                                            </h4>
+                                            <p className="text-muted-foreground text-sm">
+                                                Connect your Gemini or OpenAI API keys to start
+                                                using the Knowledge Assistant with your personal
+                                                data.
                                             </p>
                                         </div>
                                     </div>
@@ -103,11 +116,12 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                             <Card className="border-border bg-muted/30">
                                 <CardContent className="pt-4">
                                     <div className="flex items-start gap-3">
-                                        <Zap className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                        <Zap className="text-muted-foreground mt-0.5 h-5 w-5" />
                                         <div>
                                             <h4 className="font-medium">Private & Secure</h4>
-                                            <p className="text-sm text-muted-foreground">
-                                                Your API keys and data stay completely private - we never store or access your keys.
+                                            <p className="text-muted-foreground text-sm">
+                                                Your API keys and data stay completely private - we
+                                                never store or access your keys.
                                             </p>
                                         </div>
                                     </div>
@@ -115,13 +129,11 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                             </Card>
                         </div>
 
-                        <div className="flex gap-3 justify-center">
-                            <Button variant="outline" onClick={handleSkipForNow}>
+                        <div className="flex justify-center gap-3">
+                            <Button onClick={handleSkipForNow} variant="outline">
                                 Skip for Now
                             </Button>
-                            <Button onClick={() => setStep('api-keys')}>
-                                Add API Keys
-                            </Button>
+                            <Button onClick={() => setStep('api-keys')}>Add API Keys</Button>
                         </div>
                     </div>
                 )}
@@ -129,9 +141,10 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                 {step === 'api-keys' && (
                     <div className="space-y-6">
                         <div className="text-center">
-                            <h3 className="text-xl font-semibold mb-2">Connect Your API Keys</h3>
+                            <h3 className="mb-2 text-xl font-semibold">Connect Your API Keys</h3>
                             <p className="text-muted-foreground">
-                                Add at least one API key to unlock unlimited conversations with your knowledge base.
+                                Add at least one API key to unlock unlimited conversations with your
+                                knowledge base.
                             </p>
                         </div>
 
@@ -140,18 +153,18 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                                 <Label htmlFor="gemini-key">Gemini API Key (Recommended)</Label>
                                 <Input
                                     id="gemini-key"
-                                    type="password"
-                                    placeholder="Enter your Gemini API key..."
-                                    value={geminiKey}
                                     onChange={(e) => setGeminiKey(e.target.value)}
+                                    placeholder="Enter your Gemini API key..."
+                                    type="password"
+                                    value={geminiKey}
                                 />
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-muted-foreground text-xs">
                                     Get your free API key from{' '}
                                     <a
-                                        href="https://aistudio.google.com/app/apikey"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
                                         className="text-blue-600 hover:underline"
+                                        href="https://aistudio.google.com/app/apikey"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
                                     >
                                         Google AI Studio
                                     </a>
@@ -162,18 +175,18 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                                 <Label htmlFor="openai-key">OpenAI API Key (Optional)</Label>
                                 <Input
                                     id="openai-key"
-                                    type="password"
-                                    placeholder="Enter your OpenAI API key..."
-                                    value={openaiKey}
                                     onChange={(e) => setOpenaiKey(e.target.value)}
+                                    placeholder="Enter your OpenAI API key..."
+                                    type="password"
+                                    value={openaiKey}
                                 />
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-muted-foreground text-xs">
                                     Get your API key from{' '}
                                     <a
-                                        href="https://platform.openai.com/api-keys"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
                                         className="text-blue-600 hover:underline"
+                                        href="https://platform.openai.com/api-keys"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
                                     >
                                         OpenAI Platform
                                     </a>
@@ -181,11 +194,11 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                             </div>
                         </div>
 
-                        <div className="flex gap-3 justify-center">
-                            <Button variant="outline" onClick={() => setStep('welcome')}>
+                        <div className="flex justify-center gap-3">
+                            <Button onClick={() => setStep('welcome')} variant="outline">
                                 Back
                             </Button>
-                            <Button onClick={handleSubmitKeys} disabled={isSubmitting}>
+                            <Button disabled={isSubmitting} onClick={handleSubmitKeys}>
                                 {isSubmitting ? 'Saving...' : 'Save & Continue'}
                             </Button>
                         </div>

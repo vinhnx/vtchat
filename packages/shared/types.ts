@@ -1,4 +1,4 @@
-import { ChatMode } from './config';
+import type { ChatMode } from './config';
 
 export type Project = {
     id: string;

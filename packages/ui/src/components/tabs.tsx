@@ -12,11 +12,11 @@ const TabsList = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.List
-        ref={ref}
         className={cn(
-            'bg-secondary text-secondary-foreground border-border inline-flex h-10 items-center justify-start border-b',
+            'border-border bg-secondary text-secondary-foreground inline-flex h-10 items-center justify-start border-b',
             className
         )}
+        ref={ref}
         {...props}
     />
 ));
@@ -27,11 +27,11 @@ const TabsTrigger = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.Trigger
-        ref={ref}
         className={cn(
-            'ring-offset-background focus-visible:ring-ring data-[state=active]:text-brand data-[state=active]:border-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2',
+            'ring-offset-background focus-visible:ring-ring data-[state=active]:border-foreground data-[state=active]:text-brand inline-flex items-center justify-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2',
             className
         )}
+        ref={ref}
         {...props}
     />
 ));
@@ -42,11 +42,11 @@ const TabsContent = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.Content
-        ref={ref}
         className={cn(
             'ring-offset-background focus-visible:ring-ring mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
             className
         )}
+        ref={ref}
         {...props}
     />
 ));

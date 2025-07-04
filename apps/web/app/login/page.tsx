@@ -1,14 +1,13 @@
-import Image from 'next/image';
-
-import { LoginForm } from '@/components/login-form';
 import { ShineText } from '@repo/common/components';
+import Image from 'next/image';
+import { LoginForm } from '@/components/login-form';
 
 export default function LoginPage() {
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">
                 <div className="flex justify-center gap-2 md:justify-start">
-                    <a href="/" className="flex items-center gap-2 font-medium">
+                    <a className="flex items-center gap-2 font-medium" href="/">
                         <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
                             VT
                         </ShineText>
@@ -22,13 +21,13 @@ export default function LoginPage() {
             </div>
             <div className="relative hidden lg:block">
                 <Image
-                    src="/bg/bg_vt.avif"
                     alt="VT Background"
+                    className="object-cover"
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
                     quality={100}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    src="/bg/bg_vt.avif"
                 />
             </div>
         </div>

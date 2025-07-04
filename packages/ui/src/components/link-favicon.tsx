@@ -1,6 +1,6 @@
 'use client';
 import { Globe } from 'lucide-react';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { cn } from '../lib/utils';
 
 export type LinkFaviconType = {
@@ -11,9 +11,9 @@ export type LinkFaviconType = {
 
 const FallbackIcon = ({ size, className }: { size: 'sm' | 'md' | 'lg'; className?: string }) => (
     <Globe
+        className={cn('shrink-0 text-gray-500', className)}
         size={size === 'sm' ? 12 : size === 'md' ? 16 : 20}
         strokeWidth={2}
-        className={cn('shrink-0 text-gray-500', className)}
     />
 );
 
@@ -41,7 +41,7 @@ export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = 'sm' 
     const domain = extractDomain(link);
 
     if (error || !domain) {
-        return <FallbackIcon size={size} className={className} />;
+        return <FallbackIcon className={className} size={size} />;
     }
 
     return (
@@ -55,10 +55,10 @@ export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = 'sm' 
         >
             <div className="border-foreground/10 absolute inset-0 z-[2] rounded-full border" />
             <img
-                src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
                 alt="favicon"
-                onError={() => setError(true)}
                 className={cn('absolute inset-0 h-full w-full rounded-sm object-cover', className)}
+                onError={() => setError(true)}
+                src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
             />
         </div>
     );

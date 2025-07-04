@@ -90,17 +90,17 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     <div className="shrink-0">
                                         {isVtPlus ? (
                                             <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={handleManageSubscription}
                                                 disabled={isPortalLoading}
+                                                onClick={handleManageSubscription}
+                                                size="sm"
+                                                variant="outline"
                                             >
                                                 {isPortalLoading
                                                     ? BUTTON_TEXT.LOADING
                                                     : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
                                             </Button>
                                         ) : (
-                                            <Button size="sm" onClick={handleUpgradeToPlus}>
+                                            <Button onClick={handleUpgradeToPlus} size="sm">
                                                 Upgrade to VT+
                                             </Button>
                                         )}
@@ -127,10 +127,10 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                         <div className="grid gap-3">
                             {isVtPlus ? (
                                 // VT+ Features
-                                vtPlusFeatures.map(feature => (
+                                vtPlusFeatures.map((feature) => (
                                     <div
-                                        key={feature.id}
                                         className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
+                                        key={feature.id}
                                     >
                                         <div className="min-w-0 flex-1">
                                             <div className="text-foreground text-sm font-medium">
@@ -179,9 +179,14 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                 </div>
                                 <div className="space-y-2">
                                     <div className="text-foreground text-sm font-medium">
-                                        {VT_PLUS_PRICE_WITH_INTERVAL} • Free trial included • Cancel anytime
+                                        {VT_PLUS_PRICE_WITH_INTERVAL} • Free trial included • Cancel
+                                        anytime
                                     </div>
-                                    <Button size="sm" onClick={handleUpgradeToPlus} className="w-full sm:w-auto">
+                                    <Button
+                                        className="w-full sm:w-auto"
+                                        onClick={handleUpgradeToPlus}
+                                        size="sm"
+                                    >
                                         Upgrade Now
                                     </Button>
                                 </div>
@@ -206,10 +211,10 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     </p>
                                 </div>
                                 <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleManageSubscription}
                                     disabled={isPortalLoading}
+                                    onClick={handleManageSubscription}
+                                    size="sm"
+                                    variant="outline"
                                 >
                                     {isPortalLoading
                                         ? BUTTON_TEXT.LOADING

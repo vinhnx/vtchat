@@ -1,24 +1,24 @@
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { cn } from '../lib/utils';
 
 // Typography variants based on Shadcn's typography system
 const typographyVariants = cva('', {
     variants: {
         variant: {
-            h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight text-balance',
-            h2: 'mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0',
-            h3: 'mt-8 scroll-m-20 text-2xl font-semibold tracking-tight',
-            h4: 'scroll-m-20 text-xl font-semibold tracking-tight',
+            h1: 'scroll-m-20 text-balance font-extrabold text-4xl tracking-tight',
+            h2: 'mt-10 scroll-m-20 border-b pb-2 font-semibold text-3xl tracking-tight transition-colors first:mt-0',
+            h3: 'mt-8 scroll-m-20 font-semibold text-2xl tracking-tight',
+            h4: 'scroll-m-20 font-semibold text-xl tracking-tight',
             p: 'leading-7 [&:not(:first-child)]:mt-6',
             blockquote: 'mt-6 border-l-2 pl-6 italic',
             list: 'my-6 ml-6 list-disc [&>li]:mt-2',
             inlineCode:
-                'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
-            lead: 'text-xl text-muted-foreground leading-7 [&:not(:first-child)]:mt-6',
-            large: 'text-lg font-semibold',
-            small: 'text-sm font-medium leading-none',
-            muted: 'text-sm text-muted-foreground',
+                'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono font-semibold text-sm',
+            lead: 'text-muted-foreground text-xl leading-7 [&:not(:first-child)]:mt-6',
+            large: 'font-semibold text-lg',
+            small: 'font-medium text-sm leading-none',
+            muted: 'text-muted-foreground text-sm',
             table: 'my-6 w-full overflow-y-auto',
         },
         affects: {
@@ -76,35 +76,35 @@ Typography.displayName = 'Typography';
 // Convenience components for common typography elements
 export const TypographyH1 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="h1" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="h1" {...props} />
     )
 );
 TypographyH1.displayName = 'TypographyH1';
 
 export const TypographyH2 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="h2" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="h2" {...props} />
     )
 );
 TypographyH2.displayName = 'TypographyH2';
 
 export const TypographyH3 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="h3" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="h3" {...props} />
     )
 );
 TypographyH3.displayName = 'TypographyH3';
 
 export const TypographyH4 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="h4" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="h4" {...props} />
     )
 );
 TypographyH4.displayName = 'TypographyH4';
 
 export const TypographyP = React.forwardRef<HTMLParagraphElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="p" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="p" {...props} />
     )
 );
 TypographyP.displayName = 'TypographyP';
@@ -113,20 +113,20 @@ export const TypographyBlockquote = React.forwardRef<
     HTMLQuoteElement,
     Omit<TypographyProps, 'variant'>
 >(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="blockquote" className={className} {...props} />
+    <Typography className={className} ref={ref} variant="blockquote" {...props} />
 ));
 TypographyBlockquote.displayName = 'TypographyBlockquote';
 
 export const TypographyList = React.forwardRef<HTMLUListElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="list" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="list" {...props} />
     )
 );
 TypographyList.displayName = 'TypographyList';
 
 export const TypographyInlineCode = React.forwardRef<HTMLElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="inlineCode" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="inlineCode" {...props} />
     )
 );
 TypographyInlineCode.displayName = 'TypographyInlineCode';
@@ -135,20 +135,20 @@ export const TypographyLead = React.forwardRef<
     HTMLParagraphElement,
     Omit<TypographyProps, 'variant'>
 >(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="lead" className={className} {...props} />
+    <Typography className={className} ref={ref} variant="lead" {...props} />
 ));
 TypographyLead.displayName = 'TypographyLead';
 
 export const TypographyLarge = React.forwardRef<HTMLDivElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="large" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="large" {...props} />
     )
 );
 TypographyLarge.displayName = 'TypographyLarge';
 
 export const TypographySmall = React.forwardRef<HTMLElement, Omit<TypographyProps, 'variant'>>(
     ({ className, ...props }, ref) => (
-        <Typography ref={ref} variant="small" className={className} {...props} />
+        <Typography className={className} ref={ref} variant="small" {...props} />
     )
 );
 TypographySmall.displayName = 'TypographySmall';
@@ -157,7 +157,7 @@ export const TypographyMuted = React.forwardRef<
     HTMLParagraphElement,
     Omit<TypographyProps, 'variant'>
 >(({ className, ...props }, ref) => (
-    <Typography ref={ref} variant="muted" className={className} {...props} />
+    <Typography className={className} ref={ref} variant="muted" {...props} />
 ));
 TypographyMuted.displayName = 'TypographyMuted';
 
@@ -180,11 +180,11 @@ export const TypographyTableHeader = React.forwardRef<
     React.ThHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
     <th
-        ref={ref}
         className={cn(
             'border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right',
             className
         )}
+        ref={ref}
         {...props}
     />
 ));
@@ -196,11 +196,11 @@ export const TypographyTableCell = React.forwardRef<
     React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
     <td
-        ref={ref}
         className={cn(
             'border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right',
             className
         )}
+        ref={ref}
         {...props}
     />
 ));
@@ -211,7 +211,7 @@ export const TypographyTableRow = React.forwardRef<
     HTMLTableRowElement,
     React.HTMLAttributes<HTMLTableRowElement>
 >(({ className, ...props }, ref) => (
-    <tr ref={ref} className={cn('even:bg-muted m-0 border-t p-0', className)} {...props} />
+    <tr className={cn('even:bg-muted m-0 border-t p-0', className)} ref={ref} {...props} />
 ));
 TypographyTableRow.displayName = 'TypographyTableRow';
 

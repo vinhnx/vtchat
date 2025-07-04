@@ -1,8 +1,8 @@
 import { createTask } from '@repo/orchestrator';
+import { log } from '@repo/shared/logger';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { log } from '@repo/shared/logger';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     generateObject,
     getHumanizedDate,
@@ -116,7 +116,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
             updateStatus('COMPLETED');
         } else {
-            context?.update('question', current => object?.refinedQuery || question);
+            context?.update('question', (current) => object?.refinedQuery || question);
         }
 
         return {

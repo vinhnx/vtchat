@@ -1,11 +1,11 @@
 'use client';
 
-import { Model, models } from '@repo/ai/models';
+import { type Model, models } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
-import { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
-import Dexie, { Table } from 'dexie';
+import type { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
+import Dexie, { type Table } from 'dexie';
 import { nanoid } from 'nanoid';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -138,7 +138,7 @@ const loadInitialData = async () => {
 
     // Load and validate the persisted model
     const persistedModelId = config.model;
-    const persistedModel = persistedModelId ? models.find(m => m.id === persistedModelId) : null;
+    const persistedModel = persistedModelId ? models.find((m) => m.id === persistedModelId) : null;
     const model = persistedModel || models[0];
 
     const initialThreads = threads.length ? threads : [];
@@ -173,7 +173,12 @@ type State = {
     chatMode: ChatMode;
     context: string;
     imageAttachment: { base64?: string; file?: File };
-    documentAttachment: { base64?: string; file?: File; mimeType?: string; fileName?: string };
+    documentAttachment: {
+        base64?: string;
+        file?: File;
+        mimeType?: string;
+        fileName?: string;
+    };
     structuredData: {
         data?: any;
         type?: string;
@@ -297,7 +302,9 @@ const throttle = <T extends (...args: any[]) => any>(
     let lastArgs: Parameters<T> | null = null;
 
     return (...args: Parameters<T>) => {
-        if (!inThrottle) {
+        if (inThrottle) {
+            lastArgs = args;
+        } else {
             fn(...args);
             inThrottle = true;
             setTimeout(() => {
@@ -307,8 +314,6 @@ const throttle = <T extends (...args: any[]) => any>(
                     lastArgs = null;
                 }
             }, limit);
-        } else {
-            lastArgs = args;
         }
     };
 };
@@ -339,12 +344,12 @@ const processBatchUpdate = async () => {
     batchUpdateQueue.items.clear();
 
     try {
-        await withDatabaseAsync(async database => {
+        await withDatabaseAsync(async (database) => {
             await database.threadItems.bulkPut(itemsToUpdate);
             return true;
         });
         // Update last update times for all processed items
-        itemsToUpdate.forEach(item => {
+        itemsToUpdate.forEach((item) => {
             lastItemUpdateTime[item.id] = Date.now();
         });
     } catch (error) {
@@ -352,7 +357,7 @@ const processBatchUpdate = async () => {
         // If bulk update fails, try individual updates to salvage what we can
         for (const item of itemsToUpdate) {
             try {
-                await withDatabaseAsync(async database => {
+                await withDatabaseAsync(async (database) => {
                     await database.threadItems.put(item);
                     return true;
                 });
@@ -399,10 +404,10 @@ const initializeWorker = () => {
         });
 
         // Set up message handler with enhanced error handling
-        dbWorker.port.onmessage = async event => {
+        dbWorker.port.onmessage = async (event) => {
             const message = event.data;
 
-            if (!message || !message.type) return;
+            if (!(message && message.type)) return;
 
             try {
                 // Handle different message types
@@ -438,7 +443,7 @@ const initializeWorker = () => {
                     case 'thread-update':
                         // Refresh threads list with better error handling
                         try {
-                            const threads = await withDatabaseAsync(async database => {
+                            const threads = await withDatabaseAsync(async (database) => {
                                 return await database.threads.toArray();
                             });
                             if (threads) {
@@ -473,10 +478,10 @@ const initializeWorker = () => {
                     case 'thread-delete':
                         // Handle thread deletion with error handling
                         try {
-                            useChatStore.setState(state => {
+                            useChatStore.setState((state) => {
                                 const newState = { ...state };
                                 newState.threads = state.threads.filter(
-                                    t => t.id !== message.data.threadId
+                                    (t) => t.id !== message.data.threadId
                                 );
 
                                 // Update current thread if the deleted one was active
@@ -501,9 +506,9 @@ const initializeWorker = () => {
                             if (
                                 message.data?.threadId === useChatStore.getState().currentThreadId
                             ) {
-                                useChatStore.setState(state => ({
+                                useChatStore.setState((state) => ({
                                     threadItems: state.threadItems.filter(
-                                        item => item.id !== message.data.id
+                                        (item) => item.id !== message.data.id
                                     ),
                                 }));
                             }
@@ -534,7 +539,7 @@ const initializeWorker = () => {
         dbWorker.port.start();
 
         // Handle worker errors with proper fallback
-        dbWorker.onerror = err => {
+        dbWorker.onerror = (err) => {
             log.warn(
                 { context: 'ChatStore', error: err },
                 'SharedWorker connection failed, falling back to localStorage sync'
@@ -566,7 +571,7 @@ const initializeTabSync = () => {
     const SYNC_DATA_KEY = 'chat-store-sync-data';
 
     // Listen for storage events from other tabs
-    window.addEventListener('storage', event => {
+    window.addEventListener('storage', (event) => {
         if (event.key !== SYNC_EVENT_KEY) return;
 
         try {
@@ -575,12 +580,12 @@ const initializeTabSync = () => {
                 data: { threadId: null, id: null },
             }) as any;
 
-            if (!syncData || !syncData.type) return;
+            if (!(syncData && syncData.type)) return;
 
             switch (syncData.type) {
                 case 'thread-update':
                     // Refresh threads list
-                    withDatabaseAsync(async database => {
+                    withDatabaseAsync(async (database) => {
                         const threads = await database.threads.toArray();
                         useChatStore.setState({
                             threads: threads.sort(
@@ -591,20 +596,21 @@ const initializeTabSync = () => {
                     });
                     break;
 
-                case 'thread-item-update':
+                case 'thread-item-update': {
                     // Refresh thread items if we're on the same thread
                     const currentThreadId = useChatStore.getState().currentThreadId;
                     if (syncData.data?.threadId === currentThreadId) {
                         useChatStore.getState().loadThreadItems(syncData.data.threadId);
                     }
                     break;
+                }
 
                 case 'thread-delete':
                     // Handle thread deletion
-                    useChatStore.setState(state => {
+                    useChatStore.setState((state) => {
                         const newState = { ...state };
                         newState.threads = state.threads.filter(
-                            t => t.id !== syncData.data.threadId
+                            (t) => t.id !== syncData.data.threadId
                         );
 
                         // Update current thread if the deleted one was active
@@ -620,9 +626,9 @@ const initializeTabSync = () => {
                 case 'thread-item-delete':
                     // Handle thread item deletion
                     if (syncData.data?.threadId === useChatStore.getState().currentThreadId) {
-                        useChatStore.setState(state => ({
+                        useChatStore.setState((state) => ({
                             threadItems: state.threadItems.filter(
-                                item => item.id !== syncData.data.id
+                                (item) => item.id !== syncData.data.id
                             ),
                         }));
                     }
@@ -659,7 +665,7 @@ const initializeTabSync = () => {
 
 // Function to notify the worker about a change with enhanced database operation support
 const notifyWorker = (type: string, data: any, dbOperation?: any) => {
-    if (!dbWorker || !dbWorker.port) {
+    if (!(dbWorker && dbWorker.port)) {
         // Use localStorage fallback if worker isn't available
         if (typeof window !== 'undefined' && window.notifyTabSync) {
             window.notifyTabSync(type, data);
@@ -693,7 +699,7 @@ const performWorkerDatabaseOperation = async (
     data: any,
     fallbackFn: () => Promise<any>
 ) => {
-    if (!dbWorker || !dbWorker.port) {
+    if (!(dbWorker && dbWorker.port)) {
         // Use direct database operation if worker isn't available
         return await fallbackFn();
     }
@@ -834,19 +840,19 @@ export const useChatStore = create(
                 JSON.stringify({ ...existingConfig, customInstructions })
             );
 
-            set(state => {
+            set((state) => {
                 state.customInstructions = customInstructions;
             });
         },
 
         setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => {
-            set(state => {
+            set((state) => {
                 state.imageAttachment = imageAttachment;
             });
         },
 
         clearImageAttachment: () => {
-            set(state => {
+            set((state) => {
                 state.imageAttachment = { base64: undefined, file: undefined };
             });
         },
@@ -857,13 +863,13 @@ export const useChatStore = create(
             mimeType?: string;
             fileName?: string;
         }) => {
-            set(state => {
+            set((state) => {
                 state.documentAttachment = documentAttachment;
             });
         },
 
         clearDocumentAttachment: () => {
-            set(state => {
+            set((state) => {
                 state.documentAttachment = {
                     base64: undefined,
                     file: undefined,
@@ -879,19 +885,19 @@ export const useChatStore = create(
             fileName?: string;
             extractedAt?: string;
         }) => {
-            set(state => {
+            set((state) => {
                 state.structuredData = structuredData;
             });
         },
 
         clearStructuredData: () => {
-            set(state => {
+            set((state) => {
                 state.structuredData = null;
             });
         },
 
         setActiveThreadItemView: (threadItemId: string) => {
-            set(state => {
+            set((state) => {
                 state.activeThreadItemView = threadItemId;
             });
         },
@@ -907,9 +913,12 @@ export const useChatStore = create(
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(
                 CONFIG_KEY,
-                JSON.stringify({ ...existingConfig, showSuggestions: disabledSuggestions })
+                JSON.stringify({
+                    ...existingConfig,
+                    showSuggestions: disabledSuggestions,
+                })
             );
-            set(state => {
+            set((state) => {
                 state.showSuggestions = disabledSuggestions;
             });
         },
@@ -921,7 +930,7 @@ export const useChatStore = create(
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
-            set(state => {
+            set((state) => {
                 state.useWebSearch = useWebSearch;
             });
         },
@@ -936,7 +945,7 @@ export const useChatStore = create(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, useMathCalculator })
             );
-            set(state => {
+            set((state) => {
                 state.useMathCalculator = useMathCalculator;
             });
         },
@@ -948,13 +957,13 @@ export const useChatStore = create(
             // Also maintain backwards compatibility with localStorage
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
-            set(state => {
+            set((state) => {
                 state.useCharts = useCharts;
             });
         },
 
         setActiveButton: (button: ActiveButtonType) => {
-            set(state => {
+            set((state) => {
                 // When setting a new active button, deactivate other buttons
                 if (button === 'webSearch') {
                     state.activeButton = state.useWebSearch ? null : 'webSearch';
@@ -1040,7 +1049,7 @@ export const useChatStore = create(
                 );
 
                 // Update state and reset button selections when chat mode changes
-                set(state => {
+                set((state) => {
                     state.chatMode = chatMode;
                     // Reset button states when changing chat mode
                     state.activeButton = null;
@@ -1050,7 +1059,7 @@ export const useChatStore = create(
             } catch (error) {
                 log.error({ context: 'ChatStore', error }, 'Failed to persist chat mode');
                 // Still update state even if persistence fails
-                set(state => {
+                set((state) => {
                     state.chatMode = chatMode;
                     state.activeButton = null;
                     state.useWebSearch = false;
@@ -1078,7 +1087,7 @@ export const useChatStore = create(
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, thinkingMode }));
 
-            set(state => {
+            set((state) => {
                 state.thinkingMode = thinkingMode;
             });
         },
@@ -1101,18 +1110,21 @@ export const useChatStore = create(
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, geminiCaching }));
 
-            set(state => {
+            set((state) => {
                 state.geminiCaching = geminiCaching;
             });
         },
 
         pinThread: async (threadId: string) => {
-            await withDatabaseAsync(async database => {
-                await database.threads.update(threadId, { pinned: true, pinnedAt: new Date() });
+            await withDatabaseAsync(async (database) => {
+                await database.threads.update(threadId, {
+                    pinned: true,
+                    pinnedAt: new Date(),
+                });
                 return true;
             });
-            set(state => {
-                state.threads = state.threads.map(thread =>
+            set((state) => {
+                state.threads = state.threads.map((thread) =>
                     thread.id === threadId
                         ? { ...thread, pinned: true, pinnedAt: new Date() }
                         : thread
@@ -1121,12 +1133,15 @@ export const useChatStore = create(
         },
 
         unpinThread: async (threadId: string) => {
-            await withDatabaseAsync(async database => {
-                await database.threads.update(threadId, { pinned: false, pinnedAt: new Date() });
+            await withDatabaseAsync(async (database) => {
+                await database.threads.update(threadId, {
+                    pinned: false,
+                    pinnedAt: new Date(),
+                });
                 return true;
             });
-            set(state => {
-                state.threads = state.threads.map(thread =>
+            set((state) => {
+                state.threads = state.threads.map((thread) =>
                     thread.id === threadId
                         ? { ...thread, pinned: false, pinnedAt: new Date() }
                         : thread
@@ -1136,7 +1151,7 @@ export const useChatStore = create(
 
         getPinnedThreads: async () => {
             return (
-                (await withDatabaseAsync(async database => {
+                (await withDatabaseAsync(async (database) => {
                     const threads = await database.threads.where('pinned').equals('true').toArray();
                     return threads.sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime());
                 })) || []
@@ -1144,13 +1159,13 @@ export const useChatStore = create(
         },
 
         removeFollowupThreadItems: async (threadItemId: string) => {
-            const result = await withDatabaseAsync(async database => {
+            const result = await withDatabaseAsync(async (database) => {
                 const threadItem = await database.threadItems.get(threadItemId);
                 if (!threadItem) return null;
                 const threadItems = await database.threadItems
                     .where('createdAt')
                     .above(threadItem.createdAt)
-                    .and(item => item.threadId === threadItem.threadId)
+                    .and((item) => item.threadId === threadItem.threadId)
                     .toArray();
                 for (const threadItem of threadItems) {
                     await database.threadItems.delete(threadItem.id);
@@ -1160,9 +1175,9 @@ export const useChatStore = create(
 
             if (!result) return;
 
-            set(state => {
+            set((state) => {
                 state.threadItems = state.threadItems.filter(
-                    t => t.createdAt <= result.createdAt || t.threadId !== result.threadId
+                    (t) => t.createdAt <= result.createdAt || t.threadId !== result.threadId
                 );
             });
 
@@ -1175,75 +1190,75 @@ export const useChatStore = create(
         },
 
         getThreadItems: async (threadId: string) => {
-            const threadItems = await withDatabaseAsync(async database => {
+            const threadItems = await withDatabaseAsync(async (database) => {
                 return await database.threadItems.where('threadId').equals(threadId).toArray();
             });
             return threadItems || [];
         },
 
         setCurrentSources: (sources: string[]) => {
-            set(state => {
+            set((state) => {
                 state.currentSources = sources;
             });
         },
 
-        setCurrentThreadItem: threadItem =>
-            set(state => {
+        setCurrentThreadItem: (threadItem) =>
+            set((state) => {
                 state.currentThreadItem = threadItem;
             }),
 
-        setEditor: editor =>
-            set(state => {
+        setEditor: (editor) =>
+            set((state) => {
                 state.editor = editor;
             }),
 
-        setContext: context =>
-            set(state => {
+        setContext: (context) =>
+            set((state) => {
                 state.context = context;
             }),
 
-        setIsGenerating: isGenerating => {
+        setIsGenerating: (isGenerating) => {
             useAppStore.getState().dismissSideDrawer();
-            set(state => {
+            set((state) => {
                 state.isGenerating = isGenerating;
             });
         },
 
         stopGeneration: () => {
-            set(state => {
+            set((state) => {
                 state.isGenerating = false;
                 state.abortController?.abort();
             });
         },
 
-        setAbortController: abortController =>
-            set(state => {
+        setAbortController: (abortController) =>
+            set((state) => {
                 state.abortController = abortController;
             }),
 
         loadThreadItems: async (threadId: string) => {
-            const threadItems = await withDatabaseAsync(async database => {
+            const threadItems = await withDatabaseAsync(async (database) => {
                 return await database.threadItems.where('threadId').equals(threadId).toArray();
             });
-            set(state => {
+            set((state) => {
                 state.threadItems = threadItems || [];
             });
         },
 
         clearAllThreads: async () => {
-            await withDatabaseAsync(async database => {
+            await withDatabaseAsync(async (database) => {
                 await database.threads.clear();
                 await database.threadItems.clear();
                 return true;
             });
-            set(state => {
+            set((state) => {
                 state.threads = [];
                 state.threadItems = [];
             });
         },
 
         getThread: async (threadId: string) => {
-            return await withDatabaseAsync(async database => {
+            return await withDatabaseAsync(async (database) => {
                 const thread = await database.threads.get(threadId);
                 return thread || null;
             });
@@ -1259,11 +1274,11 @@ export const useChatStore = create(
                 pinned: false,
                 pinnedAt: new Date(),
             };
-            await withDatabaseAsync(async database => {
+            await withDatabaseAsync(async (database) => {
                 await database.threads.add(newThread);
                 return true;
             });
-            set(state => {
+            set((state) => {
                 state.threads.push(newThread);
                 state.currentThreadId = newThread.id;
                 state.currentThread = newThread;
@@ -1300,20 +1315,20 @@ export const useChatStore = create(
                 );
 
                 // Update state
-                set(state => {
+                set((state) => {
                     state.model = model;
                 });
             } catch (error) {
                 log.error({ context: 'ChatStore', error }, 'Failed to persist model');
                 // Still update state even if persistence fails
-                set(state => {
+                set((state) => {
                     state.model = model;
                 });
             }
         },
 
-        updateThread: async thread => {
-            const existingThread = get().threads.find(t => t.id === thread.id);
+        updateThread: async (thread) => {
+            const existingThread = get().threads.find((t) => t.id === thread.id);
             if (!existingThread) return;
 
             const updatedThread: Thread = {
@@ -1322,7 +1337,7 @@ export const useChatStore = create(
                 updatedAt: new Date(),
             };
 
-            set(state => {
+            set((state) => {
                 const index = state.threads.findIndex((t: Thread) => t.id === thread.id);
                 if (index !== -1) {
                     state.threads[index] = updatedThread;
@@ -1333,7 +1348,7 @@ export const useChatStore = create(
             });
 
             try {
-                await withDatabaseAsync(async database => {
+                await withDatabaseAsync(async (database) => {
                     await database.threads.put(updatedThread);
                     return true;
                 });
@@ -1345,21 +1360,21 @@ export const useChatStore = create(
             }
         },
 
-        createThreadItem: async threadItem => {
+        createThreadItem: async (threadItem) => {
             const threadId = get().currentThreadId;
             if (!threadId) return;
             try {
-                withDatabase(database => {
+                withDatabase((database) => {
                     if (database) {
                         database.threadItems.put(threadItem);
                     }
                 });
-                set(state => {
+                set((state) => {
                     // Clear cache since we're modifying threadItems
                     state._cache = {};
 
-                    if (state.threadItems.find(t => t.id === threadItem.id)) {
-                        state.threadItems = state.threadItems.map(t =>
+                    if (state.threadItems.find((t) => t.id === threadItem.id)) {
+                        state.threadItems = state.threadItems.map((t) =>
                             t.id === threadItem.id ? threadItem : t
                         );
                     } else {
@@ -1391,7 +1406,7 @@ export const useChatStore = create(
                 //     log.warn({ threadItemId: threadItem.id, error }, 'Couldn\'t fetch existing item');
                 // }
 
-                const existingItem = get().threadItems.find(t => t.id === threadItem.id);
+                const existingItem = get().threadItems.find((t) => t.id === threadItem.id);
 
                 // Create or update the item
                 const updatedItem = existingItem
@@ -1405,11 +1420,11 @@ export const useChatStore = create(
                       } as ThreadItem);
 
                 // Update UI state immediately
-                set(state => {
+                set((state) => {
                     // Clear cache since we're modifying threadItems
                     state._cache = {};
 
-                    const index = state.threadItems.findIndex(t => t.id === threadItem.id);
+                    const index = state.threadItems.findIndex((t) => t.id === threadItem.id);
                     if (index !== -1) {
                         state.threadItems[index] = updatedItem;
                     } else {
@@ -1461,9 +1476,9 @@ export const useChatStore = create(
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         ...threadItem,
-                        error: threadItem.error || `Something went wrong`,
+                        error: threadItem.error || 'Something went wrong',
                     };
-                    await withDatabaseAsync(async database => {
+                    await withDatabaseAsync(async (database) => {
                         await database.threadItems.put(fallbackItem);
                         return true;
                     });
@@ -1477,7 +1492,7 @@ export const useChatStore = create(
         },
 
         switchThread: async (threadId: string) => {
-            const thread = get().threads.find(t => t.id === threadId);
+            const thread = get().threads.find((t) => t.id === threadId);
 
             // Safely get existing config to preserve other settings
             const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
@@ -1500,23 +1515,23 @@ export const useChatStore = create(
                 localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
             }
 
-            set(state => {
+            set((state) => {
                 state.currentThreadId = threadId;
                 state.currentThread = thread || null;
             });
             get().loadThreadItems(threadId);
         },
 
-        deleteThreadItem: async threadItemId => {
+        deleteThreadItem: async (threadItemId) => {
             const threadId = get().currentThreadId;
             if (!threadId) return;
 
-            await withDatabaseAsync(async database => {
+            await withDatabaseAsync(async (database) => {
                 await database.threadItems.delete(threadItemId);
                 return true;
             });
 
-            set(state => {
+            set((state) => {
                 state.threadItems = state.threadItems.filter(
                     (t: ThreadItem) => t.id !== threadItemId
                 );
@@ -1526,17 +1541,17 @@ export const useChatStore = create(
             debouncedNotify('thread-item-delete', { id: threadItemId, threadId });
 
             // Check if there are any thread items left for this thread
-            const remainingItems = await withDatabaseAsync(async database => {
+            const remainingItems = await withDatabaseAsync(async (database) => {
                 return await database.threadItems.where('threadId').equals(threadId).count();
             });
 
             // If no items remain, delete the thread and redirect
             if (remainingItems === 0) {
-                await withDatabaseAsync(async database => {
+                await withDatabaseAsync(async (database) => {
                     await database.threads.delete(threadId);
                     return true;
                 });
-                set(state => {
+                set((state) => {
                     state.threads = state.threads.filter((t: Thread) => t.id !== threadId);
                     state.currentThreadId = state.threads[0]?.id;
                     state.currentThread = state.threads[0] || null;
@@ -1549,13 +1564,13 @@ export const useChatStore = create(
             }
         },
 
-        deleteThread: async threadId => {
-            await withDatabaseAsync(async database => {
+        deleteThread: async (threadId) => {
+            await withDatabaseAsync(async (database) => {
                 await database.threads.delete(threadId);
                 await database.threadItems.where('threadId').equals(threadId).delete();
                 return true;
             });
-            set(state => {
+            set((state) => {
                 state.threads = state.threads.filter((t: Thread) => t.id !== threadId);
                 state.currentThreadId = state.threads[0]?.id;
                 state.currentThread = state.threads[0] || null;
@@ -1565,7 +1580,7 @@ export const useChatStore = create(
             debouncedNotify('thread-delete', { threadId });
         },
 
-        getPreviousThreadItems: threadId => {
+        getPreviousThreadItems: (threadId) => {
             const state = get();
             const cacheKey = `prev_${threadId}`;
 
@@ -1573,14 +1588,14 @@ export const useChatStore = create(
             if (state._cache?.[cacheKey]) {
                 const cached = state._cache[cacheKey];
                 // Check if thread items for this thread have changed
-                const currentItems = state.threadItems.filter(item => item.threadId === threadId);
+                const currentItems = state.threadItems.filter((item) => item.threadId === threadId);
                 if (cached.length === currentItems.length) {
                     return cached.result;
                 }
             }
 
             const allThreadItems = state.threadItems
-                .filter(item => item.threadId === threadId)
+                .filter((item) => item.threadId === threadId)
                 .sort((a, b) => {
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
@@ -1588,7 +1603,7 @@ export const useChatStore = create(
             const result = allThreadItems.length > 1 ? allThreadItems.slice(0, -1) : [];
 
             // Cache the result
-            set(state => {
+            set((state) => {
                 if (!state._cache) state._cache = {};
                 state._cache[cacheKey] = { result, length: allThreadItems.length };
             });
@@ -1604,7 +1619,7 @@ export const useChatStore = create(
             if (state._cache?.[cacheKey]) {
                 const cached = state._cache[cacheKey];
                 const currentItems = state.threadItems.filter(
-                    item => item.threadId === state.currentThreadId
+                    (item) => item.threadId === state.currentThreadId
                 );
                 if (cached.length === currentItems.length) {
                     return cached.result;
@@ -1612,7 +1627,7 @@ export const useChatStore = create(
             }
 
             const allThreadItems = state.threadItems
-                .filter(item => item.threadId === state.currentThreadId)
+                .filter((item) => item.threadId === state.currentThreadId)
                 .sort((a, b) => {
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
@@ -1620,7 +1635,7 @@ export const useChatStore = create(
             const result = allThreadItems[allThreadItems.length - 1] || null;
 
             // Cache the result
-            set(state => {
+            set((state) => {
                 if (!state._cache) state._cache = {};
                 state._cache[cacheKey] = { result, length: allThreadItems.length };
             });
@@ -1630,7 +1645,7 @@ export const useChatStore = create(
 
         getCurrentThread: () => {
             const state = get();
-            return state.threads.find(t => t.id === state.currentThreadId) || null;
+            return state.threads.find((t) => t.id === state.currentThreadId) || null;
         },
 
         // User-specific database management for per-account thread isolation
@@ -1650,7 +1665,7 @@ export const useChatStore = create(
                     threadItems: [],
                     currentThreadId: newData.currentThreadId,
                     currentThread:
-                        newData.threads.find(t => t.id === newData.currentThreadId) ||
+                        newData.threads.find((t) => t.id === newData.currentThreadId) ||
                         newData.threads?.[0] ||
                         null,
                     chatMode: newData.chatMode,
@@ -1718,7 +1733,7 @@ if (typeof window !== 'undefined') {
             useChatStore.setState({
                 threads,
                 currentThreadId,
-                currentThread: threads.find(t => t.id === currentThreadId) || threads?.[0],
+                currentThread: threads.find((t) => t.id === currentThreadId) || threads?.[0],
                 chatMode,
                 model,
                 useWebSearch,

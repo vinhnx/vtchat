@@ -11,6 +11,7 @@ import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore } from '@repo/common/store';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
@@ -22,9 +23,9 @@ import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LoginRequiredDialog } from '../login-required-dialog';
-import { UserTierBadge } from '../user-tier-badge';
 
 import { StructuredDataDisplay } from '../structured-data-display';
+import { UserTierBadge } from '../user-tier-badge';
 import {
     ChartsButton,
     ChatModeButton,
@@ -40,8 +41,6 @@ import { ImageUpload } from './image-upload';
 import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
 import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
-
-import { log } from '@repo/shared/logger';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -67,7 +66,9 @@ export const ChatInput = ({
             if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
                 const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
-                    editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
+                    editor.commands.setContent(draftMessage, true, {
+                        preserveWhitespace: true,
+                    });
                 }
             }
             // Removed automatic login prompt on focus - users should be able to type without being forced to login
@@ -80,15 +81,15 @@ export const ChatInput = ({
         },
     });
     const size = currentThreadId ? 'base' : 'sm';
-    const getThreadItems = useChatStore(state => state.getThreadItems);
-    const threadItemsLength = useChatStore(useShallow(state => state.threadItems.length));
+    const getThreadItems = useChatStore((state) => state.getThreadItems);
+    const threadItemsLength = useChatStore(useShallow((state) => state.threadItems.length));
     const { handleSubmit } = useAgentStream();
-    const createThread = useChatStore(state => state.createThread);
-    const useWebSearch = useChatStore(state => state.useWebSearch);
-    const useMathCalculator = useChatStore(state => state.useMathCalculator);
-    const useCharts = useChatStore(state => state.useCharts);
+    const createThread = useChatStore((state) => state.createThread);
+    const useWebSearch = useChatStore((state) => state.useWebSearch);
+    const useMathCalculator = useChatStore((state) => state.useMathCalculator);
+    const useCharts = useChatStore((state) => state.useCharts);
 
-    const isGenerating = useChatStore(state => state.isGenerating);
+    const isGenerating = useChatStore((state) => state.isGenerating);
     const isChatPage =
         usePathname() !== '/' &&
         usePathname() !== '/recent' &&
@@ -99,16 +100,16 @@ export const ChatInput = ({
         usePathname() !== '/privacy' &&
         usePathname() !== '/terms' &&
         usePathname() !== '/faq';
-    const imageAttachment = useChatStore(state => state.imageAttachment);
-    const documentAttachment = useChatStore(state => state.documentAttachment);
-    const clearImageAttachment = useChatStore(state => state.clearImageAttachment);
-    const clearDocumentAttachment = useChatStore(state => state.clearDocumentAttachment);
-    const stopGeneration = useChatStore(state => state.stopGeneration);
+    const imageAttachment = useChatStore((state) => state.imageAttachment);
+    const documentAttachment = useChatStore((state) => state.documentAttachment);
+    const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
+    const clearDocumentAttachment = useChatStore((state) => state.clearDocumentAttachment);
+    const stopGeneration = useChatStore((state) => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
     const { dropzoneProps: docDropzoneProps } = useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
-    const chatMode = useChatStore(state => state.chatMode);
+    const chatMode = useChatStore((state) => state.chatMode);
     const { hasApiKeyForChatMode } = useApiKeysStore();
 
     // Multi-modal attachments state
@@ -155,16 +156,15 @@ export const ChatInput = ({
         // Check if user has valid API key for the selected chat mode
         // This applies to all users (signed in or not) for modes that require API keys
         if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
-            if (!isSignedIn) {
-                // For non-signed in users, show login prompt first
-                setShowLoginPrompt(true);
-                return;
-            } else {
+            if (isSignedIn) {
                 // For signed-in users, show BYOK dialog
                 setPendingMessage(() => sendMessage);
                 setShowBYOKDialog(true);
                 return;
             }
+            // For non-signed in users, show login prompt first
+            setShowLoginPrompt(true);
+            return;
         }
 
         let threadId = currentThreadId?.toString();
@@ -228,31 +228,31 @@ export const ChatInput = ({
     const renderChatInput = () => (
         <AnimatePresence>
             <motion.div
+                animate={{ opacity: 1, y: 0 }}
                 className="w-full px-1 md:px-3"
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                key={`chat-input`}
+                key={'chat-input'}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
             >
                 <Flex
-                    direction="col"
                     className={cn(
-                        'bg-background border-hard/50 shadow-subtle-sm relative z-10 w-full rounded-xl border'
+                        'border-hard/50 bg-background shadow-subtle-sm relative z-10 w-full rounded-xl border'
                     )}
+                    direction="col"
                 >
                     <ImageDropzoneRoot dropzoneProps={dropzonProps}>
                         <motion.div
-                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ duration: 0.15 }}
                             className="flex w-full flex-shrink-0 overflow-hidden rounded-lg"
+                            initial={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
                         >
                             {editor?.isEditable ? (
                                 <motion.div
-                                    initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.15, ease: 'easeOut' }}
                                     className="w-full"
+                                    initial={{ opacity: 0 }}
+                                    transition={{ duration: 0.15, ease: 'easeOut' }}
                                 >
                                     <div className="flex flex-col gap-2">
                                         <ImageAttachment />
@@ -267,9 +267,9 @@ export const ChatInput = ({
                                     </div>
                                     <Flex className="flex w-full flex-row items-end gap-0">
                                         <ChatEditor
-                                            sendMessage={sendMessage}
-                                            editor={editor}
                                             className="px-3 pt-3"
+                                            editor={editor}
+                                            sendMessage={sendMessage}
                                         />
                                     </Flex>
 
@@ -283,9 +283,9 @@ export const ChatInput = ({
                                             <GeneratingStatus />
                                         ) : (
                                             <Flex
+                                                className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
                                                 gap="xs"
                                                 items="center"
-                                                className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
                                             >
                                                 <ChatModeButton />
 
@@ -300,19 +300,19 @@ export const ChatInput = ({
                                                 <DocumentUploadButton />
                                                 {supportsMultiModal(chatMode) ? (
                                                     <MultiModalAttachmentButton
+                                                        attachments={multiModalAttachments}
+                                                        disabled={isGenerating}
                                                         onAttachmentsChange={
                                                             setMultiModalAttachments
                                                         }
-                                                        attachments={multiModalAttachments}
-                                                        disabled={isGenerating}
                                                     />
                                                 ) : (
                                                     <ImageUpload
+                                                        handleImageUpload={handleImageUpload}
                                                         id="image-attachment"
                                                         label="Image"
-                                                        tooltip="Image Attachment"
                                                         showIcon={true}
-                                                        handleImageUpload={handleImageUpload}
+                                                        tooltip="Image Attachment"
                                                     />
                                                 )}
 
@@ -323,26 +323,26 @@ export const ChatInput = ({
                                         )}
 
                                         <Flex
+                                            className="ml-auto flex-shrink-0"
                                             gap="sm"
                                             items="center"
-                                            className="ml-auto flex-shrink-0"
                                         >
                                             <SendStopButton
-                                                isGenerating={isGenerating}
-                                                isChatPage={isChatPage}
-                                                stopGeneration={stopGeneration}
                                                 hasTextInput={hasTextInput}
+                                                isChatPage={isChatPage}
+                                                isGenerating={isGenerating}
                                                 sendMessage={sendMessage}
+                                                stopGeneration={stopGeneration}
                                             />
                                         </Flex>
                                     </Flex>
                                 </motion.div>
                             ) : (
                                 <motion.div
-                                    className="flex h-24 w-full items-center justify-center"
-                                    initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
+                                    className="flex h-24 w-full items-center justify-center"
                                     exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0 }}
                                     transition={{ duration: 0.15 }}
                                 >
                                     <InlineLoader />
@@ -357,7 +357,7 @@ export const ChatInput = ({
 
     const renderChatBottom = () => (
         <>
-            <Flex items="center" justify="center" gap="sm">
+            <Flex gap="sm" items="center" justify="center">
                 {/* <ScrollToBottomButton /> */}
             </Flex>
             {renderChatInput()}
@@ -386,20 +386,20 @@ export const ChatInput = ({
                 )}
             >
                 <Flex
-                    items="start"
-                    justify="start"
-                    direction="col"
                     className={cn(
                         'pb-safe w-full pb-4 md:pb-4',
                         threadItemsLength > 0 ? 'mb-0' : 'h-full'
                     )}
+                    direction="col"
+                    items="start"
+                    justify="start"
                 >
                     {!currentThreadId && showGreeting && (
                         <motion.div
-                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="mb-2 flex w-full flex-col items-center gap-2"
+                            initial={{ opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
                         >
                             {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />
@@ -414,21 +414,21 @@ export const ChatInput = ({
             </div>
             {showLoginPrompt && (
                 <LoginRequiredDialog
+                    description="Please log in to start chatting or save your conversation."
                     isOpen={showLoginPrompt}
                     onClose={() => setShowLoginPrompt(false)}
                     title="Login Required"
-                    description="Please log in to start chatting or save your conversation."
                 />
             )}
             {showBYOKDialog && (
                 <BYOKValidationDialog
+                    chatMode={chatMode}
                     isOpen={showBYOKDialog}
+                    onApiKeySet={handleApiKeySet}
                     onClose={() => {
                         setShowBYOKDialog(false);
                         setPendingMessage(null);
                     }}
-                    chatMode={chatMode}
-                    onApiKeySet={handleApiKeySet}
                 />
             )}
         </div>
@@ -450,11 +450,11 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
 
             if (hour >= 5 && hour < 12) {
                 return `Good morning${userNamePart}`;
-            } else if (hour >= 12 && hour < 18) {
-                return `Good afternoon${userNamePart}`;
-            } else {
-                return `Good evening${userNamePart}`;
             }
+            if (hour >= 12 && hour < 18) {
+                return `Good afternoon${userNamePart}`;
+            }
+            return `Good evening${userNamePart}`;
         };
 
         setGreeting(getTimeBasedGreeting());
@@ -465,27 +465,27 @@ const PersonalizedGreeting = ({ session }: PersonalizedGreetingProps) => {
             if (newGreeting !== greeting) {
                 setGreeting(newGreeting);
             }
-        }, 60000); // Check every minute
+        }, 60_000); // Check every minute
 
         return () => clearInterval(interval);
     }, [greeting, session]);
 
     return (
         <Flex
-            direction="col"
             className="relative h-[100px] w-full items-center justify-center overflow-hidden"
+            direction="col"
         >
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={greeting}
-                    initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
+                    className="text-center"
                     exit={{ opacity: 0, y: 5 }}
+                    initial={{ opacity: 0, y: -5 }}
+                    key={greeting}
                     transition={{
                         duration: 0.8,
                         ease: 'easeInOut',
                     }}
-                    className="text-center"
                 >
                     <ShineText className="text-xl font-medium leading-relaxed tracking-tight sm:text-2xl md:text-3xl">
                         {greeting}

@@ -33,8 +33,7 @@ export const PRICING_CONFIG = {
                 },
                 {
                     name: 'Free Gemini 2.5 Flash Lite Preview',
-                    description:
-                        "10 requests per day with VT's server API key - no setup required",
+                    description: "10 requests per day with VT's server API key - no setup required",
                 },
                 {
                     name: 'Unlimited BYOK Access',
@@ -75,7 +74,8 @@ export const PRICING_CONFIG = {
                 },
                 {
                     name: 'Priority Support & No Limits',
-                    description: 'Priority customer support with unlimited usage of all VT+ exclusive features',
+                    description:
+                        'Priority customer support with unlimited usage of all VT+ exclusive features',
                 },
             ],
         },

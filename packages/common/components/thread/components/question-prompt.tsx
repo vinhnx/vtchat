@@ -1,6 +1,6 @@
 import { useAgentStream } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { ThreadItem } from '@repo/shared/types';
+import type { ThreadItem } from '@repo/shared/types';
 import { Button, RadioGroup, RadioGroupItem, Textarea } from '@repo/ui';
 import { Check, HelpCircle, Square } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -11,8 +11,8 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     const [customOption, setCustomOption] = useState<string>('');
     const [isCustomSelected, setIsCustomSelected] = useState<boolean>(false);
     const { handleSubmit } = useAgentStream();
-    const getThreadItems = useChatStore(state => state.getThreadItems);
-    const updateThreadItem = useChatStore(state => state.updateThreadItem);
+    const getThreadItems = useChatStore((state) => state.getThreadItems);
+    const updateThreadItem = useChatStore((state) => state.updateThreadItem);
 
     const options: string[] = threadItem.object?.clarifyingQuestion?.options || [];
     const question = threadItem.object?.clarifyingQuestion?.question || '';
@@ -31,19 +31,19 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     const renderRadioGroup = () => {
         return (
             <RadioGroup
-                value={selectedOption || ''}
-                onValueChange={handleOptionChange}
                 className="flex flex-col gap-2"
+                onValueChange={handleOptionChange}
+                value={selectedOption || ''}
             >
                 {options.map((option, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                        <RadioGroupItem value={option} id={`option-${index}`} />
+                    <div className="flex items-center space-x-2" key={index}>
+                        <RadioGroupItem id={`option-${index}`} value={option} />
                         <p className="text-sm">{option}</p>
                     </div>
                 ))}
 
                 <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="custom" id="option-custom" />
+                    <RadioGroupItem id="option-custom" value="custom" />
                     <p className="text-sm">Custom option</p>
                 </div>
             </RadioGroup>
@@ -55,23 +55,23 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
             <div className="flex flex-row flex-wrap gap-2">
                 {options.map((option, index) => (
                     <div
-                        key={index}
                         className="border-border flex items-center space-x-2 rounded-full border px-3 py-1.5"
+                        key={index}
                         onClick={() => {
                             if (selectedOptions.includes(option)) {
-                                setSelectedOptions(selectedOptions.filter(o => o !== option));
+                                setSelectedOptions(selectedOptions.filter((o) => o !== option));
                             } else {
                                 setSelectedOptions([...selectedOptions, option]);
                             }
                         }}
                     >
                         {selectedOptions.includes(option) ? (
-                            <Check size={16} strokeWidth={2} className="text-brand" />
+                            <Check className="text-brand" size={16} strokeWidth={2} />
                         ) : (
                             <Square
+                                className="text-muted-foreground/20"
                                 size={16}
                                 strokeWidth={2}
-                                className="text-muted-foreground/20"
                             />
                         )}
                         <p className="text-sm">{option}</p>
@@ -103,7 +103,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     return (
         <div className="border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4">
             <div className="flex flex-row items-center gap-1">
-                <HelpCircle size={16} strokeWidth={2} className="text-brand" />
+                <HelpCircle className="text-brand" size={16} strokeWidth={2} />
                 <p className="text-sm text-yellow-700">Follow-up Question</p>
             </div>
 
@@ -113,17 +113,15 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
 
             <div className="mt-2 w-full">
                 <Textarea
-                    value={customOption}
-                    onChange={e => setCustomOption(e.target.value)}
-                    placeholder="Add your response here..."
                     className="!border-border h-[100px] w-full rounded-lg !border px-3 py-2"
+                    onChange={(e) => setCustomOption(e.target.value)}
+                    placeholder="Add your response here..."
+                    value={customOption}
                 />
             </div>
 
             <Button
-                disabled={!selectedOption && !selectedOptions.length && !customOption}
-                size="sm"
-                rounded="full"
+                disabled={!(selectedOption || selectedOptions.length || customOption)}
                 onClick={async () => {
                     const originalQuery = threadItem.query || '';
                     let clarifyingResponse = '';
@@ -131,7 +129,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                     if (choiceType === 'single') {
                         clarifyingResponse = `${selectedOption ? `${selectedOption} \n\n` : ''}${customOption}`;
                     } else {
-                        clarifyingResponse = `${!!selectedOptions?.length ? `${selectedOptions.join(', ')} \n\n` : ''}${customOption}`;
+                        clarifyingResponse = `${selectedOptions?.length ? `${selectedOptions.join(', ')} \n\n` : ''}${customOption}`;
                     }
 
                     const query = originalQuery
@@ -159,6 +157,8 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                         });
                     }, 1000);
                 }}
+                rounded="full"
+                size="sm"
             >
                 Submit
             </Button>

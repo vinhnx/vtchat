@@ -15,8 +15,7 @@ import { SubscriptionProvider } from '@repo/common/providers/subscription-provid
 import { cn, SonnerToaster, TooltipProvider } from '@repo/ui';
 import { VemetricScript } from '@vemetric/react';
 import { GeistMono } from 'geist/font/mono';
-import type { Viewport } from 'next';
-import { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
@@ -106,24 +105,24 @@ export default function ParentLayout({
 }>) {
     return (
         <html
-            lang="en"
             className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
+            lang="en"
             suppressHydrationWarning
         >
             <head>
                 <PerformanceOptimizations />
                 {/* Primary Analytics: Vemetric (Vercel Analytics disabled) */}
                 <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN || ''} />
-                <link rel="icon" href="/favicon.ico" sizes="any" />
+                <link href="/favicon.ico" rel="icon" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
                 <GatedThemeProvider
                     attribute="class"
                     defaultTheme="light"
-                    enableSystem={true}
                     disableTransitionOnChange={false}
-                    storageKey="vt-theme"
                     enableColorScheme={false}
+                    enableSystem={true}
+                    storageKey="vt-theme"
                 >
                     <TooltipProvider>
                         <SSRErrorBoundary>

@@ -2,12 +2,12 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
+import { log } from '@repo/shared/logger';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db, withDatabaseErrorHandling } from '@/lib/database';
 import { users } from '@/lib/database/schema';
-import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
 
 export async function POST(request: NextRequest) {
     try {

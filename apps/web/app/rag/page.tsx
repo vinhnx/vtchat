@@ -103,19 +103,19 @@ export default function RAGPage() {
                                 </div>
 
                                 <PremiumButton
-                                    onClick={() => router.push('/plus')}
                                     className="w-full"
+                                    onClick={() => router.push('/plus')}
+                                    shimmer
                                     size="lg"
                                     variant="premium"
-                                    shimmer
                                 >
                                     <Sparkles className="mr-2 h-4 w-4" />
                                     Upgrade to {PRICING_CONFIG.product.name}
                                 </PremiumButton>
                                 <PremiumButton
+                                    className="w-full"
                                     onClick={() => router.push('/')}
                                     variant="outline"
-                                    className="w-full"
                                 >
                                     Continue with Free Chat
                                 </PremiumButton>
@@ -135,8 +135,8 @@ export default function RAGPage() {
                     <h1 className="flex items-center gap-2 text-xl font-bold md:text-2xl">
                         Personal AI Assistant with Memory
                         <Badge
-                            variant="secondary"
                             className="vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] shadow-lg"
+                            variant="secondary"
                         >
                             VT+
                         </Badge>

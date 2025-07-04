@@ -1,9 +1,9 @@
+import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-
-import { VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../lib/utils';
+
 const inputVariants = cva(
-    'flex h-9 w-full rounded-xl bg-background shadow-subtle-xs outline-none  px-3 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+    'flex h-9 w-full rounded-xl bg-background px-3 text-sm shadow-subtle-xs outline-none transition-colors file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
     {
         variants: {
             variant: {
@@ -36,10 +36,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, type, variant, size, rounded, ...props }, ref) => {
         return (
             <input
-                type={type}
+                autoComplete="off"
                 className={cn(inputVariants({ variant, size, rounded, className }))}
                 ref={ref}
-                autoComplete="off"
+                type={type}
                 {...props}
             />
         );

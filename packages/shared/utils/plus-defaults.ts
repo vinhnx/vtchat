@@ -102,7 +102,7 @@ export function shouldApplyPlusDefaults(
     // Or when plus user has disabled settings (allow re-enabling)
     const isPlusWithDisabledFeatures =
         newPlan === PlanSlug.VT_PLUS &&
-        (!currentSettings.thinkingMode.enabled || !currentSettings.geminiCaching.enabled);
+        !(currentSettings.thinkingMode.enabled && currentSettings.geminiCaching.enabled);
 
     return upgradingToPlus || isPlusWithDisabledFeatures;
 }

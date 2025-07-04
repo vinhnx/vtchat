@@ -1,10 +1,10 @@
-import { createAuthClient } from 'better-auth/react';
 import { multiSessionClient } from 'better-auth/client/plugins';
+import { createAuthClient } from 'better-auth/react';
 
 // Import performance utilities
 const requestDeduplicator =
     typeof window !== 'undefined'
-        ? import('@repo/shared/utils/request-deduplication').then(m => m.requestDeduplicator)
+        ? import('@repo/shared/utils/request-deduplication').then((m) => m.requestDeduplicator)
         : null;
 
 // Ensure proper URL formatting for Better Auth

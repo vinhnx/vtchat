@@ -4,14 +4,13 @@ import {
     mdxComponents,
     useMdxChunker,
 } from '@repo/common/components';
-
+import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
-import { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
 import { serialize } from 'next-mdx-remote/serialize';
 import { memo, Suspense, useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
-import { log } from '@repo/shared/logger';
 
 export const markdownStyles = {
     'animate-fade-in prose prose-sm min-w-full': true,
@@ -28,16 +27,13 @@ export const markdownStyles = {
 
     // Code styles
     'prose-code:font-mono prose-code:text-sm prose-code:font-normal': true,
-    'prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5':
-        true,
+    'prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5': true,
 
     // Table styles
-    'prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background':
-        true,
+    'prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background': true,
 
     // Table header
-    'prose-th:text-sm prose-th:font-medium prose-th:text-muted-foreground prose-th:bg-tertiary prose-th:px-3 prose-th:py-1.5':
-        true,
+    'prose-th:text-sm prose-th:font-medium prose-th:text-muted-foreground prose-th:bg-tertiary prose-th:px-3 prose-th:py-1.5': true,
 
     // Table row
     'prose-tr:border-border prose-tr:border': true,
@@ -96,11 +92,11 @@ function parseCitationsWithSourceTags(markdown: string): string {
 
     // This regex and replacement logic needs to be fixed
     const multipleCitationsRegex = /\[(\d+(?:,\s*\d+)+)\]/g;
-    result = result.replace(multipleCitationsRegex, match => {
+    result = result.replace(multipleCitationsRegex, (match) => {
         // Extract all numbers from the citation
         const numbers = match.match(/\d+/g) || [];
         // Create Source tags for each number
-        return numbers.map(num => `<Source>${num}</Source>`).join(' ');
+        return numbers.map((num) => `<Source>${num}</Source>`).join(' ');
     });
 
     return result;

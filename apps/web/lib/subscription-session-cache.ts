@@ -3,9 +3,9 @@
  * Per-account caching with session tracking and non-logged-in user handling
  */
 
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { log } from '@repo/shared/logger';
 
 export interface SessionSubscriptionStatus {
     plan: PlanSlug;
@@ -61,11 +61,11 @@ const CACHE_DURATIONS = {
  */
 function getSessionCacheKey(userId: string | null, sessionId: string): string {
     let cacheKey: string;
-    if (!userId) {
-        cacheKey = `subscription:anonymous:${sessionId}`;
-    } else {
+    if (userId) {
         // For logged-in users, use user ID as the primary key (no session dependency)
         cacheKey = `subscription:user:${userId}`;
+    } else {
+        cacheKey = `subscription:anonymous:${sessionId}`;
     }
 
     log.info(
@@ -102,9 +102,7 @@ function getSessionId(request?: Request): string {
         const hash = simpleHash(sessionData);
         const sessionId = `anon_${hash}`;
 
-        log.info(
-            '[Session Cache] Generated session ID from request headers'
-        );
+        log.info('[Session Cache] Generated session ID from request headers');
         return sessionId;
     }
 
@@ -135,7 +133,7 @@ function getCacheDuration(
     trigger: SessionSubscriptionStatus['lastRefreshTrigger'],
     userId: string | null
 ): number {
-    const type = !userId ? 'anonymous' : isPlusSubscriber ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
+    const type = userId ? (isPlusSubscriber ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE) : 'anonymous';
     return CACHE_DURATIONS[type][trigger] || CACHE_DURATIONS[type].initial;
 }
 
@@ -200,10 +198,7 @@ export function getSessionSubscriptionStatus(
         }
     }
 
-    log.info(
-        { fetchCount: cached.fetchCount },
-        '[Session Cache] Cache hit'
-    );
+    log.info({ fetchCount: cached.fetchCount }, '[Session Cache] Cache hit');
     return cached;
 }
 
@@ -244,11 +239,11 @@ export function cacheSessionSubscriptionStatus(
     sessionFetchTracker.set(userKey, true);
 
     log.info(
-        { 
-            trigger, 
-            expiresInMinutes: Math.round(cacheDuration / 1000 / 60), 
+        {
+            trigger,
+            expiresInMinutes: Math.round(cacheDuration / 1000 / 60),
             fetchCount,
-            isAnonymous: userKey === 'anonymous'
+            isAnonymous: userKey === 'anonymous',
         },
         '[Session Cache] Cached subscription'
     );
@@ -276,7 +271,7 @@ export function invalidateSessionSubscriptionCache(userId: string | null, reques
  */
 export function hasBeenFetchedInSession(userId: string | null): boolean {
     const userKey = userId || 'anonymous';
-    return sessionFetchTracker.get(userKey) || false;
+    return sessionFetchTracker.get(userKey);
 }
 
 /**

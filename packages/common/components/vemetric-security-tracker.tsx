@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
+import type { SecurityEventData } from '@repo/shared/types/analytics';
+import { useEffect, useRef } from 'react';
+import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
-import { SecurityEventData } from '@repo/shared/types/analytics';
 
 /**
  * Security and threat monitoring tracker
@@ -35,7 +35,10 @@ export function useVemetricSecurityTracking() {
                 const data = encoder.encode(ip + 'salt'); // Add salt for security
                 const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
-                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+                return hashArray
+                    .map((b) => b.toString(16).padStart(2, '0'))
+                    .join('')
+                    .substring(0, 16);
             } catch (error) {
                 // Fallback to simple hash
                 return btoa(ip).substring(0, 8);
@@ -77,11 +80,14 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
 
-            log.warn({ 
-                activityType: params.activityType,
-                severity: params.severity,
-                blocked: params.blocked
-            }, 'Suspicious activity tracked');
+            log.warn(
+                {
+                    activityType: params.activityType,
+                    severity: params.severity,
+                    blocked: params.blocked,
+                },
+                'Suspicious activity tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track suspicious activity');
         }
@@ -154,7 +160,7 @@ export function useVemetricSecurityTracking() {
         userTier: string;
         escalationAttempted?: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: SecurityEventData = {
@@ -181,7 +187,7 @@ export function useVemetricSecurityTracking() {
         dataOwner?: 'self' | 'other' | 'shared';
         ipAddress?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -193,18 +199,18 @@ export function useVemetricSecurityTracking() {
                 timestamp: Date.now(),
             };
 
-            if (!params.authorized) {
-                await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, {
-                    ...eventData,
-                    eventType: 'unauthorized_data_access',
-                    severity: 'high' as const,
-                });
-            } else {
+            if (params.authorized) {
                 // Track authorized access for audit purposes
                 await trackEvent(ANALYTICS_EVENTS.SETTINGS_CHANGED, {
                     ...eventData,
                     setting: 'data_access',
                     action: params.accessType,
+                });
+            } else {
+                await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, {
+                    ...eventData,
+                    eventType: 'unauthorized_data_access',
+                    severity: 'high' as const,
                 });
             }
         } catch (error) {
@@ -219,7 +225,7 @@ export function useVemetricSecurityTracking() {
         errorCode?: string;
         usageCount?: number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -253,7 +259,7 @@ export function useVemetricSecurityTracking() {
 
         try {
             const domain = new URL(params.endpoint).hostname;
-            
+
             const eventData: SecurityEventData = {
                 eventType: 'rate_limit_bypass',
                 endpoint: domain,
@@ -266,11 +272,14 @@ export function useVemetricSecurityTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SUSPICIOUS_ACTIVITY, eventData);
 
-            log.warn({ 
-                domain,
-                bypassMethod: params.bypassMethod,
-                blocked: params.blocked
-            }, 'Rate limit bypass attempt tracked');
+            log.warn(
+                {
+                    domain,
+                    bypassMethod: params.bypassMethod,
+                    blocked: params.blocked,
+                },
+                'Rate limit bypass attempt tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track rate limit bypass');
         }
@@ -283,7 +292,7 @@ export function useVemetricSecurityTracking() {
         severity: 'low' | 'medium' | 'high';
         action: 'blocked' | 'flagged' | 'reviewed';
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: SecurityEventData = {

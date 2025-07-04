@@ -1,8 +1,8 @@
+import { geolocation } from '@vercel/functions';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { feedback } from '@/lib/database/schema';
-import { geolocation } from '@vercel/functions';
-import { NextRequest, NextResponse } from 'next/server';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';

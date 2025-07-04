@@ -5,11 +5,13 @@ This document shows examples of the improved error diagnostic messages that repl
 ## Before vs After
 
 ### Before (Generic)
+
 ```
 ❌ Something went wrong while processing your request. Please try again.
 ```
 
 ### After (Diagnostic)
+
 The new system provides context-aware error messages with actionable troubleshooting steps.
 
 ## Error Categories & Examples
@@ -17,6 +19,7 @@ The new system provides context-aware error messages with actionable troubleshoo
 ### 1. API Key Errors
 
 **Example Error:**
+
 ```
 🔑 API key issue detected. This could be due to missing, invalid, or expired API keys.
 
@@ -30,12 +33,14 @@ The new system provides context-aware error messages with actionable troubleshoo
 [Open Settings] [Refresh Page]
 ```
 
-**Triggers:** 
+**Triggers:**
+
 - "api key", "unauthorized", "invalid key", "forbidden"
 
 ### 2. Network/Connection Errors
 
 **Example Error:**
+
 ```
 🌐 Network connectivity issue detected. The request failed to reach the AI service.
 
@@ -50,11 +55,13 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "network", "timeout", "connection", "fetch", "cors"
 
 ### 3. Model/Feature Compatibility Errors
 
 **Example Error:**
+
 ```
 🤖 Model or feature compatibility issue detected.
 
@@ -68,11 +75,13 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "model", "unsupported", "not available"
 
 ### 4. Rate Limit Errors (Enhanced)
 
 **Example Error:**
+
 ```
 ⏱️ Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.
 
@@ -86,11 +95,13 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "rate limit", "daily limit", "per minute", "minute"
 
 ### 5. Configuration Errors
 
 **Example Error:**
+
 ```
 ⚙️ Configuration issue detected. The system may need to be set up properly.
 
@@ -104,11 +115,13 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "config", "setup", "environment"
 
 ### 6. Request Cancellation
 
 **Example Error:**
+
 ```
 🚫 Request was cancelled or interrupted.
 
@@ -121,11 +134,13 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "aborted", "cancelled"
 
 ### 7. Billing/Quota Issues
 
 **Example Error:**
+
 ```
 💳 Service quota or billing issue detected.
 
@@ -139,6 +154,7 @@ The new system provides context-aware error messages with actionable troubleshoo
 ```
 
 **Triggers:**
+
 - "quota", "billing"
 
 ## UI Components
@@ -178,17 +194,20 @@ The new error alerts include:
 ## Benefits
 
 ### For Users
+
 - ✅ **Clear Understanding** - Know what went wrong
 - ✅ **Actionable Steps** - Know how to fix issues
 - ✅ **Reduced Frustration** - No more mysterious errors
 - ✅ **Faster Resolution** - Quick access to relevant settings
 
 ### For Support
+
 - ✅ **Reduced Support Tickets** - Users can self-diagnose many issues
 - ✅ **Better Bug Reports** - More specific error information
 - ✅ **Improved User Experience** - Happy users = fewer complaints
 
 ### For Development
+
 - ✅ **Better Error Tracking** - Categorized error patterns
 - ✅ **Maintainable Code** - Centralized error handling logic
 - ✅ **Extensible System** - Easy to add new error types

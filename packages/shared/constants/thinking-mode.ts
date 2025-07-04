@@ -10,7 +10,7 @@ export const THINKING_MODE = {
     /** Minimum thinking budget (0 = disabled) */
     MIN_BUDGET: 0,
     /** Maximum thinking budget for Gemini 2.5 Flash */
-    MAX_BUDGET: 24576,
+    MAX_BUDGET: 24_576,
     /** Default setting for enabling thinking mode */
     DEFAULT_ENABLED: true,
     /** Default setting for including thoughts in response */

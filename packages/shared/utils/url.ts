@@ -14,6 +14,6 @@ export const getHost = (url: string) => {
     try {
         return new URL(url).hostname;
     } catch (error) {
-        return undefined;
+        return;
     }
 };

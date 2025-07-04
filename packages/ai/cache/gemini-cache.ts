@@ -6,8 +6,8 @@
  */
 
 import { GoogleAICacheManager } from '@google/generative-ai/server';
-import { ModelEnum } from '../models';
 import { log } from '@repo/shared/logger';
+import type { ModelEnum } from '../models';
 
 /**
  * Supported Gemini models for explicit caching

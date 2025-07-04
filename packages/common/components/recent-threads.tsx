@@ -8,11 +8,11 @@ import { useEffect } from 'react';
 
 export const RecentThreads = () => {
     const { setIsCommandSearchOpen } = useRootContext();
-    const threads = useChatStore(state => state.threads.slice(0, 4));
+    const threads = useChatStore((state) => state.threads.slice(0, 4));
     const router = useRouter();
 
     useEffect(() => {
-        threads.forEach(thread => {
+        threads.forEach((thread) => {
             router.prefetch(`/chat/${thread.id}`);
         });
     }, [threads, router]);
@@ -26,28 +26,28 @@ export const RecentThreads = () => {
                 <p className="text-muted-foreground text-sm font-medium">Recent Messages</p>
                 <div className="flex-1" />
                 <Button
-                    variant="ghost"
-                    size="xs"
-                    rounded="full"
                     className="text-muted-foreground"
                     onClick={() => setIsCommandSearchOpen(true)}
+                    rounded="full"
+                    size="xs"
+                    variant="ghost"
                 >
-                    View all <ArrowRight strokeWidth={1.5} size={14} />
+                    View all <ArrowRight size={14} strokeWidth={1.5} />
                 </Button>
             </div>
             <div className="grid grid-cols-4 gap-2">
                 {threads
                     ?.sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime())
-                    .map(thread => (
+                    .map((thread) => (
                         <div
+                            className="border-border bg-background flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 text-sm transition-all duration-200 hover:border-yellow-900/20 hover:bg-yellow-700/5 hover:shadow-sm"
                             key={thread.id}
-                            className="bg-background border-border flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 text-sm transition-all duration-200 hover:border-yellow-900/20 hover:bg-yellow-700/5 hover:shadow-sm"
                             onClick={() => router.push(`/chat/${thread.id}`)}
                         >
                             <MessageCircle
+                                className="text-muted-foreground/50"
                                 size={16}
                                 strokeWidth={2}
-                                className="text-muted-foreground/50"
                             />
                             <div className="min-h-2 flex-1" />
                             <p className="line-clamp-2 text-sm font-medium leading-tight">

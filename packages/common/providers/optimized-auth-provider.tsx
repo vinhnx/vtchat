@@ -1,9 +1,9 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { sessionCache } from '@repo/shared/utils/session-cache';
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { log } from '@repo/shared/logger';
+import { sessionCache } from '@repo/shared/utils/session-cache';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
 interface OptimizedAuthContextType {
     isAuthenticated: boolean;
@@ -56,7 +56,7 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
                 refreshSession: refreshSessionStable,
             };
 
-            sessionCache.set('auth-state', authState, 30000); // Cache for 30 seconds
+            sessionCache.set('auth-state', authState, 30_000); // Cache for 30 seconds
             setCachedAuth(authState);
             return;
         }
@@ -81,7 +81,7 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
                 refreshSession: refreshSessionStable,
             };
 
-            sessionCache.set(cacheKey, authState, 60000); // Cache for 1 minute
+            sessionCache.set(cacheKey, authState, 60_000); // Cache for 1 minute
             setCachedAuth(authState);
         }
     }, [session, sessionLoading, sessionError, initialSession, isHydrated, refreshSessionStable]);

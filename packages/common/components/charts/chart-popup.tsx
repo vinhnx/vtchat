@@ -1,8 +1,7 @@
 'use client';
 
-import { ChartRenderer } from '@repo/ui';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui';
-import { X, BarChart3 } from 'lucide-react';
+import { ChartRenderer, Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui';
+import { BarChart3, X } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChartData = {
@@ -22,16 +21,16 @@ export const ChartPopup = ({ chartData, isOpen, onClose }: ChartPopupProps) => {
     if (!chartData) return null;
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-h-[80vh] max-w-[95vw] sm:max-w-2xl lg:max-w-4xl overflow-y-auto">
+        <Dialog onOpenChange={onClose} open={isOpen}>
+            <DialogContent className="max-h-[80vh] max-w-[95vw] overflow-y-auto sm:max-w-2xl lg:max-w-4xl">
                 <DialogHeader className="flex flex-row items-center justify-between">
-                    <DialogTitle className="text-lg font-semibold flex items-center gap-2">
+                    <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
                         <BarChart3 size={18} />
                         {chartData.title}
                     </DialogTitle>
                     <button
-                        onClick={onClose}
                         className="rounded-md p-1 transition-colors hover:bg-gray-100"
+                        onClick={onClose}
                     >
                         <X size={16} />
                     </button>

@@ -10,7 +10,7 @@ interface CacheEntry<T> {
 
 class SessionCache {
     private cache = new Map<string, CacheEntry<any>>();
-    private readonly defaultTTL = 60000; // 1 minute
+    private readonly defaultTTL = 60_000; // 1 minute
 
     set<T>(key: string, data: T, ttl: number = this.defaultTTL): void {
         this.cache.set(key, {

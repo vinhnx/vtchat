@@ -9,10 +9,10 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-yaml';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button, cn } from '@repo/ui';
-import { FileCode, Check, Copy, File, FileJson, FileText, Terminal } from 'lucide-react';
+import { Check, Copy, File, FileCode, FileJson, FileText, Terminal } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './code-block.css';
 import { log } from '@repo/shared/logger';
 
@@ -71,7 +71,7 @@ export const CodeBlock = ({
     return (
         <div
             className={cn(
-                'not-prose bg-tertiary  relative my-4 w-full overflow-hidden rounded-xl border px-1 pb-1',
+                'not-prose bg-tertiary relative my-4 w-full overflow-hidden rounded-xl border px-1 pb-1',
                 variant === 'secondary' && 'bg-secondary',
                 className,
                 !showHeader && 'rounded-none border-none bg-transparent p-0'
@@ -84,10 +84,10 @@ export const CodeBlock = ({
                         {lang}
                     </p>
                     <Button
-                        variant="ghost"
-                        size="xs"
                         className="gap-2"
                         onClick={() => code && copy(code)}
+                        size="xs"
+                        variant="ghost"
                     >
                         {showCopied ? (
                             <Check size={14} strokeWidth="2" />
@@ -98,10 +98,10 @@ export const CodeBlock = ({
                 </div>
             )}
             <pre
-                ref={preRef}
                 className={cn(
-                    'text-foreground border-border bg-background no-scrollbar relative overflow-x-auto rounded-lg border px-6 py-4 font-mono text-[13px] font-[300]'
+                    'no-scrollbar border-border bg-background text-foreground relative overflow-x-auto rounded-lg border px-6 py-4 font-mono text-[13px] font-[300]'
                 )}
+                ref={preRef}
             >
                 <code className={cn(`language-${lang}`)} ref={ref}>
                     {code}
@@ -119,7 +119,7 @@ export function useClipboard() {
     const [copiedText, setCopiedText] = useState<CopiedValue>(null);
     const [showCopied, setShowCopied] = useState<boolean>(false);
 
-    const copy: CopyFn = useCallback(async text => {
+    const copy: CopyFn = useCallback(async (text) => {
         if (!navigator?.clipboard) {
             log.warn({}, 'Clipboard not supported');
             return false;

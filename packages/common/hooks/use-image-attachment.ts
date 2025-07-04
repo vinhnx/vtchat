@@ -1,6 +1,6 @@
 import { useChatStore } from '@repo/common/store';
 import { useToast } from '@repo/ui';
-import { ChangeEvent, useCallback } from 'react';
+import { type ChangeEvent, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 // const resizeFile = (file: File) =>
 //   new Promise((resolve) => {
@@ -25,9 +25,9 @@ export type TRenderImageUpload = {
 };
 
 export const useImageAttachment = () => {
-    const imageAttachment = useChatStore(state => state.imageAttachment);
-    const setImageAttachment = useChatStore(state => state.setImageAttachment);
-    const clearImageAttachment = useChatStore(state => state.clearImageAttachment);
+    const imageAttachment = useChatStore((state) => state.imageAttachment);
+    const setImageAttachment = useChatStore((state) => state.setImageAttachment);
+    const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles?.[0];

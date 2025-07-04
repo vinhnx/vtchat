@@ -56,7 +56,10 @@ describe('StructuredDataDisplay', () => {
 
     it('should not render when no structured data', () => {
         (useChatStore as any).mockImplementation((selector: any) =>
-            selector({ structuredData: null, clearStructuredData: mockClearStructuredData })
+            selector({
+                structuredData: null,
+                clearStructuredData: mockClearStructuredData,
+            })
         );
 
         const { container } = render(<StructuredDataDisplay />);
@@ -161,7 +164,10 @@ describe('StructuredDataDisplay', () => {
         };
 
         (useChatStore as any).mockImplementation((selector: any) =>
-            selector({ structuredData: invoiceData, clearStructuredData: mockClearStructuredData })
+            selector({
+                structuredData: invoiceData,
+                clearStructuredData: mockClearStructuredData,
+            })
         );
 
         render(<StructuredDataDisplay />);
@@ -177,7 +183,10 @@ describe('StructuredDataDisplay', () => {
         };
 
         (useChatStore as any).mockImplementation((selector: any) =>
-            selector({ structuredData: emptyData, clearStructuredData: mockClearStructuredData })
+            selector({
+                structuredData: emptyData,
+                clearStructuredData: mockClearStructuredData,
+            })
         );
 
         render(<StructuredDataDisplay />);

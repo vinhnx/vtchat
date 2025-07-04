@@ -1,4 +1,3 @@
-
 import { log } from '@repo/shared/logger';
 /**
  * Storage cleanup utilities for handling corrupted localStorage data
@@ -15,7 +14,7 @@ export function cleanupCorruptedStorage(): void {
     // Get all localStorage keys that match our per-account patterns
     const storageKeys = Object.keys(localStorage);
     const accountStorageKeys = storageKeys.filter(
-        key =>
+        (key) =>
             key.startsWith('api-keys-storage-') ||
             key.startsWith('mcp-tools-storage-') ||
             key.startsWith('chat-config-')
@@ -52,11 +51,8 @@ export function cleanupCorruptedStorage(): void {
  * These are no longer used since the free trial system was removed
  */
 function cleanupDeprecatedRagKeys(): void {
-    const deprecatedKeys = [
-        'rag-onboarding-completed',
-        'rag-system-usage-count'
-    ];
-    
+    const deprecatedKeys = ['rag-onboarding-completed', 'rag-system-usage-count'];
+
     for (const key of deprecatedKeys) {
         if (localStorage.getItem(key) !== null) {
             localStorage.removeItem(key);
@@ -86,11 +82,16 @@ export function safeJsonParse<T>(value: string | null, fallback: T): T {
 
     // Check if it starts and ends with proper JSON characters
     if (
-        !(cleanValue.startsWith('{') && cleanValue.endsWith('}')) &&
-        !(cleanValue.startsWith('[') && cleanValue.endsWith(']')) &&
-        !(cleanValue.startsWith('"') && cleanValue.endsWith('"'))
+        !(
+            (cleanValue.startsWith('{') && cleanValue.endsWith('}')) ||
+            (cleanValue.startsWith('[') && cleanValue.endsWith(']')) ||
+            (cleanValue.startsWith('"') && cleanValue.endsWith('"'))
+        )
     ) {
-        log.warn({ value: cleanValue.substring(0, 100) }, '[StorageCleanup] Invalid JSON format, using fallback');
+        log.warn(
+            { value: cleanValue.substring(0, 100) },
+            '[StorageCleanup] Invalid JSON format, using fallback'
+        );
         return fallback;
     }
 
@@ -98,7 +99,10 @@ export function safeJsonParse<T>(value: string | null, fallback: T): T {
         const parsed = JSON.parse(cleanValue);
         return parsed;
     } catch (error) {
-        log.warn({ value: cleanValue.substring(0, 100), error }, '[StorageCleanup] Failed to parse JSON, using fallback');
+        log.warn(
+            { value: cleanValue.substring(0, 100), error },
+            '[StorageCleanup] Failed to parse JSON, using fallback'
+        );
         return fallback;
     }
 }

@@ -1,7 +1,7 @@
-import { auth } from '@/lib/auth-server';
 import { PaymentService } from '@repo/shared/config/payment';
-import { NextRequest, NextResponse } from 'next/server';
 import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';

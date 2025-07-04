@@ -1,8 +1,8 @@
 'use client';
 
-import { Component, ReactNode } from 'react';
-import { TypographyH2 } from '@repo/ui';
 import { log } from '@repo/shared/logger';
+import { TypographyH2 } from '@repo/ui';
+import { Component, type ReactNode } from 'react';
 
 interface Props {
     children: ReactNode;
@@ -41,8 +41,8 @@ export class AuthErrorBoundary extends Component<Props, State> {
                                 Please refresh the page or try again later
                             </p>
                             <button
-                                onClick={() => window.location.reload()}
                                 className="bg-primary text-primary-foreground hover:bg-primary/90 mt-4 rounded-md px-4 py-2 text-sm"
+                                onClick={() => window.location.reload()}
                             >
                                 Refresh Page
                             </button>

@@ -1,11 +1,11 @@
 import { ChatEditor, markdownStyles } from '@repo/common/components';
 import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { ThreadItem } from '@repo/shared/types';
+import type { ThreadItem } from '@repo/shared/types';
 import { Button, cn, useToast } from '@repo/ui';
-import { Check, Copy, Pencil, Clock, CheckCheck, MessageCircle } from 'lucide-react';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CheckCheck, Clock, Copy, MessageCircle, Pencil } from 'lucide-react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';
@@ -23,7 +23,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
     const [showExpandButton, setShowExpandButton] = useState(false);
     const { copyToClipboard, status } = useCopyText();
     const maxHeight = 120;
-    const isGenerating = useChatStore(state => state.isGenerating);
+    const isGenerating = useChatStore((state) => state.isGenerating);
 
     useEffect(() => {
         if (messageRef.current) {
@@ -37,7 +37,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
         }
     }, [copyToClipboard]);
 
-    const toggleExpand = useCallback(() => setIsExpanded(prev => !prev), []);
+    const toggleExpand = useCallback(() => setIsExpanded((prev) => !prev), []);
 
     // Enhanced message status indicator
     const getMessageStatus = () => {
@@ -48,8 +48,8 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
     };
 
     const MessageStatusIcon = ({ status }: { status: string }) => {
-        const iconProps = { size: 12, className: "opacity-70" };
-        
+        const iconProps = { size: 12, className: 'opacity-70' };
+
         switch (status) {
             case 'sending':
                 return <Clock {...iconProps} className="animate-pulse opacity-50" />;
@@ -65,11 +65,11 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
     };
 
     return (
-        <motion.div 
+        <motion.div
+            animate={{ opacity: 1, y: 0 }}
             className="flex w-full flex-col items-end gap-3 pt-4"
             initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
         >
             {imageAttachment && <ImageMessage imageAttachment={imageAttachment} />}
             {threadItem.documentAttachment && (
@@ -85,25 +85,32 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                     className={cn(
                         'group relative overflow-hidden rounded-2xl transition-all duration-200',
                         'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg',
-                        'hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]',
+                        'hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]',
                         'border border-blue-400/30',
                         isEditing && 'ring-2 ring-blue-300 ring-offset-2'
                     )}
                     whileHover={{ y: -1 }}
                 >
                     {/* Message content */}
-                    {!isEditing ? (
+                    {isEditing ? (
+                        <EditMessage
+                            message={message}
+                            onCancel={() => setIsEditing(false)}
+                            threadItem={threadItem}
+                            width={messageRef.current?.offsetWidth}
+                        />
+                    ) : (
                         <>
                             <div
-                                ref={messageRef}
                                 className={cn(
-                                    'relative px-4 py-3 text-[15px] leading-relaxed font-medium',
+                                    'relative px-4 py-3 text-[15px] font-medium leading-relaxed',
                                     'selection:bg-blue-200/30',
                                     {
                                         'pb-14': isExpanded,
                                         markdownStyles,
                                     }
                                 )}
+                                ref={messageRef}
                                 style={{
                                     maxHeight: isExpanded ? 'none' : maxHeight,
                                     transition: 'max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -114,21 +121,21 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
 
                             {/* Enhanced action buttons with premium styling */}
                             <AnimatePresence>
-                                {(showExpandButton || true) && (
+                                {
                                     <motion.div
-                                        className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                                        initial={{ opacity: 0, y: 5 }}
                                         animate={{ opacity: 1, y: 0 }}
+                                        className="absolute bottom-0 left-0 right-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                                         exit={{ opacity: 0, y: 5 }}
+                                        initial={{ opacity: 0, y: 5 }}
                                     >
-                                        <div className="bg-gradient-to-t from-blue-600 via-blue-600/95 to-transparent flex w-full items-center justify-between gap-2 px-4 py-3">
+                                        <div className="flex w-full items-center justify-between gap-2 bg-gradient-to-t from-blue-600 via-blue-600/95 to-transparent px-4 py-3">
                                             {showExpandButton && (
                                                 <Button
-                                                    variant="ghost"
-                                                    size="xs"
-                                                    rounded="full"
-                                                    className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all duration-200 hover:scale-105"
+                                                    className="border border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-white/20"
                                                     onClick={toggleExpand}
+                                                    rounded="full"
+                                                    size="xs"
+                                                    variant="ghost"
                                                 >
                                                     {isExpanded ? 'Show less' : 'Show more'}
                                                 </Button>
@@ -136,14 +143,22 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
 
                                             <div className="flex items-center gap-1">
                                                 <Button
-                                                    variant="ghost"
-                                                    size="icon-sm"
-                                                    className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all duration-200 hover:scale-110"
+                                                    className="border border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20"
                                                     onClick={handleCopy}
-                                                    tooltip={status === 'copied' ? 'Copied!' : 'Copy message'}
+                                                    size="icon-sm"
+                                                    tooltip={
+                                                        status === 'copied'
+                                                            ? 'Copied!'
+                                                            : 'Copy message'
+                                                    }
+                                                    variant="ghost"
                                                 >
                                                     <motion.div
-                                                        animate={status === 'copied' ? { scale: [1, 1.2, 1] } : {}}
+                                                        animate={
+                                                            status === 'copied'
+                                                                ? { scale: [1, 1.2, 1] }
+                                                                : {}
+                                                        }
                                                         transition={{ duration: 0.2 }}
                                                     >
                                                         {status === 'copied' ? (
@@ -155,41 +170,34 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                                 </Button>
 
                                                 <Button
+                                                    className="border border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20 disabled:opacity-50"
                                                     disabled={
                                                         isGenerating ||
                                                         threadItem.status === 'QUEUED' ||
                                                         threadItem.status === 'PENDING'
                                                     }
-                                                    variant="ghost"
-                                                    size="icon-sm"
-                                                    className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all duration-200 hover:scale-110 disabled:opacity-50"
-                                                    tooltip="Edit message"
                                                     onClick={() => setIsEditing(true)}
+                                                    size="icon-sm"
+                                                    tooltip="Edit message"
+                                                    variant="ghost"
                                                 >
                                                     <Pencil size={14} strokeWidth={2} />
                                                 </Button>
                                             </div>
                                         </div>
                                     </motion.div>
-                                )}
+                                }
                             </AnimatePresence>
                         </>
-                    ) : (
-                        <EditMessage
-                            width={messageRef.current?.offsetWidth}
-                            message={message}
-                            threadItem={threadItem}
-                            onCancel={() => setIsEditing(false)}
-                        />
                     )}
                 </motion.div>
 
                 {/* Message status and timestamp */}
-                <div className="flex items-center justify-end gap-2 mt-1 px-1">
-                    <span className="text-xs text-muted-foreground/70">
-                        {new Date(threadItem.createdAt).toLocaleTimeString([], { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
+                <div className="mt-1 flex items-center justify-end gap-2 px-1">
+                    <span className="text-muted-foreground/70 text-xs">
+                        {new Date(threadItem.createdAt).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
                         })}
                     </span>
                     <MessageStatusIcon status={getMessageStatus()} />
@@ -209,11 +217,11 @@ export type TEditMessage = {
 
 export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEditMessage) => {
     const { handleSubmit } = useAgentStream();
-    const removeFollowupThreadItems = useChatStore(state => state.removeFollowupThreadItems);
-    const getThreadItems = useChatStore(state => state.getThreadItems);
+    const removeFollowupThreadItems = useChatStore((state) => state.removeFollowupThreadItems);
+    const getThreadItems = useChatStore((state) => state.getThreadItems);
     const { editor } = useChatEditor({ defaultContent: message });
     const { toast } = useToast();
-    
+
     const handleSave = async (query: string) => {
         if (!query.trim()) {
             toast({
@@ -239,43 +247,43 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     };
 
     return (
-        <motion.div 
+        <motion.div
+            animate={{ opacity: 1 }}
             className="relative flex max-w-full flex-col items-end gap-3"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
         >
             <div
-                className="relative px-4 py-3 text-base font-medium bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"
+                className="relative rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base font-medium backdrop-blur-sm"
                 style={{
                     minWidth: width,
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
                 <ChatEditor
-                    maxHeight="120px"
-                    editor={editor}
-                    sendMessage={() => handleSave(editor?.getText() || '')}
                     className={cn(
-                        'text-white placeholder:text-white/70 max-w-full overflow-y-auto !p-0 border-none focus:ring-0',
+                        'max-w-full overflow-y-auto border-none !p-0 text-white placeholder:text-white/70 focus:ring-0',
                         markdownStyles
                     )}
+                    editor={editor}
+                    maxHeight="120px"
+                    sendMessage={() => handleSave(editor?.getText() || '')}
                 />
             </div>
-            
+
             <div className="flex items-center gap-2">
                 <Button
-                    size="sm"
-                    className="bg-green-500 hover:bg-green-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105"
+                    className="bg-green-500 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-green-600 hover:shadow-lg"
                     onClick={() => handleSave(editor?.getText() || '')}
+                    size="sm"
                 >
                     Save Changes
                 </Button>
-                <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm transition-all duration-200"
+                <Button
+                    className="border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20"
                     onClick={onCancel}
+                    size="sm"
+                    variant="outline"
                 >
                     Cancel
                 </Button>

@@ -2,7 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { z } from 'zod';
 import { getModelFromChatMode, ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     generateObject,
     getHumanizedDate,
@@ -87,7 +87,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             thinkingMode: context?.get('thinkingMode'),
         });
 
-        context?.update('queries', current => [...(current ?? []), ...(object?.queries || [])]);
+        context?.update('queries', (current) => [...(current ?? []), ...(object?.queries || [])]);
         // Update flow event with initial goal
 
         updateStep({

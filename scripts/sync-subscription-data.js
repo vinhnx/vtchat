@@ -9,12 +9,12 @@
  * Usage: node scripts/sync-subscription-data.js
  */
 
+import { log } from '@repo/shared/logger';
 import { and, eq, isNull } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { users, userSubscriptions } from '../apps/web/lib/database/schema.js';
+import { userSubscriptions, users } from '../apps/web/lib/database/schema.js';
 import { PlanSlug } from '../packages/shared/types/subscription.ts';
-import { log } from '@repo/shared/logger';
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -53,8 +53,11 @@ async function syncSubscriptionData() {
         console.log(
             `📋 Found ${usersWithoutSubscriptions.length} users that need subscription records:`
         );
-        log.info({ userCount: usersWithoutSubscriptions.length }, 'Found users needing subscription records');
-        usersWithoutSubscriptions.forEach(user => {
+        log.info(
+            { userCount: usersWithoutSubscriptions.length },
+            'Found users needing subscription records'
+        );
+        usersWithoutSubscriptions.forEach((user) => {
             console.log(`   - User ID: ${user.id}`);
         });
 
@@ -82,7 +85,10 @@ async function syncSubscriptionData() {
         console.log(
             `🎉 Successfully synced ${usersWithoutSubscriptions.length} subscription records`
         );
-        log.info({ count: usersWithoutSubscriptions.length }, 'Successfully synced subscription records');
+        log.info(
+            { count: usersWithoutSubscriptions.length },
+            'Successfully synced subscription records'
+        );
     } catch (error) {
         console.error('❌ Error syncing subscription data:', error);
         log.error({ error }, 'Error syncing subscription data');

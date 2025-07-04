@@ -1,12 +1,12 @@
-import { auth } from '@/lib/auth-server';
-import { ChatModeConfig, ChatMode } from '@repo/shared/config';
-import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
-import { Geo, geolocation } from '@vercel/functions';
-import { NextRequest } from 'next/server';
-import { checkVTPlusAccess, checkSignedInFeatureAccess } from '../subscription/access-control';
-import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
 import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
+import { type Geo, geolocation } from '@vercel/functions';
+import type { NextRequest } from 'next/server';
+import { auth } from '@/lib/auth-server';
+import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/access-control';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -16,7 +16,6 @@ import { completionRequestSchema, SSE_HEADERS } from './types';
 import { getIp } from './utils';
 
 export async function POST(request: NextRequest) {
-    
     if (request.method === 'OPTIONS') {
         return new Response(null, { headers: SSE_HEADERS });
     }
@@ -28,11 +27,14 @@ export async function POST(request: NextRequest) {
         const userId = session?.user?.id ?? undefined;
 
         const parsed = await request.json().catch(() => ({}));
-        
+
         const validatedBody = completionRequestSchema.safeParse(parsed);
 
         if (!validatedBody.success) {
-            log.warn({ validationError: validatedBody.error.format() }, 'Request validation failed');
+            log.warn(
+                { validationError: validatedBody.error.format() },
+                'Request validation failed'
+            );
             return new Response(
                 JSON.stringify({
                     error: 'Invalid request body',
@@ -61,21 +63,21 @@ export async function POST(request: NextRequest) {
 
         // Rate limiting for free Gemini 2.5 Flash Lite model
         const selectedModel = getModelFromChatMode(data.mode);
-        
+
         if (selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE) {
             // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
             const geminiApiKey = data.apiKeys?.['GEMINI_API_KEY'];
             const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
-            
+
             if (!hasByokGeminiKey) {
                 // Require authentication for free model access
                 if (!userId) {
                     return new Response(
-                        JSON.stringify({ 
+                        JSON.stringify({
                             error: 'Authentication required',
                             message: 'Please register to use the free Gemini 2.5 Flash Lite model.',
-                            redirect: '/auth/login'
-                        }), 
+                            redirect: '/auth/login',
+                        }),
                         {
                             status: 401,
                             headers: { 'Content-Type': 'application/json' },
@@ -92,15 +94,17 @@ export async function POST(request: NextRequest) {
                     // Continue without rate limiting if check fails (graceful degradation)
                     rateLimitResult = { allowed: true };
                 }
-                
-                if (!rateLimitResult.allowed) {
-                    const resetTime = rateLimitResult.reason === 'daily_limit_exceeded' 
-                        ? rateLimitResult.resetTime.daily 
-                        : rateLimitResult.resetTime.minute;
 
-                    const message = rateLimitResult.reason === 'daily_limit_exceeded'
-                        ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
-                        : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
+                if (!rateLimitResult.allowed) {
+                    const resetTime =
+                        rateLimitResult.reason === 'daily_limit_exceeded'
+                            ? rateLimitResult.resetTime.daily
+                            : rateLimitResult.resetTime.minute;
+
+                    const message =
+                        rateLimitResult.reason === 'daily_limit_exceeded'
+                            ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
+                            : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
 
                     return new Response(
                         JSON.stringify({
@@ -111,13 +115,15 @@ export async function POST(request: NextRequest) {
                             remainingMinute: rateLimitResult.remainingMinute,
                             resetTime: resetTime.toISOString(),
                             upgradeUrl: '/plus',
-                            usageSettingsAction: 'open_usage_settings'
+                            usageSettingsAction: 'open_usage_settings',
                         }),
                         {
                             status: 429,
-                            headers: { 
+                            headers: {
                                 'Content-Type': 'application/json',
-                                'Retry-After': Math.ceil((resetTime.getTime() - Date.now()) / 1000).toString()
+                                'Retry-After': Math.ceil(
+                                    (resetTime.getTime() - Date.now()) / 1000
+                                ).toString(),
                             },
                         }
                     );
@@ -192,14 +198,19 @@ export async function POST(request: NextRequest) {
             abortController,
             gl,
             selectedModel,
-            hasByokGeminiKey: !!(data.apiKeys?.['GEMINI_API_KEY'] && data.apiKeys['GEMINI_API_KEY'].trim().length > 0),
+            hasByokGeminiKey: !!(
+                data.apiKeys?.['GEMINI_API_KEY'] && data.apiKeys['GEMINI_API_KEY'].trim().length > 0
+            ),
         });
 
         return new Response(stream, { headers: enhancedHeaders });
     } catch (error) {
         log.error({ error }, 'Error in POST handler');
         return new Response(
-            JSON.stringify({ error: 'Internal server error', details: String(error) }),
+            JSON.stringify({
+                error: 'Internal server error',
+                details: String(error),
+            }),
             { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
     }
@@ -230,7 +241,7 @@ function createCompletionStream({
 
             heartbeatInterval = setInterval(() => {
                 controller.enqueue(_encoder.encode(': heartbeat\n\n'));
-            }, 15000);
+            }, 15_000);
 
             try {
                 await executeStream({
@@ -242,7 +253,11 @@ function createCompletionStream({
                     userId: userId ?? undefined,
                     onFinish: async () => {
                         // Record request for rate limiting (skip for BYOK users)
-                        if (userId && selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE && !hasByokGeminiKey) {
+                        if (
+                            userId &&
+                            selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE &&
+                            !hasByokGeminiKey
+                        ) {
                             await recordRequest(userId, selectedModel);
                         }
                     },

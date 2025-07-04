@@ -33,9 +33,9 @@ export const StructuredOutputButton = () => {
     const isSignedIn = !!session;
 
     // Use individual selectors to avoid infinite re-renders
-    const structuredData = useChatStore(state => state.structuredData);
-    const useStructuredOutput = useChatStore(state => state.useStructuredOutput);
-    const setUseStructuredOutput = useChatStore(state => state.setUseStructuredOutput);
+    const structuredData = useChatStore((state) => state.structuredData);
+    const useStructuredOutput = useChatStore((state) => state.useStructuredOutput);
+    const setUseStructuredOutput = useChatStore((state) => state.setUseStructuredOutput);
 
     const isProcessed = !!structuredData;
 
@@ -152,47 +152,51 @@ export const StructuredOutputButton = () => {
     return (
         <>
             <Button
-                size="icon-sm"
-                variant="ghost"
-                onClick={handleClick}
-                tooltip={
-                    !hasStructuredOutputAccess
-                        ? 'Unlock AI-powered structured data extraction with VT+'
-                        : !hasDocument
-                          ? 'Upload a PDF document to extract structured data'
-                          : !isPDF
-                            ? 'Only PDF documents are supported'
-                            : !isGeminiModel
-                              ? 'Switch to Gemini model to use structured output'
-                              : isProcessed
-                                ? `Structured data extracted from ${structuredData?.fileName}`
-                                : 'Extract structured data from PDF (Gemini only)'
-                }
                 className={cn(
                     'text-muted-foreground hover:text-foreground',
                     useStructuredOutput && 'bg-green-500/10 text-green-500 hover:text-green-600',
                     isProcessed && 'text-green-600 hover:text-green-700',
                     !hasStructuredOutputAccess && 'opacity-50'
                 )}
+                onClick={handleClick}
+                size="icon-sm"
+                tooltip={
+                    hasStructuredOutputAccess
+                        ? hasDocument
+                            ? isPDF
+                                ? isGeminiModel
+                                    ? isProcessed
+                                        ? `Structured data extracted from ${structuredData?.fileName}`
+                                        : 'Extract structured data from PDF (Gemini only)'
+                                    : 'Switch to Gemini model to use structured output'
+                                : 'Only PDF documents are supported'
+                            : 'Upload a PDF document to extract structured data'
+                        : 'Unlock AI-powered structured data extraction with VT+'
+                }
+                variant="ghost"
             >
-                {!hasStructuredOutputAccess ? (
-                    <Sparkles size={16} strokeWidth={2} />
-                ) : !hasDocument ? (
-                    <FileUp size={16} strokeWidth={2} />
-                ) : !isGeminiModel ? (
-                    <Info size={16} strokeWidth={2} />
+                {hasStructuredOutputAccess ? (
+                    hasDocument ? (
+                        isGeminiModel ? (
+                            <ScanText
+                                className={isProcessed ? 'text-green-600' : ''}
+                                size={16}
+                                strokeWidth={2}
+                            />
+                        ) : (
+                            <Info size={16} strokeWidth={2} />
+                        )
+                    ) : (
+                        <FileUp size={16} strokeWidth={2} />
+                    )
                 ) : (
-                    <ScanText
-                        size={16}
-                        strokeWidth={2}
-                        className={isProcessed ? 'text-green-600' : ''}
-                    />
+                    <Sparkles size={16} strokeWidth={2} />
                 )}
             </Button>
 
             {/* Information/Guide Dialog */}
-            <Dialog open={showDialog} onOpenChange={setShowDialog}>
-                <DialogContent className="sm:max-w-md" ariaTitle="Structured Output Information">
+            <Dialog onOpenChange={setShowDialog} open={showDialog}>
+                <DialogContent ariaTitle="Structured Output Information" className="sm:max-w-md">
                     <DialogHeader>
                         <div className="flex items-center gap-3">
                             {dialogContent.icon}
@@ -220,15 +224,15 @@ export const StructuredOutputButton = () => {
 
                             {hasStructuredOutputAccess && (
                                 <Button
-                                    variant="outlined"
-                                    size="sm"
+                                    className="w-full"
                                     onClick={() => {
                                         setShowDialog(false);
                                         setShowSchemaBuilder(true);
                                     }}
-                                    className="w-full"
+                                    size="sm"
+                                    variant="outlined"
                                 >
-                                    <Sparkles size={14} className="mr-2" />
+                                    <Sparkles className="mr-2" size={14} />
                                     Create Custom Schema (VT+ Only)
                                 </Button>
                             )}
@@ -239,25 +243,25 @@ export const StructuredOutputButton = () => {
                         {dialogContent.showUpgrade ? (
                             <div className="flex w-full gap-2">
                                 <Button
-                                    variant="outlined"
-                                    onClick={() => setShowDialog(false)}
                                     className="flex-1"
+                                    onClick={() => setShowDialog(false)}
+                                    variant="outlined"
                                 >
                                     Maybe Later
                                 </Button>
                                 <Button
+                                    className="flex-1"
                                     onClick={() => {
                                         setShowDialog(false);
                                         router.push('/plus');
                                     }}
-                                    className="flex-1"
                                 >
-                                    <Sparkles size={14} className="mr-2" />
+                                    <Sparkles className="mr-2" size={14} />
                                     Sign In
                                 </Button>
                             </div>
                         ) : (
-                            <Button onClick={() => setShowDialog(false)} className="w-full">
+                            <Button className="w-full" onClick={() => setShowDialog(false)}>
                                 Got it!
                             </Button>
                         )}
@@ -267,14 +271,14 @@ export const StructuredOutputButton = () => {
 
             {/* Custom Schema Builder Dialog */}
             {showSchemaBuilder && (
-                <Dialog open={showSchemaBuilder} onOpenChange={setShowSchemaBuilder}>
+                <Dialog onOpenChange={setShowSchemaBuilder} open={showSchemaBuilder}>
                     <DialogContent
-                        className="max-h-[80vh] overflow-y-auto sm:max-w-4xl"
                         ariaTitle="Custom Schema Builder"
+                        className="max-h-[80vh] overflow-y-auto sm:max-w-4xl"
                     >
                         <CustomSchemaBuilder
-                            onSchemaCreate={handleCustomSchemaCreate}
                             onClose={() => setShowSchemaBuilder(false)}
+                            onSchemaCreate={handleCustomSchemaCreate}
                         />
                     </DialogContent>
                 </Dialog>
@@ -282,10 +286,10 @@ export const StructuredOutputButton = () => {
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to use structured output extraction functionality."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to use structured output extraction functionality."
             />
         </>
     );

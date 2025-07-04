@@ -71,7 +71,7 @@ export function isVTPlusFeatureEnabled(featureId: FeatureSlug): boolean {
  * Get all enabled VT+ features
  */
 export function getEnabledVTPlusFeatures(): VTPlusFeature[] {
-    return Object.values(VT_PLUS_FEATURES).filter(feature => feature.enabled);
+    return Object.values(VT_PLUS_FEATURES).filter((feature) => feature.enabled);
 }
 
 /**

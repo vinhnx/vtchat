@@ -1,10 +1,10 @@
 import { CodeBlock, ToolIcon } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
-import { ToolCall as ToolCallType } from '@repo/shared/types';
-import { Badge, cn, Card } from '@repo/ui';
-import { ChevronDown, FileText, Sigma, Play, Settings } from 'lucide-react';
+import type { ToolCall as ToolCallType } from '@repo/shared/types';
+import { Badge, Card, cn } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, FileText, Play, Settings, Sigma } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export type ToolCallProps = {
     toolCall: ToolCallType;
@@ -12,7 +12,7 @@ export type ToolCallProps = {
 
 export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const toggleOpen = useCallback(() => setIsOpen(prev => !prev), []);
+    const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
 
     // Check if this is a math calculator tool
     const isToolMathTool = isMathTool(toolCall.toolName);
@@ -26,8 +26,8 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
             toolCall.toolName.includes('read'));
 
     const getToolIcon = () => {
-        if (isToolMathTool) return <Sigma size={16} className="text-green-600" />;
-        if (isDocumentTool) return <FileText size={16} className="text-blue-600" />;
+        if (isToolMathTool) return <Sigma className="text-green-600" size={16} />;
+        if (isDocumentTool) return <FileText className="text-blue-600" size={16} />;
         return <ToolIcon />;
     };
 
@@ -42,7 +42,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     };
 
     return (
-        <Card className="w-full border-muted/50 bg-muted/30 transition-all duration-200 hover:bg-muted/40">
+        <Card className="border-muted/50 bg-muted/30 hover:bg-muted/40 w-full transition-all duration-200">
             <motion.div
                 className="flex w-full cursor-pointer flex-row items-center justify-between gap-3 p-3"
                 onClick={toggleOpen}
@@ -50,55 +50,53 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                 whileTap={{ scale: 0.99 }}
             >
                 <div className="flex flex-row items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
                         {getToolIcon()}
                     </div>
                     <div className="flex flex-col gap-1">
-                        <Badge 
-                            variant="secondary" 
+                        <Badge
                             className={cn(
-                                "border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium",
+                                'border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium',
                                 getToolBadge()
                             )}
+                            variant="secondary"
                         >
-                            <Play size={10} className="mr-1" />
+                            <Play className="mr-1" size={10} />
                             {getToolLabel()}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">Tool execution</span>
+                        <span className="text-muted-foreground text-xs">Tool execution</span>
                     </div>
                 </div>
                 <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
+                    className="hover:bg-muted/60 rounded-md p-1"
                     transition={{ duration: 0.2 }}
-                    className="rounded-md p-1 hover:bg-muted/60"
                 >
-                    <ChevronDown
-                        size={16}
-                        strokeWidth={2}
-                        className="text-muted-foreground"
-                    />
+                    <ChevronDown className="text-muted-foreground" size={16} strokeWidth={2} />
                 </motion.div>
             </motion.div>
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        animate={{ height: 'auto', opacity: 1 }}
                         className="overflow-hidden"
+                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <div className="border-t border-muted/50 p-3 pt-3">
-                            <div className="flex items-center gap-2 mb-2">
-                                <Settings size={14} className="text-muted-foreground" />
-                                <span className="text-xs font-medium text-muted-foreground">Parameters</span>
+                        <div className="border-muted/50 border-t p-3 pt-3">
+                            <div className="mb-2 flex items-center gap-2">
+                                <Settings className="text-muted-foreground" size={14} />
+                                <span className="text-muted-foreground text-xs font-medium">
+                                    Parameters
+                                </span>
                             </div>
                             <CodeBlock
-                                variant="secondary"
-                                showHeader={false}
-                                lang="json"
-                                className="rounded-md border-muted/50"
+                                className="border-muted/50 rounded-md"
                                 code={JSON.stringify(toolCall.args, null, 2)}
+                                lang="json"
+                                showHeader={false}
+                                variant="secondary"
                             />
                         </div>
                     </motion.div>

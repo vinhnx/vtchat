@@ -1,5 +1,5 @@
 import { Badge } from '@repo/ui';
-import { Sigma, Loader2 } from 'lucide-react';
+import { Loader2, Sigma } from 'lucide-react';
 import { memo } from 'react';
 
 export type MathCalculatorIndicatorProps = {
@@ -12,8 +12,8 @@ export const MathCalculatorIndicator = memo(({ isCalculating }: MathCalculatorIn
     return (
         <div className="flex items-center gap-2 rounded-md border border-green-200 bg-green-50 p-2">
             <div className="flex items-center gap-1">
-                <Sigma size={16} className="text-green-600" />
-                <Loader2 size={14} className="animate-spin text-green-600" />
+                <Sigma className="text-green-600" size={16} />
+                <Loader2 className="animate-spin text-green-600" size={14} />
             </div>
             <Badge className="border-green-300 bg-green-100 text-green-800">
                 🧮 Calculating...

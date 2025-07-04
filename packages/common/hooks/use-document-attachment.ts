@@ -3,13 +3,13 @@
 import { useChatStore } from '@repo/common/store';
 import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useToast } from '@repo/ui';
-import { ChangeEvent, useCallback } from 'react';
+import { type ChangeEvent, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export const useDocumentAttachment = () => {
-    const documentAttachment = useChatStore(state => state.documentAttachment);
-    const setDocumentAttachment = useChatStore(state => state.setDocumentAttachment);
-    const clearDocumentAttachment = useChatStore(state => state.clearDocumentAttachment);
+    const documentAttachment = useChatStore((state) => state.documentAttachment);
+    const setDocumentAttachment = useChatStore((state) => state.setDocumentAttachment);
+    const clearDocumentAttachment = useChatStore((state) => state.clearDocumentAttachment);
     const { toast } = useToast();
 
     const handleFileRead = useCallback(

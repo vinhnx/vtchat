@@ -2,7 +2,7 @@ import { Footer, MarkdownContent } from '@repo/common/components';
 import { termsMdx } from '@repo/shared/config';
 import { Button } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function TermsPage() {
             <header className="border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4">
                     <Link href="/">
-                        <Button variant="ghost" size="sm" className="gap-2">
+                        <Button className="gap-2" size="sm" variant="ghost">
                             <ArrowLeft size={16} />
                             Back to VT
                         </Button>

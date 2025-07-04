@@ -2,7 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { format } from 'date-fns';
 import { getModelFromChatMode, ModelEnum } from '../../models';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from '../utils';
 
 export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
@@ -28,7 +28,7 @@ Your goal is to create a comprehensive report based on the research information 
 First, carefully read and analyze the following research information:
 
 <research_findings>
-${summaries.map(summary => `<finding>${summary}</finding>`).join('\n')}
+${summaries.map((summary) => `<finding>${summary}</finding>`).join('\n')}
 </research_findings>
 
 <analysis>
@@ -128,7 +128,7 @@ Your report should demonstrate subject matter expertise while remaining intellec
 
         updateStatus('COMPLETED');
 
-        context?.update('answer', _ => answer);
+        context?.update('answer', (_) => answer);
 
         return answer;
     },

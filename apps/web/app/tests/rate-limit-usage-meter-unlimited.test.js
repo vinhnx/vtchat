@@ -3,9 +3,8 @@
  * Ensures proper overlay display and visual feedback for unlimited users
  */
 
-import { expect, test, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
 // Mock the hooks
@@ -54,18 +53,19 @@ describe('RateLimitUsageMeter - VT+ and BYOK Handling', () => {
         vi.clearAllMocks();
         global.fetch.mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve({
-                dailyUsed: 10,
-                minuteUsed: 2,
-                dailyLimit: 100,
-                minuteLimit: 10,
-                remainingDaily: 90,
-                remainingMinute: 8,
-                resetTime: {
-                    daily: new Date().toISOString(),
-                    minute: new Date().toISOString(),
-                },
-            }),
+            json: () =>
+                Promise.resolve({
+                    dailyUsed: 10,
+                    minuteUsed: 2,
+                    dailyLimit: 100,
+                    minuteLimit: 10,
+                    remainingDaily: 90,
+                    remainingMinute: 8,
+                    resetTime: {
+                        daily: new Date().toISOString(),
+                        minute: new Date().toISOString(),
+                    },
+                }),
         });
     });
 
@@ -102,7 +102,9 @@ describe('RateLimitUsageMeter - VT+ and BYOK Handling', () => {
         expect(screen.getByTestId('crown-icon')).toBeInTheDocument();
         expect(screen.getByText('VT+ Unlimited')).toBeInTheDocument();
         expect(screen.getByText('Unlimited Usage')).toBeInTheDocument();
-        expect(screen.getByText(/Your VT\+ subscription provides unlimited access/)).toBeInTheDocument();
+        expect(
+            screen.getByText(/Your VT\+ subscription provides unlimited access/)
+        ).toBeInTheDocument();
     });
 
     test('prioritizes BYOK over VT+ when user has both', async () => {
@@ -155,7 +157,9 @@ describe('RateLimitUsageMeter - VT+ and BYOK Handling', () => {
         await screen.findByText('Usage Overview');
 
         // Check if refresh button is disabled
-        const refreshButton = screen.getByRole('button', { name: /refresh usage/i });
+        const refreshButton = screen.getByRole('button', {
+            name: /refresh usage/i,
+        });
         expect(refreshButton).toBeDisabled();
     });
 
@@ -163,22 +167,23 @@ describe('RateLimitUsageMeter - VT+ and BYOK Handling', () => {
         // Mock VT+ user with high usage (which would normally trigger CTA)
         useVtPlusAccess.mockReturnValue(true);
         useApiKeysStore.mockReturnValue(() => ({}));
-        
+
         // Mock high usage to trigger CTA
         global.fetch.mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve({
-                dailyUsed: 80, // High usage
-                minuteUsed: 8,
-                dailyLimit: 100,
-                minuteLimit: 10,
-                remainingDaily: 20,
-                remainingMinute: 2,
-                resetTime: {
-                    daily: new Date().toISOString(),
-                    minute: new Date().toISOString(),
-                },
-            }),
+            json: () =>
+                Promise.resolve({
+                    dailyUsed: 80, // High usage
+                    minuteUsed: 8,
+                    dailyLimit: 100,
+                    minuteLimit: 10,
+                    remainingDaily: 20,
+                    remainingMinute: 2,
+                    resetTime: {
+                        daily: new Date().toISOString(),
+                        minute: new Date().toISOString(),
+                    },
+                }),
         });
 
         render(<RateLimitUsageMeter userId="test-user" />);

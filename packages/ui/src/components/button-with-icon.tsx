@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import { cn } from '../lib/utils';
-import { Button, ButtonProps } from './button';
-import { ReactNode } from 'react';
+import { Button, type ButtonProps } from './button';
 
 export interface ButtonWithIconProps extends ButtonProps {
     icon?: ReactNode;

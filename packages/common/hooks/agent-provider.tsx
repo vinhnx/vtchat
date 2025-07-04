@@ -2,14 +2,14 @@ import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { getRateLimitMessage } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { ThreadItem } from '@repo/shared/types';
+import { log } from '@repo/shared/logger';
+import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
-import { log } from '@repo/shared/logger';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -50,20 +50,20 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [modalChatMode, setModalChatMode] = useState<ChatMode>(ChatMode.GPT_4o_Mini);
 
-    const updateThreadItem = useChatStore(state => state.updateThreadItem);
-    const setIsGenerating = useChatStore(state => state.setIsGenerating);
-    const setAbortController = useChatStore(state => state.setAbortController);
-    const createThreadItem = useChatStore(state => state.createThreadItem);
-    const setCurrentThreadItem = useChatStore(state => state.setCurrentThreadItem);
-    const setCurrentSources = useChatStore(state => state.setCurrentSources);
-    const updateThread = useChatStore(state => state.updateThread);
-    const chatMode = useChatStore(state => state.chatMode);
-    const customInstructions = useChatStore(state => state.customInstructions);
-    const thinkingMode = useChatStore(state => state.thinkingMode);
+    const updateThreadItem = useChatStore((state) => state.updateThreadItem);
+    const setIsGenerating = useChatStore((state) => state.setIsGenerating);
+    const setAbortController = useChatStore((state) => state.setAbortController);
+    const createThreadItem = useChatStore((state) => state.createThreadItem);
+    const setCurrentThreadItem = useChatStore((state) => state.setCurrentThreadItem);
+    const setCurrentSources = useChatStore((state) => state.setCurrentSources);
+    const updateThread = useChatStore((state) => state.updateThread);
+    const chatMode = useChatStore((state) => state.chatMode);
+    const customInstructions = useChatStore((state) => state.customInstructions);
+    const thinkingMode = useChatStore((state) => state.thinkingMode);
     const { push } = useRouter();
 
-    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
-    const hasApiKeyForChatMode = useApiKeysStore(state => state.hasApiKeyForChatMode);
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
+    const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
 
     // In-memory store for thread items
     const threadItemMap = useMemo(() => new Map<string, ThreadItem>(), []);
@@ -76,7 +76,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             eventType: string,
             eventData: any,
             parentThreadItemId?: string,
-            _shouldPersistToDB: boolean = true
+            _shouldPersistToDB = true
         ) => {
             const prevItem = threadItemMap.get(threadItemId) || ({} as ThreadItem);
 
@@ -270,9 +270,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                         setIsGenerating(false);
                                         const streamDuration = performance.now() - streamStartTime;
                                         log.info(
-                                            { 
-                                                eventCount, 
-                                                streamDurationMs: streamDuration.toFixed(2) 
+                                            {
+                                                eventCount,
+                                                streamDurationMs: streamDuration.toFixed(2),
                                             },
                                             'done event received'
                                         );
@@ -285,9 +285,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                     }
                                 } catch (jsonError) {
                                     log.warn(
-                                        { 
-                                            rawData: dataMatch[1], 
-                                            error: jsonError 
+                                        {
+                                            rawData: dataMatch[1],
+                                            error: jsonError,
                                         },
                                         'JSON parse error for data'
                                     );
@@ -296,16 +296,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         }
                     } catch (readError) {
                         log.error({ error: readError }, 'Error reading from stream');
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        continue;
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
                 }
             } catch (streamError: any) {
                 const totalTime = performance.now() - startTime;
                 log.error(
-                    { 
-                        error: streamError, 
-                        totalTimeMs: totalTime.toFixed(2) 
+                    {
+                        error: streamError,
+                        totalTimeMs: totalTime.toFixed(2),
                     },
                     'Fatal stream error'
                 );
@@ -368,8 +367,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
-            log.info({ useWebSearch, useMathCalculator, useCharts }, 'Agent provider received flags');
-            
+            log.info(
+                { useWebSearch, useMathCalculator, useCharts },
+                'Agent provider received flags'
+            );
+
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
                 !isSignedIn &&
@@ -393,7 +395,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             const documentMimeType = formData.get('documentMimeType') as string;
             const documentFileName = formData.get('documentFileName') as string;
             const multiModalAttachmentsStr = formData.get('multiModalAttachments') as string;
-            const multiModalAttachments = multiModalAttachmentsStr ? JSON.parse(multiModalAttachmentsStr) : undefined;
+            const multiModalAttachments = multiModalAttachmentsStr
+                ? JSON.parse(multiModalAttachmentsStr)
+                : undefined;
 
             const aiThreadItem: ThreadItem = {
                 id: optimisticAiThreadItemId,
@@ -436,7 +440,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
             // Check if this is a free model that should use server-side API
             const isFreeModel = mode === ChatMode.GEMINI_2_5_FLASH_LITE;
-            
+
             if (hasApiKeyForChatMode(mode, isSignedIn) && !isFreeModel) {
                 const abortController = new AbortController();
                 setAbortController(abortController);
@@ -446,10 +450,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     log.info({ threadId }, 'Abort signal received');
                     setIsGenerating(false);
                     abortWorkflow();
-                    updateThreadItem(threadId, { id: optimisticAiThreadItemId, status: 'ABORTED' });
+                    updateThreadItem(threadId, {
+                        id: optimisticAiThreadItemId,
+                        status: 'ABORTED',
+                    });
                 });
 
-                log.info({ useWebSearch, useMathCalculator, useCharts }, 'About to call startWorkflow');
+                log.info(
+                    { useWebSearch, useMathCalculator, useCharts },
+                    'About to call startWorkflow'
+                );
                 startWorkflow({
                     mode,
                     question: query,
@@ -546,9 +556,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         <AgentContext.Provider value={contextValue}>
             {children}
             <ApiKeyPromptModal
+                chatMode={modalChatMode}
                 isOpen={showApiKeyModal}
                 onClose={() => setShowApiKeyModal(false)}
-                chatMode={modalChatMode}
                 onComplete={handleApiKeyComplete}
             />
         </AgentContext.Provider>

@@ -14,10 +14,6 @@
 
 // Core types and configuration
 export * from '@repo/shared/types/subscription';
-
-// Client-side utilities
-export * from '@repo/shared/utils/subscription';
-
 // Re-export commonly used items for convenience
 export {
     DEFAULT_PLAN,
@@ -26,6 +22,8 @@ export {
     PLANS,
     PlanSlug,
 } from '@repo/shared/types/subscription';
+// Client-side utilities
+export * from '@repo/shared/utils/subscription';
 
 // Utility functions for subscription access control
 export {

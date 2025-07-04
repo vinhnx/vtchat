@@ -46,12 +46,14 @@ fly deploy
 ## Configuration Files
 
 ### fly.toml
+
 - ✅ **Configured**: Production settings with proper environment variables
 - ✅ **Region**: Singapore (sin) for Asian users
 - ✅ **Resources**: 1GB memory, shared CPU
 - ✅ **Auto-scaling**: Stop/start machines based on traffic
 
 ### Dockerfile
+
 - ✅ **Multi-stage build**: Optimized for production
 - ✅ **Bun runtime**: Fast JavaScript runtime
 - ✅ **Environment variables**: Proper secret handling
@@ -60,6 +62,7 @@ fly deploy
 ## Environment Variables
 
 ### Public Variables (in fly.toml [env] section)
+
 ```toml
 [env]
   BASE_URL = "https://vtchat-dev.fly.dev"
@@ -71,6 +74,7 @@ fly deploy
 ```
 
 ### Secrets (via fly secrets)
+
 ```bash
 fly secrets set \
   DATABASE_URL="postgresql://..." \
@@ -115,6 +119,7 @@ fly dashboard
 ## Troubleshooting
 
 ### Build Issues
+
 ```bash
 # Check build logs
 fly logs --app vtchat-dev
@@ -124,6 +129,7 @@ fly deploy --no-cache
 ```
 
 ### Runtime Issues
+
 ```bash
 # Check app health
 fly status
@@ -133,6 +139,7 @@ fly ssh console -C "printenv | grep -E '(DATABASE|AUTH|CREEM)'"
 ```
 
 ### Database Issues
+
 ```bash
 # Test database connection
 fly ssh console -C "echo 'SELECT 1;' | psql $DATABASE_URL"

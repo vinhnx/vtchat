@@ -6,7 +6,7 @@ import {
 } from '@repo/ai/models';
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { handleError, sendEvents } from '../utils';
 export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'router',
@@ -24,7 +24,7 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
         updateStatus('PENDING');
 
-        const webSearch = context?.get('webSearch') || false;
+        const webSearch = context?.get('webSearch');
         const model = getModelFromChatMode(mode);
 
         if (mode === ChatMode.Deep) {

@@ -7,8 +7,9 @@ This document outlines the security measures implemented to protect user privacy
 ## Problem
 
 The embeddings table was storing user content in plain text in the `content` column, exposing sensitive information including:
+
 - Email addresses
-- Phone numbers  
+- Phone numbers
 - Credit card numbers
 - Social Security Numbers
 - IP addresses
@@ -21,6 +22,7 @@ The embeddings table was storing user content in plain text in the `content` col
 The system now automatically detects and masks Personally Identifiable Information (PII) before storing content in the embeddings table.
 
 **Patterns Detected:**
+
 - Email addresses → `[EMAIL_REDACTED]`
 - Phone numbers → `[PHONE_REDACTED]`
 - Credit cards → `[CARD_REDACTED]`
@@ -34,6 +36,7 @@ The system now automatically detects and masks Personally Identifiable Informati
 ### 2. Content Truncation
 
 Long content (>500 characters) is truncated and hashed to prevent database bloat while maintaining privacy:
+
 - Preview: First 100 characters (with PII masked)
 - Hash: SHA-256 hash (first 16 characters)
 - Format: `{preview}... [HASH:{hash}]`
@@ -41,12 +44,14 @@ Long content (>500 characters) is truncated and hashed to prevent database bloat
 ### 3. Implementation
 
 **Core Functions** (`apps/web/lib/utils/content-security.ts`):
+
 - `maskPII(content)` - Masks PII in content
 - `containsPII(content)` - Detects if content has PII
 - `secureContentForEmbedding(content)` - Main security function
 - `createContentHash(content)` - Creates secure hash for long content
 
 **Integration** (`apps/web/lib/actions/resources.ts`):
+
 ```typescript
 // Before: storing raw content
 content: embedding.content,
@@ -58,11 +63,13 @@ content: secureContentForEmbedding(embedding.content),
 ### 4. Migration
 
 **Database Migration** (`0006_secure_embeddings_content.sql`):
+
 - Creates temporary backup column
 - Adds performance indexes
 - Documents security changes
 
 **Data Migration** (`scripts/secure-embeddings-migration.ts`):
+
 - Processes existing embeddings in batches
 - Applies PII masking to existing data
 - Maintains audit trail
@@ -75,7 +82,7 @@ content: secureContentForEmbedding(embedding.content),
 # 1. Apply database schema changes
 bun db:migrate
 
-# 2. Migrate existing data  
+# 2. Migrate existing data
 bun tsx scripts/secure-embeddings-migration.ts
 ```
 
@@ -96,6 +103,7 @@ bun test app/tests/content-security.test.ts
 ## Verification
 
 After migration, verify security by checking the embeddings table:
+
 ```sql
 SELECT content FROM embeddings LIMIT 10;
 ```
@@ -112,13 +120,14 @@ Content should show masked patterns like `[EMAIL_REDACTED]` instead of actual PI
 ## Next Steps
 
 1. Consider implementing end-to-end encryption
-2. Add user consent tracking for data processing  
+2. Add user consent tracking for data processing
 3. Implement data deletion workflows
 4. Add security monitoring and alerting
 
 ## Production Deployment
 
 ✅ **Production Ready**: The security implementation is automatically applied when:
+
 - RAG feature is deployed to production
 - Embeddings table is created with built-in security
 - All new content automatically gets PII masking

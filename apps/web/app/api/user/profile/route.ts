@@ -1,10 +1,10 @@
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { users } from '@/lib/database/schema';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';

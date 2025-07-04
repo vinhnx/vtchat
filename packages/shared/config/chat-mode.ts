@@ -1,6 +1,6 @@
 import { log } from '@repo/shared/logger';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
-import { checkSubscriptionAccess, SubscriptionContext } from '../utils/subscription';
+import { checkSubscriptionAccess, type SubscriptionContext } from '../utils/subscription';
 
 export enum ChatMode {
     Pro = 'pro',
@@ -345,21 +345,23 @@ export const ChatModeConfig: Record<
 export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
         log.warn('getAvailableChatModes called without a valid context.');
-        return Object.values(ChatMode).filter(mode => {
+        return Object.values(ChatMode).filter((mode) => {
             const config = ChatModeConfig[mode];
-            return !config.requiredFeature && !config.requiredPlan && !config.isAuthRequired;
+            return !(config.requiredFeature || config.requiredPlan || config.isAuthRequired);
         });
     }
 
-    return Object.values(ChatMode).filter(mode => {
+    return Object.values(ChatMode).filter((mode) => {
         const config = ChatModeConfig[mode];
 
-        if (!config.requiredFeature && !config.requiredPlan) {
+        if (!(config.requiredFeature || config.requiredPlan)) {
             return true;
         }
 
         if (config.requiredFeature) {
-            return checkSubscriptionAccess(context, { feature: config.requiredFeature });
+            return checkSubscriptionAccess(context, {
+                feature: config.requiredFeature,
+            });
         }
 
         if (config.requiredPlan) {
@@ -377,20 +379,22 @@ export function getAvailableChatModes(context: SubscriptionContext): ChatMode[] 
 export function getRestrictedChatModes(context: SubscriptionContext): ChatMode[] {
     if (!context) {
         log.warn('getRestrictedChatModes called without a valid context.');
-        return Object.values(ChatMode).filter(mode => {
+        return Object.values(ChatMode).filter((mode) => {
             const config = ChatModeConfig[mode];
             return !!(config.requiredFeature || config.requiredPlan || config.isAuthRequired);
         });
     }
-    return Object.values(ChatMode).filter(mode => {
+    return Object.values(ChatMode).filter((mode) => {
         const config = ChatModeConfig[mode];
 
-        if (!config.requiredFeature && !config.requiredPlan) {
+        if (!(config.requiredFeature || config.requiredPlan)) {
             return false;
         }
 
         if (config.requiredFeature) {
-            return !checkSubscriptionAccess(context, { feature: config.requiredFeature });
+            return !checkSubscriptionAccess(context, {
+                feature: config.requiredFeature,
+            });
         }
 
         if (config.requiredPlan) {
@@ -419,7 +423,7 @@ export function getChatModeUpgradeRequirements(mode: ChatMode): {
  * Check if a chat mode supports multi-modal features (images/PDFs)
  */
 export function supportsMultiModal(mode: ChatMode): boolean {
-    return ChatModeConfig[mode]?.multiModal || false;
+    return ChatModeConfig[mode]?.multiModal;
 }
 
 export const getChatModeName = (mode: ChatMode) => {

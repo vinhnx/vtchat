@@ -2,12 +2,12 @@ import {
     createContext,
     createTypedEventEmitter,
     WorkflowBuilder,
-    WorkflowConfig,
+    type WorkflowConfig,
 } from '@repo/orchestrator';
-import { ChatMode } from '@repo/shared/config';
-import { Geo } from '@vercel/functions';
-import { CoreMessage } from 'ai';
+import type { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
+import type { Geo } from '@vercel/functions';
+import type { CoreMessage } from 'ai';
 import {
     analysisTask,
     completionTask,
@@ -150,11 +150,15 @@ export const runWorkflow = ({
         includeThoughts: boolean;
     };
 }) => {
-    log.info('🔥 runWorkflow called with params:', { webSearch, mathCalculator, charts });
+    log.info('🔥 runWorkflow called with params:', {
+        webSearch,
+        mathCalculator,
+        charts,
+    });
     // Set default values for config
     const workflowConfig: WorkflowConfig = {
         maxIterations: 2,
-        timeoutMs: 480000, // Add default timeout of
+        timeoutMs: 480_000, // Add default timeout of
         ...config,
     };
 
@@ -178,7 +182,11 @@ export const runWorkflow = ({
         status: 'PENDING',
     });
 
-    log.info('🌟 Workflow context created with:', { webSearch, mathCalculator, charts });
+    log.info('🌟 Workflow context created with:', {
+        webSearch,
+        mathCalculator,
+        charts,
+    });
     const context = createContext<WorkflowContextSchema>({
         question,
         mode,

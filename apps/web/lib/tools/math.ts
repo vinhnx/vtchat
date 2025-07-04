@@ -1,4 +1,4 @@
-import { tool, type Tool } from 'ai';
+import { type Tool, tool } from 'ai';
 import { z } from 'zod';
 
 type CalculatorTools =
@@ -174,9 +174,14 @@ export const calculatorTools = (config?: {
             },
         }),
         evaluateExpression: tool({
-            description: 'Evaluate a complete mathematical expression with proper order of operations (PEMDAS). Supports +, -, *, /, ^, (), sqrt(), sin(), cos(), tan(), log(), exp(), abs(), floor(), ceil(), round(), pi, e',
+            description:
+                'Evaluate a complete mathematical expression with proper order of operations (PEMDAS). Supports +, -, *, /, ^, (), sqrt(), sin(), cos(), tan(), log(), exp(), abs(), floor(), ceil(), round(), pi, e',
             parameters: z.object({
-                expression: z.string().describe('Mathematical expression to evaluate (e.g., "2 + 3 * 4", "sqrt(16) + sin(pi/2)", "(5 + 3) * 2^3")'),
+                expression: z
+                    .string()
+                    .describe(
+                        'Mathematical expression to evaluate (e.g., "2 + 3 * 4", "sqrt(16) + sin(pi/2)", "(5 + 3) * 2^3")'
+                    ),
             }),
             execute: async ({ expression }) => {
                 return evaluateExpression(expression);
@@ -213,7 +218,11 @@ export const calculatorTools = (config?: {
             description: 'Round a number to the nearest integer',
             parameters: z.object({
                 n: z.number().describe('Number to round'),
-                decimals: z.number().int().optional().describe('Number of decimal places (default: 0)'),
+                decimals: z
+                    .number()
+                    .int()
+                    .optional()
+                    .describe('Number of decimal places (default: 0)'),
             }),
             execute: async ({ n, decimals = 0 }) => {
                 return roundNumber(n, decimals);
@@ -240,7 +249,9 @@ export const calculatorTools = (config?: {
         getConstants: tool({
             description: 'Get mathematical constants (pi, e, golden ratio, etc.)',
             parameters: z.object({
-                constant: z.enum(['pi', 'e', 'goldenRatio', 'euler', 'sqrt2']).describe('Which constant to get'),
+                constant: z
+                    .enum(['pi', 'e', 'goldenRatio', 'euler', 'sqrt2'])
+                    .describe('Which constant to get'),
             }),
             execute: async ({ constant }) => {
                 return getConstants(constant);
@@ -321,7 +332,8 @@ export const calculatorTools = (config?: {
             },
         }),
         permutation: tool({
-            description: 'Calculate permutations (nPr): number of ways to arrange r items from n items',
+            description:
+                'Calculate permutations (nPr): number of ways to arrange r items from n items',
             parameters: z.object({
                 n: z.number().int().describe('Total number of items'),
                 r: z.number().int().describe('Number of items to arrange'),
@@ -331,7 +343,8 @@ export const calculatorTools = (config?: {
             },
         }),
         combination: tool({
-            description: 'Calculate combinations (nCr): number of ways to choose r items from n items',
+            description:
+                'Calculate combinations (nCr): number of ways to choose r items from n items',
             parameters: z.object({
                 n: z.number().int().describe('Total number of items'),
                 r: z.number().int().describe('Number of items to choose'),
@@ -361,7 +374,9 @@ export const calculatorTools = (config?: {
         standardDeviation: tool({
             description: 'Calculate the standard deviation of a list of numbers',
             parameters: z.object({
-                numbers: z.array(z.number()).describe('Array of numbers to calculate standard deviation of'),
+                numbers: z
+                    .array(z.number())
+                    .describe('Array of numbers to calculate standard deviation of'),
             }),
             execute: async ({ numbers }) => {
                 return standardDeviation(numbers);
@@ -488,20 +503,20 @@ function evaluateExpression(expression: string) {
 
         // Evaluate the expression safely
         const result = Function(`"use strict"; return (${expr})`)();
-        
+
         if (typeof result !== 'number' || !isFinite(result)) {
             return { error: 'Expression did not evaluate to a valid number' };
         }
-        
-        return { 
-            result, 
+
+        return {
+            result,
             originalExpression: expression,
-            evaluatedExpression: expr 
+            evaluatedExpression: expr,
         };
     } catch (error) {
-        return { 
+        return {
             error: `Invalid mathematical expression: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            originalExpression: expression 
+            originalExpression: expression,
         };
     }
 }
@@ -519,8 +534,8 @@ function ceil(n: number) {
     return { result: Math.ceil(n) };
 }
 
-function roundNumber(n: number, decimals: number = 0) {
-    const factor = Math.pow(10, decimals);
+function roundNumber(n: number, decimals = 0) {
+    const factor = 10 ** decimals;
     return { result: Math.round(n * factor) / factor };
 }
 
@@ -544,24 +559,24 @@ function getConstants(constant: 'pi' | 'e' | 'goldenRatio' | 'euler' | 'sqrt2') 
         pi: Math.PI,
         e: Math.E,
         goldenRatio: (1 + Math.sqrt(5)) / 2, // φ
-        euler: 0.5772156649015329, // Euler-Mascheroni constant γ
-        sqrt2: Math.sqrt(2)
+        euler: 0.577_215_664_901_532_9, // Euler-Mascheroni constant γ
+        sqrt2: Math.sqrt(2),
     };
-    
-    return { 
+
+    return {
         result: constants[constant],
         name: constant,
-        description: getConstantDescription(constant)
+        description: getConstantDescription(constant),
     };
 }
 
 function getConstantDescription(constant: string): string {
     const descriptions = {
-        pi: 'The ratio of a circle\'s circumference to its diameter (π ≈ 3.14159)',
-        e: 'Euler\'s number, base of natural logarithm (e ≈ 2.71828)',
+        pi: "The ratio of a circle's circumference to its diameter (π ≈ 3.14159)",
+        e: "Euler's number, base of natural logarithm (e ≈ 2.71828)",
         goldenRatio: 'Golden ratio, often denoted φ (phi) ≈ 1.618',
         euler: 'Euler-Mascheroni constant γ ≈ 0.5772',
-        sqrt2: 'Square root of 2 ≈ 1.414'
+        sqrt2: 'Square root of 2 ≈ 1.414',
     };
     return descriptions[constant as keyof typeof descriptions] || 'Mathematical constant';
 }
@@ -602,7 +617,7 @@ function hyperbolicTangent(n: number) {
 function greatestCommonDivisor(a: number, b: number) {
     a = Math.abs(Math.floor(a));
     b = Math.abs(Math.floor(b));
-    
+
     while (b !== 0) {
         const temp = b;
         b = a % b;
@@ -615,12 +630,12 @@ function leastCommonMultiple(a: number, b: number) {
     if (a === 0 || b === 0) {
         return { result: 0 };
     }
-    
+
     const gcdResult = greatestCommonDivisor(a, b);
     if ('error' in gcdResult) {
         return gcdResult;
     }
-    
+
     return { result: Math.abs(a * b) / gcdResult.result };
 }
 
@@ -632,7 +647,7 @@ function permutation(n: number, r: number) {
     if (r > n) {
         return { result: 0 };
     }
-    
+
     let result = 1;
     for (let i = n; i > n - r; i--) {
         result *= i;
@@ -650,13 +665,13 @@ function combination(n: number, r: number) {
     if (r === 0 || r === n) {
         return { result: 1 };
     }
-    
+
     // Use the smaller of r and n-r for efficiency
     r = Math.min(r, n - r);
-    
+
     let result = 1;
     for (let i = 0; i < r; i++) {
-        result = result * (n - i) / (i + 1);
+        result = (result * (n - i)) / (i + 1);
     }
     return { result: Math.round(result) };
 }
@@ -674,15 +689,14 @@ function medianValue(numbers: number[]) {
     if (numbers.length === 0) {
         return { error: 'Cannot find median of empty array' };
     }
-    
+
     const sorted = [...numbers].sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    
+
     if (sorted.length % 2 === 0) {
         return { result: (sorted[mid - 1] + sorted[mid]) / 2 };
-    } else {
-        return { result: sorted[mid] };
     }
+    return { result: sorted[mid] };
 }
 
 function standardDeviation(numbers: number[]) {
@@ -692,15 +706,15 @@ function standardDeviation(numbers: number[]) {
     if (numbers.length === 1) {
         return { result: 0 };
     }
-    
+
     const meanResult = arithmeticMean(numbers);
     if ('error' in meanResult) {
         return meanResult;
     }
-    
+
     const mean = meanResult.result;
-    const squaredDiffs = numbers.map(num => Math.pow(num - mean, 2));
+    const squaredDiffs = numbers.map((num) => (num - mean) ** 2);
     const variance = squaredDiffs.reduce((acc, diff) => acc + diff, 0) / (numbers.length - 1);
-    
+
     return { result: Math.sqrt(variance) };
 }

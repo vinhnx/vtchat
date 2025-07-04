@@ -1,33 +1,33 @@
 'use client';
 
+import {
+    Area,
+    AreaChart,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Legend,
+    Line,
+    LineChart,
+    Pie,
+    PieChart,
+    PolarAngleAxis,
+    PolarGrid,
+    PolarRadiusAxis,
+    Radar,
+    RadarChart,
+    ResponsiveContainer,
+    XAxis,
+    YAxis,
+} from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    ChartConfig,
+    type ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart';
-import {
-    Bar,
-    BarChart,
-    Line,
-    LineChart,
-    Area,
-    AreaChart,
-    Pie,
-    PieChart,
-    Cell,
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    PolarRadiusAxis,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    ResponsiveContainer,
-    Legend,
-} from 'recharts';
 
 interface BaseChartData {
     name: string;
@@ -122,13 +122,13 @@ const renderCustomizedLabel = ({
 
     return (
         <text
-            x={x}
-            y={y}
-            fill="white"
-            textAnchor={x > cx ? 'start' : 'end'}
             dominantBaseline="central"
+            fill="white"
             fontSize={12}
             fontWeight="500"
+            textAnchor={x > cx ? 'start' : 'end'}
+            x={x}
+            y={y}
         >
             {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -190,28 +190,28 @@ export function ChartRenderer(props: ChartProps) {
                             <YAxis />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Line
-                                type="monotone"
                                 dataKey="series1"
+                                dot={{ fill: 'var(--color-series1)' }}
                                 stroke="var(--color-series1)"
                                 strokeWidth={2}
-                                dot={{ fill: 'var(--color-series1)' }}
+                                type="monotone"
                             />
-                            {props.data.some(d => d.series2 !== undefined) && (
+                            {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
-                                    type="monotone"
                                     dataKey="series2"
+                                    dot={{ fill: 'var(--color-series2)' }}
                                     stroke="var(--color-series2)"
                                     strokeWidth={2}
-                                    dot={{ fill: 'var(--color-series2)' }}
+                                    type="monotone"
                                 />
                             )}
-                            {props.data.some(d => d.series3 !== undefined) && (
+                            {props.data.some((d) => d.series3 !== undefined) && (
                                 <Line
-                                    type="monotone"
                                     dataKey="series3"
+                                    dot={{ fill: 'var(--color-series3)' }}
                                     stroke="var(--color-series3)"
                                     strokeWidth={2}
-                                    dot={{ fill: 'var(--color-series3)' }}
+                                    type="monotone"
                                 />
                             )}
                         </LineChart>
@@ -227,46 +227,46 @@ export function ChartRenderer(props: ChartProps) {
                             <YAxis />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Area
-                                type="monotone"
                                 dataKey="series1"
-                                stackId={props.stacked ? '1' : undefined}
-                                stroke="var(--color-series1)"
                                 fill="var(--color-series1)"
                                 fillOpacity={0.6}
+                                stackId={props.stacked ? '1' : undefined}
+                                stroke="var(--color-series1)"
+                                type="monotone"
                             />
-                            {props.data.some(d => d.series2 !== undefined) && (
+                            {props.data.some((d) => d.series2 !== undefined) && (
                                 <Area
-                                    type="monotone"
                                     dataKey="series2"
-                                    stackId={props.stacked ? '1' : undefined}
-                                    stroke="var(--color-series2)"
                                     fill="var(--color-series2)"
                                     fillOpacity={0.6}
+                                    stackId={props.stacked ? '1' : undefined}
+                                    stroke="var(--color-series2)"
+                                    type="monotone"
                                 />
                             )}
                         </AreaChart>
                     </ChartContainer>
                 );
 
-            case 'pieChart':
+            case 'pieChart': {
                 const colors = chartColors.default;
                 return (
                     <ChartContainer config={getChartConfig()}>
                         <PieChart>
                             <Pie
-                                data={props.data}
                                 cx="50%"
                                 cy="50%"
-                                labelLine={false}
-                                label={props.showLabels ? renderCustomizedLabel : false}
-                                outerRadius={80}
-                                fill="#8884d8"
+                                data={props.data}
                                 dataKey="value"
+                                fill="#8884d8"
+                                label={props.showLabels ? renderCustomizedLabel : false}
+                                labelLine={false}
+                                outerRadius={80}
                             >
                                 {props.data.map((entry, index) => (
                                     <Cell
-                                        key={`cell-${index}`}
                                         fill={colors[index % colors.length]}
+                                        key={`cell-${index}`}
                                     />
                                 ))}
                             </Pie>
@@ -275,6 +275,7 @@ export function ChartRenderer(props: ChartProps) {
                         </PieChart>
                     </ChartContainer>
                 );
+            }
 
             case 'radarChart':
                 return (
@@ -284,11 +285,11 @@ export function ChartRenderer(props: ChartProps) {
                             <PolarAngleAxis dataKey="category" />
                             <PolarRadiusAxis angle={90} domain={[0, props.maxValue || 100]} />
                             <Radar
-                                name="Value"
                                 dataKey="value"
-                                stroke="var(--color-value)"
                                 fill="var(--color-value)"
                                 fillOpacity={0.3}
+                                name="Value"
+                                stroke="var(--color-value)"
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
                         </RadarChart>

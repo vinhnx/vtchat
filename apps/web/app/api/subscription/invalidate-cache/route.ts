@@ -1,7 +1,7 @@
+import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
 
 export async function POST(request: NextRequest) {
     try {

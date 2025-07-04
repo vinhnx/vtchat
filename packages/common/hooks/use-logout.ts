@@ -1,12 +1,12 @@
 'use client';
 
 import { signOut } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { useTheme } from 'next-themes';
 import { useCallback, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
-import { useChatStore } from '../store/chat.store';
 import { useAppStore } from '../store/app.store';
-import { log } from '@repo/shared/logger';
+import { useChatStore } from '../store/chat.store';
 
 /**
  * Custom hook for logout functionality that ensures all gated features
@@ -18,9 +18,9 @@ import { log } from '@repo/shared/logger';
 export const useLogout = () => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const { setTheme } = useTheme();
-    const clearAllKeys = useApiKeysStore(state => state.clearAllKeys);
-    const clearAllThreads = useChatStore(state => state.clearAllThreads);
-    const resetUserState = useAppStore(state => state.resetUserState);
+    const clearAllKeys = useApiKeysStore((state) => state.clearAllKeys);
+    const clearAllThreads = useChatStore((state) => state.clearAllThreads);
+    const resetUserState = useAppStore((state) => state.resetUserState);
 
     const logout = useCallback(async () => {
         if (isLoggingOut) return;
@@ -51,12 +51,12 @@ export const useLogout = () => {
             if (typeof window !== 'undefined') {
                 // Clear subscription status cache
                 const subscriptionKeys = Object.keys(localStorage).filter(
-                    key =>
+                    (key) =>
                         key.startsWith('subscription_status_') ||
                         key.startsWith('creem_') ||
                         key.startsWith('vt_plus_')
                 );
-                subscriptionKeys.forEach(key => {
+                subscriptionKeys.forEach((key) => {
                     localStorage.removeItem(key);
                 });
                 log.info(
@@ -76,7 +76,7 @@ export const useLogout = () => {
                     'linking_provider', // User profile linking provider
                     'hasSeenIntro', // Intro dialog state
                 ];
-                userDataKeys.forEach(key => {
+                userDataKeys.forEach((key) => {
                     if (localStorage.getItem(key)) {
                         localStorage.removeItem(key);
                         log.info({ key }, '[Logout] ✅ Cleared subscription cache key');
@@ -85,14 +85,14 @@ export const useLogout = () => {
 
                 // Clear user-specific dynamic keys (like chat-config-{userId})
                 const dynamicKeys = Object.keys(localStorage).filter(
-                    key =>
+                    (key) =>
                         key.startsWith('chat-config-') ||
                         key.startsWith('api-keys-') ||
                         key.startsWith('mcp-tools-') ||
                         key.includes('user-') ||
                         key.includes('profile-')
                 );
-                dynamicKeys.forEach(key => {
+                dynamicKeys.forEach((key) => {
                     localStorage.removeItem(key);
                     log.info({ key }, '[Logout] ✅ Cleared dynamic key');
                 });
@@ -102,18 +102,21 @@ export const useLogout = () => {
 
                 // More aggressive theme cleanup
                 const allThemeKeys = Object.keys(localStorage).filter(
-                    key =>
+                    (key) =>
                         key.includes('theme') ||
                         key.includes('next-themes') ||
                         key.includes('dark') ||
                         key.includes('mode')
                 );
-                allThemeKeys.forEach(key => localStorage.removeItem(key));
-                log.info({ themeKeysCleared: allThemeKeys.length + 1 }, '[Logout] ✅ Cleared theme storage');
+                allThemeKeys.forEach((key) => localStorage.removeItem(key));
+                log.info(
+                    { themeKeysCleared: allThemeKeys.length + 1 },
+                    '[Logout] ✅ Cleared theme storage'
+                );
 
                 // Clear any remaining VT+ or premium feature caches
                 const premiumKeys = Object.keys(localStorage).filter(
-                    key =>
+                    (key) =>
                         key.includes('premium') ||
                         key.includes('plus') ||
                         key.includes('dark') ||
@@ -121,7 +124,7 @@ export const useLogout = () => {
                         key.includes('vt+') ||
                         key.includes('vtplus')
                 );
-                premiumKeys.forEach(key => {
+                premiumKeys.forEach((key) => {
                     localStorage.removeItem(key);
                 });
                 if (premiumKeys.length > 0) {
@@ -169,7 +172,7 @@ export const useLogout = () => {
 
                 // Clear any auth-related cookies client-side
                 try {
-                    document.cookie.split(';').forEach(function (c) {
+                    document.cookie.split(';').forEach((c) => {
                         document.cookie = c
                             .replace(/^ +/, '')
                             .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
@@ -203,8 +206,8 @@ export const useLogout = () => {
                 if (typeof window !== 'undefined') {
                     localStorage.removeItem('theme');
                     Object.keys(localStorage)
-                        .filter(key => key.includes('theme') || key.includes('dark'))
-                        .forEach(key => localStorage.removeItem(key));
+                        .filter((key) => key.includes('theme') || key.includes('dark'))
+                        .forEach((key) => localStorage.removeItem(key));
                 }
 
                 clearAllKeys();

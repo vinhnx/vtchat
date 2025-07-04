@@ -1,13 +1,14 @@
 import { ChatEditor, markdownStyles } from '@repo/common/components';
 import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { ThreadItem } from '@repo/shared/types';
+import type { ThreadItem } from '@repo/shared/types';
 import { Button, cn, useToast } from '@repo/ui';
 import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';
+
 type MessageProps = {
     message: string;
     imageAttachment?: string;
@@ -21,7 +22,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
     const [showExpandButton, setShowExpandButton] = useState(false);
     const { copyToClipboard, status } = useCopyText();
     const maxHeight = 120;
-    const isGenerating = useChatStore(state => state.isGenerating);
+    const isGenerating = useChatStore((state) => state.isGenerating);
     useEffect(() => {
         if (messageRef.current) {
             setShowExpandButton(messageRef.current.scrollHeight > maxHeight);
@@ -34,7 +35,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
         }
     }, [copyToClipboard]);
 
-    const toggleExpand = useCallback(() => setIsExpanded(prev => !prev), []);
+    const toggleExpand = useCallback(() => setIsExpanded((prev) => !prev), []);
 
     return (
         <div className="flex w-full flex-col items-end gap-2 pt-4">
@@ -47,18 +48,18 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
             )}
             <div
                 className={cn(
-                    'text-foreground bg-tertiary group relative max-w-[90%] sm:max-w-[80%] overflow-hidden rounded-lg',
+                    'bg-tertiary text-foreground group relative max-w-[90%] overflow-hidden rounded-lg sm:max-w-[80%]',
                     isEditing && 'border-hard'
                 )}
             >
                 {!isEditing && (
                     <>
                         <div
-                            ref={messageRef}
                             className={cn('prose-sm relative px-3 py-1.5 font-normal', {
                                 'pb-12': isExpanded,
                                 markdownStyles,
                             })}
+                            ref={messageRef}
                             style={{
                                 maxHeight: isExpanded ? 'none' : maxHeight,
                                 transition: 'max-height 0.3s ease-in-out',
@@ -68,27 +69,27 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                         </div>
                         <div
                             className={cn(
-                                'absolute bottom-0 left-0 right-0 hidden flex-col items-center  group-hover:flex',
+                                'absolute bottom-0 left-0 right-0 hidden flex-col items-center group-hover:flex',
                                 showExpandButton && 'flex'
                             )}
                         >
                             <div className="via-tertiary/85 to-tertiary flex w-full items-center justify-end gap-1 bg-gradient-to-b from-transparent p-1.5">
                                 {showExpandButton && (
                                     <Button
-                                        variant="secondary"
-                                        size="xs"
-                                        rounded="full"
                                         className="pointer-events-auto relative z-10 px-4"
                                         onClick={toggleExpand}
+                                        rounded="full"
+                                        size="xs"
+                                        variant="secondary"
                                     >
                                         {isExpanded ? 'Show less' : 'Show more'}
                                     </Button>
                                 )}
                                 <Button
-                                    variant="bordered"
-                                    size="icon-sm"
                                     onClick={handleCopy}
+                                    size="icon-sm"
                                     tooltip={status === 'copied' ? 'Copied' : 'Copy'}
+                                    variant="bordered"
                                 >
                                     {status === 'copied' ? (
                                         <Check size={14} strokeWidth={2} />
@@ -102,10 +103,10 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                         threadItem.status === 'QUEUED' ||
                                         threadItem.status === 'PENDING'
                                     }
-                                    variant="bordered"
+                                    onClick={() => setIsEditing(true)}
                                     size="icon-sm"
                                     tooltip="Edit"
-                                    onClick={() => setIsEditing(true)}
+                                    variant="bordered"
                                 >
                                     <Pencil size={14} strokeWidth={2} />
                                 </Button>
@@ -116,12 +117,12 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
 
                 {isEditing && (
                     <EditMessage
-                        width={messageRef.current?.offsetWidth}
                         message={message}
-                        threadItem={threadItem}
                         onCancel={() => {
                             setIsEditing(false);
                         }}
+                        threadItem={threadItem}
+                        width={messageRef.current?.offsetWidth}
                     />
                 )}
             </div>
@@ -138,15 +139,15 @@ export type TEditMessage = {
 
 export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEditMessage) => {
     const { handleSubmit } = useAgentStream();
-    const removeFollowupThreadItems = useChatStore(state => state.removeFollowupThreadItems);
-    const getThreadItems = useChatStore(state => state.getThreadItems);
+    const removeFollowupThreadItems = useChatStore((state) => state.removeFollowupThreadItems);
+    const getThreadItems = useChatStore((state) => state.getThreadItems);
 
     const { editor } = useChatEditor({
         defaultContent: message,
     });
 
     const { toast } = useToast();
-    
+
     const handleSave = async (query: string) => {
         if (!query.trim()) {
             toast({
@@ -181,26 +182,26 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
                 }}
             >
                 <ChatEditor
-                    maxHeight="100px"
+                    className={cn('prose-sm max-w-full overflow-y-scroll !p-0', markdownStyles)}
                     editor={editor}
+                    maxHeight="100px"
                     sendMessage={() => {
                         handleSave(editor?.getText() || '');
                     }}
-                    className={cn('prose-sm max-w-full overflow-y-scroll !p-0', markdownStyles)}
                 />
             </div>
-            <div className={cn('flex-col items-center  group-hover:flex')}>
+            <div className={cn('flex-col items-center group-hover:flex')}>
                 <div className=" flex w-full items-center justify-end gap-1 bg-gradient-to-b from-transparent p-1.5">
                     <Button
-                        size="xs"
                         onClick={() => {
                             handleSave(editor?.getText() || '');
                         }}
+                        size="xs"
                         tooltip={status === 'copied' ? 'Copied' : 'Copy'}
                     >
                         Save
                     </Button>
-                    <Button variant="bordered" size="xs" tooltip="Edit" onClick={onCancel}>
+                    <Button onClick={onCancel} size="xs" tooltip="Edit" variant="bordered">
                         Cancel
                     </Button>
                 </div>

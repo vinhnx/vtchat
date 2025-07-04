@@ -2,6 +2,8 @@
 
 import { useLogout } from '@repo/common/hooks';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Avatar,
     Button,
@@ -12,13 +14,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import { FileText, HelpCircle, LogOut, Settings, Shield, User, Palette } from 'lucide-react';
+import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
 import Link from 'next/link';
 import { useAppStore } from '../store/app.store';
-import { ThemeSwitcher } from './theme-switcher';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { GatedFeatureAlert } from './gated-feature-alert';
-import { log } from '@repo/shared/logger';
+import { ThemeSwitcher } from './theme-switcher';
 
 interface UserButtonProps {
     showName?: boolean;
@@ -28,7 +28,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
     if (!session?.user) return null;
 
@@ -37,9 +37,12 @@ export function UserButton({ showName = false }: UserButtonProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="secondary" className="flex h-auto items-center gap-2 p-1 bg-background border shadow-sm">
+                <Button
+                    className="bg-background flex h-auto items-center gap-2 border p-1 shadow-sm"
+                    variant="secondary"
+                >
                     {user.image ? (
-                        <img src={user.image} width={24} height={24} className="rounded-full" />
+                        <img className="rounded-full" height={24} src={user.image} width={24} />
                     ) : (
                         <Avatar name={user.name || user.email} size="sm" />
                     )}
@@ -76,12 +79,12 @@ export function UserButton({ showName = false }: UserButtonProps) {
                         <span className="text-sm">Theme</span>
                     </div>
                     <GatedFeatureAlert
-                        requiredFeature={FeatureSlug.DARK_THEME}
-                        title="Sign In Required"
                         message="Dark theme is available to all registered users. Please sign in to access this feature."
                         onGatedClick={() => {
                             log.info('User attempted to use dark theme without signing in');
                         }}
+                        requiredFeature={FeatureSlug.DARK_THEME}
+                        title="Sign In Required"
                     >
                         <ThemeSwitcher className="scale-75" />
                     </GatedFeatureAlert>
@@ -90,19 +93,19 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Support & Legal */}
                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                <Link href="/faq" className="w-full">
+                <Link className="w-full" href="/faq">
                     <DropdownMenuItem>
                         <HelpCircle className="mr-2 h-4 w-4" />
                         Help Center
                     </DropdownMenuItem>
                 </Link>
-                <Link href="/terms" className="w-full">
+                <Link className="w-full" href="/terms">
                     <DropdownMenuItem>
                         <FileText className="mr-2 h-4 w-4" />
                         Terms of Service
                     </DropdownMenuItem>
                 </Link>
-                <Link href="/privacy" className="w-full">
+                <Link className="w-full" href="/privacy">
                     <DropdownMenuItem>
                         <Shield className="mr-2 h-4 w-4" />
                         Privacy Policy
@@ -112,9 +115,9 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Sign Out */}
                 <DropdownMenuItem
-                    onClick={() => logout()}
-                    disabled={isLoggingOut}
                     className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                    disabled={isLoggingOut}
+                    onClick={() => logout()}
                 >
                     <LogOut className="mr-2 h-4 w-4" />
                     {isLoggingOut ? 'Signing out...' : 'Sign out'}

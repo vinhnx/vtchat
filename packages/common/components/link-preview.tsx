@@ -1,10 +1,12 @@
 'use client';
 
-import { Source } from '@repo/shared/types';
+import type { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
 import { HoverCard, HoverCardContent, HoverCardTrigger, LinkFavicon } from '@repo/ui';
 import { ExternalLink } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import type React from 'react';
+import { memo, useState } from 'react';
+
 const ogCache = new Map<string, any>();
 
 export type LinkPreviewType = {
@@ -18,11 +20,11 @@ export const LinkPreviewPopover = memo(({ source, children }: LinkPreviewType) =
     }
 
     return (
-        <HoverCard openDelay={200} closeDelay={100}>
+        <HoverCard closeDelay={100} openDelay={200}>
             <HoverCardTrigger className="cursor-pointer">{children}</HoverCardTrigger>
             <HoverCardContent
-                className="bg-background prose-none hover:border-hard group isolate z-[100] w-[400px] cursor-pointer rounded-xl p-0 shadow-2xl"
-                onClick={e => {
+                className="prose-none bg-background hover:border-hard group isolate z-[100] w-[400px] cursor-pointer rounded-xl p-0 shadow-2xl"
+                onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     window.open(source.link, '_blank');

@@ -2,7 +2,7 @@
 
 import { FullPageLoader } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface ClientBoundaryProps {
     children: ReactNode;

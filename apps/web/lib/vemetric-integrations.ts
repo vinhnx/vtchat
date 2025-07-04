@@ -1,7 +1,7 @@
 import { vemetricBackend } from '@repo/common/services/vemetric-backend';
-import { ANALYTICS_EVENTS } from '@repo/shared/types/analytics';
 import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
+import { ANALYTICS_EVENTS } from '@repo/shared/types/analytics';
+import type { PlanSlug } from '@repo/shared/types/subscription';
 
 /**
  * Vemetric integrations for critical user actions
@@ -25,24 +25,23 @@ export async function trackPaymentSuccess(
     }
 ) {
     try {
-        await vemetricBackend.trackPaymentEvent(
-            userId,
-            'completed',
-            {
-                amount: paymentData.amount,
-                currency: paymentData.currency,
-                tier: paymentData.subscriptionTier,
-                paymentMethod: paymentData.paymentMethod,
-                subscriptionId: paymentData.subscriptionId,
-                processingTime: paymentData.processingTime,
-            }
-        );
-
-        log.info({ 
-            userId, 
+        await vemetricBackend.trackPaymentEvent(userId, 'completed', {
+            amount: paymentData.amount,
+            currency: paymentData.currency,
             tier: paymentData.subscriptionTier,
-            amount: paymentData.amount 
-        }, 'Payment success tracked');
+            paymentMethod: paymentData.paymentMethod,
+            subscriptionId: paymentData.subscriptionId,
+            processingTime: paymentData.processingTime,
+        });
+
+        log.info(
+            {
+                userId,
+                tier: paymentData.subscriptionTier,
+                amount: paymentData.amount,
+            },
+            'Payment success tracked'
+        );
     } catch (error) {
         log.error({ error, userId }, 'Failed to track payment success');
     }
@@ -63,17 +62,13 @@ export async function trackPaymentFailure(
     }
 ) {
     try {
-        await vemetricBackend.trackPaymentEvent(
-            userId,
-            'failed',
-            {
-                errorCode: errorData.errorCode,
-                paymentMethod: errorData.paymentMethod,
-                amount: errorData.amount,
-                currency: errorData.currency || 'USD',
-                tier: errorData.subscriptionTier,
-            }
-        );
+        await vemetricBackend.trackPaymentEvent(userId, 'failed', {
+            errorCode: errorData.errorCode,
+            paymentMethod: errorData.paymentMethod,
+            amount: errorData.amount,
+            currency: errorData.currency || 'USD',
+            tier: errorData.subscriptionTier,
+        });
 
         log.info({ userId, errorCode: errorData.errorCode }, 'Payment failure tracked');
     } catch (error) {
@@ -94,14 +89,11 @@ export async function trackUserRegistration(
     }
 ) {
     try {
-        await vemetricBackend.trackUserRegistration(
-            userId,
-            {
-                authMethod: registrationData.provider,
-                referralSource: registrationData.referralSource,
-                subscriptionTier: 'VT_BASE',
-            }
-        );
+        await vemetricBackend.trackUserRegistration(userId, {
+            authMethod: registrationData.provider,
+            referralSource: registrationData.referralSource,
+            subscriptionTier: 'VT_BASE',
+        });
 
         log.info({ userId, provider: registrationData.provider }, 'User registration tracked');
     } catch (error) {
@@ -123,11 +115,7 @@ export async function trackSubscriptionCreated(
     }
 ) {
     try {
-        await vemetricBackend.trackSubscriptionEvent(
-            userId,
-            'created',
-            subscriptionData
-        );
+        await vemetricBackend.trackSubscriptionEvent(userId, 'created', subscriptionData);
 
         log.info({ userId, tier: subscriptionData.tier }, 'Subscription creation tracked');
     } catch (error) {
@@ -148,14 +136,10 @@ export async function trackSubscriptionCancelled(
     }
 ) {
     try {
-        await vemetricBackend.trackSubscriptionEvent(
-            userId,
-            'cancelled',
-            {
-                tier: subscriptionData.tier,
-                plan: subscriptionData.plan,
-            }
-        );
+        await vemetricBackend.trackSubscriptionEvent(userId, 'cancelled', {
+            tier: subscriptionData.tier,
+            plan: subscriptionData.plan,
+        });
 
         log.info({ userId, tier: subscriptionData.tier }, 'Subscription cancellation tracked');
     } catch (error) {
@@ -190,11 +174,14 @@ export async function trackPremiumFeatureUsage(
             }
         );
 
-        log.debug({ 
-            userId, 
-            feature: featureData.featureName,
-            context: featureData.context 
-        }, 'Premium feature usage tracked');
+        log.debug(
+            {
+                userId,
+                feature: featureData.featureName,
+                context: featureData.context,
+            },
+            'Premium feature usage tracked'
+        );
     } catch (error) {
         log.error({ error, userId }, 'Failed to track premium feature usage');
     }
@@ -221,11 +208,14 @@ export async function trackCriticalAPIError(
             errorData.errorMessage
         );
 
-        log.warn({ 
-            userId, 
-            endpoint: errorData.endpoint,
-            errorCode: errorData.errorCode 
-        }, 'Critical API error tracked');
+        log.warn(
+            {
+                userId,
+                endpoint: errorData.endpoint,
+                errorCode: errorData.errorCode,
+            },
+            'Critical API error tracked'
+        );
     } catch (error) {
         log.error({ error, userId }, 'Failed to track critical API error');
     }
@@ -245,23 +235,22 @@ export async function trackOnboardingCompletion(
     }
 ) {
     try {
-        await vemetricBackend.trackEvent(
-            userId,
-            ANALYTICS_EVENTS.ONBOARDING_COMPLETED,
-            {
-                step: onboardingData.step,
-                completedSteps: onboardingData.completedSteps,
-                totalSteps: onboardingData.totalSteps,
-                timeToComplete: onboardingData.timeToComplete,
-                completionRate: onboardingData.completedSteps / onboardingData.totalSteps,
-            }
-        );
-
-        log.info({ 
-            userId, 
+        await vemetricBackend.trackEvent(userId, ANALYTICS_EVENTS.ONBOARDING_COMPLETED, {
             step: onboardingData.step,
-            completionRate: onboardingData.completedSteps / onboardingData.totalSteps 
-        }, 'Onboarding completion tracked');
+            completedSteps: onboardingData.completedSteps,
+            totalSteps: onboardingData.totalSteps,
+            timeToComplete: onboardingData.timeToComplete,
+            completionRate: onboardingData.completedSteps / onboardingData.totalSteps,
+        });
+
+        log.info(
+            {
+                userId,
+                step: onboardingData.step,
+                completionRate: onboardingData.completedSteps / onboardingData.totalSteps,
+            },
+            'Onboarding completion tracked'
+        );
     } catch (error) {
         log.error({ error, userId }, 'Failed to track onboarding completion');
     }
@@ -281,22 +270,21 @@ export async function trackFirstMessage(
     }
 ) {
     try {
-        await vemetricBackend.trackEvent(
-            userId,
-            ANALYTICS_EVENTS.FIRST_MESSAGE_SENT,
+        await vemetricBackend.trackEvent(userId, ANALYTICS_EVENTS.FIRST_MESSAGE_SENT, {
+            modelName: messageData.modelName,
+            messageLength: messageData.messageLength,
+            hasAttachments: messageData.hasAttachments,
+            timeToFirstMessage: messageData.timeToFirstMessage,
+        });
+
+        log.info(
             {
+                userId,
                 modelName: messageData.modelName,
                 messageLength: messageData.messageLength,
-                hasAttachments: messageData.hasAttachments,
-                timeToFirstMessage: messageData.timeToFirstMessage,
-            }
+            },
+            'First message tracked'
         );
-
-        log.info({ 
-            userId, 
-            modelName: messageData.modelName,
-            messageLength: messageData.messageLength 
-        }, 'First message tracked');
     } catch (error) {
         log.error({ error, userId }, 'Failed to track first message');
     }
@@ -316,23 +304,22 @@ export async function trackFeatureGateEncounter(
     }
 ) {
     try {
-        await vemetricBackend.trackEvent(
-            userId,
-            ANALYTICS_EVENTS.FEATURE_GATE_ENCOUNTERED,
-            {
-                featureName: gateData.featureName,
-                userTier: gateData.userTier,
-                context: gateData.context,
-                actionTaken: gateData.actionTaken,
-            }
-        );
+        await vemetricBackend.trackEvent(userId, ANALYTICS_EVENTS.FEATURE_GATE_ENCOUNTERED, {
+            featureName: gateData.featureName,
+            userTier: gateData.userTier,
+            context: gateData.context,
+            actionTaken: gateData.actionTaken,
+        });
 
-        log.info({ 
-            userId, 
-            feature: gateData.featureName,
-            tier: gateData.userTier,
-            action: gateData.actionTaken 
-        }, 'Feature gate encounter tracked');
+        log.info(
+            {
+                userId,
+                feature: gateData.featureName,
+                tier: gateData.userTier,
+                action: gateData.actionTaken,
+            },
+            'Feature gate encounter tracked'
+        );
     } catch (error) {
         log.error({ error, userId }, 'Failed to track feature gate encounter');
     }

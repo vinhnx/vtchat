@@ -1,13 +1,13 @@
 import { animate, useMotionValue } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-let delimiter = ' ';
+const delimiter = ' ';
 export function useAnimatedText(text: string, shouldAnimate = true) {
-    let animatedCursor = useMotionValue(0);
-    let [cursor, setCursor] = useState(0);
-    let [prevText, setPrevText] = useState(text);
-    let [isSameText, setIsSameText] = useState(true);
-    let [isAnimationComplete, setIsAnimationComplete] = useState(!shouldAnimate);
+    const animatedCursor = useMotionValue(0);
+    const [cursor, setCursor] = useState(0);
+    const [prevText, setPrevText] = useState(text);
+    const [isSameText, setIsSameText] = useState(true);
+    const [isAnimationComplete, setIsAnimationComplete] = useState(!shouldAnimate);
 
     if (prevText !== text) {
         setPrevText(text);
@@ -32,7 +32,7 @@ export function useAnimatedText(text: string, shouldAnimate = true) {
 
         const wordCount = text.split(delimiter).length;
 
-        let controls = animate(animatedCursor, wordCount, {
+        const controls = animate(animatedCursor, wordCount, {
             duration: 3,
             ease: 'easeOut',
             onUpdate(latest) {

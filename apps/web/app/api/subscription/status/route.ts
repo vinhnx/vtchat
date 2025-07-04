@@ -2,20 +2,20 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { userSubscriptions, users } from '@/lib/database/schema';
 import {
-    SessionSubscriptionStatus,
     getAnonymousSubscriptionStatus,
     getOrCreateSubscriptionRequest,
     getSessionSubscriptionStatus,
+    type SessionSubscriptionStatus,
 } from '@/lib/subscription-session-cache';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
 
 async function fetchSubscriptionFromDB(
     userId: string
@@ -120,10 +120,13 @@ export async function GET(request: NextRequest) {
         const userId = (session as any)?.user?.id || null;
         const isLoggedIn = !!userId;
 
-        log.info({ 
-            trigger: refreshTrigger 
-        }, `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'}`);
-        
+        log.info(
+            {
+                trigger: refreshTrigger,
+            },
+            `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'}`
+        );
+
         // For non-logged-in users, return cached anonymous status or create it
         if (!isLoggedIn) {
             const cached = getSessionSubscriptionStatus(null, refreshTrigger, request);
@@ -142,7 +145,10 @@ export async function GET(request: NextRequest) {
             }
 
             // Use deduplication for anonymous users as well
-            log.info({}, '[Subscription Status API] Cache miss for anonymous user, using deduplication');
+            log.info(
+                {},
+                '[Subscription Status API] Cache miss for anonymous user, using deduplication'
+            );
             const cachedResult = await getOrCreateSubscriptionRequest(
                 null,
                 refreshTrigger,
@@ -166,9 +172,12 @@ export async function GET(request: NextRequest) {
         // For logged-in users, check session cache first
         const cached = getSessionSubscriptionStatus(userId, refreshTrigger, request);
         if (cached && !forceRefresh) {
-            log.info({ 
-                fetchCount: cached.fetchCount 
-            }, `[Subscription Status API] Session cache hit for user ${userId}`);
+            log.info(
+                {
+                    fetchCount: cached.fetchCount,
+                },
+                `[Subscription Status API] Session cache hit for user ${userId}`
+            );
             return NextResponse.json({
                 plan: cached.plan,
                 status: cached.status,
@@ -183,9 +192,12 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        log.info(`[Subscription Status API] Session cache miss for user ${userId}, using deduplication for DB fetch`, { 
-            trigger: refreshTrigger 
-        });
+        log.info(
+            `[Subscription Status API] Session cache miss for user ${userId}, using deduplication for DB fetch`,
+            {
+                trigger: refreshTrigger,
+            }
+        );
 
         // Use deduplication to prevent multiple simultaneous DB calls for the same user
         const cachedResult = await getOrCreateSubscriptionRequest(

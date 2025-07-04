@@ -1,21 +1,21 @@
 import { log } from '@repo/shared/logger';
-import { 
-    ANALYTICS_EVENTS, 
-    type VemetricEventData, 
+import {
+    ANALYTICS_EVENTS,
     type ChatEventData,
-    type UserJourneyEvent,
-    type SubscriptionEventData,
-    type FileEventData,
-    type FeatureEventData,
-    type UserProperties,
-    type PaymentEventData,
     type DocumentEventData,
-    type RagEventData,
-    type ToolEventData,
+    type FeatureEventData,
+    type FileEventData,
+    type PaymentEventData,
     type PerformanceEventData,
-    type SecurityEventData
+    type RagEventData,
+    type SecurityEventData,
+    type SubscriptionEventData,
+    type ToolEventData,
+    type UserJourneyEvent,
+    type UserProperties,
+    type VemetricEventData,
 } from '@repo/shared/types/analytics';
-import { PlanSlug } from '@repo/shared/types/subscription';
+import type { PlanSlug } from '@repo/shared/types/subscription';
 
 /**
  * Utility functions for Vemetric analytics tracking
@@ -28,32 +28,42 @@ export class AnalyticsUtils {
 
     private static sanitizeData(data: VemetricEventData): VemetricEventData {
         const sanitized: VemetricEventData = {};
-        
+
         for (const [key, value] of Object.entries(data)) {
             // Skip potentially sensitive fields
-            if (this.isPotentiallyPII(key)) {
+            if (AnalyticsUtils.isPotentiallyPII(key)) {
                 continue;
             }
-            
+
             // Sanitize values
             if (typeof value === 'string') {
-                sanitized[key] = this.sanitizeString(value);
+                sanitized[key] = AnalyticsUtils.sanitizeString(value);
             } else {
                 sanitized[key] = value;
             }
         }
-        
+
         return sanitized;
     }
 
     private static isPotentiallyPII(key: string): boolean {
         const piiPatterns = [
-            'email', 'password', 'token', 'secret', 'key', 'auth',
-            'phone', 'address', 'name', 'username', 'ssn', 'id'
+            'email',
+            'password',
+            'token',
+            'secret',
+            'key',
+            'auth',
+            'phone',
+            'address',
+            'name',
+            'username',
+            'ssn',
+            'id',
         ];
-        
+
         const lowerKey = key.toLowerCase();
-        return piiPatterns.some(pattern => lowerKey.includes(pattern));
+        return piiPatterns.some((pattern) => lowerKey.includes(pattern));
     }
 
     private static sanitizeString(value: string): string {
@@ -77,7 +87,7 @@ export class AnalyticsUtils {
         hasAttachments?: boolean;
         toolsUsed?: string[];
     }): ChatEventData {
-        return this.sanitizeData({
+        return AnalyticsUtils.sanitizeData({
             messageId: params.messageId?.substring(0, 8), // Only first 8 chars for correlation
             modelName: params.modelName,
             messageLength: params.messageLength,
@@ -97,7 +107,7 @@ export class AnalyticsUtils {
         price?: number;
         currency?: string;
     }): SubscriptionEventData {
-        return this.sanitizeData({
+        return AnalyticsUtils.sanitizeData({
             tier: params.tier,
             plan: params.plan,
             price: params.price,
@@ -113,10 +123,12 @@ export class AnalyticsUtils {
         fileSize?: number;
         fileName?: string;
     }): FileEventData {
-        return this.sanitizeData({
+        return AnalyticsUtils.sanitizeData({
             fileType: params.fileType,
             fileSize: params.fileSize,
-            fileName: params.fileName ? this.sanitizeFileName(params.fileName) : undefined,
+            fileName: params.fileName
+                ? AnalyticsUtils.sanitizeFileName(params.fileName)
+                : undefined,
         }) as FileEventData;
     }
 
@@ -134,7 +146,7 @@ export class AnalyticsUtils {
         context?: string;
         value?: number;
     }): FeatureEventData {
-        return this.sanitizeData({
+        return AnalyticsUtils.sanitizeData({
             featureName: params.featureName,
             context: params.context,
             value: params.value,
@@ -149,7 +161,7 @@ export class AnalyticsUtils {
         value?: number;
         category?: string;
     }): UserJourneyEvent {
-        return this.sanitizeData({
+        return AnalyticsUtils.sanitizeData({
             step: params.step,
             value: params.value,
             category: params.category,
@@ -192,14 +204,14 @@ export class AnalyticsUtils {
      * Log analytics events for debugging
      */
     static logEvent(eventName: string, data?: VemetricEventData): void {
-        if (!this.isEnabled()) return;
-        
+        if (!AnalyticsUtils.isEnabled()) return;
+
         log.debug(
-            { 
-                analyticsEvent: eventName, 
+            {
+                analyticsEvent: eventName,
                 eventData: data,
-                timestamp: new Date().toISOString()
-            }, 
+                timestamp: new Date().toISOString(),
+            },
             'Analytics event tracked'
         );
     }
@@ -222,14 +234,21 @@ export class AnalyticsUtils {
         if (typeof window === 'undefined') return {};
 
         const ua = navigator.userAgent;
-        const deviceType = /Mobile|Android|iPhone|iPad/.test(ua) 
-            ? /iPad/.test(ua) ? 'tablet' : 'mobile'
+        const deviceType = /Mobile|Android|iPhone|iPad/.test(ua)
+            ? /iPad/.test(ua)
+                ? 'tablet'
+                : 'mobile'
             : 'desktop';
 
-        const browserName = ua.includes('Chrome') ? 'Chrome' :
-                          ua.includes('Firefox') ? 'Firefox' :
-                          ua.includes('Safari') ? 'Safari' :
-                          ua.includes('Edge') ? 'Edge' : 'Unknown';
+        const browserName = ua.includes('Chrome')
+            ? 'Chrome'
+            : ua.includes('Firefox')
+              ? 'Firefox'
+              : ua.includes('Safari')
+                ? 'Safari'
+                : ua.includes('Edge')
+                  ? 'Edge'
+                  : 'Unknown';
 
         return {
             deviceType,
@@ -245,7 +264,7 @@ export class AnalyticsUtils {
     static createTimer() {
         const startTime = performance.now();
         return {
-            end: () => this.createPerformanceData(startTime)
+            end: () => AnalyticsUtils.createPerformanceData(startTime),
         };
     }
 }

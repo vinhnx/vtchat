@@ -1,12 +1,13 @@
 #!/usr/bin/env bun
+
 /**
  * Migration script to add enhanced user profile fields
  * Run with: bun run scripts/migrate-user-profile.ts
  */
 
-import { db } from '../apps/web/lib/database';
-import { sql } from 'drizzle-orm';
 import { log } from '@repo/shared/logger';
+import { sql } from 'drizzle-orm';
+import { db } from '../apps/web/lib/database';
 
 async function runMigration() {
     // CLI output for user
@@ -77,7 +78,7 @@ runMigration()
         log.info('Migration script completed successfully');
         process.exit(0);
     })
-    .catch(error => {
+    .catch((error) => {
         console.error('💥 Migration script failed:', error);
         log.error({ error }, 'Migration script failed');
         process.exit(1);

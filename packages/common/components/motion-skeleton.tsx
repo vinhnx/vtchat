@@ -1,15 +1,18 @@
-import { cn } from '@repo/ui';
-
-import { Skeleton } from '@repo/ui';
+import { cn, Skeleton } from '@repo/ui';
 import { motion } from 'framer-motion';
 
 export const MotionSkeleton = ({ className }: { className?: string }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, width: '0%' }}
             animate={{ opacity: 1, width: '100%' }}
             exit={{ opacity: 0, width: '0%' }}
-            transition={{ duration: 2, ease: 'easeInOut', damping: 50, stiffness: 20 }}
+            initial={{ opacity: 0, width: '0%' }}
+            transition={{
+                duration: 2,
+                ease: 'easeInOut',
+                damping: 50,
+                stiffness: 20,
+            }}
         >
             <Skeleton
                 className={cn(

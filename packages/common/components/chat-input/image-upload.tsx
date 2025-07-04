@@ -5,7 +5,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Tooltip } from '@repo/ui';
 import { Image } from 'lucide-react';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
@@ -13,7 +13,7 @@ import { LoginRequiredDialog } from '../login-required-dialog';
 const ImageIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <Image size={size} className={className} />;
+}) => <Image className={className} size={size} />;
 
 export type TImageUpload = {
     id: string;
@@ -30,8 +30,8 @@ export const ImageUpload: FC<TImageUpload> = ({
     showIcon,
     handleImageUpload,
 }) => {
-    const chatMode = useChatStore(state => state.chatMode);
-    const imageAttachment = useChatStore(state => state.imageAttachment);
+    const chatMode = useChatStore((state) => state.chatMode);
+    const imageAttachment = useChatStore((state) => state.imageAttachment);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -72,7 +72,7 @@ export const ImageUpload: FC<TImageUpload> = ({
 
     const imageUploadButton = (
         <>
-            <input type="file" id={id} className="hidden" onChange={handleImageUpload} />
+            <input className="hidden" id={id} onChange={handleImageUpload} type="file" />
             <Tooltip
                 content={
                     hasImageAttached
@@ -82,22 +82,22 @@ export const ImageUpload: FC<TImageUpload> = ({
             >
                 {showIcon ? (
                     <Button
-                        variant={hasImageAttached ? 'default' : 'ghost'}
-                        size="icon-sm"
-                        onClick={handleFileSelect}
                         className={
                             hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
                         }
+                        onClick={handleFileSelect}
+                        size="icon-sm"
+                        variant={hasImageAttached ? 'default' : 'ghost'}
                     >
                         <Image size={16} strokeWidth={2} />
                     </Button>
                 ) : (
                     <Button
-                        variant={hasImageAttached ? 'default' : 'bordered'}
-                        onClick={handleFileSelect}
                         className={
                             hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
                         }
+                        onClick={handleFileSelect}
+                        variant={hasImageAttached ? 'default' : 'bordered'}
                     >
                         {label}
                     </Button>
@@ -106,11 +106,11 @@ export const ImageUpload: FC<TImageUpload> = ({
 
             {/* Login prompt dialog */}
             <LoginRequiredDialog
+                description="Please log in to upload and attach files to your messages."
+                icon={ImageIcon}
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to upload and attach files to your messages."
-                icon={ImageIcon}
             />
         </>
     );
@@ -119,10 +119,10 @@ export const ImageUpload: FC<TImageUpload> = ({
     if (requiresVTPlusForImageUpload && isSignedIn) {
         return (
             <GatedFeatureAlert
+                message="Image upload with advanced models is a VT+ feature. Upgrade to access enhanced AI capabilities."
                 requiredFeature={chatModeConfig?.requiredFeature}
                 requiredPlan={chatModeConfig?.requiredPlan}
                 title="Image Upload Requires VT+"
-                message="Image upload with advanced models is a VT+ feature. Upgrade to access enhanced AI capabilities."
             >
                 {imageUploadButton}
             </GatedFeatureAlert>

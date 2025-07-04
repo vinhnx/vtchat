@@ -1,12 +1,12 @@
 import { createTask } from '@repo/orchestrator';
-import { calculatorTools } from '../../../../apps/web/lib/tools/math';
+import { log } from '@repo/shared/logger';
 import { chartTools } from '../../../../apps/web/lib/tools/charts';
+import { calculatorTools } from '../../../../apps/web/lib/tools/math';
 import { getModelFromChatMode, supportsOpenAIWebSearch, supportsTools } from '../../models';
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
-import { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, getHumanizedDate, handleError } from '../utils';
-import { log } from '@repo/shared/logger';
 
 const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
@@ -19,15 +19,15 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         const customInstructions = context?.get('customInstructions');
         const mode = context.get('mode');
-        const webSearch = context.get('webSearch') || false;
-        const mathCalculator = context.get('mathCalculator') || false;
-        const charts = context.get('charts') || false;
+        const webSearch = context.get('webSearch');
+        const mathCalculator = context.get('mathCalculator');
+        const charts = context.get('charts');
 
         let messages =
             context
                 .get('messages')
                 ?.filter(
-                    message =>
+                    (message) =>
                         (message.role === 'user' || message.role === 'assistant') &&
                         !!message.content
                 ) || [];
@@ -55,7 +55,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             return;
         }
 
-        let prompt = `You are a helpful assistant that can answer questions and help with tasks.
+        const prompt = `You are a helpful assistant that can answer questions and help with tasks.
         Today is ${getHumanizedDate()}.
         ${mathCalculator ? MATH_CALCULATOR_PROMPT : ''}
         ${charts ? 'You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart.' : ''}
@@ -65,7 +65,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             threshold: 200,
             breakOn: ['\n\n'],
             onFlush: (_chunk: string, fullText: string) => {
-                events?.update('steps', prev => ({
+                events?.update('steps', (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
@@ -87,7 +87,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             threshold: 200,
             breakOn: ['\n'],
             onFlush: (text: string) => {
-                events?.update('answer', current => ({
+                events?.update('answer', (current) => ({
                     ...current,
                     text,
                     status: 'PENDING' as const,
@@ -106,13 +106,16 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         }
 
         if (charts) {
-            log.info({ model: model }, '🎨 Charts enabled for model, adding chart tools...');
+            log.info({ model }, '🎨 Charts enabled for model, adding chart tools...');
             const chartToolsObj = chartTools();
-            log.info({ 
-                chartTools: Object.keys(chartToolsObj),
-                model: model,
-                supportsTools: supportsTools ? supportsTools(model) : 'unknown'
-            }, '📊 Available chart tools for model');
+            log.info(
+                {
+                    chartTools: Object.keys(chartToolsObj),
+                    model,
+                    supportsTools: supportsTools ? supportsTools(model) : 'unknown',
+                },
+                '📊 Available chart tools for model'
+            );
             tools = { ...tools, ...chartToolsObj };
         }
 
@@ -140,8 +143,8 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
             },
-            onReasoningDetails: details => {
-                events?.update('steps', prev => ({
+            onReasoningDetails: (details) => {
+                events?.update('steps', (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
@@ -160,10 +163,10 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             onChunk: (chunk, _fullText) => {
                 chunkBuffer.add(chunk);
             },
-            onToolCall: toolCall => {
+            onToolCall: (toolCall) => {
                 log.info({ toolName: toolCall.toolName, args: toolCall.args }, '🔧 Tool call');
                 // Send tool call event to UI
-                events?.update('steps', prev => ({
+                events?.update('steps', (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
@@ -190,7 +193,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 }));
 
                 // Also update toolCalls for threadItem
-                events?.update('toolCalls', prev => [
+                events?.update('toolCalls', (prev) => [
                     ...(prev || []),
                     {
                         toolCallId: toolCall.toolCallId,
@@ -199,10 +202,13 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                     },
                 ]);
             },
-            onToolResult: toolResult => {
-                log.info({ toolName: toolResult.toolName, result: toolResult.result }, '🔧 Tool result for');
+            onToolResult: (toolResult) => {
+                log.info(
+                    { toolName: toolResult.toolName, result: toolResult.result },
+                    '🔧 Tool result for'
+                );
                 // Send tool result event to UI
-                events?.update('steps', prev => ({
+                events?.update('steps', (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
@@ -230,7 +236,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 }));
 
                 // Also update toolResults for threadItem
-                events?.update('toolResults', prev => [
+                events?.update('toolResults', (prev) => [
                     ...(prev || []),
                     {
                         toolCallId: toolResult.toolCallId,
@@ -244,16 +250,16 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         reasoningBuffer.end();
         chunkBuffer.end();
 
-        events?.update('answer', prev => ({
+        events?.update('answer', (prev) => ({
             ...prev,
             text: '',
             fullText: response,
             status: 'COMPLETED',
         }));
 
-        context.update('answer', _ => response);
+        context.update('answer', (_) => response);
 
-        events?.update('status', _prev => 'COMPLETED');
+        events?.update('status', (_prev) => 'COMPLETED');
 
         const onFinish = context.get('onFinish');
         if (onFinish) {

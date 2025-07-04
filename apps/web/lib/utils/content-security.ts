@@ -5,9 +5,15 @@ import crypto from 'crypto';
  */
 const PII_PATTERNS = [
     // Email addresses
-    { pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, replacement: '[EMAIL_REDACTED]' },
+    {
+        pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+        replacement: '[EMAIL_REDACTED]',
+    },
     // Phone numbers (various formats)
-    { pattern: /(?:\+?1[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/g, replacement: '[PHONE_REDACTED]' },
+    {
+        pattern: /(?:\+?1[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/g,
+        replacement: '[PHONE_REDACTED]',
+    },
     // Credit card numbers
     { pattern: /\b(?:\d{4}[-\s]?){3}\d{4}\b/g, replacement: '[CARD_REDACTED]' },
     // ZIP codes (US format) - Must come before SSN to avoid conflicts
@@ -19,11 +25,22 @@ const PII_PATTERNS = [
     // URLs with potential sensitive info
     { pattern: /https?:\/\/[^\s]+/g, replacement: '[URL_REDACTED]' },
     // Home addresses (street addresses with numbers)
-    { pattern: /\b\d{1,6}\s+[A-Za-z\s]{1,50}(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Boulevard|Blvd|Court|Ct|Place|Pl|Way|Circle|Cir|Loop|Parkway|Pkwy|Highway|Hwy)\b/gi, replacement: '[ADDRESS_REDACTED]' },
+    {
+        pattern:
+            /\b\d{1,6}\s+[A-Za-z\s]{1,50}(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Boulevard|Blvd|Court|Ct|Place|Pl|Way|Circle|Cir|Loop|Parkway|Pkwy|Highway|Hwy)\b/gi,
+        replacement: '[ADDRESS_REDACTED]',
+    },
     // International addresses (number followed by multiple words, like "173 Truong Dinh")
-    { pattern: /\b\d{1,6}\s+[A-Za-z]+(?:\s+[A-Za-z]+){1,4}(?:\s*,?\s*(?:TP|Quan|District|Ward|City|Province|State)\s+[\w\s]+)?\b/gi, replacement: '[ADDRESS_REDACTED]' },
+    {
+        pattern:
+            /\b\d{1,6}\s+[A-Za-z]+(?:\s+[A-Za-z]+){1,4}(?:\s*,?\s*(?:TP|Quan|District|Ward|City|Province|State)\s+[\w\s]+)?\b/gi,
+        replacement: '[ADDRESS_REDACTED]',
+    },
     // Apartment/unit numbers
-    { pattern: /\b(?:Apt|Apartment|Unit|Suite|Ste)\.?\s*#?\s*[A-Za-z0-9-]+\b/gi, replacement: '[UNIT_REDACTED]' },
+    {
+        pattern: /\b(?:Apt|Apartment|Unit|Suite|Ste)\.?\s*#?\s*[A-Za-z0-9-]+\b/gi,
+        replacement: '[UNIT_REDACTED]',
+    },
 ];
 
 /**
@@ -31,11 +48,11 @@ const PII_PATTERNS = [
  */
 export function maskPII(content: string): string {
     let maskedContent = content;
-    
+
     for (const { pattern, replacement } of PII_PATTERNS) {
         maskedContent = maskedContent.replace(pattern, replacement);
     }
-    
+
     return maskedContent;
 }
 
@@ -65,11 +82,11 @@ export function secureContentForEmbedding(content: string): string {
     if (containsPII(content)) {
         return maskPII(content);
     }
-    
+
     // For non-PII content, still limit storage to prevent bloat
     if (content.length > 500) {
         return createContentHash(content);
     }
-    
+
     return content;
 }

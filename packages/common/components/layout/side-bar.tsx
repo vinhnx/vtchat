@@ -3,7 +3,7 @@ import { UserButton } from '@repo/common/components/user-button';
 import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Thread } from '@repo/shared/types';
+import type { Thread } from '@repo/shared/types';
 import { Button, cn, Flex, Skeleton } from '@repo/ui';
 import { PanelLeftClose, PanelRightClose, Plus, Search } from 'lucide-react';
 import moment from 'moment';
@@ -16,17 +16,17 @@ export const Sidebar = () => {
     const { setIsCommandSearchOpen } = useRootContext();
     const { push } = useRouter();
     const isChatPage = pathname === '/' || pathname.startsWith('/chat/');
-    const threads = useChatStore(state => state.threads);
+    const threads = useChatStore((state) => state.threads);
     const { data: session, isPending: isAuthLoading } = useSession();
     const isSignedIn = !!session;
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
     };
-    const clearAllThreads = useChatStore(state => state.clearAllThreads);
-    const pinThread = useChatStore(state => state.pinThread);
-    const unpinThread = useChatStore(state => state.unpinThread);
-    const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
-    const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
+    const clearAllThreads = useChatStore((state) => state.clearAllThreads);
+    const pinThread = useChatStore((state) => state.pinThread);
+    const unpinThread = useChatStore((state) => state.unpinThread);
+    const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
+    const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
 
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
@@ -36,7 +36,7 @@ export const Sidebar = () => {
         previousMonths: [],
     };
 
-    sortThreads(threads, 'createdAt')?.forEach(thread => {
+    sortThreads(threads, 'createdAt')?.forEach((thread) => {
         const createdAt = moment(thread.createdAt);
         const now = moment();
         if (createdAt.isSame(now, 'day')) {
@@ -55,23 +55,23 @@ export const Sidebar = () => {
     const renderGroup = (title: string, threads: Thread[]) => {
         if (threads.length === 0) return null;
         return (
-            <Flex gap="xs" direction="col" items="start" className="w-full">
+            <Flex className="w-full" direction="col" gap="xs" items="start">
                 <p className="text-muted-foreground py-1 text-xs">{title}</p>
                 <Flex
                     className="border-border/50 w-full gap-0.5 border-l pl-2"
-                    gap="none"
                     direction="col"
+                    gap="none"
                 >
-                    {threads.map(thread => (
+                    {threads.map((thread) => (
                         <HistoryItem
-                            thread={thread}
-                            key={thread.id}
                             dismiss={() => {
-                                setIsSidebarOpen(prev => false);
+                                setIsSidebarOpen((prev) => false);
                             }}
                             isActive={thread.id === currentThreadId}
                             isPinned={thread.pinned}
+                            key={thread.id}
                             pinThread={pinThread}
+                            thread={thread}
                             unpinThread={unpinThread}
                         />
                     ))}
@@ -85,41 +85,41 @@ export const Sidebar = () => {
             className={cn(
                 'border-border/0 relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l border-dashed py-2 transition-all duration-200',
                 isSidebarOpen
-                    ? 'bg-background border-border/70 shadow-xs top-0 h-full w-[240px] border-l'
+                    ? 'border-border/70 bg-background shadow-xs top-0 h-full w-[240px] border-l'
                     : 'w-[50px]'
             )}
         >
-            <Flex direction="col" className="w-full flex-1 overflow-hidden">
-                <Flex direction="col" className="w-full px-2" gap="sm">
+            <Flex className="w-full flex-1 overflow-hidden" direction="col">
+                <Flex className="w-full px-2" direction="col" gap="sm">
                     <Button
-                        size={isSidebarOpen ? 'sm' : 'icon'}
-                        variant="bordered"
-                        rounded="full"
-                        tooltip={isSidebarOpen ? undefined : 'New Thread'}
-                        tooltipSide="right"
                         className={cn('relative w-full shadow-sm', 'justify-center')}
                         onClick={() => !isChatPage && push('/')}
+                        rounded="full"
+                        size={isSidebarOpen ? 'sm' : 'icon'}
+                        tooltip={isSidebarOpen ? undefined : 'New Thread'}
+                        tooltipSide="right"
+                        variant="bordered"
                     >
                         <Plus
+                            className={cn(isSidebarOpen && 'absolute left-2')}
                             size={16}
                             strokeWidth={2}
-                            className={cn(isSidebarOpen && 'absolute left-2')}
                         />
                         {isSidebarOpen && 'New'}
                     </Button>
                     <Button
-                        size={isSidebarOpen ? 'sm' : 'icon'}
-                        variant="secondary"
-                        rounded="full"
-                        tooltip={isSidebarOpen ? undefined : 'Search'}
-                        tooltipSide="right"
                         className={cn('relative w-full', 'justify-center')}
                         onClick={() => setIsCommandSearchOpen(true)}
+                        rounded="full"
+                        size={isSidebarOpen ? 'sm' : 'icon'}
+                        tooltip={isSidebarOpen ? undefined : 'Search'}
+                        tooltipSide="right"
+                        variant="secondary"
                     >
                         <Search
+                            className={cn(isSidebarOpen && 'absolute left-2')}
                             size={16}
                             strokeWidth={2}
-                            className={cn(isSidebarOpen && 'absolute left-2')}
                         />
                         {isSidebarOpen && 'Search'}
                     </Button>
@@ -127,12 +127,12 @@ export const Sidebar = () => {
 
                 {isAuthLoading ? (
                     <Flex
-                        direction="col"
-                        gap="md"
                         className={cn(
                             'border-border/70 mt-3 w-full flex-1 overflow-y-auto border-t border-dashed p-3',
                             isSidebarOpen ? 'flex' : 'hidden'
                         )}
+                        direction="col"
+                        gap="md"
                     >
                         <div className="space-y-4">
                             <div className="space-y-2">
@@ -154,12 +154,12 @@ export const Sidebar = () => {
                     </Flex>
                 ) : (
                     <Flex
-                        direction="col"
-                        gap="md"
                         className={cn(
                             'border-border/70 mt-3 w-full flex-1 overflow-y-auto border-t border-dashed p-3',
                             isSidebarOpen ? 'flex' : 'hidden'
                         )}
+                        direction="col"
+                        gap="md"
                     >
                         {renderGroup('Today', groupedThreads.today)}
                         {renderGroup('Yesterday', groupedThreads.yesterday)}
@@ -171,18 +171,18 @@ export const Sidebar = () => {
 
                 <Flex
                     className="mt-auto w-full p-2"
-                    gap="xs"
                     direction={'col'}
+                    gap="xs"
                     justify={isSidebarOpen ? 'between' : 'center'}
                 >
                     {isSidebarOpen && (
                         <Flex className="w-full items-center justify-between px-2">
                             <Button
-                                variant="ghost"
-                                size={isSidebarOpen ? 'sm' : 'icon'}
-                                onClick={() => setIsSidebarOpen(prev => !prev)}
                                 className={cn(!isSidebarOpen && 'mx-auto')}
+                                onClick={() => setIsSidebarOpen((prev) => !prev)}
+                                size={isSidebarOpen ? 'sm' : 'icon'}
                                 tooltip="Close Sidebar"
+                                variant="ghost"
                             >
                                 <PanelLeftClose size={16} strokeWidth={2} /> Close
                             </Button>
@@ -190,10 +190,10 @@ export const Sidebar = () => {
                     )}
                     {!isSidebarOpen && (
                         <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setIsSidebarOpen(prev => !prev)}
                             className={cn(!isSidebarOpen && 'mx-auto')}
+                            onClick={() => setIsSidebarOpen((prev) => !prev)}
+                            size="icon"
+                            variant="ghost"
                         >
                             <PanelRightClose size={16} strokeWidth={2} />
                         </Button>
@@ -208,7 +208,7 @@ export const Sidebar = () => {
                             <UserButton showName />
                         ) : (
                             <Link href="/login">
-                                <Button variant="default" size="sm" rounded="full">
+                                <Button rounded="full" size="sm" variant="default">
                                     Log in
                                 </Button>
                             </Link>

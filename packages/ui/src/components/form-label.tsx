@@ -22,9 +22,9 @@ export const FormLabel = ({
     link,
 }: TFormLabel) => {
     return (
-        <Flex direction="col" gap="none" items="start" className={cn('w-full', className)}>
-            <Flex items="center" gap="sm" className="w-full">
-                <Flex items="center" gap="xs">
+        <Flex className={cn('w-full', className)} direction="col" gap="none" items="start">
+            <Flex className="w-full" gap="sm" items="center">
+                <Flex gap="xs" items="center">
                     <Type size="sm" weight="medium">
                         {label}
                     </Type>
@@ -36,9 +36,9 @@ export const FormLabel = ({
                 </Flex>
                 {link && (
                     <Link
+                        className="decoration-brand/20 py-0.5 text-sm font-medium text-violet-500 underline underline-offset-4 hover:opacity-90"
                         href={link}
                         target="_blank"
-                        className="decoration-brand/20 py-0.5 text-sm font-medium text-violet-500 underline underline-offset-4 hover:opacity-90"
                     >
                         {linkText}
                     </Link>
@@ -46,7 +46,7 @@ export const FormLabel = ({
                 {extra && extra()}
             </Flex>
             {children && (
-                <Type size="xs" textColor="secondary" asChild>
+                <Type asChild size="xs" textColor="secondary">
                     <div>{children}</div>
                 </Type>
             )}

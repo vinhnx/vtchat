@@ -1,5 +1,5 @@
-import { Source } from '@repo/shared/types';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import type { Source } from '@repo/shared/types';
+import { createContext, type PropsWithChildren, useEffect, useState } from 'react';
 
 export type Citation = {
     url: string;
@@ -52,7 +52,7 @@ export type CitationProviderContextType = {
 
 export const CitationProviderContext = createContext<CitationProviderContextType>({
     sources: [],
-    getSourceByIndex: () => undefined,
+    getSourceByIndex: () => {},
 });
 
 export const CitationProvider = ({
@@ -68,7 +68,7 @@ export const CitationProvider = ({
     }, [sources]);
 
     const getSourceByIndex = (index: number) => {
-        return sourceList.find(source => source.index === index);
+        return sourceList.find((source) => source.index === index);
     };
 
     return (

@@ -2,19 +2,19 @@ import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-acces
 import { useChatStore } from '@repo/common/store';
 import { supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Attachment } from '@repo/shared/types';
+import { log } from '@repo/shared/logger';
+import type { Attachment } from '@repo/shared/types';
 import { Button, Tooltip, useToast } from '@repo/ui';
 import { Paperclip } from 'lucide-react';
-import { FC, useCallback, useRef, useState } from 'react';
+import { type FC, useCallback, useRef, useState } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
 import { LoginRequiredDialog } from '../login-required-dialog';
-import { log } from '@repo/shared/logger';
 
 // Create a wrapper component for Paperclip to match expected icon prop type
-const PaperclipIcon: React.ComponentType<{ size?: number; className?: string }> = ({
-    size,
-    className,
-}) => <Paperclip size={size} className={className} />;
+const PaperclipIcon: React.ComponentType<{
+    size?: number;
+    className?: string;
+}> = ({ size, className }) => <Paperclip className={className} size={size} />;
 
 interface MultiModalAttachmentButtonProps {
     onAttachmentsChange: (attachments: Attachment[]) => void;
@@ -27,7 +27,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     attachments,
     disabled = false,
 }) => {
-    const chatMode = useChatStore(state => state.chatMode);
+    const chatMode = useChatStore((state) => state.chatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -38,62 +38,68 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     const hasAttachments = attachments.length > 0;
 
     const { toast } = useToast();
-    
-    const handleFileUpload = useCallback(async (files: File[]) => {
-        if (files.length === 0) return;
 
-        const maxFiles = 5;
-        if (attachments.length + files.length > maxFiles) {
-            toast({
-                title: `Maximum ${maxFiles} files allowed`,
-                variant: 'destructive',
-            });
-            return;
-        }
+    const handleFileUpload = useCallback(
+        async (files: File[]) => {
+            if (files.length === 0) return;
 
-        setUploading(true);
-
-        try {
-            const formData = new FormData();
-            files.forEach(file => formData.append('files', file));
-
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Upload failed');
+            const maxFiles = 5;
+            if (attachments.length + files.length > maxFiles) {
+                toast({
+                    title: `Maximum ${maxFiles} files allowed`,
+                    variant: 'destructive',
+                });
+                return;
             }
 
-            const data = await response.json();
-            const newAttachments = [...attachments, ...data.attachments];
-            
-            onAttachmentsChange(newAttachments);
-            toast({
-                title: data.message,
-                variant: 'success',
-            });
-        } catch (error) {
-            log.error({ data: error }, 'Upload error');
-            toast({
-                title: error instanceof Error ? error.message : 'Upload failed',
-                variant: 'destructive',
-            });
-        } finally {
-            setUploading(false);
-        }
-    }, [attachments, onAttachmentsChange, toast]);
+            setUploading(true);
 
-    const handleFileInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files || []);
-        handleFileUpload(files);
-        // Reset input to allow same file to be selected again
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    }, [handleFileUpload]);
+            try {
+                const formData = new FormData();
+                files.forEach((file) => formData.append('files', file));
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Upload failed');
+                }
+
+                const data = await response.json();
+                const newAttachments = [...attachments, ...data.attachments];
+
+                onAttachmentsChange(newAttachments);
+                toast({
+                    title: data.message,
+                    variant: 'success',
+                });
+            } catch (error) {
+                log.error({ data: error }, 'Upload error');
+                toast({
+                    title: error instanceof Error ? error.message : 'Upload failed',
+                    variant: 'destructive',
+                });
+            } finally {
+                setUploading(false);
+            }
+        },
+        [attachments, onAttachmentsChange, toast]
+    );
+
+    const handleFileInputChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            const files = Array.from(event.target.files || []);
+            handleFileUpload(files);
+            // Reset input to allow same file to be selected again
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        },
+        [handleFileUpload]
+    );
 
     const handleFileSelect = () => {
         if (!isSignedIn) {
@@ -115,7 +121,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
         if (uploading) return 'Uploading...';
         if (hasAttachments) {
             const count = attachments.length;
-            const fileNames = attachments.map(a => a.name).join(', ');
+            const fileNames = attachments.map((a) => a.name).join(', ');
             return `${count} file${count > 1 ? 's' : ''} attached: ${fileNames}`;
         }
         return 'Attach images and PDFs';
@@ -124,23 +130,23 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     const attachmentButton = (
         <>
             <input
-                ref={fileInputRef}
-                type="file"
-                multiple
                 accept="image/*,.pdf"
-                onChange={handleFileInputChange}
                 className="hidden"
                 disabled={disabled || uploading}
+                multiple
+                onChange={handleFileInputChange}
+                ref={fileInputRef}
+                type="file"
             />
             <Tooltip content={getTooltipContent()}>
                 <Button
-                    variant={hasAttachments ? 'default' : 'ghost'}
-                    size="icon-sm"
-                    onClick={handleFileSelect}
-                    disabled={disabled || uploading}
                     className={
                         hasAttachments ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
                     }
+                    disabled={disabled || uploading}
+                    onClick={handleFileSelect}
+                    size="icon-sm"
+                    variant={hasAttachments ? 'default' : 'ghost'}
                 >
                     <Paperclip size={16} strokeWidth={2} />
                 </Button>
@@ -148,11 +154,11 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 
             {/* Login prompt dialog */}
             <LoginRequiredDialog
+                description="Please log in to upload and attach files to your messages."
+                icon={PaperclipIcon}
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to upload and attach files to your messages."
-                icon={PaperclipIcon}
             />
         </>
     );

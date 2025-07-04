@@ -1,10 +1,10 @@
-import { runWorkflow } from '@repo/ai/workflow';
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
-import { log } from '@repo/shared/logger';
+import { runWorkflow } from '@repo/ai/workflow';
 import { ChatMode } from '@repo/shared/config';
+import { log } from '@repo/shared/logger';
 import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
-import { Geo } from '@vercel/functions';
-import { CompletionRequestType, StreamController } from './types';
+import type { Geo } from '@vercel/functions';
+import type { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
 
 /**
@@ -13,7 +13,11 @@ import { sanitizePayloadForJSON } from './utils';
  */
 function getThinkingModeForChatMode(
     mode: ChatMode,
-    userThinkingMode?: { enabled: boolean; budget: number; includeThoughts: boolean }
+    userThinkingMode?: {
+        enabled: boolean;
+        budget: number;
+        includeThoughts: boolean;
+    }
 ) {
     // Auto-enable reasoning for research modes with high budgets
     if (mode === ChatMode.Deep) {
@@ -59,11 +63,14 @@ export function sendMessage(
         controller.enqueue(new Uint8Array(0));
     } catch (error) {
         // This is critical - we should log errors in message serialization
-        log.error({ 
-            error, 
-            payloadType: payload.type,
-            threadId: payload.threadId 
-        }, 'Error serializing message payload');
+        log.error(
+            {
+                error,
+                payloadType: payload.type,
+                threadId: payload.threadId,
+            },
+            'Error serializing message payload'
+        );
 
         const errorMessage = `event: done\ndata: ${JSON.stringify({
             type: 'done',
@@ -109,16 +116,16 @@ export async function executeStream({
             threadItemId: data.threadItemId,
             messages: data.messages,
             customInstructions: data.customInstructions,
-            webSearch: data.webSearch || false,
-            mathCalculator: data.mathCalculator || false,
-            charts: data.charts || false,
+            webSearch: data.webSearch,
+            mathCalculator: data.mathCalculator,
+            charts: data.charts,
             config: {
                 maxIterations: data.maxIterations || 3,
                 signal,
             },
             gl,
-            showSuggestions: data.showSuggestions || false,
-            onFinish: onFinish,
+            showSuggestions: data.showSuggestions,
+            onFinish,
             apiKeys: data.apiKeys,
             thinkingMode: getThinkingModeForChatMode(data.mode, data.thinkingMode),
         });
@@ -131,8 +138,8 @@ export async function executeStream({
                 parentThreadItemId: data.parentThreadItemId,
                 query: data.prompt,
                 mode: data.mode,
-                webSearch: data.webSearch || false,
-                showSuggestions: data.showSuggestions || false,
+                webSearch: data.webSearch,
+                showSuggestions: data.showSuggestions,
                 [event]: payload,
             });
         });
@@ -174,12 +181,15 @@ export async function executeStream({
             });
         } else {
             // Actual errors during workflow execution are important
-            log.error({ 
-                error,
-                userId,
-                threadId: data.threadId,
-                mode: data.mode,
-            }, 'Workflow execution error');
+            log.error(
+                {
+                    error,
+                    userId,
+                    threadId: data.threadId,
+                    mode: data.mode,
+                },
+                'Workflow execution error'
+            );
 
             sendMessage(controller, encoder, {
                 type: 'done',

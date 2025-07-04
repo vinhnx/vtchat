@@ -1,8 +1,8 @@
+import { type Model, models } from '@repo/ai/models';
+import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { models, type Model } from '@repo/ai/models';
-import { ApiKeys } from '@repo/common/store/api-keys.store';
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { checkSubscriptionAccess, SubscriptionContext } from '@repo/shared/utils/subscription';
+import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
 import { Brain, Gift } from 'lucide-react';
 
 export const chatOptions = [
@@ -118,14 +118,11 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 };
 
 // Helper function to generate model options from models array
-export const generateModelOptionsForProvider = (
-    provider: string,
-    excludePreview: boolean = false
-) => {
+export const generateModelOptionsForProvider = (provider: string, excludePreview = false) => {
     return models
-        .filter(model => model.provider === provider)
-        .filter(model => !excludePreview || !model.name.toLowerCase().includes('preview'))
-        .map(model => {
+        .filter((model) => model.provider === provider)
+        .filter((model) => !(excludePreview && model.name.toLowerCase().includes('preview')))
+        .map((model) => {
             const chatMode = getChatModeFromModel(model);
             if (!chatMode) return null;
 
@@ -151,9 +148,9 @@ export const generateModelOptionsForProvider = (
                 value: chatMode,
                 webSearch: true,
                 icon: model.isFree ? (
-                    <Gift size={16} className="text-green-500" />
+                    <Gift className="text-green-500" size={16} />
                 ) : hasReasoningCapability(chatMode) ? (
-                    <Brain size={16} className="text-purple-500" />
+                    <Brain className="text-purple-500" size={16} />
                 ) : undefined,
                 ...(model.isFree ? {} : { requiredApiKey: getApiKeyForProvider(model.provider) }),
             };
@@ -203,21 +200,21 @@ export const modelOptionsByProvider = {
             label: 'o3',
             value: ChatMode.O3,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'o3 mini',
             value: ChatMode.O3_Mini,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'o4 mini',
             value: ChatMode.O4_Mini,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -226,7 +223,7 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.5 Flash Lite Preview',
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             description: 'Free model • 10 requests/day per account • 1 request/minute',
             isFreeModel: true,
         },
@@ -241,21 +238,21 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.0 Flash Lite',
             value: ChatMode.GEMINI_2_0_FLASH_LITE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Flash',
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -264,14 +261,14 @@ export const modelOptionsByProvider = {
             label: 'Claude 4 Sonnet',
             value: ChatMode.CLAUDE_4_SONNET,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Claude 4 Opus',
             value: ChatMode.CLAUDE_4_OPUS,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -280,7 +277,7 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
-            icon: <Brain size={16} className="text-purple-500" />,
+            icon: <Brain className="text-purple-500" size={16} />,
             requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -305,7 +302,7 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek V3 0324',
             value: ChatMode.DEEPSEEK_V3_0324_FREE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
@@ -319,14 +316,14 @@ export const modelOptionsByProvider = {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1_FREE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'DeepSeek R1 0528',
             value: ChatMode.DEEPSEEK_R1_0528_FREE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
@@ -354,7 +351,7 @@ export const modelOptionsByProvider = {
             label: 'Qwen3 14B',
             value: ChatMode.QWEN3_14B_FREE,
             webSearch: true,
-            icon: <Gift size={16} className="text-green-500" />,
+            icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
     ],
@@ -362,8 +359,12 @@ export const modelOptionsByProvider = {
 
 // Create modelOptions with Gemini 2.5 Flash Lite as the first option
 const allModelOptions = Object.values(modelOptionsByProvider).flat();
-const geminiFlashLiteOption = allModelOptions.find(option => option.value === ChatMode.GEMINI_2_5_FLASH_LITE);
-const otherOptions = allModelOptions.filter(option => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE);
+const geminiFlashLiteOption = allModelOptions.find(
+    (option) => option.value === ChatMode.GEMINI_2_5_FLASH_LITE
+);
+const otherOptions = allModelOptions.filter(
+    (option) => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE
+);
 
 export const modelOptions = geminiFlashLiteOption
     ? [geminiFlashLiteOption, ...otherOptions]

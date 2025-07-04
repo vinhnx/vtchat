@@ -7,10 +7,10 @@
 
 import { auth } from '@repo/shared/lib/auth';
 import { getUserWithSubscription } from '@repo/shared/lib/database-queries';
-import { NextRequest, NextResponse } from 'next/server';
-import { AccessCheckOptions, FeatureSlug, PlanSlug } from '../types/subscription';
-import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
 import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
+import { type AccessCheckOptions, type FeatureSlug, PlanSlug } from '../types/subscription';
+import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
 
 /**
  * Server-side subscription access check using Better Auth.
@@ -20,7 +20,9 @@ export async function serverHasAccess(
     options: AccessCheckOptions,
     headers?: Headers
 ): Promise<boolean> {
-    const session = await auth.api.getSession({ headers: headers || new Headers() });
+    const session = await auth.api.getSession({
+        headers: headers || new Headers(),
+    });
 
     if (!session?.user?.id) {
         return false;
@@ -66,7 +68,9 @@ export async function serverHasPlan(plan: PlanSlug, headers?: Headers): Promise<
  */
 export async function getServerUserSubscription(headers?: Headers) {
     try {
-        const session = await auth.api.getSession({ headers: headers || new Headers() });
+        const session = await auth.api.getSession({
+            headers: headers || new Headers(),
+        });
         if (!session?.user?.id) return null;
 
         const userWithSub = await getUserWithSubscription(session.user.id);

@@ -5,10 +5,10 @@
  * while maintaining compatibility with Better Auth authentication
  */
 
+import { log } from '@repo/shared/logger';
 import { Creem } from 'creem';
 import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from './env';
-import { log } from '@repo/shared/logger';
 
 // Types for Creem.io integration
 export enum PriceType {
@@ -97,7 +97,7 @@ export class CreemService {
      */
     static async createCheckout(request: CheckoutRequest): Promise<CheckoutResponse> {
         try {
-            if (!this.API_KEY) {
+            if (!CreemService.API_KEY) {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
@@ -114,7 +114,7 @@ export class CreemService {
                 (request.successUrl && request.successUrl.includes(`plan=${PlanSlug.VT_PLUS}`)); // Used PlanSlug
 
             // Get the base URL for success redirect
-            const baseUrl = this.getBaseUrl();
+            const baseUrl = CreemService.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
             // Ensure success URL is properly formatted for redirect - must be absolute URL
@@ -126,12 +126,12 @@ export class CreemService {
 
             log.info('[CreemService] Using success URL:', { data: successUrl });
 
-            const result = await this.client.createCheckout({
-                xApiKey: this.API_KEY,
+            const result = await CreemService.client.createCheckout({
+                xApiKey: CreemService.API_KEY,
                 createCheckoutRequest: {
-                    productId: this.PRODUCT_ID || '', // Use configured product ID with fallback
+                    productId: CreemService.PRODUCT_ID || '', // Use configured product ID with fallback
                     units: request.quantity || 1,
-                    successUrl: successUrl,
+                    successUrl,
                     customer: request.customerEmail
                         ? {
                               email: request.customerEmail,
@@ -139,7 +139,7 @@ export class CreemService {
                         : undefined,
                     metadata: {
                         packageId: request.productId || '', // Store the internal package ID for webhook processing
-                        successUrl: successUrl,
+                        successUrl,
                         source: 'vtchat-app',
                         timestamp: new Date().toISOString(),
                     },
@@ -174,7 +174,7 @@ export class CreemService {
      */
     static async getPortalUrl(customerEmail?: string, userId?: string): Promise<PortalResponse> {
         try {
-            if (!this.API_KEY) {
+            if (!CreemService.API_KEY) {
                 throw new Error('CREEM_API_KEY not configured');
             }
 
@@ -195,10 +195,7 @@ export class CreemService {
                         .limit(1);
                     if (userResults.length > 0 && userResults[0].creemCustomerId) {
                         customerId = userResults[0].creemCustomerId;
-                        log.info(
-                            { userId },
-                            '[CreemService] Found customer ID for user'
-                        );
+                        log.info({ userId }, '[CreemService] Found customer ID for user');
                     }
                 } catch (dbError) {
                     log.info('[CreemService] Database lookup failed, proceeding with fallback');
@@ -208,10 +205,10 @@ export class CreemService {
             // If we have a customer ID, use the proper Creem SDK method
             if (customerId) {
                 try {
-                    const result = await this.client.generateCustomerLinks({
-                        xApiKey: this.API_KEY!,
+                    const result = await CreemService.client.generateCustomerLinks({
+                        xApiKey: CreemService.API_KEY!,
                         createCustomerPortalLinkRequestEntity: {
-                            customerId: customerId,
+                            customerId,
                         },
                     });
 
@@ -224,9 +221,7 @@ export class CreemService {
                             (result as any).link;
 
                         if (portalUrl) {
-                            log.info(
-                                '[CreemService] Generated customer portal URL successfully'
-                            );
+                            log.info('[CreemService] Generated customer portal URL successfully');
                             return {
                                 url: portalUrl,
                                 success: true,
@@ -243,13 +238,13 @@ export class CreemService {
             }
 
             // Fallback logic for when customer ID is not available or SDK call fails
-            const baseUrl = this.getBaseUrl();
+            const baseUrl = CreemService.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
             // If not in production, return the Creem.io sandbox customer portal
             if (!isProductionEnvironment()) {
                 return {
-                    url: `https://www.creem.io/test/billing?product=${this.PRODUCT_ID || ''}`,
+                    url: `https://www.creem.io/test/billing?product=${CreemService.PRODUCT_ID || ''}`,
                     success: true,
                 };
             }
@@ -262,7 +257,7 @@ export class CreemService {
         } catch (error) {
             log.error('Creem portal error:', { data: error });
             // Return fallback URL instead of throwing
-            const baseUrl = this.getBaseUrl();
+            const baseUrl = CreemService.getBaseUrl();
             const normalizedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
 
             return {
@@ -278,8 +273,8 @@ export class CreemService {
     static async subscribeToVtPlus(customerEmail?: string) {
         log.info('[CreemService] Creating VT+ subscription checkout');
 
-        return this.createCheckout({
-            productId: this.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
+        return CreemService.createCheckout({
+            productId: CreemService.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
             customerEmail,
             successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
         });
@@ -289,7 +284,7 @@ export class CreemService {
      * Get Creem client instance for advanced operations
      */
     static getClient() {
-        return this.client;
+        return CreemService.client;
     }
 }
 

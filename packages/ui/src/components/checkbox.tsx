@@ -11,11 +11,11 @@ const Checkbox = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
 >(({ className, ...props }, ref) => (
     <CheckboxPrimitive.Root
-        ref={ref}
         className={cn(
             'border-primary focus-visible:ring-ring data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground peer h-5 w-5 shrink-0 rounded-md border focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
             className
         )}
+        ref={ref}
         {...props}
     >
         <CheckboxPrimitive.Indicator

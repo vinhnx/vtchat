@@ -2,12 +2,12 @@
 
 import { PAYMENT_EVENT_TYPES } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { useEffect, useRef } from 'react';
 import { useSubscriptionAccess } from '../hooks/use-subscription-access';
 import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS, AnalyticsUtils } from '../utils/analytics';
-import { log } from '@repo/shared/logger';
 
 /**
  * Component that tracks subscription-related analytics events
@@ -23,7 +23,7 @@ export function VemetricSubscriptionTracker() {
 
     // Track subscription tier changes
     useEffect(() => {
-        if (!isEnabled || !session || !isLoaded) return;
+        if (!(isEnabled && session && isLoaded)) return;
 
         const currentTier = currentPlan || PlanSlug.VT_BASE;
 
@@ -94,7 +94,7 @@ export function useVemetricSubscriptionTracking() {
     const { data: session } = useSession();
 
     const trackUpgradeInitiated = async (context?: string) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             await trackEvent(ANALYTICS_EVENTS.PLAN_UPGRADE_INITIATED, {
@@ -111,7 +111,7 @@ export function useVemetricSubscriptionTracking() {
         requiredTier: string;
         context?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             await trackEvent(ANALYTICS_EVENTS.FEATURE_GATE_ENCOUNTERED, {
@@ -132,7 +132,7 @@ export function useVemetricSubscriptionTracking() {
         currency?: string;
         paymentMethod?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = AnalyticsUtils.createSubscriptionEventData({

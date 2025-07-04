@@ -1,4 +1,5 @@
 import { Footer } from '@repo/common/components';
+import { VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
 import {
     Accordion,
     AccordionContent,
@@ -7,9 +8,8 @@ import {
     Button,
     TypographyH2,
 } from '@repo/ui';
-import { VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
 import { ArrowLeft } from 'lucide-react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default function HelpCenterPage() {
             <header className="border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4">
                     <Link href="/">
-                        <Button variant="ghost" size="sm" className="gap-2">
+                        <Button className="gap-2" size="sm" variant="ghost">
                             <ArrowLeft size={16} />
                             Back to VT
                         </Button>
@@ -76,7 +76,7 @@ function HelpCenterContent() {
                 </div>
 
                 <div className="mx-auto max-w-4xl">
-                    <Accordion type="single" collapsible className="w-full space-y-4">
+                    <Accordion className="w-full space-y-4" collapsible type="single">
                         {/* Privacy & Thread Isolation */}
                         <AccordionItem value="thread-isolation">
                             <AccordionTrigger className="font-medium">
@@ -218,7 +218,8 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Document Processing:</strong> Upload and analyze
-                                        PDFs, documents, and images with AI models (Free for all users)
+                                        PDFs, documents, and images with AI models (Free for all
+                                        users)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Structured Output:</strong> Extract structured data
@@ -249,31 +250,42 @@ function HelpCenterContent() {
                                 <p className="text-muted-foreground">
                                     Most advanced features are completely free for logged-in users:
                                 </p>
-                                <h4 className="font-medium mt-4 mb-2 text-foreground">Free Features (Logged-in Users):</h4>
+                                <h4 className="text-foreground mb-2 mt-4 font-medium">
+                                    Free Features (Logged-in Users):
+                                </h4>
                                 <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Advanced UI:</strong> Dark mode, thinking mode toggle, structured output
+                                        <strong>Advanced UI:</strong> Dark mode, thinking mode
+                                        toggle, structured output
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Document & Image Processing:</strong> Upload PDFs, images, analyze documents with structured data extraction
+                                        <strong>Document & Image Processing:</strong> Upload PDFs,
+                                        images, analyze documents with structured data extraction
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>AI Capabilities:</strong> Reasoning chain, thinking mode, Gemini caching, chart visualization
+                                        <strong>AI Capabilities:</strong> Reasoning chain, thinking
+                                        mode, Gemini caching, chart visualization
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>All Chat Tools:</strong> Mathematical computing, multi-modal processing, productivity tools
+                                        <strong>All Chat Tools:</strong> Mathematical computing,
+                                        multi-modal processing, productivity tools
                                     </li>
                                 </ul>
-                                <h4 className="font-medium mt-4 mb-2 text-foreground">VT+ Exclusive Features ({VT_PLUS_PRICE_WITH_INTERVAL}):</h4>
+                                <h4 className="text-foreground mb-2 mt-4 font-medium">
+                                    VT+ Exclusive Features ({VT_PLUS_PRICE_WITH_INTERVAL}):
+                                </h4>
                                 <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Pro Search:</strong> Lightning-fast web search with AI grounding
+                                        <strong>Pro Search:</strong> Lightning-fast web search with
+                                        AI grounding
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Deep Research:</strong> Comprehensive multi-step research and analysis
+                                        <strong>Deep Research:</strong> Comprehensive multi-step
+                                        research and analysis
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>AI Memory:</strong> Personal AI assistant with knowledge base (RAG)
+                                        <strong>AI Memory:</strong> Personal AI assistant with
+                                        knowledge base (RAG)
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -351,7 +363,9 @@ function HelpCenterContent() {
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Both research modes are VT+ exclusive features ({VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 3 premium features while everything else is free.
+                                    Both research modes are VT+ exclusive features (
+                                    {VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 3 premium features
+                                    while everything else is free.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -363,7 +377,7 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Thinking Mode shows you the AI's reasoning process for more 
+                                    Thinking Mode shows you the AI's reasoning process for more
                                     transparent and thoughtful responses (Free for all users):
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
@@ -372,8 +386,8 @@ function HelpCenterContent() {
                                         only with Google Gemini models that support reasoning
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Free Feature:</strong> Available to all registered users
-                                        with adjustable thinking budget in settings
+                                        <strong>Free Feature:</strong> Available to all registered
+                                        users with adjustable thinking budget in settings
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Reasoning Display:</strong> See the AI's
@@ -402,8 +416,9 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Gemini Explicit Caching reduces API costs by reusing conversation 
-                                    context across multiple queries (Free for all users):
+                                    Gemini Explicit Caching reduces API costs by reusing
+                                    conversation context across multiple queries (Free for all
+                                    users):
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
@@ -473,14 +488,17 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT now offers free access to Gemini 2.5 Flash Lite Preview for registered users:
+                                    VT now offers free access to Gemini 2.5 Flash Lite Preview for
+                                    registered users:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Model:</strong> Gemini 2.5 Flash Lite Preview with advanced AI capabilities
+                                        <strong>Free Model:</strong> Gemini 2.5 Flash Lite Preview
+                                        with advanced AI capabilities
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Daily Limit:</strong> 10 requests per day for registered users
+                                        <strong>Daily Limit:</strong> 10 requests per day for
+                                        registered users
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Rate Limit:</strong> Maximum 1 request per minute
@@ -489,14 +507,17 @@ function HelpCenterContent() {
                                         <strong>Reset Time:</strong> Daily limits reset at 00:00 UTC
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Registration Required:</strong> Must be signed in to access free model
+                                        <strong>Registration Required:</strong> Must be signed in to
+                                        access free model
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Server API Key:</strong> Uses VT's server-side API key (no need for BYOK)
+                                        <strong>Server API Key:</strong> Uses VT's server-side API
+                                        key (no need for BYOK)
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Upgrade to VT+ for enhanced web search, deep research, and personal AI assistant features.
+                                    Upgrade to VT+ for enhanced web search, deep research, and
+                                    personal AI assistant features.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -508,18 +529,30 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                VT offers generous free features with VT+ focusing on exclusive research capabilities:
+                                    VT offers generous free features with VT+ focusing on exclusive
+                                    research capabilities:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
-                                <li className="text-muted-foreground">
-                                <strong>Free tier (logged-in users):</strong> Most advanced features included free - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage. Plus free Gemini 2.5 Flash Lite Preview (10 requests/day).
-                                </li>
-                                <li className="text-muted-foreground">
-                                <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong> Everything free + premium AI models (Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + only 3 exclusive features: Pro Search (fast web search), Deep Research (comprehensive analysis), and AI Memory (personal knowledge base with RAG).
-                                </li>
-                                <li className="text-muted-foreground">
-                                Both tiers include complete privacy with thread isolation and local storage.
-                                </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Free tier (logged-in users):</strong> Most advanced
+                                        features included free - dark mode, thinking mode,
+                                        structured output, document parsing, reasoning chain, Gemini
+                                        caching, chart visualization, multi-modal chat, and
+                                        unlimited BYOK usage. Plus free Gemini 2.5 Flash Lite
+                                        Preview (10 requests/day).
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
+                                        Everything free + premium AI models (Claude 4, GPT-4.1, O3
+                                        series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + only 3
+                                        exclusive features: Pro Search (fast web search), Deep
+                                        Research (comprehensive analysis), and AI Memory (personal
+                                        knowledge base with RAG).
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        Both tiers include complete privacy with thread isolation
+                                        and local storage.
+                                    </li>
                                 </ul>
                             </AccordionContent>
                         </AccordionItem>
@@ -595,8 +628,8 @@ function HelpCenterContent() {
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Feature:</strong> Available to all registered users
-                                        with AI-powered chart generation
+                                        <strong>Free Feature:</strong> Available to all registered
+                                        users with AI-powered chart generation
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Chart Types:</strong> Bar charts, line charts, area
@@ -630,13 +663,13 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    All registered users can upload and analyze images and PDF documents
-                                    alongside text conversations using advanced AI models:
+                                    All registered users can upload and analyze images and PDF
+                                    documents alongside text conversations using advanced AI models:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Feature:</strong> Available to all registered users
-                                        with supported AI models
+                                        <strong>Free Feature:</strong> Available to all registered
+                                        users with supported AI models
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Supported Models:</strong> GPT-4o, Claude models,
@@ -673,42 +706,57 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Getting started with Personal AI Assistant with Memory is simple! Here's how to build your personal AI assistant:
+                                    Getting started with Personal AI Assistant with Memory is
+                                    simple! Here's how to build your personal AI assistant:
                                 </p>
                                 <ol className="mt-4 list-outside list-decimal space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Get VT+ subscription:</strong> Personal AI Assistant with Memory is exclusive to VT+ users for enhanced privacy and features
+                                        <strong>Get VT+ subscription:</strong> Personal AI Assistant
+                                        with Memory is exclusive to VT+ users for enhanced privacy
+                                        and features
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Set up API keys:</strong> Add your Google Gemini API key in Settings → API Keys (required for embeddings)
+                                        <strong>Set up API keys:</strong> Add your Google Gemini API
+                                        key in Settings → API Keys (required for embeddings)
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Access AI Assistant:</strong> Click "AI Assistant" in the sidebar navigation
+                                        <strong>Access AI Assistant:</strong> Click "AI Assistant"
+                                        in the sidebar navigation
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Start sharing information:</strong> Tell the AI about yourself, your work, preferences, or important facts
+                                        <strong>Start sharing information:</strong> Tell the AI
+                                        about yourself, your work, preferences, or important facts
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Ask questions:</strong> Query your stored knowledge by asking questions about anything you've shared
+                                        <strong>Ask questions:</strong> Query your stored knowledge
+                                        by asking questions about anything you've shared
                                     </li>
                                 </ol>
-                                <h4 className="font-medium mt-6 mb-2">Example conversations to start:</h4>
+                                <h4 className="mb-2 mt-6 font-medium">
+                                    Example conversations to start:
+                                </h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        "My name is John and I work as a software engineer at Google"
+                                        "My name is John and I work as a software engineer at
+                                        Google"
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "I prefer working remotely and my favorite programming languages are Python and TypeScript"
+                                        "I prefer working remotely and my favorite programming
+                                        languages are Python and TypeScript"
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "I have a meeting with the product team every Tuesday at 2 PM"
+                                        "I have a meeting with the product team every Tuesday at 2
+                                        PM"
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "What did I tell you about my work schedule?" (after sharing information)
+                                        "What did I tell you about my work schedule?" (after sharing
+                                        information)
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    The AI will automatically save information you share and help you retrieve it later through natural conversation. The more you share, the more personalized your assistant becomes!
+                                    The AI will automatically save information you share and help
+                                    you retrieve it later through natural conversation. The more you
+                                    share, the more personalized your assistant becomes!
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -720,63 +768,88 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you build and query your personal knowledge base using Retrieval-Augmented Generation (RAG) technology. It's like having your own AI assistant with perfect memory of everything you've shared:
+                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you
+                                    build and query your personal knowledge base using
+                                    Retrieval-Augmented Generation (RAG) technology. It's like
+                                    having your own AI assistant with perfect memory of everything
+                                    you've shared:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+ subscribers with enhanced privacy and security features
+                                        <strong>VT+ Exclusive:</strong> Available only to VT+
+                                        subscribers with enhanced privacy and security features
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Personal AI Assistant:</strong> Build your own intelligent knowledge repository that remembers everything you share
+                                        <strong>Personal AI Assistant:</strong> Build your own
+                                        intelligent knowledge repository that remembers everything
+                                        you share
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Smart Auto-Storage:</strong> Information is automatically processed, chunked, and embedded using advanced vector embeddings
+                                        <strong>Smart Auto-Storage:</strong> Information is
+                                        automatically processed, chunked, and embedded using
+                                        advanced vector embeddings
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Semantic Search:</strong> AI finds relevant information using meaning-based search, not just keywords
+                                        <strong>Semantic Search:</strong> AI finds relevant
+                                        information using meaning-based search, not just keywords
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Natural Conversations:</strong> Share facts, preferences, experiences, or ask questions in plain English
+                                        <strong>Natural Conversations:</strong> Share facts,
+                                        preferences, experiences, or ask questions in plain English
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Proactive Learning:</strong> AI encourages you to build your knowledge base for more personalized assistance
-                                    </li>
-                                </ul>
-                                <h4 className="font-medium mt-6 mb-2">Key Benefits:</h4>
-                                <ul className="list-outside list-disc space-y-2 pl-4">
-                                    <li className="text-muted-foreground">
-                                        <strong>Persistent Memory:</strong> Unlike regular chat, your knowledge base grows over time and remembers everything
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Personalized Responses:</strong> Get answers tailored to your specific information and preferences
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Intelligent Organization:</strong> No need to manually organize - AI finds connections automatically
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Instant Access:</strong> Quickly retrieve any stored information through natural conversation
+                                        <strong>Proactive Learning:</strong> AI encourages you to
+                                        build your knowledge base for more personalized assistance
                                     </li>
                                 </ul>
-                                <h4 className="font-medium mt-6 mb-2">Privacy & Security:</h4>
+                                <h4 className="mb-2 mt-6 font-medium">Key Benefits:</h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Complete Isolation:</strong> Your knowledge base is completely private and isolated to your account only
+                                        <strong>Persistent Memory:</strong> Unlike regular chat,
+                                        your knowledge base grows over time and remembers everything
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Zero Data Sharing:</strong> No other users can access your stored information - guaranteed
+                                        <strong>Personalized Responses:</strong> Get answers
+                                        tailored to your specific information and preferences
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Secure Storage:</strong> All embeddings and data are encrypted and stored securely in our database
+                                        <strong>Intelligent Organization:</strong> No need to
+                                        manually organize - AI finds connections automatically
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>User-Controlled:</strong> You can view, delete individual items, or clear your entire knowledge base anytime
+                                        <strong>Instant Access:</strong> Quickly retrieve any stored
+                                        information through natural conversation
+                                    </li>
+                                </ul>
+                                <h4 className="mb-2 mt-6 font-medium">Privacy & Security:</h4>
+                                <ul className="list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Complete Isolation:</strong> Your knowledge base is
+                                        completely private and isolated to your account only
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>No Third-Party Sharing:</strong> Your data is never shared with any third parties and only used to improve your VT experience
+                                        <strong>Zero Data Sharing:</strong> No other users can
+                                        access your stored information - guaranteed
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Secure Storage:</strong> All embeddings and data are
+                                        encrypted and stored securely in our database
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>User-Controlled:</strong> You can view, delete
+                                        individual items, or clear your entire knowledge base
+                                        anytime
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>No Third-Party Sharing:</strong> Your data is never
+                                        shared with any third parties and only used to improve your
+                                        VT experience
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Access RAG Knowledge Chat from the sidebar (VT+ users) and start building your personalized AI assistant by sharing information about yourself, your work, preferences, and important facts.
+                                    Access RAG Knowledge Chat from the sidebar (VT+ users) and start
+                                    building your personalized AI assistant by sharing information
+                                    about yourself, your work, preferences, and important facts.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>

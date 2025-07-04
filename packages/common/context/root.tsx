@@ -1,9 +1,9 @@
 'use client';
+import { log } from '@repo/shared/logger';
 import { initHotjar } from '@repo/shared/utils';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useThreadAuth } from '../hooks';
 import { initializeStorageCleanup } from '../utils/storage-cleanup';
-import { log } from '@repo/shared/logger';
 
 export type RootContextType = {
     isSidebarOpen: boolean;

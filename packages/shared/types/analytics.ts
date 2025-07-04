@@ -1,5 +1,5 @@
 import { PAYMENT_EVENT_TYPES, TOOL_FEATURES } from '../constants';
-import { PlanSlug } from './subscription';
+import type { PlanSlug } from './subscription';
 
 export interface VemetricUser {
     identifier: string;

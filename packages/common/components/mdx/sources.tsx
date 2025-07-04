@@ -1,5 +1,5 @@
-import { XMLParser } from 'fast-xml-parser';
 import { log } from '@repo/shared/logger';
+import { XMLParser } from 'fast-xml-parser';
 
 export function parseSourceTagsFromXML(xmlText: string): string[] {
     if (!xmlText) {
@@ -16,7 +16,7 @@ export function parseSourceTagsFromXML(xmlText: string): string[] {
                 for (const [key, value] of Object.entries(obj)) {
                     if (key === 'Source') {
                         if (Array.isArray(value)) {
-                            value.forEach(val => {
+                            value.forEach((val) => {
                                 results.add(val);
                             });
                         } else {

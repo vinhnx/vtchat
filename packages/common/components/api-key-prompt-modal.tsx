@@ -1,6 +1,7 @@
 'use client';
 
 import { ChatMode } from '@repo/shared/config';
+import { log } from '@repo/shared/logger';
 import {
     Button,
     Dialog,
@@ -13,8 +14,7 @@ import {
 } from '@repo/ui';
 import { ExternalLink, Key } from 'lucide-react';
 import { useState } from 'react';
-import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
-import { log } from '@repo/shared/logger';
+import { type ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;
@@ -125,7 +125,7 @@ export const ApiKeyPromptModal = ({
     onComplete,
 }: ApiKeyPromptModalProps) => {
     const requiredProvider = getRequiredApiKeyForMode(chatMode);
-    const setApiKey = useApiKeysStore(state => state.setKey);
+    const setApiKey = useApiKeysStore((state) => state.setKey);
 
     const [apiKeyValue, setApiKeyValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -158,7 +158,7 @@ export const ApiKeyPromptModal = ({
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
+        <Dialog onOpenChange={handleClose} open={isOpen}>
             <DialogContent ariaTitle="API Key Required" className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -175,40 +175,40 @@ export const ApiKeyPromptModal = ({
                     <div className="space-y-2">
                         <Label htmlFor="api-key">{providerInfo.name} API Key</Label>
                         <Input
+                            autoFocus
                             id="api-key"
-                            type="password"
-                            placeholder={providerInfo.placeholder}
-                            value={apiKeyValue}
-                            onChange={e => setApiKeyValue(e.target.value)}
-                            onKeyDown={e => {
+                            onChange={(e) => setApiKeyValue(e.target.value)}
+                            onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
                                     handleSave();
                                 }
                             }}
-                            autoFocus
+                            placeholder={providerInfo.placeholder}
+                            type="password"
+                            value={apiKeyValue}
                         />
                         <p className="text-muted-foreground text-sm">{providerInfo.description}</p>
                     </div>
 
                     <div className="flex items-center justify-between pt-2">
                         <Button
-                            variant="outlined"
-                            size="sm"
-                            onClick={() => window.open(providerInfo.url, '_blank')}
                             className="flex items-center gap-1"
+                            onClick={() => window.open(providerInfo.url, '_blank')}
+                            size="sm"
+                            variant="outlined"
                         >
                             <ExternalLink className="h-3 w-3" />
                             Get API Key
                         </Button>
 
                         <div className="flex gap-2">
-                            <Button variant="outlined" onClick={handleClose}>
+                            <Button onClick={handleClose} variant="outlined">
                                 Cancel
                             </Button>
                             <Button
-                                onClick={handleSave}
                                 disabled={!apiKeyValue.trim() || isLoading}
+                                onClick={handleSave}
                             >
                                 {isLoading ? 'Saving...' : 'Save & Continue'}
                             </Button>

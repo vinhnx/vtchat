@@ -2,8 +2,8 @@
 import { ChatModeOptions } from '@repo/common/components';
 import { useAgentStream, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { ChatMode, getChatModeName } from '@repo/shared/config';
-import { ThreadItem } from '@repo/shared/types';
+import { type ChatMode, getChatModeName } from '@repo/shared/config';
+import type { ThreadItem } from '@repo/shared/types';
 import {
     Alert,
     AlertDescription,
@@ -14,6 +14,7 @@ import {
 } from '@repo/ui';
 import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
 import { forwardRef, useState } from 'react';
+
 type MessageActionsProps = {
     threadItem: ThreadItem;
     isLast: boolean;
@@ -22,9 +23,9 @@ type MessageActionsProps = {
 export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
     ({ threadItem, isLast }, ref) => {
         const { handleSubmit } = useAgentStream();
-        const removeThreadItem = useChatStore(state => state.deleteThreadItem);
-        const getThreadItems = useChatStore(state => state.getThreadItems);
-        const useWebSearch = useChatStore(state => state.useWebSearch);
+        const removeThreadItem = useChatStore((state) => state.deleteThreadItem);
+        const getThreadItems = useChatStore((state) => state.getThreadItems);
+        const useWebSearch = useChatStore((state) => state.useWebSearch);
         const [chatMode, setChatMode] = useState<ChatMode>(threadItem.mode);
         const { copyToClipboard, status, copyMarkdown, markdownCopyStatus } = useCopyText();
         const [gatedFeatureAlert, setGatedFeatureAlert] = useState<{
@@ -47,14 +48,14 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                 <div className="flex flex-row items-center gap-1 py-2">
                     {threadItem?.answer?.text && (
                         <Button
-                            variant="ghost-bordered"
-                            size="icon-sm"
                             onClick={() => {
                                 if (ref && 'current' in ref && ref.current) {
                                     copyToClipboard(ref.current);
                                 }
                             }}
+                            size="icon-sm"
                             tooltip="Copy"
+                            variant="ghost-bordered"
                         >
                             {status === 'copied' ? (
                                 <Check size={16} strokeWidth={2} />
@@ -66,25 +67,26 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
 
                     {threadItem?.answer?.text && (
                         <Button
-                            variant="ghost-bordered"
-                            size="icon-sm"
                             onClick={() => {
                                 // Get text content from the DOM element (same as regular copy)
                                 let textContent = '';
                                 if (ref && 'current' in ref && ref.current) {
-                                    textContent = ref.current.innerText || ref.current.textContent || '';
+                                    textContent =
+                                        ref.current.innerText || ref.current.textContent || '';
                                 }
-                                
+
                                 // Build references section
-                                const referencesSection = threadItem?.sources?.length 
+                                const referencesSection = threadItem?.sources?.length
                                     ? `\n\n## References\n${threadItem.sources
-                                        .map(source => `[${source.index}] ${source.link}`)
-                                        .join('\n')}`
+                                          .map((source) => `[${source.index}] ${source.link}`)
+                                          .join('\n')}`
                                     : '';
-                                
+
                                 copyMarkdown(`${textContent}${referencesSection}`);
                             }}
+                            size="icon-sm"
                             tooltip="Copy Markdown"
+                            variant="ghost-bordered"
                         >
                             {markdownCopyStatus === 'copied' ? (
                                 <Check size={16} strokeWidth={2} />
@@ -98,16 +100,17 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
-                                        variant="ghost-bordered"
                                         size="icon-sm"
                                         tooltip="Rewrite"
+                                        variant="ghost-bordered"
                                     >
                                         <RotateCcw size={16} strokeWidth={2} />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <ChatModeOptions
                                     chatMode={chatMode}
-                                    setChatMode={async mode => {
+                                    onGatedFeature={handleGatedFeature}
+                                    setChatMode={async (mode) => {
                                         setChatMode(mode);
                                         const formData = new FormData();
                                         formData.append('query', threadItem.query || '');
@@ -119,22 +122,21 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                             existingThreadItemId: threadItem.id,
                                             newChatMode: mode as any,
                                             messages: threadItems,
-                                            useWebSearch: useWebSearch,
+                                            useWebSearch,
                                         });
                                     }}
-                                    onGatedFeature={handleGatedFeature}
                                 />
                             </DropdownMenu>
                         )}
 
                     {isLast && (
                         <Button
-                            variant="ghost-bordered"
-                            size="icon-sm"
                             onClick={() => {
                                 removeThreadItem(threadItem.id);
                             }}
+                            size="icon-sm"
                             tooltip="Remove"
+                            variant="ghost-bordered"
                         >
                             <Trash size={16} strokeWidth={2} />
                         </Button>

@@ -13,10 +13,10 @@ const containerVariants = {
 export const StaggerContainer = ({ children }: { children: React.ReactNode }) => {
     return (
         <motion.div
-            initial="hidden"
             animate="visible"
-            exit="hidden"
             className="w-full"
+            exit="hidden"
+            initial="hidden"
             variants={containerVariants}
         >
             {children}

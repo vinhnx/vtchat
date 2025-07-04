@@ -40,7 +40,7 @@ function getBundleStats() {
     let totalSize = 0;
     const fileSizes = {};
 
-    allFiles.forEach(file => {
+    allFiles.forEach((file) => {
         const filePath = path.join(buildOutputPath, file);
         if (fs.existsSync(filePath)) {
             const stats = fs.statSync(filePath);
@@ -98,7 +98,7 @@ function formatBytes(bytes) {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return Number.parseFloat((bytes / k ** i).toFixed(2)) + ' ' + sizes[i];
 }
 
 function loadBundleHistory() {
@@ -144,13 +144,16 @@ function generateReport(stats, comparison) {
     console.log(`💾 Total Bundle Size: ${formatBytes(stats.totalSize)}`);
 
     // Internal logging
-    log.info({
-        timestamp: stats.timestamp,
-        commit: stats.commit,
-        totalSize: stats.totalSize,
-        fileCount: stats.fileCount,
-        pages: stats.pages
-    }, 'Bundle size report generated');
+    log.info(
+        {
+            timestamp: stats.timestamp,
+            commit: stats.commit,
+            totalSize: stats.totalSize,
+            fileCount: stats.fileCount,
+            pages: stats.pages,
+        },
+        'Bundle size report generated'
+    );
 
     if (comparison.previousSize) {
         const emoji = comparison.isImprovement
@@ -165,12 +168,15 @@ function generateReport(stats, comparison) {
         console.log(`   Previous: ${comparison.previousSize}`);
         console.log(`   Current:  ${comparison.currentSize}`);
 
-        log.info({
-            sizeDiff: comparison.totalSizeChange,
-            sizeChangePercent: comparison.totalSizeChangePercent,
-            isImprovement: comparison.isImprovement,
-            currentSize: stats.totalSize
-        }, 'Bundle size comparison');
+        log.info(
+            {
+                sizeDiff: comparison.totalSizeChange,
+                sizeChangePercent: comparison.totalSizeChangePercent,
+                isImprovement: comparison.isImprovement,
+                currentSize: stats.totalSize,
+            },
+            'Bundle size comparison'
+        );
     }
 
     console.log('\n📊 Breakdown:');
@@ -189,7 +195,7 @@ function main() {
 
     try {
         switch (command) {
-            case 'track':
+            case 'track': {
                 console.log('📊 Analyzing current bundle...');
                 log.info('Starting bundle size analysis');
                 const stats = getBundleStats();
@@ -212,12 +218,16 @@ function main() {
                 // Exit with error code if bundle size increased significantly
                 if (comparison.totalSizeChangePercent > 5) {
                     console.log('\n❌ Bundle size increased by more than 5%!');
-                    log.error({ sizeIncrease: comparison.totalSizeChangePercent }, 'Bundle size increased significantly');
+                    log.error(
+                        { sizeIncrease: comparison.totalSizeChangePercent },
+                        'Bundle size increased significantly'
+                    );
                     process.exit(1);
                 }
                 break;
+            }
 
-            case 'history':
+            case 'history': {
                 const savedHistory = loadBundleHistory();
                 if (savedHistory.length === 0) {
                     console.log('No bundle history found. Run `track` first.');
@@ -232,6 +242,7 @@ function main() {
                     );
                 });
                 break;
+            }
 
             case 'clean':
                 if (fs.existsSync(BUNDLE_HISTORY_FILE)) {

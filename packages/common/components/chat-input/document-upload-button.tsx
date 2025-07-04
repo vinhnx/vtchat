@@ -9,8 +9,8 @@ import { useRef, useState } from 'react';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
 export const DocumentUploadButton = () => {
-    const chatMode = useChatStore(state => state.chatMode);
-    const documentAttachment = useChatStore(state => state.documentAttachment);
+    const chatMode = useChatStore((state) => state.chatMode);
+    const documentAttachment = useChatStore((state) => state.documentAttachment);
     const { handleDocumentUpload } = useDocumentAttachment();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { data: session } = useSession();
@@ -43,35 +43,35 @@ export const DocumentUploadButton = () => {
     return (
         <>
             <Button
-                size="icon-sm"
-                variant={hasDocument ? 'secondary' : 'ghost'}
+                className={cn(
+                    'text-muted-foreground hover:text-foreground',
+                    hasDocument && 'bg-blue-500/10 text-blue-500 hover:text-blue-600'
+                )}
                 onClick={handleClick}
+                size="icon-sm"
                 tooltip={
                     hasDocument
                         ? `Document uploaded: ${documentAttachment?.fileName}`
                         : 'Document Upload (PDF, DOC, TXT)'
                 }
-                className={cn(
-                    'text-muted-foreground hover:text-foreground',
-                    hasDocument && 'bg-blue-500/10 text-blue-500 hover:text-blue-600'
-                )}
+                variant={hasDocument ? 'secondary' : 'ghost'}
             >
                 <FileText size={16} strokeWidth={2} />
             </Button>
             <input
-                ref={fileInputRef}
-                type="file"
                 accept={acceptString}
                 className="hidden"
                 onChange={handleFileChange}
+                ref={fileInputRef}
+                type="file"
             />
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
+                description="Please log in to upload and attach documents to your messages."
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
                 title="Login Required"
-                description="Please log in to upload and attach documents to your messages."
             />
         </>
     );

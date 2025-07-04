@@ -29,23 +29,26 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     if (!isRateLimitError) {
         // Check if this is a diagnostic message with suggestions
         const hasSuggestions = error.includes('🔧 Try these steps:');
-        
+
         if (hasSuggestions) {
             const [message, suggestionsSection] = error.split('🔧 Try these steps:');
-            const suggestions = suggestionsSection.trim().split('\n').filter(s => s.trim());
-            
+            const suggestions = suggestionsSection
+                .trim()
+                .split('\n')
+                .filter((s) => s.trim());
+
             return (
-                <Alert variant="destructive" className={className}>
+                <Alert className={className} variant="destructive">
                     <AlertDescription>
                         <div className="flex items-start gap-2">
                             <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
                             <div className="flex-1">
                                 <p className="mb-3">{message.trim()}</p>
                                 <div className="mb-3">
-                                    <p className="text-sm font-medium mb-2">🔧 Try these steps:</p>
-                                    <ul className="text-sm space-y-1 list-disc pl-4">
+                                    <p className="mb-2 text-sm font-medium">🔧 Try these steps:</p>
+                                    <ul className="list-disc space-y-1 pl-4 text-sm">
                                         {suggestions.map((suggestion, index) => (
-                                            <li key={index} className="text-gray-300">
+                                            <li className="text-gray-300" key={index}>
                                                 {suggestion.replace(/^\d+\.\s*/, '')}
                                             </li>
                                         ))}
@@ -53,19 +56,19 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={handleOpenUsageSettings}
                                         className="h-8 text-xs"
+                                        onClick={handleOpenUsageSettings}
+                                        size="sm"
+                                        variant="outline"
                                     >
                                         <Settings className="mr-1 h-3 w-3" />
                                         Open Settings
                                     </Button>
                                     <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => window.location.reload()}
                                         className="h-8 text-xs"
+                                        onClick={() => window.location.reload()}
+                                        size="sm"
+                                        variant="outline"
                                     >
                                         Refresh Page
                                     </Button>
@@ -76,9 +79,9 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                 </Alert>
             );
         }
-        
+
         return (
-            <Alert variant="destructive" className={className}>
+            <Alert className={className} variant="destructive">
                 <AlertDescription>
                     <div className="flex items-start gap-2">
                         <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
@@ -90,7 +93,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     }
 
     return (
-        <Alert variant="destructive" className={className}>
+        <Alert className={className} variant="destructive">
             <AlertDescription>
                 <div className="flex items-start gap-2">
                     <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
@@ -98,18 +101,15 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                         <p className="mb-3">{error}</p>
                         <div className="flex flex-wrap gap-2">
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleOpenUsageSettings}
                                 className="h-8 text-xs"
+                                onClick={handleOpenUsageSettings}
+                                size="sm"
+                                variant="outline"
                             >
                                 <Settings className="mr-1 h-3 w-3" />
                                 View Usage
                             </Button>
-                            <Button
-                                className="group gap-2"
-                                onClick={handleUpgrade}
-                            >
+                            <Button className="group gap-2" onClick={handleUpgrade}>
                                 <Sparkles className="h-4 w-4" />
                                 Upgrade to VT+
                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

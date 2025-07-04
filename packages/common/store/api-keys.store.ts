@@ -45,13 +45,13 @@ function getEffectiveStorageKey(requestedName: string): string {
  */
 function findStoredApiKeys(): string | null {
     if (typeof window === 'undefined') return null;
-    
+
     // Try current storage key first
     let stored = localStorage.getItem(currentStorageKey);
     if (stored) {
         return stored;
     }
-    
+
     // Try anonymous key if not current
     if (currentStorageKey !== 'api-keys-storage-anonymous') {
         stored = localStorage.getItem('api-keys-storage-anonymous');
@@ -59,13 +59,13 @@ function findStoredApiKeys(): string | null {
             return stored;
         }
     }
-    
+
     // Try original Zustand key (fallback for older data)
     stored = localStorage.getItem('api-keys-storage');
     if (stored) {
         return stored;
     }
-    
+
     return null;
 }
 
@@ -85,7 +85,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
         (set, get) => ({
             keys: {},
             setKey: (provider, key) => {
-                set(state => ({
+                set((state) => ({
                     keys: { ...state.keys, [provider]: key },
                 }));
 
@@ -109,8 +109,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     // Don't throw error to prevent store initialization failure
                 }
             },
-            removeKey: provider => {
-                set(state => {
+            removeKey: (provider) => {
+                set((state) => {
                     const newKeys = { ...state.keys };
                     delete newKeys[provider];
                     return { keys: newKeys };
@@ -125,7 +125,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
 
                 // Only switch if user changed
                 if (currentUserId !== newUserId) {
-
                     // Store current state before switching
                     const currentState = get();
                     const currentPersistData = {
@@ -137,7 +136,10 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     try {
                         localStorage.setItem(currentStorageKey, JSON.stringify(currentPersistData));
                     } catch (error) {
-                        log.error({ error, storageKey: currentStorageKey }, '[ApiKeys] Failed to save current state');
+                        log.error(
+                            { error, storageKey: currentStorageKey },
+                            '[ApiKeys] Failed to save current state'
+                        );
                     }
 
                     // Update user context
@@ -146,7 +148,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
 
                     // Load API keys for the new user - try multiple storage locations
                     let storedData = localStorage.getItem(currentStorageKey);
-                    
+
                     // If no data found in user-specific storage, try fallback locations
                     if (!storedData && newUserId) {
                         // Try anonymous storage first
@@ -156,7 +158,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                             localStorage.setItem(currentStorageKey, storedData);
                         }
                     }
-                    
+
                     const userData = safeJsonParse(storedData, { state: { keys: {} } });
 
                     // Update state with new user's data
@@ -170,7 +172,10 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         };
                         localStorage.setItem(currentStorageKey, JSON.stringify(newPersistData));
                     } catch (error) {
-                        log.warn({ error, storageKey: currentStorageKey }, '[ApiKeys] Failed to initialize storage after user switch');
+                        log.warn(
+                            { error, storageKey: currentStorageKey },
+                            '[ApiKeys] Failed to initialize storage after user switch'
+                        );
                     }
                 }
             },
@@ -250,7 +255,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                             const value = findStoredApiKeys();
                             return value;
                         }
-                        
+
                         // For other requests, use the effective storage key
                         const key = getEffectiveStorageKey(name);
                         const value = localStorage.getItem(key);
@@ -275,10 +280,16 @@ export const useApiKeysStore = create<ApiKeysState>()(
                             try {
                                 const verification = localStorage.getItem(key);
                                 if (verification !== value) {
-                                    log.warn({ key }, '[ApiKeys] Storage verification mismatch, but continuing');
+                                    log.warn(
+                                        { key },
+                                        '[ApiKeys] Storage verification mismatch, but continuing'
+                                    );
                                 }
                             } catch (verifyError) {
-                                log.warn({ error: verifyError, key }, '[ApiKeys] Storage verification failed');
+                                log.warn(
+                                    { error: verifyError, key },
+                                    '[ApiKeys] Storage verification failed'
+                                );
                             }
                         }, 0);
                     } catch (error) {
@@ -318,9 +329,12 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         // Reset to default state on hydration error
                         return { keys: {} };
                     }
-                    log.debug({ 
-                        keyCount: state?.keys ? Object.keys(state.keys).length : 0 
-                    }, '[ApiKeys] Hydration successful');
+                    log.debug(
+                        {
+                            keyCount: state?.keys ? Object.keys(state.keys).length : 0,
+                        },
+                        '[ApiKeys] Hydration successful'
+                    );
                 };
             },
         }

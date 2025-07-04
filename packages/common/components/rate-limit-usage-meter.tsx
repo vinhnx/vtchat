@@ -59,28 +59,28 @@ function CircleProgress({
     return (
         <div className={cn('relative', className)}>
             <svg
-                width={size}
+                className="-rotate-90 transform"
                 height={size}
                 viewBox={`0 0 ${size} ${size}`}
-                className="-rotate-90 transform"
+                width={size}
             >
                 <circle
+                    className="stroke-muted fill-transparent"
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
-                    className="stroke-muted fill-transparent"
                     strokeWidth={strokeWidth}
                 />
                 <circle
+                    className="fill-transparent transition-all duration-300"
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
-                    className="fill-transparent transition-all duration-300"
                     stroke={getColor(fillPercentage)}
-                    strokeWidth={strokeWidth}
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
+                    strokeWidth={strokeWidth}
                 />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -117,7 +117,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
 
     // Detect VT+ subscription and BYOK API keys
     const isVtPlus = useVtPlusAccess();
-    const apiKeys = useApiKeysStore(state => state.getAllKeys());
+    const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const hasGeminiApiKey = !!(apiKeys.GEMINI_API_KEY && apiKeys.GEMINI_API_KEY.trim() !== '');
 
     // Determine unlimited access status - BYOK takes priority over VT+
@@ -208,32 +208,32 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                         {/* Usage stats skeleton */}
                         <div className="space-y-4">
                             <div className="animate-pulse">
-                                <div className="mb-2 h-5 w-48 rounded bg-gray-200"></div>
-                                <div className="h-3 w-full rounded bg-gray-200"></div>
+                                <div className="mb-2 h-5 w-48 rounded bg-gray-200" />
+                                <div className="h-3 w-full rounded bg-gray-200" />
                             </div>
                             <div className="animate-pulse">
-                                <div className="mb-2 h-5 w-40 rounded bg-gray-200"></div>
-                                <div className="h-3 w-full rounded bg-gray-200"></div>
+                                <div className="mb-2 h-5 w-40 rounded bg-gray-200" />
+                                <div className="h-3 w-full rounded bg-gray-200" />
                             </div>
                         </div>
-                        
+
                         {/* Progress circles skeleton */}
                         <div className="flex justify-around space-x-4">
                             <div className="flex flex-col items-center space-y-2">
-                                <div className="animate-pulse h-16 w-16 rounded-full bg-gray-200"></div>
-                                <div className="animate-pulse h-4 w-20 rounded bg-gray-200"></div>
+                                <div className="h-16 w-16 animate-pulse rounded-full bg-gray-200" />
+                                <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
                             </div>
                             <div className="flex flex-col items-center space-y-2">
-                                <div className="animate-pulse h-16 w-16 rounded-full bg-gray-200"></div>
-                                <div className="animate-pulse h-4 w-20 rounded bg-gray-200"></div>
+                                <div className="h-16 w-16 animate-pulse rounded-full bg-gray-200" />
+                                <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
                             </div>
                         </div>
-                        
+
                         {/* Additional content skeleton */}
                         <div className="space-y-3">
-                            <div className="animate-pulse h-4 w-full rounded bg-gray-200"></div>
-                            <div className="animate-pulse h-4 w-3/4 rounded bg-gray-200"></div>
-                            <div className="animate-pulse h-4 w-5/6 rounded bg-gray-200"></div>
+                            <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+                            <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
+                            <div className="h-4 w-5/6 animate-pulse rounded bg-gray-200" />
                         </div>
                     </div>
                 </CardContent>
@@ -254,10 +254,10 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                     <div className="py-4 text-center">
                         <p className="mb-3 text-sm text-gray-500">{error}</p>
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={fetchUsage}
                             className="flex items-center gap-2"
+                            onClick={fetchUsage}
+                            size="sm"
+                            variant="outline"
                         >
                             <RefreshCw className="h-4 w-4" />
                             Retry
@@ -287,7 +287,11 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
     const getPerMinuteStatus = () => {
         // If daily limit is exhausted, show unavailable regardless of minute status
         if (status.remainingDaily <= 0)
-            return { variant: 'secondary' as const, text: 'Unavailable', icon: TrendingUp };
+            return {
+                variant: 'secondary' as const,
+                text: 'Unavailable',
+                icon: TrendingUp,
+            };
         if (perMinutePercentage >= 70)
             return { variant: 'secondary' as const, text: 'Busy', icon: TrendingUp };
         if (perMinutePercentage >= 40)
@@ -306,7 +310,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                     {unlimitedAccessType === 'byok' ? (
                         <>
                             <Key className="text-muted-foreground h-8 w-8" />
-                            <Badge variant="outline" className="px-4 py-2 text-lg font-semibold">
+                            <Badge className="px-4 py-2 text-lg font-semibold" variant="outline">
                                 Using Your API Key
                             </Badge>
                         </>
@@ -314,8 +318,8 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                         <>
                             <Sparkle className="text-muted-foreground h-8 w-8" />
                             <Badge
-                                variant="secondary"
                                 className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                variant="secondary"
                             >
                                 VT+ Active
                             </Badge>
@@ -381,9 +385,9 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                                     </div>
                                 </div>
                                 <CircleProgress
-                                    value={status.dailyUsed}
                                     maxValue={status.dailyLimit}
                                     size={80}
+                                    value={status.dailyUsed}
                                 />
                             </div>
                             <div className="flex items-center justify-between text-sm">
@@ -427,13 +431,13 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                                     </div>
                                 </div>
                                 <CircleProgress
+                                    maxValue={status.minuteLimit}
+                                    size={80}
                                     value={
                                         status.remainingDaily <= 0
                                             ? status.minuteLimit
                                             : status.minuteUsed
                                     }
-                                    maxValue={status.minuteLimit}
-                                    size={80}
                                 />
                             </div>
                             <div className="flex items-center justify-between text-sm">
@@ -530,11 +534,11 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
             {/* Refresh Button */}
             <div className={cn('flex justify-center', hasUnlimitedAccess && 'opacity-50')}>
                 <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={fetchUsage}
                     className="flex items-center gap-2 text-xs"
                     disabled={hasUnlimitedAccess}
+                    onClick={fetchUsage}
+                    size="sm"
+                    variant="ghost"
                 >
                     <RefreshCw className="h-3 w-3" />
                     Refresh Usage

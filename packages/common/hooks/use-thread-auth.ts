@@ -1,11 +1,11 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { monitorAuth } from '@repo/shared/utils/performance-monitor';
 import { useEffect, useRef } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
-import { log } from '@repo/shared/logger';
 
 /**
  * Hook to manage thread database switching based on user authentication
@@ -13,9 +13,9 @@ import { log } from '@repo/shared/logger';
  */
 export const useThreadAuth = () => {
     const { data: session } = useSession();
-    const switchUserDatabase = useChatStore(state => state.switchUserDatabase);
-    const switchUserStorage = useApiKeysStore(state => state.switchUserStorage);
-    const forceRehydrate = useApiKeysStore(state => state.forceRehydrate);
+    const switchUserDatabase = useChatStore((state) => state.switchUserDatabase);
+    const switchUserStorage = useApiKeysStore((state) => state.switchUserStorage);
+    const forceRehydrate = useApiKeysStore((state) => state.forceRehydrate);
     const previousUserIdRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -25,7 +25,10 @@ export const useThreadAuth = () => {
         // Only switch database if user actually changed
         if (currentUserId !== previousUserId) {
             log.info(
-                { previousUserId: previousUserId || 'anonymous', currentUserId: currentUserId || 'anonymous' },
+                {
+                    previousUserId: previousUserId || 'anonymous',
+                    currentUserId: currentUserId || 'anonymous',
+                },
                 '[ThreadAuth] User changed'
             );
 
@@ -39,13 +42,13 @@ export const useThreadAuth = () => {
                         '[ThreadAuth] Successfully switched to database for user'
                     );
                 })
-                .catch(error => {
+                .catch((error) => {
                     log.error({ error }, '[ThreadAuth] Failed to switch user database');
                 });
 
             // Switch to the appropriate user storage for API keys
             switchUserStorage(currentUserId);
-            
+
             // Force rehydration to ensure the store has the latest data
             setTimeout(() => {
                 forceRehydrate();

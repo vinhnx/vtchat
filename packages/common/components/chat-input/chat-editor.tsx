@@ -1,7 +1,7 @@
 import { useChatStore } from '@repo/common/store';
 import { cn, Flex } from '@repo/ui';
-import { Editor, EditorContent } from '@tiptap/react';
-import { FC } from 'react';
+import { type Editor, EditorContent } from '@tiptap/react';
+import type { FC } from 'react';
 
 export type TChatEditor = {
     sendMessage?: (message: string) => void;
@@ -18,7 +18,7 @@ export const ChatEditor: FC<TChatEditor> = ({
     maxHeight = '200px',
     className,
 }) => {
-    const isGenerating = useChatStore(state => state.isGenerating);
+    const isGenerating = useChatStore((state) => state.isGenerating);
 
     if (!editor) return null;
 
@@ -39,14 +39,14 @@ export const ChatEditor: FC<TChatEditor> = ({
     return (
         <Flex className="flex-1">
             <EditorContent
-                editor={editor}
                 autoFocus
+                className={cn(editorContainerClass, className)}
+                disabled={isGenerating}
+                editor={editor}
+                onKeyDown={handleKeyDown}
                 style={{
                     maxHeight,
                 }}
-                disabled={isGenerating}
-                onKeyDown={handleKeyDown}
-                className={cn(editorContainerClass, className)}
             />
         </Flex>
     );

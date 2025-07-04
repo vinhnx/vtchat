@@ -81,7 +81,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog onOpenChange={onClose} open={isOpen}>
             <DialogContent ariaTitle={title} className="max-w-md">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
@@ -89,11 +89,11 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = ({
                 </DialogHeader>
                 <DialogFooter className="gap-3">
                     {showCancel && (
-                        <Button variant="outline" onClick={handleCancel}>
+                        <Button onClick={handleCancel} variant="outline">
                             {cancelText}
                         </Button>
                     )}
-                    <Button onClick={handleLogin} className="gap-2">
+                    <Button className="gap-2" onClick={handleLogin}>
                         <LogIn size={16} />
                         {loginText}
                     </Button>
@@ -156,10 +156,10 @@ export const withLoginRequired = <T extends Record<string, any>>(
                         }}
                     />
                     <LoginRequiredDialog
+                        description={options?.description}
                         isOpen={showLoginPrompt}
                         onClose={hideLoginPrompt}
                         title={options?.title}
-                        description={options?.description}
                     />
                 </>
             );

@@ -15,7 +15,7 @@ async function validateVemetricSetup() {
     // Check local environment
     console.log('📍 LOCAL ENVIRONMENT:');
     const localToken = process.env.NEXT_PUBLIC_VEMETRIC_TOKEN;
-    
+
     if (localToken) {
         console.log(`  ✅ NEXT_PUBLIC_VEMETRIC_TOKEN: ${localToken.substring(0, 8)}...`);
         log.info('NEXT_PUBLIC_VEMETRIC_TOKEN is set');
@@ -49,7 +49,7 @@ async function validateVemetricSetup() {
         const _reactSdk = await import('@vemetric/react');
         console.log('  ✅ @vemetric/react: Available');
         log.info('@vemetric/react SDK available');
-        
+
         // Backend SDK
         const _nodeSdk = await import('@vemetric/node');
         console.log('  ✅ @vemetric/node: Available');
@@ -61,16 +61,16 @@ async function validateVemetricSetup() {
 
     // Recommendations
     console.log('\n💡 RECOMMENDATIONS:');
-    
+
     if (!localToken) {
         console.log('  1. Add NEXT_PUBLIC_VEMETRIC_TOKEN to your local .env.local file');
         console.log('  2. Copy the token from Fly.io secrets or Vemetric dashboard');
     }
-    
+
     console.log('  3. Ensure your domain is whitelisted in Vemetric dashboard:');
     console.log('     - localhost:3000 (development)');
     console.log('     - vtchat.io.vn (production)');
-    
+
     console.log('\n📊 NEXT STEPS:');
     console.log('  1. Test connection: bun scripts/test-vemetric-connection.js');
     console.log('  2. View logs: flyctl logs --app vtchat');

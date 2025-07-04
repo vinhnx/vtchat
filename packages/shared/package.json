@@ -34,7 +34,6 @@
         "./utils/session-cache": "./utils/session-cache.ts",
         "./utils/ssr-session": "./utils/ssr-session.ts",
         "./utils/plus-defaults": "./utils/plus-defaults.ts",
-
         "./types/analytics": "./types/analytics.ts"
     },
     "scripts": {
@@ -45,7 +44,6 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
-
         "@hotjar/browser": "^1.0.9",
         "@langchain/core": "^0.3.59",
         "@tiptap/react": "^2.14.0",

@@ -8,7 +8,7 @@ VT is production-ready with automated deployment scripts for both development an
 # Development deployment
 ./deploy-fly.sh --dev
 
-# Production deployment  
+# Production deployment
 ./deploy-fly.sh --prod
 
 # Clean secrets and deploy
@@ -27,6 +27,7 @@ VT is production-ready with automated deployment scripts for both development an
 ## Environment Configuration
 
 ### Development (`fly.toml`)
+
 - **App**: `vtchat-dev.fly.dev`
 - **NODE_ENV**: `development`
 - **Resources**: 1GB RAM, 1 CPU
@@ -35,6 +36,7 @@ VT is production-ready with automated deployment scripts for both development an
 - **Secrets from**: `apps/web/.env.development`
 
 ### Production (`fly.production.toml`)
+
 - **App**: `vtchat` (live at vtchat.io.vn)
 - **NODE_ENV**: `production`
 - **Resources**: 2GB RAM, 2 CPUs (shared)
@@ -58,11 +60,13 @@ VT is production-ready with automated deployment scripts for both development an
 ## Environment Variables
 
 ### Public (in fly.toml [env] section)
+
 - `NODE_ENV`, `BASE_URL`, `NEXT_PUBLIC_*`
 - `CREEM_ENVIRONMENT`, `BETTER_AUTH_ENV`
 - Product configuration
 
 ### Secrets (via fly secrets)
+
 - `DATABASE_URL`, `BETTER_AUTH_SECRET`
 - `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET`
 - `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_PRODUCT_ID`
@@ -98,6 +102,7 @@ fly open --app vtchat
 ## Health Checks
 
 Both environments have health checks at `/api/health`:
+
 - **Development**: 60s interval
 - **Production**: 30s interval
 
@@ -114,7 +119,7 @@ Both environments have health checks at `/api/health`:
 ## Deployment Process
 
 1. **Reads** environment-specific secrets
-2. **Sets** Fly.io secrets automatically  
+2. **Sets** Fly.io secrets automatically
 3. **Deploys** using Dockerfile
 4. **Applies** environment-specific configuration
 5. **Reports** deployment status and URLs

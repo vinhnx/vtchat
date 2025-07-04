@@ -31,16 +31,18 @@ export function useRateLimit(modelId: ModelEnum) {
         const fetchRateLimit = async () => {
             setIsLoading(true);
             setError(null);
-            
+
             try {
-                const response = await fetch(`/api/rate-limit/status?model=${encodeURIComponent(modelId)}`);
-                
+                const response = await fetch(
+                    `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`
+                );
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 if (data) {
                     // Convert date strings back to Date objects
                     data.resetTime = {
@@ -48,7 +50,7 @@ export function useRateLimit(modelId: ModelEnum) {
                         minute: new Date(data.resetTime.minute),
                     };
                 }
-                
+
                 setStatus(data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch rate limit status');
@@ -59,10 +61,10 @@ export function useRateLimit(modelId: ModelEnum) {
         };
 
         fetchRateLimit();
-        
+
         // Refresh every minute to update remaining time
-        const interval = setInterval(fetchRateLimit, 60000);
-        
+        const interval = setInterval(fetchRateLimit, 60_000);
+
         return () => clearInterval(interval);
     }, [modelId, session?.user?.id]);
 
@@ -71,9 +73,8 @@ export function useRateLimit(modelId: ModelEnum) {
 
 export function useRateLimitForChatMode(chatMode: string) {
     // Map chat mode to model - only needed for Gemini 2.5 Flash Lite
-    const modelId = chatMode === ChatMode.GEMINI_2_5_FLASH_LITE
-        ? ModelEnum.GEMINI_2_5_FLASH_LITE 
-        : null;
-    
+    const modelId =
+        chatMode === ChatMode.GEMINI_2_5_FLASH_LITE ? ModelEnum.GEMINI_2_5_FLASH_LITE : null;
+
     return useRateLimit(modelId as ModelEnum);
 }

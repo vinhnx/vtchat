@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useVemetric } from '../hooks/use-vemetric';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
+import type { PerformanceEventData, ToolEventData } from '@repo/shared/types/analytics';
+import { useEffect, useRef } from 'react';
+import { useVemetric } from '../hooks/use-vemetric';
 import { ANALYTICS_EVENTS } from '../utils/analytics';
-import { PerformanceEventData, ToolEventData } from '@repo/shared/types/analytics';
 
 /**
  * Performance and reliability tracking for critical operations
@@ -22,11 +22,15 @@ export function VemetricPerformanceTracker() {
 
         const trackPagePerformance = () => {
             try {
-                const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+                const navigation = performance.getEntriesByType(
+                    'navigation'
+                )[0] as PerformanceNavigationTiming;
                 if (navigation) {
                     trackEvent(ANALYTICS_EVENTS.PAGE_LOAD_TIME, {
                         loadTime: navigation.loadEventEnd - navigation.loadEventStart,
-                        domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+                        domContentLoaded:
+                            navigation.domContentLoadedEventEnd -
+                            navigation.domContentLoadedEventStart,
                         firstPaint: navigation.responseEnd - navigation.responseStart,
                         ttfb: navigation.responseStart - navigation.requestStart,
                         resourceCount: performance.getEntriesByType('resource').length,
@@ -72,7 +76,7 @@ export function useVemetricPerformanceTracking() {
         try {
             // Extract domain only for privacy
             const domain = new URL(params.endpoint).hostname;
-            
+
             const eventData: PerformanceEventData = {
                 endpoint: domain,
                 method: params.method,
@@ -100,7 +104,7 @@ export function useVemetricPerformanceTracking() {
 
         try {
             const domain = new URL(params.endpoint).hostname;
-            
+
             const eventData: PerformanceEventData = {
                 endpoint: domain,
                 duration: params.timeoutDuration,
@@ -112,11 +116,14 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RESPONSE_TIMEOUT, eventData);
 
-            log.warn({ 
-                domain,
-                timeoutDuration: params.timeoutDuration,
-                retryAttempt: params.retryAttempt
-            }, 'Response timeout tracked');
+            log.warn(
+                {
+                    domain,
+                    timeoutDuration: params.timeoutDuration,
+                    retryAttempt: params.retryAttempt,
+                },
+                'Response timeout tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track response timeout');
         }
@@ -133,7 +140,7 @@ export function useVemetricPerformanceTracking() {
 
         try {
             const domain = new URL(params.endpoint).hostname;
-            
+
             const eventData = {
                 endpoint: domain,
                 limitType: params.limitType,
@@ -146,11 +153,14 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.RATE_LIMIT_EXCEEDED, eventData);
 
-            log.warn({ 
-                domain,
-                limitType: params.limitType,
-                usagePercentage: eventData.usagePercentage
-            }, 'Rate limit exceeded tracked');
+            log.warn(
+                {
+                    domain,
+                    limitType: params.limitType,
+                    usagePercentage: eventData.usagePercentage,
+                },
+                'Rate limit exceeded tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track rate limit');
         }
@@ -163,7 +173,7 @@ export function useVemetricPerformanceTracking() {
         quota: number;
         tier: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -191,7 +201,7 @@ export function useVemetricPerformanceTracking() {
         errorType?: string;
         cached?: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: ToolEventData = {
@@ -213,12 +223,15 @@ export function useVemetricPerformanceTracking() {
                 await trackEvent(ANALYTICS_EVENTS.WEB_SEARCH_FAILED, eventData);
             }
 
-            log.debug({ 
-                searchProvider: params.searchProvider,
-                executionTime: params.executionTime,
-                resultCount: params.resultCount,
-                success: params.success
-            }, 'Web search execution tracked');
+            log.debug(
+                {
+                    searchProvider: params.searchProvider,
+                    executionTime: params.executionTime,
+                    resultCount: params.resultCount,
+                    success: params.success,
+                },
+                'Web search execution tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track web search');
         }
@@ -232,7 +245,7 @@ export function useVemetricPerformanceTracking() {
         errorType?: string;
         inputSize?: number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: ToolEventData = {
@@ -260,7 +273,7 @@ export function useVemetricPerformanceTracking() {
         success: boolean;
         errorType?: string;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData: ToolEventData = {
@@ -299,11 +312,14 @@ export function useVemetricPerformanceTracking() {
 
             await trackEvent(ANALYTICS_EVENTS.SERVICE_UNAVAILABLE, eventData);
 
-            log.error({ 
-                service: params.service,
-                errorCode: params.errorCode,
-                downtime: params.downtime
-            }, 'Service unavailable tracked');
+            log.error(
+                {
+                    service: params.service,
+                    errorCode: params.errorCode,
+                    downtime: params.downtime,
+                },
+                'Service unavailable tracked'
+            );
         } catch (error) {
             log.error({ error }, 'Failed to track service unavailable');
         }
@@ -316,7 +332,7 @@ export function useVemetricPerformanceTracking() {
         tier: string;
         upgradePrompted?: boolean;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {
@@ -340,7 +356,7 @@ export function useVemetricPerformanceTracking() {
         tier: string;
         featureUsageCount?: number;
     }) => {
-        if (!isEnabled || !session) return;
+        if (!(isEnabled && session)) return;
 
         try {
             const eventData = {

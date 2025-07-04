@@ -176,7 +176,10 @@ const reportGenerator = createTask({
     dependencies: ['informationAnalyzer'],
     execute: async ({ context, data }) => {
         const { analysis, insights } = data.informationAnalyzer;
-        const { query, searchResults } = context?.getAll() || { query: '', searchResults: [] };
+        const { query, searchResults } = context?.getAll() || {
+            query: '',
+            searchResults: [],
+        };
 
         const reportResponse = await llm.chat.completions.create({
             model: 'gpt-4o',
@@ -212,7 +215,9 @@ builder.addTask(reportGenerator);
 
 // Build and start the workflow
 const workflow = builder.build();
-workflow.start('taskPlanner', { query: 'Research the impact of AI on healthcare' });
+workflow.start('taskPlanner', {
+    query: 'Research the impact of AI on healthcare',
+});
 
 // Export the workflow for external use
 export const researchAgent = workflow;

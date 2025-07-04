@@ -5,6 +5,7 @@ This guide covers the implementation of the free Gemini 2.5 Flash Lite Preview m
 ## Overview
 
 The free model implementation includes:
+
 - **Rate limiting**: 10 requests per day **per user account**, 1 request per minute per user
 - **Authentication requirement**: Users must be registered to access
 - **UI indicators**: Real-time usage tracking in model selection and settings
@@ -15,6 +16,7 @@ The free model implementation includes:
 ### 1. Model Configuration
 
 The model is defined in `packages/ai/models.ts`:
+
 ```typescript
 {
     id: ModelEnum.GEMINI_2_5_FLASH_LITE,
@@ -29,6 +31,7 @@ The model is defined in `packages/ai/models.ts`:
 ### 2. Database Schema
 
 Rate limiting uses the `user_rate_limits` table:
+
 ```sql
 CREATE TABLE user_rate_limits (
     id TEXT PRIMARY KEY,
@@ -48,10 +51,12 @@ CREATE TABLE user_rate_limits (
 Located in `apps/web/lib/services/rate-limit.ts`:
 
 #### Rate Limits (Per User Account)
+
 - **Daily**: 10 requests per 24-hour period per user (resets at 00:00 UTC)
 - **Per-minute**: 1 request per minute per user
 
 #### Functions
+
 - `checkRateLimit()`: Validates if user can make a request
 - `recordRequest()`: Records successful requests
 - `getRateLimitStatus()`: Returns current usage for UI display
@@ -59,6 +64,7 @@ Located in `apps/web/lib/services/rate-limit.ts`:
 ### 4. API Integration
 
 The main completion API (`/api/completion`) includes:
+
 - Pre-request rate limit validation
 - Authentication requirement for free model
 - Request recording after successful completion
@@ -67,16 +73,18 @@ The main completion API (`/api/completion`) includes:
 ### 5. UI Components
 
 #### Model Selection
+
 - Shows rate limit info in dropdown: "Free model • 10 requests/day per account • 1 request/minute"
 - Real-time usage indicator for authenticated users showing their personal usage
 - Gift icon to indicate free availability
 
 #### Settings Page
+
 - `RateLimitMeter` component shows:
-  - Personal daily usage progress bar
-  - Personal remaining requests counter
-  - Reset time information
-  - Warning messages when user's limits are approached
+    - Personal daily usage progress bar
+    - Personal remaining requests counter
+    - Reset time information
+    - Warning messages when user's limits are approached
 
 ## Environment Setup
 
@@ -96,23 +104,26 @@ Add the secret to your Fly.io app:
 # For development
 flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-dev
 
-# For production  
+# For production
 flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-prod
 ```
 
 ## User Experience
 
 ### For Non-Authenticated Users
+
 - Cannot access the free model
 - Redirected to login with message: "Please register to use the free Gemini 2.5 Flash Lite model"
 
 ### For Registered Users
+
 - Can use the free model within rate limits
 - See real-time usage tracking
 - Receive clear error messages when limits are exceeded
 - Prompted to upgrade when approaching limits
 
 ### For VT+ Users
+
 - Unlimited access to all models
 - Rate limiting does not apply
 - Can still see free model option but not subject to restrictions
@@ -120,11 +131,13 @@ flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-prod
 ## Rate Limit Behavior
 
 ### Daily Reset
+
 - Occurs at 00:00 UTC every day
 - Resets `daily_request_count` to 0
 - Updates `last_daily_reset` timestamp
 
 ### Per-Minute Reset
+
 - Occurs every minute
 - Resets `minute_request_count` to 0
 - Updates `last_minute_reset` timestamp
@@ -132,28 +145,30 @@ flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-prod
 ### Error Responses
 
 #### Daily Limit Exceeded (429)
+
 ```json
 {
-  "error": "Rate limit exceeded",
-  "message": "You have reached your daily limit for the free Gemini model. Upgrade to VT+ for unlimited access.",
-  "limitType": "daily_limit_exceeded",
-  "remainingDaily": 0,
-  "remainingMinute": 1,
-  "resetTime": "2024-01-02T00:00:00.000Z",
-  "upgradeUrl": "/plus"
+    "error": "Rate limit exceeded",
+    "message": "You have reached your daily limit for the free Gemini model. Upgrade to VT+ for unlimited access.",
+    "limitType": "daily_limit_exceeded",
+    "remainingDaily": 0,
+    "remainingMinute": 1,
+    "resetTime": "2024-01-02T00:00:00.000Z",
+    "upgradeUrl": "/plus"
 }
 ```
 
 #### Per-Minute Limit Exceeded (429)
+
 ```json
 {
-  "error": "Rate limit exceeded", 
-  "message": "You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.",
-  "limitType": "minute_limit_exceeded",
-  "remainingDaily": 5,
-  "remainingMinute": 0,
-  "resetTime": "2024-01-01T12:35:00.000Z",
-  "upgradeUrl": "/plus"
+    "error": "Rate limit exceeded",
+    "message": "You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.",
+    "limitType": "minute_limit_exceeded",
+    "remainingDaily": 5,
+    "remainingMinute": 0,
+    "resetTime": "2024-01-01T12:35:00.000Z",
+    "upgradeUrl": "/plus"
 }
 ```
 
@@ -168,13 +183,17 @@ bun test apps/web/app/tests/rate-limit.test.ts
 ## Monitoring
 
 ### Database Queries
+
 Monitor the `user_rate_limits` table for:
+
 - High usage patterns
 - Users approaching limits
 - System performance impact
 
 ### API Metrics
+
 Track:
+
 - 429 error rates
 - Conversion from rate limit hits to upgrades
 - Free model usage patterns
@@ -206,6 +225,7 @@ Track:
 ### Debug Tools
 
 Use the rate limit status API for debugging:
+
 ```bash
 curl -H "Authorization: Bearer <token>" \
   "https://your-app.fly.dev/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17"

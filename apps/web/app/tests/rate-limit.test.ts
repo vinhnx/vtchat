@@ -1,6 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { checkRateLimit, recordRequest, getRateLimitStatus, RATE_LIMITS } from '@/lib/services/rate-limit';
 import { ModelEnum } from '@repo/ai/models';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    checkRateLimit,
+    getRateLimitStatus,
+    RATE_LIMITS,
+    recordRequest,
+} from '@/lib/services/rate-limit';
 
 // Mock the database
 vi.mock('@/lib/database/db', () => ({
@@ -38,15 +43,15 @@ describe('Rate Limiting Service', () => {
     describe('checkRateLimit', () => {
         it('should allow requests for non-rate-limited models', async () => {
             const result = await checkRateLimit(testUserId, ModelEnum.GPT_4o);
-            
+
             expect(result.allowed).toBe(true);
-            expect(result.remainingDaily).toBe(Infinity);
-            expect(result.remainingMinute).toBe(Infinity);
+            expect(result.remainingDaily).toBe(Number.POSITIVE_INFINITY);
+            expect(result.remainingMinute).toBe(Number.POSITIVE_INFINITY);
         });
 
         it('should handle first-time users for rate-limited models', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             // Mock empty result for first-time user
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -64,7 +69,7 @@ describe('Rate Limiting Service', () => {
             });
 
             const result = await checkRateLimit(testUserId, testModelId);
-            
+
             expect(result.allowed).toBe(true);
             expect(result.remainingDaily).toBe(10);
             expect(result.remainingMinute).toBe(1);
@@ -74,7 +79,7 @@ describe('Rate Limiting Service', () => {
     describe('Rate limit validation', () => {
         it('should reject requests when daily limit is exceeded', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             // Mock existing user with daily limit exceeded
             const mockRecord = {
                 id: 'record-123',
@@ -99,7 +104,7 @@ describe('Rate Limiting Service', () => {
             });
 
             const result = await checkRateLimit(testUserId, testModelId);
-            
+
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('daily_limit_exceeded');
             expect(result.remainingDaily).toBe(0);
@@ -107,7 +112,7 @@ describe('Rate Limiting Service', () => {
 
         it('should reject requests when minute limit is exceeded', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             // Mock existing user with minute limit exceeded
             const mockRecord = {
                 id: 'record-123',
@@ -132,7 +137,7 @@ describe('Rate Limiting Service', () => {
             });
 
             const result = await checkRateLimit(testUserId, testModelId);
-            
+
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('minute_limit_exceeded');
             expect(result.remainingMinute).toBe(0);
@@ -142,16 +147,16 @@ describe('Rate Limiting Service', () => {
     describe('recordRequest', () => {
         it('should not record requests for non-rate-limited models', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             await recordRequest(testUserId, ModelEnum.GPT_4o);
-            
+
             // Should not call database for non-rate-limited models
             expect(mockDb.db.select).not.toHaveBeenCalled();
         });
 
         it('should create new record for first-time users', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             // Mock empty result for first-time user
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -169,7 +174,7 @@ describe('Rate Limiting Service', () => {
             });
 
             await recordRequest(testUserId, testModelId);
-            
+
             expect(mockInsert).toHaveBeenCalledWith(
                 expect.objectContaining({
                     userId: testUserId,
@@ -184,13 +189,13 @@ describe('Rate Limiting Service', () => {
     describe('getRateLimitStatus', () => {
         it('should return null for non-rate-limited models', async () => {
             const status = await getRateLimitStatus(testUserId, ModelEnum.GPT_4o);
-            
+
             expect(status).toBeNull();
         });
 
         it('should return default status for first-time users', async () => {
             const mockDb = await import('@/lib/database/db');
-            
+
             // Mock empty result for first-time user
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -203,7 +208,7 @@ describe('Rate Limiting Service', () => {
             });
 
             const status = await getRateLimitStatus(testUserId, testModelId);
-            
+
             expect(status).toEqual({
                 dailyUsed: 0,
                 minuteUsed: 0,

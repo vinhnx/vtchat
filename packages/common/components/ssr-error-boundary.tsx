@@ -1,8 +1,8 @@
 'use client';
 
+import { log } from '@repo/shared/logger';
 import React, { type ReactNode } from 'react';
 import { FullPageLoader } from './full-page-loader';
-import { log } from '@repo/shared/logger';
 
 interface SSRErrorBoundaryProps {
     children: ReactNode;

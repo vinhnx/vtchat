@@ -1,11 +1,10 @@
-export { PRODUCTS_BY_PLAN_SLUG, PaymentService, VT_PLUS_PRODUCT } from '../config/payment';
-
 export type {
     CheckoutRequest,
     CheckoutResponse,
-    Product as PaymentProductType,
     PortalResponse,
+    Product as PaymentProductType,
 } from '../config/payment';
+export { PaymentService, PRODUCTS_BY_PLAN_SLUG, VT_PLUS_PRODUCT } from '../config/payment';
 
 export * from './env';
 export * from './hotjar';

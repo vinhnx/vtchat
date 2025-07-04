@@ -1,12 +1,12 @@
 'use client';
 
 import { SUBSCRIPTION_SOURCES } from '@repo/shared/constants';
+import { log } from '@repo/shared/logger';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
+import type { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
 import { useCallback, useMemo } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
-import { log } from '@repo/shared/logger';
 
 /**
  * Custom hook for optimized subscription access checking.
@@ -29,8 +29,8 @@ export function useSubscriptionAccess() {
         return {
             currentPlanSlug,
             isActive: isStatusActive,
-            isPremium: subscriptionStatus?.isPlusSubscriber || false,
-            isVtPlus: subscriptionStatus?.isPlusSubscriber || false,
+            isPremium: subscriptionStatus?.isPlusSubscriber,
+            isVtPlus: subscriptionStatus?.isPlusSubscriber,
             isVtBase: !subscriptionStatus?.isPlusSubscriber && currentPlanSlug === PlanSlug.VT_BASE,
             canUpgrade: !subscriptionStatus?.isPlusSubscriber,
             status:
@@ -38,7 +38,9 @@ export function useSubscriptionAccess() {
                     ? SubscriptionStatusEnum.ACTIVE
                     : SubscriptionStatusEnum.NONE,
             planConfig, // Use the actual plan configuration with features
-            source: subscriptionStatus?.hasSubscription ? SUBSCRIPTION_SOURCES.CREEM : SUBSCRIPTION_SOURCES.NONE, // Add missing source
+            source: subscriptionStatus?.hasSubscription
+                ? SUBSCRIPTION_SOURCES.CREEM
+                : SUBSCRIPTION_SOURCES.NONE, // Add missing source
         } as const;
     }, [subscriptionStatus]);
 
@@ -49,7 +51,7 @@ export function useSubscriptionAccess() {
 
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
-            if (!isLoaded || !subscriptionStatus || !convertedStatus.isActive) {
+            if (!(isLoaded && subscriptionStatus && convertedStatus.isActive)) {
                 // If not loaded, or no status, or overall status is not active, then no access.
                 return false;
             }
@@ -89,7 +91,7 @@ export function useSubscriptionAccess() {
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;
                 }
-                
+
                 // Features available to all logged-in users (free tier)
                 const freeFeatures = [
                     FeatureSlug.DARK_THEME,
@@ -154,16 +156,16 @@ export function useSubscriptionAccess() {
 
         hasAnyFeature: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded || !convertedStatus.isActive) return false;
-                return features.some(feature => hasAccess({ feature }));
+                if (!(isLoaded && convertedStatus.isActive)) return false;
+                return features.some((feature) => hasAccess({ feature }));
             },
             [isLoaded, convertedStatus.isActive, hasAccess]
         ),
 
         hasAllFeatures: useCallback(
             (features: FeatureSlug[]) => {
-                if (!isLoaded || !convertedStatus.isActive) return false;
-                return features.every(feature => hasAccess({ feature }));
+                if (!(isLoaded && convertedStatus.isActive)) return false;
+                return features.every((feature) => hasAccess({ feature }));
             },
             [isLoaded, convertedStatus.isActive, hasAccess]
         ),

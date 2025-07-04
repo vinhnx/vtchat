@@ -11,7 +11,7 @@ const withBundleAnalyzer =
               enabled: true,
               openAnalyzer: true,
           })
-        : config => config;
+        : (config) => config;
 
 const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
@@ -79,7 +79,7 @@ const nextConfig = {
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         formats: ['image/webp', 'image/avif'],
-        minimumCacheTTL: 2678400, // 31 days
+        minimumCacheTTL: 2_678_400, // 31 days
     },
 
     // Webpack optimizations (only when not using Turbopack)
@@ -91,7 +91,7 @@ const nextConfig = {
                 const externals = Array.isArray(config.externals)
                     ? config.externals
                     : [config.externals];
-                config.externals = externals.filter(external => {
+                config.externals = externals.filter((external) => {
                     if (typeof external === 'function') {
                         return (context, request, callback) => {
                             if (request === 'undici' || request.startsWith('undici/')) {
@@ -108,10 +108,10 @@ const nextConfig = {
             if (dev) {
                 // Disable webpack cache in development to prevent bloating
                 config.cache = false;
-                
+
                 // Reduce module resolution overhead
                 config.resolve.symlinks = false;
-                
+
                 // Disable optimizations that slow down dev builds
                 config.optimization.minimize = false;
                 config.optimization.splitChunks = {
@@ -176,7 +176,7 @@ const nextConfig = {
                             priority: 20,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 200000, // ~200KB limit
+                            maxSize: 200_000, // ~200KB limit
                         },
                         // Utilities
                         utils: {
@@ -185,7 +185,7 @@ const nextConfig = {
                             priority: 15,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 150000, // ~150KB limit
+                            maxSize: 150_000, // ~150KB limit
                         },
                         // Remaining vendor packages
                         vendor: {
@@ -194,7 +194,7 @@ const nextConfig = {
                             priority: 10,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 244000, // ~240KB limit per chunk
+                            maxSize: 244_000, // ~240KB limit per chunk
                         },
                         // Common application code
                         common: {
@@ -202,7 +202,7 @@ const nextConfig = {
                             minChunks: 2,
                             priority: 5,
                             reuseExistingChunk: true,
-                            maxSize: 200000, // ~200KB limit
+                            maxSize: 200_000, // ~200KB limit
                         },
                     },
                 };

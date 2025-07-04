@@ -1,6 +1,6 @@
 'use client';
-import { useRef, useState } from 'react';
 import type React from 'react';
+import { useRef, useState } from 'react';
 
 interface ButtonAnimatedGradientProps {
     children: React.ReactNode;
@@ -50,8 +50,8 @@ export const ButtonAnimatedGradient = ({
     if (variant === 'secondary') {
         return (
             <button
-                onClick={onClick}
                 className={`relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-900/50 px-6 font-medium text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 ${className}`}
+                onClick={onClick}
             >
                 {children}
             </button>
@@ -60,14 +60,14 @@ export const ButtonAnimatedGradient = ({
 
     return (
         <button
-            ref={divRef}
-            onClick={onClick}
-            onMouseMove={handleMouseMove}
-            onFocus={handleFocus}
+            className={`relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-gray-800 bg-gradient-to-r from-gray-900 to-gray-950 px-6 font-medium text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 ${className}`}
             onBlur={handleBlur}
+            onClick={onClick}
+            onFocus={handleFocus}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={`relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-gray-800 bg-gradient-to-r from-gray-900 to-gray-950 px-6 font-medium text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 ${className}`}
+            onMouseMove={handleMouseMove}
+            ref={divRef}
         >
             <div
                 className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"

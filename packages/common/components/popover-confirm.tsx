@@ -1,5 +1,5 @@
-import { Button, ButtonProps, Popover, PopoverContent, PopoverTrigger } from '@repo/ui';
-import { FC, ReactNode } from 'react';
+import { Button, type ButtonProps, Popover, PopoverContent, PopoverTrigger } from '@repo/ui';
+import type { FC, ReactNode } from 'react';
 
 type ConfirmPopoverProps = {
     open: boolean;
@@ -27,26 +27,26 @@ export const ConfirmPopover: FC<ConfirmPopoverProps> = ({
     additionalActions,
 }) => {
     return (
-        <Popover open={open} onOpenChange={onOpenChange}>
+        <Popover onOpenChange={onOpenChange} open={open}>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
             <PopoverContent>
                 <p className="pb-2 text-sm font-medium md:text-base">{title}</p>
                 <div className="flex flex-row gap-1">
                     <Button
-                        variant={confirmVariant}
-                        onClick={e => {
+                        onClick={(e) => {
                             onConfirm();
                             e.stopPropagation();
                         }}
+                        variant={confirmVariant}
                     >
                         {confirmText}
                     </Button>
                     <Button
-                        variant={cancelVariant}
-                        onClick={e => {
+                        onClick={(e) => {
                             onOpenChange(false);
                             e.stopPropagation();
                         }}
+                        variant={cancelVariant}
                     >
                         {cancelText}
                     </Button>

@@ -2,24 +2,21 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
+import { log } from '@repo/shared/logger';
+import { eq, inArray } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
-import { resources, embeddings } from '@/lib/database/schema';
-import { eq, inArray } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/logger';
+import { embeddings, resources } from '@/lib/database/schema';
 
 export async function DELETE(_req: NextRequest) {
     try {
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then(m => m.headers()),
+            headers: await import('next/headers').then((m) => m.headers()),
         });
-        
+
         if (!session?.user?.id) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const userId = session.user.id;
@@ -29,16 +26,14 @@ export async function DELETE(_req: NextRequest) {
             .select({ id: resources.id })
             .from(resources)
             .where(eq(resources.userId, userId));
-        
-        const resourceIds = userResources.map(r => r.id);
-        
+
+        const resourceIds = userResources.map((r) => r.id);
+
         // Delete all embeddings for user's resources
         if (resourceIds.length > 0) {
-            await db.delete(embeddings).where(
-                inArray(embeddings.resourceId, resourceIds)
-            );
+            await db.delete(embeddings).where(inArray(embeddings.resourceId, resourceIds));
         }
-        
+
         // Delete all resources for the user
         await db.delete(resources).where(eq(resources.userId, userId));
 
@@ -48,9 +43,6 @@ export async function DELETE(_req: NextRequest) {
         );
     } catch (error) {
         log.error('Error clearing knowledge base:', { error });
-        return NextResponse.json(
-            { error: 'Failed to clear knowledge base' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Failed to clear knowledge base' }, { status: 500 });
     }
 }

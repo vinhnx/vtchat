@@ -4,8 +4,8 @@ import { Download, FileText, X } from 'lucide-react';
 import { useState } from 'react';
 
 export const StructuredDataDisplay = () => {
-    const structuredData = useChatStore(state => state.structuredData);
-    const clearStructuredData = useChatStore(state => state.clearStructuredData);
+    const structuredData = useChatStore((state) => state.structuredData);
+    const clearStructuredData = useChatStore((state) => state.clearStructuredData);
     const [isExpanded, setIsExpanded] = useState(true);
 
     if (!structuredData) return null;
@@ -41,7 +41,7 @@ export const StructuredDataDisplay = () => {
         return (
             <div className={`${level > 0 ? 'ml-4' : ''} space-y-2`}>
                 {Object.entries(data).map(([key, value]) => (
-                    <div key={key} className="border-muted border-l-2 pl-3">
+                    <div className="border-muted border-l-2 pl-3" key={key}>
                         <div className="text-sm font-medium capitalize">
                             {key.replace(/([A-Z])/g, ' $1').trim()}
                         </div>
@@ -63,33 +63,33 @@ export const StructuredDataDisplay = () => {
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <FileText size={16} className="text-green-600" />
+                        <FileText className="text-green-600" size={16} />
                         <CardTitle className="text-sm">
                             Structured Data - {structuredData.type}
                         </CardTitle>
                     </div>
                     <div className="flex items-center gap-1">
                         <Button
-                            size="icon-sm"
-                            variant="ghost"
                             onClick={() => setIsExpanded(!isExpanded)}
+                            size="icon-sm"
                             tooltip={isExpanded ? 'Collapse' : 'Expand'}
+                            variant="ghost"
                         >
-                            <FileText size={14} className={isExpanded ? 'rotate-90' : ''} />
+                            <FileText className={isExpanded ? 'rotate-90' : ''} size={14} />
                         </Button>
                         <Button
-                            size="icon-sm"
-                            variant="ghost"
                             onClick={handleDownload}
+                            size="icon-sm"
                             tooltip="Download JSON"
+                            variant="ghost"
                         >
                             <Download size={14} />
                         </Button>
                         <Button
-                            size="icon-sm"
-                            variant="ghost"
                             onClick={handleClose}
+                            size="icon-sm"
                             tooltip="Close"
+                            variant="ghost"
                         >
                             <X size={14} />
                         </Button>
@@ -102,7 +102,7 @@ export const StructuredDataDisplay = () => {
             </CardHeader>
             {isExpanded && (
                 <CardContent className="pt-0">
-                    <div className="max-h-96 overflow-y-auto touch-pan-y overscroll-contain">
+                    <div className="max-h-96 touch-pan-y overflow-y-auto overscroll-contain">
                         {renderData(structuredData.data)}
                     </div>
                 </CardContent>

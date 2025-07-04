@@ -20,7 +20,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { FileText, HelpCircle, Info, LogOut, Menu, Settings, Shield, User, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 import { Drawer } from 'vaul';
 
@@ -33,8 +33,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         useRootContext();
     const pathname = usePathname();
     const { data: session } = useSession();
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
-    const sidebarPlacement = useAppStore(state => state.sidebarPlacement);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
 
@@ -55,7 +55,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         return (
             <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
                 {/* Simplified structure during SSR to match client structure */}
-                <div className="bg-tertiary item-center fixed inset-0 z-[99999] flex justify-center md:hidden">
+                <div className="item-center bg-tertiary fixed inset-0 z-[99999] flex justify-center md:hidden">
                     <div className="flex flex-col items-center justify-center gap-2">
                         <span className="text-muted-foreground text-center text-sm">
                             Loading...
@@ -96,12 +96,12 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <motion.div
-                            key="left-sidebar"
-                            initial={{ width: 0, opacity: 0 }}
                             animate={{ width: 'auto', opacity: 1 }}
-                            exit={{ width: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="hidden overflow-hidden md:flex"
+                            exit={{ width: 0, opacity: 0 }}
+                            initial={{ width: 0, opacity: 0 }}
+                            key="left-sidebar"
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                         >
                             <Sidebar />
                         </motion.div>
@@ -119,7 +119,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             <div className="relative flex h-full w-0 flex-1 flex-row">
                                 <div className="flex w-full flex-col gap-2 overflow-y-auto">
                                     {shouldShowDropShadow && (
-                                        <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block"></div>
+                                        <div className="from-secondary via-secondary/70 to-secondary/0 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block" />
                                     )}
 
                                     {children}
@@ -138,12 +138,12 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <motion.div
-                            key="right-sidebar"
-                            initial={{ width: 0, opacity: 0 }}
                             animate={{ width: 'auto', opacity: 1 }}
-                            exit={{ width: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="hidden overflow-hidden md:flex"
+                            exit={{ width: 0, opacity: 0 }}
+                            initial={{ width: 0, opacity: 0 }}
+                            key="right-sidebar"
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                         >
                             <Sidebar />
                         </motion.div>
@@ -152,17 +152,17 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             )}
 
             <Drawer.Root
-                open={isMobileSidebarOpen}
                 direction={sidebarPlacement}
-                shouldScaleBackground
-                onOpenChange={setIsMobileSidebarOpen}
                 dismissible={false}
                 modal={true}
+                onOpenChange={setIsMobileSidebarOpen}
+                open={isMobileSidebarOpen}
+                shouldScaleBackground
             >
                 <Drawer.Portal>
                     <Drawer.Overlay
                         className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300"
-                        onClick={e => {
+                        onClick={(e) => {
                             // Check if click target is inside the sidebar content or dropdown
                             const target = e.target as HTMLElement;
                             const isInsideSidebar = target.closest('[data-sidebar-content]');
@@ -173,11 +173,11 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 target.closest('[data-radix-dropdown-menu-content]');
 
                             // Only close sidebar if clicking on overlay, not sidebar content or dropdown
-                            if (!isInsideSidebar && !isInsideDropdown) {
+                            if (!(isInsideSidebar || isInsideDropdown)) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
-                        onTouchEnd={e => {
+                        onTouchEnd={(e) => {
                             // Handle iOS touch events specifically
                             const target = e.target as HTMLElement;
                             const isInsideSidebar = target.closest('[data-sidebar-content]');
@@ -188,7 +188,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 target.closest('[data-radix-dropdown-menu-content]');
 
                             // Only close sidebar if touching overlay, not sidebar content or dropdown
-                            if (!isInsideSidebar && !isInsideDropdown) {
+                            if (!(isInsideSidebar || isInsideDropdown)) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
@@ -209,10 +209,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Mobile Floating Menu Button */}
             <div className="pt-safe fixed left-4 top-4 z-50 md:hidden">
                 <Button
-                    variant="secondary"
-                    size="icon"
-                    onClick={() => setIsMobileSidebarOpen(true)}
                     className="h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
+                    onClick={() => setIsMobileSidebarOpen(true)}
+                    size="icon"
+                    variant="secondary"
                 >
                     <Menu size={20} strokeWidth={2} />
                 </Button>
@@ -224,51 +224,51 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
-                                variant="default"
-                                size="icon"
                                 className="bg-primary h-12 w-12 rounded-full p-1 shadow-lg transition-shadow hover:shadow-xl"
+                                size="icon"
+                                variant="default"
                             >
                                 <Avatar
-                                    name={session.user?.name || session.user?.email || 'User'}
-                                    src={session.user?.image || undefined}
-                                    size="md"
                                     className="h-8 w-8"
+                                    name={session.user?.name || session.user?.email || 'User'}
+                                    size="md"
+                                    src={session.user?.image || undefined}
                                 />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="mb-2 w-48">
                             <DropdownMenuItem onClick={() => router.push('/profile')}>
-                                <User size={16} strokeWidth={2} className="mr-2" />
+                                <User className="mr-2" size={16} strokeWidth={2} />
                                 Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                                <Settings size={16} strokeWidth={2} className="mr-2" />
+                                <Settings className="mr-2" size={16} strokeWidth={2} />
                                 Settings
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => router.push('/about')}>
-                                <Info size={16} strokeWidth={2} className="mr-2" />
+                                <Info className="mr-2" size={16} strokeWidth={2} />
                                 About
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push('/faq')}>
-                                <HelpCircle size={16} strokeWidth={2} className="mr-2" />
+                                <HelpCircle className="mr-2" size={16} strokeWidth={2} />
                                 Help Center
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push('/privacy')}>
-                                <Shield size={16} strokeWidth={2} className="mr-2" />
+                                <Shield className="mr-2" size={16} strokeWidth={2} />
                                 Privacy Policy
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push('/terms')}>
-                                <FileText size={16} strokeWidth={2} className="mr-2" />
+                                <FileText className="mr-2" size={16} strokeWidth={2} />
                                 Terms of Service
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                onClick={() => logout()}
-                                disabled={isLoggingOut}
                                 className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                                disabled={isLoggingOut}
+                                onClick={() => logout()}
                             >
-                                <LogOut size={16} strokeWidth={2} className="mr-2" />
+                                <LogOut className="mr-2" size={16} strokeWidth={2} />
                                 {isLoggingOut ? 'Signing out...' : 'Sign out'}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -281,8 +281,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
 export const SideDrawer = () => {
     const pathname = usePathname();
-    const sideDrawer = useAppStore(state => state.sideDrawer);
-    const dismissSideDrawer = useAppStore(state => state.dismissSideDrawer);
+    const sideDrawer = useAppStore((state) => state.sideDrawer);
+    const dismissSideDrawer = useAppStore((state) => state.dismissSideDrawer);
     const { isClient } = useRootContext();
     const { scrollRef, contentRef } = useStickToBottom({
         stiffness: 1,
@@ -358,19 +358,19 @@ export const SideDrawer = () => {
         <AnimatePresence>
             {sideDrawer.open && isThreadPage && isClient && (
                 <motion.div
-                    key="side-drawer"
-                    initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
+                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
                     exit={{ opacity: 0, x: 40 }}
+                    initial={{ opacity: 0, x: 40 }}
+                    key="side-drawer"
                     transition={{
                         type: 'spring',
                         stiffness: 300,
                         damping: 30,
                         exit: { duration: 0.2 },
                     }}
-                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
                 >
-                    <div className="bg-background/95 border-muted/50 flex h-full w-full flex-col overflow-hidden rounded-xl shadow-lg backdrop-blur-sm">
+                    <div className="border-muted/50 bg-background/95 flex h-full w-full flex-col overflow-hidden rounded-xl shadow-lg backdrop-blur-sm">
                         <div className="border-muted/50 bg-muted/20 flex flex-row items-center justify-between gap-3 border-b px-4 py-3">
                             <div className="flex items-center gap-2">
                                 <div className="text-foreground text-sm font-medium">
@@ -378,28 +378,28 @@ export const SideDrawer = () => {
                                 </div>
                                 {sideDrawer.badge && (
                                     <Badge
+                                        className="border-muted-foreground/20 bg-muted/30 text-muted-foreground"
                                         variant="secondary"
-                                        className="bg-muted/30 text-muted-foreground border-muted-foreground/20"
                                     >
                                         {sideDrawer.badge}
                                     </Badge>
                                 )}
                             </div>
                             <Button
-                                variant="ghost"
-                                size="icon-xs"
-                                onClick={() => dismissSideDrawer()}
-                                tooltip="Close"
                                 className="hover:bg-muted/40 h-7 w-7 rounded-md"
+                                onClick={() => dismissSideDrawer()}
+                                size="icon-xs"
+                                tooltip="Close"
+                                variant="ghost"
                             >
-                                <X size={14} strokeWidth={2} className="text-muted-foreground" />
+                                <X className="text-muted-foreground" size={14} strokeWidth={2} />
                             </Button>
                         </div>
                         <div
                             className="no-scrollbar flex flex-1 flex-col gap-3 overflow-y-auto p-4"
                             ref={scrollRef}
                         >
-                            <div ref={contentRef} className="w-full space-y-3">
+                            <div className="w-full space-y-3" ref={contentRef}>
                                 {renderContent()}
                             </div>
                         </div>

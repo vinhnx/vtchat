@@ -1,24 +1,24 @@
-import { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
+import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
+import { log } from '@repo/shared/logger';
 import {
-    CoreMessage,
+    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
-    ToolSet,
+    type ToolSet,
 } from 'ai';
 import { format } from 'date-fns';
-import { ZodSchema } from 'zod';
-import { ReasoningType, CLAUDE_4_CONFIG } from '../constants/reasoning';
+import type { ZodSchema } from 'zod';
+import { CLAUDE_4_CONFIG, ReasoningType } from '../constants/reasoning';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
-import {
+import type {
     GenerateTextWithReasoningResult,
     ReasoningDetail,
     ThinkingModeConfig,
 } from '../types/reasoning';
-import { WorkflowEventSchema } from './flow';
+import type { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
-import { log } from '@repo/shared/logger';
 
 export type ChunkBufferOptions = {
     threshold?: number;
@@ -45,7 +45,9 @@ export class ChunkBuffer {
 
         const shouldFlush =
             (this.threshold && this.buffer.length >= this.threshold) ||
-            this.breakPatterns.some(pattern => chunk.includes(pattern) || chunk.endsWith(pattern));
+            this.breakPatterns.some(
+                (pattern) => chunk.includes(pattern) || chunk.endsWith(pattern)
+            );
 
         if (shouldFlush) {
             this.flush();
@@ -107,26 +109,27 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-        const hasSystemGeminiKey = 
-            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) ||
-            windowApiKey;
+        const hasUserGeminiKey =
+            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+        const hasSystemGeminiKey =
+            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) || windowApiKey;
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-        
-        if (!hasUserGeminiKey && !hasSystemGeminiKey) {
+
+        if (!(hasUserGeminiKey || hasSystemGeminiKey)) {
             if (isFreeGeminiModel) {
-                throw new Error('Free Gemini model requires system configuration. Please contact support or upgrade to use your own API key.');
-            } else {
-                throw new Error('Gemini API key is required for web search functionality');
+                throw new Error(
+                    'Free Gemini model requires system configuration. Please contact support or upgrade to use your own API key.'
+                );
             }
+            throw new Error('Gemini API key is required for web search functionality');
         }
 
         // If user has BYOK, use their key (unlimited usage)
         // If user doesn't have BYOK but using free model, use system key (counted usage)
         const useSystemKey = !hasUserGeminiKey && isFreeGeminiModel;
-        
+
         log.info('API key usage decision:', {
             hasUserKey: hasUserGeminiKey,
             hasSystemKey: hasSystemGeminiKey,
@@ -135,10 +138,17 @@ export const generateTextWithGeminiSearch = async ({
         });
 
         log.info('Getting language model for:', { data: model });
-        
+
         // Use system key for free model users without BYOK
         const effectiveByokKeys = useSystemKey ? undefined : byokKeys;
-        const selectedModel = getLanguageModel(model, undefined, effectiveByokKeys, true, undefined, thinkingMode?.claude4InterleavedThinking);
+        const selectedModel = getLanguageModel(
+            model,
+            undefined,
+            effectiveByokKeys,
+            true,
+            undefined,
+            thinkingMode?.claude4InterleavedThinking
+        );
         log.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
             modelType: typeof selectedModel,
@@ -164,7 +174,7 @@ export const generateTextWithGeminiSearch = async ({
         // Filter out messages with empty content to prevent Gemini API errors
         let filteredMessages = messages;
         if (messages?.length) {
-            filteredMessages = messages.filter(message => {
+            filteredMessages = messages.filter((message) => {
                 const hasContent =
                     message.content &&
                     (typeof message.content === 'string'
@@ -215,9 +225,9 @@ export const generateTextWithGeminiSearch = async ({
                     case ReasoningType.ANTHROPIC_REASONING:
                         // Anthropic Claude 4 models support reasoning with extended thinking
                         providerOptions.anthropic = {
-                            thinking: { 
-                                type: 'enabled' as const, 
-                                budgetTokens: CLAUDE_4_CONFIG.DEFAULT_THINKING_BUDGET 
+                            thinking: {
+                                type: 'enabled' as const,
+                                budgetTokens: CLAUDE_4_CONFIG.DEFAULT_THINKING_BUDGET,
                             },
                         };
                         break;
@@ -254,7 +264,9 @@ export const generateTextWithGeminiSearch = async ({
             });
 
             streamResult = streamText(streamTextConfig as any);
-            log.info('StreamText call successful, result type:', { data: typeof streamResult });
+            log.info('StreamText call successful, result type:', {
+                data: typeof streamResult,
+            });
         } catch (error: any) {
             log.error('Error creating streamText:', { data: error });
             log.error('Error stack:', { data: error.stack });
@@ -312,7 +324,9 @@ export const generateTextWithGeminiSearch = async ({
             throw error;
         }
 
-        log.info('Stream iteration completed, fullText length:', { data: fullText.length });
+        log.info('Stream iteration completed, fullText length:', {
+            data: fullText.length,
+        });
 
         // Safely handle potentially undefined sources and metadata
         log.info('Resolving sources and metadata...');
@@ -353,7 +367,7 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         // Extract reasoning details if available
-        let reasoning: string = '';
+        let reasoning = '';
         let reasoningDetails: any[] = [];
 
         try {
@@ -368,7 +382,9 @@ export const generateTextWithGeminiSearch = async ({
         try {
             if (streamResult?.reasoningDetails) {
                 reasoningDetails = (await streamResult.reasoningDetails) || [];
-                log.info('ReasoningDetails extracted:', { data: reasoningDetails.length });
+                log.info('ReasoningDetails extracted:', {
+                    data: reasoningDetails.length,
+                });
             }
         } catch (error) {
             log.warn('Failed to resolve reasoningDetails:', { data: error });
@@ -400,11 +416,14 @@ export const generateTextWithGeminiSearch = async ({
             throw new Error(
                 'Invalid or missing Gemini API key. Please check your API key configuration.'
             );
-        } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+        }
+        if (error.message?.includes('403') || error.message?.includes('forbidden')) {
             throw new Error('Gemini API access forbidden. Please check your API key permissions.');
-        } else if (error.message?.includes('429')) {
+        }
+        if (error.message?.includes('429')) {
             throw new Error('Gemini API rate limit exceeded. Please try again later.');
-        } else if (error.message?.includes('undefined to object')) {
+        }
+        if (error.message?.includes('undefined to object')) {
             throw new Error('Gemini web search configuration error. Please check your API setup.');
         }
 
@@ -453,7 +472,7 @@ export const generateText = async ({
         // Filter out messages with empty content to prevent Gemini API errors
         let filteredMessages = messages;
         if (messages?.length) {
-            filteredMessages = messages.filter(message => {
+            filteredMessages = messages.filter((message) => {
                 const hasContent =
                     message.content &&
                     (typeof message.content === 'string'
@@ -471,7 +490,7 @@ export const generateText = async ({
         );
 
         // Set up middleware based on model's reasoning capabilities
-        let middleware: any = undefined;
+        let middleware: any;
         const reasoningTagName = getReasoningTagName(model);
 
         if (reasoningTagName && supportsReasoning(model)) {
@@ -481,7 +500,14 @@ export const generateText = async ({
             });
         }
 
-        const selectedModel = getLanguageModel(model, middleware, byokKeys, useSearchGrounding, undefined, thinkingMode?.claude4InterleavedThinking);
+        const selectedModel = getLanguageModel(
+            model,
+            middleware,
+            byokKeys,
+            useSearchGrounding,
+            undefined,
+            thinkingMode?.claude4InterleavedThinking
+        );
 
         // Set up provider options based on model's reasoning type
         const providerOptions: any = {};
@@ -619,7 +645,7 @@ export const generateObject = async ({
         // Filter out messages with empty content to prevent Gemini API errors
         let filteredMessages = messages;
         if (messages?.length) {
-            filteredMessages = messages.filter(message => {
+            filteredMessages = messages.filter((message) => {
                 const hasContent =
                     message.content &&
                     (typeof message.content === 'string'
@@ -653,7 +679,14 @@ export const generateObject = async ({
         // Import reasoning utilities
         const { supportsReasoning, getReasoningType } = await import('../models');
 
-        const selectedModel = getLanguageModel(model, undefined, byokKeys, undefined, undefined, thinkingMode?.claude4InterleavedThinking);
+        const selectedModel = getLanguageModel(
+            model,
+            undefined,
+            byokKeys,
+            undefined,
+            undefined,
+            thinkingMode?.claude4InterleavedThinking
+        );
         log.info('Selected model for generateObject:', {
             hasModel: !!selectedModel,
             modelType: typeof selectedModel,
@@ -734,13 +767,16 @@ export const generateObject = async ({
             throw new Error(
                 'Invalid message format: Some messages have empty content. Please ensure all messages have valid content.'
             );
-        } else if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+        }
+        if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
             throw new Error(
                 'Invalid or missing API key for the selected model. Please check your API key configuration.'
             );
-        } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+        }
+        if (error.message?.includes('403') || error.message?.includes('forbidden')) {
             throw new Error('API access forbidden. Please check your API key permissions.');
-        } else if (error.message?.includes('429')) {
+        }
+        if (error.message?.includes('429')) {
             throw new Error('API rate limit exceeded. Please try again later.');
         }
 
@@ -782,7 +818,7 @@ export class EventEmitter<T extends Record<string, any>> {
     emit(event: string, data: any) {
         const callbacks = this.listeners.get(event);
         if (callbacks) {
-            callbacks.forEach(callback => callback(data));
+            callbacks.forEach((callback) => callback(data));
         }
         return this;
     }
@@ -850,7 +886,7 @@ export const getWebPageContent = async (url: string) => {
     }
 };
 
-const processContent = (content: string, maxLength: number = 10000): string => {
+const processContent = (content: string, maxLength = 10_000): string => {
     if (!content) return '';
 
     const chunks = content.split('\n\n');
@@ -879,7 +915,7 @@ const fetchWithJina = async (url: string): Promise<TReaderResult> => {
                 'X-Robots-Txt': 'JinaReader',
                 // 'X-With-Links-Summary': 'true',
             },
-            signal: AbortSignal.timeout(15000),
+            signal: AbortSignal.timeout(15_000),
         });
 
         if (!response.ok) {
@@ -912,23 +948,29 @@ export const readURL = async (url: string): Promise<TReaderResult> => {
     try {
         if (process.env.JINA_API_KEY) {
             return await fetchWithJina(url);
-        } else {
-            log.info('No Jina API key found');
         }
+        log.info('No Jina API key found');
 
         return { success: false };
     } catch (error) {
         log.error('Error in readURL:', { data: error });
-        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        };
     }
 };
 
 export const processWebPages = async (
     results: Array<{ link: string; title: string }>,
     signal?: AbortSignal,
-    options = { batchSize: 4, maxPages: 8, timeout: 30000 }
+    options = { batchSize: 4, maxPages: 8, timeout: 30_000 }
 ) => {
-    const processedResults: Array<{ title: string; link: string; content: string }> = [];
+    const processedResults: Array<{
+        title: string;
+        link: string;
+        content: string;
+    }> = [];
     const timeoutSignal = AbortSignal.timeout(options.timeout);
     const combinedSignal = new AbortController();
 
@@ -944,9 +986,9 @@ export const processWebPages = async (
             if (Date.now() - startTime > options.timeout) break;
 
             const batch = results.slice(i, i + options.batchSize);
-            const batchPromises = batch.map(result =>
+            const batchPromises = batch.map((result) =>
                 getWebPageContent(result.link)
-                    .then(content => ({
+                    .then((content) => ({
                         title: result.title,
                         link: result.link,
                         content,
@@ -993,7 +1035,7 @@ export const handleError = (error: Error, { context, events }: TaskParams) => {
     const errorMessage = generateErrorMessage(error);
     log.error('Task failed', { data: error });
 
-    events?.update('error', prev => ({
+    events?.update('error', (prev) => ({
         ...prev,
         error: errorMessage,
         status: 'ERROR',
@@ -1015,7 +1057,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
         subSteps: Record<string, { status: 'PENDING' | 'COMPLETED'; data?: any }>;
     }) => {
         const { stepId, text, stepStatus, subSteps } = params;
-        events?.update('steps', prev => ({
+        events?.update('steps', (prev) => ({
             ...prev,
             [stepId]: {
                 ...prev?.[stepId],
@@ -1037,7 +1079,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
                                             ...prev?.[stepId]?.steps?.[key]?.data,
                                             ...value.data,
                                         }
-                                      : !!value?.data
+                                      : value?.data
                                         ? value.data
                                         : prev?.[stepId]?.steps?.[key]?.data,
                             },
@@ -1049,9 +1091,9 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
     };
 
     const addSources = (sources: any[]) => {
-        events?.update('sources', prev => {
+        events?.update('sources', (prev) => {
             const newSources = sources
-                ?.filter((result: any) => !prev?.some(source => source.link === result.link))
+                ?.filter((result: any) => !prev?.some((source) => source.link === result.link))
                 .map((result: any, index: number) => ({
                     title: result?.title,
                     link: result?.link,
@@ -1071,7 +1113,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
         finalText?: string;
         status?: 'PENDING' | 'COMPLETED';
     }) => {
-        events?.update('answer', prev => ({
+        events?.update('answer', (prev) => ({
             ...prev,
             text: text || prev?.text,
             finalText: finalText || prev?.finalText,
@@ -1080,14 +1122,21 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
     };
 
     const updateStatus = (status: 'PENDING' | 'COMPLETED' | 'ERROR') => {
-        events?.update('status', prev => status);
+        events?.update('status', (prev) => status);
     };
 
     const updateObject = (object: any) => {
-        events?.update('object', prev => object);
+        events?.update('object', (prev) => object);
     };
 
-    return { updateStep, addSources, updateAnswer, nextStepId, updateStatus, updateObject };
+    return {
+        updateStep,
+        addSources,
+        updateAnswer,
+        nextStepId,
+        updateStatus,
+        updateObject,
+    };
 };
 
 /**
@@ -1118,7 +1167,7 @@ export const selectAvailableModel = (
 
     log.info('Input:', {
         preferredModel,
-        availableKeys: byokKeys ? Object.keys(byokKeys).filter(key => byokKeys[key]) : [],
+        availableKeys: byokKeys ? Object.keys(byokKeys).filter((key) => byokKeys[key]) : [],
         byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         hasSelf: typeof self !== 'undefined',
         hasWindow: (() => {

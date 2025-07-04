@@ -5,8 +5,8 @@
  * Verifies all critical production environment configurations for VT Chat
  */
 
-import { existsSync } from 'fs';
 import { log } from '@repo/shared/logger';
+import { existsSync } from 'fs';
 
 const CONFIG_VERIFICATION = {
     environment: {
@@ -20,7 +20,7 @@ const CONFIG_VERIFICATION = {
             { name: 'NEXT_PUBLIC_BASE_URL', required: true, type: 'url' },
             { name: 'BASE_URL', required: true, type: 'url' },
             { name: 'NODE_ENV', required: true, expected: 'production' },
-        ]
+        ],
     },
     ai: {
         name: 'AI Service Configuration',
@@ -30,7 +30,7 @@ const CONFIG_VERIFICATION = {
             { name: 'GEMINI_API_KEY', required: false, type: 'secret' },
             { name: 'FIREWORKS_API_KEY', required: false, type: 'secret' },
             { name: 'JINA_API_KEY', required: false, type: 'secret' },
-        ]
+        ],
     },
     payment: {
         name: 'Payment Integration',
@@ -39,7 +39,7 @@ const CONFIG_VERIFICATION = {
             { name: 'CREEM_PRODUCT_ID', required: false, type: 'string' },
             { name: 'CREEM_ENVIRONMENT', required: false, expected: 'production' },
             { name: 'CREEM_WEBHOOK_SECRET', required: false, type: 'secret' },
-        ]
+        ],
     },
     oauth: {
         name: 'OAuth Configuration',
@@ -48,7 +48,7 @@ const CONFIG_VERIFICATION = {
             { name: 'GITHUB_CLIENT_SECRET', required: false, type: 'secret' },
             { name: 'GOOGLE_CLIENT_ID', required: false, type: 'string' },
             { name: 'GOOGLE_CLIENT_SECRET', required: false, type: 'secret' },
-        ]
+        ],
     },
     monitoring: {
         name: 'Monitoring & Analytics',
@@ -56,8 +56,8 @@ const CONFIG_VERIFICATION = {
             { name: 'NEXT_PUBLIC_HOTJAR_SITE_ID', required: false, type: 'string' },
             { name: 'NEXT_PUBLIC_HOTJAR_VERSION', required: false, type: 'string' },
             { name: 'LOG_LEVEL', required: false, type: 'string' },
-        ]
-    }
+        ],
+    },
 };
 
 class ProductionVerifier {
@@ -74,18 +74,10 @@ class ProductionVerifier {
             value: value ? (config.type === 'secret' ? '[HIDDEN]' : value) : null,
             status: 'missing',
             message: '',
-            required: config.required
+            required: config.required,
         };
 
-        if (!value) {
-            result.status = config.required ? 'error' : 'warning';
-            result.message = config.required ? 'Required variable missing' : 'Optional variable not set';
-            if (config.required) {
-                this.errors.push(`${name} is required but not set`);
-            } else {
-                this.warnings.push(`${name} is optional but not set`);
-            }
-        } else {
+        if (value) {
             if (config.expected && value !== config.expected) {
                 result.status = 'warning';
                 result.message = `Expected '${config.expected}', got '${value}'`;
@@ -101,6 +93,16 @@ class ProductionVerifier {
             } else {
                 result.status = 'success';
                 result.message = 'Valid';
+            }
+        } else {
+            result.status = config.required ? 'error' : 'warning';
+            result.message = config.required
+                ? 'Required variable missing'
+                : 'Optional variable not set';
+            if (config.required) {
+                this.errors.push(`${name} is required but not set`);
+            } else {
+                this.warnings.push(`${name} is optional but not set`);
             }
         }
 
@@ -122,7 +124,7 @@ class ProductionVerifier {
         if (!dbUrl) {
             return {
                 status: 'error',
-                message: 'DATABASE_URL not set'
+                message: 'DATABASE_URL not set',
             };
         }
 
@@ -133,12 +135,12 @@ class ProductionVerifier {
             await drizzle.execute('SELECT 1');
             return {
                 status: 'success',
-                message: 'Database connection successful'
+                message: 'Database connection successful',
             };
         } catch (error) {
             return {
                 status: 'error',
-                message: `Database connection failed: ${error.message}`
+                message: `Database connection failed: ${error.message}`,
             };
         }
     }
@@ -148,7 +150,7 @@ class ProductionVerifier {
         if (!apiKey) {
             return {
                 status: 'warning',
-                message: 'Creem API key not configured (payment disabled)'
+                message: 'Creem API key not configured (payment disabled)',
             };
         }
 
@@ -156,26 +158,25 @@ class ProductionVerifier {
             // Test Creem API connection
             const response = await fetch('https://api.creem.io/v1/health', {
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
+                    Authorization: `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (response.ok) {
                 return {
                     status: 'success',
-                    message: 'Creem API connection successful'
-                };
-            } else {
-                return {
-                    status: 'error',
-                    message: `Creem API returned: ${response.status}`
+                    message: 'Creem API connection successful',
                 };
             }
+            return {
+                status: 'error',
+                message: `Creem API returned: ${response.status}`,
+            };
         } catch (error) {
             return {
                 status: 'error',
-                message: `Creem API connection failed: ${error.message}`
+                message: `Creem API connection failed: ${error.message}`,
             };
         }
     }
@@ -184,7 +185,7 @@ class ProductionVerifier {
         const flyConfig = {
             productionFile: existsSync('fly.production.toml'),
             developmentFile: existsSync('fly.toml'),
-            healthEndpoint: existsSync('apps/web/app/api/health/route.ts')
+            healthEndpoint: existsSync('apps/web/app/api/health/route.ts'),
         };
 
         const issues = [];
@@ -197,8 +198,9 @@ class ProductionVerifier {
 
         return {
             status: issues.length === 0 ? 'success' : 'error',
-            message: issues.length === 0 ? 'Fly.io configuration valid' : `Issues: ${issues.join(', ')}`,
-            details: flyConfig
+            message:
+                issues.length === 0 ? 'Fly.io configuration valid' : `Issues: ${issues.join(', ')}`,
+            details: flyConfig,
         };
     }
 
@@ -210,7 +212,9 @@ class ProductionVerifier {
         for (const [category, config] of Object.entries(CONFIG_VERIFICATION)) {
             this.results[category] = {
                 name: config.name,
-                checks: config.checks.map(check => this.checkEnvironmentVariable(check.name, check))
+                checks: config.checks.map((check) =>
+                    this.checkEnvironmentVariable(check.name, check)
+                ),
             };
         }
         log.info('Environment variables checked');
@@ -218,7 +222,7 @@ class ProductionVerifier {
         // Check external connections
         console.log('🔌 Testing External Connections...\n');
         log.info('Testing external connections');
-        
+
         this.results.database = await this.checkDatabaseConnection();
         this.results.creem = await this.checkCreemConnection();
         this.results.fly = this.checkFlyConfiguration();
@@ -237,20 +241,23 @@ class ProductionVerifier {
                 warnings: this.warnings.length,
                 total_checks: Object.values(this.results).reduce((acc, result) => {
                     return acc + (result.checks ? result.checks.length : 1);
-                }, 0)
+                }, 0),
             },
             results: this.results,
             errors: this.errors,
-            warnings: this.warnings
+            warnings: this.warnings,
         };
 
         this.printReport(report);
-        log.info({
-            status: report.status,
-            errors: report.summary.errors,
-            warnings: report.summary.warnings,
-            totalChecks: report.summary.total_checks
-        }, 'Production configuration verification completed');
+        log.info(
+            {
+                status: report.status,
+                errors: report.summary.errors,
+                warnings: report.summary.warnings,
+                totalChecks: report.summary.total_checks,
+            },
+            'Production configuration verification completed'
+        );
         return report;
     }
 
@@ -270,30 +277,32 @@ class ProductionVerifier {
             if (result.checks) {
                 console.log(`## ${result.name}\n`);
                 for (const check of result.checks) {
-                    const icon = check.status === 'success' ? '✅' : 
-                                check.status === 'error' ? '❌' : '⚠️';
+                    const icon =
+                        check.status === 'success' ? '✅' : check.status === 'error' ? '❌' : '⚠️';
                     const req = check.required ? '(Required)' : '(Optional)';
                     console.log(`${icon} **${check.name}** ${req}: ${check.message}`);
                 }
                 console.log('');
             } else {
                 // External connections
-                const icon = result.status === 'success' ? '✅' : 
-                            result.status === 'error' ? '❌' : '⚠️';
-                console.log(`## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`);
+                const icon =
+                    result.status === 'success' ? '✅' : result.status === 'error' ? '❌' : '⚠️';
+                console.log(
+                    `## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`
+                );
                 console.log(`${icon} **Status**: ${result.message}\n`);
             }
         }
 
         if (report.errors.length > 0) {
             console.log('## ❌ Critical Issues\n');
-            report.errors.forEach(error => console.log(`- ${error}`));
+            report.errors.forEach((error) => console.log(`- ${error}`));
             console.log('');
         }
 
         if (report.warnings.length > 0) {
             console.log('## ⚠️ Warnings\n');
-            report.warnings.forEach(warning => console.log(`- ${warning}`));
+            report.warnings.forEach((warning) => console.log(`- ${warning}`));
             console.log('');
         }
 
@@ -313,7 +322,7 @@ class ProductionVerifier {
 if (import.meta.main) {
     const verifier = new ProductionVerifier();
     const report = await verifier.verifyAll();
-    
+
     // Exit with error code if not ready
     if (report.status !== 'ready') {
         process.exit(1);

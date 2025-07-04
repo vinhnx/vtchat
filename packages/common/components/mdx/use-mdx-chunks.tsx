@@ -14,7 +14,7 @@ export const useMdxChunker = () => {
      * Extract the substring from the original MDX text for the given node's range.
      */
     const getNodeText = (node: any, lines: string[]): string => {
-        if (!node.position || !node.position.start || !node.position.end) {
+        if (!(node.position && node.position.start && node.position.end)) {
             return '';
         }
         const startLine = node.position.start.line;
@@ -86,10 +86,12 @@ export const useMdxChunker = () => {
             if (isFirstItem && isLastItem) {
                 // Single item list needs both opening and closing tags
                 return `<${listType}>\n${nodeText}\n</${listType}>`;
-            } else if (isFirstItem) {
+            }
+            if (isFirstItem) {
                 // First item needs opening tag
                 return `<${listType}>\n${nodeText}`;
-            } else if (isLastItem) {
+            }
+            if (isLastItem) {
                 // Last item needs closing tag
                 return `${nodeText}\n</${listType}>`;
             }
@@ -131,7 +133,7 @@ export const useMdxChunker = () => {
 
             const lines = mdxText.split('\n');
             const chunks: string[] = [];
-            let currentChunk: string | null = null;
+            const currentChunk: string | null = null;
             let previousNode: any = null;
 
             if (Array.isArray(ast.children)) {

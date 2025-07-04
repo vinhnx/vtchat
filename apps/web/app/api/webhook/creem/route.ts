@@ -4,18 +4,17 @@ export const runtime = 'nodejs';
 export const revalidate = 0;
 
 import { log } from '@repo/shared/logger';
-
-import { db } from '@/lib/database';
-import { sessions, users, userSubscriptions } from '@/lib/database/schema';
-import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
-import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
 import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import crypto from 'crypto';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { db } from '@/lib/database';
+import { sessions, userSubscriptions, users } from '@/lib/database/schema';
+import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
+import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
 
 // Creem.io webhook event schemas - Updated to match actual Creem events
 const CreemWebhookEventSchema = z.object({
@@ -153,7 +152,7 @@ async function updateUserSubscription(
         );
 
         // Start a transaction to ensure data consistency
-        await db.transaction(async tx => {
+        await db.transaction(async (tx) => {
             // Update user's plan and customer ID in the users table
             const userUpdateData: any = {
                 planSlug,
@@ -235,9 +234,7 @@ async function invalidateUserSessions(userId: string) {
                 })
                 .where(eq(sessions.userId, userId));
 
-            log.info(
-                `[Creem Webhook] Updated ${userSessions.length} sessions for user ${userId}`
-            );
+            log.info(`[Creem Webhook] Updated ${userSessions.length} sessions for user ${userId}`);
         }
     } catch (error) {
         log.error('[Creem Webhook] Error updating user sessions:', { error });
@@ -348,9 +345,7 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
             break;
 
         case 'subscription.expired':
-            log.info(
-                `[Creem Webhook] Subscription expired: ${data.id}. Access should be revoked.`
-            );
+            log.info(`[Creem Webhook] Subscription expired: ${data.id}. Access should be revoked.`);
             break;
     }
 
@@ -367,7 +362,7 @@ function verifyWebhookSignature(payload: string, signature: string, secret: stri
 
         log.info('[Creem Webhook] Signature verification debug:', {
             receivedSignature: signature,
-            expectedSignature: expectedSignature,
+            expectedSignature,
             secretLength: secret.length,
             payloadLength: payload.length,
         });
@@ -389,7 +384,9 @@ export async function POST(request: NextRequest) {
 
         log.info('[Creem Webhook] =================================');
         log.info('[Creem Webhook] Received webhook request at /api/webhook/creem');
-        log.info('[Creem Webhook] Headers:', { headers: Object.fromEntries(request.headers.entries()) });
+        log.info('[Creem Webhook] Headers:', {
+            headers: Object.fromEntries(request.headers.entries()),
+        });
         log.info('[Creem Webhook] Body length:', { bodyLength: body.length });
         log.info('[Creem Webhook] Raw body:', { body });
 
@@ -399,7 +396,7 @@ export async function POST(request: NextRequest) {
         // In development, we might not have webhook secret configured
         const isDevelopment = getCurrentEnvironment() === EnvironmentType.DEVELOPMENT;
 
-        if (!webhookSecret && !isDevelopment) {
+        if (!(webhookSecret || isDevelopment)) {
             log.error('[Creem Webhook] CREEM_WEBHOOK_SECRET not configured');
             return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
         }
@@ -429,7 +426,9 @@ export async function POST(request: NextRequest) {
         try {
             event = JSON.parse(body);
         } catch (parseError) {
-            log.error('[Creem Webhook] Failed to parse webhook body:', { error: parseError });
+            log.error('[Creem Webhook] Failed to parse webhook body:', {
+                error: parseError,
+            });
             return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
         }
 
@@ -442,25 +441,26 @@ export async function POST(request: NextRequest) {
 
         // Route to appropriate handler
         switch (validatedEvent.eventType) {
-            case 'checkout.completed':
+            case 'checkout.completed': {
                 const checkoutEvent = CreemCheckoutEventSchema.parse(event);
                 await handleCheckoutCompleted(checkoutEvent);
                 break;
+            }
 
             case 'subscription.active':
             case 'subscription.paid':
             case 'subscription.update':
             case 'subscription.canceled':
-            case 'subscription.expired':
+            case 'subscription.expired': {
                 const subscriptionEvent = CreemSubscriptionEventSchema.parse(event);
                 await handleSubscriptionEvent(subscriptionEvent);
                 break;
+            }
 
             default:
-                log.info(
-                    '[Creem Webhook] Unhandled webhook event type:',
-                    { data: validatedEvent.eventType }
-                );
+                log.info('[Creem Webhook] Unhandled webhook event type:', {
+                    data: validatedEvent.eventType,
+                });
         }
 
         log.info('[Creem Webhook] Event processed successfully');
@@ -469,7 +469,9 @@ export async function POST(request: NextRequest) {
         log.error('[Creem Webhook] Webhook error:', { error });
 
         if (error instanceof z.ZodError) {
-            log.error('[Creem Webhook] Schema validation failed:', { data: error.errors });
+            log.error('[Creem Webhook] Schema validation failed:', {
+                data: error.errors,
+            });
             return NextResponse.json(
                 { error: 'Invalid webhook payload', details: error.errors },
                 { status: 400 }

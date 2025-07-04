@@ -6,7 +6,10 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
-    () => import('@repo/common/components').then(mod => ({ default: mod.ChatInput })),
+    () =>
+        import('@repo/common/components').then((mod) => ({
+            default: mod.ChatInput,
+        })),
     {
         ssr: false,
         loading: () => (
@@ -34,7 +37,7 @@ export default function HomePage() {
             </div>
 
             {/* ChatFooter pinned to bottom with padding for non-logged users */}
-            {!isPending && !session && (
+            {!(isPending || session) && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
                     <div className="pointer-events-auto">
                         <ChatFooter />

@@ -1,12 +1,12 @@
-import { Vemetric } from '@vemetric/node';
 import { log } from '@repo/shared/logger';
 import {
     ANALYTICS_EVENTS,
-    type VemetricEventData,
     type PaymentEventData,
     type SubscriptionEventData,
     type UserProperties,
+    type VemetricEventData,
 } from '@repo/shared/types/analytics';
+import { Vemetric } from '@vemetric/node';
 import { AnalyticsUtils } from '../utils/analytics';
 
 /**
@@ -24,7 +24,7 @@ class VemetricBackendService {
     private initialize() {
         try {
             const token = process.env.VEMETRIC_TOKEN || process.env.NEXT_PUBLIC_VEMETRIC_TOKEN;
-            
+
             if (!token) {
                 log.debug('Vemetric token not found, backend tracking disabled');
                 return;
@@ -51,45 +51,54 @@ class VemetricBackendService {
         eventData?: VemetricEventData,
         userData?: Partial<UserProperties>
     ): Promise<void> {
-        if (!this.isEnabled || !this.client) {
+        if (!(this.isEnabled && this.client)) {
             log.debug('Vemetric backend tracking disabled');
             return;
         }
 
         try {
-            const sanitizedEventData = eventData ? AnalyticsUtils.sanitizeData(eventData) : undefined;
-            const sanitizedUserData = userData ? AnalyticsUtils.createUserProperties(userData) : undefined;
+            const sanitizedEventData = eventData
+                ? AnalyticsUtils.sanitizeData(eventData)
+                : undefined;
+            const sanitizedUserData = userData
+                ? AnalyticsUtils.createUserProperties(userData)
+                : undefined;
 
             await this.client.trackEvent(eventName, {
                 userIdentifier,
                 eventData: sanitizedEventData,
-                userData: sanitizedUserData ? {
-                    set: sanitizedUserData,
-                } : undefined,
+                userData: sanitizedUserData
+                    ? {
+                          set: sanitizedUserData,
+                      }
+                    : undefined,
             });
 
-            log.debug({ 
-                eventName, 
-                userId: userIdentifier,
-                eventDataKeys: sanitizedEventData ? Object.keys(sanitizedEventData) : [],
-            }, 'Backend event tracked');
+            log.debug(
+                {
+                    eventName,
+                    userId: userIdentifier,
+                    eventDataKeys: sanitizedEventData ? Object.keys(sanitizedEventData) : [],
+                },
+                'Backend event tracked'
+            );
         } catch (error) {
-            log.error({ 
-                error, 
-                eventName, 
-                userId: userIdentifier 
-            }, 'Failed to track backend event');
+            log.error(
+                {
+                    error,
+                    eventName,
+                    userId: userIdentifier,
+                },
+                'Failed to track backend event'
+            );
         }
     }
 
     /**
      * Update user properties
      */
-    async updateUser(
-        userIdentifier: string, 
-        userData: Partial<UserProperties>
-    ): Promise<void> {
-        if (!this.isEnabled || !this.client) return;
+    async updateUser(userIdentifier: string, userData: Partial<UserProperties>): Promise<void> {
+        if (!(this.isEnabled && this.client)) return;
 
         try {
             const sanitizedUserData = AnalyticsUtils.createUserProperties(userData);
@@ -101,15 +110,21 @@ class VemetricBackendService {
                 },
             });
 
-            log.debug({ 
-                userId: userIdentifier,
-                userDataKeys: Object.keys(sanitizedUserData),
-            }, 'User properties updated on backend');
+            log.debug(
+                {
+                    userId: userIdentifier,
+                    userDataKeys: Object.keys(sanitizedUserData),
+                },
+                'User properties updated on backend'
+            );
         } catch (error) {
-            log.error({ 
-                error, 
-                userId: userIdentifier 
-            }, 'Failed to update user properties on backend');
+            log.error(
+                {
+                    error,
+                    userId: userIdentifier,
+                },
+                'Failed to update user properties on backend'
+            );
         }
     }
 
@@ -194,7 +209,7 @@ class VemetricBackendService {
                 registrationTimestamp: Date.now(),
             },
             {
-                subscriptionTier: registrationData.subscriptionTier as any || 'VT_BASE',
+                subscriptionTier: (registrationData.subscriptionTier as any) || 'VT_BASE',
                 accountAge: 0,
                 messageCount: 0,
                 referralSource: registrationData.referralSource,
@@ -211,16 +226,12 @@ class VemetricBackendService {
         context?: string,
         metadata?: Record<string, any>
     ): Promise<void> {
-        await this.trackEvent(
-            userIdentifier,
-            ANALYTICS_EVENTS.PREMIUM_FEATURE_ACCESSED,
-            {
-                featureName,
-                context,
-                timestamp: Date.now(),
-                ...metadata,
-            }
-        );
+        await this.trackEvent(userIdentifier, ANALYTICS_EVENTS.PREMIUM_FEATURE_ACCESSED, {
+            featureName,
+            context,
+            timestamp: Date.now(),
+            ...metadata,
+        });
     }
 
     /**
@@ -232,16 +243,12 @@ class VemetricBackendService {
         errorCode: string,
         errorMessage?: string
     ): Promise<void> {
-        await this.trackEvent(
-            userIdentifier,
-            ANALYTICS_EVENTS.API_ERROR,
-            {
-                endpoint: AnalyticsUtils.sanitizeUrl(endpoint),
-                errorCode,
-                errorMessage: errorMessage?.substring(0, 100), // Truncate for privacy
-                timestamp: Date.now(),
-            }
-        );
+        await this.trackEvent(userIdentifier, ANALYTICS_EVENTS.API_ERROR, {
+            endpoint: AnalyticsUtils.sanitizeUrl(endpoint),
+            errorCode,
+            errorMessage: errorMessage?.substring(0, 100), // Truncate for privacy
+            timestamp: Date.now(),
+        });
     }
 
     /**
@@ -260,7 +267,7 @@ class VemetricBackendService {
         for (const event of events) {
             await this.trackEvent(userIdentifier, event.eventName, event.eventData);
             // Small delay to prevent overwhelming the API
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise((resolve) => setTimeout(resolve, 10));
         }
     }
 
@@ -280,5 +287,6 @@ export const trackBackendEvent = vemetricBackend.trackEvent.bind(vemetricBackend
 export const trackPaymentEvent = vemetricBackend.trackPaymentEvent.bind(vemetricBackend);
 export const trackSubscriptionEvent = vemetricBackend.trackSubscriptionEvent.bind(vemetricBackend);
 export const trackUserRegistration = vemetricBackend.trackUserRegistration.bind(vemetricBackend);
-export const trackCriticalFeatureUsage = vemetricBackend.trackCriticalFeatureUsage.bind(vemetricBackend);
+export const trackCriticalFeatureUsage =
+    vemetricBackend.trackCriticalFeatureUsage.bind(vemetricBackend);
 export const trackAPIError = vemetricBackend.trackAPIError.bind(vemetricBackend);

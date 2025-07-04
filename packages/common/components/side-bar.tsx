@@ -6,7 +6,7 @@ import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { Thread } from '@repo/shared/types';
+import type { Thread } from '@repo/shared/types';
 import {
     Avatar,
     Badge,
@@ -52,9 +52,9 @@ import { UserTierBadge } from './user-tier-badge';
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
-    const threads = useChatStore(state => state.threads);
-    const pinThread = useChatStore(state => state.pinThread);
-    const unpinThread = useChatStore(state => state.unpinThread);
+    const threads = useChatStore((state) => state.threads);
+    const pinThread = useChatStore((state) => state.pinThread);
+    const unpinThread = useChatStore((state) => state.unpinThread);
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         return [...threads].sort((a, b) => compareDesc(new Date(a[sortBy]), new Date(b[sortBy])));
     };
@@ -62,9 +62,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const user = session?.user;
-    const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
-    const isSidebarOpen = forceMobile || useAppStore(state => state.isSidebarOpen);
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
+    const isSidebarOpen = forceMobile || useAppStore((state) => state.isSidebarOpen);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
@@ -79,7 +79,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         previousMonths: [],
     };
 
-    sortThreads(threads, 'createdAt')?.forEach(thread => {
+    sortThreads(threads, 'createdAt')?.forEach((thread) => {
         const createdAt = new Date(thread.createdAt);
         const now = new Date();
 
@@ -112,7 +112,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     }) => {
         if (threads.length === 0 && !renderEmptyState) return null;
         return (
-            <Flex direction="col" items="start" className="w-full gap-0.5">
+            <Flex className="w-full gap-0.5" direction="col" items="start">
                 <div className="text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
                     {groupIcon}
                     {title}
@@ -120,14 +120,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {threads.length === 0 && renderEmptyState ? (
                     renderEmptyState()
                 ) : (
-                    <Flex className="w-full gap-0.5" gap="none" direction="col">
-                        {threads.map(thread => (
+                    <Flex className="w-full gap-0.5" direction="col" gap="none">
+                        {threads.map((thread) => (
                             <HistoryItem
-                                thread={thread}
-                                pinThread={() => pinThread(thread.id)}
-                                unpinThread={() => unpinThread(thread.id)}
-                                isPinned={thread.pinned}
-                                key={thread.id}
                                 dismiss={() => {
                                     if (forceMobile) {
                                         setIsMobileSidebarOpen(false);
@@ -136,6 +131,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     }
                                 }}
                                 isActive={thread.id === currentThreadId}
+                                isPinned={thread.pinned}
+                                key={thread.id}
+                                pinThread={() => pinThread(thread.id)}
+                                thread={thread}
+                                unpinThread={() => unpinThread(thread.id)}
                             />
                         ))}
                     </Flex>
@@ -147,7 +147,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'bg-sidebar border-sidebar-border relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l',
+                'border-sidebar-border bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l',
                 'dark:border-gray-800 dark:bg-black/95',
                 forceMobile
                     ? 'w-[280px]'
@@ -157,7 +157,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                       )
             )}
         >
-            <Flex direction="col" className="w-full flex-1 items-start overflow-hidden">
+            <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
                 <div
                     className={cn(
@@ -170,15 +170,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <DropdownMenuTrigger asChild>
                                 <div
                                     className={cn(
-                                        'bg-sidebar-accent/30 hover:bg-sidebar-accent border-sidebar-border flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
+                                        'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
                                         isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
                                     )}
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         // Prevent clicks on user profile trigger from closing mobile sidebar
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
-                                    onTouchEnd={e => {
+                                    onTouchEnd={(e) => {
                                         // Handle iOS touch events specifically
                                         e.stopPropagation();
                                         e.preventDefault();
@@ -186,8 +186,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 >
                                     <Avatar
                                         name={user?.name || user?.email || 'User'}
-                                        src={user?.image || undefined}
                                         size="sm"
+                                        src={user?.image || undefined}
                                     />
 
                                     {isSidebarOpen && (
@@ -200,9 +200,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     )}
                                     {isSidebarOpen && (
                                         <ChevronsUpDown
+                                            className="text-sidebar-foreground/60 flex-shrink-0"
                                             size={14}
                                             strokeWidth={2}
-                                            className="text-sidebar-foreground/60 flex-shrink-0"
                                         />
                                     )}
                                 </div>
@@ -210,27 +210,27 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <DropdownMenuContent
                                 align="start"
                                 className="w-56 pl-2"
-                                onClick={e => {
+                                onClick={(e) => {
                                     // Prevent clicks inside dropdown from closing mobile sidebar
                                     e.stopPropagation();
                                 }}
-                                onPointerDownOutside={e => {
-                                    // Prevent dropdown from closing when clicking outside on mobile
-                                    if (forceMobile) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                onEscapeKeyDown={e => {
+                                onEscapeKeyDown={(e) => {
                                     // Allow escape key to close dropdown but not sidebar
                                     if (forceMobile) {
                                         e.stopPropagation();
+                                    }
+                                }}
+                                onPointerDownOutside={(e) => {
+                                    // Prevent dropdown from closing when clicking outside on mobile
+                                    if (forceMobile) {
+                                        e.preventDefault();
                                     }
                                 }}
                             >
                                 {/* Account Management */}
                                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         e.stopPropagation();
                                         push('/profile');
                                     }}
@@ -239,7 +239,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     Profile
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         e.stopPropagation();
                                         setIsSettingsOpen(true);
                                     }}
@@ -252,34 +252,34 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                onClick={e => {
-                                e.stopPropagation();
-                                push('/about');
-                                }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        push('/about');
+                                    }}
                                 >
-                                <Info size={16} strokeWidth={2} />
-                                About
+                                    <Info size={16} strokeWidth={2} />
+                                    About
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                onClick={e => {
-                                e.stopPropagation();
-                                push('/faq');
-                                }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        push('/faq');
+                                    }}
                                 >
-                                <HelpCircle size={16} strokeWidth={2} />
-                                Help Center
+                                    <HelpCircle size={16} strokeWidth={2} />
+                                    Help Center
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                onClick={e => {
-                                e.stopPropagation();
-                                push('/privacy');
-                                }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        push('/privacy');
+                                    }}
                                 >
-                                <Shield size={16} strokeWidth={2} />
-                                Privacy Policy
+                                    <Shield size={16} strokeWidth={2} />
+                                    Privacy Policy
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         e.stopPropagation();
                                         push('/terms');
                                     }}
@@ -291,12 +291,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Authentication */}
                                 <DropdownMenuItem
-                                    onClick={e => {
+                                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                                    disabled={isLoggingOut}
+                                    onClick={(e) => {
                                         e.stopPropagation();
                                         logout();
                                     }}
-                                    disabled={isLoggingOut}
-                                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
                                 >
                                     <LogOut size={16} strokeWidth={2} />
                                     {isLoggingOut ? 'Signing out...' : 'Sign out'}
@@ -305,18 +305,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         </DropdownMenu>
                     ) : (
                         <Button
-                            variant="ghost"
+                            className="w-full justify-start"
+                            onClick={() => push('/login')}
+                            rounded="lg"
                             size={isSidebarOpen ? 'sm' : 'icon-sm'}
                             tooltip={isSidebarOpen ? undefined : 'Login'}
                             tooltipSide="right"
-                            rounded="lg"
-                            className="w-full justify-start"
-                            onClick={() => push('/login')}
+                            variant="ghost"
                         >
                             <User
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                                 size={16}
                                 strokeWidth={2}
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             />
                             {isSidebarOpen && 'Log in / Sign up'}
                         </Button>
@@ -335,23 +335,23 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         isSidebarOpen ? 'mb-4 px-4 py-3' : 'mb-2 px-2 py-2'
                     )}
                 >
-                    <Link href="/" className="w-full">
+                    <Link className="w-full" href="/">
                         <motion.div
-                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
                             className={cn(
                                 'hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200',
                                 !isSidebarOpen && 'justify-center px-0'
                             )}
+                            initial={{ opacity: 0 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
                         >
-                            <Logo round className="text-brand size-6 flex-shrink-0" />
+                            <Logo className="text-brand size-6 flex-shrink-0" round />
                             {isSidebarOpen && (
                                 <motion.p
-                                    initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.2, delay: 0.1 }}
                                     className="font-clash text-sidebar-foreground text-xl font-bold tracking-wide"
+                                    initial={{ opacity: 0, x: -10 }}
+                                    transition={{ duration: 0.2, delay: 0.1 }}
                                 >
                                     VT
                                 </motion.p>
@@ -360,16 +360,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     </Link>
                     {isSidebarOpen && (
                         <Button
-                            variant="ghost"
-                            tooltip="Close Sidebar"
-                            tooltipSide="right"
-                            size="icon-sm"
+                            className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
                             onClick={() =>
                                 forceMobile
                                     ? setIsMobileSidebarOpen(false)
-                                    : setIsSidebarOpen(prev => !prev)
+                                    : setIsSidebarOpen((prev) => !prev)
                             }
-                            className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
+                            size="icon-sm"
+                            tooltip="Close Sidebar"
+                            tooltipSide="right"
+                            variant="ghost"
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />
                         </Button>
@@ -377,19 +377,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 </div>
                 {/* Primary Actions Section */}
                 <Flex
-                    direction="col"
                     className={cn(
                         'w-full transition-all duration-200',
                         isSidebarOpen ? 'gap-2 px-4' : 'items-center gap-3 px-2'
                     )}
+                    direction="col"
                 >
                     {/* New Chat Button */}
                     <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="default"
-                        rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'New Chat (⌘⌃⌥N)'}
-                        tooltipSide="right"
                         className={cn(
                             'relative shadow-sm transition-all duration-200',
                             isSidebarOpen
@@ -411,12 +406,17 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
+                        rounded="lg"
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        tooltip={isSidebarOpen ? undefined : 'New Chat (⌘⌃⌥N)'}
+                        tooltipSide="right"
+                        variant="default"
                     >
                         <div className="flex items-center">
                             <Plus
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                                 size={16}
                                 strokeWidth={2}
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             />
                             {isSidebarOpen && 'New Chat'}
                         </div>
@@ -424,26 +424,26 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             // <span className="text-xs opacity-60 font-mono">⌘⌃⌥N</span>
                             <div className="ml-auto flex flex-row items-center gap-1">
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                    variant="secondary"
                                 >
-                                    <Command size={10} strokeWidth={2} className="shrink-0" />
+                                    <Command className="shrink-0" size={10} strokeWidth={2} />
                                 </Badge>
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                    variant="secondary"
                                 >
-                                    <Option size={10} strokeWidth={2} className="shrink-0" />
+                                    <Option className="shrink-0" size={10} strokeWidth={2} />
                                 </Badge>
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                    variant="secondary"
                                 >
-                                    <ChevronUp size={10} strokeWidth={2} className="shrink-0" />
+                                    <ChevronUp className="shrink-0" size={10} strokeWidth={2} />
                                 </Badge>
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                    variant="secondary"
                                 >
                                     N
                                 </Badge>
@@ -453,16 +453,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                     {/* Search Button */}
                     <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="ghost"
-                        rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
-                        tooltipSide="right"
                         className={cn(
                             'transition-all duration-200',
                             isSidebarOpen
-                                ? 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent relative w-full justify-between'
-                                : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                                ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between'
+                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                         )}
                         onClick={() => {
                             if (!isSignedIn) {
@@ -471,26 +466,31 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }
                             setIsCommandSearchOpen(true);
                         }}
+                        rounded="lg"
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
+                        tooltipSide="right"
+                        variant="ghost"
                     >
                         <div className="flex items-center">
                             <Search
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                                 size={16}
                                 strokeWidth={2}
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             />
                             {isSidebarOpen && 'Search'}
                         </div>
                         {isSidebarOpen && (
                             <div className="ml-auto flex flex-row items-center gap-1">
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                    variant="secondary"
                                 >
-                                    <Command size={10} strokeWidth={2} className="shrink-0" />
+                                    <Command className="shrink-0" size={10} strokeWidth={2} />
                                 </Badge>
                                 <Badge
-                                    variant="secondary"
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                    variant="secondary"
                                 >
                                     K
                                 </Badge>
@@ -500,16 +500,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                     {/* RAG Knowledge Chat Button */}
                     <Button
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        variant="ghost"
-                        rounded="lg"
-                        tooltip={isSidebarOpen ? undefined : 'Knowledge Base'}
-                        tooltipSide="right"
                         className={cn(
                             'relative transition-all duration-200',
                             isSidebarOpen
-                                ? 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full justify-start'
-                                : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                                ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                         )}
                         onClick={() => {
                             push('/rag');
@@ -518,19 +513,24 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
+                        rounded="lg"
+                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                        tooltip={isSidebarOpen ? undefined : 'Knowledge Base'}
+                        tooltipSide="right"
+                        variant="ghost"
                     >
                         <Database
+                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             size={16}
                             strokeWidth={2}
-                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                         />
                         {isSidebarOpen && (
                             <span className="flex items-center gap-2">
                                 AI Assistant
                                 {!isPlusFromGlobal && (
                                     <Badge
-                                        variant="secondary"
                                         className="vt-plus-glass border-[#D99A4E]/30 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
+                                        variant="secondary"
                                     >
                                         VT+
                                     </Badge>
@@ -554,15 +554,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 >
                     {isSidebarOpen ? (
                         <Button
-                            size={forceMobile ? 'default' : 'lg'}
-                            variant="ghost"
-                            rounded="lg"
-                            disabled={isPortalLoading}
                             className={cn(
                                 'group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300',
                                 'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10',
                                 forceMobile ? 'h-auto min-h-[44px] py-2' : ''
                             )}
+                            disabled={isPortalLoading}
                             onClick={() => {
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
@@ -570,15 +567,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     push('/plus');
                                 }
                             }}
+                            rounded="lg"
+                            size={forceMobile ? 'default' : 'lg'}
+                            variant="ghost"
                         >
                             <Sparkles
-                                size={forceMobile ? 16 : 20}
-                                strokeWidth={2}
                                 className={cn(
                                     'flex-shrink-0 transition-all duration-300 group-hover:scale-110',
                                     'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300',
                                     forceMobile ? 'mr-2' : 'mr-3'
                                 )}
+                                size={forceMobile ? 16 : 20}
+                                strokeWidth={2}
                             />
                             <span
                                 className={cn(
@@ -595,26 +595,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </span>
                             {isPlusSubscriber && (
                                 <ExternalLink
-                                    size={forceMobile ? 10 : 12}
                                     className={cn(
                                         'ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80',
                                         forceMobile ? 'mt-0.5' : ''
                                     )}
+                                    size={forceMobile ? 10 : 12}
                                 />
                             )}
                         </Button>
                     ) : (
                         <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            rounded="lg"
-                            disabled={isPortalLoading}
-                            tooltip={
-                                isPlusSubscriber
-                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
-                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS
-                            }
-                            tooltipSide="right"
                             className={cn(
                                 'group !m-0 flex items-center justify-center !p-0 transition-all duration-300',
                                 isPlusSubscriber
@@ -623,6 +613,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     : // Upgrade Button - Black style
                                       'border-black/20 bg-black/5 hover:bg-black/10 hover:shadow-lg hover:shadow-black/20 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10'
                             )}
+                            disabled={isPortalLoading}
                             onClick={() => {
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
@@ -630,16 +621,25 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     push('/plus');
                                 }
                             }}
+                            rounded="lg"
+                            size="icon-sm"
+                            tooltip={
+                                isPlusSubscriber
+                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
+                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS
+                            }
+                            tooltipSide="right"
+                            variant="ghost"
                         >
                             <Sparkles
-                                size={16}
-                                strokeWidth={2}
                                 className={cn(
                                     'm-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110',
                                     isPlusSubscriber
                                         ? 'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300'
                                         : 'text-black/70 group-hover:text-black dark:text-white/70 dark:group-hover:text-white'
                                 )}
+                                size={16}
+                                strokeWidth={2}
                             />
                         </Button>
                     )}
@@ -677,15 +677,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             {renderGroup({
                                 title: 'Pinned',
                                 threads: threads
-                                    .filter(thread => thread.pinned)
+                                    .filter((thread) => thread.pinned)
                                     .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
                                 groupIcon: <Pin size={14} strokeWidth={2} />,
                                 renderEmptyState: () => (
                                     <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
                                         <Pin
+                                            className="text-sidebar-foreground/30"
                                             size={16}
                                             strokeWidth={1.5}
-                                            className="text-sidebar-foreground/30"
                                         />
                                         <p className="text-sidebar-foreground/60 text-center text-xs">
                                             Pin important conversations to keep them at the top
@@ -696,7 +696,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                             {/* Recent Conversations */}
                             {renderGroup({ title: 'Today', threads: groupedThreads.today })}
-                            {renderGroup({ title: 'Yesterday', threads: groupedThreads.yesterday })}
+                            {renderGroup({
+                                title: 'Yesterday',
+                                threads: groupedThreads.yesterday,
+                            })}
                             {renderGroup({
                                 title: 'Last 7 Days',
                                 threads: groupedThreads.last7Days,
@@ -718,12 +721,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     <div className="from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent px-2 py-2 pt-8">
                         <div className="flex flex-col items-center gap-3">
                             <Button
-                                variant="ghost"
+                                className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                                onClick={() => setIsSidebarOpen((prev) => !prev)}
                                 size="icon-sm"
                                 tooltip="Open Sidebar"
                                 tooltipSide="right"
-                                onClick={() => setIsSidebarOpen(prev => !prev)}
-                                className="text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+                                variant="ghost"
                             >
                                 <PanelRightClose size={16} strokeWidth={2} />
                             </Button>
@@ -733,10 +736,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
             </Flex>
 
             <LoginRequiredDialog
+                description="Please sign in to access the command search feature."
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
                 title="Login Required"
-                description="Please sign in to access the command search feature."
             />
         </div>
     );

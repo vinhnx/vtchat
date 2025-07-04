@@ -25,13 +25,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
     size,
     className,
-}) => <Trash2 size={size} className={className} />;
+}) => <Trash2 className={className} size={size} />;
 
 export default function ThreadsPage() {
-    const threads = useChatStore(state => state.threads);
-    const updateThread = useChatStore(state => state.updateThread);
-    const deleteThread = useChatStore(state => state.deleteThread);
-    const switchThread = useChatStore(state => state.switchThread);
+    const threads = useChatStore((state) => state.threads);
+    const updateThread = useChatStore((state) => state.updateThread);
+    const deleteThread = useChatStore((state) => state.deleteThread);
+    const switchThread = useChatStore((state) => state.switchThread);
     const { push } = useRouter();
     const [editingId, setEditingId] = useState<string | null>(null);
     const [title, setTitle] = useState('');
@@ -98,16 +98,16 @@ export default function ThreadsPage() {
                 <TypographyH3 className="font-clash text-brand tracking-wide">
                     Chat History
                 </TypographyH3>
-                <Command className="bg-secondary !max-h-auto w-full">
+                <Command className="!max-h-auto bg-secondary w-full">
                     <CommandInput
-                        placeholder="Search"
                         className="bg-tertiary h-8 w-full rounded-sm"
+                        placeholder="Search"
                     />
 
                     <CommandList className="bg-secondary mt-2 !max-h-none gap-2">
                         {threads?.length > 0 ? (
-                            threads.map(thread => (
-                                <CommandItem key={thread.id} className="mb-2">
+                            threads.map((thread) => (
+                                <CommandItem className="mb-2" key={thread.id}>
                                     <div
                                         className="bg-tertiary hover:bg-quaternary group relative flex w-full cursor-pointer flex-col items-start rounded-md p-4 transition-all duration-200"
                                         onClick={() => handleThreadClick(thread.id)}
@@ -116,13 +116,13 @@ export default function ThreadsPage() {
                                             <div className="flex flex-col items-start gap-1">
                                                 {editingId === thread.id ? (
                                                     <input
+                                                        className="bg-quaternary rounded px-2 py-1 text-sm"
+                                                        onBlur={handleInputBlur}
+                                                        onChange={handleInputChange}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        onKeyDown={handleInputKeyDown}
                                                         ref={inputRef}
                                                         value={title}
-                                                        onChange={handleInputChange}
-                                                        onBlur={handleInputBlur}
-                                                        onKeyDown={handleInputKeyDown}
-                                                        className="bg-quaternary rounded px-2 py-1 text-sm"
-                                                        onClick={e => e.stopPropagation()}
                                                     />
                                                 ) : (
                                                     <TypographyP className="!mt-0 line-clamp-2 w-full text-sm font-medium">
@@ -133,7 +133,9 @@ export default function ThreadsPage() {
                                                     <Clock size={12} strokeWidth={2} />
                                                     {formatDistanceToNow(
                                                         new Date(thread.createdAt),
-                                                        { addSuffix: true }
+                                                        {
+                                                            addSuffix: true,
+                                                        }
                                                     )}
                                                 </TypographyMuted>
                                             </div>
@@ -141,15 +143,15 @@ export default function ThreadsPage() {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button
-                                                        variant="ghost"
-                                                        size="icon-xs"
                                                         className="shrink-0"
-                                                        onClick={e => e.stopPropagation()}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        size="icon-xs"
+                                                        variant="ghost"
                                                     >
                                                         <MoreHorizontal
+                                                            className="text-muted-foreground/50"
                                                             size={14}
                                                             strokeWidth="2"
-                                                            className="text-muted-foreground/50"
                                                         />
                                                     </Button>
                                                 </DropdownMenuTrigger>
@@ -188,7 +190,7 @@ export default function ThreadsPage() {
                                         Start a new conversation to create a thread
                                     </TypographyMuted>
                                 </div>
-                                <Button variant="default" size="sm" onClick={() => push('/')}>
+                                <Button onClick={() => push('/')} size="sm" variant="default">
                                     <Plus size={14} strokeWidth={2} />
                                     New Thread
                                 </Button>
@@ -199,11 +201,11 @@ export default function ThreadsPage() {
             </div>
 
             <LoginRequiredDialog
+                description="Please sign in to delete chat threads."
+                icon={TrashIcon}
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
                 title="Login Required"
-                description="Please sign in to delete chat threads."
-                icon={TrashIcon}
             />
         </div>
     );

@@ -1,8 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('Chat Route Redirect - Comprehensive Safety Tests', () => {
     // Simulate the exact middleware logic
-    const middlewareRedirectLogic = (pathname: string): { shouldRedirect: boolean; redirectTo?: string } => {
+    const middlewareRedirectLogic = (
+        pathname: string
+    ): { shouldRedirect: boolean; redirectTo?: string } => {
         // Only redirect exact '/chat' path, not '/chat/' or '/chat/anything'
         if (pathname === '/chat') {
             return { shouldRedirect: true, redirectTo: '/' };
@@ -37,7 +39,7 @@ describe('Chat Route Redirect - Comprehensive Safety Tests', () => {
                 '/chat/thread123/nested/path',
             ];
 
-            threadPaths.forEach(path => {
+            threadPaths.forEach((path) => {
                 const result = middlewareRedirectLogic(path);
                 expect(result.shouldRedirect).toBe(false);
             });
@@ -57,7 +59,7 @@ describe('Chat Route Redirect - Comprehensive Safety Tests', () => {
                 '/live-chat',
             ];
 
-            similarPaths.forEach(path => {
+            similarPaths.forEach((path) => {
                 const result = middlewareRedirectLogic(path);
                 expect(result.shouldRedirect).toBe(false);
             });
@@ -83,7 +85,7 @@ describe('Chat Route Redirect - Comprehensive Safety Tests', () => {
                 '/CHAT', // different case
             ];
 
-            edgeCases.forEach(path => {
+            edgeCases.forEach((path) => {
                 const result = middlewareRedirectLogic(path);
                 expect(result.shouldRedirect).toBe(false);
             });
@@ -100,7 +102,7 @@ describe('Chat Route Redirect - Comprehensive Safety Tests', () => {
                 null as any,
             ];
 
-            malformedPaths.forEach(path => {
+            malformedPaths.forEach((path) => {
                 const result = middlewareRedirectLogic(path);
                 expect(result.shouldRedirect).toBe(false);
             });

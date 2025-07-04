@@ -1,12 +1,12 @@
 'use client';
 
+import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Tooltip } from '@repo/ui';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useState } from 'react';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
-import { FeatureSlug } from '@repo/shared/types/subscription';
-import { log } from '@repo/shared/logger';
 
 const themes = [
     {
@@ -87,17 +87,17 @@ export const ThemeSwitcher = ({ onChange, className = '' }: ThemeSwitcherProps) 
 
                 return (
                     <button
-                        type="button"
-                        key={key}
+                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}${isDisabled ? ' (Sign in required)' : ''}`}
                         className={`relative h-6 w-6 rounded-full transition-all duration-200 ${
                             isDisabled
                                 ? 'cursor-not-allowed opacity-50'
                                 : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
-                        onClick={() => handleThemeClick(key as 'light' | 'dark' | 'system')}
                         disabled={isDisabled}
-                        aria-label={`${label}${showSystemHint ? ` (${resolvedTheme})` : ''}${isDisabled ? ' (Sign in required)' : ''}`}
+                        key={key}
+                        onClick={() => handleThemeClick(key as 'light' | 'dark' | 'system')}
                         title={`${label}${showSystemHint ? ` (currently ${resolvedTheme})` : ''}${isDisabled ? ' - Sign in required' : ''}`}
+                        type="button"
                     >
                         {isActive && (
                             <div className="bg-secondary absolute inset-0 rounded-full transition-all duration-200" />

@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { 
-    maskPII, 
-    createContentHash, 
-    containsPII, 
-    secureContentForEmbedding 
+import { describe, expect, it } from 'vitest';
+import {
+    containsPII,
+    createContentHash,
+    maskPII,
+    secureContentForEmbedding,
 } from '@/lib/utils/content-security';
 
 describe('Content Security', () => {
@@ -110,15 +110,21 @@ describe('Content Security', () => {
         });
 
         it('should handle multiple PII types', () => {
-            const content = 'Email: john@example.com, Phone: 555-123-4567, Card: 1234 5678 9012 3456';
+            const content =
+                'Email: john@example.com, Phone: 555-123-4567, Card: 1234 5678 9012 3456';
             const result = secureContentForEmbedding(content);
-            expect(result).toBe('Email: [EMAIL_REDACTED], Phone: [PHONE_REDACTED], Card: [CARD_REDACTED]');
+            expect(result).toBe(
+                'Email: [EMAIL_REDACTED], Phone: [PHONE_REDACTED], Card: [CARD_REDACTED]'
+            );
         });
 
         it('should handle address with multiple PII elements', () => {
-            const content = 'Contact: john@test.com, Address: 456 Oak Drive, Unit 2A, ZIP: 90210, Phone: 555-999-8888';
+            const content =
+                'Contact: john@test.com, Address: 456 Oak Drive, Unit 2A, ZIP: 90210, Phone: 555-999-8888';
             const result = secureContentForEmbedding(content);
-            expect(result).toBe('Contact: [EMAIL_REDACTED], Address: [ADDRESS_REDACTED], [UNIT_REDACTED], ZIP: [ZIP_REDACTED], Phone: [PHONE_REDACTED]');
+            expect(result).toBe(
+                'Contact: [EMAIL_REDACTED], Address: [ADDRESS_REDACTED], [UNIT_REDACTED], ZIP: [ZIP_REDACTED], Phone: [PHONE_REDACTED]'
+            );
         });
     });
 });
