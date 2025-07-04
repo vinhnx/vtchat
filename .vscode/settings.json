@@ -10,5 +10,6 @@
     "cSpell.enabledFileTypes": {
         "markdown": false
     },
-    "oxc.enable": true
+    "oxc.enable": true,
+    "npm.packageManager": "bun"
 }
