@@ -1,6 +1,8 @@
 import { log } from '@repo/shared/logger';
 import { EnvironmentType } from '../types/environment';
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 /**
  * Checks if the current environment is production.
  * It considers CREEM_ENVIRONMENT first, then NODE_ENV.
@@ -65,27 +67,26 @@ export const isProduction = process.env.NODE_ENV === 'production';
  */
 export const devLog = {
     log: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.log(...args);
         }
     },
     warn: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.warn(...args);
         }
     },
     error: (...args: any[]) => {
-        if (isDevelopment) {
-            console.error(...args);
-        }
+        // Always log errors, even in production
+        console.error(...args);
     },
     info: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.info(...args);
         }
     },
     debug: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.debug(...args);
         }
     },
@@ -96,7 +97,7 @@ export const devLog = {
  */
 export const prodSafeLog = {
     log: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.log(...args);
         }
     },
@@ -104,15 +105,16 @@ export const prodSafeLog = {
         console.warn(...args);
     },
     error: (...args: any[]) => {
+        // Always log errors even in production
         console.error(...args);
     },
     info: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.info(...args);
         }
     },
     debug: (...args: any[]) => {
-        if (isDevelopment) {
+        if (!IS_PRODUCTION) {
             console.debug(...args);
         }
     },

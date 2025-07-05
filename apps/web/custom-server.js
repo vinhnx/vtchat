@@ -7,8 +7,12 @@ const { execSync } = require('child_process');
 const path = require('path');
 
 // Simple inline logger to avoid monorepo dependency issues in standalone build
+// Only logs in non-production environments
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 const log = {
     info: (msg, obj) => {
+        if (IS_PRODUCTION) return;
         const timestamp = new Date().toISOString();
         if (typeof msg === 'object') {
             console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
@@ -19,6 +23,7 @@ const log = {
         }
     },
     error: (msg, obj) => {
+        // Always log errors even in production
         const timestamp = new Date().toISOString();
         if (typeof msg === 'object') {
             console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
@@ -29,6 +34,7 @@ const log = {
         }
     },
     warn: (msg, obj) => {
+        // Always log warnings even in production
         const timestamp = new Date().toISOString();
         if (typeof msg === 'object') {
             console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));

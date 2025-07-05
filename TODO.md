@@ -3,15 +3,13 @@
 --
 ok go! -> https://vtchat.io.vn/
 
+--
 
 --
 
-should mask user email on users DB? use neon mcp and better-auth to handle user data privacy
-
---
+ask the Oracle for review feedback.
 
 now Add this to your coding workflow AGENT.md: before implement every task, make sure you should ask the Oracle for details plan first. then review the feedback and start to implement your answer. then ask Oracle for view feedback again when done then apply changes if needed, reiterate until oracle approve.
-
 --
 
 Show HN: Built a Local-First AI Research Platform with Advanced RAG

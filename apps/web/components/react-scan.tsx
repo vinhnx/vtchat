@@ -23,13 +23,11 @@ export function ReactScan() {
 
         // Additional runtime safety check
         if (process.env.NODE_ENV !== 'development') {
-            console.warn('[React Scan] Blocked: Not in development environment');
             return;
         }
 
         // Check for deployment environment indicators
         if (REACT_SCAN_CONFIG.isDeployment) {
-            console.warn('[React Scan] Blocked: Deployment environment detected');
             return;
         }
 
@@ -54,7 +52,7 @@ export function ReactScan() {
                             (render) => (render.time ?? 0) > REACT_SCAN_CONFIG.slowRenderThreshold
                         );
 
-                        if (slowRenders.length > 0) {
+                        if (slowRenders.length > 0 && process.env.NODE_ENV === 'development') {
                             console.debug('[React Scan] Slow renders detected:', {
                                 component: fiber.type?.name || fiber.type || 'Unknown',
                                 slowRenders: slowRenders.map((r) => ({
@@ -72,7 +70,7 @@ export function ReactScan() {
 
                 onPaintStart: (outlines) => {
                     // Track when render highlighting starts
-                    if (REACT_SCAN_CONFIG.log && outlines.length > 5) {
+                    if (REACT_SCAN_CONFIG.log && outlines.length > 5 && process.env.NODE_ENV === 'development') {
                         console.debug(
                             '[React Scan] Heavy render cycle detected:',
                             outlines.length,
@@ -86,13 +84,16 @@ export function ReactScan() {
                 },
             });
 
-            console.log('[React Scan] Performance monitoring initialized', {
-                environment: process.env.NODE_ENV,
-                trackUnnecessaryRenders: REACT_SCAN_CONFIG.trackUnnecessaryRenders,
-                logging: REACT_SCAN_CONFIG.log,
-                deployment: REACT_SCAN_CONFIG.isDeployment,
-            });
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[React Scan] Performance monitoring initialized', {
+                    environment: process.env.NODE_ENV,
+                    trackUnnecessaryRenders: REACT_SCAN_CONFIG.trackUnnecessaryRenders,
+                    logging: REACT_SCAN_CONFIG.log,
+                    deployment: REACT_SCAN_CONFIG.isDeployment,
+                });
+            }
         } catch (error) {
+            // Always log errors
             console.error('[React Scan] Failed to initialize:', error);
         }
     }, []);
