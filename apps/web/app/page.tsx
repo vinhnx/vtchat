@@ -3,6 +3,7 @@
 import { ChatFooter, InlineLoader, Thread } from '@repo/common/components';
 import { useSession } from '@repo/shared/lib/auth-client';
 import dynamic from 'next/dynamic';
+// import { SemanticRouterDebug } from '../components/debug/SemanticRouterDebug';
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
@@ -44,6 +45,9 @@ export default function HomePage() {
                     </div>
                 </div>
             )}
+            
+            {/* Debug component for development */}
+            {/* {process.env.NODE_ENV === 'development' && <SemanticRouterDebug />} */}
         </div>
     );
 }

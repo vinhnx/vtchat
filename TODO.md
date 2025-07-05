@@ -1,47 +1,57 @@
 # TODO
 
 --
-ok go! -> https://vtchat.io.vn/
+ok go-> https://vtchat.io.vn/
 
 --
+https://dotenvx.com/docs/platforms/fly
+--
+https://contentsignals.org/
+# NOTICE: The collection of content and other data on this
+# site through automated means, including any device, tool,
+# or process designed to data mine or scrape content, is
+# prohibited except (1) as provided by the below Content
+# Usage directives or (2) with express written permission
+# from VT.
+
+# The Content Usage directives in this file use syntax and
+# vocabulary from a proposed IETF standard drafted by the AI
+# Preferences (aipref) working group and have the meanings
+# set forth in that standard. To learn more, please see
+# https://contentsignals.org/.
+
+# To request permission to license our intellectual property
+# and/or other materials, please contact us at
+# hello@vtchat.io.vn.
+
+User-Agent: *
+Content-Usage: tdm=n, search=y
+Allow: /
+--
+think and create new visual tools if neeed
+--
+
+try to find a way to do semantics tool router -> auto select the best tool for the user based on the query
+https://claude.ai/chat/937e24c6-06b6-4525-8974-d427b3e8561a
 
 --
 
 ask the Oracle for review feedback.
 
-now Add this to your coding workflow AGENT.md: before implement every task, make sure you should ask the Oracle for details plan first. then review the feedback and start to implement your answer. then ask Oracle for view feedback again when done then apply changes if needed, reiterate until oracle approve.
 --
 
 Show HN: Built a Local-First AI Research Platform with Advanced RAG
-
 I've built VT Chat, a privacy-first AI platform that keeps all your conversations local while providing advanced research capabilities and access to 15+ AI models including Claude 4, GPT-4.1, and O3.
 
-Live demo: https://vtchat.io.vn | Source: https://github.com/vinhnx/vtchat | Peerlist: https://peerlist.io/vinhnx/project/vt (#68 ranking, 12 upvotes)
+Live demo: https://vtchat.io.vn | Source: https://github.com/vinhnx/vtchat
 
-Advanced capabilities:
-- Deep Research: AI conducts comprehensive multi-step research with source verification
-- Pro Search: Real-time web search integration with intelligent result synthesis
-- AI Memory (RAG): Personal knowledge base that learns from your conversations
-- Document processing: Upload PDFs/docs for AI analysis (free for all users)
-- "Thinking mode": See complete AI reasoning process with full token transparency
-- Structured extraction: Turn documents into JSON with AI (free feature)
+The core difference is true local-first architecture. All chats are stored in IndexedDB with zero server storage. Your API keys never leave your browser, and I can't see them even as the developer. You can switch between OpenAI, Anthropic, Google and other providers to compare responses, with complete data isolation for shared machines.
 
-Privacy-first architecture:
-- True local-first: All chats stored in IndexedDB, zero server storage
-- Multi-provider switching: Compare responses across OpenAI, Anthropic, Google, etc.
-- Per-user isolation: Safe for shared machines with complete data separation
-- Your API keys never leave your browser—even I can't see them as the developer
+I've added some research features that I actually use daily: Deep Research does multi-step research with source verification, Pro Search integrates real-time web search, and AI Memory creates a personal knowledge base from your conversations. There's also document processing for PDFs, a "thinking mode" to see complete AI reasoning, and structured extraction to turn documents into JSON.
 
-Technical highlights:
-- Fully open source: Self-host with your own API keys (BYOK)
-- Turborepo monorepo with 87% faster builds via Turbopack
-- Next.js 14 App Router + TypeScript + Tailwind
-- Comprehensive testing with zero TypeScript errors
-- Production-ready on Fly.io with 2-region deployment
+Built with Vercel's AI.SDK, Next.js 14, TypeScript, and Turborepo in a monorepo setup. Everything is fully open source for self-hosting with your own API keys. The hosted version keeps most features free, with optional VT+ for premium models and advanced research capabilities.
 
-The platform is completely open source for self-hosting. For the hosted version, most features are free with optional VT+ for premium models and advanced research features.
-
-Happy to discuss the research workflow architecture, local-first design, or any other technical details!
+Happy to discuss the local-first design decisions or research workflow architecture.
 --
 
 
@@ -51,9 +61,13 @@ Happy to discuss the research workflow architecture, local-first design, or any 
 
 https://github.com/e2b-dev/fragments
 
-    --
+--
 
-# https://ai-sdk.dev/docs/advanced/rendering-ui-with-language-models
+https://ai-sdk.dev/docs/advanced/rendering-ui-with-language-models
+
+https://ai-sdk.dev/cookbook/rsc/stream-updates-to-visual-interfaces
+
+--
 
 ## https://ai-sdk.dev/docs/advanced/multiple-streamables
 

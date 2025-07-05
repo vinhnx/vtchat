@@ -121,6 +121,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         charts,
         showSuggestions,
         thinkingMode,
+        userTier = 'FREE',
     }: {
         mode: ChatMode;
         question: string;
@@ -141,6 +142,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
             budget: number;
             includeThoughts: boolean;
         };
+        userTier?: 'FREE' | 'PLUS';
     }) => {
         // Reset state
         setError(null);
@@ -185,6 +187,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                     charts,
                     showSuggestions,
                     thinkingMode,
+                    userTier,
                 },
             });
 

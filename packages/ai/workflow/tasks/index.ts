@@ -5,6 +5,7 @@ export * from './gemini-web-search';
 export * from './planner';
 export * from './refine-query';
 export * from './reflector';
+export * from './semantic-tool-router';
 export * from './structured-extraction';
 export * from './suggestion';
 export * from './writer';

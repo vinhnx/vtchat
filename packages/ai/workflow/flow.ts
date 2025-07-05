@@ -16,6 +16,7 @@ import {
     plannerTask,
     refineQueryTask,
     reflectorTask,
+    semanticToolRouterTask,
     suggestionsTask,
     writerTask,
 } from './tasks';
@@ -109,6 +110,20 @@ export type WorkflowContextSchema = {
         budget: number;
         includeThoughts: boolean;
     };
+    // Semantic tool router fields
+    userTier?: 'FREE' | 'PLUS';
+    semanticRouter?: {
+        selectedTools: string[];
+        scores: Array<{
+            id: string;
+            name: string;
+            score: number;
+            tier: 'FREE' | 'PLUS';
+        }>;
+        reasoning: string;
+        usedQuickMatch: boolean;
+        timestamp: number;
+    };
 };
 
 export const runWorkflow = ({
@@ -128,6 +143,7 @@ export const runWorkflow = ({
     gl,
     apiKeys,
     thinkingMode,
+    userTier = 'FREE',
 }: {
     mode: ChatMode;
     question: string;
@@ -149,6 +165,7 @@ export const runWorkflow = ({
         budget: number;
         includeThoughts: boolean;
     };
+    userTier?: 'FREE' | 'PLUS';
 }) => {
     log.info('🔥 runWorkflow called with params:', {
         webSearch,
@@ -192,7 +209,7 @@ export const runWorkflow = ({
         mode,
         webSearch,
         mathCalculator,
-        charts,
+        charts, // Charts now available to all users
         search_queries: [],
         messages: messages as any,
         goals: [],
@@ -209,6 +226,7 @@ export const runWorkflow = ({
         onFinish: onFinish as any,
         apiKeys,
         thinkingMode,
+        userTier,
     });
 
     // Use the typed builder
@@ -221,6 +239,7 @@ export const runWorkflow = ({
     });
 
     builder.addTasks([
+        semanticToolRouterTask,
         plannerTask,
         geminiWebSearchTask,
         reflectorTask,
