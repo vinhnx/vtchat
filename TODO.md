@@ -28,23 +28,19 @@ ask oracle for review feedback then implement
 use context7 or neon mcp tool to get the latest documentation and guides.
 
 --
+
 Thinking Mode should be enable by default for VT+ tier users.
 
 --
 
 setup your API keys modal in RAG page is not fit on mobile screen, need to fix it
 --
-make sure this fit the smart semantic routing logic. but also make sure when user explicit activate any tools button in chat input. it should work as expected -> ask oracle
---
-
-IMPORTANT remove required VT+ tier for advanced models (claude 4, GPT-4.1, O3, gemini 2.5 pro, etc.) check model slugs and plan slugs to all model barriers are removed. Only VT+ Deep Research, Pro Search, RAG (Personal AI Assistant). update gated features logic and documentations and tiers UI accordingly.
-
-ask oracle for for plan first and then start implementing on that plan. iterate until oracle approves the changes.
 
 --
 1. setup your API keys modal in RAG page is not fit on mobile screen,
 2. fix usage settings tab not showing on mobile screen, need to fix it
 --
+
 rethink Plus tier offering -> maybe remove BYOK.
 
 --
