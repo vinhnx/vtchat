@@ -13,8 +13,7 @@ export const auth = betterAuth({
         process.env.NODE_ENV === 'production'
             ? 'https://vtchat.io.vn'
             : process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
-              process.env.NEXT_PUBLIC_BASE_URL ||
-              'http://localhost:3000',
+              process.env.NEXT_PUBLIC_BASE_URL,
     basePath: '/api/auth',
     database: drizzleAdapter(db, {
         provider: 'pg',
@@ -50,7 +49,7 @@ export const auth = betterAuth({
             redirectURI:
                 process.env.NODE_ENV === 'production'
                     ? 'https://vtchat.io.vn/api/auth/callback/github'
-                    : 'http://localhost:3000/api/auth/callback/github',
+                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/github`,
             scope: ['read:user', 'user:email'],
             mapProfileToUser: (profile) => {
                 return {
@@ -64,7 +63,7 @@ export const auth = betterAuth({
             redirectURI:
                 process.env.NODE_ENV === 'production'
                     ? 'https://vtchat.io.vn/api/auth/callback/google'
-                    : 'http://localhost:3000/api/auth/callback/google',
+                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
             scope: ['openid', 'email', 'profile'],
             mapProfileToUser: (profile) => {
                 return {
@@ -78,7 +77,7 @@ export const auth = betterAuth({
             redirectURI:
                 process.env.NODE_ENV === 'production'
                     ? 'https://vtchat.io.vn/api/auth/callback/twitter'
-                    : 'http://localhost:3000/api/auth/callback/twitter',
+                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
         },
     },
     session: {
@@ -96,7 +95,6 @@ export const auth = betterAuth({
     },
     trustedOrigins: [
         process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
-        'http://localhost:3000',
         'http://127.0.0.1:3000',
     ],
     fetchOptions: {

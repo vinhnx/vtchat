@@ -4,18 +4,18 @@ import middleware from '../../middleware';
 
 describe('Chat Route Redirect', () => {
     it('should redirect /chat to /', async () => {
-        const request = new NextRequest('http://localhost:3000/chat', {
+        const request = new NextRequest('process.env.NEXT_PUBLIC_BASE_URL/chat', {
             method: 'GET',
         });
 
         const response = await middleware(request);
 
         expect(response.status).toBe(307); // Temporary redirect
-        expect(response.headers.get('location')).toBe('http://localhost:3000/');
+        expect(response.headers.get('location')).toBe('process.env.NEXT_PUBLIC_BASE_URL/');
     });
 
     it('should NOT redirect /chat/{threadId}', async () => {
-        const request = new NextRequest('http://localhost:3000/chat/abc123', {
+        const request = new NextRequest('process.env.NEXT_PUBLIC_BASE_URL/chat/abc123', {
             method: 'GET',
         });
 
@@ -26,7 +26,7 @@ describe('Chat Route Redirect', () => {
     });
 
     it('should NOT redirect /chat/ (with trailing slash)', async () => {
-        const request = new NextRequest('http://localhost:3000/chat/', {
+        const request = new NextRequest('process.env.NEXT_PUBLIC_BASE_URL/chat/', {
             method: 'GET',
         });
 
@@ -48,7 +48,7 @@ describe('Chat Route Redirect', () => {
         ];
 
         for (const path of testCases) {
-            const request = new NextRequest(`http://localhost:3000${path}`, {
+            const request = new NextRequest(`process.env.NEXT_PUBLIC_BASE_URL${path}`, {
                 method: 'GET',
             });
 
