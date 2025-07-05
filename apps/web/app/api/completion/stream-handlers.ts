@@ -128,6 +128,7 @@ export async function executeStream({
             onFinish,
             apiKeys: data.apiKeys,
             thinkingMode: getThinkingModeForChatMode(data.mode, data.thinkingMode),
+            userTier: data.userTier ?? 'FREE',
         });
 
         workflow.onAll((event, payload) => {
@@ -148,7 +149,7 @@ export async function executeStream({
             log.debug('Starting workflow', { threadId: data.threadId });
         }
 
-        await workflow.start('router', {
+        await workflow.start('semantic-tool-router', {
             question: data.prompt,
         });
 

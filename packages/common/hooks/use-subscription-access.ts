@@ -87,6 +87,7 @@ export function useSubscriptionAccess() {
                     FeatureSlug.RAG,
                     FeatureSlug.GROUNDING_WEB_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
+                    FeatureSlug.CHART_VISUALIZATION,
                 ];
                 if (vtPlusExclusiveFeatures.includes(feature)) {
                     return convertedStatus.isVtPlus;
@@ -101,7 +102,6 @@ export function useSubscriptionAccess() {
                     FeatureSlug.DOCUMENT_PARSING,
                     FeatureSlug.REASONING_CHAIN,
                     FeatureSlug.GEMINI_EXPLICIT_CACHING,
-                    FeatureSlug.CHART_VISUALIZATION,
                 ];
                 if (freeFeatures.includes(feature)) {
                     return isSignedIn; // Available to all logged-in users

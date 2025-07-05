@@ -157,6 +157,15 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        // Validate userTier against actual subscription status and check chart access
+        let actualUserTier: 'FREE' | 'PLUS' = 'FREE';
+        const accessResult = await checkVTPlusAccess({ userId, ip });
+        if (accessResult.hasAccess) {
+            actualUserTier = 'PLUS';
+        }
+
+        // Charts are now available to all users - no restriction needed
+
         // Check VT+ access for gated features
         const modeConfig = ChatModeConfig[data.mode];
         if (modeConfig?.requiredFeature || modeConfig?.requiredPlan) {
@@ -166,7 +175,6 @@ export async function POST(request: NextRequest) {
             const isByokEligibleMode = data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
 
             if (!(isByokEligibleMode && hasByokGeminiKey)) {
-                const accessResult = await checkVTPlusAccess({ userId, ip });
                 if (!accessResult.hasAccess) {
                     return new Response(
                         JSON.stringify({
@@ -217,8 +225,14 @@ export async function POST(request: NextRequest) {
 
         const gl = geolocation(request);
 
+        // Override userTier with server-validated value to prevent spoofing
+        const safeData = {
+            ...data,
+            userTier: actualUserTier,
+        };
+
         const stream = createCompletionStream({
-            data,
+            data: safeData,
             userId,
             _ip: ip,
             abortController,

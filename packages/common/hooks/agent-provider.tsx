@@ -10,6 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
+import { useVtPlusAccess } from './use-subscription-access';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -22,6 +23,7 @@ const EVENT_TYPES = [
     'toolCalls',
     'toolResults',
     'object',
+    'toolRouter',
 ] as const;
 
 export type AgentContextType = {
@@ -64,6 +66,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
     const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
+    const hasVtPlusAccess = useVtPlusAccess();
+    
+    // Store setters for syncing tool states
+    const setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
+    const setUseWebSearch = useChatStore((state) => state.setUseWebSearch);
+    const setUseCharts = useChatStore((state) => state.setUseCharts);
 
     // In-memory store for thread items
     const threadItemMap = useMemo(() => new Map<string, ThreadItem>(), []);
@@ -100,6 +108,23 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
+            
+            // Handle semantic tool router events - sync UI state with activated tools
+            if (eventType === 'toolRouter' && eventData?.selected) {
+                const selectedTools = eventData.selected;
+                log.info({ selectedTools, reasoning: eventData.reasoning }, '🧠 Semantic router activated tools');
+                
+                // Sync UI toggles with semantic router decisions
+                if (selectedTools.includes('calculator')) {
+                    setUseMathCalculator(true);
+                }
+                if (selectedTools.includes('web-search')) {
+                    setUseWebSearch(true);
+                }
+                if (selectedTools.includes('charts')) {
+                    setUseCharts(true);
+                }
+            }
 
             const updatedItem: ThreadItem = {
                 ...prevItem,
@@ -126,7 +151,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             threadItemMap.set(threadItemId, updatedItem);
             updateThreadItem(threadId, { ...updatedItem, persistToDB: true });
         },
-        [threadItemMap, updateThreadItem]
+        [threadItemMap, updateThreadItem, setUseMathCalculator, setUseWebSearch, setUseCharts]
     );
 
     const { startWorkflow, abortWorkflow } = useWorkflowWorker(
@@ -470,10 +495,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     customInstructions,
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
-                    charts: useCharts,
+                    charts: hasVtPlusAccess && useCharts, // Safety guard: only allow charts for VT+ users
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
                     thinkingMode,
+                    userTier: hasVtPlusAccess ? 'PLUS' : 'FREE',
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
@@ -495,9 +521,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     parentThreadItemId: '',
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
-                    charts: useCharts,
+                    charts: hasVtPlusAccess && useCharts, // Safety guard: only allow charts for VT+ users
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
+                    userTier: hasVtPlusAccess ? 'PLUS' : 'FREE',
                 });
             }
         },
@@ -520,6 +547,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             runAgent,
             setAbortController,
             thinkingMode,
+            hasVtPlusAccess,
         ]
     );
 

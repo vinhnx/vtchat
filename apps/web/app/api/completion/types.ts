@@ -14,6 +14,7 @@ export const completionRequestSchema = z.object({
     charts: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
+    userTier: z.enum(['FREE', 'PLUS']).optional(),
     thinkingMode: z
         .object({
             enabled: z.boolean(),

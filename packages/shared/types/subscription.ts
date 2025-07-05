@@ -89,7 +89,6 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.DOCUMENT_PARSING,
             FeatureSlug.REASONING_CHAIN,
             FeatureSlug.GEMINI_EXPLICIT_CACHING,
-            FeatureSlug.CHART_VISUALIZATION,
             FeatureSlug.MULTI_MODAL_CHAT,
         ],
         isDefault: true,

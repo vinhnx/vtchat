@@ -84,6 +84,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 charts,
                 showSuggestions,
                 thinkingMode,
+                userTier = 'FREE',
             } = payload;
 
             // Set API keys if provided
@@ -118,6 +119,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 charts,
                 showSuggestions,
                 thinkingMode: getThinkingModeForChatMode(mode, thinkingMode),
+                userTier,
                 onFinish: (_data: any) => {},
             });
 
