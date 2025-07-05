@@ -70,7 +70,11 @@ export function ReactScan() {
 
                 onPaintStart: (outlines) => {
                     // Track when render highlighting starts
-                    if (REACT_SCAN_CONFIG.log && outlines.length > 5 && process.env.NODE_ENV === 'development') {
+                    if (
+                        REACT_SCAN_CONFIG.log &&
+                        outlines.length > 5 &&
+                        process.env.NODE_ENV === 'development'
+                    ) {
                         console.debug(
                             '[React Scan] Heavy render cycle detected:',
                             outlines.length,

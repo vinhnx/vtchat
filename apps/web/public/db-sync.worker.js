@@ -23,7 +23,7 @@ const workerLog = {
         console.error(`[SharedWorker] ${message}`, data || '');
     },
     warn: (message, data) => {
-        // Always log warnings even in production  
+        // Always log warnings even in production
         console.warn(`[SharedWorker] ${message}`, data || '');
     },
     debug: (message, data) => {
