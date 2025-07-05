@@ -26,7 +26,8 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub)
-- **Free Model Usage:** Daily request counts and rate limiting data for 9 free AI models (5 Gemini + 4 OpenRouter models), with different limits for regular users (20/day, 5/minute) vs VT+ users (100/day, 10/minute)
+- **Free Model Usage:** Daily request counts and rate limiting data for 9 free AI models (5 Gemini + 4 OpenRouter models)
+- **Premium Model Access:** Access to all premium AI models (Claude 4, GPT-4.1, O3, etc.) with BYOK for all logged-in users
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
 - **User Preferences:** Settings and configuration choices
@@ -59,9 +60,9 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models with tiered limits (regular users: 20/day, 5/minute; VT+ users: 100/day, 10/minute)
+- **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
-- **Feature Access:** Determine access to VT+ exclusive features (Pro Search, Deep Research, AI Memory) and premium AI models, while providing enhanced free Gemini limits and advanced features for VT+ users
+- **Feature Access:** Determine access to VT+ exclusive research features (PRO_SEARCH, DEEP_RESEARCH, RAG) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 

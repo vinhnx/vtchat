@@ -79,8 +79,7 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isNew: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.GPT_4_1_Mini]: {
         webSearch: true,
@@ -104,8 +103,7 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isNew: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.O3_Mini]: {
         webSearch: true,
@@ -113,8 +111,7 @@ export const ChatModeConfig: Record<
         multiModal: false,
         retry: true,
         isNew: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.O4_Mini]: {
         webSearch: true,
@@ -122,8 +119,7 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isNew: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.GPT_4o_Mini]: {
         webSearch: true,
@@ -144,24 +140,21 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         multiModal: true,
         retry: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.CLAUDE_4_OPUS]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
         retry: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.GEMINI_2_5_PRO]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
         retry: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.GEMINI_2_5_FLASH]: {
         webSearch: true,
@@ -199,7 +192,6 @@ export const ChatModeConfig: Record<
         multiModal: false,
         retry: true,
         isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GROK_3]: {
         webSearch: true,
@@ -208,7 +200,6 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-        requiredPlan: PlanSlug.VT_PLUS,
     },
     [ChatMode.GROK_3_MINI]: {
         webSearch: true,
@@ -288,16 +279,14 @@ export const ChatModeConfig: Record<
         imageUpload: false,
         multiModal: false,
         retry: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.O1_PREVIEW]: {
         webSearch: false,
         imageUpload: false,
         multiModal: false,
         retry: true,
-        isAuthRequired: true,
-        requiredPlan: PlanSlug.VT_PLUS,
+        isAuthRequired: true
     },
     [ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20]: {
         webSearch: true,

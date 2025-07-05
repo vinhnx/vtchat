@@ -26,18 +26,17 @@ This project aims to refactor and improve an existing web application to enhance
 ## Product Details for VT+
 
 Name: VT+
-Product ID: Use environment variable CREEM_PRODUCT_ID. Do not hardcode prod_1XIVxekQ92QfjjOqbDVQk6.
-Description: "VT+ provides premium AI models, research capabilities, and AI memory"
+Product ID: Use environment variable CREEM_PRODUCT_ID.
+Description: "VT+ provides enhanced research capabilities and AI memory"
 Payment: Subscription type, $5.99 USD monthly, price includes tax.
 Features:
-Premium AI Models: "Exclusive access to Claude 4 Sonnet & Opus, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, and Grok 3"
 PRO_SEARCH: "Enhanced Web Search: Real-time web integration for grounded information retrieval."
 DEEP_RESEARCH: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
 RAG: "Personal AI Assistant with Memory: AI memory system for personalized assistance."
 
 ## New Tier System (Updated July 2025)
 
-### Free Tier (Most generous free tier in the industry)
+### Free Tier
 
 Available to all logged-in users:
 
@@ -48,7 +47,8 @@ Available to all logged-in users:
 - Chart Visualization
 - Gemini Explicit Caching
 - Mathematical calculation tools
-- 9 free AI models (5 Gemini + 4 OpenRouter)
+- All AI models including ALL premium models: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 (free with BYOK)
+- 9 free models with server API (5 Gemini + 4 OpenRouter)
 - Unlimited usage with BYOK
 
 ### VT+ Tier ($5.99/month)
@@ -58,4 +58,3 @@ All free tier features PLUS 3 exclusive research-focused features:
 - PRO_SEARCH (Enhanced Web Search)
 - DEEP_RESEARCH (Deep Research capabilities)
 - RAG (Personal AI Assistant with Memory)
-- Premium AI models: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3

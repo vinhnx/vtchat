@@ -4,29 +4,72 @@
 ok go-> https://vtchat.io.vn/
 
 --
+22:44:11.512 Cannot update a component (`ChatInput`) while rendering a different component (`Thread`). To locate the bad setState() call inside `Thread`, follow the stack trace as described in https://react.dev/link/setstate-in-render Stack:
+    scheduleUpdateOnFiber react-dom-client.development.js:14486
+    forceStoreRerender react-dom-client.development.js:7264
+    [project]/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js [app-client] (ecmascript)/subscribeToStore/< react-dom-client.development.js:7249
+    [project]/packages/common/node_modules/zustand/esm/vanilla.mjs [app-client] (ecmascript)/createStoreImpl/setState/< vanilla.mjs:9
+    setState vanilla.mjs:9
+    [project]/packages/common/node_modules/zustand/esm/middleware/immer.mjs [app-client] (ecmascript)/immerImpl/</store.setState immer.mjs:6
+    getPreviousThreadItems chat.store.ts:1651
+    previousThreadItems thread-combo.tsx:11
+    [project]/packages/common/node_modules/zustand/esm/react/shallow.mjs [app-client] (ecmascript)/useShallow/< shallow.mjs:44
+    memoizedSelector with-selector.development.js:47
+    [project]/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js [app-client] (ecmascript)/exports.useSyncExternalStoreWithSelector/instRef</< with-selector.development.js:71
+    mountSyncExternalStore react-dom-client.development.js:7129
+    useSyncExternalStore react-dom-client.development.js:23316
+    [project]/node_modules/next/dist/compiled/react/cjs/react.development.js [app-client] (ecmascript)/exports.useSyncExternalStore React
+    [project]/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js [app-client] (ecmascript)/exports.useSyncExternalStoreWithSelector with-selector.development.js:82
+    useStore index.mjs:18
+    useBoundStore index.mjs:34
+    Thread thread-combo.tsx:11
+    HomePage page.tsx:32
+    ClientPageRoot client-page.tsx:60
+intercept-console-error.ts:40:26
 
+-
+
+tap on "No API key configured" field on each BYOK field should allow to edit the field.
+--
+
+https://startupfa.me/dashboard/vt-chat/promote
+
+help me Add a badge on your home page and get featured on Startup Fame for free.
+
+More visibility for your startup
+10+ « Do-follow » links to your website
+« Featured » badge
+Dedicated page for your startup
+Unlimited startup edits
+
+in homepage footer make sure this requirement is met
+"To complete verification, please add a badge to your website, https://vtchat.io.vn, with a standard link (without the ‘nofollow’ attribute)."
+
+--
+
+for RAG -> keep the local db -> don't sync to remove DB to fully support local-first architecture.
+ask oracle for review feedback then implement
+use context7 or neon mcp tool to get the latest documentation and guides.
+
+--
 Thinking Mode should be enable by default for VT+ tier users.
 
 --
 
 setup your API keys modal in RAG page is not fit on mobile screen, need to fix it
-
+--
+make sure this fit the smart semantic routing logic. but also make sure when user explicit activate any tools button in chat input. it should work as expected -> ask oracle
 --
 
-fix usage settings tab not showing on mobile screen, need to fix it
+IMPORTANT remove required VT+ tier for advanced models (claude 4, GPT-4.1, O3, gemini 2.5 pro, etc.) check model slugs and plan slugs to all model barriers are removed. Only VT+ Deep Research, Pro Search, RAG (Personal AI Assistant). update gated features logic and documentations and tiers UI accordingly.
 
+ask oracle for for plan first and then start implementing on that plan. iterate until oracle approves the changes.
+
+--
+1. setup your API keys modal in RAG page is not fit on mobile screen,
+2. fix usage settings tab not showing on mobile screen, need to fix it
 --
 rethink Plus tier offering -> maybe remove BYOK.
-
---
-update Connected Accounts
-with X/Twitter oauth
-
-check better-auth document and implement it like Google and Github
-
-use context7, neon mcp if needed
-
--> check twitter_link_account git stash
 
 --
 

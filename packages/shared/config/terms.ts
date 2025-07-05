@@ -83,20 +83,17 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 
 ### 4.1 Free Tier Benefits (VT_BASE)
 VT_BASE is our free tier for logged-in users that includes:
-- **Free Gemini Model**: Access to Gemini 2.5 Flash Lite Preview with 20 requests per day and 5 requests per minute rate limit
-- **Server API Key**: Uses VT's server-side API key for free model access (no BYOK required)
+- **All Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys (BYOK)
+- **9 Free Server Models**: Gemini and OpenRouter models with VT's server API keys (no BYOK required)
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
-- **Advanced Features**: Intelligent Tool Router, Chart Visualization, Web Search, Dark Mode, Thinking Mode Toggle, Structured Output, Document Processing, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
-- **BYOK Option**: Unlimited usage with your own API keys as alternative
+- **Advanced Features**: Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, Web Search, Intelligent Tool Router, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
+- **Unlimited BYOK Usage**: No limits when using your own API keys
 
 ### 4.2 VT+ Subscription Features
-VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** with free trial included that includes:
-- **All Free Tier Features**: Complete access to all features available to free tier users
-- **Enhanced Gemini Limits**: 100 requests per day and 10 requests per minute for free Gemini 2.5 Flash Lite (vs 20/day, 5/minute for regular users)
-- **Premium AI Models**: Exclusive access to Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
-- **Three Exclusive Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
-- **Unlimited Access**: No daily limits or rate limiting on premium models
+VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
+- **All Free Tier Features**: Complete access to all premium AI models and advanced features
+- **Three Exclusive Research Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

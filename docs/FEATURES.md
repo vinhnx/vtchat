@@ -120,7 +120,7 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 
 ### Sophisticated Subscription Tiers
 
-- **Free Tier**: Most generous free tier in the industry - 9 AI models, Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, unlimited BYOK usage
+- **Free Tier**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
 - **VT+ ($5.99/month)**: All free features + 3 research-focused exclusives: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), Personal AI Assistant with Memory (RAG)
 
 ### Advanced Payment Integration

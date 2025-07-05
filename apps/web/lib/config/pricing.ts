@@ -1,12 +1,11 @@
 import { CURRENCIES, VT_PLUS_PRICE } from '@repo/shared/constants';
-import { limitText } from '@repo/shared/constants/rate-limits';
 
 // Pricing and product configuration
 export const PRICING_CONFIG = {
     // Product information
     product: {
         name: 'VT+',
-        description: 'Pro research and AI memory - exclusively for deep work',
+        description: 'Research-focused exclusives: Pro Search, Deep Research, and AI Memory',
         id: process.env.CREEM_PRODUCT_ID || '',
     },
 
@@ -33,8 +32,13 @@ export const PRICING_CONFIG = {
                         'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included',
                 },
                 {
-                    name: 'Free Gemini 2.5 Flash Lite Preview',
-                    description: `${limitText.free()} with VT's server API key - no setup required`,
+                    name: 'All Premium AI Models (Free with BYOK)',
+                    description:
+                        'Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users',
+                },
+                {
+                    name: '9 Free Server Models',
+                    description: 'Gemini and OpenRouter models with VT\'s server API keys - no setup required',
                 },
                 {
                     name: 'Unlimited BYOK Access',
@@ -49,13 +53,8 @@ export const PRICING_CONFIG = {
             interval: 'month',
             features: [
                 {
-                    name: 'Everything in Free Plan + Enhanced Gemini Limits',
-                    description: `All advanced AI features including intelligent tool routing, chart visualization, web search, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
-                },
-                {
-                    name: 'Premium AI Models (Exclusive)',
-                    description:
-                        'Access to the most powerful AI models: Claude 4 Sonnet & Opus, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, and Grok 3',
+                    name: 'Everything in Free Plan (All Premium AI Models Included)',
+                    description: 'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',
                 },
                 {
                     name: 'Pro Search (Exclusive)',

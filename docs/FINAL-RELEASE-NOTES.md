@@ -1,6 +1,6 @@
 # 🚀 VT (VTChat) - Production Release v1.0
 
-**Release Date:** June 30, 2025  
+**Release Date:** June 30, 2025
 **Status:** ✅ Production Ready & Live at [vtchat.io.vn](https://vtchat.io.vn)
 
 ## 🎯 Executive Summary
@@ -74,7 +74,7 @@ VT (VTChat) has successfully reached production readiness with all core features
 
 ## 📊 **Feature Comparison**
 
-### **Free Tier (Most Generous in Industry)**
+### **Free Tier**
 
 - 9 AI models (Gemini + OpenRouter)
 - **Dark Mode** interface
