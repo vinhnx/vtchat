@@ -5,6 +5,7 @@
         "no-constant-condition": "error",
         "no-extra-boolean-cast": "error",
         "no-unsafe-optional-chaining": "error",
+        "no-console": "warn",
         "unicorn/no-empty-file": "warn",
         "unicorn/no-invalid-remove-event-listener": "error",
         "unicorn/no-useless-fallback-in-spread": "warn"

@@ -47,12 +47,6 @@ Happy to discuss the research workflow architecture, local-first design, or any 
 
 --
 
-https://ai-sdk.dev/providers/ai-sdk-providers/groq
-
-## https://console.groq.com/docs/ai-sdk -> offer free
-
-tailwind v4
-
 --
 
 https://github.com/e2b-dev/fragments
@@ -64,8 +58,6 @@ https://github.com/e2b-dev/fragments
 ## https://ai-sdk.dev/docs/advanced/multiple-streamables
 
 ## https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
-
-## https://ai-sdk.dev/docs/ai-sdk-core/prompt-engineering
 
 https://ai-sdk.dev/docs/ai-sdk-core/testing
 
@@ -90,7 +82,6 @@ Future plan
 - verify email
 - otp email
 - magic link
-- https://supermemory.ai/docs/memory-api/overview
 - mcp
 - localization
 
