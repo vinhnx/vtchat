@@ -67,7 +67,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
     const hasVtPlusAccess = useVtPlusAccess();
-    
+
     // Store setters for syncing tool states
     const setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
     const setUseWebSearch = useChatStore((state) => state.setUseWebSearch);
@@ -108,12 +108,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
-            
+
             // Handle semantic tool router events - sync UI state with activated tools
             if (eventType === 'toolRouter' && eventData?.selected) {
                 const selectedTools = eventData.selected;
-                log.info({ selectedTools, reasoning: eventData.reasoning }, '🧠 Semantic router activated tools');
-                
+                log.info(
+                    { selectedTools, reasoning: eventData.reasoning },
+                    '🧠 Semantic router activated tools'
+                );
+
                 // Sync UI toggles with semantic router decisions
                 if (selectedTools.includes('calculator')) {
                     setUseMathCalculator(true);
@@ -495,7 +498,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     customInstructions,
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
-                    charts: hasVtPlusAccess && useCharts, // Safety guard: only allow charts for VT+ users
+                    charts: useCharts, // Charts now available to all users
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
                     thinkingMode,
@@ -521,7 +524,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     parentThreadItemId: '',
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
-                    charts: hasVtPlusAccess && useCharts, // Safety guard: only allow charts for VT+ users
+                    charts: useCharts, // Charts now available to all users
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
                     userTier: hasVtPlusAccess ? 'PLUS' : 'FREE',
