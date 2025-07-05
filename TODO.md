@@ -4,6 +4,13 @@
 ok go-> https://vtchat.io.vn/
 
 --
+user feedbacks:
+kindly check, not giving reasonable answers
+
+a) try to use api of chat models
+
+b) dall-e and spon-video model of gpt
+--
 https://dotenvx.com/docs/platforms/fly
 --
 https://contentsignals.org/

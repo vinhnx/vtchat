@@ -18,7 +18,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Search the internet for current information, news, real-time data, and web pages to cite as sources',
         tier: 'FREE',
-        activate: context => context.set('webSearch', true),
+        activate: (context) => context.set('webSearch', true),
         keywords: [
             'search',
             'web',
@@ -54,7 +54,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Perform mathematical calculations, solve equations, arithmetic operations, trigonometry, and financial calculations',
         tier: 'FREE',
-        activate: context => context.set('mathCalculator', true),
+        activate: (context) => context.set('mathCalculator', true),
         keywords: [
             'calculate',
             'math',
@@ -95,7 +95,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Generate bar charts, line graphs, pie charts, scatter plots and other data visualizations',
         tier: 'FREE',
-        activate: context => context.set('charts', true),
+        activate: (context) => context.set('charts', true),
         keywords: [
             'chart',
             'graph',
@@ -129,7 +129,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Parse and analyze PDF, DOC, DOCX, TXT, MD files to extract text content for Q&A and summarization',
         tier: 'FREE', // Available to all logged-in users
-        activate: context => context.set('documentProcessing', true),
+        activate: (context) => context.set('documentProcessing', true),
         keywords: [
             'upload',
             'document',
@@ -164,7 +164,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Extract structured JSON data, tables, and key-value pairs from documents using advanced parsing',
         tier: 'FREE', // Available to all logged-in users, but requires Gemini models
-        activate: context => context.set('structuredOutput', true),
+        activate: (context) => context.set('structuredOutput', true),
         keywords: [
             'extract',
             'structured',
@@ -198,7 +198,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         description:
             'Analyze images, photos, diagrams, charts, and visual content to extract insights and descriptions',
         tier: 'FREE', // Available to all logged-in users with multimodal models
-        activate: context => context.set('visionAnalysis', true),
+        activate: (context) => context.set('visionAnalysis', true),
         keywords: [
             'image',
             'photo',
@@ -232,7 +232,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
  * Get tool by ID
  */
 export function getToolById(id: string): ToolMeta | undefined {
-    return TOOL_REGISTRY.find(tool => tool.id === id);
+    return TOOL_REGISTRY.find((tool) => tool.id === id);
 }
 
 /**
@@ -242,7 +242,7 @@ export function getAvailableTools(userTier: ToolTier = 'FREE'): ToolMeta[] {
     if (userTier === 'PLUS') {
         return TOOL_REGISTRY;
     }
-    return TOOL_REGISTRY.filter(tool => tool.tier === 'FREE');
+    return TOOL_REGISTRY.filter((tool) => tool.tier === 'FREE');
 }
 
 /**
@@ -263,7 +263,7 @@ export function hasToolAccess(toolId: string, userTier: ToolTier = 'FREE'): bool
  * Get all tool descriptions for embedding generation
  */
 export function getAllToolDescriptions(): { id: string; text: string }[] {
-    return TOOL_REGISTRY.map(tool => ({
+    return TOOL_REGISTRY.map((tool) => ({
         id: tool.id,
         text: [tool.description, ...tool.keywords, ...tool.examples].join(' '),
     }));
