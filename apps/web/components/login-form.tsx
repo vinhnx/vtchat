@@ -125,6 +125,9 @@ function LoginFormContent({
                 </PremiumButton>
                 <PremiumButton
                     className="w-full"
+                    data-vmtrc="AuthMethodSelected"
+                    data-vmtrc-context="login_form"
+                    data-vmtrc-provider="twitter"
                     loading={loading}
                     onClick={() => handleSocialSignIn('twitter')}
                     variant="outline"
@@ -137,7 +140,7 @@ function LoginFormContent({
                     >
                         <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
                     </svg>
-                    Continue with Twitter
+                    Continue with X (Twitter)
                 </PremiumButton>
             </div>
             <div className="text-muted-foreground text-center text-xs">
