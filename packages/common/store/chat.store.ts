@@ -399,7 +399,9 @@ const initializeWorker = () => {
 
     try {
         // Create a shared worker using the public JS file
-        dbWorker = new SharedWorker('/db-sync.worker.js', {
+        // Add production flag to suppress debug logs in production
+        const workerUrl = `/db-sync.worker.js${process.env.NODE_ENV === 'production' ? '?prod=true' : ''}`;
+        dbWorker = new SharedWorker(workerUrl, {
             type: 'module',
         });
 

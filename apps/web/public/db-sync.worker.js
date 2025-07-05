@@ -9,11 +9,27 @@ let isInitialized = false;
 let dbInstance = null;
 
 // Simple logger for SharedWorker context (can't use pino directly in web workers)
+// Only logs in development mode
+// Check for production flag via URL query param since process.env is not available in browser workers
+const IS_PRODUCTION = self.location.search.includes('prod=true');
+
 const workerLog = {
-    info: (message, data) => console.log(`[SharedWorker] ${message}`, data || ''),
-    error: (message, data) => console.error(`[SharedWorker] ${message}`, data || ''),
-    warn: (message, data) => console.warn(`[SharedWorker] ${message}`, data || ''),
-    debug: (message, data) => console.debug(`[SharedWorker] ${message}`, data || ''),
+    info: (message, data) => {
+        if (IS_PRODUCTION) return;
+        console.log(`[SharedWorker] ${message}`, data || '');
+    },
+    error: (message, data) => {
+        // Always log errors even in production
+        console.error(`[SharedWorker] ${message}`, data || '');
+    },
+    warn: (message, data) => {
+        // Always log warnings even in production  
+        console.warn(`[SharedWorker] ${message}`, data || '');
+    },
+    debug: (message, data) => {
+        if (IS_PRODUCTION) return;
+        console.debug(`[SharedWorker] ${message}`, data || '');
+    },
 };
 
 // Initialize IndexedDB in the worker context
