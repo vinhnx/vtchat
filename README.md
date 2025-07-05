@@ -9,7 +9,7 @@
 
 **A modern, privacy-first AI chat application with enterprise-grade security**
 
-[Live Demo](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/SECURITY.md)
+[Live](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/SECURITY.md)
 
 </div>
 
