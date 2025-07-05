@@ -9,7 +9,8 @@ import { db } from './database';
 import * as schema from './database/schema';
 
 // Validate required OAuth environment variables (skip during build)
-const isBuilding = process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build';
+const isBuilding =
+    process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build';
 
 if (!isBuilding) {
     if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
