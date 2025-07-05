@@ -142,7 +142,7 @@ export class PaymentService {
             process.env.NEXTAUTH_URL ||
             process.env.VERCEL_URL ||
             (typeof window !== 'undefined' ? window.location.origin : null) ||
-            'http://localhost:3000'
+            'https://vtchat.io.vn'
         );
     }
 
@@ -401,7 +401,7 @@ export class PaymentService {
         return PaymentService.createCheckout({
             productId: PlanSlug.VT_PLUS,
             customerEmail,
-            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`,
+            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn'}/success?plan=${PlanSlug.VT_PLUS}`,
         });
     }
 

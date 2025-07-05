@@ -88,7 +88,7 @@ export class CreemService {
             process.env.NEXTAUTH_URL ||
             process.env.VERCEL_URL ||
             (typeof window !== 'undefined' ? window.location.origin : null) ||
-            'http://localhost:3000'
+            'https://vtchat.io.vn'
         );
     }
 
@@ -276,7 +276,7 @@ export class CreemService {
         return CreemService.createCheckout({
             productId: CreemService.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
             customerEmail,
-            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
+            successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn'}/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
         });
     }
 
