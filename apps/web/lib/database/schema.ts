@@ -71,7 +71,9 @@ export const accounts = pgTable('accounts', {
     password: text('password'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+}, (table) => ({
+    providerAccountIdx: index('provider_account_idx').on(table.providerId, table.accountId, table.userId),
+}));
 
 // Verification tokens for email verification, password reset, etc.
 export const verifications = pgTable('verifications', {

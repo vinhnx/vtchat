@@ -1,0 +1,1 @@
+CREATE INDEX "provider_account_idx" ON "accounts" USING btree ("provider_id","account_id","user_id");

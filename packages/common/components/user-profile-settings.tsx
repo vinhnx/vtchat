@@ -222,7 +222,7 @@ export const UserProfileSettings = () => {
             localStorage.setItem('linking_provider', provider);
 
             await linkSocial({
-                provider: provider as 'google' | 'github',
+                provider: provider as 'google' | 'github' | 'twitter',
                 callbackURL: window.location.href, // Stay on the same page
             });
 
@@ -742,6 +742,133 @@ export const UserProfileSettings = () => {
                                             <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
                                         {isLinking === 'github'
+                                            ? 'Connecting...'
+                                            : 'Connect Account'}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Twitter/X Account */}
+                    <div
+                        className={`rounded-lg border p-4 transition-all duration-200 ${
+                            linkedAccounts.some((acc) => acc.providerId === 'twitter')
+                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
+                                : 'border-border/50 bg-muted/20'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div
+                                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+                                        linkedAccounts.some((acc) => acc.providerId === 'twitter')
+                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
+                                            : 'border-border bg-white dark:bg-gray-900'
+                                    }`}
+                                >
+                                    <svg
+                                        className="h-5 w-5 text-black dark:text-white"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                        role="img"
+                                    >
+                                        <title>X (Twitter) Logo</title>
+                                        <path
+                                            fill="currentColor"
+                                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                                        />
+                                    </svg>
+                                    {/* Connected overlay checkmark */}
+                                    {linkedAccounts.some((acc) => acc.providerId === 'twitter') && (
+                                        <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
+                                            <CheckCircle2 className="h-3 w-3 text-white" />
+                                        </div>
+                                    )}
+                                    {/* Loading overlay */}
+                                    {(isLinking === 'twitter' || isUnlinking === 'twitter') && (
+                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
+                                            <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-foreground text-sm font-medium">
+                                            X (Twitter)
+                                        </div>
+                                        {linkedAccounts.some(
+                                            (acc) => acc.providerId === 'twitter'
+                                        ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                                    </div>
+                                    <div className="text-muted-foreground text-xs">
+                                        {justLinked === 'twitter' ? (
+                                            <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
+                                                Connection successful!
+                                            </span>
+                                        ) : justUnlinked === 'twitter' ? (
+                                            <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
+                                                Account disconnected
+                                            </span>
+                                        ) : linkedAccounts.some(
+                                              (acc) => acc.providerId === 'twitter'
+                                          ) ? (
+                                            'Account successfully connected'
+                                        ) : (
+                                            'Connect your X account for easy sign-in'
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {linkedAccounts.some((acc) => acc.providerId === 'twitter') ? (
+                                    <>
+                                        <Badge
+                                            className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
+                                                justLinked === 'twitter'
+                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
+                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                            }`}
+                                            variant="secondary"
+                                        >
+                                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                                            {justLinked === 'twitter'
+                                                ? 'Just Connected!'
+                                                : 'Connected'}
+                                        </Badge>
+                                        <Button
+                                            className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
+                                            disabled={
+                                                isUnlinking === 'twitter' || isLoadingAccounts
+                                            }
+                                            onClick={() => handleUnlinkAccount('twitter')}
+                                            size="sm"
+                                            variant="outline"
+                                        >
+                                            {isUnlinking === 'twitter' ? (
+                                                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                            ) : (
+                                                <Unlink className="mr-1 h-3 w-3" />
+                                            )}
+                                            {isUnlinking === 'twitter'
+                                                ? 'Disconnecting...'
+                                                : 'Disconnect'}
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button
+                                        className="border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-300 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-700 dark:hover:bg-blue-950/30"
+                                        disabled={isLinking === 'twitter' || isLoadingAccounts}
+                                        onClick={() => handleLinkAccount('twitter')}
+                                        size="sm"
+                                        variant="outline"
+                                    >
+                                        {isLinking === 'twitter' ? (
+                                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                        ) : (
+                                            <ExternalLink className="mr-1 h-3 w-3" />
+                                        )}
+                                        {isLinking === 'twitter'
                                             ? 'Connecting...'
                                             : 'Connect Account'}
                                     </Button>

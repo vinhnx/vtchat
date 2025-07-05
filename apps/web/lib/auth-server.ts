@@ -8,6 +8,19 @@ import { botDetection } from './bot-detection-plugin';
 import { db } from './database';
 import * as schema from './database/schema';
 
+// Validate required OAuth environment variables
+if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
+    throw new Error('GitHub OAuth environment variables (GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET) are not set');
+}
+
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    throw new Error('Google OAuth environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) are not set');
+}
+
+if (!process.env.TWITTER_CLIENT_ID || !process.env.TWITTER_CLIENT_SECRET) {
+    throw new Error('Twitter OAuth environment variables (TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET) are not set');
+}
+
 export const auth = betterAuth({
     baseURL:
         process.env.NODE_ENV === 'production'
@@ -38,7 +51,7 @@ export const auth = betterAuth({
         accountLinking: {
             enabled: true,
             trustedProviders: ['google', 'github', 'twitter'],
-            allowDifferentEmails: false, // More secure - require same email
+            allowDifferentEmails: true, // Allow for Twitter which doesn't provide email consistently
         },
     },
     socialProviders: {
@@ -77,6 +90,15 @@ export const auth = betterAuth({
                 process.env.NODE_ENV === 'production'
                     ? 'https://vtchat.io.vn/api/auth/callback/twitter'
                     : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
+            scope: ['tweet.read', 'users.read', 'offline.access'],
+            mapProfileToUser: (profile) => {
+                return {
+                    name: profile.data?.name,
+                    image:
+                        profile.data?.profile_image_url?.replace('_normal', '') ||
+                        profile.data?.profile_image_url,
+                };
+            },
         },
     },
     session: {
