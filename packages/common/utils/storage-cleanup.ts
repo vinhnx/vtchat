@@ -9,7 +9,7 @@ import { log } from '@repo/shared/logger';
 export function cleanupCorruptedStorage(): void {
     if (typeof window === 'undefined') return;
 
-    log.info('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...');
+    // log.info('[StorageCleanup] Starting cleanup of potentially corrupted storage entries...'); // Removed - too verbose for production
 
     // Get all localStorage keys that match our per-account patterns
     const storageKeys = Object.keys(localStorage);
@@ -41,9 +41,10 @@ export function cleanupCorruptedStorage(): void {
 
     if (cleanedCount > 0) {
         log.info({ count: cleanedCount }, '[StorageCleanup] Cleaned up corrupted storage entries');
-    } else {
-        log.info('[StorageCleanup] No corrupted storage entries found');
     }
+    // else {
+    //     log.info('[StorageCleanup] No corrupted storage entries found'); // Removed - too verbose for production
+    // }
 }
 
 /**
@@ -56,7 +57,7 @@ function cleanupDeprecatedRagKeys(): void {
     for (const key of deprecatedKeys) {
         if (localStorage.getItem(key) !== null) {
             localStorage.removeItem(key);
-            log.info({ key }, '[StorageCleanup] Removed deprecated RAG key');
+            // log.info({ key }, '[StorageCleanup] Removed deprecated RAG key'); // Removed - only log if multiple keys found
         }
     }
 }

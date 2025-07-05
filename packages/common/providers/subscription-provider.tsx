@@ -84,13 +84,13 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const fetchSubscriptionStatus = useCallback(
         async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
             const userId = session?.user?.id || null;
-            const userDescription = userId ? `user ${userId}` : 'anonymous user';
+            // const userDescription = userId ? `user ${userId}` : 'anonymous user'; // Removed - no longer used in production logs
 
             // For anonymous users, immediately return basic anonymous tier without API calls
             if (!userId) {
-                log.info(
-                    '[Subscription Provider] Returning basic anonymous tier for anonymous user'
-                );
+                // log.info(
+                //     '[Subscription Provider] Returning basic anonymous tier for anonymous user'
+                // ); // Removed - too verbose for production
                 const anonymousStatus: SubscriptionStatus = {
                     plan: PlanSlug.ANONYMOUS,
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -115,10 +115,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // If there's already a global fetch in progress and not forcing refresh, wait for it
             if (globalFetchPromise && !forceRefresh) {
-                log.info(
-                    { userDescription },
-                    '[Subscription Provider] Using existing global fetch'
-                );
+                // log.info(
+                //     { userDescription },
+                //     '[Subscription Provider] Using existing global fetch'
+                // ); // Removed - too verbose for production
                 const result = await globalFetchPromise;
                 setSubscriptionStatus(result);
                 setIsLoading(false);
@@ -132,10 +132,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 globalIsLoading = true;
                 globalError = null;
 
-                log.info(
-                    { userDescription, trigger },
-                    '[Subscription Provider] Starting global fetch'
-                );
+                // log.info(
+                //     { userDescription, trigger },
+                //     '[Subscription Provider] Starting global fetch'
+                // ); // Removed - too verbose for production
 
                 // Create the global fetch promise with deduplication
                 const requestKey = `subscription-${userId}-${trigger}`;
@@ -203,18 +203,18 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 setSubscriptionStatus(result);
                 setIsLoading(false);
 
-                log.info(
-                    result
-                        ? {
-                              plan: result.plan,
-                              isPlusSubscriber: result.isPlusSubscriber,
-                              fromCache: result.fromCache,
-                              fetchCount: result.fetchCount,
-                              trigger: result.lastRefreshTrigger,
-                          }
-                        : {},
-                    `Global fetch completed for ${userDescription}`
-                );
+                // log.info(
+                //     result
+                //         ? {
+                //               plan: result.plan,
+                //               isPlusSubscriber: result.isPlusSubscriber,
+                //               fromCache: result.fromCache,
+                //               fetchCount: result.fetchCount,
+                //               trigger: result.lastRefreshTrigger,
+                //           }
+                //         : {},
+                //     `Global fetch completed for ${userDescription}`
+                // ); // Removed - too verbose for production
 
                 // Clear the global promise after a short delay to allow other components to use it
                 setTimeout(() => {
@@ -273,7 +273,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     // Trigger subscription status check when session becomes available or changes
     useEffect(() => {
         if (session?.user) {
-            log.info({}, 'Session detected, refreshing subscription status');
+            // log.info({}, 'Session detected, refreshing subscription status'); // Removed - too verbose for production
             fetchSubscriptionStatus('initial', false);
         }
     }, [session?.user, fetchSubscriptionStatus]);
@@ -293,7 +293,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 // Check if we're returning from a payment flow
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
-                    log.info({}, 'Detected return from payment, refreshing subscription');
+                    // log.info({}, 'Detected return from payment, refreshing subscription'); // Removed - too verbose for production
                     setIsPortalReturn(true);
                     refreshSubscriptionStatus(true, 'payment');
 
@@ -334,7 +334,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
             // Refresh when close to expiration (within 1 day) or already expired
             if (daysDiff <= 1) {
-                log.info({}, 'Subscription near expiration, refreshing');
+                // log.info({}, 'Subscription near expiration, refreshing'); // Removed - too verbose for production
                 refreshSubscriptionStatus(true, 'expiration');
             }
         };

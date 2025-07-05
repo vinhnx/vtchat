@@ -1,6 +1,6 @@
 'use client';
 
-import { log } from '@repo/shared/logger';
+// import { log } from '@repo/shared/logger'; // Removed - no longer needed
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import type * as React from 'react';
 
@@ -9,7 +9,8 @@ function ThemeEnforcer({ children }: { children: React.ReactNode }) {
     // The ThemeSwitcher component handles the gating at the UI level, which is sufficient
     // This global enforcement can be re-enabled once provider initialization order is fixed
 
-    log.info({}, '🔒 GatedThemeProvider: Theme enforcement temporarily disabled');
+    // Remove log statement - no need to log this temporary state in production
+    // log.info({}, '🔒 GatedThemeProvider: Theme enforcement temporarily disabled');
 
     return <>{children}</>;
 }
