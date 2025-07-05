@@ -1,5 +1,4 @@
 import { Footer } from '@repo/common/components';
-import { limitText } from '@repo/shared/constants/rate-limits';
 import { Button, TypographyH2 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -178,7 +177,7 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT gives you comprehensive free access, keeping just 3 features premium. Upgrade to VT+ for enhanced Gemini limits ({limitText.compare()}), research capabilities, and premium AI models.
+                            VT provides comprehensive free access with just 3 features behind the premium tier. Upgrade to VT+ for Deep Research tools, Pro Search capabilities, and RAG document intelligence.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">
