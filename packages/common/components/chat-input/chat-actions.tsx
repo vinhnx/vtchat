@@ -345,9 +345,7 @@ export function ChartsButton() {
                     variant={useCharts ? 'secondary' : 'ghost'}
                 >
                     <BarChart3
-                        className={cn(
-                            useCharts ? '!text-purple-500' : 'text-muted-foreground'
-                        )}
+                        className={cn(useCharts ? '!text-purple-500' : 'text-muted-foreground')}
                         size={16}
                         strokeWidth={2}
                     />
