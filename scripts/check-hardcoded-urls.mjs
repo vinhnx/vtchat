@@ -23,15 +23,15 @@ const EXCLUDE_PATTERNS = [
     '**/build/**',
     '**/.next/**',
     '**/coverage/**',
-    'TODO.md',           // Allow in TODO files
-    'memory-bank/**',    // Allow in documentation
-    'docs/**',           // Allow in documentation (will be updated separately)
-    '*.md',              // Allow in markdown files (will be updated separately)
+    'TODO.md', // Allow in TODO files
+    'memory-bank/**', // Allow in documentation
+    'docs/**', // Allow in documentation (will be updated separately)
+    '*.md', // Allow in markdown files (will be updated separately)
 ];
 
 function checkForHardcodedUrls() {
     console.log('🔍 Checking for hardcoded URLs...');
-    
+
     // Check if ripgrep is available
     try {
         execSync('command -v rg', { stdio: 'pipe' });
@@ -44,14 +44,14 @@ function checkForHardcodedUrls() {
 
     for (const pattern of HARDCODED_URL_PATTERNS) {
         try {
-            const excludeArgs = EXCLUDE_PATTERNS.map(p => `--glob '!${p}'`).join(' ');
+            const excludeArgs = EXCLUDE_PATTERNS.map((p) => `--glob '!${p}'`).join(' ');
             const cmd = `rg -n "${pattern}" ${excludeArgs} --type-not binary`;
-            
-            const result = execSync(cmd, { 
+
+            const result = execSync(cmd, {
                 encoding: 'utf8',
-                stdio: 'pipe' 
+                stdio: 'pipe',
             });
-            
+
             if (result.trim()) {
                 console.error(`\n❌ Hardcoded URL pattern "${pattern}" found:`);
                 console.error(result);
@@ -79,7 +79,7 @@ function checkForHardcodedUrls() {
 
 function checkWithGrep() {
     console.log('Using basic file scanning (no ripgrep found)...');
-    
+
     // For now, just warn and pass - the CI environment should have ripgrep
     console.warn('⚠️  Install ripgrep (rg) for proper URL checking');
     console.warn('   brew install ripgrep  # macOS');

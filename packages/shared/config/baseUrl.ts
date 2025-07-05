@@ -1,6 +1,6 @@
 /**
  * Canonical Base URL Configuration
- * 
+ *
  * Single source of truth for determining the application's base URL
  * across all environments (development, CI, production).
  */
@@ -15,7 +15,7 @@ interface BaseURLOptions {
 
 /**
  * Get the canonical base URL for the application
- * 
+ *
  * @param opts Configuration options
  * @returns The base URL without trailing slash
  * @throws Error in production if no URL is configured
@@ -58,9 +58,7 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
     // Development fallback
     if (!url) {
         if (process.env.NODE_ENV === 'production') {
-            throw new Error(
-                'APP_URL or NEXT_PUBLIC_APP_URL must be set in production environment'
-            );
+            throw new Error('APP_URL or NEXT_PUBLIC_APP_URL must be set in production environment');
         }
         return 'http://localhost:3000';
     }
