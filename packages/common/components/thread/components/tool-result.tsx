@@ -1,3 +1,5 @@
+'use client';
+
 import { CodeBlock, ToolResultIcon } from '@repo/common/components';
 import { isChartTool } from '@repo/common/constants/chart-tools';
 import { isMathTool } from '@repo/common/constants/math-tools';

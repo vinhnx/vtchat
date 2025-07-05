@@ -1,3 +1,5 @@
+'use client';
+
 import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { log } from '@repo/shared/logger';
 import { useToast } from '@repo/ui';

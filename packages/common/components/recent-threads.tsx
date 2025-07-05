@@ -1,3 +1,5 @@
+'use client';
+
 import { useRootContext } from '@repo/common/context';
 import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';

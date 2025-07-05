@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@repo/ui';

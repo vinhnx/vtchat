@@ -1,8 +1,10 @@
-export enum EnvironmentType {
-    PRODUCTION = 'production',
-    SANDBOX = 'sandbox',
-    DEVELOPMENT = 'development',
-}
+export const EnvironmentType = {
+    PRODUCTION: 'production',
+    SANDBOX: 'sandbox',
+    DEVELOPMENT: 'development',
+} as const;
+
+export type EnvironmentType = (typeof EnvironmentType)[keyof typeof EnvironmentType];
 
 export function getCurrentEnvironment(): EnvironmentType {
     const env = process.env.CREEM_ENVIRONMENT || process.env.NODE_ENV;

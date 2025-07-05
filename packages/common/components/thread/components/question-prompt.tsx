@@ -1,3 +1,5 @@
+'use client';
+
 import { useAgentStream } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';

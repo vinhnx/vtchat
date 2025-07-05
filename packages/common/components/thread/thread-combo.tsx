@@ -1,3 +1,5 @@
+'use client';
+
 import { ThreadItem } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useParams } from 'next/navigation';

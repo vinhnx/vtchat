@@ -1,3 +1,5 @@
+'use client';
+
 import type { Source } from '@repo/shared/types';
 import { createContext, type PropsWithChildren, useEffect, useState } from 'react';
 

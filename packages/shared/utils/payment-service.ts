@@ -11,17 +11,21 @@ import { PlanSlug } from '../types/subscription';
 import { isProductionEnvironment } from './env';
 
 // Types for Creem.io integration
-export enum PriceType {
-    ONE_TIME = 'one_time',
-    RECURRING = 'recurring',
-}
+export const PriceType = {
+    ONE_TIME: 'one_time',
+    RECURRING: 'recurring',
+} as const;
 
-export enum RecurringInterval {
-    MONTH = 'month',
-    YEAR = 'year',
-    DAY = 'day',
-    WEEK = 'week',
-}
+export type PriceType = typeof PriceType[keyof typeof PriceType];
+
+export const RecurringInterval = {
+    MONTH: 'month',
+    YEAR: 'year',
+    DAY: 'day',
+    WEEK: 'week',
+} as const;
+
+export type RecurringInterval = typeof RecurringInterval[keyof typeof RecurringInterval];
 
 export interface CreemProduct {
     id: string;

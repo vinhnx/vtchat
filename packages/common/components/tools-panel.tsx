@@ -1,3 +1,5 @@
+'use client';
+
 import { ToolCallStep, ToolResultStep } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';
