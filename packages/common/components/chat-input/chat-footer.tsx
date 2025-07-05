@@ -36,7 +36,7 @@ export const ChatFooter = () => {
                 <div className="flex flex-col items-center gap-1 text-xs opacity-50 sm:flex-row sm:gap-3">
                     <span>© 2025 VT. All rights reserved.</span>
                     <div className="flex items-center gap-3">
-                        <Link href="/About" className="hover:opacity-100">
+                        <Link href="/about" className="hover:opacity-100">
                             About
                         </Link>
                         <span>•</span>
