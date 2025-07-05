@@ -547,15 +547,26 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+                                    VT offers free tier, and with VT+ focusing only on 3 exclusive
+                                    research capabilities: Deep Research, Pro Search, and RAG
+                                    (Personal AI Assistant with Memory).
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free tier (logged-in users):</strong> ALL premium AI models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + all advanced features - intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, multi-modal chat, and unlimited BYOK usage. Plus 9 free server models.
+                                        <strong>Free tier (logged-in users):</strong> ALL premium AI
+                                        models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1,
+                                        Grok 3) + all advanced features - intelligent tool routing,
+                                        chart visualization, web search, dark mode, thinking mode,
+                                        structured output, document parsing, reasoning chain, Gemini
+                                        caching, multi-modal chat, and unlimited BYOK usage. Plus 9
+                                        free server models.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
-                                        Everything free + only 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory).
+                                        Everything free + only 3 exclusive research features:
+                                        PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep
+                                        Research capabilities), and RAG (Personal AI Assistant with
+                                        Memory).
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers include complete privacy with thread isolation
