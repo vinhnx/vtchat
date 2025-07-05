@@ -10,15 +10,21 @@ import * as schema from './database/schema';
 
 // Validate required OAuth environment variables
 if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
-    throw new Error('GitHub OAuth environment variables (GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET) are not set');
+    throw new Error(
+        'GitHub OAuth environment variables (GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET) are not set'
+    );
 }
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    throw new Error('Google OAuth environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) are not set');
+    throw new Error(
+        'Google OAuth environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) are not set'
+    );
 }
 
 if (!process.env.TWITTER_CLIENT_ID || !process.env.TWITTER_CLIENT_SECRET) {
-    throw new Error('Twitter OAuth environment variables (TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET) are not set');
+    throw new Error(
+        'Twitter OAuth environment variables (TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET) are not set'
+    );
 }
 
 export const auth = betterAuth({
@@ -116,7 +122,10 @@ export const auth = betterAuth({
     },
     trustedOrigins: [
         process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
-        'http://127.0.0.1:3000',
+        ...(process.env.NODE_ENV === 'development' 
+            ? [process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000']
+            : []
+        ),
     ],
     fetchOptions: {
         timeout: 10_000, // 10 second timeout

@@ -54,26 +54,34 @@ export const sessions = pgTable('sessions', {
 });
 
 // Accounts table for OAuth providers
-export const accounts = pgTable('accounts', {
-    id: text('id').primaryKey(),
-    accountId: text('account_id').notNull(),
-    providerId: text('provider_id').notNull(),
-    userId: text('user_id')
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-    accessToken: text('access_token'),
-    refreshToken: text('refresh_token'),
-    idToken: text('id_token'),
-    expiresAt: timestamp('expires_at'),
-    accessTokenExpiresAt: timestamp('access_token_expires_at'),
-    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-    scope: text('scope'),
-    password: text('password'),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-    providerAccountIdx: index('provider_account_idx').on(table.providerId, table.accountId, table.userId),
-}));
+export const accounts = pgTable(
+    'accounts',
+    {
+        id: text('id').primaryKey(),
+        accountId: text('account_id').notNull(),
+        providerId: text('provider_id').notNull(),
+        userId: text('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        accessToken: text('access_token'),
+        refreshToken: text('refresh_token'),
+        idToken: text('id_token'),
+        expiresAt: timestamp('expires_at'),
+        accessTokenExpiresAt: timestamp('access_token_expires_at'),
+        refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+        scope: text('scope'),
+        password: text('password'),
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        providerAccountIdx: index('provider_account_idx').on(
+            table.providerId,
+            table.accountId,
+            table.userId
+        ),
+    })
+);
 
 // Verification tokens for email verification, password reset, etc.
 export const verifications = pgTable('verifications', {
