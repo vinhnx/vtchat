@@ -226,16 +226,26 @@ function HelpCenterContent() {
                                         from documents (Free for all users - Gemini models only)
                                     </li>
                                     <li className="text-muted-foreground">
+                                        <strong>Chart Visualization:</strong> Create interactive bar
+                                        charts, line graphs, pie charts, and scatter plots (Free for
+                                        all users)
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Intelligent Tool Router:</strong> AI-powered semantic
+                                        routing automatically activates tools based on your queries
+                                        (Free for all users)
+                                    </li>
+                                    <li className="text-muted-foreground">
                                         <strong>Math Calculator:</strong> Advanced mathematical
                                         computations and problem solving
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Multiple Chat Modes:</strong> Specialized modes for
-                                        different use cases
+                                        <strong>Web Search Integration:</strong> Real-time web search
+                                        capabilities for current information (Free for all users)
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Tool Integration:</strong> Framework ready for
-                                        external tool connectivity (temporarily optimized)
+                                        <strong>Multiple Chat Modes:</strong> Specialized modes for
+                                        different use cases
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -263,8 +273,9 @@ function HelpCenterContent() {
                                         images, analyze documents with structured data extraction
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>AI Capabilities:</strong> Reasoning chain, thinking
-                                        mode, Gemini caching, chart visualization
+                                        <strong>AI Capabilities:</strong> Intelligent tool routing,
+                                        reasoning chain, thinking mode, Gemini caching, chart
+                                        visualization, web search
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>All Chat Tools:</strong> Mathematical computing,
@@ -541,11 +552,12 @@ function HelpCenterContent() {
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Free tier (logged-in users):</strong> Most advanced
-                                        features included free - dark mode, thinking mode,
+                                        features included free - intelligent tool routing, chart
+                                        visualization, web search, dark mode, thinking mode,
                                         structured output, document parsing, reasoning chain, Gemini
-                                        caching, chart visualization, multi-modal chat, and
-                                        unlimited BYOK usage. Plus free Gemini 2.5 Flash Lite
-                                        Preview (20 requests/day, 5/minute).
+                                        caching, multi-modal chat, and unlimited BYOK usage. Plus
+                                        free Gemini 2.5 Flash Lite Preview (20 requests/day,
+                                        5/minute).
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
@@ -623,6 +635,52 @@ function HelpCenterContent() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* Intelligent Tool Router */}
+                        <AccordionItem value="intelligent-tool-router">
+                            <AccordionTrigger className="font-medium">
+                                How does the intelligent tool router work?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT's intelligent tool router uses AI to automatically activate
+                                    the right tools based on your queries, making your experience
+                                    seamless and efficient:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Free Feature:</strong> Available to all users with
+                                        AI-powered semantic routing
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Smart Detection:</strong> Automatically detects when
+                                        you need charts, calculations, web search, or document
+                                        processing
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>OpenAI Embeddings:</strong> Uses advanced AI
+                                        embeddings to understand query intent and context
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Pattern Matching:</strong> Fast regex patterns for
+                                        instant tool activation on common requests
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Automatic Activation:</strong> No need to manually
+                                        toggle tools - the AI does it for you
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Context Aware:</strong> Avoids duplicate activations
+                                        and respects your current tool settings
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Just type naturally like "create a chart", "calculate 15% of
+                                    1000", or "search for latest AI news" and watch the router
+                                    automatically activate the right tools!
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Chart Visualization */}
                         <AccordionItem value="chart-visualization">
                             <AccordionTrigger className="font-medium">
@@ -630,13 +688,13 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    All registered users can create beautiful, interactive charts
-                                    directly from AI conversations:
+                                    All users can create beautiful, interactive charts directly from
+                                    AI conversations:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Feature:</strong> Available to all registered
-                                        users with AI-powered chart generation
+                                        <strong>Free Feature:</strong> Available to all users with
+                                        AI-powered chart generation and intelligent routing
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Chart Types:</strong> Bar charts, line charts, area
@@ -651,14 +709,19 @@ function HelpCenterContent() {
                                         charts with your data or specifications
                                     </li>
                                     <li className="text-muted-foreground">
+                                        <strong>Automatic Activation:</strong> The intelligent router
+                                        detects chart requests and activates visualization mode
+                                        automatically
+                                    </li>
+                                    <li className="text-muted-foreground">
                                         <strong>Professional Design:</strong> Beautiful
                                         visualizations with shadcn/ui styling and animations
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Enable charts mode in your chat interface and ask for
-                                    visualizations like "Create a bar chart showing sales data" to
-                                    get started.
+                                    Just ask for visualizations like "Create a bar chart showing
+                                    sales data" and the router will automatically enable charts and
+                                    generate your visualization!
                                 </p>
                             </AccordionContent>
                         </AccordionItem>

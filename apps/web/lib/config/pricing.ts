@@ -20,7 +20,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'All Advanced AI Features',
                     description:
-                        'Complete access to dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, and chart visualization - all free for logged-in users',
+                        'Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users',
                 },
                 {
                     name: 'Multi-Modal Chat',
@@ -30,7 +30,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'All Chat Input Tools',
                     description:
-                        'Mathematical calculator, image analysis, document processing, and all productivity tools included',
+                        'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included',
                 },
                 {
                     name: 'Free Gemini 2.5 Flash Lite Preview',
@@ -50,7 +50,7 @@ export const PRICING_CONFIG = {
             features: [
                 {
                     name: 'Everything in Free Plan + Enhanced Gemini Limits',
-                    description: `All advanced AI features, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
+                    description: `All advanced AI features including intelligent tool routing, chart visualization, web search, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
                 },
                 {
                     name: 'Premium AI Models (Exclusive)',

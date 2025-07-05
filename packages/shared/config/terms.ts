@@ -19,7 +19,8 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Custom AI Interfaces**: Enhanced user experience for multiple AI model providers
 - **Privacy-First Architecture**: All conversations stored locally on your device using IndexedDB
 - **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models through our interface
-- **Advanced Features**: Reasoning mode, document processing, web search integration
+- **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
+- **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
 - **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (20 requests/day, 5/minute rate limit; VT+ users get enhanced limits: 100/day, 10/minute)
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
@@ -86,7 +87,7 @@ VT_BASE is our free tier for logged-in users that includes:
 - **Server API Key**: Uses VT's server-side API key for free model access (no BYOK required)
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
-- **Advanced Features**: Dark Mode, Thinking Mode Toggle, Structured Output, Document Processing, Reasoning Chain, Gemini Explicit Caching, Chart Visualization, Multi-modal Chat
+- **Advanced Features**: Intelligent Tool Router, Chart Visualization, Web Search, Dark Mode, Thinking Mode Toggle, Structured Output, Document Processing, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
 - **BYOK Option**: Unlimited usage with your own API keys as alternative
 
 ### 4.2 VT+ Subscription Features
