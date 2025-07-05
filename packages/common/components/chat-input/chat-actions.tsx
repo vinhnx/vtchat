@@ -147,13 +147,14 @@ export function ChatModeButton() {
 
             {/* Gated Feature Alert Modal */}
             {showGateAlert && (
-                <Dialog onOpenChange={(open) => !open && setShowGateAlert(null)} open={!!showGateAlert}>
+                <Dialog
+                    onOpenChange={(open) => !open && setShowGateAlert(null)}
+                    open={!!showGateAlert}
+                >
                     <DialogContent className="max-w-md">
                         <DialogHeader>
                             <DialogTitle>{showGateAlert.title}</DialogTitle>
-                            <DialogDescription>
-                                {showGateAlert.message}
-                            </DialogDescription>
+                            <DialogDescription>{showGateAlert.message}</DialogDescription>
                         </DialogHeader>
 
                         <div className="space-y-4">
