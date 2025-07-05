@@ -11,28 +11,6 @@ increase chat thread markdown font size to more comfortable size, min 13px
 rethink Plus tier offering -> maybe remove BYOK.
 
 --
-IMPORTANT: fix payment call back fall
-ON PRODUCTION CREEM.IO -> CURRENTLY IT USE LOCALHOST REDIRECT. PLEASE HELP TO CHECK ENV AND CREEM SUBSCRITPION FLOW AND LOGIC TO MAKE SURE IT USE PRODUCTION URL: https://vtchat.io.vn FOR PAYMENT CALL BACK. ASK ORACLE FOR REVIEW AND FIX ASAP.
-
-THIS ONE FIX IT ASAP:
-```
-return CreemService.createCheckout({
-    productId: CreemService.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
-    customerEmail,
-    successUrl: `${typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
-});
-```
-packages/shared/utils/payment-service.ts
-
-CHECK OTHER HARDCODED URL PATH LIKE THIS AND FIX IT ASAP.
-
-http://localhost:3000/success?plan=vt_plus&checkout_id=ch_78yU0Et6VoIPsVsN7gWiQE&order_id=ord_2sSQ3ZBrfwGkjwKAesVniU&customer_id=cust_1TFvfGvNMr1dsS0hy4ZwLj&subscription_id=sub_s4BJap8T8Y28OzJUrgmY2&product_id=prod_1UZhx15bSgbT8ggWTPQNi&signature=24dde2ce32aa45487b1e267cd0c3d07744ea69c20d97e51ce73de3305f9a95a6
-
-
-USE CONTEXT7, FLYMCP OR ANY MCP TOOLS IF NEEDED
-
-DEPLOY TO  fly.io USING ./deploy-fly.sh  when done
---
 update Connected Accounts
 with X/Twitter oauth
 
