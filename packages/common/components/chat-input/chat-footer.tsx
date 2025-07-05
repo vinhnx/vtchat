@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 export const ChatFooter = () => {
     return (
-        <Flex className="w-full p-2" justify="center" gap="sm">
-            <div className="flex flex-col items-center gap-3">
+        <Flex className="w-full p-1 sm:p-2" justify="center" gap="sm">
+            <div className="flex flex-col items-center gap-2 sm:gap-3">
                 {/* Badges */}
                 <div className="flex flex-row items-center justify-center gap-2 sm:gap-3">
                     <a
@@ -17,7 +17,7 @@ export const ChatFooter = () => {
                             alt="Featured on Startup Fame"
                             width="96"
                             height="30"
-                            className="transition-opacity hover:opacity-80 sm:h-10 sm:w-32"
+                            className="h-6 w-auto transition-opacity hover:opacity-80 sm:h-10 sm:w-32"
                         />
                     </a>
 
@@ -27,7 +27,7 @@ export const ChatFooter = () => {
                             alt="VT Chat on Peerlist"
                             width="221"
                             height="60"
-                            className="w-28 h-8 sm:w-56 sm:h-15"
+                            className="h-6 w-auto sm:w-56 sm:h-15"
                         />
                     </a>
                 </div>
@@ -49,7 +49,7 @@ export const ChatFooter = () => {
                         </Link>
                         <span>•</span>
                         <Link href="/faq" className="hover:opacity-100">
-                            Help Center
+                            FAQ
                         </Link>
                         <span>•</span>
                         <Link href="mailto:hello@vtchat.io.vn" className="hover:opacity-100">
