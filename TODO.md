@@ -3,6 +3,17 @@
 --
 ok go-> https://vtchat.io.vn/
 
+
+--
+when a tools is invoked using smart semantic routing feature, it should be able to select the best tool BUTTON in chat input bar for the user based on the query.
+for example:
+
+
+"Calculate 2+2" -> Math tool button enabled and selected
+
+"Search latest Hacker News" -> Web Search button enabled and selected
+
+"Create a line chart sales data: A 100, B 150, C 120, D 200" -> Charts button enabled and selected
 --
 user feedbacks:
 kindly check, not giving reasonable answers
