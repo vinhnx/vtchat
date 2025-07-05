@@ -5,6 +5,18 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+
+Thinking Mode should be enable by default for VT+ tier users.
+
+--
+
+setup your API keys modal in RAG page is not fit on mobile screen, need to fix it
+
+--
+
+fix usage settings tab not showing on mobile screen, need to fix it
+
+--
 rethink Plus tier offering -> maybe remove BYOK.
 
 --
