@@ -14,6 +14,7 @@ export enum PublicRoutes {
     PRIVACY = '/privacy',
     TERMS = '/terms',
     FAQ = '/faq',
+    ABOUT = '/about',
 }
 
 /**
