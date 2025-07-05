@@ -40,8 +40,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
     describe('Rate Limit Constants', () => {
         it('should enforce correct per-account limits for Gemini 2.5 Flash Lite', () => {
             expect(RATE_LIMITS.GEMINI_2_5_FLASH_LITE).toEqual({
-                DAILY_LIMIT: 10, // 10 requests per day PER USER
-                MINUTE_LIMIT: 1, // 1 request per minute PER USER
+                DAILY_LIMIT: 20, // 20 requests per day PER USER
+                MINUTE_LIMIT: 5, // 5 requests per minute PER USER
                 MODEL_ID: ModelEnum.GEMINI_2_5_FLASH_LITE,
             });
         });

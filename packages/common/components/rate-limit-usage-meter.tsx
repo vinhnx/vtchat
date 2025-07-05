@@ -1,6 +1,7 @@
 'use client';
 
 import { ModelEnum } from '@repo/ai/models';
+import { GEMINI_FLASH_LIMITS, limitText } from '@repo/shared/constants/rate-limits';
 import {
     Badge,
     Button,
@@ -335,7 +336,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                     <p className="text-muted-foreground max-w-md text-sm">
                         {unlimitedAccessType === 'byok'
                             ? 'You are using your own Gemini API key. Usage limits do not apply to your account.'
-                            : 'Your VT+ subscription provides unlimited access to all features without usage restrictions.'}
+                            : `Your VT+ subscription provides unlimited access to all features. For Gemini 2.5 Flash Lite, you get enhanced limits (${limitText.plus()}) with our free offering. Set up your own Gemini API key for unlimited usage.`}
                     </p>
                 </div>
             </div>
@@ -490,46 +491,98 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
                 </Card>
             </div>
 
-            {/* VT+ Upgrade CTA - Only show if user doesn't have unlimited access */}
-            {!hasUnlimitedAccess && (dailyPercentage >= 60 || perMinutePercentage >= 50) && (
-                <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50 dark:border-blue-800 dark:from-blue-950 dark:to-purple-950">
-                    <CardContent className="py-6">
-                        <div className="flex items-center gap-4">
-                            <div className="flex-1">
-                                <div className="text-lg font-bold text-blue-800 dark:text-blue-200">
-                                    Upgrade to VT+ for More
-                                </div>
-                                <div className="mt-1 text-sm text-blue-700 dark:text-blue-300">
-                                    Get unlimited usage, priority support, and access to the latest
-                                    AI models.
-                                </div>
-                                <div className="mt-3 flex items-center gap-2">
-                                    <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
-                                        <Star className="h-3 w-3" />
-                                        Higher daily limits
+            {/* VT+ Gemini API Key CTA - Only show if user has VT+ but no Gemini API key */}
+            {isVtPlus &&
+                !hasGeminiApiKey &&
+                (dailyPercentage >= 60 || perMinutePercentage >= 50) && (
+                    <Card className="border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 dark:border-yellow-800 dark:from-yellow-950 dark:to-orange-950">
+                        <CardContent className="py-6">
+                            <div className="flex items-center gap-4">
+                                <div className="flex-1">
+                                    <div className="text-lg font-bold text-yellow-800 dark:text-yellow-200">
+                                        Get Unlimited Gemini Usage
                                     </div>
-                                    <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
-                                        <Zap className="h-3 w-3" />
-                                        Priority processing
+                                    <div className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                                        {`You're hitting your VT+ enhanced limits (${GEMINI_FLASH_LIMITS.PLUS_DAY}/day, ${GEMINI_FLASH_LIMITS.PLUS_MINUTE}/minute)
+                                        for free Gemini 2.5 Flash Lite. Set up your own Gemini API
+                                        key for unlimited usage and access to all Gemini models.`}
                                     </div>
-                                    <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
-                                        <TrendingUp className="h-3 w-3" />
-                                        Advanced models
+                                    <div className="mt-3 flex items-center gap-2">
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <Key className="h-3 w-3" />
+                                            Free API key
+                                        </div>
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <Zap className="h-3 w-3" />
+                                            Unlimited usage
+                                        </div>
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <Sparkles className="h-3 w-3" />
+                                            Premium models
+                                        </div>
                                     </div>
                                 </div>
+                                <Button
+                                    className="group gap-2"
+                                    onClick={() =>
+                                        window.open(
+                                            'https://aistudio.google.com/app/apikey',
+                                            '_blank'
+                                        )
+                                    }
+                                    variant="outline"
+                                >
+                                    <Key className="h-4 w-4" />
+                                    Get API Key
+                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                </Button>
                             </div>
-                            <Button
-                                className="group gap-2"
-                                onClick={() => (window.location.href = '/plus')}
-                            >
-                                <Sparkles className="h-4 w-4" />
-                                Upgrade to VT+
-                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                        </CardContent>
+                    </Card>
+                )}
+
+            {/* VT+ Upgrade CTA - Only show if user doesn't have unlimited access */}
+            {!hasUnlimitedAccess &&
+                !isVtPlus &&
+                (dailyPercentage >= 60 || perMinutePercentage >= 50) && (
+                    <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50 dark:border-blue-800 dark:from-blue-950 dark:to-purple-950">
+                        <CardContent className="py-6">
+                            <div className="flex items-center gap-4">
+                                <div className="flex-1">
+                                    <div className="text-lg font-bold text-blue-800 dark:text-blue-200">
+                                        Upgrade to VT+ for More
+                                    </div>
+                                    <div className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                                        Get unlimited usage, priority support, and access to the
+                                        latest AI models.
+                                    </div>
+                                    <div className="mt-3 flex items-center gap-2">
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <Star className="h-3 w-3" />
+                                            Higher daily limits
+                                        </div>
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <Zap className="h-3 w-3" />
+                                            Priority processing
+                                        </div>
+                                        <div className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+                                            <TrendingUp className="h-3 w-3" />
+                                            Advanced models
+                                        </div>
+                                    </div>
+                                </div>
+                                <Button
+                                    className="group gap-2"
+                                    onClick={() => (window.location.href = '/plus')}
+                                >
+                                    <Sparkles className="h-4 w-4" />
+                                    Upgrade to VT+
+                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
             {/* Refresh Button */}
             <div className={cn('flex justify-center', hasUnlimitedAccess && 'opacity-50')}>

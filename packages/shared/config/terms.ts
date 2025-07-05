@@ -21,7 +21,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Multiple AI Providers**: Access OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI models through our interface
 - **Advanced Features**: Reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (10 requests/day, 1/minute rate limit)
+- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (20 requests/day, 5/minute rate limit; VT+ users get enhanced limits: 100/day, 10/minute)
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (VT+ feature)
@@ -36,7 +36,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 ### 2.1 Account Creation
 - You may use VT anonymously for basic functionality
 - Account registration (via Google or GitHub OAuth) is required for:
-  - Free Gemini 2.5 Flash Lite Preview access (10 requests/day, 1/minute limit)
+  - Free Gemini 2.5 Flash Lite Preview access (20 requests/day, 5/minute limit)
   - VT+ subscription features (Grounding Web Search, Dark Mode)
   - Daily usage tracking and fair usage enforcement
   - Thread synchronization and account-based management
@@ -82,7 +82,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 
 ### 4.1 Free Tier Benefits (VT_BASE)
 VT_BASE is our free tier for logged-in users that includes:
-- **Free Gemini Model**: Access to Gemini 2.5 Flash Lite Preview with 10 requests per day and 1 request per minute rate limit
+- **Free Gemini Model**: Access to Gemini 2.5 Flash Lite Preview with 20 requests per day and 5 requests per minute rate limit
 - **Server API Key**: Uses VT's server-side API key for free model access (no BYOK required)
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
@@ -92,9 +92,10 @@ VT_BASE is our free tier for logged-in users that includes:
 ### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** with free trial included that includes:
 - **All Free Tier Features**: Complete access to all features available to free tier users
+- **Enhanced Gemini Limits**: 100 requests per day and 10 requests per minute for free Gemini 2.5 Flash Lite (vs 20/day, 5/minute for regular users)
 - **Premium AI Models**: Exclusive access to Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 - **Three Exclusive Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
-- **Unlimited Access**: No daily limits or rate limiting on all models
+- **Unlimited Access**: No daily limits or rate limiting on premium models
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

@@ -111,15 +111,13 @@ export function ChatModeButton() {
         return !hasRequiredAccess;
     })();
 
-    const handleGatedFeature = React.useCallback((gateInfo: {
-        feature?: string;
-        plan?: string;
-        title: string;
-        message: string;
-    }) => {
-        setShowGateAlert(gateInfo);
-        setIsChatModeOpen(false); // Close the dropdown
-    }, []);
+    const handleGatedFeature = React.useCallback(
+        (gateInfo: { feature?: string; plan?: string; title: string; message: string }) => {
+            setShowGateAlert(gateInfo);
+            setIsChatModeOpen(false); // Close the dropdown
+        },
+        []
+    );
 
     return (
         <>

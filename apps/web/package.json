@@ -7,7 +7,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "next dev --turbopack",
-        "dev:scan": "next dev --turbopack & bunx react-scan localhost:3000",
+        "dev:scan": "REACT_SCAN_ENABLED=true next dev --turbopack",
         "build": "next build",
         "analyze": "ANALYZE=true next build",
         "start": "next start",

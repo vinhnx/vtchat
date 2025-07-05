@@ -65,7 +65,7 @@ export function RAGChatbot() {
             if (!hasRequiredKeys) {
                 setShowApiKeyDialog(true);
             }
-        } else if (!(hasRequiredKeys || showApiKeyDialog)) {
+        } else if (!hasRequiredKeys && !showApiKeyDialog) {
             // Only show dialog if keys were removed and dialog isn't already open
             setShowApiKeyDialog(true);
         }

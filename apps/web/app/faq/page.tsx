@@ -489,7 +489,7 @@ function HelpCenterContent() {
                             <AccordionContent>
                                 <p className="text-muted-foreground">
                                     VT now offers free access to Gemini 2.5 Flash Lite Preview for
-                                    registered users:
+                                    registered users with tiered limits:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
@@ -497,11 +497,12 @@ function HelpCenterContent() {
                                         with advanced AI capabilities
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Daily Limit:</strong> 10 requests per day for
-                                        registered users
+                                        <strong>Regular Users:</strong> 20 requests per day, 5
+                                        requests per minute
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Rate Limit:</strong> Maximum 1 request per minute
+                                        <strong>VT+ Users:</strong> Enhanced limits - 100 requests
+                                        per day, 10 requests per minute
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Reset Time:</strong> Daily limits reset at 00:00 UTC
@@ -514,10 +515,15 @@ function HelpCenterContent() {
                                         <strong>Server API Key:</strong> Uses VT's server-side API
                                         key (no need for BYOK)
                                     </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Unlimited with BYOK:</strong> Set up your own Gemini
+                                        API key for unlimited usage
+                                    </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Upgrade to VT+ for enhanced web search, deep research, and
-                                    personal AI assistant features.
+                                    Upgrade to VT+ for enhanced limits and exclusive features like
+                                    web search, deep research, and personal AI assistant. Or set up
+                                    your own Gemini API key for unlimited usage.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -539,11 +545,12 @@ function HelpCenterContent() {
                                         structured output, document parsing, reasoning chain, Gemini
                                         caching, chart visualization, multi-modal chat, and
                                         unlimited BYOK usage. Plus free Gemini 2.5 Flash Lite
-                                        Preview (10 requests/day).
+                                        Preview (20 requests/day, 5/minute).
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
-                                        Everything free + premium AI models (Claude 4, GPT-4.1, O3
+                                        Everything free + enhanced Gemini limits (100/day,
+                                        10/minute) + premium AI models (Claude 4, GPT-4.1, O3
                                         series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + only 3
                                         exclusive features: Pro Search (fast web search), Deep
                                         Research (comprehensive analysis), and AI Memory (personal

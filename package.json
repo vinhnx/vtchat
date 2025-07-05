@@ -25,6 +25,7 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
+        "dev:scan": "REACT_SCAN_ENABLED=true turbo run dev",
         "start": "cd apps/web && bun start",
         "lint": "oxlint",
         "clean": "turbo run clean && rm -rf node_modules",

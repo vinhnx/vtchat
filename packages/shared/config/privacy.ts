@@ -26,7 +26,7 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub)
-- **Free Model Usage:** Daily request counts and rate limiting data for 9 free AI models (5 Gemini + 4 OpenRouter models)
+- **Free Model Usage:** Daily request counts and rate limiting data for 9 free AI models (5 Gemini + 4 OpenRouter models), with different limits for regular users (20/day, 5/minute) vs VT+ users (100/day, 10/minute)
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
 - **User Preferences:** Settings and configuration choices
@@ -58,9 +58,9 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models
+- **Free Model Management:** Track daily usage limits and rate limiting for 9 free AI models with tiered limits (regular users: 20/day, 5/minute; VT+ users: 100/day, 10/minute)
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
-- **Feature Access:** Determine access to VT+ exclusive features (Pro Search, Deep Research, AI Memory) and premium AI models, while providing free access to advanced features for logged-in users
+- **Feature Access:** Determine access to VT+ exclusive features (Pro Search, Deep Research, AI Memory) and premium AI models, while providing enhanced free Gemini limits and advanced features for VT+ users
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 
@@ -94,7 +94,7 @@ VT is built with **privacy-first principles** at its core:
 ### 3.2 Server Storage (Our Systems)
 **We only store minimal data on our servers:**
 - **Account information** (email, name, subscription status) for registered users
-- **Free model usage data** (daily request counts and timestamps for rate limiting - no conversation content)
+- **Free model usage data** (daily request counts and timestamps for rate limiting with tiered limits based on subscription status - no conversation content)
 - **Payment records** (handled securely by Creem.io, not stored on our servers)
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)

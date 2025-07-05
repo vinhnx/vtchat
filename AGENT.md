@@ -25,10 +25,43 @@
 
 ## Development Workflow
 
+- **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
 - Test core functionality after significant changes
+
+### Oracle Consultation Workflow (REQUIRED)
+
+All code changes **must** follow this ask-implement-review loop with the Oracle.
+
+1. **Task Intake**  
+   - Write a concise Problem Statement, goals, and acceptance criteria.
+
+2. **ASK-ORACLE (PLAN)**  
+   - Provide the above context plus key code excerpts.  
+   - Ask: "Oracle, please produce a detailed implementation plan."
+
+3. **Implementation**  
+   - Implement strictly according to the received plan.  
+   - Keep commits granular and descriptive.
+
+4. **REVIEW-ORACLE**  
+   - Present the diff or PR link and ask: "Oracle, please review and approve."  
+   - Address comments; iterate until Oracle replies **Approved**.
+
+5. **Merge & Document**  
+   - Merge only after approval.  
+   - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
+
+6. **Exceptions**  
+   - For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
+
+**Best practices:**  
+✔ Provide only relevant context; avoid massive dumps.  
+✔ Use enumerated questions.  
+✔ Time-box to 2 iterations; escalate if more.  
+✔ Always run format, lint, build, and tests before requesting review.  
 
 ### Git Hooks
 

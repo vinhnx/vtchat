@@ -50,7 +50,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (!threadId) return;

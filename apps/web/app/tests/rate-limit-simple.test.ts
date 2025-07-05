@@ -5,11 +5,11 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
     describe('Rate Limit Constants', () => {
         it('should have correct rate limit specifications', () => {
             // These are the exact specifications from the requirements
-            const EXPECTED_DAILY_LIMIT = 10; // 10 requests per day per account
-            const EXPECTED_MINUTE_LIMIT = 1; // 1 request per minute per account
+            const EXPECTED_DAILY_LIMIT = 20; // 20 requests per day per account
+            const EXPECTED_MINUTE_LIMIT = 5; // 5 requests per minute per account
 
-            expect(EXPECTED_DAILY_LIMIT).toBe(10);
-            expect(EXPECTED_MINUTE_LIMIT).toBe(1);
+            expect(EXPECTED_DAILY_LIMIT).toBe(20);
+            expect(EXPECTED_MINUTE_LIMIT).toBe(5);
         });
     });
 
@@ -102,7 +102,7 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
 
         it('should enforce per-account limits independently', () => {
-            const DAILY_LIMIT = 10;
+            const DAILY_LIMIT = 20;
 
             // User1 at limit, User2 has remaining
             const user1Used = 10;
@@ -179,12 +179,12 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
     describe('UI Display Text', () => {
         it('should have correct description text for free model', () => {
             const expectedDescription =
-                'Free model • 10 requests/day per account • 1 request/minute';
+                'Free model • 20 requests/day per account • 5 requests/minute';
 
             // This text should be shown in the UI
             expect(expectedDescription).toContain('per account');
-            expect(expectedDescription).toContain('10 requests/day');
-            expect(expectedDescription).toContain('1 request/minute');
+            expect(expectedDescription).toContain('20 requests/day');
+            expect(expectedDescription).toContain('5 requests/minute');
         });
     });
 });

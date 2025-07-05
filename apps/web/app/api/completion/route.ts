@@ -87,8 +87,13 @@ export async function POST(request: NextRequest) {
 
                 // Check rate limits only for users without BYOK
                 let rateLimitResult;
+                let vtPlusAccess;
                 try {
-                    rateLimitResult = await checkRateLimit(userId, selectedModel);
+                    // Check VT+ status once for both rate limits and messages
+                    vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+                    const isVTPlusUser = vtPlusAccess.hasAccess;
+
+                    rateLimitResult = await checkRateLimit(userId, selectedModel, isVTPlusUser);
                 } catch (error) {
                     log.error({ error }, 'Rate limit check failed');
                     // Continue without rate limiting if check fails (graceful degradation)
@@ -101,10 +106,17 @@ export async function POST(request: NextRequest) {
                             ? rateLimitResult.resetTime.daily
                             : rateLimitResult.resetTime.minute;
 
+                    // Use already fetched VT+ status for appropriate message
+                    const isVTPlusUser = vtPlusAccess?.hasAccess || false;
+
                     const message =
                         rateLimitResult.reason === 'daily_limit_exceeded'
-                            ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
-                            : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
+                            ? isVTPlusUser
+                                ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_VT_PLUS
+                                : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
+                            : isVTPlusUser
+                              ? RATE_LIMIT_MESSAGES.MINUTE_LIMIT_VT_PLUS
+                              : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
 
                     return new Response(
                         JSON.stringify({
@@ -127,6 +139,20 @@ export async function POST(request: NextRequest) {
                             },
                         }
                     );
+                }
+
+                // Record request immediately after rate limit check passes to prevent abort bypass
+                if (
+                    userId &&
+                    selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE &&
+                    !hasByokGeminiKey
+                ) {
+                    try {
+                        await recordRequest(userId, selectedModel);
+                    } catch (error) {
+                        log.error({ error }, 'Failed to record request for rate limiting');
+                        // Continue - don't fail the request if rate limit recording fails
+                    }
                 }
             }
         }
@@ -222,8 +248,8 @@ function createCompletionStream({
     ip: _ip,
     abortController,
     gl,
-    selectedModel,
-    hasByokGeminiKey,
+    selectedModel: _selectedModel,
+    hasByokGeminiKey: _hasByokGeminiKey,
 }: {
     data: any;
     userId?: string;
@@ -252,14 +278,8 @@ function createCompletionStream({
                     gl,
                     userId: userId ?? undefined,
                     onFinish: async () => {
-                        // Record request for rate limiting (skip for BYOK users)
-                        if (
-                            userId &&
-                            selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE &&
-                            !hasByokGeminiKey
-                        ) {
-                            await recordRequest(userId, selectedModel);
-                        }
+                        // Rate limiting recording moved to before streaming to prevent abort bypass
+                        // No additional actions needed on finish for rate limiting
                     },
                 });
             } catch (error) {

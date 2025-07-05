@@ -1,4 +1,5 @@
 import { ModelEnum } from '@repo/ai/models';
+import { GEMINI_FLASH_LIMITS } from '@repo/shared/constants/rate-limits';
 import { and, eq } from 'drizzle-orm';
 import { db } from '@/lib/database';
 import { userRateLimits } from '@/lib/database/schema';
@@ -6,9 +7,12 @@ import { userRateLimits } from '@/lib/database/schema';
 // Rate limit constants - PER USER ACCOUNT
 export const RATE_LIMITS = {
     GEMINI_2_5_FLASH_LITE: {
-        DAILY_LIMIT: 10, // 10 requests per day PER USER
-        MINUTE_LIMIT: 1, // 1 request per minute PER USER
+        DAILY_LIMIT: GEMINI_FLASH_LIMITS.FREE_DAY, // requests per day PER USER (free tier)
+        MINUTE_LIMIT: GEMINI_FLASH_LIMITS.FREE_MINUTE, // requests per minute PER USER (free tier)
         MODEL_ID: ModelEnum.GEMINI_2_5_FLASH_LITE,
+        // VT+ enhanced limits (without BYOK)
+        VT_PLUS_DAILY_LIMIT: GEMINI_FLASH_LIMITS.PLUS_DAY, // requests per day for VT+ users
+        VT_PLUS_MINUTE_LIMIT: GEMINI_FLASH_LIMITS.PLUS_MINUTE, // requests per minute for VT+ users
     },
 } as const;
 
@@ -39,8 +43,13 @@ export interface RateLimitStatus {
 /**
  * Check if user can make a request to the specified model
  * Rate limits are enforced PER USER ACCOUNT
+ * VT+ users get enhanced limits (100/day, 10/minute)
  */
-export async function checkRateLimit(userId: string, modelId: ModelEnum): Promise<RateLimitResult> {
+export async function checkRateLimit(
+    userId: string,
+    modelId: ModelEnum,
+    isVTPlusUser?: boolean
+): Promise<RateLimitResult> {
     // Only apply rate limiting to free models
     if (modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE) {
         return {
@@ -56,6 +65,10 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
 
     const config = RATE_LIMITS.GEMINI_2_5_FLASH_LITE;
     const now = new Date();
+
+    // Use VT+ enhanced limits if user has VT+ subscription
+    const dailyLimit = isVTPlusUser ? config.VT_PLUS_DAILY_LIMIT : config.DAILY_LIMIT;
+    const minuteLimit = isVTPlusUser ? config.VT_PLUS_MINUTE_LIMIT : config.MINUTE_LIMIT;
 
     // Get or create user rate limit record
     let rateLimitRecord = await db
@@ -86,8 +99,8 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount, 10);
+    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount, 10);
 
     if (needsDailyReset) {
         dailyCount = 0;
@@ -98,8 +111,8 @@ export async function checkRateLimit(userId: string, modelId: ModelEnum): Promis
     }
 
     // Calculate remaining requests
-    const remainingDaily = config.DAILY_LIMIT - dailyCount;
-    const remainingMinute = config.MINUTE_LIMIT - minuteCount;
+    const remainingDaily = dailyLimit - dailyCount;
+    const remainingMinute = minuteLimit - minuteCount;
 
     // Calculate reset times
     const nextDailyReset = getNextDailyReset();
@@ -182,8 +195,8 @@ export async function recordRequest(userId: string, modelId: ModelEnum): Promise
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount, 10);
+    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount, 10);
     let lastDailyReset = rateLimitRecord.lastDailyReset;
     let lastMinuteReset = rateLimitRecord.lastMinuteReset;
 
@@ -219,7 +232,8 @@ export async function recordRequest(userId: string, modelId: ModelEnum): Promise
  */
 export async function getRateLimitStatus(
     userId: string,
-    modelId: ModelEnum
+    modelId: ModelEnum,
+    isVTPlusUser?: boolean
 ): Promise<RateLimitStatus | null> {
     // Only provide status for free models
     if (modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE) {
@@ -228,6 +242,10 @@ export async function getRateLimitStatus(
 
     const config = RATE_LIMITS.GEMINI_2_5_FLASH_LITE;
     const now = new Date();
+
+    // Use VT+ enhanced limits if user has VT+ subscription
+    const dailyLimit = isVTPlusUser ? config.VT_PLUS_DAILY_LIMIT : config.DAILY_LIMIT;
+    const minuteLimit = isVTPlusUser ? config.VT_PLUS_MINUTE_LIMIT : config.MINUTE_LIMIT;
 
     const rateLimitRecord = await db
         .select()
@@ -240,10 +258,10 @@ export async function getRateLimitStatus(
         return {
             dailyUsed: 0,
             minuteUsed: 0,
-            dailyLimit: config.DAILY_LIMIT,
-            minuteLimit: config.MINUTE_LIMIT,
-            remainingDaily: config.DAILY_LIMIT,
-            remainingMinute: config.MINUTE_LIMIT,
+            dailyLimit: dailyLimit,
+            minuteLimit: minuteLimit,
+            remainingDaily: dailyLimit,
+            remainingMinute: minuteLimit,
             resetTime: {
                 daily: getNextDailyReset(),
                 minute: getNextMinuteReset(),
@@ -255,8 +273,8 @@ export async function getRateLimitStatus(
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyUsed = Number.parseInt(rateLimitRecord.dailyRequestCount);
-    let minuteUsed = Number.parseInt(rateLimitRecord.minuteRequestCount);
+    let dailyUsed = Number.parseInt(rateLimitRecord.dailyRequestCount, 10);
+    let minuteUsed = Number.parseInt(rateLimitRecord.minuteRequestCount, 10);
 
     if (needsDailyReset) {
         dailyUsed = 0;
@@ -269,10 +287,10 @@ export async function getRateLimitStatus(
     return {
         dailyUsed,
         minuteUsed,
-        dailyLimit: config.DAILY_LIMIT,
-        minuteLimit: config.MINUTE_LIMIT,
-        remainingDaily: config.DAILY_LIMIT - dailyUsed,
-        remainingMinute: config.MINUTE_LIMIT - minuteUsed,
+        dailyLimit: dailyLimit,
+        minuteLimit: minuteLimit,
+        remainingDaily: dailyLimit - dailyUsed,
+        remainingMinute: minuteLimit - minuteUsed,
         resetTime: {
             daily: getNextDailyReset(),
             minute: getNextMinuteReset(),
