@@ -1,3 +1,5 @@
+'use client';
+
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { Button, Textarea } from '@repo/ui';

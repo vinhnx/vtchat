@@ -1,3 +1,5 @@
+'use client';
+
 import { ModelEnum } from '@repo/ai/models';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { useEffect, useState } from 'react';

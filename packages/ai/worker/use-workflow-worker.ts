@@ -1,3 +1,5 @@
+'use client';
+
 import type { ChatMode } from '@repo/shared/config';
 import type { CoreAssistantMessage, CoreUserMessage } from 'ai';
 import { useEffect, useRef, useState } from 'react';

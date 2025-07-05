@@ -1,3 +1,5 @@
+'use client';
+
 import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';

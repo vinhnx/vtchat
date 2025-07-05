@@ -1,3 +1,5 @@
+'use client';
+
 import { useChatStore } from '@repo/common/store';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
 import { Download, FileText, X } from 'lucide-react';

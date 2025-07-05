@@ -1,3 +1,5 @@
+'use client';
+
 import { useChatStore } from '@repo/common/store';
 import { cn, Flex } from '@repo/ui';
 import { type Editor, EditorContent } from '@tiptap/react';

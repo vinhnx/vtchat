@@ -1,3 +1,5 @@
+'use client';
+
 import { CodeBlock, ToolIcon } from '@repo/common/components';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import type { ToolCall as ToolCallType } from '@repo/shared/types';

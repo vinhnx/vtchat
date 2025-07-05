@@ -7,37 +7,43 @@
  * Public routes that don't require authentication
  * These routes are accessible without login
  */
-export enum PublicRoutes {
-    HOME = '/',
-    LOGIN = '/login',
-    API_AUTH = '/api/auth',
-    PRIVACY = '/privacy',
-    TERMS = '/terms',
-    FAQ = '/faq',
-    ABOUT = '/about',
-}
+export const PublicRoutes = {
+    HOME: '/',
+    LOGIN: '/login',
+    API_AUTH: '/api/auth',
+    PRIVACY: '/privacy',
+    TERMS: '/terms',
+    FAQ: '/faq',
+    ABOUT: '/about',
+} as const;
+
+export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
 
 /**
  * Protected routes that require authentication
  * These routes will redirect to login if user is not authenticated
  */
-export enum ProtectedRoutes {
-    RECENT = '/recent',
-    SETTINGS = '/settings',
-    PLUS = '/plus', // VT+ subscription page - requires login
-    SUCCESS = '/success',
-}
+export const ProtectedRoutes = {
+    RECENT: '/recent',
+    SETTINGS: '/settings',
+    PLUS: '/plus', // VT+ subscription page - requires login
+    SUCCESS: '/success',
+} as const;
+
+export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRoutes];
 
 /**
  * API routes that may have different authentication requirements
  */
-export enum ApiRoutes {
-    AUTH = '/api/auth',
-    USER_PROFILE = '/api/user/profile',
-    CHECKOUT = '/api/checkout',
-    WEBHOOK_CREEM = '/api/webhook/creem',
-    SUBSCRIPTION = '/api/subscription',
-}
+export const ApiRoutes = {
+    AUTH: '/api/auth',
+    USER_PROFILE: '/api/user/profile',
+    CHECKOUT: '/api/checkout',
+    WEBHOOK_CREEM: '/api/webhook/creem',
+    SUBSCRIPTION: '/api/subscription',
+} as const;
+
+export type ApiRoute = (typeof ApiRoutes)[keyof typeof ApiRoutes];
 
 /**
  * Array of all public routes for middleware usage

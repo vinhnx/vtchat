@@ -1,3 +1,5 @@
+'use client';
+
 import { log } from '@repo/shared/logger';
 import { useCallback, useState } from 'react';
 

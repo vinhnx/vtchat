@@ -1,3 +1,5 @@
+'use client';
+
 import { useChatStore } from '@repo/common/store';
 import { useToast } from '@repo/ui';
 import { type ChangeEvent, useCallback } from 'react';

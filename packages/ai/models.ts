@@ -3,35 +3,37 @@ import type { CoreMessage } from 'ai';
 import { ReasoningTagName, ReasoningType } from './constants/reasoning';
 import type { ProviderEnumType } from './providers';
 
-export enum ModelEnum {
-    CLAUDE_4_SONNET = 'claude-4-sonnet-20250514',
-    Deepseek_R1 = 'accounts/fireworks/models/deepseek-r1',
-    GEMINI_2_5_FLASH_LITE = 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_0_FLASH = 'gemini-2.0-flash',
-    GEMINI_2_0_FLASH_LITE = 'gemini-2.0-flash-lite',
-    GEMINI_2_5_FLASH = 'gemini-2.5-flash',
-    GEMINI_2_5_PRO = 'gemini-2.5-pro',
-    CLAUDE_4_OPUS = 'claude-4-opus-20250514',
-    GPT_4o_Mini = 'gpt-4o-mini',
-    GPT_4o = 'gpt-4o',
-    GPT_4_1_Mini = 'gpt-4.1-mini',
-    GPT_4_1_Nano = 'gpt-4.1-nano',
-    GPT_4_1 = 'gpt-4.1',
-    O3 = 'o3',
-    O3_Mini = 'o3-mini',
-    O4_Mini = 'o4-mini',
-    GROK_3 = 'grok-3',
-    GROK_3_MINI = 'grok-3-mini',
+export const ModelEnum = {
+    CLAUDE_4_SONNET: 'claude-4-sonnet-20250514',
+    Deepseek_R1: 'accounts/fireworks/models/deepseek-r1',
+    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
+    GEMINI_2_0_FLASH: 'gemini-2.0-flash',
+    GEMINI_2_0_FLASH_LITE: 'gemini-2.0-flash-lite',
+    GEMINI_2_5_FLASH: 'gemini-2.5-flash',
+    GEMINI_2_5_PRO: 'gemini-2.5-pro',
+    CLAUDE_4_OPUS: 'claude-4-opus-20250514',
+    GPT_4o_Mini: 'gpt-4o-mini',
+    GPT_4o: 'gpt-4o',
+    GPT_4_1_Mini: 'gpt-4.1-mini',
+    GPT_4_1_Nano: 'gpt-4.1-nano',
+    GPT_4_1: 'gpt-4.1',
+    O3: 'o3',
+    O3_Mini: 'o3-mini',
+    O4_Mini: 'o4-mini',
+    GROK_3: 'grok-3',
+    GROK_3_MINI: 'grok-3-mini',
     // OpenRouter models
-    DEEPSEEK_V3_0324_FREE = 'deepseek/deepseek-chat-v3-0324:free',
-    DEEPSEEK_V3_0324 = 'deepseek/deepseek-chat-v3-0324',
-    DEEPSEEK_R1_FREE = 'deepseek/deepseek-r1:free',
-    DEEPSEEK_R1_0528_FREE = 'deepseek/deepseek-r1-0528:free',
-    QWEN3_235B_A22B = 'qwen/qwen3-235b-a22b',
-    QWEN3_32B = 'qwen/qwen3-32b',
-    MISTRAL_NEMO = 'mistralai/mistral-nemo',
-    QWEN3_14B_FREE = 'qwen/qwen3-14b:free',
-}
+    DEEPSEEK_V3_0324_FREE: 'deepseek/deepseek-chat-v3-0324:free',
+    DEEPSEEK_V3_0324: 'deepseek/deepseek-chat-v3-0324',
+    DEEPSEEK_R1_FREE: 'deepseek/deepseek-r1:free',
+    DEEPSEEK_R1_0528_FREE: 'deepseek/deepseek-r1-0528:free',
+    QWEN3_235B_A22B: 'qwen/qwen3-235b-a22b',
+    QWEN3_32B: 'qwen/qwen3-32b',
+    MISTRAL_NEMO: 'mistralai/mistral-nemo',
+    QWEN3_14B_FREE: 'qwen/qwen3-14b:free',
+} as const;
+
+export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
 
 export type Model = {
     id: ModelEnum;

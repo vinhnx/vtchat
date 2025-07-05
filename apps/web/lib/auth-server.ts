@@ -8,30 +8,6 @@ import { botDetection } from './bot-detection-plugin';
 import { db } from './database';
 import * as schema from './database/schema';
 
-// Validate required OAuth environment variables (skip during build)
-const isBuilding =
-    process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build';
-
-if (!isBuilding) {
-    if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
-        throw new Error(
-            'GitHub OAuth environment variables (GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET) are not set'
-        );
-    }
-
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-        throw new Error(
-            'Google OAuth environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) are not set'
-        );
-    }
-
-    if (!process.env.TWITTER_CLIENT_ID || !process.env.TWITTER_CLIENT_SECRET) {
-        throw new Error(
-            'Twitter OAuth environment variables (TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET) are not set'
-        );
-    }
-}
-
 export const auth = betterAuth({
     baseURL:
         process.env.NODE_ENV === 'production'
@@ -146,5 +122,9 @@ export const auth = betterAuth({
         },
     },
 });
+
+// NOTE: If you see type errors related to better-auth types not assignable,
+// ensure only one version of better-auth is installed in the monorepo root.
+// Remove node_modules and bun.lockb in both root and app, then run `bun install` from root.
 
 export type Session = typeof auth.$Infer.Session;

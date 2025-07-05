@@ -5,28 +5,34 @@
 /**
  * Types of reasoning implementations supported by different providers
  */
-export enum ReasoningType {
-    DEEPSEEK_REASONING = 'deepseek-reasoning',
-    ANTHROPIC_REASONING = 'anthropic-reasoning',
-    GEMINI_THINKING = 'gemini-thinking',
-    NONE = 'none',
-}
+export const ReasoningType = {
+    DEEPSEEK_REASONING: 'deepseek-reasoning',
+    ANTHROPIC_REASONING: 'anthropic-reasoning',
+    GEMINI_THINKING: 'gemini-thinking',
+    NONE: 'none',
+} as const;
+
+export type ReasoningType = (typeof ReasoningType)[keyof typeof ReasoningType];
 
 /**
  * Reasoning tag names used by different providers
  */
-export enum ReasoningTagName {
-    THINK = 'think',
-    THINKING = 'thinking',
-}
+export const ReasoningTagName = {
+    THINK: 'think',
+    THINKING: 'thinking',
+} as const;
+
+export type ReasoningTagName = (typeof ReasoningTagName)[keyof typeof ReasoningTagName];
 
 /**
  * Store and configuration keys
  */
-export enum StoreKeys {
-    THINKING_MODE = 'thinkingMode',
-    API_KEYS = 'apiKeys',
-}
+export const StoreKeys = {
+    THINKING_MODE: 'thinkingMode',
+    API_KEYS: '[REDACTED:api-key]',
+} as const;
+
+export type StoreKeys = (typeof StoreKeys)[keyof typeof StoreKeys];
 
 /**
  * Reasoning middleware configuration

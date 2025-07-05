@@ -6,37 +6,41 @@
  */
 
 // Plan slug enumerations
-export enum PlanSlug {
-    ANONYMOUS = 'anonymous',
-    VT_BASE = 'vt_base',
-    VT_PLUS = 'vt_plus',
-}
+export const PlanSlug = {
+    ANONYMOUS: 'anonymous',
+    VT_BASE: 'vt_base',
+    VT_PLUS: 'vt_plus',
+} as const;
+
+export type PlanSlug = (typeof PlanSlug)[keyof typeof PlanSlug];
 
 // Feature slug enumerations
-export enum FeatureSlug {
+export const FeatureSlug = {
     // Base Plan Features
-    ACCESS_CHAT = 'access_chat',
-    BASE_MODELS = 'base_models',
-    FREE_MODELS = 'free_models',
-    MATH_CALCULATOR = 'math_calculator',
-    BASE_FEATURES = 'base_features',
+    ACCESS_CHAT: 'access_chat',
+    BASE_MODELS: 'base_models',
+    FREE_MODELS: 'free_models',
+    MATH_CALCULATOR: 'math_calculator',
+    BASE_FEATURES: 'base_features',
 
     // VT+ Plan Features
-    DARK_THEME = 'dark_theme',
-    DEEP_RESEARCH = 'deep_research',
-    PRO_SEARCH = 'pro_search',
-    GROUNDING_WEB_SEARCH = 'grounding_web_search',
-    ADVANCED_CHAT_MODES = 'advanced_chat_modes',
-    STRUCTURED_OUTPUT = 'structured_output',
-    THINKING_MODE = 'thinking_mode',
-    DOCUMENT_PARSING = 'document_parsing',
-    THINKING_MODE_TOGGLE = 'thinking_mode_toggle',
-    REASONING_CHAIN = 'reasoning_chain',
-    GEMINI_EXPLICIT_CACHING = 'gemini_explicit_caching',
-    CHART_VISUALIZATION = 'chart_visualization',
-    MULTI_MODAL_CHAT = 'multi_modal_chat',
-    RAG = 'rag',
-}
+    DARK_THEME: 'dark_theme',
+    DEEP_RESEARCH: 'deep_research',
+    PRO_SEARCH: 'pro_search',
+    GROUNDING_WEB_SEARCH: 'grounding_web_search',
+    ADVANCED_CHAT_MODES: 'advanced_chat_modes',
+    STRUCTURED_OUTPUT: 'structured_output',
+    THINKING_MODE: 'thinking_mode',
+    DOCUMENT_PARSING: 'document_parsing',
+    THINKING_MODE_TOGGLE: 'thinking_mode_toggle',
+    REASONING_CHAIN: 'reasoning_chain',
+    GEMINI_EXPLICIT_CACHING: 'gemini_explicit_caching',
+    CHART_VISUALIZATION: 'chart_visualization',
+    MULTI_MODAL_CHAT: 'multi_modal_chat',
+    RAG: 'rag',
+} as const;
+
+export type FeatureSlug = (typeof FeatureSlug)[keyof typeof FeatureSlug];
 
 // Plan configuration interface
 export interface PlanConfig {

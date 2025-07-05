@@ -1,3 +1,5 @@
+'use client';
+
 import { DisableEnter, ShiftEnterToLineBreak } from '@repo/shared/utils';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Document } from '@tiptap/extension-document';
