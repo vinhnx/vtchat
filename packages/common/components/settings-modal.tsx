@@ -146,20 +146,21 @@ export const SettingsModal = () => {
                         {/* Sidebar Navigation */}
                         <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[320px] md:border-b-0 md:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="flex overflow-x-auto whitespace-nowrap p-2 md:flex-col md:space-y-2 md:p-4 md:whitespace-normal">
+                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            'flex-1 md:flex-none md:min-h-auto flex min-h-[44px] w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
+                                            'flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors md:min-w-0 md:shrink md:items-start md:justify-start md:p-3 md:text-left',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
+                                        style={{ minWidth: 'max-content' }}
                                     >
                                         <div className="flex-1 space-y-0.5">
-                                            <div className="text-xs font-medium md:text-base">
+                                            <div className="whitespace-nowrap text-xs font-medium md:whitespace-normal md:text-base">
                                                 {setting.title}
                                             </div>
                                             <div className="text-muted-foreground hidden text-xs md:block">
@@ -441,7 +442,10 @@ export const ApiKeySettings = () => {
                                     </div>
                                 ) : (
                                     <div className="flex w-full items-center gap-3">
-                                        <div className="border-border bg-background min-w-0 flex-1 rounded-lg border px-3 py-2 font-mono text-sm">
+                                        <button
+                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-mono text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            onClick={() => handleEdit(apiKey.key)}
+                                        >
                                             {apiKey.value ? (
                                                 <span className="text-muted-foreground block truncate">
                                                     {getMaskedKey(apiKey.value)}
@@ -451,7 +455,7 @@ export const ApiKeySettings = () => {
                                                     No API key configured
                                                 </span>
                                             )}
-                                        </div>
+                                        </button>
                                         <div className="flex shrink-0 gap-2">
                                             <Button
                                                 className="whitespace-nowrap"
