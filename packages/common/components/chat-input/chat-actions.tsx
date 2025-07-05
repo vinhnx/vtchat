@@ -274,7 +274,6 @@ export function MathCalculatorButton() {
                         'gap-2',
                         mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500'
                     )}
-                    disabled={!hasMathCalculatorAccess}
                     onClick={handleMathCalculatorToggle}
                     size={mathCalculatorEnabled ? 'sm' : 'icon-sm'}
                     tooltip={
@@ -284,8 +283,7 @@ export function MathCalculatorButton() {
                 >
                     <Calculator
                         className={cn(
-                            mathCalculatorEnabled ? '!text-orange-500' : 'text-muted-foreground',
-                            !hasMathCalculatorAccess && 'opacity-50'
+                            mathCalculatorEnabled ? '!text-orange-500' : 'text-muted-foreground'
                         )}
                         size={16}
                         strokeWidth={2}
@@ -341,7 +339,6 @@ export function ChartsButton() {
             >
                 <Button
                     className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
-                    disabled={!hasChartAccess}
                     onClick={handleChartsToggle}
                     size={useCharts ? 'sm' : 'icon-sm'}
                     tooltip={useCharts ? 'Charts & Graphs - Enabled' : 'Charts & Graphs'}
@@ -349,13 +346,12 @@ export function ChartsButton() {
                 >
                     <BarChart3
                         className={cn(
-                            useCharts ? '!text-purple-500' : 'text-muted-foreground',
-                            !hasChartAccess && 'opacity-50'
+                            useCharts ? '!text-purple-500' : 'text-muted-foreground'
                         )}
                         size={16}
                         strokeWidth={2}
                     />
-                    {useCharts && hasChartAccess && <p className="text-xs">Charts</p>}
+                    {useCharts && <p className="text-xs">Charts</p>}
                 </Button>
             </GatedFeatureAlert>
 

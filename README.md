@@ -29,10 +29,10 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **🤖 Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
 - **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
-- **Chart Visualization (Free)**: Create bar charts, line graphs, pie charts, and scatter plots - available to all users
+- **Chart Visualization (Free)**: Create interactive bar charts, line graphs, pie charts, and scatter plots - always available and discoverable through smart UI
 - **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process - available to all logged-in users
-- **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - available to all users
-- **Web Search Integration (Free)**: Real-time web search capabilities for current information - available to all users
+- **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - always available and discoverable through smart UI
+- **Web Search Integration (Free)**: Real-time web search capabilities for current information - always available and discoverable through smart UI
 
 ### 🔒 Privacy-First Architecture
 
@@ -51,6 +51,8 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 ### 🎨 Modern User Experience
 
 - **Shadcn UI Design System**: Consistent, accessible interface
+- **Smart Tool Discovery**: All tools always visible and clickable with intelligent gated access dialogs
+- **Seamless Feature Access**: Tools remain enabled for discoverability while proper access controls show contextual dialogs
 - **Dark Mode**: Premium theming experience for all logged-in users
 - **Responsive Design**: Optimized for desktop and mobile
 - **87% Performance Improvement**: Faster compilation and load times
@@ -318,6 +320,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - **Zero TypeScript Errors**: Complete type safety across the codebase
 - **87% Performance Improvement**: Optimized compilation and runtime
+- **Smart UX Design**: All tools discoverable through always-enabled buttons with intelligent gated dialogs
 - **Production-Ready**: Deployed and running in production environment
 - **Security Hardened**: Comprehensive protection against common threats
 - **Privacy-First**: Industry-leading approach to user data protection

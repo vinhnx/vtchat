@@ -51,11 +51,6 @@ export function useSubscriptionAccess() {
 
     const hasAccess = useCallback(
         (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
-            // Special case: Chart visualization is always available (even for anonymous users)
-            if (options.feature === FeatureSlug.CHART_VISUALIZATION) {
-                return isLoaded && subscriptionStatus;
-            }
-            
             if (!(isLoaded && subscriptionStatus && convertedStatus.isActive)) {
                 // If not loaded, or no status, or overall status is not active, then no access.
                 return false;
@@ -109,11 +104,7 @@ export function useSubscriptionAccess() {
                     FeatureSlug.CHART_VISUALIZATION,
                 ];
                 if (freeFeatures.includes(feature)) {
-                    // Chart visualization is available to everyone (including anonymous users)
-                    if (feature === FeatureSlug.CHART_VISUALIZATION) {
-                        return true;
-                    }
-                    return isSignedIn; // Other features available to all logged-in users
+                    return isSignedIn; // Available to all logged-in users
                 }
                 // If it's a base feature and included in their planConfig, they have access.
                 return true;
