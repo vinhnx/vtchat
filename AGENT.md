@@ -25,6 +25,7 @@
 
 ## Development Workflow
 
+- **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
 - Run `bun run lint` (oxlint) for comprehensive error checking
