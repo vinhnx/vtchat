@@ -12,8 +12,7 @@ export const auth = betterAuth({
     baseURL:
         process.env.NODE_ENV === 'production'
             ? 'https://vtchat.io.vn'
-            : process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
-              process.env.NEXT_PUBLIC_BASE_URL,
+            : process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_BASE_URL,
     basePath: '/api/auth',
     database: drizzleAdapter(db, {
         provider: 'pg',

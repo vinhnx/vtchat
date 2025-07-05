@@ -27,8 +27,8 @@ async function invalidateUserCache(userId) {
                 // Instead, the user needs to trigger this from the frontend
             },
             body: JSON.stringify({
-                targetUserId: userId
-            })
+                targetUserId: userId,
+            }),
         });
 
         if (response.ok) {
@@ -37,7 +37,10 @@ async function invalidateUserCache(userId) {
             log.info({ result }, 'Cache invalidation successful');
         } else {
             console.log('❌ Cache invalidation failed:', response.status, response.statusText);
-            log.error({ status: response.status, statusText: response.statusText }, 'Cache invalidation failed');
+            log.error(
+                { status: response.status, statusText: response.statusText },
+                'Cache invalidation failed'
+            );
         }
     } catch (error) {
         console.error('❌ Error during cache invalidation:', error);
