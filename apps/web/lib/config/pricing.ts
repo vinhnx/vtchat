@@ -34,8 +34,7 @@ export const PRICING_CONFIG = {
                 },
                 {
                     name: 'Free Gemini 2.5 Flash Lite Preview',
-                    description:
-                        `${limitText.free()} with VT's server API key - no setup required`,
+                    description: `${limitText.free()} with VT's server API key - no setup required`,
                 },
                 {
                     name: 'Unlimited BYOK Access',
@@ -51,8 +50,7 @@ export const PRICING_CONFIG = {
             features: [
                 {
                     name: 'Everything in Free Plan + Enhanced Gemini Limits',
-                    description:
-                        `All advanced AI features, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
+                    description: `All advanced AI features, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
                 },
                 {
                     name: 'Premium AI Models (Exclusive)',
