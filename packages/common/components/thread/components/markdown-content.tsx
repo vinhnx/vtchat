@@ -13,7 +13,7 @@ import { memo, Suspense, useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 
 export const markdownStyles = {
-    'animate-fade-in prose prose-sm min-w-full': true,
+    'animate-fade-in prose prose-base min-w-full': true,
 
     // Text styles
     'prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0': true,

@@ -55,7 +55,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                 {!isEditing && (
                     <>
                         <div
-                            className={cn('prose-sm relative px-3 py-1.5 font-normal', {
+                            className={cn('prose-base relative px-3 py-1.5 font-normal', {
                                 'pb-12': isExpanded,
                                 markdownStyles,
                             })}
@@ -182,7 +182,7 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
                 }}
             >
                 <ChatEditor
-                    className={cn('prose-sm max-w-full overflow-y-scroll !p-0', markdownStyles)}
+                    className={cn('prose-base max-w-full overflow-y-scroll !p-0', markdownStyles)}
                     editor={editor}
                     maxHeight="100px"
                     sendMessage={() => {
