@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
     Button,
     Dialog,
@@ -11,7 +12,6 @@ import {
 } from '@repo/ui';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
 
 export interface LoginRequiredDialogProps {
     /** Whether the dialog is open */

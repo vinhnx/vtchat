@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
     getModelFromChatMode,
     ModelEnum,
@@ -110,7 +111,7 @@ export function ChatModeButton() {
         return !hasRequiredAccess;
     })();
 
-    const handleGatedFeature = (gateInfo: {
+    const handleGatedFeature = React.useCallback((gateInfo: {
         feature?: string;
         plan?: string;
         title: string;
@@ -118,7 +119,7 @@ export function ChatModeButton() {
     }) => {
         setShowGateAlert(gateInfo);
         setIsChatModeOpen(false); // Close the dropdown
-    };
+    }, []);
 
     return (
         <>

@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { ChatModeOptions } from '@repo/common/components';
 import { useAgentStream, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
@@ -35,14 +36,14 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
             message: string;
         } | null>(null);
 
-        const handleGatedFeature = (gateInfo: {
+        const handleGatedFeature = React.useCallback((gateInfo: {
             feature?: string;
             plan?: string;
             title: string;
             message: string;
         }) => {
             setGatedFeatureAlert(gateInfo);
-        };
+        }, []);
         return (
             <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-1 py-2">
