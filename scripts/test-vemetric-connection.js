@@ -6,6 +6,7 @@
  */
 
 const { log } = require('@repo/shared/logger');
+const { getPublicBaseURL } = require('@repo/shared/config/baseUrl');
 
 async function testVemetricConnection() {
     const token = process.env.NEXT_PUBLIC_VEMETRIC_TOKEN;
@@ -32,7 +33,7 @@ async function testVemetricConnection() {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
-                    Origin: 'http://localhost:3000',
+                    Origin: getPublicBaseURL(),
                 },
                 body: JSON.stringify({
                     test: true,
@@ -63,7 +64,7 @@ async function testVemetricConnection() {
         if (error.message.includes('CORS')) {
             console.log('\n🔧 CORS Issue Detected:');
             console.log('1. Check your Vemetric dashboard domain allowlist');
-            console.log('2. Add your domain: localhost:3000, yourapp.com');
+            console.log(`2. Add your domain: ${getPublicBaseURL()}, yourapp.com`);
             console.log('3. Verify your token is valid');
             log.warn('CORS issue detected during Vemetric connection test');
         }

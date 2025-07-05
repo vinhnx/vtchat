@@ -26,7 +26,7 @@ const getBaseURL = () => {
     }
 
     // Server-side fallback
-    return 'http://localhost:3000';
+    return process.env.NEXT_PUBLIC_BASE_URL;
 };
 
 // Create the auth client that will be used across all packages

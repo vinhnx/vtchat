@@ -45,15 +45,15 @@ Edit `apps/web/.env.local` with your local development values:
 
 # Better-Auth Configuration (Required)
 BETTER_AUTH_SECRET=your-32-character-secret-key-here
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_URL=process.env.NEXT_PUBLIC_BASE_URL
 BETTER_AUTH_ENV=development
-BASE_URL=http://localhost:3000
+BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
 
 # Next.js Public Variables
-NEXT_PUBLIC_COMMON_URL=http://localhost:3000
-NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_COMMON_URL=process.env.NEXT_PUBLIC_BASE_URL
+NEXT_PUBLIC_BETTER_AUTH_URL=process.env.NEXT_PUBLIC_BASE_URL
+NEXT_PUBLIC_BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
+NEXT_PUBLIC_APP_URL=process.env.NEXT_PUBLIC_BASE_URL
 
 # Database Configuration (Choose one option below)
 # Option 1: Local PostgreSQL
@@ -196,7 +196,7 @@ DATABASE_URL=postgresql://yourusername@localhost:5432/vtchat_dev
 
 1. Go to [github.com/settings/developers](https://github.com/settings/developers)
 2. Create a new OAuth App
-3. Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+3. Authorization callback URL: `process.env.NEXT_PUBLIC_BASE_URL/api/auth/callback/github`
 4. Copy Client ID and Client Secret
 
 **Google OAuth**
@@ -205,7 +205,7 @@ DATABASE_URL=postgresql://yourusername@localhost:5432/vtchat_dev
 2. Create a new project or use existing
 3. Enable Google+ API
 4. Create OAuth 2.0 credentials
-5. Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
+5. Authorized redirect URIs: `process.env.NEXT_PUBLIC_BASE_URL/api/auth/callback/google`
 6. Copy Client ID and Client Secret
 
 ## 🏃‍♂️ Running the Development Server
@@ -223,15 +223,15 @@ pnpm dev
 
 ### Access the Application
 
-- **Main App**: [http://localhost:3000](http://localhost:3000)
-- **Chat Interface**: [http://localhost:3000/chat](http://localhost:3000/chat)
-- **Health Check**: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+- **Main App**: [process.env.NEXT_PUBLIC_BASE_URL](process.env.NEXT_PUBLIC_BASE_URL)
+- **Chat Interface**: [process.env.NEXT_PUBLIC_BASE_URL/chat](process.env.NEXT_PUBLIC_BASE_URL/chat)
+- **Health Check**: [process.env.NEXT_PUBLIC_BASE_URL/api/health](process.env.NEXT_PUBLIC_BASE_URL/api/health)
 
 ## 🧪 Testing Your Setup
 
 ### 1. Basic Application Test
 
-- [ ] App loads at `http://localhost:3000`
+- [ ] App loads at `process.env.NEXT_PUBLIC_BASE_URL`
 - [ ] No console errors
 - [ ] Health check returns `{"status": "ok"}`
 

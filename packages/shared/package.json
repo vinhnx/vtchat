@@ -10,6 +10,7 @@
         "./config/payment": "./config/payment.ts",
         "./config/vt-plus-features": "./config/vt-plus-features.ts",
         "./config/embedding-models": "./config/embedding-models.ts",
+        "./config/baseUrl": "./config/baseUrl.ts",
         "./constants": "./constants/index.ts",
         "./constants/rate-limits": "./constants/rate-limits.ts",
         "./constants/routes": "./constants/routes.ts",

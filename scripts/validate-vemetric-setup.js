@@ -6,6 +6,7 @@
  */
 
 const { log } = require('@repo/shared/logger');
+const { getPublicBaseURL } = require('@repo/shared/config/baseUrl');
 
 async function validateVemetricSetup() {
     // CLI output for user
@@ -68,7 +69,9 @@ async function validateVemetricSetup() {
     }
 
     console.log('  3. Ensure your domain is whitelisted in Vemetric dashboard:');
-    console.log('     - localhost:3000 (development)');
+    const baseUrl = getPublicBaseURL();
+    const domain = baseUrl.replace('http://', '').replace('https://', '');
+    console.log(`     - ${domain} (current environment)`);
     console.log('     - vtchat.io.vn (production)');
 
     console.log('\n📊 NEXT STEPS:');

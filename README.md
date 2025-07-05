@@ -151,7 +151,7 @@ vtchat/
 
     - `DATABASE_URL` - Neon PostgreSQL connection string
     - `BETTER_AUTH_SECRET` - Authentication secret key
-    - `BETTER_AUTH_URL` - Authentication URL (http://localhost:3000 for development)
+    - `BETTER_AUTH_URL` - Authentication URL (process.env.NEXT_PUBLIC_BASE_URL for development)
 
     **AI Provider Keys (choose one or more):**
 
@@ -183,7 +183,7 @@ vtchat/
     ```
 
 6. **Open the application**:
-   Navigate to `http://localhost:3000` in your browser.
+   Navigate to `process.env.NEXT_PUBLIC_BASE_URL` in your browser.
 
 ### Development Commands
 

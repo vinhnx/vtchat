@@ -5,7 +5,10 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-increase chat thread markdown font size to more comfortable size, min 13px
+## ✅ RESOLVED: USER ID 84362f24-8643-4a1e-8615-bb605c3e7717 - VT+ subscription issue investigated. Database is correct, frontend cache issue identified. Solution: User needs to logout, clear cache, and login again. See: docs/subscription-issue-investigation-84362f24.md
+
+--
+increase chat thread markdown font size to more comfortable size, min 13px. using markdown prose
 --
 
 rethink Plus tier offering -> maybe remove BYOK.
@@ -24,41 +27,52 @@ use context7, neon mcp if needed
 when a tools is invoked using smart semantic routing feature, it should be able to select the best tool BUTTON in chat input bar for the user based on the query.
 for example:
 
-
 "Calculate 2+2" -> Math tool button enabled and selected
 
 "Search latest Hacker News" -> Web Search button enabled and selected
 
-"Create a line chart sales data: A 100, B 150, C 120, D 200" -> Charts button enabled and selected
---
+## "Create a line chart sales data: A 100, B 150, C 120, D 200" -> Charts button enabled and selected
+
 user feedbacks:
 kindly check, not giving reasonable answers
 
 a) try to use api of chat models
 
-b) dall-e and spon-video model of gpt
---
-https://dotenvx.com/docs/platforms/fly
---
+## b) dall-e and spon-video model of gpt
+
+## https://dotenvx.com/docs/platforms/fly
+
 https://contentsignals.org/
+
 # NOTICE: The collection of content and other data on this
+
 # site through automated means, including any device, tool,
+
 # or process designed to data mine or scrape content, is
+
 # prohibited except (1) as provided by the below Content
+
 # Usage directives or (2) with express written permission
+
 # from VT.
 
 # The Content Usage directives in this file use syntax and
+
 # vocabulary from a proposed IETF standard drafted by the AI
+
 # Preferences (aipref) working group and have the meanings
+
 # set forth in that standard. To learn more, please see
+
 # https://contentsignals.org/.
 
 # To request permission to license our intellectual property
+
 # and/or other materials, please contact us at
+
 # hello@vtchat.io.vn.
 
-User-Agent: *
+User-Agent: \*
 Content-Usage: tdm=n, search=y
 Allow: /
 --
@@ -85,9 +99,7 @@ I've added some research features that I actually use daily: Deep Research does 
 
 Built with Next.js 14, TypeScript, and Turborepo in a monorepo setup. Everything is fully open source for self-hosting with your own API keys. The hosted version keeps most features free, with optional VT+ for premium models and advanced research capabilities.
 
-Happy to discuss the local-first design decisions or research workflow architecture.
---
-
+## Happy to discuss the local-first design decisions or research workflow architecture.
 
 --
 
