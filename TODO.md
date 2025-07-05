@@ -5,12 +5,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-## ✅ RESOLVED: USER ID 84362f24-8643-4a1e-8615-bb605c3e7717 - VT+ subscription issue investigated. Database is correct, frontend cache issue identified. Solution: User needs to logout, clear cache, and login again. See: docs/subscription-issue-investigation-84362f24.md
-
---
-increase chat thread markdown font size to more comfortable size, min 13px. using markdown prose
---
-
 rethink Plus tier offering -> maybe remove BYOK.
 
 --

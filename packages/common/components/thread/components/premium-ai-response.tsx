@@ -161,7 +161,7 @@ export const PremiumAIResponse = memo(
                         {/* Content */}
                         <div
                             className={cn(
-                                'prose prose-sm max-w-none p-6',
+                                'prose prose-base max-w-none p-6',
                                 'prose-gray dark:prose-invert',
                                 'prose-headings:font-semibold prose-headings:text-gray-900 dark:prose-headings:text-gray-100',
                                 'prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300',
