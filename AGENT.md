@@ -23,6 +23,15 @@
 - Use oxlint for fast comprehensive linting (run `bun run lint`)
 - Use Prettier for markdown files only (run `bun run format`)
 
+## UI/UX Design Principles
+
+- **Minimal Design**: Follow shadcn/ui principles with clean, minimal aesthetics
+- **No Colors**: Use only black/white/muted colors (avoid gradients, bright colors)
+- **Minimal Icons**: Reduce icon usage to essentials only
+- **Clean Typography**: Rely on typography hierarchy over visual decorations
+- **Neutral Palette**: Use `text-muted-foreground`, `bg-muted`, standard shadcn colors
+- **Simple Interactions**: Avoid flashy animations or complex visual effects
+
 ## Development Workflow
 
 - **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first

@@ -112,7 +112,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] md:max-w-[1200px] md:rounded-xl">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <div
                     className="scrollbar-thin relative w-full overflow-y-auto overflow-x-hidden"
@@ -142,15 +142,15 @@ export const SettingsModal = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-col md:flex-row">
+                    <div className="flex flex-col xl:flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[320px] md:border-b-0 md:border-r">
+                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[320px] xl:border-b-0 xl:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
+                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 xl:flex-col xl:gap-0 xl:space-y-2 xl:overflow-x-visible xl:p-4">
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            'flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors md:min-w-0 md:shrink md:items-start md:justify-start md:p-3 md:text-left',
+                                            'flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
@@ -160,10 +160,10 @@ export const SettingsModal = () => {
                                         style={{ minWidth: 'max-content' }}
                                     >
                                         <div className="flex-1 space-y-0.5">
-                                            <div className="whitespace-nowrap text-xs font-medium md:whitespace-normal md:text-base">
+                                            <div className="whitespace-nowrap text-xs font-medium xl:whitespace-normal xl:text-base">
                                                 {setting.title}
                                             </div>
-                                            <div className="text-muted-foreground hidden text-xs md:block">
+                                            <div className="text-muted-foreground hidden text-xs xl:block">
                                                 {setting.description}
                                             </div>
                                         </div>
@@ -174,14 +174,14 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 md:p-8"
+                            className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 xl:p-8"
                             ref={panelContentRef}
                             style={{
                                 minHeight: '500px',
                                 maxHeight: 'calc(85vh - 120px)',
                             }}
                         >
-                            <div className="w-full min-w-0 max-w-none md:min-w-[700px] lg:min-w-[800px]">
+                            <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
                                 {
                                     settingMenu.find((setting) => setting.key === settingTab)
                                         ?.component

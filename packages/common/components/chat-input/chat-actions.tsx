@@ -21,6 +21,7 @@ import {
     cn,
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DropdownMenu,
@@ -145,30 +146,39 @@ export function ChatModeButton() {
             </DropdownMenu>
 
             {/* Gated Feature Alert Modal */}
-            <Dialog onOpenChange={(open) => !open && setShowGateAlert(null)} open={!!showGateAlert}>
-                <DialogContent className="mx-4 max-w-[95vw] rounded-xl sm:max-w-md">
-                    <DialogTitle className="sr-only">
-                        {showGateAlert?.title || 'Upgrade Required'}
-                    </DialogTitle>
-                    <div className="flex flex-col items-center gap-4 p-6 text-center">
-                        <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
-                            <ArrowUp className="text-purple-600 dark:text-purple-400" size={24} />
+            {showGateAlert && (
+                <Dialog onOpenChange={(open) => !open && setShowGateAlert(null)} open={!!showGateAlert}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>{showGateAlert.title}</DialogTitle>
+                            <DialogDescription>
+                                {showGateAlert.message}
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-4">
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={() => setShowGateAlert(null)}
+                                    variant="outline"
+                                    className="flex-1"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        push('/plus');
+                                        setShowGateAlert(null);
+                                    }}
+                                    className="flex-1"
+                                >
+                                    Upgrade to VT+
+                                </Button>
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-semibold">{showGateAlert?.title}</h3>
-                            <p className="text-muted-foreground text-sm">
-                                {showGateAlert?.message}
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button onClick={() => setShowGateAlert(null)} variant="outline">
-                                Cancel
-                            </Button>
-                            <Button onClick={() => push('/plus')}>Upgrade Now</Button>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
+                    </DialogContent>
+                </Dialog>
+            )}
         </>
     );
 }
