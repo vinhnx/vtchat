@@ -8,13 +8,13 @@ import { log } from '@repo/shared/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Button,
+    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -26,8 +26,8 @@ import {
 } from '@repo/ui';
 import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
@@ -323,13 +323,12 @@ export const CommandSearch = () => {
                         <Button
                             className="gap-2"
                             onClick={() => {
-                                router.push('/plus');
+                                router.push('/login');
                                 setShowSubscriptionDialog(false);
                                 onClose();
                             }}
                         >
-                            <Plus size={16} />
-                            Upgrade to VT+
+                            Login
                         </Button>
                     </DialogFooter>
                 </DialogContent>
