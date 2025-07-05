@@ -73,7 +73,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
             open={isOpen}
             modal={true}
         >
-            <DialogContent 
+            <DialogContent
                 className="w-full max-w-[95vw] sm:max-w-lg md:max-w-2xl p-3 sm:p-6"
                 onPointerDownOutside={(e) => {
                     e.preventDefault();

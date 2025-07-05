@@ -54,15 +54,18 @@ export function RAGChatbot() {
     // Simple BYOK check - show onboarding if no required API keys
     const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
     const [hasCheckedApiKeys, setHasCheckedApiKeys] = useState(false);
-    
+
     // Mobile sidebar state
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     // Enhanced error handling function
     const showErrorToast = (error: any) => {
         // Debug logging to understand error structure
-        log.error({ error, errorMessage: error?.message, errorType: typeof error }, 'showErrorToast called');
-        
+        log.error(
+            { error, errorMessage: error?.message, errorType: typeof error },
+            'showErrorToast called'
+        );
+
         // Extract error message from various possible structures
         let errorMessage = '';
         if (typeof error === 'string') {
@@ -76,26 +79,31 @@ export function RAGChatbot() {
         } else {
             errorMessage = 'Unknown error occurred';
         }
-        
+
         const message = errorMessage.toLowerCase();
         log.info({ message, originalError: error }, 'Processing error message for toast');
-        
+
         try {
             if (message.includes('api key is required') || message.includes('unauthorized')) {
                 toast.error('API Key Required', {
-                    description: 'Please configure your API keys in Settings to use the Knowledge Assistant.',
+                    description:
+                        'Please configure your API keys in Settings to use the Knowledge Assistant.',
                     action: {
                         label: 'Add Keys',
-                        onClick: () => setShowApiKeyDialog(true)
-                    }
+                        onClick: () => setShowApiKeyDialog(true),
+                    },
                 });
             } else if (message.includes('rate limit') || message.includes('too many requests')) {
                 toast.error('Rate Limit Exceeded', {
                     description: 'Too many requests. Please try again in a few minutes.',
                 });
-            } else if (message.includes('insufficient credits') || message.includes('quota exceeded')) {
+            } else if (
+                message.includes('insufficient credits') ||
+                message.includes('quota exceeded')
+            ) {
                 toast.error('Credits Exhausted', {
-                    description: 'Your API credits have been exhausted. Please check your provider account.',
+                    description:
+                        'Your API credits have been exhausted. Please check your provider account.',
                 });
             } else if (message.includes('network') || message.includes('fetch')) {
                 toast.error('Network Error', {
@@ -120,7 +128,10 @@ export function RAGChatbot() {
             }
             log.info({}, 'Toast error shown successfully');
         } catch (toastError) {
-            log.error({ toastError, originalError: error }, 'Failed to show error toast - this indicates a problem with the toast system');
+            log.error(
+                { toastError, originalError: error },
+                'Failed to show error toast - this indicates a problem with the toast system'
+            );
         }
     };
 
@@ -155,11 +166,14 @@ export function RAGChatbot() {
             profile,
         },
         onError: (error) => {
-            log.error({ error, errorKeys: Object.keys(error), errorProto: Object.getPrototypeOf(error) }, 'RAG Chat Error in onError handler');
-            
+            log.error(
+                { error, errorKeys: Object.keys(error), errorProto: Object.getPrototypeOf(error) },
+                'RAG Chat Error in onError handler'
+            );
+
             // Show error toast immediately and also with slight delay as fallback
             showErrorToast(error);
-            
+
             // Fallback with delay in case immediate call doesn't work
             setTimeout(() => {
                 log.info({}, 'Showing error toast with delay fallback');
@@ -170,12 +184,17 @@ export function RAGChatbot() {
             // Check if the assistant message contains error indicators
             if (message.content) {
                 const content = message.content.toLowerCase();
-                if (content.includes('error:') || content.includes('failed to') || content.includes('unable to')) {
+                if (
+                    content.includes('error:') ||
+                    content.includes('failed to') ||
+                    content.includes('unable to')
+                ) {
                     // Extract error from message content if it looks like an error
-                    const errorMatch = message.content.match(/error:\s*(.*)/i) || 
-                                     message.content.match(/failed to\s*(.*)/i) ||
-                                     message.content.match(/unable to\s*(.*)/i);
-                    
+                    const errorMatch =
+                        message.content.match(/error:\s*(.*)/i) ||
+                        message.content.match(/failed to\s*(.*)/i) ||
+                        message.content.match(/unable to\s*(.*)/i);
+
                     if (errorMatch) {
                         const errorMsg = errorMatch[1].trim();
                         setTimeout(() => {
@@ -201,7 +220,9 @@ export function RAGChatbot() {
                 setKnowledgeBase(resources);
             } else {
                 const errorText = await response.text();
-                const error = new Error(errorText || `HTTP ${response.status}: ${response.statusText}`);
+                const error = new Error(
+                    errorText || `HTTP ${response.status}: ${response.statusText}`
+                );
                 log.error(
                     { status: response.status, statusText: response.statusText, errorText },
                     'Failed to fetch knowledge base'
@@ -229,7 +250,9 @@ export function RAGChatbot() {
                 toast.success('Knowledge base cleared successfully');
             } else {
                 const errorText = await response.text();
-                const error = new Error(errorText || `HTTP ${response.status}: Failed to clear knowledge base`);
+                const error = new Error(
+                    errorText || `HTTP ${response.status}: Failed to clear knowledge base`
+                );
                 log.error({ status: response.status, errorText }, 'Error clearing knowledge base');
                 showErrorToast(error);
             }
@@ -254,7 +277,9 @@ export function RAGChatbot() {
                 toast.success('Knowledge item deleted successfully');
             } else {
                 const errorText = await response.text();
-                const error = new Error(errorText || `HTTP ${response.status}: Failed to delete knowledge item`);
+                const error = new Error(
+                    errorText || `HTTP ${response.status}: Failed to delete knowledge item`
+                );
                 log.error({ status: response.status, errorText }, 'Error deleting knowledge item');
                 showErrorToast(error);
             }
@@ -480,7 +505,7 @@ export function RAGChatbot() {
                                 </Button>
                             )}
                         </div>
-                        
+
                         <form className="flex gap-2" onSubmit={handleSubmit}>
                             <Input
                                 className="flex-1 text-sm sm:text-base"
@@ -508,7 +533,7 @@ export function RAGChatbot() {
 
             {/* Desktop Sidebar */}
             <div className="hidden md:flex w-80 border-l">
-                <RagSidebar 
+                <RagSidebar
                     knowledgeBase={knowledgeBase}
                     isViewDialogOpen={isViewDialogOpen}
                     setIsViewDialogOpen={setIsViewDialogOpen}
@@ -533,7 +558,7 @@ export function RAGChatbot() {
                     <div className="border-b p-4">
                         <h2 className="text-lg font-semibold">Knowledge Base & Settings</h2>
                     </div>
-                    <RagSidebar 
+                    <RagSidebar
                         knowledgeBase={knowledgeBase}
                         isViewDialogOpen={isViewDialogOpen}
                         setIsViewDialogOpen={setIsViewDialogOpen}
@@ -653,8 +678,8 @@ function RagSidebar({
                                         <div className="space-y-3">
                                             {knowledgeBase.length === 0 ? (
                                                 <div className="text-muted-foreground py-8 text-center">
-                                                    No knowledge items yet. Start chatting
-                                                    to build your knowledge base!
+                                                    No knowledge items yet. Start chatting to build
+                                                    your knowledge base!
                                                 </div>
                                             ) : (
                                                 knowledgeBase.map((item) => (
@@ -674,9 +699,7 @@ function RagSidebar({
                                                         </div>
                                                         <Button
                                                             className="text-destructive hover:text-destructive"
-                                                            onClick={() =>
-                                                                setDeleteItemId(item.id)
-                                                            }
+                                                            onClick={() => setDeleteItemId(item.id)}
                                                             size="sm"
                                                             variant="ghost"
                                                         >
@@ -690,10 +713,7 @@ function RagSidebar({
                                 </DialogContent>
                             </Dialog>
 
-                            <Dialog
-                                onOpenChange={setIsClearDialogOpen}
-                                open={isClearDialogOpen}
-                            >
+                            <Dialog onOpenChange={setIsClearDialogOpen} open={isClearDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button className="flex-1" size="sm" variant="outline">
                                         <Trash2 className="mr-2 h-3 w-3" />
@@ -704,9 +724,9 @@ function RagSidebar({
                                     <DialogHeader>
                                         <DialogTitle>Clear Knowledge Base</DialogTitle>
                                         <DialogDescription>
-                                            This will permanently delete all{' '}
-                                            {knowledgeBase.length} items from your knowledge
-                                            base. This action cannot be undone.
+                                            This will permanently delete all {knowledgeBase.length}{' '}
+                                            items from your knowledge base. This action cannot be
+                                            undone.
                                         </DialogDescription>
                                     </DialogHeader>
                                     <div className="flex justify-end gap-2">
@@ -729,10 +749,7 @@ function RagSidebar({
                         </div>
 
                         {/* Individual Delete Confirmation Dialog */}
-                        <Dialog
-                            onOpenChange={() => setDeleteItemId(null)}
-                            open={!!deleteItemId}
-                        >
+                        <Dialog onOpenChange={() => setDeleteItemId(null)} open={!!deleteItemId}>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Delete Knowledge Item</DialogTitle>
@@ -742,17 +759,13 @@ function RagSidebar({
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="flex justify-end gap-2">
-                                    <Button
-                                        onClick={() => setDeleteItemId(null)}
-                                        variant="outline"
-                                    >
+                                    <Button onClick={() => setDeleteItemId(null)} variant="outline">
                                         Cancel
                                     </Button>
                                     <Button
                                         disabled={isDeleting}
                                         onClick={() =>
-                                            deleteItemId &&
-                                            deleteKnowledgeItem(deleteItemId)
+                                            deleteItemId && deleteKnowledgeItem(deleteItemId)
                                         }
                                         variant="destructive"
                                     >
@@ -777,9 +790,7 @@ function RagSidebar({
                             <div className="text-muted-foreground text-xs font-medium">
                                 CHAT MODEL
                             </div>
-                            <div className="text-sm">
-                                {currentRagChatModel?.name || 'Unknown'}
-                            </div>
+                            <div className="text-sm">{currentRagChatModel?.name || 'Unknown'}</div>
                         </div>
                         <div className="space-y-2">
                             <div className="text-muted-foreground text-xs font-medium">
