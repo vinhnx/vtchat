@@ -123,6 +123,15 @@ ENV CREEM_ENVIRONMENT=${CREEM_ENVIRONMENT}
 # Build the application with environment variables
 # Set a placeholder DATABASE_URL for build time (actual value is set at runtime via secrets)
 ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder"
+ENV NEXT_PHASE="phase-production-build"
+
+# Set placeholder OAuth secrets for build time (actual values will be available at runtime)
+ENV GITHUB_CLIENT_ID="build-placeholder"
+ENV GITHUB_CLIENT_SECRET="build-placeholder"
+ENV GOOGLE_CLIENT_ID="build-placeholder"
+ENV GOOGLE_CLIENT_SECRET="build-placeholder"
+ENV TWITTER_CLIENT_ID="build-placeholder"
+ENV TWITTER_CLIENT_SECRET="build-placeholder"
 
 RUN cd apps/web && \
     echo "=== BUILD ENVIRONMENT DEBUG ===" && \
@@ -131,6 +140,7 @@ RUN cd apps/web && \
     echo "CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT" && \
     echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && \
     echo "NODE_ENV will be automatically set by Next.js build process" && \
+    echo "NEXT_PHASE: $NEXT_PHASE" && \
     echo "==============================" && \
     bun run build
 
