@@ -20,13 +20,11 @@
 - 4-space indentation, single quotes, 100 char line length
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
-- **Always run Biome.js before commits** (run `bun run biome:check` or `bun run biome:format`)
 - Use oxlint for fast comprehensive linting (run `bun run lint`)
 - Use Prettier for markdown files only (run `bun run format`)
 
 ## Development Workflow
 
-- **REQUIRED**: Run `bun run biome:check` before any git commit (automated via Husky pre-commit hook)
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
