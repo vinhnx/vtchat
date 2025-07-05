@@ -26,10 +26,13 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Premium AI Models (VT+ exclusive)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 - **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
+- **🤖 Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
 - **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
+- **Chart Visualization (Free)**: Create bar charts, line graphs, pie charts, and scatter plots - available to all users
 - **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process - available to all logged-in users
 - **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - available to all users
+- **Web Search Integration (Free)**: Real-time web search capabilities for current information - available to all users
 
 ### 🔒 Privacy-First Architecture
 
@@ -41,7 +44,7 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 
 ### 💼 Subscription Tiers
 
-- **Free tier (logged-in users)**: Most advanced features included - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage
+- **Free tier (logged-in users)**: Most advanced features included - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
 - **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search, Deep Research, and AI Memory (RAG)
 - **Seamless Management**: Creem.io integration with customer portal
 
@@ -62,7 +65,7 @@ vtchat/
 │   └── web/              # Next.js 14 web application (App Router)
 ├── packages/
 │   ├── actions/          # Server actions (e.g., feedback)
-│   ├── ai/               # AI models, providers, tools, workflow logic
+│   ├── ai/               # AI models, providers, tools, semantic router, workflow logic
 │   ├── common/           # Shared React components, hooks, context, store
 │   ├── orchestrator/     # Workflow engine and task management
 │   ├── shared/           # Shared types, constants, configs, utils, logger
@@ -106,7 +109,9 @@ vtchat/
 
 - **AI Providers**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI
 - **AI SDK**: Vercel AI SDK with reasoning tokens support
+- **Semantic Tool Router**: OpenAI embeddings + pattern matching for intelligent tool activation
 - **Document Processing**: Multi-format file analysis
+- **Chart Generation**: Bar charts, line graphs, pie charts, scatter plots
 - **Web Search**: Real-time grounding capabilities
 
 ## 🚀 Getting Started
@@ -214,7 +219,7 @@ The application requires several environment variables for full functionality. R
 
 VTChat implements a dual-tier system with the most generous free tier in the industry:
 
-- **Free tier (logged-in users)**: Most advanced features included - dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, chart visualization, multi-modal chat, and unlimited BYOK usage
+- **Free tier (logged-in users)**: Most advanced features included - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
 - **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search (fast web search), Deep Research (comprehensive analysis), and AI Memory (personal knowledge base with RAG)
 
 ## 🚢 Deployment

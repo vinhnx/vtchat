@@ -121,6 +121,11 @@ function AboutContent() {
                                     Google, Fireworks, Together AI, and xAI
                                 </li>
                                 <li>
+                                    <strong>Intelligent Tool Router:</strong> AI-powered semantic
+                                    routing automatically activates tools based on query intent using
+                                    OpenAI embeddings and pattern matching
+                                </li>
+                                <li>
                                     <strong>Premium AI Models:</strong> Claude 4, GPT-4.1, O3
                                     series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
                                 </li>
@@ -128,6 +133,15 @@ function AboutContent() {
                                     <strong>Free AI Models:</strong> 9 models including Gemini
                                     2.0/2.5 Flash and OpenRouter models with tiered rate limits (VT+
                                     users get up to 5x enhanced limits)
+                                </li>
+                                <li>
+                                    <strong>Chart Visualization:</strong> Create interactive bar
+                                    charts, line graphs, pie charts, and scatter plots - available to
+                                    all users
+                                </li>
+                                <li>
+                                    <strong>Web Search Integration:</strong> Real-time web search
+                                    capabilities for current information and grounding
                                 </li>
                                 <li>
                                     <strong>Thinking Mode:</strong> AI SDK reasoning tokens with

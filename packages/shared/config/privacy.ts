@@ -42,6 +42,7 @@ VT is built with **privacy-first principles** at its core:
 - **Error Logs:** Crash reports and error data to improve service stability
 - **Performance Metrics:** Page load times, feature usage patterns (no content)
 - **Security Logs:** Authentication attempts, failed login detection
+- **Tool Router Analytics:** Anonymous usage data of intelligent tool routing features for optimization (no query content, only tool activation patterns)
 
 ### 1.3 Information We Do NOT Collect
 - ❌ **Chat conversations** - stored only locally on your device, never on our servers
@@ -70,6 +71,7 @@ VT is built with **privacy-first principles** at its core:
 - **Feature Development:** Understand user needs to develop new features
 - **Security Enhancement:** Detect and prevent security threats and abuse
 - **Quality Assurance:** Ensure service reliability and user experience
+- **AI Router Optimization:** Improve intelligent tool routing accuracy using anonymous usage patterns (no query content analyzed)
 
 ### 2.3 Legal & Compliance
 - **Legal Obligations:** Comply with applicable laws, regulations, and legal requests
