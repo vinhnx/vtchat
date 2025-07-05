@@ -74,9 +74,7 @@ function AboutContent() {
                             <p className="text-muted-foreground">
                                 VT delivers cutting-edge AI capabilities through a sophisticated
                                 dual-tier subscription system while maintaining a privacy-first
-                                architecture. We believe in providing the most generous free tier in
-                                the industry while offering premium research capabilities for power
-                                users.
+                                architecture.
                             </p>
                         </div>
 
@@ -126,13 +124,11 @@ function AboutContent() {
                                     using OpenAI embeddings and pattern matching
                                 </li>
                                 <li>
-                                    <strong>Premium AI Models:</strong> Claude 4, GPT-4.1, O3
-                                    series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+                                    <strong>Premium AI Models (Free with BYOK):</strong> ALL premium models including Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - available to all logged-in users with their own API keys
                                 </li>
                                 <li>
                                     <strong>Free AI Models:</strong> 9 models including Gemini
-                                    2.0/2.5 Flash and OpenRouter models with tiered rate limits (VT+
-                                    users get up to 5x enhanced limits)
+                                    2.0/2.5 Flash and OpenRouter models - no API keys required
                                 </li>
                                 <li>
                                     <strong>Chart Visualization:</strong> Create interactive bar
@@ -191,9 +187,7 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT provides comprehensive free access with just 3 features behind
-                                the premium tier. Upgrade to VT+ for Deep Research tools, Pro Search
-                                capabilities, and RAG document intelligence.
+                            VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">

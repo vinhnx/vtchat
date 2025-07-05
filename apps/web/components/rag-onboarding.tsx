@@ -70,7 +70,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
             }}
             open={isOpen}
         >
-            <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl">
+            <DialogContent className="w-full max-w-[95vw] sm:max-w-lg md:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Brain className="text-muted-foreground h-6 w-6" />

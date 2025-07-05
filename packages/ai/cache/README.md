@@ -1,6 +1,6 @@
 # Gemini Explicit Caching
 
-This module provides cost-effective caching for Gemini 2.5 and 2.0 models using Google's explicit caching feature. This is a VT+ exclusive feature.
+This module provides cost-effective caching for Gemini 2.5 and 2.0 models using Google's explicit caching feature. This feature is available to all logged-in users.
 
 ## Features
 
@@ -8,7 +8,7 @@ This module provides cost-effective caching for Gemini 2.5 and 2.0 models using 
 - **Supported Models**: Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, 1.5 Pro-001
 - **Configurable TTL**: Set cache duration from 1 minute to 1 hour
 - **Cache Management**: Manage up to 20 cached conversations simultaneously
-- **VT+ Integration**: Seamlessly integrated with VTChat's subscription system
+- **Authentication Integration**: Seamlessly integrated with VTChat's authentication system
 
 ## Usage
 
@@ -56,7 +56,7 @@ const { text } = await generateText({
 });
 ```
 
-### VT+ Integration
+### Authentication Integration
 
 ```typescript
 import { useGeminiCaching } from '@repo/common/hooks';
@@ -74,7 +74,7 @@ function MyComponent() {
     } = useGeminiCaching();
 
     if (!hasAccess) {
-        return <div>Upgrade to VT+ to access Gemini caching</div>;
+        return <div>Please log in to access Gemini caching</div>;
     }
 
     return (
@@ -139,11 +139,11 @@ try {
 2. **Set Appropriate TTL**: Balance between cost savings and freshness requirements
 3. **Monitor Cache Usage**: Keep track of active caches to stay within limits
 4. **Cleanup Old Caches**: Remove unused caches to free up space for new ones
-5. **VT+ Feature Gating**: Always check user access before enabling caching features
+5. **Authentication Check**: Always check user access before enabling caching features
 
 ## Implementation Notes
 
-- Caching is only available for VT+ subscribers
+- Caching is available for all logged-in users
 - Cache settings are persisted in localStorage
 - The cache manager uses a singleton pattern for efficient resource usage
 - All caching operations are asynchronous and include proper error handling

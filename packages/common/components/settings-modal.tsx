@@ -146,11 +146,11 @@ export const SettingsModal = () => {
                         {/* Sidebar Navigation */}
                         <div className="border-border bg-muted/30 w-full shrink-0 border-b md:min-h-full md:w-[320px] md:border-b-0 md:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="flex gap-1 overflow-x-auto p-1 md:flex-col md:gap-0 md:space-y-2 md:overflow-x-visible md:p-4">
+                            <nav className="flex overflow-x-auto whitespace-nowrap p-2 md:flex-col md:space-y-2 md:p-4 md:whitespace-normal">
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            'md:min-h-auto flex min-h-[44px] w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
+                                            'flex-1 md:flex-none md:min-h-auto flex min-h-[44px] w-full items-start whitespace-nowrap rounded-lg p-2 text-left transition-colors md:w-auto md:whitespace-normal md:p-3',
                                             settingTab === setting.key
                                                 ? 'bg-background text-foreground shadow-sm'
                                                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'

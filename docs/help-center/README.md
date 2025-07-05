@@ -10,19 +10,20 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 
 ### Key Features
 
-- **9 Free AI Models**: Access to Gemini and OpenRouter models
+- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys + 9 free server models
 - **Privacy-First**: All conversations stored locally in your browser
-- **Premium Features**: Enhanced web search, deep research, personal AI memory (VT+ subscription)
+- **Research Features**: Enhanced web search, deep research, personal AI memory (VT+ subscription)
 - **Security**: Enterprise-grade protection with rate limiting and bot detection
 - **Multi-Device**: Use on desktop, tablet, and mobile devices
 
 ## 💳 Subscription Plans
 
-### Free Tier (Most Generous in Industry)
+### Free Tier
 
 Available to all logged-in users:
 
-- 9 AI models (5 Gemini + 4 OpenRouter models)
+- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys
+- **9 Free Server Models**: (5 Gemini + 4 OpenRouter models) without needing your own API keys
 - **Dark Theme**: Premium dark mode interface
 - **Thinking Mode**: See how AI thinks through problems
 - **Document Processing**: Upload and analyze PDF, Word, and text files (up to 10MB)
@@ -40,7 +41,6 @@ All free features plus 3 research-focused exclusives:
 - **Enhanced Web Search (PRO_SEARCH)**: AI can search the web for current information
 - **Deep Research (DEEP_RESEARCH)**: Comprehensive analysis of complex topics
 - **Personal AI Memory (RAG)**: AI assistant with memory capabilities
-- **Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 - **Priority Support**: Faster support response times
 
 ## 🛡️ Privacy & Security
@@ -71,29 +71,18 @@ We never collect or store:
 
 ### Available Models
 
-**Free Models (VT_BASE):**
+**All Models Available to Logged-in Users:**
 
-- Gemini 2.0 Flash
-- Gemini 2.5 Flash Lite Preview (with daily rate limits)
-- DeepSeek V3
-- DeepSeek R1
-- Qwen3 14B
-- And 4 more OpenRouter models
+- **Premium Models (Free with BYOK)**: Claude 4, GPT-4.1, O3/O3 Mini, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Free Server Models**: Gemini 2.0 Flash, Gemini 2.5 Flash Lite, DeepSeek V3, DeepSeek R1, Qwen3 14B, and 4 more OpenRouter models
 
-**Premium Models (VT_PLUS):**
+### Model Access
 
-- All free models plus unlimited access
-- OpenAI GPT-4o, GPT-4o Mini, o-series reasoning models
-- Anthropic Claude 3.5 Sonnet, Claude 3.5 Haiku
-- Additional Gemini and specialized models
+- **Premium Models**: Use your own API keys for unlimited access to all premium models
+- **Free Server Models**: No API keys required, uses VT's server-side keys
+- **No Restrictions**: All logged-in users have access to the same AI models
 
-### Rate Limits
-
-- **Free Models**: Limited to 10 requests per day per account
-- **Premium Models**: Unlimited access with VT+ subscription
-- **Rate Limiting**: Protects against abuse while ensuring fair access
-
-## 📄 Document Processing (VT+ Only)
+## 📄 Document Processing
 
 ### Supported File Types
 
@@ -104,7 +93,7 @@ We never collect or store:
 
 ### How to Upload Documents
 
-1. Subscribe to VT+ if you haven't already
+1. Log in to your account if you haven't already
 2. Click the paperclip icon in the chat interface
 3. Select your document (PDF, DOC, DOCX, TXT, or MD)
 4. Wait for processing (files are processed locally)
@@ -114,20 +103,22 @@ We never collect or store:
 
 Documents are processed locally in your browser and never uploaded to our servers. The content is sent to the AI provider for analysis but not stored by us.
 
-## 🔍 Web Search (VT+ Only)
+## 🔍 Web Search
 
 ### Real-Time Information
 
-VT+ subscribers can enable web search to get current information:
+All logged-in users can access basic web search functionality:
 
 - Current events and news
 - Recent developments in any field
 - Real-time data and statistics
 - Latest research and publications
 
+**Note**: VT+ subscribers get enhanced PRO_SEARCH capabilities with more comprehensive results and faster processing.
+
 ### How to Use Web Search
 
-1. Subscribe to VT+ if you haven't already
+1. Log in to your account if you haven't already
 2. Enable web search in the chat interface
 3. Ask questions that require current information
 4. The AI will search the web and provide grounded responses with sources
@@ -172,9 +163,9 @@ Simply type mathematical expressions or ask math-related questions in natural la
 
 ## 🎨 Interface & Themes
 
-### Dark Mode (VT+ Only)
+### Dark Mode
 
-VT+ subscribers get access to a premium dark theme:
+All logged-in users get access to a premium dark theme:
 
 - Official Shadcn UI design variables
 - Consistent dark mode across all components
@@ -194,8 +185,8 @@ VT+ subscribers get access to a premium dark theme:
 
 **"Rate limit exceeded" message**
 
-- You've reached the daily limit for free models (10 requests/day)
-- Upgrade to VT+ for unlimited access to premium models
+- You've reached the daily limit for free server models
+- Use your own API keys for unlimited access to all premium models (free for all logged-in users)
 - Wait 24 hours for the limit to reset
 
 **Authentication issues**
@@ -212,7 +203,7 @@ VT+ subscribers get access to a premium dark theme:
 
 **File upload not working**
 
-- Ensure you have a VT+ subscription
+- Ensure you're logged in (document processing is free for all logged-in users)
 - Check file size (must be under 10MB)
 - Verify file type (PDF, DOC, DOCX, TXT, MD only)
 - Try a different browser if issues persist
@@ -285,9 +276,9 @@ VT is available globally with optimized performance:
 
 ## 📞 Contact & Support
 
-**Website**: [vtchat.io.vn](https://vtchat.io.vn)  
-**Documentation**: Complete technical guides available  
-**Community**: Join our user community for tips and support  
+**Website**: [vtchat.io.vn](https://vtchat.io.vn)
+**Documentation**: Complete technical guides available
+**Community**: Join our user community for tips and support
 **Privacy Policy**: Detailed privacy information available
 
 **Remember**: VT prioritizes your privacy above all else. Your conversations are yours alone and never leave your device.

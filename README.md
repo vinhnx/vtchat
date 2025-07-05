@@ -23,7 +23,7 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 
 ### 🧠 Advanced AI Capabilities
 
-- **Premium AI Models (VT+ exclusive)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
 - **🤖 Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
@@ -44,8 +44,8 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 
 ### 💼 Subscription Tiers
 
-- **Free tier (logged-in users)**: Most advanced features included - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search, Deep Research, and AI Memory (RAG)
+- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
 - **Seamless Management**: Creem.io integration with customer portal
 
 ### 🎨 Modern User Experience
@@ -219,10 +219,10 @@ The application requires several environment variables for full functionality. R
 
 ### Subscription Tiers
 
-VTChat implements a dual-tier system with the most generous free tier in the industry:
+VTChat implements a dual-tier system:
 
-- **Free tier (logged-in users)**: Most advanced features included - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + premium AI models (Claude 4, GPT-4.1, O3, etc.) + 3 exclusive research features: Pro Search (fast web search), Deep Research (comprehensive analysis), and AI Memory (personal knowledge base with RAG)
+- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
 
 ## 🚢 Deployment
 
@@ -323,7 +323,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Smart UX Design**: All tools discoverable through always-enabled buttons with intelligent gated dialogs
 - **Production-Ready**: Deployed and running in production environment
 - **Security Hardened**: Comprehensive protection against common threats
-- **Privacy-First**: Industry-leading approach to user data protection
+- **Privacy-First**: Commited to user data protection
 
 ## 🎯 Roadmap
 
