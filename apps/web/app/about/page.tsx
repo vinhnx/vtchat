@@ -124,7 +124,10 @@ function AboutContent() {
                                     using OpenAI embeddings and pattern matching
                                 </li>
                                 <li>
-                                    <strong>Premium AI Models (Free with BYOK):</strong> ALL premium models including Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - available to all logged-in users with their own API keys
+                                    <strong>Premium AI Models (Free with BYOK):</strong> ALL premium
+                                    models including Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro,
+                                    DeepSeek R1, Grok 3 - available to all logged-in users with
+                                    their own API keys
                                 </li>
                                 <li>
                                     <strong>Free AI Models:</strong> 9 models including Gemini
@@ -187,7 +190,9 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                            VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+                                VT offers free tier, and with VT+ focusing only on 3 exclusive
+                                research capabilities: Deep Research, Pro Search, and RAG (Personal
+                                AI Assistant with Memory).
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">

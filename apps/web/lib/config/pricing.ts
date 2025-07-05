@@ -38,7 +38,8 @@ export const PRICING_CONFIG = {
                 },
                 {
                     name: '9 Free Server Models',
-                    description: 'Gemini and OpenRouter models with VT\'s server API keys - no setup required',
+                    description:
+                        "Gemini and OpenRouter models with VT's server API keys - no setup required",
                 },
                 {
                     name: 'Unlimited BYOK Access',
@@ -54,7 +55,8 @@ export const PRICING_CONFIG = {
             features: [
                 {
                     name: 'Everything in Free Plan (All Premium AI Models Included)',
-                    description: 'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',
+                    description:
+                        'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',
                 },
                 {
                     name: 'Pro Search (Exclusive)',

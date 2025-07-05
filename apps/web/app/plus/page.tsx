@@ -228,7 +228,9 @@ export default function PlusPage() {
                                     </span>
                                 </p>
                                 <p className="mt-6 text-base/7 text-gray-600">
-                                VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+                                    VT offers free tier, and with VT+ focusing only on 3 exclusive
+                                    research capabilities: Deep Research, Pro Search, and RAG
+                                    (Personal AI Assistant with Memory).
                                 </p>
                                 <ul
                                     className="mt-8 space-y-3 text-sm/6 text-gray-600 sm:mt-10"
