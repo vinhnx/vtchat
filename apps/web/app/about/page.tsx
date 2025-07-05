@@ -179,8 +179,9 @@ function AboutContent() {
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
                                 VT offers the most generous free tier in the industry with only 3
-                                premium features. Upgrade to VT+ for enhanced Gemini limits ({limitText.compare()}), research capabilities,
-                                and premium AI models.
+                                premium features. Upgrade to VT+ for enhanced Gemini limits (
+                                {limitText.compare()}), research capabilities, and premium AI
+                                models.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">
