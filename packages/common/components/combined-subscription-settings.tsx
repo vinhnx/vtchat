@@ -355,7 +355,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 <Brain className="h-5 w-5" />
                                 Thinking Mode
                                 <Badge
-                                    className="bg-green-100 px-1.5 py-0.5 text-[10px] text-green-800"
+                                    className="bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                     variant="secondary"
                                 >
                                     Free Feature
@@ -479,7 +479,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 <Zap className="h-5 w-5" />
                                 Gemini Explicit Caching
                                 <Badge
-                                    className="bg-green-100 px-1.5 py-0.5 text-[10px] text-green-800"
+                                    className="bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                     variant="secondary"
                                 >
                                     Free Feature
@@ -966,11 +966,11 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             const details = getFeatureDetails(feature);
                                             return (
                                                 <div
-                                                    className="border-border/50 rounded-lg border bg-green-50 p-4"
+                                                    className="border-border/50 rounded-lg border bg-slate-50 dark:bg-slate-900/50 p-4"
                                                     key={feature}
                                                 >
                                                     <div className="flex items-start gap-3">
-                                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
                                                             {details.icon}
                                                         </div>
                                                         <div className="min-w-0 flex-1">
@@ -979,7 +979,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                                     {details.benefit}
                                                                 </div>
                                                                 <Badge
-                                                                    className="bg-green-100 text-xs text-green-800"
+                                                                    className="bg-slate-100 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                                                     variant="secondary"
                                                                 >
                                                                     Free for All Users

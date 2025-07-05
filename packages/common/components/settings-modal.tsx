@@ -292,7 +292,7 @@ export const ApiKeySettings = () => {
                 <CardContent className="pt-0">
                     <div className="border-border/50 bg-muted/20 rounded-lg border p-3 md:p-4">
                         <div className="flex items-start gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
                                 <Key className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div className="flex-1">
@@ -378,7 +378,7 @@ export const ApiKeySettings = () => {
                                         </div>
                                         {apiKey.value && (
                                             <Badge
-                                                className="bg-green-100 text-[10px] text-green-800 md:text-xs dark:bg-green-900/30 dark:text-green-200"
+                                                className="bg-slate-100 text-[10px] text-slate-700 md:text-xs dark:bg-slate-800 dark:text-slate-300"
                                                 variant="secondary"
                                             >
                                                 Configured

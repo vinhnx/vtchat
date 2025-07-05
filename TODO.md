@@ -5,7 +5,10 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+✅ remove text-green-800 and bg-green-100 in VT+
+✅ use mute color (replaced with slate colors)
 
+---
 Thinking Mode should be enable by default for VT+ tier users.
 
 --

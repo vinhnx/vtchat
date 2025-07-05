@@ -1,9 +1,9 @@
 import { log } from '@repo/shared/logger';
 import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
+import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { multiSession } from 'better-auth/plugins';
-import { emailHarmony } from 'better-auth-harmony';
 import { botDetection } from './bot-detection-plugin';
 import { db } from './database';
 import * as schema from './database/schema';
@@ -96,15 +96,6 @@ export const auth = betterAuth({
                 process.env.NODE_ENV === 'production'
                     ? 'https://vtchat.io.vn/api/auth/callback/twitter'
                     : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
-            scope: ['tweet.read', 'users.read', 'offline.access'],
-            mapProfileToUser: (profile) => {
-                return {
-                    name: profile.data?.name,
-                    image:
-                        profile.data?.profile_image_url?.replace('_normal', '') ||
-                        profile.data?.profile_image_url,
-                };
-            },
         },
     },
     session: {
@@ -122,10 +113,9 @@ export const auth = betterAuth({
     },
     trustedOrigins: [
         process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
-        ...(process.env.NODE_ENV === 'development' 
+        ...(process.env.NODE_ENV === 'development'
             ? [process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000']
-            : []
-        ),
+            : []),
     ],
     fetchOptions: {
         timeout: 10_000, // 10 second timeout
