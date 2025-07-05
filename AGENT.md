@@ -28,6 +28,7 @@
 - **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
 - Test core functionality after significant changes
@@ -36,38 +37,40 @@
 
 All code changes **must** follow this ask-implement-review loop with the Oracle.
 
-1. **Task Intake**  
-   - Write a concise Problem Statement, goals, and acceptance criteria.
+1. **Task Intake**
 
-2. **ASK-ORACLE (PLAN)**  
-   - Provide the above context plus key code excerpts.  
-   - Ask: "Oracle, please produce a detailed implementation plan."
+    - Write a concise Problem Statement, goals, and acceptance criteria.
 
-3. **Implementation**  
-   - Implement strictly according to the received plan.  
-   - Keep commits granular and descriptive.
+2. **ASK-ORACLE (PLAN)**
 
-4. **REVIEW-ORACLE**  
-   - Present the diff or PR link and ask: "Oracle, please review and approve."  
-   - Address comments; iterate until Oracle replies **Approved**.
+    - Provide the above context plus key code excerpts.
+    - Ask: "Oracle, please produce a detailed implementation plan."
 
-5. **Merge & Document**  
-   - Merge only after approval.  
-   - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
+3. **Implementation**
 
-6. **Exceptions**  
-   - For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
+    - Implement strictly according to the received plan.
 
-**Best practices:**  
-✔ Provide only relevant context; avoid massive dumps.  
-✔ Use enumerated questions.  
-✔ Time-box to 2 iterations; escalate if more.  
-✔ Always run format, lint, build, and tests before requesting review.  
+4. **REVIEW-ORACLE**
+
+    - Present the diff or PR link and ask: "Oracle, please review and approve."
+    - Address comments; iterate until Oracle replies **Approved**.
+
+5. **Merge & Document**
+
+    - Merge only after approval.
+    - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
+
+6. **Exceptions**
+    - For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
+
+**Best practices:**
+✔ Provide only relevant context; avoid massive dumps.
+✔ Use enumerated questions.
+✔ Time-box to 2 iterations; escalate if more.
+✔ Always run format, lint, build, and tests before requesting review.
 
 ### Git Hooks
 
-- **Pre-commit hook**: Automatically runs Biome format on staged files and oxlint checks (non-blocking)
-- **Strict mode**: Use `STRICT_COMMIT=true git commit` for full build validation
 - **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
 - **Philosophy**: Encourage good practices without blocking development flow
 
