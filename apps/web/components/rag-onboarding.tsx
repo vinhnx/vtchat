@@ -66,11 +66,24 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
     return (
         <Dialog
             onOpenChange={(open) => {
-                if (!open) onSkip();
+                if (!open) {
+                    onSkip();
+                }
             }}
             open={isOpen}
+            modal={true}
         >
-            <DialogContent className="w-full max-w-[95vw] sm:max-w-lg md:max-w-2xl p-3 sm:p-6">
+            <DialogContent 
+                className="w-full max-w-[95vw] sm:max-w-lg md:max-w-2xl p-3 sm:p-6"
+                onPointerDownOutside={(e) => {
+                    e.preventDefault();
+                    onSkip();
+                }}
+                onEscapeKeyDown={(e) => {
+                    e.preventDefault();
+                    onSkip();
+                }}
+            >
                 <DialogHeader className="space-y-2">
                     <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
                         <Brain className="text-muted-foreground h-5 w-5 sm:h-6 sm:w-6" />
@@ -85,7 +98,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                                 <Sparkles className="text-muted-foreground h-6 w-6 sm:h-8 sm:w-8" />
                             </div>
                             <div>
-                                <h3 className="mb-2 text-lg sm:text-xl font-semibold">Setup Your API Keys</h3>
+                                <h3 className="mb-2 text-lg sm:text-xl font-semibold">
+                                    Setup Your API Keys
+                                </h3>
                                 <p className="text-muted-foreground text-sm sm:text-base px-2 sm:px-0">
                                     To use the Knowledge Assistant, you need to provide your own API
                                     keys. This ensures your data stays private and you have full
@@ -118,7 +133,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                                     <div className="flex items-start gap-2 sm:gap-3">
                                         <Zap className="text-muted-foreground mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                                         <div>
-                                            <h4 className="font-medium text-sm sm:text-base">Private & Secure</h4>
+                                            <h4 className="font-medium text-sm sm:text-base">
+                                                Private & Secure
+                                            </h4>
                                             <p className="text-muted-foreground text-xs sm:text-sm">
                                                 Your API keys and data stay completely private - we
                                                 never store or access your keys.
@@ -130,10 +147,19 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
-                            <Button onClick={handleSkipForNow} variant="outline" className="w-full sm:w-auto">
+                            <Button
+                                onClick={handleSkipForNow}
+                                variant="outline"
+                                className="w-full sm:w-auto"
+                            >
                                 Skip for Now
                             </Button>
-                            <Button onClick={() => setStep('api-keys')} className="w-full sm:w-auto">Add API Keys</Button>
+                            <Button
+                                onClick={() => setStep('api-keys')}
+                                className="w-full sm:w-auto"
+                            >
+                                Add API Keys
+                            </Button>
                         </div>
                     </div>
                 )}
@@ -141,7 +167,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                 {step === 'api-keys' && (
                     <div className="space-y-4 sm:space-y-6">
                         <div className="text-center">
-                            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Connect Your API Keys</h3>
+                            <h3 className="mb-2 text-lg sm:text-xl font-semibold">
+                                Connect Your API Keys
+                            </h3>
                             <p className="text-muted-foreground text-sm sm:text-base px-2 sm:px-0">
                                 Add at least one API key to unlock unlimited conversations with your
                                 knowledge base.
@@ -150,7 +178,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
 
                         <div className="space-y-3 sm:space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="gemini-key" className="text-sm sm:text-base">Gemini API Key (Recommended)</Label>
+                                <Label htmlFor="gemini-key" className="text-sm sm:text-base">
+                                    Gemini API Key (Recommended)
+                                </Label>
                                 <Input
                                     id="gemini-key"
                                     onChange={(e) => setGeminiKey(e.target.value)}
@@ -173,7 +203,9 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="openai-key" className="text-sm sm:text-base">OpenAI API Key (Optional)</Label>
+                                <Label htmlFor="openai-key" className="text-sm sm:text-base">
+                                    OpenAI API Key (Optional)
+                                </Label>
                                 <Input
                                     id="openai-key"
                                     onChange={(e) => setOpenaiKey(e.target.value)}
@@ -197,10 +229,18 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
-                            <Button onClick={() => setStep('welcome')} variant="outline" className="w-full sm:w-auto">
+                            <Button
+                                onClick={() => setStep('welcome')}
+                                variant="outline"
+                                className="w-full sm:w-auto"
+                            >
                                 Back
                             </Button>
-                            <Button disabled={isSubmitting} onClick={handleSubmitKeys} className="w-full sm:w-auto">
+                            <Button
+                                disabled={isSubmitting}
+                                onClick={handleSubmitKeys}
+                                className="w-full sm:w-auto"
+                            >
                                 {isSubmitting ? 'Saving...' : 'Save & Continue'}
                             </Button>
                         </div>
