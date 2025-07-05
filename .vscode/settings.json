@@ -32,5 +32,6 @@
     "cSpell.enabledFileTypes": {
         "markdown": false
     },
-    "npm.packageManager": "bun"
+    "npm.packageManager": "bun",
+    "amp.experimental.enhancedRules": true
 }
