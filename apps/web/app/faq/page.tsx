@@ -231,17 +231,18 @@ function HelpCenterContent() {
                                         all users)
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Intelligent Tool Router:</strong> AI-powered semantic
-                                        routing automatically activates tools based on your queries
-                                        (Free for all users)
+                                        <strong>Intelligent Tool Router:</strong> AI-powered
+                                        semantic routing automatically activates tools based on your
+                                        queries (Free for all users)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Math Calculator:</strong> Advanced mathematical
                                         computations and problem solving
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Web Search Integration:</strong> Real-time web search
-                                        capabilities for current information (Free for all users)
+                                        <strong>Web Search Integration:</strong> Real-time web
+                                        search capabilities for current information (Free for all
+                                        users)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Multiple Chat Modes:</strong> Specialized modes for
@@ -709,9 +710,9 @@ function HelpCenterContent() {
                                         charts with your data or specifications
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Automatic Activation:</strong> The intelligent router
-                                        detects chart requests and activates visualization mode
-                                        automatically
+                                        <strong>Automatic Activation:</strong> The intelligent
+                                        router detects chart requests and activates visualization
+                                        mode automatically
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Professional Design:</strong> Beautiful

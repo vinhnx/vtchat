@@ -122,8 +122,8 @@ function AboutContent() {
                                 </li>
                                 <li>
                                     <strong>Intelligent Tool Router:</strong> AI-powered semantic
-                                    routing automatically activates tools based on query intent using
-                                    OpenAI embeddings and pattern matching
+                                    routing automatically activates tools based on query intent
+                                    using OpenAI embeddings and pattern matching
                                 </li>
                                 <li>
                                     <strong>Premium AI Models:</strong> Claude 4, GPT-4.1, O3
@@ -136,8 +136,8 @@ function AboutContent() {
                                 </li>
                                 <li>
                                     <strong>Chart Visualization:</strong> Create interactive bar
-                                    charts, line graphs, pie charts, and scatter plots - available to
-                                    all users
+                                    charts, line graphs, pie charts, and scatter plots - available
+                                    to all users
                                 </li>
                                 <li>
                                     <strong>Web Search Integration:</strong> Real-time web search
@@ -191,7 +191,9 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                            VT provides comprehensive free access with just 3 features behind the premium tier. Upgrade to VT+ for Deep Research tools, Pro Search capabilities, and RAG document intelligence.
+                                VT provides comprehensive free access with just 3 features behind
+                                the premium tier. Upgrade to VT+ for Deep Research tools, Pro Search
+                                capabilities, and RAG document intelligence.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">
