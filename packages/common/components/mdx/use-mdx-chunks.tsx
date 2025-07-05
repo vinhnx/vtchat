@@ -1,5 +1,6 @@
 import { createProcessor } from '@mdx-js/mdx';
 import { log } from '@repo/shared/logger';
+import { useCallback, useMemo } from 'react';
 
 //
 // Types
@@ -125,8 +126,9 @@ export const useMdxChunker = () => {
 
     /**
      * Main function to parse MDX text and build an array of MdxChunks.
+     * Memoized to prevent infinite re-renders in components that depend on it.
      */
-    const chunkMdx = async (mdxText: string) => {
+    const chunkMdx = useCallback(async (mdxText: string) => {
         try {
             const processor = createProcessor({ jsx: true });
             const ast = await processor.parse(mdxText);
@@ -162,9 +164,8 @@ export const useMdxChunker = () => {
             log.error({ data: error }, 'Failed to parse and chunk MDX');
             return { chunks: [] };
         }
-    };
+    }, []); // Stable reference for the lifetime of the component
 
-    return {
-        chunkMdx,
-    };
+    // Return a stable object to avoid needless re-renders
+    return useMemo(() => ({ chunkMdx }), [chunkMdx]);
 };

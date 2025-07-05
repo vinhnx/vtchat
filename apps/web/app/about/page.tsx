@@ -1,4 +1,5 @@
 import { Footer } from '@repo/common/components';
+import { limitText } from '@repo/shared/constants/rate-limits';
 import { Button, TypographyH2 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -126,7 +127,8 @@ function AboutContent() {
                                 </li>
                                 <li>
                                     <strong>Free AI Models:</strong> 9 models including Gemini
-                                    2.0/2.5 Flash and OpenRouter models
+                                    2.0/2.5 Flash and OpenRouter models with tiered rate limits (VT+
+                                    users get up to 5x enhanced limits)
                                 </li>
                                 <li>
                                     <strong>Thinking Mode:</strong> AI SDK reasoning tokens with
@@ -177,7 +179,7 @@ function AboutContent() {
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
                                 VT offers the most generous free tier in the industry with only 3
-                                premium features. Upgrade to VT+ for enhanced research capabilities
+                                premium features. Upgrade to VT+ for enhanced Gemini limits ({limitText.compare()}), research capabilities,
                                 and premium AI models.
                             </p>
                             <div className="text-center">

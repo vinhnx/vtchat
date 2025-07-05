@@ -21,11 +21,7 @@ export const ChatFooter = () => {
                         />
                     </a>
 
-                    <a
-                        href="https://peerlist.io/vinhnx/project/vt"
-                        target="_blank"
-                        rel="noopener"
-                    >
+                    <a href="https://peerlist.io/vinhnx/project/vt" target="_blank" rel="noopener">
                         <img
                             src="/icons/peerlist_badge.svg"
                             alt="VT Chat on Peerlist"

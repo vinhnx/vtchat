@@ -135,7 +135,7 @@ export const MarkdownContent = memo(
                     log.error('Error processing MDX chunks:', { data: error });
                 }
             })();
-        }, [content, isCompleted]);
+        }, [content, isCompleted]); // chunkMdx no longer needs to be in dependencies since it's stable
 
         if (isCompleted && !isLast) {
             return (

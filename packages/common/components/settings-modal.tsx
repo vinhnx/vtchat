@@ -1,6 +1,7 @@
 'use client';
 
 import { useChatEditor } from '@repo/common/hooks';
+import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Alert,
@@ -198,6 +199,7 @@ export const ApiKeySettings = () => {
     const setApiKey = useApiKeysStore((state) => state.setKey);
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+    const isVtPlus = useVtPlusAccess();
 
     const apiKeyList = [
         {
@@ -317,24 +319,33 @@ export const ApiKeySettings = () => {
                             Free Gemini 2.5 Flash Lite Available
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm">
-                            You're currently using the free Gemini 2.5 Flash Lite with rate limits
+                            {isVtPlus
+                                ? "You're using free Gemini 2.5 Flash Lite with VT+ enhanced limits"
+                                : "You're currently using the free Gemini 2.5 Flash Lite with rate limits"}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0">
                         <div className="border-border/50 rounded-lg border bg-blue-50 p-3 md:p-4 dark:bg-blue-950/20">
                             <div className="space-y-2 md:space-y-3">
                                 <div className="text-foreground text-xs md:text-sm">
-                                    <strong>Current limits:</strong> 10 requests per day, 1 request
-                                    per minute
+                                    <strong>Current limits:</strong>{' '}
+                                    {isVtPlus
+                                        ? '100 requests per day, 10 requests per minute (VT+ enhanced)'
+                                        : '20 requests per day, 5 requests per minute'}
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
-                                    Add your own Google Gemini API key below to remove rate limits
-                                    and unlock unlimited usage of all Gemini models.
+                                    {isVtPlus
+                                        ? 'You have enhanced VT+ limits for free Gemini 2.5 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models.'
+                                        : 'Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.'}
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
                                     <strong>Pro tip:</strong> With your own API key, you'll have
                                     access to Gemini 2.5 Pro, Gemini 2.0 Flash, and other premium
-                                    models without restrictions.
+                                    models without restrictions
+                                    {isVtPlus
+                                        ? ', plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+'
+                                        : ''}
+                                    .
                                 </div>
                             </div>
                         </div>

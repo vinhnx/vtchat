@@ -33,8 +33,8 @@ describe('Rate Limiting Service', () => {
     describe('RATE_LIMITS constants', () => {
         it('should have correct rate limits for Gemini 2.5 Flash Lite', () => {
             expect(RATE_LIMITS.GEMINI_2_5_FLASH_LITE).toEqual({
-                DAILY_LIMIT: 10,
-                MINUTE_LIMIT: 1,
+                DAILY_LIMIT: 20,
+                MINUTE_LIMIT: 5,
                 MODEL_ID: ModelEnum.GEMINI_2_5_FLASH_LITE,
             });
         });

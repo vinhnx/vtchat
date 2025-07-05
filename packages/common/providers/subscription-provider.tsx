@@ -320,7 +320,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('popstate', handlePopState);
         };
-    }, [refreshSubscriptionStatus]);
+    }, []); // Remove refreshSubscriptionStatus dependency to prevent infinite loop
 
     // Check subscription expiration periodically
     useEffect(() => {

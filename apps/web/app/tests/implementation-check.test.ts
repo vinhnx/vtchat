@@ -76,8 +76,8 @@ describe('Gemini 2.5 Flash Lite - Implementation Verification', () => {
 
             const geminiLimits = RATE_LIMITS.GEMINI_2_5_FLASH_LITE;
             expect(geminiLimits).toBeDefined();
-            expect(geminiLimits.DAILY_LIMIT).toBe(10);
-            expect(geminiLimits.MINUTE_LIMIT).toBe(1);
+            expect(geminiLimits.DAILY_LIMIT).toBe(20);
+            expect(geminiLimits.MINUTE_LIMIT).toBe(5);
             expect(geminiLimits.MODEL_ID).toBe(ModelEnum.GEMINI_2_5_FLASH_LITE);
         } catch (error) {
             throw new Error(`Rate limit constants not configured: ${error}`);

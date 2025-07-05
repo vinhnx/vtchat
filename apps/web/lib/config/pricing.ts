@@ -1,4 +1,5 @@
 import { CURRENCIES, VT_PLUS_PRICE } from '@repo/shared/constants';
+import { limitText } from '@repo/shared/constants/rate-limits';
 
 // Pricing and product configuration
 export const PRICING_CONFIG = {
@@ -33,7 +34,8 @@ export const PRICING_CONFIG = {
                 },
                 {
                     name: 'Free Gemini 2.5 Flash Lite Preview',
-                    description: "10 requests per day with VT's server API key - no setup required",
+                    description:
+                        `${limitText.free()} with VT's server API key - no setup required`,
                 },
                 {
                     name: 'Unlimited BYOK Access',
@@ -48,9 +50,9 @@ export const PRICING_CONFIG = {
             interval: 'month',
             features: [
                 {
-                    name: 'Everything in Free Plan',
+                    name: 'Everything in Free Plan + Enhanced Gemini Limits',
                     description:
-                        'All advanced AI features, multi-modal chat, productivity tools, and unlimited BYOK access',
+                        `All advanced AI features, multi-modal chat, productivity tools, unlimited BYOK access, plus enhanced Gemini 2.5 Flash Lite limits (${limitText.compare()} for free users)`,
                 },
                 {
                     name: 'Premium AI Models (Exclusive)',
