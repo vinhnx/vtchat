@@ -1,0 +1,45 @@
+# vtchat
+
+> Privacy-first AI chat application with subscription tiers, MCP integration, and multiple AI model support. Built as a Turborepo monorepo with Next.js 14, TypeScript, and a comprehensive agentic system.
+
+vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory). The codebase follows minimal design principles with Oracle consultation workflow for all changes.
+
+## Core Documentation
+- [README.md](README.md): Project overview, features, tech stack, and setup instructions
+- [AGENT.md](AGENT.md): Development guidelines, code style, Oracle workflow, and best practices
+- [docs/SECURITY.md](docs/SECURITY.md): Comprehensive security implementation with Arcjet
+- [docs/FINAL-RELEASE-NOTES.md](docs/FINAL-RELEASE-NOTES.md): Complete feature summary of production launch
+- [docs/FINAL-PROJECT-REPORT.md](docs/FINAL-PROJECT-REPORT.md): Business and technical deep-dive analysis
+
+## Architecture & Structure
+- [apps/web/](apps/web/): Next.js 14 application with App Router
+- [packages/ai/](packages/ai/): Agentic Graph System supporting OpenAI, Anthropic, Google, Groq
+- [packages/common/](packages/common/): Shared React components and hooks
+- [packages/shared/](packages/shared/): Types, constants, utilities, and Pino logger
+- [packages/ui/](packages/ui/): shadcn/ui-based component library
+- [packages/actions/](packages/actions/): Server Action layer for feedback and telemetry
+- [packages/orchestrator/](packages/orchestrator/): Workflow engine and multi-tool orchestration
+
+## Development Guides
+- [docs/guides/](docs/guides/): Step-by-step development guides
+- [docs/analytics-setup.md](docs/analytics-setup.md): Vemetric analytics configuration
+- [docs/guides/arcjet-security.md](docs/guides/arcjet-security.md): Security implementation guide
+- [docs/production-deployment-checklist.md](docs/production-deployment-checklist.md): Production deployment requirements
+- [docs/production-monitoring-setup.md](docs/production-monitoring-setup.md): Monitoring and observability setup
+
+## API & Technical Reference
+- [packages/ai/src/](packages/ai/src/): Provider adapters, tool router, and prompt logic
+- [packages/shared/src/types/](packages/shared/src/types/): TypeScript types and enums
+- [apps/web/app/api/](apps/web/app/api/): Next.js Route Handlers
+- [packages/actions/src/](packages/actions/src/): Server Actions
+
+## Tests & Quality
+- [apps/web/app/tests/](apps/web/app/tests/): Vitest and Testing-Library test suites
+- [vitest.config.ts](vitest.config.ts): Testing configuration
+- [biome.json](biome.json): Code formatting and linting configuration
+
+## Optional
+- [memory-bank/](memory-bank/): Project context and decision logs (chronological)
+- [docs-mdx/](docs-mdx/): Additional documentation in MDX format
+- [turbo.json](turbo.json): Turborepo configuration
+- [package.json](package.json): Root package configuration and scripts

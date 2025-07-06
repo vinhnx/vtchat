@@ -8,6 +8,12 @@ ok go-> https://vtchat.io.vn/
 
 add llms.txt
 
+
+--
+add https://llmstxt.site/
+
+https://directory.llmstxt.cloud/
+
 -
 fix twitter remote cache still showing old image
 
