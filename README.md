@@ -1,4 +1,4 @@
-# VTChat
+# VT
 
 <div align="center">
 
@@ -15,18 +15,18 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 
-VTChat is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VTChat offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
 
-## ✨ Key Features
+## Key Features
 
-### 🧠 Advanced AI Capabilities
+### Advanced AI Capabilities
 
 - **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
-- **🤖 Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
+- **Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
 - **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
 - **Chart Visualization (Free)**: Create interactive bar charts, line graphs, pie charts, and scatter plots - always available and discoverable through smart UI
@@ -34,7 +34,7 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - always available and discoverable through smart UI
 - **Web Search Integration (Free)**: Real-time web search capabilities for current information - always available and discoverable through smart UI
 
-### 🔒 Privacy-First Architecture
+### Privacy-First Architecture
 
 - **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Storage**: Conversations never leave the user's device
@@ -42,13 +42,13 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Enterprise-Grade Security**: Secure authentication with Better Auth
 - **Privacy-Focused Security**: Bot detection and secure authentication with Better Auth
 
-### 💼 Subscription Tiers
+### Subscription Tiers
 
 - **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
 - **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
 - **Seamless Management**: Creem.io integration with customer portal
 
-### 🎨 Modern User Experience
+### Modern User Experience
 
 - **Shadcn UI Design System**: Consistent, accessible interface
 - **Smart Tool Discovery**: All tools always visible and clickable with intelligent gated access dialogs
@@ -57,9 +57,9 @@ VTChat is a production-ready, privacy-focused AI chat application delivering cut
 - **Responsive Design**: Optimized for desktop and mobile
 - **87% Performance Improvement**: Faster compilation and load times
 
-## 🏗️ Architecture
+## Architecture
 
-VTChat utilizes a Turborepo-managed monorepo structure:
+VT utilizes a Turborepo-managed monorepo structure:
 
 ```
 vtchat/
@@ -79,7 +79,7 @@ vtchat/
 └── scripts/              # Utility scripts (e.g., data sync)
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### **Frontend & Core**
 
@@ -116,7 +116,7 @@ vtchat/
 - **Chart Generation**: Bar charts, line graphs, pie charts, scatter plots
 - **Web Search**: Real-time grounding capabilities
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -219,14 +219,14 @@ The application requires several environment variables for full functionality. R
 
 ### Subscription Tiers
 
-VTChat implements a dual-tier system:
+VT implements a dual-tier system:
 
 - **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
 - **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
 
 ## 🚢 Deployment
 
-VTChat is production-ready and deployed on Fly.io:
+VT is production-ready and deployed on Fly.io:
 
 ### Production Deployment
 
@@ -244,7 +244,7 @@ VTChat is production-ready and deployed on Fly.io:
 - **Health Checks**: HTTP and TCP monitoring
 - **Auto-scaling**: Suspend/resume based on traffic
 
-## 📚 Documentation
+## Documentation
 
 ### **Production Readiness**
 
@@ -264,9 +264,9 @@ VTChat is production-ready and deployed on Fly.io:
 
 The `/memory-bank` directory contains contextual documents tracking project evolution, feature implementations, and development insights for continuous improvement.
 
-## 🔐 Security
+## Security
 
-VTChat implements comprehensive security measures:
+VT implements comprehensive security measures:
 
 - **Privacy-First**: All conversations stored locally in IndexedDB
 - **Authentication**: Better Auth with secure session management
@@ -275,9 +275,9 @@ VTChat implements comprehensive security measures:
 - **Data Protection**: No server-side storage of sensitive chat data
 - **Secure Communication**: HTTPS enforced, secure headers implemented
 
-## 🧪 Testing
+## Testing
 
-VTChat includes comprehensive testing:
+VT includes comprehensive testing:
 
 ```bash
 # Run all tests
@@ -295,7 +295,7 @@ bun test app/tests/rate-limit-simple.test.ts
 
 Testing framework: Vitest with Testing Library for React components.
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these guidelines:
 
@@ -312,11 +312,11 @@ We welcome contributions! Please follow these guidelines:
 - Ensure all tests pass before submitting
 - Update AGENT.md with any significant changes
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 🏆 Achievements
+## Achievements
 
 - **Zero TypeScript Errors**: Complete type safety across the codebase
 - **87% Performance Improvement**: Optimized compilation and runtime
@@ -324,21 +324,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Production-Ready**: Deployed and running in production environment
 - **Security Hardened**: Comprehensive protection against common threats
 - **Privacy-First**: Commited to user data protection
-
-## 🎯 Roadmap
-
-- [ ] Mobile app development (React Native)
-- [ ] Additional AI provider integrations
-- [ ] Advanced collaboration features
-- [ ] Enhanced document processing capabilities
-- [ ] API access for developers
-
+- 
 ---
 
 <div align="center">
 
-**[Visit VTChat](https://vtchat.io.vn)** | **[View Documentation](docs/)** | **[Report Issues](https://github.com/vinhnx/vtchat/issues)**
+**[Visit VT](https://vtchat.io.vn)** | **[View Documentation](docs/)** | **[Report Issues](https://github.com/vinhnx/vtchat/issues)**
 
-Built with ❤️ by the VTChat team
+I'm @vinhnx.
 
 </div>
