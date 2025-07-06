@@ -41,6 +41,20 @@ export const semanticToolRouterTask = createTask<WorkflowEventSchema, WorkflowCo
     execute: async ({ context, events }) => {
         log.info('🧠 Semantic router task started'); // Debug logging
 
+        // Check if semantic routing is disabled via environment variable
+        const isSemanticRoutingEnabled = process.env.SEMANTIC_ROUTING_ENABLED !== 'false';
+        if (!isSemanticRoutingEnabled) {
+            log.info('Semantic routing is disabled via SEMANTIC_ROUTING_ENABLED=false');
+            context.set('semanticRouter', {
+                selectedTools: [],
+                scores: [],
+                reasoning: 'Semantic routing disabled via environment variable',
+                usedQuickMatch: false,
+                timestamp: Date.now(),
+            });
+            return;
+        }
+
         const question = context.get('question') ?? '';
         if (!question.trim()) {
             log.debug('No question provided, skipping semantic tool routing');

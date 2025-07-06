@@ -7,7 +7,7 @@ const embeddingCache = new Map<string, number[]>();
 const toolEmbeddingCache = new Map<string, number[]>();
 
 /**
- * Generate text embeddings using OpenAI's text-embedding-3-small model
+ * Generate text embeddings using Gemini's text-embedding-004 model
  */
 export async function getEmbedding(
     text: string,
@@ -20,44 +20,39 @@ export async function getEmbedding(
         return embeddingCache.get(cacheKey)!;
     }
 
-    const apiKey = apiKeys?.openai || process.env.OPENAI_API_KEY;
+    const apiKey = apiKeys?.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        log.error('OPENAI_API_KEY missing – semantic router disabled');
-        throw new Error('OPENAI_API_KEY missing – semantic router disabled');
+        log.error('GEMINI_API_KEY missing – semantic router disabled');
+        throw new Error('GEMINI_API_KEY missing – semantic router disabled');
     }
 
     try {
-        const response = await fetch('https://api.openai.com/v1/embeddings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-                model: 'text-embedding-3-small',
-                input: text.trim(),
-                encoding_format: 'float',
-            }),
+        // Use Google Generative AI SDK for embeddings
+        const { GoogleGenerativeAI } = await import('@google/generative-ai');
+        const genAI = new GoogleGenerativeAI(apiKey);
+
+        const model = genAI.getGenerativeModel({
+            model: 'text-embedding-004', // Gemini-004 model as requested
         });
 
-        if (!response.ok) {
-            throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        const embedding = data.data[0].embedding as number[];
+        const result = await model.embedContent(text.trim());
+        const embedding = result.embedding.values || [];
 
         // Cache the result
         embeddingCache.set(cacheKey, embedding);
 
         log.debug(
-            { textLength: text.length, embeddingLength: embedding.length },
-            'Generated embedding'
+            {
+                textLength: text.length,
+                embeddingLength: embedding.length,
+                model: 'text-embedding-004',
+            },
+            'Generated Gemini embedding'
         );
 
         return embedding;
     } catch (error) {
-        log.error({ error, text: text.substring(0, 100) }, 'Failed to generate embedding');
+        log.error({ error, text: text.substring(0, 100) }, 'Failed to generate Gemini embedding');
         throw error;
     }
 }
@@ -172,6 +167,13 @@ export async function initializeToolEmbeddings(): Promise<void> {
         return; // Skip in test environment
     }
 
+    // Check if semantic routing is disabled
+    const isSemanticRoutingEnabled = process.env.SEMANTIC_ROUTING_ENABLED !== 'false';
+    if (!isSemanticRoutingEnabled) {
+        log.info('Skipping tool embeddings initialization - semantic routing disabled');
+        return;
+    }
+
     try {
         // Import here to avoid circular dependency
         const { getAllToolDescriptions } = await import('../tool-registry');
@@ -197,7 +199,11 @@ export async function initializeToolEmbeddings(): Promise<void> {
 }
 
 // Auto-initialize tool embeddings when module loads (in non-test environments)
-if (typeof process === 'undefined' || process.env.NODE_ENV !== 'test') {
+// Only if semantic routing is enabled
+if (
+    typeof process === 'undefined' ||
+    (process.env.NODE_ENV !== 'test' && process.env.SEMANTIC_ROUTING_ENABLED !== 'false')
+) {
     initializeToolEmbeddings().catch((error) => {
         log.warn({ error }, 'Background tool embedding initialization failed');
     });
