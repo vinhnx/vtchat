@@ -3,6 +3,16 @@
 --
 ok go-> https://vtchat.io.vn/
 
+
+--
+
+add llms.txt
+
+-
+fix twitter remote cache still showing old image
+
+https://x.com/vinhnx/status/1941716426198483117
+
 --
 
 https://support.google.com/webmasters/answer/6062598?hl=en#check-status
