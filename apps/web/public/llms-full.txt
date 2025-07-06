@@ -1,0 +1,263 @@
+# vtchat
+
+> Privacy-first AI chat application with subscription tiers, MCP integration, and multiple AI model support. Built as a Turborepo monorepo with Next.js 14, TypeScript, and a comprehensive agentic system.
+
+vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory). The codebase follows minimal design principles with Oracle consultation workflow for all changes.
+
+## Complete README Content
+
+**VT** is a modern, privacy-first AI chat application with enterprise-grade security.
+
+### Overview
+
+VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+
+### Key Features
+
+**Advanced AI Capabilities:**
+- **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
+- **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
+- **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
+- **Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
+- **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
+- **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
+- **Chart Visualization (Free)**: Create interactive bar charts, line graphs, pie charts, and scatter plots - always available and discoverable through smart UI
+- **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process - available to all logged-in users
+- **Mathematical Calculator (Free)**: Advanced functions including trigonometry, logarithms, and arithmetic - always available and discoverable through smart UI
+- **Web Search Integration (Free)**: Real-time web search capabilities for current information - always available and discoverable through smart UI
+
+**Privacy-First Architecture:**
+- **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
+- **Zero Server Storage**: Conversations never leave the user's device
+- **Multi-User Isolation**: Complete data separation on shared devices
+- **Enterprise-Grade Security**: Secure authentication with Better Auth
+- **Privacy-Focused Security**: Bot detection and secure authentication with Better Auth
+
+**Subscription Tiers:**
+- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
+- **Seamless Management**: Creem.io integration with customer portal
+
+### Architecture
+
+VT utilizes a Turborepo-managed monorepo structure:
+
+```
+vtchat/
+├── apps/
+│   └── web/              # Next.js 14 web application (App Router)
+├── packages/
+│   ├── actions/          # Server actions (e.g., feedback)
+│   ├── ai/               # AI models, providers, tools, semantic router, workflow logic
+│   ├── common/           # Shared React components, hooks, context, store
+│   ├── orchestrator/     # Workflow engine and task management
+│   ├── shared/           # Shared types, constants, configs, utils, logger
+│   ├── tailwind-config/  # Shared Tailwind CSS configuration
+│   ├── typescript-config/# Shared TypeScript configurations
+│   └── ui/               # Base UI components (from Shadcn UI)
+├── docs/                 # Documentation and guides
+├── memory-bank/          # Project context and evolution tracking
+└── scripts/              # Utility scripts (e.g., data sync)
+```
+
+### Tech Stack
+
+**Frontend & Core:**
+- **Framework**: Next.js 14 (App Router) with TypeScript
+- **Styling**: Tailwind CSS + Shadcn UI design system
+- **State Management**: Zustand + React Query
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+
+**Backend & Infrastructure:**
+- **Database**: Neon PostgreSQL with Drizzle ORM
+- **Authentication**: Better Auth (modern session management)
+- **Application Security**: Bot detection for authentication and secure OAuth integration
+- **Payment Processing**: Creem.io integration
+- **Local Storage**: IndexedDB via Dexie.js
+- **Deployment**: Fly.io (production-ready)
+
+**Development & Build:**
+- **Runtime**: Bun (package manager + JavaScript runtime)
+- **Monorepo**: Turborepo with optimized caching
+- **Testing**: Vitest with Testing Library
+- **Code Quality**: Biome (formatting & linting) + oxlint (comprehensive linting)
+- **Type Checking**: TypeScript with strict configuration
+- **Performance Monitoring**: React Scan for development performance optimization
+
+**AI & Integrations:**
+- **AI Providers**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI
+- **AI SDK**: Vercel AI SDK with reasoning tokens support
+- **Semantic Tool Router**: OpenAI embeddings + pattern matching for intelligent tool activation
+- **Document Processing**: Multi-format file analysis
+- **Chart Generation**: Bar charts, line graphs, pie charts, scatter plots
+- **Web Search**: Real-time grounding capabilities
+
+## Complete AGENT.md Development Guidelines
+
+### Tech Stack & Project Overview
+
+- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
+- **Core Technologies**: Next.js (App Router, v14+), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
+- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
+
+### Package Management
+
+- Use `bun` instead of `npm` for all operations
+
+### Code Style
+
+- Make sure no string in codebase, use enum pattern.
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs)
+- Use centralize enum for custom reusable keys.
+- 4-space indentation, single quotes, 100 char line length
+- PascalCase components, camelCase hooks/utils, kebab-case files
+- Named exports preferred over default exports
+- Use oxlint for fast comprehensive linting
+- Use Prettier for markdown files only
+
+### UI/UX Design Principles
+
+- **Minimal Design**: Follow shadcn/ui principles with clean, minimal aesthetics
+- **No Colors**: Use only black/white/muted colors (avoid gradients, bright colors)
+- **Minimal Icons**: Reduce icon usage to essentials only
+- **Clean Typography**: Rely on typography hierarchy over visual decorations
+- **Neutral Palette**: Use `text-muted-foreground`, `bg-muted`, standard shadcn colors
+- **Simple Interactions**: Avoid flashy animations or complex visual effects
+
+### Development Workflow
+
+- **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
+- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
+- Run `bun run lint` (oxlint) for comprehensive error checking
+- Run `bun run build` to verify compilation before major changes
+- Test core functionality after significant changes
+
+### Oracle Consultation Workflow (REQUIRED)
+
+All code changes **must** follow this ask-implement-review loop with the Oracle.
+
+1. **Task Intake**: Write a concise Problem Statement, goals, and acceptance criteria.
+2. **ASK-ORACLE (PLAN)**: Provide the above context plus key code excerpts. Ask: "Oracle, please produce a detailed implementation plan."
+3. **Implementation**: Implement strictly according to the received plan.
+4. **REVIEW-ORACLE**: Present the diff or PR link and ask: "Oracle, please review and approve." Address comments; iterate until Oracle replies **Approved**.
+5. **Merge & Document**: Merge only after approval. Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
+6. **Exceptions**: For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
+
+### Git Hooks
+
+- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Philosophy**: Encourage good practices without blocking development flow
+
+## Core Documentation
+
+### README.md
+Complete project overview, features, tech stack, and setup instructions for the vtchat AI chat application.
+
+### AGENT.md
+Development guidelines including tech stack, code style, UI/UX principles, Oracle consultation workflow, and best practices.
+
+### Security Implementation
+Comprehensive security design with Better Auth, bot detection, local-first storage, and privacy-focused architecture.
+
+### Analytics Setup
+Vemetric analytics implementation with domain whitelisting and CORS configuration.
+
+### Testing
+Vitest configuration with Testing Library for React components, including test coverage and quality assurance.
+
+## AI & Provider Integration
+
+### Multi-Provider Support
+Integration with OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI for comprehensive AI model access.
+
+### Intelligent Tool Router
+AI-powered semantic routing using OpenAI embeddings and pattern matching for automatic tool activation.
+
+### Agentic Graph System
+Sophisticated workflow engine supporting multiple AI providers with tool orchestration and task management.
+
+## Subscription & Payment
+
+### Creem.io Integration
+Payment processing with customer portal, webhook validation, and subscription management for VT+ tier.
+
+### Subscription Tiers
+- Free tier: All premium AI models with BYOK + advanced features
+- VT+ ($5.99/month): Exclusive research capabilities (Pro Search, Deep Research, RAG)
+
+## Database & Storage
+
+### Neon PostgreSQL
+Production database with Drizzle ORM for user data and subscription management.
+
+### Local-First Storage
+IndexedDB via Dexie.js for chat data with zero server storage and multi-user isolation.
+
+## Deployment & Infrastructure
+
+### Fly.io Deployment
+Production deployment with 2-region setup (Singapore primary, Virginia secondary) and auto-scaling.
+
+### Performance
+87% performance improvement with optimized compilation, bundle size, and runtime efficiency.
+
+## Development Environment
+
+### Prerequisites
+- Bun v1.1.19+ (primary runtime)
+- Node.js (for Turborepo operations)
+- Git for version control
+
+### Installation
+1. Clone repository: `git clone https://github.com/vinhnx/vtchat.git`
+2. Install dependencies: `bun install`
+3. Setup environment: Copy `.env.example` to `.env.local`
+4. Configure database: `bun run generate`
+5. Start development: `bun dev`
+
+### Environment Variables
+Essential services: DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL
+AI providers: OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY
+Payment: CREEM_WEBHOOK_SECRET, CREEM_API_KEY, CREEM_PRODUCT_ID
+Security: NEXT_PUBLIC_BASE_URL
+
+## Code Quality & Testing
+
+### Linting & Formatting
+- oxlint for comprehensive error checking
+- Biome for code formatting and style enforcement
+- TypeScript strict configuration for type safety
+
+### Testing Framework
+- Vitest with Testing Library for React components
+- Coverage reporting and quality metrics
+- Comprehensive test suites for core functionality
+
+## Error Handling & Logging
+
+### Pino Logger
+Structured logging with automatic PII redaction, request tracing, and environment-specific configurations.
+
+### Error Boundaries
+React error boundaries for graceful error handling and user experience.
+
+## Documentation & Memory Bank
+
+### Living Documentation
+Memory bank directory containing project context, decision logs, and evolution tracking for continuous improvement.
+
+### Guides & References
+Comprehensive documentation covering security, analytics, deployment, and development workflows.
+
+## Additional Resources
+
+- [Live Application](https://vtchat.io.vn)
+- [GitHub Repository](https://github.com/vinhnx/vtchat)
+- [Documentation](docs/)
+- [Security Guide](docs/SECURITY.md)
+- [Final Release Notes](docs/FINAL-RELEASE-NOTES.md)
+- [Final Project Report](docs/FINAL-PROJECT-REPORT.md)
