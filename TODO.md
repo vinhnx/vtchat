@@ -5,21 +5,13 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-fix open graph showing on twitter chat on remote, seems still cache still showing old image
-
-should use the latest https://vtchat.io.vn/twitter-image.jpg or https://vtchat.io.vn/og-image.jpg
+local models Connecting local models via Ollama and LM Studio
 
 --
 
---
-
-for RAG -> keep the local db -> don't sync to remove DB to fully support local-first architecture.
+for RAG -> can't keep all data in the local db -> don't sync to remove DB to fully support local-first architecture.
 ask oracle for review feedback then implement
 use context7 or neon mcp tool to get the latest documentation and guides.
-
---
-
-Thinking Mode should be enable by default for VT+ tier users.
 
 --
 rethink Plus tier offering -> maybe remove BYOK.
