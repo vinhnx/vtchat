@@ -198,12 +198,12 @@ export const getProviderInstance = (
         case 'lmstudio': {
             // LM Studio uses baseURL instead of API key
             let rawURL = apiKey || 'http://localhost:1234';
-            
+
             // Add protocol if missing
             if (!/^https?:\/\//i.test(rawURL)) {
                 rawURL = `http://${rawURL}`;
             }
-            
+
             // For browser environments, use proxy to avoid CORS/mixed content issues
             if (typeof window !== 'undefined') {
                 // In production, use the proxy endpoint
@@ -218,20 +218,20 @@ export const getProviderInstance = (
                     });
                 }
             }
-            
+
             // Security: Validate that base URL is localhost only (prevent SSRF)
             const url = new URL(rawURL);
             const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
-            
+
             if (!LOCAL_HOSTS.has(url.hostname) && !process.env.ALLOW_REMOTE_LMSTUDIO) {
                 throw new Error(
                     'LM Studio base URL must resolve to localhost. Set ALLOW_REMOTE_LMSTUDIO=true to override.'
                 );
             }
-            
+
             // Clean up URL and add /v1 endpoint
             const baseURL = url.origin.replace(/\/+$/, '') + '/v1';
-            
+
             return createOpenAI({
                 baseURL,
                 apiKey: 'not-required', // LM Studio doesn't require API key

@@ -408,12 +408,12 @@ export const ChatInput = ({
                     )}
 
                     {renderChatBottom()}
-                    
+
                     {/* Show LM Studio setup banner for local models */}
                     {!currentThreadId && chatMode.startsWith('lmstudio-') && (
                         <LMStudioSetupBanner />
                     )}
-                    
+
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
 
                     {/* ChatFooter moved to chat layout */}

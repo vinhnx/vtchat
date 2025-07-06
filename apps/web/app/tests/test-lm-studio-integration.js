@@ -3,7 +3,7 @@
 /**
  * Test LM Studio integration
  * This script tests if LM Studio provider works correctly
- * 
+ *
  * Prerequisites:
  * 1. Start LM Studio server: `lms server start --port 1234 --cors`
  * 2. Load a model in LM Studio
@@ -60,20 +60,19 @@ async function testLMStudioIntegration() {
         console.log(`📝 Response: ${gemma3Text}\n`);
 
         console.log('🎉 All LM Studio tests passed!');
-        
     } catch (error) {
         console.error('❌ LM Studio integration test failed:');
         console.error(error.message);
-        
+
         if (error.message.includes('ECONNREFUSED')) {
             console.log('\n💡 Make sure LM Studio server is running:');
             console.log('   lms server start --port 1234 --cors');
         }
-        
+
         if (error.message.includes('model')) {
             console.log('\n💡 Make sure you have a model loaded in LM Studio');
         }
-        
+
         process.exit(1);
     }
 }
