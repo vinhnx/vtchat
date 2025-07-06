@@ -16,7 +16,7 @@ export function generateMetadata({
     description = 'Minimal AI chat application.',
     pathname = '',
     keywords,
-    image = '/og-image.jpg',
+    image = '/og-image-v2.jpg',
     noIndex = false,
 }: MetadataConfig = {}): Metadata {
     const canonicalUrl = `${BASE_URL}${pathname}`;
@@ -56,7 +56,7 @@ export function generateMetadata({
             card: 'summary_large_image',
             title: fullTitle,
             description,
-            images: [`${BASE_URL}/twitter-image.jpg?v=${imageVersion}`],
+            images: [`${BASE_URL}/twitter-image-v2.jpg`],
         },
         robots: noIndex ? 'noindex,nofollow' : 'index,follow',
     };
