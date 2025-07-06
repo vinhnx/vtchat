@@ -41,14 +41,13 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                 <Alert className={className} variant="destructive">
                     <AlertDescription>
                         <div className="flex items-start gap-2">
-                            <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
                             <div className="flex-1">
                                 <p className="mb-3">{message.trim()}</p>
                                 <div className="mb-3">
-                                    <p className="mb-2 text-sm font-medium">🔧 Try these steps:</p>
+                                    <p className="mb-2 text-sm font-medium">Try these steps:</p>
                                     <ul className="list-disc space-y-1 pl-4 text-sm">
                                         {suggestions.map((suggestion, index) => (
-                                            <li className="text-gray-300" key={index}>
+                                            <li className="text-300" key={index}>
                                                 {suggestion.replace(/^\d+\.\s*/, '')}
                                             </li>
                                         ))}
