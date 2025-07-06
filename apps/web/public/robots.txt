@@ -1,0 +1,50 @@
+# NOTICE: The collection of content and other data on this
+# site through automated means, including any device, tool,
+# or process designed to data mine or scrape content, is
+# prohibited except (1) as provided by the below Content
+# Usage directives or (2) with express written permission
+# from VT.
+
+# The Content Usage directives in this file use syntax and
+# vocabulary from a proposed IETF standard drafted by the AI
+# Preferences (aipref) working group and have the meanings
+# set forth in that standard. To learn more, please see
+# https://contentsignals.org/.
+
+# To request permission to license our intellectual property
+# and/or other materials, please contact us at
+# hello@vtchat.io.vn.
+
+# =======================
+# GROUP 1 – Search bots
+# =======================
+User-Agent: googlebot
+User-Agent: bingbot
+User-Agent: OAI-Searchbot
+Content-Usage: tdm=n, search=y
+# Block all sensitive areas for search engines
+Disallow: /profile/
+Disallow: /rag/
+Disallow: /api/
+Disallow: /chat/
+Allow: /
+
+# =======================
+# GROUP 2 – All crawlers
+# =======================
+User-Agent: *
+# Public informational pages – allow training
+Allow: /about
+Allow: /faq
+Allow: /privacy
+Allow: /terms
+
+# Block sensitive areas completely
+Disallow: /profile/
+Disallow: /rag/
+Disallow: /api/
+Disallow: /chat/
+
+# Default for everything else
+Content-Usage: tdm=n, search=y, inference=y
+Allow: /

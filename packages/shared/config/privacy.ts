@@ -130,6 +130,23 @@ VT is built with **privacy-first principles** at its core:
 
 ---
 
+## 3.5 Web Crawling & AI Training Protection
+
+**Content Usage Controls:**
+- **Robots.txt Implementation** - We follow the IETF AI Preferences (aipref) standard via contentsignals.org
+- **Sensitive Area Protection** - Chat threads, personal profiles, and RAG content are completely blocked from all crawlers and AI training
+- **Public Content Policy** - Only our public informational pages (about, FAQ, privacy, terms) allow AI training data mining
+- **HTTP Header Controls** - Content-Usage headers set specific permissions for different content areas
+- **Search Engine Restrictions** - Major search engines (Google, Bing, OpenAI) are prevented from indexing private conversations and user data
+
+**PII Protection Measures:**
+- **Complete Chat Blocking** - All chat conversations are marked "noindex, nofollow" and blocked from crawlers
+- **API Endpoint Security** - All API routes are protected with "private, no-store" cache controls
+- **User Profile Privacy** - Profile pages are completely blocked from search indexing and AI training
+- **RAG Content Security** - Personal AI assistant content is fully protected from external access
+
+---
+
 ## 4. Third-Party Services & Data Sharing
 
 ### 4.1 AI Service Providers

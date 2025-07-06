@@ -4,6 +4,10 @@
 ok go-> https://vtchat.io.vn/
 
 --
+
+https://support.google.com/webmasters/answer/6062598?hl=en#check-status
+
+--
 vendors-b9f70e77-6089d804bc8e296f.js:11 OPENAI_API_KEY missing – semantic router disabled
 
 --
