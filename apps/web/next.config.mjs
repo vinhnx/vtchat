@@ -237,9 +237,91 @@ const nextConfig = {
                 ],
             },
             {
-                // Performance optimization headers
-                source: '/(.*)',
+                // Block sensitive areas completely
+                source: '/(profile|rag)/:path*',
                 headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
+                    },
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
+                    },
+                ],
+            },
+            {
+                // Content-Usage headers for public pages (allow AI training)
+                source: '/(about|faq|privacy|terms)/:path*',
+                headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=y',
+                    },
+                ],
+            },
+            {
+                // Block all API routes from indexing
+                source: '/api/:path*',
+                headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
+                    },
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'private, no-store',
+                    },
+                ],
+            },
+            {
+                // Block all chat routes from indexing (PII protection)
+                source: '/chat',
+                headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
+                    },
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'private, no-store',
+                    },
+                ],
+            },
+            {
+                // Block all chat thread pages from indexing (PII protection)
+                source: '/chat/:path*',
+                headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
+                    },
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'private, no-store',
+                    },
+                ],
+            },
+            {
+                // Default Content-Usage header for all other pages
+                source: '/((?!api|_next|static|favicon\\.ico|robots\\.txt|profile|rag|chat).*)',
+                headers: [
+                    {
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=y, inference=y',
+                    },
                     {
                         key: 'X-DNS-Prefetch-Control',
                         value: 'on',

@@ -32,6 +32,31 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 
 ---
 
+## 1.1 Content Usage & Crawler Protection
+
+VT implements the IETF AI Preferences (aipref) standard to control how automated systems use our content:
+
+**Protected Content Areas:**
+- **Private Conversations**: All chat threads are completely blocked from search engines and AI training crawlers
+- **User Profiles**: Personal account information is protected from indexing and data mining
+- **RAG Content**: Personal AI assistant knowledge base is fully blocked from external access
+- **API Endpoints**: All server APIs are protected with no-index and no-store policies
+
+**Public Content Policy:**
+- **Informational Pages**: Only our public pages (About, FAQ, Privacy, Terms) may be used for AI training
+- **Search Restrictions**: Major search engines are prevented from indexing sensitive user data
+- **Training Data Controls**: We explicitly control which content can be used for AI model training
+
+**Technical Implementation:**
+- robots.txt compliance with IETF standard syntax
+- HTTP Content-Usage headers for granular control
+- X-Robots-Tag headers for additional protection
+- Cache-Control headers preventing data storage
+
+By using VT, you acknowledge that we protect your private data from being used in AI training datasets while allowing appropriate use of our public informational content.
+
+---
+
 ## 2. Account Registration & Age Requirements
 
 ### 2.1 Account Creation
