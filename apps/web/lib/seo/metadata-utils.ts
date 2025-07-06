@@ -22,10 +22,10 @@ export function generateMetadata({
     const canonicalUrl = `${BASE_URL}${pathname}`;
     const fullTitle = pathname ? `${title} | VT` : title;
 
-    // Use a static version for consistent caching but allow manual updates
+    // Use current timestamp for fresh cache busting
     // File Renaming Strategy:
     // example: og-image-v2.jpg  // New file when image changes
-    const imageVersion = '1704109200'; // Timestamp for cache busting -> update when needed
+    const imageVersion = Date.now().toString(); // Current timestamp for cache busting
 
     return {
         title: fullTitle,

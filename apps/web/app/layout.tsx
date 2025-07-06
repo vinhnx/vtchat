@@ -50,7 +50,7 @@ export const metadata: Metadata = {
         locale: 'en_US',
         images: [
             {
-                url: 'https://vtchat.io.vn/og-image.jpg',
+                url: `https://vtchat.io.vn/og-image.jpg?v=${Date.now()}`,
                 width: 1200,
                 height: 630,
                 alt: 'VT Preview',
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
         site: 'VT',
         creator: '@vinhnx',
         description: 'Minimal AI chat application.',
-        images: ['https://vtchat.io.vn/twitter-image.jpg'],
+        images: [`https://vtchat.io.vn/twitter-image.jpg?v=${Date.now()}`],
     },
     robots: {
         index: true,

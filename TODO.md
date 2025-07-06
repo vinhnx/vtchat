@@ -3,28 +3,13 @@
 --
 ok go-> https://vtchat.io.vn/
 
-
 --
 
-add llms.txt
+fix open graph showing on twitter chat on remote, seems still cache still showing old image
 
-
---
-add https://llmstxt.site/
-
-https://directory.llmstxt.cloud/
-
--
-fix twitter remote cache still showing old image
-
-https://x.com/vinhnx/status/1941716426198483117
+should use the latest https://vtchat.io.vn/twitter-image.jpg or https://vtchat.io.vn/og-image.jpg
 
 --
-
-https://support.google.com/webmasters/answer/6062598?hl=en#check-status
-
---
-vendors-b9f70e77-6089d804bc8e296f.js:11 OPENAI_API_KEY missing – semantic router disabled
 
 --
 
