@@ -205,7 +205,7 @@ export const getProviderInstance = (
             }
 
             // For browser environments, use proxy to avoid CORS/mixed content issues
-            if (typeof window !== 'undefined') {
+            if (typeof window !== 'undefined' && window.location) {
                 // In production, use the proxy endpoint
                 const isProduction = window.location.protocol === 'https:';
                 if (isProduction) {
