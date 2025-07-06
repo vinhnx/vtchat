@@ -17,37 +17,37 @@
 
 # Allow specific search engines to index for search, but not for AI training
 User-Agent: googlebot
-Content-Usage: tdm=n, search=y
+content-usage: tdm=n, search=y
 Allow: /
 
 User-Agent: bingbot
-Content-Usage: tdm=n, search=y
+content-usage: tdm=n, search=y
 Allow: /
 
 User-Agent: OAI-Searchbot
-Content-Usage: tdm=n, search=y
+content-usage: tdm=n, search=y
 Allow: /
 
 # Allow unfettered access to public informational pages
 User-Agent: *
-Content-Usage: /about tdm=y
+content-usage: /about tdm=y
 Allow: /about
 
 User-Agent: *
-Content-Usage: /faq tdm=y
+content-usage: /faq tdm=y
 Allow: /faq
 
 User-Agent: *
-Content-Usage: /privacy tdm=y
+content-usage: /privacy tdm=y
 Allow: /privacy
 
 User-Agent: *
-Content-Usage: /terms tdm=y
+content-usage: /terms tdm=y
 Allow: /terms
 
 # Search-only access to other public content
 User-Agent: *
-Content-Usage: tdm=n, search=y, inference=y
+content-usage: tdm=n, search=y, inference=y
 Allow: /
 
 # Disallow access to sensitive areas
