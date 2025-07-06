@@ -207,7 +207,7 @@ cd apps/web
 bun run generate       # Generate Drizzle schema
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Setup
 
@@ -218,15 +218,8 @@ The application requires several environment variables for full functionality. R
 - **AI Providers**: Support for multiple AI APIs
 - **Payment**: Creem.io for subscription management
 - **Security**: Bot detection and secure authentication
-
-### Subscription Tiers
-
-VT implements a dual-tier system:
-
-- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
-
-## 🚢 Deployment
+- 
+## Deployment
 
 VT is production-ready and deployed on Fly.io:
 
