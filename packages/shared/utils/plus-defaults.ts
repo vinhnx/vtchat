@@ -31,16 +31,16 @@ export const PLUS_GEMINI_CACHING_DEFAULTS = {
  * Base user default settings (for non-plus users)
  */
 export const BASE_THINKING_MODE_DEFAULTS = {
-    enabled: false,
+    enabled: true, // Enable Thinking Mode by default for all logged-in users
     budget: THINKING_MODE.DEFAULT_BUDGET,
     includeThoughts: true,
     claude4InterleavedThinking: false, // Disable Claude 4 interleaved thinking for base users
 } as const;
 
 export const BASE_GEMINI_CACHING_DEFAULTS = {
-    enabled: false,
+    enabled: true, // Enable Gemini Explicit Caching by default for all logged-in users
     ttlSeconds: 3600,
-    maxCaches: 10,
+    maxCaches: 10, // Higher limit for base users than plus users
 } as const;
 
 /**
