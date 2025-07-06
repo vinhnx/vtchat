@@ -15,36 +15,44 @@
 # and/or other materials, please contact us at
 # hello@vtchat.io.vn.
 
-# =======================
-# GROUP 1 – Search bots
-# =======================
+# Allow specific search engines to index for search, but not for AI training
 User-Agent: googlebot
+Content-Usage: tdm=n, search=y
+Allow: /
+
 User-Agent: bingbot
+Content-Usage: tdm=n, search=y
+Allow: /
+
 User-Agent: OAI-Searchbot
 Content-Usage: tdm=n, search=y
-# Block all sensitive areas for search engines
-Disallow: /profile/
-Disallow: /rag/
-Disallow: /api/
-Disallow: /chat/
 Allow: /
 
-# =======================
-# GROUP 2 – All crawlers
-# =======================
+# Allow unfettered access to public informational pages
 User-Agent: *
-# Public informational pages – allow training
+Content-Usage: /about tdm=y
 Allow: /about
+
+User-Agent: *
+Content-Usage: /faq tdm=y
 Allow: /faq
+
+User-Agent: *
+Content-Usage: /privacy tdm=y
 Allow: /privacy
+
+User-Agent: *
+Content-Usage: /terms tdm=y
 Allow: /terms
 
-# Block sensitive areas completely
+# Search-only access to other public content
+User-Agent: *
+Content-Usage: tdm=n, search=y, inference=y
+Allow: /
+
+# Disallow access to sensitive areas
+User-Agent: *
 Disallow: /profile/
 Disallow: /rag/
 Disallow: /api/
 Disallow: /chat/
-
-# Default for everything else
-Content-Usage: tdm=n, search=y, inference=y
-Allow: /
