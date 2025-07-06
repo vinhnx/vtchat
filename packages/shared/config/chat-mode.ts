@@ -39,6 +39,11 @@ export const ChatMode = {
     QWEN3_32B: 'qwen3-32b',
     MISTRAL_NEMO: 'mistral-nemo',
     QWEN3_14B_FREE: 'qwen3-14b-free',
+    // LM Studio local models
+    LMSTUDIO_LLAMA_3_8B: 'lmstudio-llama-3-8b',
+    LMSTUDIO_QWEN_7B: 'lmstudio-qwen-7b',
+    LMSTUDIO_GEMMA_7B: 'lmstudio-gemma-7b',
+    LMSTUDIO_GEMMA_3_1B: 'lmstudio-gemma-3-1b',
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
@@ -276,6 +281,39 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
+    // LM Studio local models - no auth required, free local models
+    [ChatMode.LMSTUDIO_LLAMA_3_8B]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: false,
+        isNew: true,
+    },
+    [ChatMode.LMSTUDIO_QWEN_7B]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: false,
+        isNew: true,
+    },
+    [ChatMode.LMSTUDIO_GEMMA_7B]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: false,
+        isNew: true,
+    },
+    [ChatMode.LMSTUDIO_GEMMA_3_1B]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: false,
+        isNew: true,
+    },
     [ChatMode.O1_MINI]: {
         webSearch: false,
         imageUpload: false,
@@ -476,6 +514,15 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenRouter Mistral Nemo';
         case ChatMode.QWEN3_14B_FREE:
             return 'OpenRouter Qwen3 14B';
+        // LM Studio local models
+        case ChatMode.LMSTUDIO_LLAMA_3_8B:
+            return 'LM Studio Llama 3 8B (Local)';
+        case ChatMode.LMSTUDIO_QWEN_7B:
+            return 'LM Studio Qwen 2.5 7B (Local)';
+        case ChatMode.LMSTUDIO_GEMMA_7B:
+            return 'LM Studio Gemma 7B (Local)';
+        case ChatMode.LMSTUDIO_GEMMA_3_1B:
+            return 'LM Studio Gemma 3 1B (Local)';
         case ChatMode.O1_MINI:
             return 'OpenAI o1-mini';
         case ChatMode.O1_PREVIEW:

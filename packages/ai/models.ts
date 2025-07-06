@@ -31,6 +31,11 @@ export const ModelEnum = {
     QWEN3_32B: 'qwen/qwen3-32b',
     MISTRAL_NEMO: 'mistralai/mistral-nemo',
     QWEN3_14B_FREE: 'qwen/qwen3-14b:free',
+    // LM Studio models (using generic model names)
+    LMSTUDIO_LLAMA_3_8B: 'llama-3-8b-instruct',
+    LMSTUDIO_QWEN_7B: 'qwen2.5-7b-instruct',
+    LMSTUDIO_GEMMA_7B: 'gemma-7b-instruct',
+    LMSTUDIO_GEMMA_3_1B: 'google/gemma-3-1b',
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -202,6 +207,39 @@ export const models: Model[] = [
         contextWindow: 40_960,
         isFree: true,
     },
+    // LM Studio models
+    {
+        id: ModelEnum.LMSTUDIO_LLAMA_3_8B,
+        name: 'Llama 3 8B (Local)',
+        provider: 'lmstudio',
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.LMSTUDIO_QWEN_7B,
+        name: 'Qwen 2.5 7B (Local)',
+        provider: 'lmstudio',
+        maxTokens: 8192,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.LMSTUDIO_GEMMA_7B,
+        name: 'Gemma 7B (Local)',
+        provider: 'lmstudio',
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.LMSTUDIO_GEMMA_3_1B,
+        name: 'Gemma 3 1B (Local)',
+        provider: 'lmstudio',
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -261,6 +299,15 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.MISTRAL_NEMO;
         case ChatMode.QWEN3_14B_FREE:
             return ModelEnum.QWEN3_14B_FREE;
+        // LM Studio local models
+        case ChatMode.LMSTUDIO_LLAMA_3_8B:
+            return ModelEnum.LMSTUDIO_LLAMA_3_8B;
+        case ChatMode.LMSTUDIO_QWEN_7B:
+            return ModelEnum.LMSTUDIO_QWEN_7B;
+        case ChatMode.LMSTUDIO_GEMMA_7B:
+            return ModelEnum.LMSTUDIO_GEMMA_7B;
+        case ChatMode.LMSTUDIO_GEMMA_3_1B:
+            return ModelEnum.LMSTUDIO_GEMMA_3_1B;
         default:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
@@ -306,6 +353,13 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
             return 40_960;
         case ChatMode.MISTRAL_NEMO:
             return 131_072;
+        // LM Studio local models
+        case ChatMode.LMSTUDIO_LLAMA_3_8B:
+        case ChatMode.LMSTUDIO_GEMMA_7B:
+        case ChatMode.LMSTUDIO_GEMMA_3_1B:
+            return 8192;
+        case ChatMode.LMSTUDIO_QWEN_7B:
+            return 32768;
         default:
             return 100_000;
     }

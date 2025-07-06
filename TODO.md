@@ -3,10 +3,29 @@
 --
 ok go-> https://vtchat.io.vn/
 
+
+--
+check structure output. show "Upload a Document First" dialog even though the user has uploaded a document.
+
+--
+improve markdown rendering for chat thread with better typography and faster loading and more performance
+
+support for more markdown features like tables, footnotes, etc.
+
+support llm renderings
+
 --
 
-local models Connecting local models via Ollama and LM Studio
+✅ **COMPLETED** local models Connecting local models via Ollama and LM Studio
 
+✅ **LM Studio Integration Complete**:
+- Added LM Studio provider to packages/ai/providers.ts
+- Added 3 LM Studio models: Llama 3 8B, Qwen 2.5 7B, Gemma 7B
+- Created test script: apps/web/app/tests/test-lm-studio-integration.js
+- Created setup guide: docs/guides/lm-studio-setup.md
+- OpenAI-compatible API server integration ready
+--
+https://ai-sdk.dev/providers/community-providers/ollama
 --
 
 for RAG -> can't keep all data in the local db -> don't sync to remove DB to fully support local-first architecture.
@@ -26,48 +45,6 @@ b) dall-e and spon-video model of gpt
 --
 https://dotenvx.com/docs/platforms/fly
 --
-https://contentsignals.org/
-
-# NOTICE: The collection of content and other data on this
-
-# site through automated means, including any device, tool,
-
-# or process designed to data mine or scrape content, is
-
-# prohibited except (1) as provided by the below Content
-
-# Usage directives or (2) with express written permission
-
-# from VT.
-
-# The Content Usage directives in this file use syntax and
-
-# vocabulary from a proposed IETF standard drafted by the AI
-
-# Preferences (aipref) working group and have the meanings
-
-# set forth in that standard. To learn more, please see
-
-# https://contentsignals.org/.
-
-# To request permission to license our intellectual property
-
-# and/or other materials, please contact us at
-
-# hello@vtchat.io.vn.
-
-User-Agent: \*
-Content-Usage: tdm=n, search=y
-Allow: /
---
-think and create new visual tools if neeed
-
---
-
-ask the Oracle for review feedback.
-
-## --
-
 https://github.com/e2b-dev/fragments
 
 --

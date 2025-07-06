@@ -233,6 +233,12 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.MISTRAL_NEMO:
                     case ChatMode.QWEN3_14B_FREE:
                         return isValidKey(apiKeys['OPENROUTER_API_KEY']);
+                    // LM Studio local models - no API key required
+                    case ChatMode.LMSTUDIO_LLAMA_3_8B:
+                    case ChatMode.LMSTUDIO_QWEN_7B:
+                    case ChatMode.LMSTUDIO_GEMMA_7B:
+                    case ChatMode.LMSTUDIO_GEMMA_3_1B:
+                        return true; // Local models don't require API keys
                     default:
                         return false;
                 }

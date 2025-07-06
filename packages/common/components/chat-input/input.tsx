@@ -22,6 +22,7 @@ import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
+import { LMStudioSetupBanner } from '../lm-studio-setup-banner';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
 import { StructuredDataDisplay } from '../structured-data-display';
@@ -407,6 +408,12 @@ export const ChatInput = ({
                     )}
 
                     {renderChatBottom()}
+                    
+                    {/* Show LM Studio setup banner for local models */}
+                    {!currentThreadId && chatMode.startsWith('lmstudio-') && (
+                        <LMStudioSetupBanner />
+                    )}
+                    
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
 
                     {/* ChatFooter moved to chat layout */}

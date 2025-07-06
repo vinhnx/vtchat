@@ -47,6 +47,11 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'Grok 3 Mini': ChatMode.GROK_3_MINI,
         // Fireworks models
         'DeepSeek R1': ChatMode.DEEPSEEK_R1,
+        // LM Studio local models
+        'Llama 3 8B (Local)': ChatMode.LMSTUDIO_LLAMA_3_8B,
+        'Qwen 2.5 7B (Local)': ChatMode.LMSTUDIO_QWEN_7B,
+        'Gemma 7B (Local)': ChatMode.LMSTUDIO_GEMMA_7B,
+        'Gemma 3 1B (Local)': ChatMode.LMSTUDIO_GEMMA_3_1B,
     };
 
     // For OpenRouter models with duplicate names, use model ID mapping
@@ -353,6 +358,40 @@ export const modelOptionsByProvider = {
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+    ],
+    'LM Studio': [
+        {
+            label: 'Llama 3 8B (Local)',
+            value: ChatMode.LMSTUDIO_LLAMA_3_8B,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: 'Free local model • No API key required • Privacy-first',
+            isFreeModel: true,
+        },
+        {
+            label: 'Qwen 2.5 7B (Local)',
+            value: ChatMode.LMSTUDIO_QWEN_7B,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: 'Free local model • No API key required • Privacy-first',
+            isFreeModel: true,
+        },
+        {
+            label: 'Gemma 7B (Local)',
+            value: ChatMode.LMSTUDIO_GEMMA_7B,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: 'Free local model • No API key required • Privacy-first',
+            isFreeModel: true,
+        },
+        {
+            label: 'Gemma 3 1B (Local)',
+            value: ChatMode.LMSTUDIO_GEMMA_3_1B,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: 'Free local model • No API key required • Privacy-first',
+            isFreeModel: true,
         },
     ],
 };

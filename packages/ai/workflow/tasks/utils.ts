@@ -23,6 +23,15 @@ export const generateErrorMessage = (error: Error | string) => {
             return 'The API key is invalid. Please try again.';
         }
 
+        // LM Studio specific error handling
+        if (/ECONNREFUSED.*localhost/i.test(error.message)) {
+            return 'Local LM Studio server is not reachable. Ensure it is running (e.g. `lms server start --cors`).';
+        }
+
+        if (/fetch failed.*localhost/i.test(error.message)) {
+            return 'Cannot connect to LM Studio. Ensure the server is running on the correct port.';
+        }
+
         return 'Something went wrong. Please try again later.';
     }
 
