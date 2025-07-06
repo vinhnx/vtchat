@@ -110,6 +110,7 @@ Future plan
 - magic link
 - mcp
 - localization
+- local models Connecting local models via Ollama and LM Studio
 
 --
 
