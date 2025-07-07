@@ -1,57 +1,44 @@
 # NOTICE: The collection of content and other data on this
 # site through automated means, including any device, tool,
 # or process designed to data mine or scrape content, is
-# prohibited except (1) as provided by the below Content
-# Usage directives or (2) with express written permission
-# from VT.
+# prohibited except with express written permission from VT.
 
-# The Content Usage directives in this file use syntax and
-# vocabulary from a proposed IETF standard drafted by the AI
-# Preferences (aipref) working group and have the meanings
-# set forth in that standard. To learn more, please see
-# https://contentsignals.org/.
+# Related Content-Usage rules are delivered via HTTP response
+# headers (see next.config.mjs).
 
 # To request permission to license our intellectual property
 # and/or other materials, please contact us at
 # hello@vtchat.io.vn.
 
-# Allow specific search engines to index for search, but not for AI training
-User-Agent: googlebot
-Content-Usage: tdm=n, search=y
+# --- Search-engine-specific allow rules --------------------
+User-Agent: Googlebot
 Allow: /
+Disallow: /profile/
+Disallow: /rag/
+Disallow: /api/
+Disallow: /chat/
 
-User-Agent: bingbot
-Content-Usage: tdm=n, search=y
+User-Agent: Bingbot
 Allow: /
+Disallow: /profile/
+Disallow: /rag/
+Disallow: /api/
+Disallow: /chat/
 
 User-Agent: OAI-Searchbot
-Content-Usage: tdm=n, search=y
 Allow: /
+Disallow: /profile/
+Disallow: /rag/
+Disallow: /api/
+Disallow: /chat/
 
-# Allow unfettered access to public informational pages
+# --- Default rules for all other crawlers ------------------
 User-Agent: *
-Content-Usage: /about tdm=y, inference=y
 Allow: /about
-
-User-Agent: *
-Content-Usage: /faq tdm=y, inference=y
 Allow: /faq
-
-User-Agent: *
-Content-Usage: /privacy tdm=y, inference=y
 Allow: /privacy
-
-User-Agent: *
-Content-Usage: /terms tdm=y, inference=y
 Allow: /terms
-
-# Search-only access to other public content (no training, no inference)
-User-Agent: *
-Content-Usage: tdm=n, search=y, inference=n
 Allow: /
-
-# Disallow access to sensitive areas
-User-Agent: *
 Disallow: /profile/
 Disallow: /rag/
 Disallow: /api/

@@ -3,6 +3,16 @@
 --
 ok go-> https://vtchat.io.vn/
 
+fix core web vital https://search.google.com/search-console/core-web-vitals?resource_id=sc-domain%3Avtchat.io.vn&hl=en
+
+--
+
+fix https://search.google.com/search-console/https?resource_id=sc-domain%3Avtchat.io.vn&hl=en
+
+-
+
+fix structure output tool, it should be able to detect if a document has been uploaded on chat input
+
 --
 check structure output. show "Upload a Document First" dialog even though the user has uploaded a document.
 
@@ -22,8 +32,7 @@ bunx shadcn@latest migrate radix
 
 --
 
-local models Connecting local models via Ollama and LM Studio
---
+## local models Connecting local models via Ollama and LM Studio
 
 https://ai-sdk.dev/providers/community-providers/ollama
 
