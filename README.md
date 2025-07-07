@@ -19,7 +19,7 @@
 
 ## Overview
 
-VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+VT is a privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
 
 ## Key Features
 
@@ -218,7 +218,7 @@ The application requires several environment variables for full functionality. R
 - **AI Providers**: Support for multiple AI APIs
 - **Payment**: Creem.io for subscription management
 - **Security**: Bot detection and secure authentication
-- 
+-
 ## Deployment
 
 VT is production-ready and deployed on Fly.io:
@@ -319,7 +319,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Production-Ready**: Deployed and running in production environment
 - **Security Hardened**: Comprehensive protection against common threats
 - **Privacy-First**: Commited to user data protection
-- 
+-
 ---
 
 <div align="center">

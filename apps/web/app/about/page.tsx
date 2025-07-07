@@ -72,9 +72,7 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                VT delivers cutting-edge AI capabilities through a sophisticated
-                                dual-tier subscription system while maintaining a privacy-first
-                                architecture.
+                            VT is a privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
                             </p>
                         </div>
 
@@ -269,17 +267,16 @@ function AboutContent() {
                             <p className="text-muted-foreground mb-4">
                                 VT is built with transparency and community in mind. We believe in
                                 open development practices and welcome contributions from the
-                                community. Our codebase maintains zero TypeScript errors and
-                                comprehensive test coverage for reliability.
+                                community.
                             </p>
                             <div className="mt-6 flex flex-wrap items-center gap-4">
                                 <a
-                                    href="https://vtchat.io.vn"
+                                    href="https://github.com/vinhnx/vtchat"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >
-                                    🚀 Verified Startup
+                                    GitHub
                                 </a>
                             </div>
                         </div>

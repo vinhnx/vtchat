@@ -3,7 +3,6 @@
 --
 ok go-> https://vtchat.io.vn/
 
-
 --
 check structure output. show "Upload a Document First" dialog even though the user has uploaded a document.
 
@@ -16,17 +15,17 @@ support llm renderings
 
 --
 
-✅ **COMPLETED** local models Connecting local models via Ollama and LM Studio
+migrate (optional) to the radix-ui mono package with one command. No breaking changes.
+https://x.com/shadcn/status/1932819652524355998?t=PpYJInz2WcSN_fhoxWJwRQ
 
-✅ **LM Studio Integration Complete**:
-- Added LM Studio provider to packages/ai/providers.ts
-- Added 3 LM Studio models: Llama 3 8B, Qwen 2.5 7B, Gemma 7B
-- Created test script: apps/web/app/tests/test-lm-studio-integration.js
-- Created setup guide: docs/guides/lm-studio-setup.md
-- OpenAI-compatible API server integration ready
+bunx shadcn@latest migrate radix
+
 --
+
+local models Connecting local models via Ollama and LM Studio
+--
+
 https://ai-sdk.dev/providers/community-providers/ollama
---
 
 for RAG -> can't keep all data in the local db -> don't sync to remove DB to fully support local-first architecture.
 ask oracle for review feedback then implement
