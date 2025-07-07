@@ -254,6 +254,20 @@ export async function enforceVTPlusAccess(request: NextRequest): Promise<{
         });
         const userId = session?.user?.id;
 
+        // Check authentication first
+        if (!userId) {
+            return {
+                success: false,
+                response: new Response(
+                    JSON.stringify({ error: 'Unauthorized' }),
+                    {
+                        status: 401,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                ),
+            };
+        }
+
         // Extract IP for rate limiting analytics
         const ip =
             request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for') ?? undefined;
