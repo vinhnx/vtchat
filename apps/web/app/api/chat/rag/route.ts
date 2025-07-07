@@ -21,11 +21,19 @@ export async function POST(req: Request) {
         });
 
         if (!session?.user?.id) {
-            return new Response('Unauthorized', { status: 401 });
+            return new Response(
+                JSON.stringify({ error: 'Unauthorized' }),
+                {
+                    status: 401,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
         }
 
-        // Check VT+ access for RAG feature
-        const vtPlusCheck = await checkVTPlusAccess(session.user.id);
+        // Check VT+ access for RAG feature  
+        const headers = await import('next/headers').then((m) => m.headers());
+        const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
+        const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
         if (!vtPlusCheck.hasAccess) {
             return new Response(
                 JSON.stringify({
@@ -50,10 +58,14 @@ export async function POST(req: Request) {
         } = await req.json();
 
         // Validate API keys are provided
-        if (!apiKeys || typeof apiKeys !== 'object') {
-            return new Response('API keys are required for RAG functionality', {
-                status: 400,
-            });
+        if (!apiKeys || typeof apiKeys !== 'object' || apiKeys === null) {
+            return new Response(
+                JSON.stringify({ error: 'API keys are required for RAG functionality' }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
         }
 
         // Configure model based on user selection
@@ -61,18 +73,26 @@ export async function POST(req: Request) {
         if (ragChatModel.startsWith('gpt-')) {
             const openaiApiKey = apiKeys['OPENAI_API_KEY'];
             if (!openaiApiKey) {
-                return new Response('OpenAI API key is required for GPT models', {
-                    status: 400,
-                });
+                return new Response(
+                    JSON.stringify({ error: 'OpenAI API key is required for GPT models' }),
+                    {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
             }
             const openaiProvider = createOpenAI({ apiKey: openaiApiKey });
             model = openaiProvider(ragChatModel);
         } else if (ragChatModel.startsWith('claude-')) {
             const anthropicApiKey = apiKeys['ANTHROPIC_API_KEY'];
             if (!anthropicApiKey) {
-                return new Response('Anthropic API key is required for Claude models', {
-                    status: 400,
-                });
+                return new Response(
+                    JSON.stringify({ error: 'Anthropic API key is required for Claude models' }),
+                    {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
             }
             const anthropicProvider = createAnthropic({
                 apiKey: anthropicApiKey,
@@ -84,14 +104,24 @@ export async function POST(req: Request) {
         } else if (ragChatModel.startsWith('gemini-')) {
             const geminiApiKey = apiKeys['GEMINI_API_KEY'];
             if (!geminiApiKey) {
-                return new Response('Gemini API key is required for Gemini models', {
-                    status: 400,
-                });
+                return new Response(
+                    JSON.stringify({ error: 'Gemini API key is required for Gemini models' }),
+                    {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
             }
             const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
             model = googleProvider(ragChatModel);
         } else {
-            return new Response('Unsupported model selected', { status: 400 });
+            return new Response(
+                JSON.stringify({ error: 'Unsupported model selected' }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
         }
 
         // Build personalized system prompt based on profile
@@ -162,6 +192,12 @@ export async function POST(req: Request) {
         return result.toDataStreamResponse();
     } catch (error) {
         log.error({ error }, 'RAG Chat API Error');
-        return new Response('Internal Server Error', { status: 500 });
+        return new Response(
+            JSON.stringify({ error: 'Internal Server Error' }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }

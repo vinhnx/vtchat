@@ -5,21 +5,17 @@ export const revalidate = 0;
 import { log } from '@repo/shared/logger';
 import { desc, eq } from 'drizzle-orm';
 import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { resources } from '@/lib/database/schema';
+import { enforceVTPlusAccess } from '../../subscription/access-control';
 
-export async function GET(_req: NextRequest) {
+export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({
-            headers: await import('next/headers').then((m) => m.headers()),
-        });
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        // Use enforceVTPlusAccess middleware for consistent access control
+        const { success, response, userId } = await enforceVTPlusAccess(request);
+        if (!success) {
+            return response!;
         }
-
-        const userId = session.user.id;
 
         // Get all resources for the user
         const userResources = await db

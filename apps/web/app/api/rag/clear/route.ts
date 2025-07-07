@@ -8,6 +8,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { embeddings, resources } from '@/lib/database/schema';
+import { checkVTPlusAccess } from '../../subscription/access-control';
 
 export async function DELETE(_req: NextRequest) {
     try {
@@ -17,6 +18,21 @@ export async function DELETE(_req: NextRequest) {
 
         if (!session?.user?.id) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        // Check VT+ access for RAG feature
+        const headers = await import('next/headers').then((m) => m.headers());
+        const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
+        const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
+        if (!vtPlusCheck.hasAccess) {
+            return NextResponse.json(
+                {
+                    error: 'VT+ subscription required',
+                    message: 'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
+                    code: 'VT_PLUS_REQUIRED',
+                },
+                { status: 403 }
+            );
         }
 
         const userId = session.user.id;
