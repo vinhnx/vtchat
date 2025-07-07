@@ -43,3 +43,6 @@ Disallow: /profile/
 Disallow: /rag/
 Disallow: /api/
 Disallow: /chat/
+
+# --- Sitemap location ---
+Sitemap: https://vtchat.io.vn/sitemap.xml

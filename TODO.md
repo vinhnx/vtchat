@@ -7,7 +7,8 @@ fix core web vital https://search.google.com/search-console/core-web-vitals?reso
 
 --
 
-fix https://search.google.com/search-console/https?resource_id=sc-domain%3Avtchat.io.vn&hl=en
+fix https?
+https://search.google.com/search-console/https/drilldown?resource_id=sc-domain%3Avtchat.io.vn&item_key=CAMQAQ&hl=en
 
 -
 
