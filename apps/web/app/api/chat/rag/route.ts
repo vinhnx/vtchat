@@ -21,16 +21,13 @@ export async function POST(req: Request) {
         });
 
         if (!session?.user?.id) {
-            return new Response(
-                JSON.stringify({ error: 'Unauthorized' }),
-                {
-                    status: 401,
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
+            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+                status: 401,
+                headers: { 'Content-Type': 'application/json' },
+            });
         }
 
-        // Check VT+ access for RAG feature  
+        // Check VT+ access for RAG feature
         const headers = await import('next/headers').then((m) => m.headers());
         const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
@@ -115,13 +112,10 @@ export async function POST(req: Request) {
             const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
             model = googleProvider(ragChatModel);
         } else {
-            return new Response(
-                JSON.stringify({ error: 'Unsupported model selected' }),
-                {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
+            return new Response(JSON.stringify({ error: 'Unsupported model selected' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
         }
 
         // Build personalized system prompt based on profile
@@ -192,12 +186,9 @@ export async function POST(req: Request) {
         return result.toDataStreamResponse();
     } catch (error) {
         log.error({ error }, 'RAG Chat API Error');
-        return new Response(
-            JSON.stringify({ error: 'Internal Server Error' }),
-            {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' },
-            }
-        );
+        return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
 }

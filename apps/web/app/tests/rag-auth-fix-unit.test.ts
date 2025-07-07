@@ -14,7 +14,7 @@ describe('RAG Authentication Fix - Unit Test', () => {
             expect(identifier).toHaveProperty('userId');
             expect(typeof identifier.userId).toBe('string');
             expect(identifier.userId).toBe('test-user-123');
-            
+
             return Promise.resolve({
                 hasAccess: true,
                 planSlug: 'vt_plus',
@@ -37,18 +37,18 @@ describe('RAG Authentication Fix - Unit Test', () => {
                 // This is what would happen in the old buggy code
                 const { userId } = identifier as any; // This would fail
                 expect(userId).toBeUndefined(); // userId would be undefined
-                
+
                 return Promise.resolve({
                     hasAccess: false,
                     reason: 'Authentication required for VT+ features',
                 });
             }
-            
+
             // After the fix, this is the correct behavior
             expect(typeof identifier).toBe('object');
             const { userId } = identifier;
             expect(userId).toBeDefined();
-            
+
             return Promise.resolve({
                 hasAccess: true,
                 planSlug: 'vt_plus',
@@ -73,15 +73,15 @@ describe('RAG Authentication Fix - Unit Test', () => {
     it('should verify the exact line change in RAG route', () => {
         // This test documents the exact change made to fix the bug
         const sessionUserId = 'vt-plus-user-123';
-        
+
         // Before fix (buggy code):
         // checkVTPlusAccess(session.user.id)
         const buggyCall = sessionUserId; // This was the bug
-        
+
         // After fix (correct code):
         // checkVTPlusAccess({ userId: session.user.id })
         const correctCall = { userId: sessionUserId }; // This is the fix
-        
+
         // Verify the fix provides the correct structure
         expect(typeof buggyCall).toBe('string');
         expect(typeof correctCall).toBe('object');
@@ -93,14 +93,14 @@ describe('RAG Authentication Fix - Unit Test', () => {
         // Test that simulates the checkVTPlusAccess function logic
         function simulateCheckVTPlusAccess(identifier: { userId?: string; ip?: string }) {
             const { userId } = identifier; // This is the destructuring that was failing
-            
+
             if (!userId) {
                 return {
                     hasAccess: false,
                     reason: 'Authentication required for VT+ features',
                 };
             }
-            
+
             return {
                 hasAccess: true,
                 userId,
@@ -122,7 +122,7 @@ describe('RAG Authentication Fix - Unit Test', () => {
         // Test that the fixed format also supports optional IP parameter
         function simulateCheckVTPlusAccessWithIP(identifier: { userId?: string; ip?: string }) {
             const { userId, ip } = identifier;
-            
+
             return {
                 hasAccess: !!userId,
                 userId,
@@ -131,20 +131,20 @@ describe('RAG Authentication Fix - Unit Test', () => {
         }
 
         // Test with both userId and IP
-        const result = simulateCheckVTPlusAccessWithIP({ 
+        const result = simulateCheckVTPlusAccessWithIP({
             userId: 'test-user-123',
-            ip: '192.168.1.1' 
+            ip: '192.168.1.1',
         });
-        
+
         expect(result.hasAccess).toBe(true);
         expect(result.userId).toBe('test-user-123');
         expect(result.ip).toBe('192.168.1.1');
 
         // Test with only userId
-        const resultWithoutIP = simulateCheckVTPlusAccessWithIP({ 
-            userId: 'test-user-123'
+        const resultWithoutIP = simulateCheckVTPlusAccessWithIP({
+            userId: 'test-user-123',
         });
-        
+
         expect(resultWithoutIP.hasAccess).toBe(true);
         expect(resultWithoutIP.userId).toBe('test-user-123');
         expect(resultWithoutIP.ip).toBeUndefined();

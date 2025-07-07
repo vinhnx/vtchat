@@ -3,17 +3,15 @@
 --
 ok go-> https://vtchat.io.vn/
 
-fix core web vital
-'/Users/vinh.nguyenxuan/Documents/VT Chat Documents/pagespeed reports/vtchat.io.vn-20250707T120332.json'
-
-https://search.google.com/search-console/core-web-vitals?resource_id=sc-domain%3Avtchat.io.vn&hl=en
-https://pagespeed.web.dev/analysis/https-vtchat-io-vn/17173y7wyy?utm_source=search_console&form_factor=desktop&hl=en
 --
 
-fix https?
-https://search.google.com/search-console/https/drilldown?resource_id=sc-domain%3Avtchat.io.vn&item_key=CAMQAQ&hl=en
+what is /api/auth/fetch-options/method/to-upper-case api, and why it keep showing 404 error in the console?
 
--
+--
+
+replace /rag endpoint with /assistant endpoint
+
+--
 
 fix structure output tool, it should be able to detect if a document has been uploaded on chat input
 
@@ -26,13 +24,6 @@ improve markdown rendering for chat thread with better typography and faster loa
 support for more markdown features like tables, footnotes, etc.
 
 support llm renderings
-
---
-
-migrate (optional) to the radix-ui mono package with one command. No breaking changes.
-https://x.com/shadcn/status/1932819652524355998?t=PpYJInz2WcSN_fhoxWJwRQ
-
-bunx shadcn@latest migrate radix
 
 --
 
