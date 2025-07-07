@@ -8,13 +8,14 @@ bun run lint 2>/dev/null || echo "⚠️  oxlint found some issues (non-blocking
 
 # Optional: Run full build check only if STRICT_COMMIT is set
 if [ "$STRICT_COMMIT" = "true" ]; then
-    echo "🏗️  Running strict build check..."
+    echo "🏗️  Running build check (strict mode)..."
     bun run build
-    if [ $? -ne 0 ]; then
-        echo "❌ Build failed. Fix compilation errors before committing."
-        exit 1
-    fi
+fi
+
+# Run tests if TEST_ON_COMMIT is set
+if [ "$TEST_ON_COMMIT" = "true" ]; then
+    echo "🧪 Running tests..."
+    bun run test:run
 fi
 
 echo "✅ Pre-commit checks completed!"
-echo "💡 Run 'STRICT_COMMIT=true git commit' for full validation"
