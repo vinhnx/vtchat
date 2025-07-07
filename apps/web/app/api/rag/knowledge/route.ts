@@ -28,7 +28,8 @@ export async function GET(_req: NextRequest) {
             return NextResponse.json(
                 {
                     error: 'VT+ subscription required',
-                    message: 'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
+                    message:
+                        'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
                     code: 'VT_PLUS_REQUIRED',
                 },
                 { status: 403 }
