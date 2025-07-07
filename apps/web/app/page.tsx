@@ -1,9 +1,16 @@
 'use client';
 
-import { ChatFooter, InlineLoader, Thread } from '@repo/common/components';
+import {
+    ChatFooter,
+    InlineLoader,
+    PersonalizedGreeting,
+    Thread,
+    UserTierBadge,
+} from '@repo/common/components';
+import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-// import { SemanticRouterDebug } from '../components/debug/SemanticRouterDebug';
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
@@ -23,6 +30,7 @@ const ChatInput = dynamic(
 
 export default function HomePage() {
     const { data: session, isPending } = useSession();
+    const isPlusTier = useVtPlusAccess();
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
@@ -34,7 +42,21 @@ export default function HomePage() {
                 </div>
             </div>
             <div className="flex-shrink-0">
-                <ChatInput />
+                <div
+                    className="mx-auto flex w-full max-w-3xl flex-col items-start justify-start px-2
+                    md:px-0"
+                >
+                    <motion.div
+                        animate={{ opacity: 1 }}
+                        className="mb-2 flex w-full flex-col items-center gap-2"
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                    >
+                        {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
+                        <PersonalizedGreeting session={session} />
+                    </motion.div>
+                </div>
+                <ChatInput showGreeting={false} />
             </div>
 
             {/* ChatFooter pinned to bottom with padding for non-logged users */}

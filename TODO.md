@@ -3,8 +3,11 @@
 --
 ok go-> https://vtchat.io.vn/
 
-fix core web vital https://search.google.com/search-console/core-web-vitals?resource_id=sc-domain%3Avtchat.io.vn&hl=en
+fix core web vital
+'/Users/vinh.nguyenxuan/Documents/VT Chat Documents/pagespeed reports/vtchat.io.vn-20250707T120332.json'
 
+https://search.google.com/search-console/core-web-vitals?resource_id=sc-domain%3Avtchat.io.vn&hl=en
+https://pagespeed.web.dev/analysis/https-vtchat-io-vn/17173y7wyy?utm_source=search_console&form_factor=desktop&hl=en
 --
 
 fix https?

@@ -27,6 +27,7 @@ export const dynamic = 'force-dynamic';
 const bricolage = Bricolage_Grotesque({
     subsets: ['latin'],
     variable: '--font-bricolage',
+    display: 'swap',
 });
 
 import '@repo/ui/src/styles.css';
@@ -84,19 +85,20 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
     width: 'device-width',
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
+    userScalable: true,
     interactiveWidget: 'resizes-content',
 };
 
 const inter = Inter({
     subsets: ['latin'],
     variable: '--font-inter',
+    display: 'swap',
 });
 
 const clash = Bricolage_Grotesque({
     subsets: ['latin'],
     variable: '--font-clash',
+    display: 'swap',
 });
 
 export default function ParentLayout({
@@ -143,11 +145,13 @@ export default function ParentLayout({
                                                     <ReactScan />
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
-                                                        <VemetricAuthProvider>
-                                                            <VemetricSubscriptionTracker />
-                                                            <VemetricSettingsTracker />
-                                                            {children}
-                                                        </VemetricAuthProvider>
+                                                        <main className="flex flex-1 flex-col">
+                                                            <VemetricAuthProvider>
+                                                                <VemetricSubscriptionTracker />
+                                                                <VemetricSettingsTracker />
+                                                                {children}
+                                                            </VemetricAuthProvider>
+                                                        </main>
                                                     </RootLayout>
                                                     <SonnerToaster />
                                                 </RootProvider>

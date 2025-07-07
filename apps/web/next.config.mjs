@@ -31,26 +31,28 @@ const nextConfig = {
         webpackMemoryOptimizations: true,
         webpackBuildWorker: true,
         preloadEntriesOnStart: false,
-        optimizePackageImports: [
-            'lucide-react',
-            '@radix-ui/react-icons',
-            'date-fns',
-            'lodash-es',
-            'recharts',
-            'framer-motion',
-            '@tanstack/react-query',
-            'react-hook-form',
-            'zod',
-            'react-markdown',
-            'remark-gfm',
-            'react-syntax-highlighter',
-            '@google/generative-ai',
-            'ai',
-            'immer',
-            'nanoid',
-            'sonner',
-            'zustand',
-        ],
+        ...(process.env.EXPERIMENTAL_OPTI_IMPORTS === 'true' && {
+            optimizePackageImports: [
+                'lucide-react',
+                '@radix-ui/react-icons',
+                'date-fns',
+                'lodash-es',
+                'recharts',
+                'framer-motion',
+                '@tanstack/react-query',
+                'react-hook-form',
+                'zod',
+                'react-markdown',
+                'remark-gfm',
+                'react-syntax-highlighter',
+                '@google/generative-ai',
+                'ai',
+                'immer',
+                'nanoid',
+                'sonner',
+                'zustand',
+            ],
+        }),
     },
 
     // Moved from experimental to root level (Next.js 15+)
@@ -194,7 +196,7 @@ const nextConfig = {
                             priority: 10,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 244_000, // ~240KB limit per chunk
+                            maxSize: 150_000, // ~150KB limit per chunk
                         },
                         // Common application code
                         common: {
@@ -290,10 +292,6 @@ const nextConfig = {
                         key: 'X-Robots-Tag',
                         value: 'noindex, nofollow',
                     },
-                    {
-                        key: 'Cache-Control',
-                        value: 'private, no-store',
-                    },
                 ],
             },
             {
@@ -307,10 +305,6 @@ const nextConfig = {
                     {
                         key: 'X-Robots-Tag',
                         value: 'noindex, nofollow',
-                    },
-                    {
-                        key: 'Cache-Control',
-                        value: 'private, no-store',
                     },
                 ],
             },

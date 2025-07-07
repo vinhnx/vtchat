@@ -42,6 +42,7 @@ export const ChatEditor: FC<TChatEditor> = ({
         <Flex className="flex-1">
             <EditorContent
                 autoFocus
+                aria-label={placeholder}
                 className={cn(editorContainerClass, className)}
                 disabled={isGenerating}
                 editor={editor}

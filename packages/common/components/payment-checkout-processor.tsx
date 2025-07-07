@@ -18,7 +18,7 @@ export const CheckoutPackageType = {
     VT_PLUS: PlanSlug.VT_PLUS, // Matches PlanSlug.VT_PLUS ('vt_plus')
 } as const;
 
-export type CheckoutPackageType = typeof CheckoutPackageType[keyof typeof CheckoutPackageType];
+export type CheckoutPackageType = (typeof CheckoutPackageType)[keyof typeof CheckoutPackageType];
 
 /**
  * This component processes the Creem.io checkout success response

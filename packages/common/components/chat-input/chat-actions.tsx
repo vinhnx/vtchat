@@ -205,6 +205,7 @@ export function WebSearchButton() {
     return (
         <>
             <Button
+                aria-label={useWebSearch ? 'Web Search Enabled' : 'Enable Web Search'}
                 className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
                 onClick={handleWebSearchToggle}
                 size={useWebSearch ? 'sm' : 'icon-sm'}
@@ -281,6 +282,9 @@ export function MathCalculatorButton() {
                 requiredFeature={FeatureSlug.MATH_CALCULATOR}
             >
                 <Button
+                    aria-label={
+                        mathCalculatorEnabled ? 'Math Calculator Enabled' : 'Enable Math Calculator'
+                    }
                     className={cn(
                         'gap-2',
                         mathCalculatorEnabled && 'bg-orange-500/10 text-orange-500'
@@ -349,6 +353,7 @@ export function ChartsButton() {
                 requiredFeature={FeatureSlug.CHART_VISUALIZATION}
             >
                 <Button
+                    aria-label={useCharts ? 'Charts & Graphs Enabled' : 'Enable Charts & Graphs'}
                     className={cn('gap-2', useCharts && 'bg-purple-500/10 text-purple-500')}
                     onClick={handleChartsToggle}
                     size={useCharts ? 'sm' : 'icon-sm'}
@@ -985,6 +990,7 @@ export function SendStopButton({
                         transition={{ duration: 0.2 }}
                     >
                         <Button
+                            aria-label="Stop Generation"
                             onClick={stopGeneration}
                             size="icon-sm"
                             tooltip="Stop Generation"
@@ -1002,6 +1008,7 @@ export function SendStopButton({
                         transition={{ duration: 0.2 }}
                     >
                         <Button
+                            aria-label="Send Message"
                             className="min-h-[36px] min-w-[36px] md:min-h-[32px] md:min-w-[32px]"
                             disabled={!hasTextInput || isGenerating}
                             onClick={() => {

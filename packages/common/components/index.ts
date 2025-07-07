@@ -38,6 +38,7 @@ export * from './multi-session-panel';
 export * from './no-ssr';
 export * from './payment-checkout-processor';
 export * from './payment-redirect-loader';
+export * from './personalized-greeting';
 export * from './plus-settings';
 export * from './popover-confirm';
 export * from './portal-loading-indicator';

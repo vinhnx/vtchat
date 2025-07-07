@@ -23,7 +23,7 @@ export async function getEmbedding(
     const apiKey = apiKeys?.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
     if (!apiKey) {
         log.error('GEMINI_API_KEY missing – semantic router disabled');
-        throw new Error('GEMINI_API_KEY missing – semantic router disabled');
+        return [];
     }
 
     try {

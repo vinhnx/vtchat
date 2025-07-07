@@ -74,7 +74,16 @@ export const ImageUpload: FC<TImageUpload> = ({
 
     const imageUploadButton = (
         <>
-            <input className="hidden" id={id} onChange={handleImageUpload} type="file" />
+            <label htmlFor={id} className="sr-only">
+                {label}
+            </label>
+            <input
+                className="hidden"
+                id={id}
+                onChange={handleImageUpload}
+                type="file"
+                aria-label={label}
+            />
             <Tooltip
                 content={
                     hasImageAttached

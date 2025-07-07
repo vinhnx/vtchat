@@ -72,7 +72,11 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                            VT is a privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+                                VT is a privacy-focused AI chat application delivering cutting-edge
+                                AI capabilities through a sophisticated dual-tier subscription
+                                system. Built with modern web technologies and a privacy-first
+                                architecture, VT offers advanced AI reasoning, document processing,
+                                web search integration, and comprehensive multi-AI provider support.
                             </p>
                         </div>
 

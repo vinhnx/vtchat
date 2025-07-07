@@ -16,7 +16,7 @@ export const PriceType = {
     RECURRING: 'recurring',
 } as const;
 
-export type PriceType = typeof PriceType[keyof typeof PriceType];
+export type PriceType = (typeof PriceType)[keyof typeof PriceType];
 
 export const RecurringInterval = {
     MONTH: 'month',
@@ -25,7 +25,7 @@ export const RecurringInterval = {
     WEEK: 'week',
 } as const;
 
-export type RecurringInterval = typeof RecurringInterval[keyof typeof RecurringInterval];
+export type RecurringInterval = (typeof RecurringInterval)[keyof typeof RecurringInterval];
 
 export interface CreemProduct {
     id: string;

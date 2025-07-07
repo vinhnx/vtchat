@@ -4,10 +4,6 @@ import { Suspense } from 'react';
 export function PerformanceOptimizations() {
     return (
         <>
-            {/* Google Fonts preconnect for Inter and Bricolage Grotesque */}
-            <link href="https://fonts.googleapis.com" rel="preconnect" />
-            <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
-
             {/* DNS prefetch for external domains */}
             <link href="//www.google.com" rel="dns-prefetch" />
 
