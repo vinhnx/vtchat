@@ -13,7 +13,7 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 - **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys + 9 free server models
 - **Privacy-First**: All conversations stored locally in your browser
 - **Research Features**: Enhanced web search, deep research, personal AI memory (VT+ subscription)
-- **Security**: Enterprise-grade protection with rate limiting and bot detection
+- **Security**: protection with rate limiting and bot detection
 - **Multi-Device**: Use on desktop, tablet, and mobile devices
 
 ## 💳 Subscription Plans
@@ -32,7 +32,7 @@ Available to all logged-in users:
 - Advanced calculator with mathematical functions
 - Basic chat functionality
 - Local privacy protection
-- Enterprise-grade security
+- security
 
 ### VT+ ($5.99/month)
 

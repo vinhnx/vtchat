@@ -182,4 +182,4 @@ const logout = async () => {
 - ✅ **Anonymous user privacy** (isolated storage)
 - ✅ **Device sharing security** (safe for shared devices)
 
-The implementation provides **enterprise-grade security** for user data isolation while maintaining a **seamless user experience** with automatic context switching. All sensitive data is properly compartmentalized per user account with robust logout security.
+The implementation provides **security** for user data isolation while maintaining a **seamless user experience** with automatic context switching. All sensitive data is properly compartmentalized per user account with robust logout security.

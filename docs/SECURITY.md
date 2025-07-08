@@ -1,6 +1,6 @@
 # VT (VTChat) Security Overview
 
-VT implements enterprise-grade security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security and Better Auth.
+VT implements security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security and Better Auth.
 
 ## 🛡️ Security Architecture
 

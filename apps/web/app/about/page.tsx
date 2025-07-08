@@ -7,11 +7,11 @@ import Link from 'next/link';
 export const metadata: Metadata = {
     title: 'About VT',
     description:
-        'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security and advanced AI capabilities.',
+        'Learn about VT - Your privacy-focused AI chat platform with security and advanced AI capabilities.',
     openGraph: {
         title: 'About VT',
         description:
-            'Learn about VT - Your privacy-focused AI chat platform with enterprise-grade security.',
+            'Learn about VT - Your privacy-focused AI chat platform with security.',
         type: 'website',
     },
     robots: {
@@ -243,7 +243,7 @@ function AboutContent() {
                                 Performance & Reliability
                             </h3>
                             <p className="text-muted-foreground mb-4">
-                                VT is production-ready with enterprise-grade performance
+                                VT is production-ready with performance
                                 optimization:
                             </p>
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">

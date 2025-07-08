@@ -1,6 +1,10 @@
 'use client';
 
-import { ChatFooter, InlineLoader, Thread } from '@repo/common/components';
+import {
+    ChatFooter,
+    InlineLoader,
+    Thread,
+} from '@repo/common/components';
 import { useSession } from '@repo/shared/lib/auth-client';
 import dynamic from 'next/dynamic';
 

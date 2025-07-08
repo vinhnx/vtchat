@@ -152,7 +152,7 @@ export const useAppStore = create<State & Actions>()(
                 settingTab: SETTING_TABS.USAGE_CREDITS,
                 showSignInModal: false,
                 // Default settings - using base plan defaults initially
-                showExamplePrompts: false,
+                showExamplePrompts: true, // Enable by default for better onboarding
                 customInstructions: '',
                 useWebSearch: false,
                 useMathCalculator: false,
@@ -192,7 +192,7 @@ export const useAppStore = create<State & Actions>()(
                             })
                         );
                     } catch (error) {
-                        log.warn('Failed to save sidebar state:', { data: error });
+                        log.warn({ error }, 'Failed to save sidebar state');
                     }
                 },
 
@@ -209,7 +209,7 @@ export const useAppStore = create<State & Actions>()(
                             })
                         );
                     } catch (error) {
-                        log.warn('Failed to save sidebar state:', { data: error });
+                        log.warn({ error }, 'Failed to save sidebar state');
                     }
                 },
 
@@ -344,7 +344,7 @@ export const useAppStore = create<State & Actions>()(
                         // Reset all user preferences to base plan defaults
                         const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
-                        state.showExamplePrompts = false;
+                        state.showExamplePrompts = true; // Enable by default for better onboarding
                         state.customInstructions = '';
                         state.useWebSearch = false;
                         state.useMathCalculator = false;

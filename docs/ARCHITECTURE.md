@@ -296,4 +296,4 @@ graph TB
 
 ---
 
-This architecture provides a solid foundation for a production-ready, privacy-focused AI chat application with enterprise-grade security, performance, and scalability.
+This architecture provides a solid foundation for a production-ready, privacy-focused AI chat application with security, performance, and scalability.

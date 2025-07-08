@@ -6,7 +6,7 @@ vtchat is an AI chat application featuring free and premium tiers (VT+), with ex
 
 ## Complete README Content
 
-**VT** is a modern, privacy-first AI chat application with enterprise-grade security.
+**VT** is a modern, privacy-first AI chat application with security.
 
 ### Overview
 
@@ -30,7 +30,7 @@ VT is a production-ready, privacy-focused AI chat application delivering cutting
 - **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
-- **Enterprise-Grade Security**: Secure authentication with Better Auth
+- **Security**: Secure authentication with Better Auth
 - **Privacy-Focused Security**: Bot detection and secure authentication with Better Auth
 
 **Subscription Tiers:**

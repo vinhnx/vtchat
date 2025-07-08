@@ -1,6 +1,6 @@
 # VT (VTChat) Features Overview
 
-VT is a production-ready, privacy-focused AI chat application with enterprise-grade security and comprehensive AI capabilities. This document provides a complete overview of all features and capabilities.
+VT is a production-ready, privacy-focused AI chat application with security and comprehensive AI capabilities. This document provides a complete overview of all features and capabilities.
 
 ## 🤖 AI & Language Models
 

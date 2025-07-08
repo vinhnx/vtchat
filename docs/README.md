@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-VT is a production-ready, privacy-focused AI chat application with enterprise-grade security and comprehensive AI capabilities. This documentation provides complete guides for deployment, development, and feature implementation.
+VT is a production-ready, privacy-focused AI chat application with security and comprehensive AI capabilities. This documentation provides complete guides for deployment, development, and feature implementation.
 
 ## 🚀 Quick Start
 
@@ -107,7 +107,7 @@ VT is a production-ready, privacy-focused AI chat application with enterprise-gr
 - 9 AI models (5 Gemini + 4 OpenRouter)
 - Advanced calculator with mathematical functions
 - Local-first privacy with IndexedDB storage
-- Enterprise-grade security protection
+- security protection
 - Basic chat functionality
 
 ### Premium Tier (VT_PLUS - $10/month)
