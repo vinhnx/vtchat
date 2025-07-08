@@ -34,6 +34,7 @@
 
 ## Development Workflow
 
+- Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
 - **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues

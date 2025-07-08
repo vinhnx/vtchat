@@ -311,11 +311,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             </div>
                                             <UserTierBadge />
                                         </div>
-                                        <div className="text-muted-foreground text-sm">
-                                            {isVtPlus
-                                                ? `${VT_PLUS_PRICE_WITH_INTERVAL} • Renews automatically`
-                                                : currentPlan.description}
-                                        </div>
                                     </div>
                                 </div>
                                 {isLoaded ? (

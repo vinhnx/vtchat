@@ -126,7 +126,7 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 export const generateModelOptionsForProvider = (provider: string, excludePreview = false) => {
     return models
         .filter((model) => model.provider === provider)
-        .filter((model) => !(excludePreview && model.name.toLowerCase().includes('preview')))
+        .filter((model) => !(excludePreview && model.name && model.name.toLowerCase().includes('preview')))
         .map((model) => {
             const chatMode = getChatModeFromModel(model);
             if (!chatMode) return null;

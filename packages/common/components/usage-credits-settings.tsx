@@ -206,9 +206,6 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                                     <h4 className="text-foreground text-base font-semibold">
                                         VT+ Monthly Subscription
                                     </h4>
-                                    <p className="text-muted-foreground text-sm">
-                                        {VT_PLUS_PRICE_WITH_INTERVAL} • Renews automatically
-                                    </p>
                                 </div>
                                 <Button
                                     disabled={isPortalLoading}
