@@ -229,7 +229,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free model • 10 requests/day per account • 1 request/minute',
+            description: 'Free model',
             isFreeModel: true,
         },
         {
