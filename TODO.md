@@ -25,9 +25,6 @@ review apps/web/lib/database/users.ts
 don't use strings for constants, use enums or constants file
 
 --
-remove "Your VT+ subscription provides enhanced limits (100 requests/day, 10/min) for Gemini models." in settings for VT+
-
---
 
 Based on the Oracle's approval of Phase 1, here are the immediate next steps:
 
@@ -39,7 +36,7 @@ Add geminiUsageSource to user preferences - Store user's preferred GEMINI API so
 Phase 3 - Component Refactoring (Priority: Medium) 4. Refactor RateLimitUsageMeter for better reusability 5. Use object parameters for functions with multiple boolean parameters 6. Create comprehensive UI tests for settings and chat dropdown
 
 Should I start with the Oracle's high-priority feedback items (centralizing feature flags and implementing VT+ rate limiting)?
-
+ 
 --
 
 - Centralize feature flag logic - create utility function for NEXT_PUBLIC_VT_PLUS_GEMINI_UNLIMITED checks
@@ -72,7 +69,6 @@ Phase 3: Dynamic throttling + emergency controls
 Should I start implementing the GeminiBudgetManager service first?
 
 --
-example doesn't show even toggle from settings
 
 --
 
