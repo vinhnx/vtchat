@@ -1,5 +1,3 @@
-
-
 <div align="center">
 
 <h1>VT</h1>
@@ -9,7 +7,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Deployed on Fly.io](https://img.shields.io/badge/Deployed%20on-Fly.io-blueviolet)](https://fly.io)
 
-**A modern, privacy-first AI chat application with enterprise-grade security**
+**A modern, privacy-first AI chat application with security**
 
 [Live](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/SECURITY.md)
 
@@ -41,7 +39,7 @@ VT is a privacy-focused AI chat application delivering cutting-edge AI capabilit
 - **Local-First Storage**: All chat data stored in browser's IndexedDB via Dexie.js
 - **Zero Server Storage**: Conversations never leave the user's device
 - **Multi-User Isolation**: Complete data separation on shared devices
-- **Enterprise-Grade Security**: Secure authentication with Better Auth
+- **Security**: Secure authentication with Better Auth
 - **Privacy-Focused Security**: Bot detection and secure authentication with Better Auth
 
 ### Subscription Tiers
@@ -219,6 +217,7 @@ The application requires several environment variables for full functionality. R
 - **Payment**: Creem.io for subscription management
 - **Security**: Bot detection and secure authentication
 -
+
 ## Deployment
 
 VT is production-ready and deployed on Fly.io:
@@ -319,8 +318,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Production-Ready**: Deployed and running in production environment
 - **Security Hardened**: Comprehensive protection against common threats
 - **Privacy-First**: Commited to user data protection
--
----
+- ***
 
 <div align="center">
 
