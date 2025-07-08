@@ -149,7 +149,7 @@ export async function executeStream({
             log.debug('Starting workflow', { threadId: data.threadId });
         }
 
-        await workflow.start('semantic-tool-router', {
+        await workflow.start('planner', {
             question: data.prompt,
         });
 

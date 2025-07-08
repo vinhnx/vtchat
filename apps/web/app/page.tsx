@@ -46,7 +46,7 @@ export default function HomePage() {
             )}
 
             {/* Debug component for development */}
-            {/* {process.env.NODE_ENV === 'development' && <SemanticRouterDebug />} */}
+            
         </div>
     );
 }

@@ -16,7 +16,6 @@ import {
     plannerTask,
     refineQueryTask,
     reflectorTask,
-    semanticToolRouterTask,
     suggestionsTask,
     writerTask,
 } from './tasks';
@@ -110,20 +109,7 @@ export type WorkflowContextSchema = {
         budget: number;
         includeThoughts: boolean;
     };
-    // Semantic tool router fields
-    userTier?: 'FREE' | 'PLUS';
-    semanticRouter?: {
-        selectedTools: string[];
-        scores: Array<{
-            id: string;
-            name: string;
-            score: number;
-            tier: 'FREE' | 'PLUS';
-        }>;
-        reasoning: string;
-        usedQuickMatch: boolean;
-        timestamp: number;
-    };
+
 };
 
 export const runWorkflow = ({
@@ -239,7 +225,6 @@ export const runWorkflow = ({
     });
 
     builder.addTasks([
-        semanticToolRouterTask,
         plannerTask,
         geminiWebSearchTask,
         reflectorTask,

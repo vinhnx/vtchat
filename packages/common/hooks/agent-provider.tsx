@@ -111,25 +111,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
 
-            // Handle semantic tool router events - sync UI state with activated tools
-            if (eventType === 'toolRouter' && eventData?.selected) {
-                const selectedTools = eventData.selected;
-                log.info(
-                    { selectedTools, reasoning: eventData.reasoning },
-                    '🧠 Semantic router activated tools'
-                );
 
-                // Sync UI toggles with semantic router decisions
-                if (selectedTools.includes('calculator')) {
-                    setUseMathCalculator(true);
-                }
-                if (selectedTools.includes('web-search')) {
-                    setUseWebSearch(true);
-                }
-                if (selectedTools.includes('charts')) {
-                    setUseCharts(true);
-                }
-            }
 
             const updatedItem: ThreadItem = {
                 ...prevItem,
@@ -156,7 +138,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             threadItemMap.set(threadItemId, updatedItem);
             updateThreadItem(threadId, { ...updatedItem, persistToDB: true });
         },
-        [threadItemMap, updateThreadItem, setUseMathCalculator, setUseWebSearch, setUseCharts]
+        [threadItemMap, updateThreadItem]
     );
 
     const { startWorkflow, abortWorkflow } = useWorkflowWorker(

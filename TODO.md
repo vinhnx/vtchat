@@ -115,8 +115,6 @@ Would you like me to proceed with implementing this rate limiting system?
 
 --
 
-https://nextjs.org/docs/architecture/accessibility
-
 --
 
 https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performance
@@ -181,44 +179,6 @@ PLUS_MINUTE: 10,
 
 --
 
-remove semantic router features completely
-
-@vtchat/web:dev: 🌟 Workflow context created with:
-@vtchat/web:dev: 🚀 Executing task "semantic-tool-router" (Run #1)
-@vtchat/web:dev: 🧠 Semantic router task started
-@vtchat/web:dev: Starting semantic tool routing {
-@vtchat/web:dev: questionLength: 5,
-@vtchat/web:dev: userTier: 'PLUS',
-@vtchat/web:dev: question: 'hello',
-@vtchat/web:dev: hasChartAccess: true
-@vtchat/web:dev: }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 477, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 384, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 455, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 598, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 5, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 425, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 407, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Tool embeddings initialized { cachedCount: 6 }
-@vtchat/web:dev: Generated Gemini embedding { textLength: 407, embeddingLength: 768, model: 'text-embedding-004' }
-@vtchat/web:dev: Semantic tool routing failed {
-@vtchat/web:dev: error: TypeError: updater is not a function
-@vtchat/web:dev: at TypedEventEmitter.update (../../packages/orchestrator/events.ts:50:25)
-@vtchat/web:dev: at Object.execute (../../packages/ai/workflow/tasks/semantic-tool-router.ts:117:29)
-@vtchat/web:dev: at async WorkflowEngine.executeTask (../../packages/orchestrator/engine.ts:171:22)
-@vtchat/web:dev: at async WorkflowEngine.start (../../packages/orchestrator/engine.ts:84:8)
-@vtchat/web:dev: at async executeStream (app/api/completion/stream-handlers.ts:152:8)
-@vtchat/web:dev: at async Object.start (app/api/completion/route.ts:287:16)
-@vtchat/web:dev: 48 | update<K extends keyof T>(event: K, updater: (current: T[K]) => T[K]) {
-@vtchat/web:dev: 49 | const currentValue = this.state[event] as T[K];
-@vtchat/web:dev: > 50 | const newValue = updater(currentValue);
-@vtchat/web:dev: | ^
-@vtchat/web:dev: 51 | this.emit(event, newValue);
-@vtchat/web:dev: 52 | return this;
-@vtchat/web:dev: 53 | },
-@vtchat/web:dev: question: 'hello'
-@vtchat/web:dev: }
---
 
 https://xmcp.dev/docs
 
@@ -231,9 +191,6 @@ just disabe rag feature completedly
 RLS embeddings RAG feature
 
 --
-
-disable semantic router in rag feature
-
 --
 
 replace /rag endpoint with /assistant endpoint
