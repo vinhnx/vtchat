@@ -5,7 +5,7 @@
  * using the proper PlanSlug enum
  */
 
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { Creem } from 'creem';
 import {
     CREEM_API_CONFIG,

@@ -1,6 +1,6 @@
 # VT (VTChat) Security Overview
 
-VT implements enterprise-grade security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security through Arcjet integration and Better Auth.
+VT implements enterprise-grade security measures to protect users, data, and infrastructure from various threats. Our multi-layered security approach combines privacy-first architecture with advanced application security and Better Auth.
 
 ## 🛡️ Security Architecture
 
@@ -192,7 +192,6 @@ NEXT_PUBLIC_BASE_URL=your_app_url      # Application base URL
 
 ## 📚 Additional Resources
 
-- **[Arcjet Security Guide](guides/arcjet-security.md)**: Detailed implementation guide
 - **[Better Auth Documentation](https://better-auth.com)**: Authentication security details
 - **[Security Best Practices](https://owasp.org)**: Industry security standards
 - **[Privacy Policy](../PRIVACY.md)**: User privacy commitments

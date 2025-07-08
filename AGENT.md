@@ -45,11 +45,11 @@
 ## Deployment
 
 - **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io
-  - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
-  - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
-  - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
-  - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
-  - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
+    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
 ### Oracle Consultation Workflow (REQUIRED)
 
@@ -162,16 +162,14 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 
 ## Logging
 
-- **NEVER use console.log/error/warn** - Always use Pino logger (`@repo/shared/logger`)
-- **Import**: `import { log } from '@repo/shared/logger'` for basic logging (use `log` not `logger`)
+- **NEVER use console.log/error/warn** - Always use Pino logger (`@repo/shared/lib/logger`)
+- **Import**: `import { log } from '@repo/shared/lib/logger'` for basic logging (use `log` not `logger`)
 - **Usage**: `log.info({ key: value }, 'message')`, `log.error({ error }, 'message')`
 - **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
 - **Structured logging** - Always pass metadata as first parameter, message as second
 - **API key security** - API keys automatically redacted in logs (apiKey, api_key, Authorization headers)
-- **Next.js compatible** configuration that avoids worker thread bundling issues
-- **Request tracing** with `withRequestId()` and `withLogging()` middleware
-- **Performance timing** with `createTimer()` for monitoring operations
-- **Child loggers** with `createChildLogger()` for scoped context
+- **Audit logging** - Use `logAuditEvent(userId, event, metadata)` for compliance tracking
+- **PII masking** - All string fields automatically masked using `maskPII()` function
 - **Environment-specific** configurations (development/production/test)
 - **Log levels**: debug (dev only), info, warn, error, fatal
 
@@ -181,7 +179,6 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 - You can search for documentation using `context7` MCP tool
 - You can search the internet using MCP tool `tavily-search`
 - Documentation should be in `docs/` directory
-- **Security Documentation**: Comprehensive Arcjet security implementation documented in `docs/SECURITY.md` and `docs/guides/arcjet-security.md`
 - **Help Center = FAQ**: When user mentions "help center", they mean the FAQ page for end users
 - After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
 - Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.

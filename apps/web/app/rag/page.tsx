@@ -12,7 +12,7 @@ import {
     PremiumCardHeader,
     PremiumCardTitle,
 } from '@repo/ui';
-import { Database, Lock, Sparkles } from 'lucide-react';
+import { Database, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { RAGChatbot } from '../../components/rag-chatbot';
@@ -145,6 +145,8 @@ export default function RAGPage() {
                         Build and query your personal knowledge base with AI
                     </p>
                 </div>
+
+
                 <div className="min-h-0 flex-1">
                     <RAGChatbot />
                 </div>

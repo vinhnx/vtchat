@@ -2,7 +2,7 @@
 
 import { ModelEnum } from '@repo/ai/models';
 import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import {
     getDefaultSettingsForPlan,

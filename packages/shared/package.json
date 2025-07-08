@@ -19,7 +19,7 @@
         "./utils": "./utils/index.ts",
         "./types": "./types.ts",
         "./types/environment": "./types/environment.ts",
-        "./logger": "./logger-simple.ts",
+        "./logger": "./src/lib/logger.ts",
         "./lib/auth-client": "./lib/auth-client.ts",
         "./lib/auth": "./lib/auth.ts",
         "./lib/database": "./lib/database.ts",

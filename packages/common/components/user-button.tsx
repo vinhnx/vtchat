@@ -2,7 +2,7 @@
 
 import { useLogout } from '@repo/common/hooks';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Avatar,

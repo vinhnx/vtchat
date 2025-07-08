@@ -7,7 +7,7 @@ vtchat is an AI chat application featuring free and premium tiers (VT+), with ex
 ## Core Documentation
 - [README.md](README.md): Project overview, features, tech stack, and setup instructions
 - [AGENT.md](AGENT.md): Development guidelines, code style, Oracle workflow, and best practices
-- [docs/SECURITY.md](docs/SECURITY.md): Comprehensive security implementation with Arcjet
+- [docs/SECURITY.md](docs/SECURITY.md): Comprehensive security implementation
 - [docs/FINAL-RELEASE-NOTES.md](docs/FINAL-RELEASE-NOTES.md): Complete feature summary of production launch
 - [docs/FINAL-PROJECT-REPORT.md](docs/FINAL-PROJECT-REPORT.md): Business and technical deep-dive analysis
 
@@ -23,7 +23,6 @@ vtchat is an AI chat application featuring free and premium tiers (VT+), with ex
 ## Development Guides
 - [docs/guides/](docs/guides/): Step-by-step development guides
 - [docs/analytics-setup.md](docs/analytics-setup.md): Vemetric analytics configuration
-- [docs/guides/arcjet-security.md](docs/guides/arcjet-security.md): Security implementation guide
 - [docs/production-deployment-checklist.md](docs/production-deployment-checklist.md): Production deployment requirements
 - [docs/production-monitoring-setup.md](docs/production-monitoring-setup.md): Monitoring and observability setup
 

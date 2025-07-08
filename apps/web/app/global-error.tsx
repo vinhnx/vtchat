@@ -1,6 +1,6 @@
 'use client';
 
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { TypographyH3 } from '@repo/ui';
 
 // Force dynamic rendering to prevent SSR issues

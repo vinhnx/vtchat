@@ -4,7 +4,7 @@ import { models } from '@repo/ai/models';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import {
     Avatar,
     Badge,
