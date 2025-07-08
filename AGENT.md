@@ -168,7 +168,7 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 - **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
 - **Structured logging** - Always pass metadata as first parameter, message as second
 - **API key security** - API keys automatically redacted in logs (apiKey, api_key, Authorization headers)
-- **Audit logging** - Use `logAuditEvent(userId, event, metadata)` for compliance tracking
+
 - **PII masking** - All string fields automatically masked using `maskPII()` function
 - **Environment-specific** configurations (development/production/test)
 - **Log levels**: debug (dev only), info, warn, error, fatal
