@@ -20,10 +20,6 @@ oracle: please plan this change
 SOLUTION: Modified handleModeSelect function in chat-actions.tsx to check for unlimited Gemini access for VT+ users before showing BYOK dialog. VT+ users with unlimited Gemini access now bypass the BYOK requirement completely.
 
 --
-review apps/web/lib/database/users.ts
-
-don't use strings for constants, use enums or constants file
-
 --
 
 Based on the Oracle's approval of Phase 1, here are the immediate next steps:
@@ -36,7 +32,7 @@ Add geminiUsageSource to user preferences - Store user's preferred GEMINI API so
 Phase 3 - Component Refactoring (Priority: Medium) 4. Refactor RateLimitUsageMeter for better reusability 5. Use object parameters for functions with multiple boolean parameters 6. Create comprehensive UI tests for settings and chat dropdown
 
 Should I start with the Oracle's high-priority feedback items (centralizing feature flags and implementing VT+ rate limiting)?
- 
+
 --
 
 - Centralize feature flag logic - create utility function for NEXT_PUBLIC_VT_PLUS_GEMINI_UNLIMITED checks
@@ -69,13 +65,6 @@ Phase 3: Dynamic throttling + emergency controls
 Should I start implementing the GeminiBudgetManager service first?
 
 --
-
---
-
-## Add geminiUsageSource to user preferences store
-
-oracle I have 300 usd gemini free budget and for 3 month. think a plan to protect myself
-
 --
 
 Based on my research, here's my analysis and proposed rate limiting plan for VT+ users:
