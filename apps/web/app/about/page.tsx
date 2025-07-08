@@ -274,23 +274,26 @@ function AboutContent() {
                                 community.
                             </p>
                             <div className="mt-6 flex flex-wrap items-center gap-4">
-                                <a
+                                <Link
                                     href="https://github.com/vinhnx/vtchat"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >
-                                    GitHub
-                                </a>
+                                    Source Code on GitHub
+                                </Link>
                             </div>
-                        </div>
 
-                        <div className="pt-8 text-center">
-                            <Link href="/">
-                                <Button className="gap-2" size="lg">
-                                    Get Started with VT
-                                </Button>
-                            </Link>
+                            <div className="mt-6 flex flex-wrap items-center gap-4">
+                                <Link
+                                    href="https://twitter.com/intent/tweet?text=VT&url=https%3A%2F%2Fvtchat.io.vn%2F"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                >
+                                    Share VT on X/Twitter
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
