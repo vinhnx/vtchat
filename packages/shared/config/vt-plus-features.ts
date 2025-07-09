@@ -40,6 +40,13 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             'Personal knowledge base with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
         enabled: true,
     },
+    [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
+        id: FeatureSlug.GEMINI_MODELS_NO_BYOK,
+        name: 'All Gemini Models Without BYOK',
+        description:
+            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
+        enabled: true,
+    },
 } as const;
 
 /**

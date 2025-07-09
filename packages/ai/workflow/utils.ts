@@ -1,6 +1,7 @@
 import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import {
     type CoreMessage,
     extractReasoningMiddleware,
@@ -84,7 +85,7 @@ export const generateTextWithGeminiSearch = async ({
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
-    userTier?: 'FREE' | 'PLUS';
+    userTier?: UserTierType;
 }): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
     log.info({}, '=== generateTextWithGeminiSearch START ===');
@@ -118,7 +119,7 @@ export const generateTextWithGeminiSearch = async ({
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-        const isVtPlusUser = userTier === 'PLUS';
+        const isVtPlusUser = userTier === UserTier.PLUS;
 
         if (!(hasUserGeminiKey || hasSystemGeminiKey)) {
             if (isFreeGeminiModel) {
@@ -474,7 +475,7 @@ export const generateText = async ({
     byokKeys?: Record<string, string>;
     useSearchGrounding?: boolean;
     thinkingMode?: ThinkingModeConfig;
-    userTier?: 'FREE' | 'PLUS';
+    userTier?: UserTierType;
 }) => {
     try {
         if (signal?.aborted) {
@@ -514,7 +515,7 @@ export const generateText = async ({
 
         // Handle API key logic for VT+ users and Gemini models
         const isGeminiModel = model.toString().toLowerCase().includes('gemini');
-        const isVtPlusUser = userTier === 'PLUS';
+        const isVtPlusUser = userTier === UserTier.PLUS;
 
         if (isGeminiModel && isVtPlusUser) {
             // For VT+ users with Gemini models, check if they have BYOK
@@ -657,7 +658,7 @@ export const generateObject = async ({
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
-    userTier?: 'FREE' | 'PLUS';
+    userTier?: UserTierType;
 }) => {
     try {
         if (signal?.aborted) {
@@ -713,7 +714,7 @@ export const generateObject = async ({
 
         // Handle API key logic for VT+ users and Gemini models
         const isGeminiModel = model.toString().toLowerCase().includes('gemini');
-        const isVtPlusUser = userTier === 'PLUS';
+        const isVtPlusUser = userTier === UserTier.PLUS;
 
         if (isGeminiModel && isVtPlusUser) {
             // For VT+ users with Gemini models, check if they have BYOK

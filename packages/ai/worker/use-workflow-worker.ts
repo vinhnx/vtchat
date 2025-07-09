@@ -1,6 +1,7 @@
 'use client';
 
 import type { ChatMode } from '@repo/shared/config';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import type { CoreAssistantMessage, CoreUserMessage } from 'ai';
 import { useEffect, useRef, useState } from 'react';
 
@@ -123,7 +124,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         charts,
         showSuggestions,
         thinkingMode,
-        userTier = 'FREE',
+        userTier = UserTier.FREE,
     }: {
         mode: ChatMode;
         question: string;
@@ -144,7 +145,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
             budget: number;
             includeThoughts: boolean;
         };
-        userTier?: 'FREE' | 'PLUS';
+        userTier?: UserTierType;
     }) => {
         // Reset state
         setError(null);

@@ -193,6 +193,47 @@ export default function PlusPage() {
                     </div>
                 </div>
 
+                {/* Promotional Banner */}
+                <div className="mb-8 flex justify-center">
+                    <div className="relative rounded-lg bg-gradient-to-r from-[#BFB38F]/20 to-[#BFB38F]/30 p-1">
+                        <div className="rounded-lg bg-black/80 px-6 py-4 text-center backdrop-blur-sm">
+                            <div className="mb-2 flex items-center justify-center gap-2">
+                                <Sparkles className="h-5 w-5 text-[#BFB38F]" />
+                                <span className="text-sm font-semibold uppercase tracking-wide text-[#BFB38F]">
+                                    Limited Time Offer
+                                </span>
+                                <Sparkles className="h-5 w-5 text-[#BFB38F]" />
+                            </div>
+
+                            <p className="text-lg font-medium text-white">
+                                Get 20% off VT+ with code{' '}
+                                <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-mono text-[#BFB38F]">
+                                    VTLAUNCH
+                                </span>
+                            </p>
+
+                            <p className="mt-1 text-sm text-gray-300">
+                                Limited supply • Exclusive launch pricing  • Subscribe now
+                            </p><br/>
+
+                            <ButtonAnimatedGradient
+                                className="flex w-full items-center justify-center"
+                                data-vmtrc="PremiumPlanSelected"
+                                data-vmtrc-context="pricing_page"
+                                data-vmtrc-plan="VT_PLUS"
+                                data-vmtrc-price="10"
+                                onClick={() => {
+                                    if (!(isPortalLoading || isPaymentLoading)) {
+                                        handleSubscribe();
+                                    }
+                                }}
+                            >
+                                {getSubscribeButtonText()}
+                            </ButtonAnimatedGradient>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Pricing Section */}
                 <div className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8" id="pricing">
                     <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2">

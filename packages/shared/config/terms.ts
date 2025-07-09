@@ -119,6 +119,7 @@ VT_BASE is our free tier for logged-in users that includes:
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
 - **Three Exclusive Research Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
+- **All Gemini Models Without BYOK**: Access to all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys - system automatically handles API key management for VT+ users
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

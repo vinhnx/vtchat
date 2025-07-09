@@ -38,6 +38,7 @@ export const FeatureSlug = {
     CHART_VISUALIZATION: 'chart_visualization',
     MULTI_MODAL_CHAT: 'multi_modal_chat',
     RAG: 'rag',
+    GEMINI_MODELS_NO_BYOK: 'gemini_models_no_byok',
 } as const;
 
 export type FeatureSlug = (typeof FeatureSlug)[keyof typeof FeatureSlug];
@@ -125,6 +126,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.RAG,
             FeatureSlug.GROUNDING_WEB_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
+            FeatureSlug.GEMINI_MODELS_NO_BYOK,
         ],
     },
 };
@@ -237,6 +239,12 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: 'Personal AI Assistant with Memory',
         description:
             'Personal knowledge base with intelligent information storage and retrieval capabilities',
+    },
+    [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
+        slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,
+        name: 'All Gemini Models Without BYOK',
+        description:
+            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys',
     },
 };
 

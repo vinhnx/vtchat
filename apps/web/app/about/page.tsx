@@ -193,7 +193,10 @@ function AboutContent() {
                             <p className="text-muted-foreground mb-4">
                                 VT offers free tier, and with VT+ focusing only on 3 exclusive
                                 research capabilities: Deep Research, Pro Search, and RAG (Personal
-                                AI Assistant with Memory).
+                                AI Assistant with Memory). VT+ users also get access to all Gemini
+                                models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools
+                                (web search, math calculator, charts) without needing their own API
+                                keys.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">

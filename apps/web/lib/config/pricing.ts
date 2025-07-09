@@ -54,6 +54,11 @@ export const PRICING_CONFIG = {
             interval: 'month',
             features: [
                 {
+                    name: 'Access to Gemini Models + Enhanced Tools',
+                    description:
+                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
+                },
+                {
                     name: 'Everything in Free Plan (All Premium AI Models Included)',
                     description:
                         'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',

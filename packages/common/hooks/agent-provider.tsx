@@ -3,6 +3,7 @@
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { getRateLimitMessage } from '@repo/shared/constants';
+import { UserTier } from '@repo/shared/constants/user-tiers';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
@@ -491,7 +492,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
                     thinkingMode,
-                    userTier: hasVtPlusAccess ? 'PLUS' : 'FREE',
+                    userTier: hasVtPlusAccess ? UserTier.PLUS : UserTier.FREE,
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
@@ -516,7 +517,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     charts: useCharts, // Charts now available to all users
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: getAllKeys(),
-                    userTier: hasVtPlusAccess ? 'PLUS' : 'FREE',
+                    userTier: hasVtPlusAccess ? UserTier.PLUS : UserTier.FREE,
                 });
             }
         },

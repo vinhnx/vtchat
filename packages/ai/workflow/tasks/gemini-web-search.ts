@@ -1,4 +1,5 @@
 import { createTask } from '@repo/orchestrator';
+import { UserTier } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -26,9 +27,9 @@ Please include:
         try {
             // Use the user's selected model
             const mode = context?.get('mode') || '';
-            const userTier = context?.get('userTier') || 'FREE';
+            const userTier = context?.get('userTier') || UserTier.FREE;
             const userApiKeys = context?.get('apiKeys') || {};
-            const isVtPlusUser = userTier === 'PLUS';
+            const isVtPlusUser = userTier === UserTier.PLUS;
 
             log.info('=== gemini-web-search EXECUTE START ===');
             log.info('Chat mode:', { data: mode });
@@ -146,7 +147,7 @@ Please include:
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
             const hasUserApiKey = userApiKeys?.GEMINI_API_KEY;
             const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
-            const isVtPlusUser = userTier === 'PLUS';
+            const isVtPlusUser = userTier === UserTier.PLUS;
 
             if (error.message?.includes('Free Gemini model requires system configuration')) {
                 // System configuration issue for free model

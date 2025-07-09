@@ -1,4 +1,6 @@
-export type ToolTier = 'FREE' | 'PLUS';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
+
+export type ToolTier = UserTierType;
 
 export interface ToolMeta {
     id: string;
@@ -17,7 +19,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Web Search',
         description:
             'Search the internet for current information, news, real-time data, and web pages to cite as sources',
-        tier: 'FREE',
+        tier: UserTier.FREE,
         activate: (context) => context.set('webSearch', true),
         keywords: [
             'search',
@@ -53,7 +55,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Math Calculator',
         description:
             'Perform mathematical calculations, solve equations, arithmetic operations, trigonometry, and financial calculations',
-        tier: 'FREE',
+        tier: UserTier.FREE,
         activate: (context) => context.set('mathCalculator', true),
         keywords: [
             'calculate',
@@ -94,7 +96,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Charts & Visualization',
         description:
             'Generate bar charts, line graphs, pie charts, scatter plots and other data visualizations',
-        tier: 'FREE',
+        tier: UserTier.FREE,
         activate: (context) => context.set('charts', true),
         keywords: [
             'chart',
@@ -128,7 +130,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Document Processing',
         description:
             'Parse and analyze PDF, DOC, DOCX, TXT, MD files to extract text content for Q&A and summarization',
-        tier: 'FREE', // Available to all logged-in users
+        tier: UserTier.FREE, // Available to all logged-in users
         activate: (context) => context.set('documentProcessing', true),
         keywords: [
             'upload',
@@ -163,7 +165,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Structured Data Extraction',
         description:
             'Extract structured JSON data, tables, and key-value pairs from documents using advanced parsing',
-        tier: 'FREE', // Available to all logged-in users, but requires Gemini models
+        tier: UserTier.FREE, // Available to all logged-in users, but requires Gemini models
         activate: (context) => context.set('structuredOutput', true),
         keywords: [
             'extract',
@@ -197,7 +199,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
         name: 'Image & Visual Analysis',
         description:
             'Analyze images, photos, diagrams, charts, and visual content to extract insights and descriptions',
-        tier: 'FREE', // Available to all logged-in users with multimodal models
+        tier: UserTier.FREE, // Available to all logged-in users with multimodal models
         activate: (context) => context.set('visionAnalysis', true),
         keywords: [
             'image',
@@ -238,21 +240,21 @@ export function getToolById(id: string): ToolMeta | undefined {
 /**
  * Get available tools for user tier
  */
-export function getAvailableTools(userTier: ToolTier = 'FREE'): ToolMeta[] {
-    if (userTier === 'PLUS') {
+export function getAvailableTools(userTier: ToolTier = UserTier.FREE): ToolMeta[] {
+    if (userTier === UserTier.PLUS) {
         return TOOL_REGISTRY;
     }
-    return TOOL_REGISTRY.filter((tool) => tool.tier === 'FREE');
+    return TOOL_REGISTRY.filter((tool) => tool.tier === UserTier.FREE);
 }
 
 /**
  * Check if user has access to a specific tool
  */
-export function hasToolAccess(toolId: string, userTier: ToolTier = 'FREE'): boolean {
+export function hasToolAccess(toolId: string, userTier: ToolTier = UserTier.FREE): boolean {
     const tool = getToolById(toolId);
     if (!tool) return false;
 
-    if (tool.tier === 'PLUS' && userTier !== 'PLUS') {
+    if (tool.tier === UserTier.PLUS && userTier !== UserTier.PLUS) {
         return false;
     }
 

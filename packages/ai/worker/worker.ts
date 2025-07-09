@@ -1,4 +1,5 @@
 import { ChatMode } from '@repo/shared/config';
+import { UserTier } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { REASONING_BUDGETS } from '../constants/reasoning';
 import { runWorkflow } from '../workflow/flow';
@@ -84,7 +85,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
                 charts,
                 showSuggestions,
                 thinkingMode,
-                userTier = 'FREE',
+                userTier = UserTier.FREE,
             } = payload;
 
             // Set API keys if provided

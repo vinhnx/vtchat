@@ -540,6 +540,49 @@ function HelpCenterContent() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/* VT+ Gemini Models */}
+                        <AccordionItem value="vt-plus-gemini-models">
+                            <AccordionTrigger className="font-medium">
+                                What Gemini models and tools do VT+ users get access to?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT+ users get access to all Gemini models and tools without
+                                    needing to provide their own API keys:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>All Gemini Models:</strong> Access to Gemini 2.5
+                                        Flash Pro, Gemini 2.5 Pro, Gemini 2.0 Flash, and all other
+                                        Gemini models without BYOK
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Enhanced Tools:</strong> Web search, math
+                                        calculator, and chart visualization work seamlessly with all
+                                        Gemini models
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>No API Key Required:</strong> System automatically
+                                        handles API key management for VT+ users
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Premium Features:</strong> Thinking mode, structured
+                                        output, and document processing available with all Gemini
+                                        models
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Higher Limits:</strong> 100 requests per day, 10
+                                        requests per minute for all Gemini models
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    Free users still get Gemini 2.5 Flash Lite with rate limits, but
+                                    VT+ users enjoy full access to the entire Gemini model suite
+                                    plus enhanced tool integrations.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
                         {/* Subscription Plans */}
                         <AccordionItem value="subscription-plans">
                             <AccordionTrigger className="font-medium">
@@ -559,14 +602,16 @@ function HelpCenterContent() {
                                         chart visualization, web search, dark mode, thinking mode,
                                         structured output, document parsing, reasoning chain, Gemini
                                         caching, multi-modal chat, and unlimited BYOK usage. Plus 9
-                                        free server models.
+                                        free server models including Gemini 2.5 Flash Lite.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
                                         Everything free + only 3 exclusive research features:
                                         PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep
                                         Research capabilities), and RAG (Personal AI Assistant with
-                                        Memory).
+                                        Memory). Plus access to all Gemini models (2.5 Flash Pro,
+                                        2.5 Pro, 2.0 Flash, etc.) and enhanced tools (web search,
+                                        math calculator, charts) without needing your own API keys.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers include complete privacy with thread isolation

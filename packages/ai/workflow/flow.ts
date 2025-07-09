@@ -5,6 +5,7 @@ import {
     type WorkflowConfig,
 } from '@repo/orchestrator';
 import type { ChatMode } from '@repo/shared/config';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import type { Geo } from '@vercel/functions';
 import type { CoreMessage } from 'ai';
@@ -128,7 +129,7 @@ export const runWorkflow = ({
     gl,
     apiKeys,
     thinkingMode,
-    userTier = 'FREE',
+    userTier = UserTier.FREE,
 }: {
     mode: ChatMode;
     question: string;
@@ -150,7 +151,7 @@ export const runWorkflow = ({
         budget: number;
         includeThoughts: boolean;
     };
-    userTier?: 'FREE' | 'PLUS';
+    userTier?: UserTierType;
 }) => {
     log.info('🔥 runWorkflow called with params:', {
         webSearch,
