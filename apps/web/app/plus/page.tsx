@@ -213,8 +213,9 @@ export default function PlusPage() {
                             </p>
 
                             <p className="mt-1 text-sm text-gray-300">
-                                Limited supply • Exclusive launch pricing  • Subscribe now
-                            </p><br/>
+                                Limited supply • Exclusive launch pricing • Subscribe now
+                            </p>
+                            <br />
 
                             <ButtonAnimatedGradient
                                 className="flex w-full items-center justify-center"
