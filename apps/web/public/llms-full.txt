@@ -163,9 +163,6 @@ Development guidelines including tech stack, code style, UI/UX principles, Oracl
 ### Security Implementation
 Comprehensive security design with Better Auth, bot detection, local-first storage, and privacy-focused architecture.
 
-### Analytics Setup
-Vemetric analytics implementation with domain whitelisting and CORS configuration.
-
 ### Testing
 Vitest configuration with Testing Library for React components, including test coverage and quality assurance.
 

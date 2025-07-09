@@ -22,7 +22,6 @@ vtchat is an AI chat application featuring free and premium tiers (VT+), with ex
 
 ## Development Guides
 - [docs/guides/](docs/guides/): Step-by-step development guides
-- [docs/analytics-setup.md](docs/analytics-setup.md): Vemetric analytics configuration
 - [docs/production-deployment-checklist.md](docs/production-deployment-checklist.md): Production deployment requirements
 - [docs/production-monitoring-setup.md](docs/production-monitoring-setup.md): Monitoring and observability setup
 

@@ -1,10 +1,8 @@
-// Embedding model configuration
+// Embedding model configuration (Gemini models only)
 export const EMBEDDING_MODELS = {
     GEMINI_004: 'gemini-004',
     GEMINI_EXP: 'gemini-exp',
     GEMINI_001: 'gemini-001',
-    OPENAI_LARGE_3: 'openai-large-3',
-    OPENAI_SMALL_3: 'openai-small-3',
 } as const;
 
 export type EmbeddingModel = (typeof EMBEDDING_MODELS)[keyof typeof EMBEDDING_MODELS];
@@ -31,20 +29,6 @@ export const EMBEDDING_MODEL_CONFIG = {
         dimensions: 768,
         description: "Google's stable embedding model",
         provider: 'Google',
-    },
-    [EMBEDDING_MODELS.OPENAI_LARGE_3]: {
-        id: 'text-embedding-3-large',
-        name: 'OpenAI Text Embedding 3 Large',
-        dimensions: 3072,
-        description: "OpenAI's most capable embedding model",
-        provider: 'OpenAI',
-    },
-    [EMBEDDING_MODELS.OPENAI_SMALL_3]: {
-        id: 'text-embedding-3-small',
-        name: 'OpenAI Text Embedding 3 Small',
-        dimensions: 1536,
-        description: "OpenAI's efficient embedding model",
-        provider: 'OpenAI',
     },
 } as const;
 

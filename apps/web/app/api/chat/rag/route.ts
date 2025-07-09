@@ -1,9 +1,7 @@
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { auth } from '@/lib/auth-server';
-import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createOpenAI } from '@ai-sdk/openai';
 import { ModelEnum } from '@repo/ai/models';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
@@ -13,15 +11,6 @@ import { checkVTPlusAccess } from '../../subscription/access-control';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
-
-// Model provider prefixes
-const MODEL_PROVIDER_PREFIX = {
-    OPENAI: 'gpt-',
-    ANTHROPIC: 'claude-',
-    GOOGLE: 'gemini-',
-} as const;
-
-// API key constants imported from shared location
 
 export async function POST(req: Request) {
     try {
@@ -67,74 +56,39 @@ export async function POST(req: Request) {
             );
         }
 
-        // Configure model based on user selection
-        let model;
-        if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.OPENAI)) {
-            const openaiApiKey = apiKeys?.[API_KEY_NAMES.OPENAI] || process.env.OPENAI_API_KEY;
-            if (!openaiApiKey) {
-                return new Response(
-                    JSON.stringify({
-                        error: 'OpenAI API key is required for GPT models',
-                        message: hasVTPlusAccess
-                            ? 'OpenAI API key is required for GPT models'
-                            : 'OpenAI API key is required for GPT models. Please provide your API key or upgrade to VT+.',
-                    }),
-                    {
-                        status: 400,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
-            }
-            const openaiProvider = createOpenAI({ apiKey: openaiApiKey });
-            model = openaiProvider(ragChatModel);
-        } else if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.ANTHROPIC)) {
-            const anthropicApiKey =
-                apiKeys?.[API_KEY_NAMES.ANTHROPIC] || process.env.ANTHROPIC_API_KEY;
-            if (!anthropicApiKey) {
-                return new Response(
-                    JSON.stringify({
-                        error: 'Anthropic API key is required for Claude models',
-                        message: hasVTPlusAccess
-                            ? 'Anthropic API key is required for Claude models'
-                            : 'Anthropic API key is required for Claude models. Please provide your API key or upgrade to VT+.',
-                    }),
-                    {
-                        status: 400,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
-            }
-            const anthropicProvider = createAnthropic({
-                apiKey: anthropicApiKey,
-                headers: {
-                    'anthropic-dangerous-direct-browser-access': 'true',
-                },
-            });
-            model = anthropicProvider(ragChatModel);
-        } else if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.GOOGLE)) {
-            const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
-            if (!geminiApiKey) {
-                return new Response(
-                    JSON.stringify({
-                        error: 'Gemini API key is required for Gemini models',
-                        message: hasVTPlusAccess
-                            ? 'Gemini API key is required for Gemini models'
-                            : 'Gemini API key is required for Gemini models. Please provide your API key or upgrade to VT+.',
-                    }),
-                    {
-                        status: 400,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
-            }
-            const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
-            model = googleProvider(ragChatModel);
-        } else {
-            return new Response(JSON.stringify({ error: 'Unsupported model selected' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
+        // Validate that only Gemini models are used
+        if (!ragChatModel.startsWith('gemini-')) {
+            return new Response(
+                JSON.stringify({
+                    error: 'Only Gemini models are supported',
+                    message: 'Personal AI Assistant with Memory only supports Gemini models.',
+                }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
         }
+
+        // Configure Gemini model - VT+ users get automatic access, free users need BYOK
+        const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
+        if (!geminiApiKey) {
+            return new Response(
+                JSON.stringify({
+                    error: 'Gemini API key is required',
+                    message: hasVTPlusAccess
+                        ? 'Server configuration error: Gemini API key missing'
+                        : 'Gemini API key is required. Please provide your API key or upgrade to VT+.',
+                }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+        }
+
+        const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
+        const model = googleProvider(ragChatModel);
 
         // Build personalized system prompt based on profile
         const profileContext =
@@ -150,7 +104,7 @@ export async function POST(req: Request) {
 
             📚 **When users share information, facts, or personal details:**
             - Enthusiastically use the addResource tool to save it to their private knowledge base
-            - Give them a warm confirmation like "Perfect! I've saved that to your personal knowledge base 📝"
+            - Give them a warm confirmation like "Perfect! I've saved that to your personal knowledge base"
             - Examples of what to save: preferences, work details, personal facts, important notes, experiences, insights
             - Do not use emoji, sound professional but friendly and helpful.
 

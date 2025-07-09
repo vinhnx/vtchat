@@ -1,4 +1,3 @@
-import { log } from '@repo/shared/logger';
 import {
     ANALYTICS_EVENTS,
     type ChatEventData,
@@ -13,72 +12,31 @@ import {
     type ToolEventData,
     type UserJourneyEvent,
     type UserProperties,
-    type VemetricEventData,
 } from '@repo/shared/types/analytics';
 import type { PlanSlug } from '@repo/shared/types/subscription';
 
+// Generic event data type for analytics
+type EventData = Record<string, string | number | boolean | undefined>;
+
 /**
- * Utility functions for Vemetric analytics tracking
- * Ensures consistent event tracking across the application
+ * Utility functions for analytics tracking
+ * Analytics are currently disabled - all functions are no-ops
  */
 export class AnalyticsUtils {
     private static isEnabled(): boolean {
-        return process.env.NEXT_PUBLIC_VEMETRIC_TOKEN ? true : false;
+        return false; // Analytics disabled
     }
 
-    private static sanitizeData(data: VemetricEventData): VemetricEventData {
-        const sanitized: VemetricEventData = {};
-
-        for (const [key, value] of Object.entries(data)) {
-            // Skip potentially sensitive fields
-            if (AnalyticsUtils.isPotentiallyPII(key)) {
-                continue;
-            }
-
-            // Sanitize values
-            if (typeof value === 'string') {
-                sanitized[key] = AnalyticsUtils.sanitizeString(value);
-            } else {
-                sanitized[key] = value;
-            }
-        }
-
-        return sanitized;
-    }
-
-    private static isPotentiallyPII(key: string): boolean {
-        const piiPatterns = [
-            'email',
-            'password',
-            'token',
-            'secret',
-            'key',
-            'auth',
-            'phone',
-            'address',
-            'name',
-            'username',
-            'ssn',
-            'id',
-        ];
-
-        const lowerKey = key.toLowerCase();
-        return piiPatterns.some((pattern) => lowerKey.includes(pattern));
-    }
-
-    private static sanitizeString(value: string): string {
-        // Remove potential PII patterns and limit length
-        return value
-            .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[email]')
-            .replace(/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, '[card]')
-            .replace(/\b\d{3}-\d{3}-\d{4}\b/g, '[phone]')
-            .substring(0, 100); // Limit length
+    private static sanitizeData(_data: EventData): EventData {
+        // Analytics disabled - return empty object
+        return {};
     }
 
     /**
      * Create chat event data with proper sanitization
+     * Analytics disabled - returns minimal structure for type compatibility
      */
-    static createChatEventData(params: {
+    static createChatEventData(_params: {
         messageId?: string;
         modelName?: string;
         messageLength?: number;
@@ -87,19 +45,13 @@ export class AnalyticsUtils {
         hasAttachments?: boolean;
         toolsUsed?: string[];
     }): ChatEventData {
-        return AnalyticsUtils.sanitizeData({
-            messageId: params.messageId?.substring(0, 8), // Only first 8 chars for correlation
-            modelName: params.modelName,
-            messageLength: params.messageLength,
-            threadId: params.threadId?.substring(0, 8), // Only first 8 chars
-            responseTime: params.responseTime,
-            hasAttachments: params.hasAttachments,
-            toolsUsed: params.toolsUsed?.join(','),
-        }) as ChatEventData;
+        // Analytics disabled - return minimal structure
+        return {};
     }
 
     /**
      * Create subscription event data
+     * Analytics disabled - returns minimal structure for type compatibility
      */
     static createSubscriptionEventData(params: {
         tier: PlanSlug;
@@ -107,69 +59,52 @@ export class AnalyticsUtils {
         price?: number;
         currency?: string;
     }): SubscriptionEventData {
-        return AnalyticsUtils.sanitizeData({
-            tier: params.tier,
-            plan: params.plan,
-            price: params.price,
-            currency: params.currency,
-        }) as SubscriptionEventData;
+        // Analytics disabled - return minimal structure
+        return { tier: params.tier };
     }
 
     /**
      * Create file event data (no PII)
+     * Analytics disabled - returns minimal structure for type compatibility
      */
-    static createFileEventData(params: {
+    static createFileEventData(_params: {
         fileType?: string;
         fileSize?: number;
         fileName?: string;
     }): FileEventData {
-        return AnalyticsUtils.sanitizeData({
-            fileType: params.fileType,
-            fileSize: params.fileSize,
-            fileName: params.fileName
-                ? AnalyticsUtils.sanitizeFileName(params.fileName)
-                : undefined,
-        }) as FileEventData;
-    }
-
-    private static sanitizeFileName(fileName: string): string {
-        // Only keep extension and basic info, remove potential PII
-        const extension = fileName.split('.').pop();
-        return extension ? `file.${extension}` : 'file';
+        // Analytics disabled - return minimal structure
+        return {};
     }
 
     /**
      * Create feature usage event data
+     * Analytics disabled - returns minimal structure for type compatibility
      */
     static createFeatureEventData(params: {
         featureName: string;
         context?: string;
         value?: number;
     }): FeatureEventData {
-        return AnalyticsUtils.sanitizeData({
-            featureName: params.featureName,
-            context: params.context,
-            value: params.value,
-        }) as FeatureEventData;
+        // Analytics disabled - return minimal structure
+        return { featureName: params.featureName };
     }
 
     /**
      * Create user journey event data
+     * Analytics disabled - returns minimal structure for type compatibility
      */
     static createUserJourneyEventData(params: {
         step: string;
         value?: number;
         category?: string;
     }): UserJourneyEvent {
-        return AnalyticsUtils.sanitizeData({
-            step: params.step,
-            value: params.value,
-            category: params.category,
-        }) as UserJourneyEvent;
+        // Analytics disabled - return minimal structure
+        return { step: params.step };
     }
 
     /**
      * Create user properties without PII
+     * Analytics disabled - returns minimal structure for type compatibility
      */
     static createUserProperties(params: {
         subscriptionTier: PlanSlug;
@@ -184,93 +119,52 @@ export class AnalyticsUtils {
         referralSource?: string;
         featureFlags?: string[];
     }): UserProperties {
-        return {
-            subscriptionTier: params.subscriptionTier,
-            accountAge: params.accountAge,
-            messageCount: params.messageCount,
-            lastActiveDate: new Date().toISOString().split('T')[0], // Date only
-            preferredModel: params.preferredModel,
-            themePreference: params.themePreference,
-            timezone: params.timezone,
-            locale: params.locale,
-            deviceType: params.deviceType,
-            browserName: params.browserName,
-            referralSource: params.referralSource,
-            featureFlags: params.featureFlags,
-        };
+        // Analytics disabled - return minimal structure
+        return { subscriptionTier: params.subscriptionTier };
     }
 
     /**
      * Log analytics events for debugging
+     * Analytics disabled - no-op function
      */
-    static logEvent(eventName: string, data?: VemetricEventData): void {
-        if (!AnalyticsUtils.isEnabled()) return;
-
-        log.debug(
-            {
-                analyticsEvent: eventName,
-                eventData: data,
-                timestamp: new Date().toISOString(),
-            },
-            'Analytics event tracked'
-        );
+    static logEvent(_eventName: string, _data?: EventData): void {
+        // Analytics disabled - no-op
+        return;
     }
 
     /**
      * Generate performance timing data
+     * Analytics disabled - returns minimal structure for type compatibility
      */
-    static createPerformanceData(startTime: number): VemetricEventData {
-        const duration = performance.now() - startTime;
-        return {
-            duration: Math.round(duration),
-            timestamp: Date.now(),
-        };
+    static createPerformanceData(_startTime: number): EventData {
+        // Analytics disabled - return minimal structure
+        return {};
     }
 
     /**
      * Get device and browser information (non-PII)
+     * Analytics disabled - returns minimal structure for type compatibility
      */
     static getDeviceInfo(): Partial<UserProperties> {
-        if (typeof window === 'undefined') return {};
-
-        const ua = navigator.userAgent;
-        const deviceType = /Mobile|Android|iPhone|iPad/.test(ua)
-            ? /iPad/.test(ua)
-                ? 'tablet'
-                : 'mobile'
-            : 'desktop';
-
-        const browserName = ua.includes('Chrome')
-            ? 'Chrome'
-            : ua.includes('Firefox')
-              ? 'Firefox'
-              : ua.includes('Safari')
-                ? 'Safari'
-                : ua.includes('Edge')
-                  ? 'Edge'
-                  : 'Unknown';
-
-        return {
-            deviceType,
-            browserName,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            locale: navigator.language,
-        };
+        // Analytics disabled - return minimal structure
+        return {};
     }
 
     /**
      * Create a timer for performance tracking
+     * Analytics disabled - returns no-op timer
      */
     static createTimer() {
-        const startTime = performance.now();
         return {
-            end: () => AnalyticsUtils.createPerformanceData(startTime),
+            end: () => AnalyticsUtils.createPerformanceData(0),
         };
     }
 }
 
 // Export commonly used event names for easy access
-// Helper functions for new event types
+export { ANALYTICS_EVENTS };
+
+// Helper functions for event data creation - all disabled, return minimal structures
 export const createPaymentEventData = (params: {
     tier: string;
     amount?: number;
@@ -279,10 +173,6 @@ export const createPaymentEventData = (params: {
     processingTime?: number;
 }): PaymentEventData => ({
     tier: params.tier,
-    amount: params.amount,
-    currency: params.currency,
-    paymentMethod: params.paymentMethod,
-    processingTime: params.processingTime,
     timestamp: Date.now(),
 });
 
@@ -295,24 +185,16 @@ export const createDocumentEventData = (params: {
 }): DocumentEventData => ({
     documentType: params.documentType,
     fileSize: params.fileSize,
-    processingTime: params.processingTime,
-    success: params.success,
-    errorType: params.errorType,
     timestamp: Date.now(),
 });
 
-export const createRagEventData = (params: {
+export const createRagEventData = (_params: {
     queryType?: string;
     documentCount?: number;
     retrievalTime?: number;
     contextSize?: number;
     success?: boolean;
 }): RagEventData => ({
-    queryType: params.queryType,
-    documentCount: params.documentCount,
-    retrievalTime: params.retrievalTime,
-    contextSize: params.contextSize,
-    success: params.success,
     timestamp: Date.now(),
 });
 
@@ -325,26 +207,16 @@ export const createToolEventData = (params: {
     outputSize?: number;
 }): ToolEventData => ({
     toolName: params.toolName,
-    executionTime: params.executionTime,
-    success: params.success,
-    errorType: params.errorType,
-    inputSize: params.inputSize,
-    outputSize: params.outputSize,
     timestamp: Date.now(),
 });
 
-export const createPerformanceEventData = (params: {
+export const createPerformanceEventData = (_params: {
     duration: number;
     endpoint?: string;
     resourceType?: string;
     success?: boolean;
     errorCode?: string;
 }): PerformanceEventData => ({
-    duration: params.duration,
-    endpoint: params.endpoint,
-    resourceType: params.resourceType,
-    success: params.success,
-    errorCode: params.errorCode,
     timestamp: Date.now(),
 });
 
@@ -355,27 +227,22 @@ export const createSecurityEventData = (params: {
     userAgent?: string;
 }): SecurityEventData => ({
     eventType: params.eventType,
-    severity: params.severity,
-    blocked: params.blocked,
-    userAgent: params.userAgent,
     timestamp: Date.now(),
 });
 
-export { ANALYTICS_EVENTS };
-
-// Type-safe event tracking functions
-export const trackChatEvent = (eventName: string, data: ChatEventData) => {
-    AnalyticsUtils.logEvent(eventName, data);
+// Type-safe event tracking functions - all no-ops
+export const trackChatEvent = (_eventName: string, _data: ChatEventData) => {
+    // Analytics disabled - no-op
 };
 
-export const trackUserJourney = (eventName: string, data: UserJourneyEvent) => {
-    AnalyticsUtils.logEvent(eventName, data);
+export const trackUserJourney = (_eventName: string, _data: UserJourneyEvent) => {
+    // Analytics disabled - no-op
 };
 
-export const trackFeatureUsage = (eventName: string, data: FeatureEventData) => {
-    AnalyticsUtils.logEvent(eventName, data);
+export const trackFeatureUsage = (_eventName: string, _data: FeatureEventData) => {
+    // Analytics disabled - no-op
 };
 
-export const trackSubscriptionEvent = (eventName: string, data: SubscriptionEventData) => {
-    AnalyticsUtils.logEvent(eventName, data);
+export const trackSubscriptionEvent = (_eventName: string, _data: SubscriptionEventData) => {
+    // Analytics disabled - no-op
 };

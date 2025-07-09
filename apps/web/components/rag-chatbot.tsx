@@ -4,6 +4,7 @@ import { models } from '@repo/ai/models';
 import { useSubscriptionAccess } from '@repo/common/hooks';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
@@ -141,12 +142,11 @@ export function RAGChatbot() {
 
     const allApiKeys = getAllKeys();
     const hasGeminiKey = !!allApiKeys[API_KEY_NAMES.GOOGLE];
-    const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
-    const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
 
-    // For VT+ users, API keys are optional (they can use BYOK or not)
-    // For free users, API keys are required
-    const needsApiKeys = !hasVTPlusAccess && !hasRequiredKeys;
+    // VT+ users can chat with or without BYOK (server API key used automatically)
+    // Free users must have their own Gemini API key
+    const canChat = hasVTPlusAccess || hasGeminiKey;
+    const needsApiKeys = !canChat;
 
     // Check for required API keys on component mount and when keys change
     useEffect(() => {
@@ -313,9 +313,12 @@ export function RAGChatbot() {
         scrollToBottom();
     }, [messages, isLoading]);
 
+    // Filter to only show Gemini models for RAG
+    const geminiModels = models.filter(m => m.id.startsWith('gemini-'));
+
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
-    const currentRagChatModel = models.find((m) => m.id === ragChatModel);
+    const currentRagChatModel = geminiModels.find((m) => m.id === ragChatModel);
 
     return (
         <div className="flex h-full flex-col gap-4 md:flex-row md:gap-6">
@@ -410,12 +413,10 @@ export function RAGChatbot() {
                                                 <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
                                                     <div className="flex items-center gap-2">
                                                         <span>
-                                                            Chat:{' '}
                                                             {currentRagChatModel?.name || 'Unknown'}
                                                         </span>
                                                         <span>•</span>
                                                         <span>
-                                                            Embed:{' '}
                                                             {currentEmbeddingModel?.name ||
                                                                 'Unknown'}
                                                         </span>
@@ -470,12 +471,12 @@ export function RAGChatbot() {
                 {/* Chat Input */}
                 <div className="border-t p-2 sm:p-4">
                     {/* Show message when no API keys */}
-                    {!hasRequiredKeys && (
-                        <div className="mb-3 rounded-lg bg-amber-50 p-2 sm:p-3 text-xs sm:text-sm">
-                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                <span className="text-amber-700">
-                                    Please add your API keys to use the Knowledge Assistant
-                                </span>
+                    {!canChat && (
+                    <div className="mb-3 rounded-lg bg-amber-50 p-2 sm:p-3 text-xs sm:text-sm">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <span className="text-amber-700">
+                                        Please add your Gemini API key to use the Knowledge Assistant
+                                    </span>
                                 <Button
                                     className="text-xs w-full sm:w-auto"
                                     onClick={() => setShowApiKeyDialog(true)}
@@ -517,17 +518,17 @@ export function RAGChatbot() {
                         <form className="flex gap-2" onSubmit={handleSubmit}>
                             <Input
                                 className="flex-1 text-sm sm:text-base"
-                                disabled={isLoading || !hasRequiredKeys}
+                                disabled={isLoading || !canChat}
                                 onChange={handleInputChange}
                                 placeholder={
-                                    hasRequiredKeys
+                                    canChat
                                         ? 'Ask anything or share knowledge...'
-                                        : 'Add API keys to continue chatting...'
+                                        : 'Add Gemini API key to continue chatting...'
                                 }
                                 value={input}
                             />
                             <Button
-                                disabled={isLoading || !input.trim() || !hasRequiredKeys}
+                                disabled={isLoading || !input.trim() || !canChat}
                                 size="icon"
                                 type="submit"
                                 className="shrink-0"

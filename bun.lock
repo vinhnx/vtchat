@@ -11,7 +11,6 @@
         "@types/pino": "^7.0.5",
         "@types/react": "^18",
         "@types/react-dom": "^18",
-        "@vemetric/node": "^0.1.2",
         "@vercel/functions": "^2.2.0",
         "better-auth": "^1.2.9",
         "better-auth-harmony": "^1.2.5",
@@ -77,7 +76,6 @@
         "@repo/common": "*",
         "@repo/shared": "*",
         "@repo/ui": "*",
-        "@vemetric/react": "^0.5.4",
         "ai": "^4.3.16",
         "better-auth": "^1.2.9",
         "better-auth-is-bot": "^1.0.0",
@@ -1150,10 +1148,6 @@
     "@types/whatwg-mimetype": ["@types/whatwg-mimetype@3.0.2", "", {}, "sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA=="],
 
     "@ungap/structured-clone": ["@ungap/structured-clone@1.3.0", "", {}, "sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g=="],
-
-    "@vemetric/node": ["@vemetric/node@0.1.2", "", {}, "sha512-4p7Qba8ngYyQNOEjYfqQjwX8uOr/qPXggzl92RXS52a68MD13B4dV908PSnex+yMi85CGu78rdeM+mey2wrx+A=="],
-
-    "@vemetric/react": ["@vemetric/react@0.5.4", "", { "peerDependencies": { "react": "^18 || ^19" }, "optionalPeers": ["react"] }, "sha512-xwkBF+uLbB64tfiEdWmHD1IKVDORgxfP6sfN3n2N8ZiiO+NG4gfc5CQb29DaXzTBg31CDAByfzf4Simqgf+tqA=="],
 
     "@vercel/functions": ["@vercel/functions@2.2.3", "", { "peerDependencies": { "@aws-sdk/credential-provider-web-identity": "*" }, "optionalPeers": ["@aws-sdk/credential-provider-web-identity"] }, "sha512-Z6xwsxM/57/92PLW2HoLLmVw4+Nb5OZzMzDA4qfkksWgG1k5dGV7kvP1TDEOlW3WHjqWtfPJBcd61dE2p0mbxQ=="],
 

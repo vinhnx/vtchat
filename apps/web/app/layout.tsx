@@ -4,16 +4,12 @@ import {
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
-    VemetricAuthProvider,
-    VemetricSettingsTracker,
-    VemetricSubscriptionTracker,
 } from '@repo/common/components';
 import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { RootProvider } from '@repo/common/context';
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
 import { cn, SonnerToaster, TooltipProvider } from '@repo/ui';
-import { VemetricScript } from '@vemetric/react';
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
@@ -114,8 +110,6 @@ export default function ParentLayout({
         >
             <head>
                 <PerformanceOptimizations />
-                {/* Primary Analytics: Vemetric (Vercel Analytics disabled) */}
-                <VemetricScript token={process.env.NEXT_PUBLIC_VEMETRIC_TOKEN || ''} />
                 <link href="/favicon.ico" rel="icon" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
@@ -146,11 +140,7 @@ export default function ParentLayout({
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
                                                         <main className="flex flex-1 flex-col">
-                                                            <VemetricAuthProvider>
-                                                                <VemetricSubscriptionTracker />
-                                                                <VemetricSettingsTracker />
-                                                                {children}
-                                                            </VemetricAuthProvider>
+                                                            {children}
                                                         </main>
                                                     </RootLayout>
                                                     <SonnerToaster />

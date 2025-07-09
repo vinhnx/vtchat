@@ -16,7 +16,7 @@ const withBundleAnalyzer =
 const nextConfig = {
     transpilePackages: ['next-mdx-remote'],
 
-    // Disable Vercel Analytics auto-injection (we use Vemetric)
+    // Disable Vercel Analytics auto-injection
     // Note: analyticsId is not a valid Next.js config option
 
     // Server-side optimizations - exclude workspace packages from bundling

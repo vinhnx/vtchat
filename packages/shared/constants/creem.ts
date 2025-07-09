@@ -9,41 +9,28 @@ import { isProductionEnvironment } from '../utils/env';
  * Creem API endpoints based on environment
  */
 export const CREEM_API_CONFIG = {
-    /**
-     * Get the appropriate Creem API base URL
-     */
-    getBaseUrl(): string {
-        return isProductionEnvironment() ? 'https://api.creem.io' : 'https://test-api.creem.io';
+    baseUrl: isProductionEnvironment() ? 'https://api.creem.io' : 'https://test-api.creem.io',
+    
+    getBaseUrl() {
+        return this.baseUrl;
     },
-
-    /**
-     * Get the customer billing portal endpoint
-     */
-    getCustomerBillingEndpoint(): string {
-        return `${this.getBaseUrl()}/v1/customers/billing`;
+    
+    getCustomerBillingEndpoint() {
+        return `${this.baseUrl}/v1/customers/billing`;
     },
-
-    /**
-     * Get the API key from environment
-     */
-    getApiKey(): string | undefined {
+    
+    getApiKey() {
         return process.env.CREEM_API_KEY;
     },
-
-    /**
-     * Get the webhook secret from environment
-     */
-    getWebhookSecret(): string | undefined {
+    
+    getWebhookSecret() {
         return process.env.CREEM_WEBHOOK_SECRET;
     },
-
-    /**
-     * Get the product ID from environment
-     */
-    getProductId(): string | undefined {
+    
+    getProductId() {
         return process.env.CREEM_PRODUCT_ID;
     },
-} as const;
+};
 
 /**
  * Creem API response types

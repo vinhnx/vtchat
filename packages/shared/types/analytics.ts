@@ -1,20 +1,13 @@
 import { PAYMENT_EVENT_TYPES, TOOL_FEATURES } from '../constants';
 import type { PlanSlug } from './subscription';
 
-export interface VemetricUser {
-    identifier: string;
-    displayName?: string;
-    email?: string;
-    subscriptionTier?: PlanSlug;
-    allowCookies?: boolean;
-    data?: Record<string, any>;
+// Generic event data type for analytics
+export interface EventData {
+    [key: string]: string | number | boolean | string[] | undefined;
+    timestamp?: number;
 }
 
-export interface VemetricEventData {
-    [key: string]: string | number | boolean | undefined;
-}
-
-export interface ChatEventData extends VemetricEventData {
+export interface ChatEventData extends EventData {
     messageId?: string;
     modelName?: string;
     messageLength?: number;
@@ -24,32 +17,32 @@ export interface ChatEventData extends VemetricEventData {
     toolsUsed?: string[];
 }
 
-export interface UserJourneyEvent extends VemetricEventData {
+export interface UserJourneyEvent extends EventData {
     step: string;
     value?: number;
     category?: string;
 }
 
-export interface SubscriptionEventData extends VemetricEventData {
+export interface SubscriptionEventData extends EventData {
     tier: PlanSlug;
     plan?: string;
     price?: number;
     currency?: string;
 }
 
-export interface FileEventData extends VemetricEventData {
+export interface FileEventData extends EventData {
     fileType?: string;
     fileSize?: number;
     fileName?: string; // No PII, just extension or sanitized name
 }
 
-export interface FeatureEventData extends VemetricEventData {
+export interface FeatureEventData extends EventData {
     featureName: string;
     context?: string;
     value?: number;
 }
 
-export interface PaymentEventData extends VemetricEventData {
+export interface PaymentEventData extends EventData {
     paymentMethod?: string;
     amount?: number;
     currency?: string;
@@ -59,7 +52,7 @@ export interface PaymentEventData extends VemetricEventData {
     processingTime?: number;
 }
 
-export interface DocumentEventData extends VemetricEventData {
+export interface DocumentEventData extends EventData {
     documentType?: string;
     fileSize?: number;
     processingTime?: number;
@@ -68,7 +61,7 @@ export interface DocumentEventData extends VemetricEventData {
     success?: boolean;
 }
 
-export interface RagEventData extends VemetricEventData {
+export interface RagEventData extends EventData {
     queryType?: string;
     contextSize?: number;
     retrievalTime?: number;
@@ -77,7 +70,7 @@ export interface RagEventData extends VemetricEventData {
     success?: boolean;
 }
 
-export interface ToolEventData extends VemetricEventData {
+export interface ToolEventData extends EventData {
     toolName: string;
     executionTime?: number;
     inputSize?: number;
@@ -86,7 +79,7 @@ export interface ToolEventData extends VemetricEventData {
     errorType?: string;
 }
 
-export interface PerformanceEventData extends VemetricEventData {
+export interface PerformanceEventData extends EventData {
     duration?: number;
     resourceType?: string;
     errorCode?: string;
@@ -94,7 +87,7 @@ export interface PerformanceEventData extends VemetricEventData {
     endpoint?: string; // Domain only, no full path
 }
 
-export interface SecurityEventData extends VemetricEventData {
+export interface SecurityEventData extends EventData {
     eventType: string;
     severity?: 'low' | 'medium' | 'high' | 'critical';
     blocked?: boolean;
@@ -222,18 +215,4 @@ export interface UserProperties {
     browserName?: string;
     referralSource?: string;
     featureFlags?: string[];
-}
-
-// Configuration for the analytics system
-export interface VemetricConfig {
-    token: string;
-    enabled: boolean;
-    debug?: boolean;
-    host?: string;
-    scriptUrl?: string;
-    trackPageViews?: boolean;
-    trackOutboundLinks?: boolean;
-    trackDataAttributes?: boolean;
-    maskPaths?: string[];
-    allowCookies?: boolean;
 }

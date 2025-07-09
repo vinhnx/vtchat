@@ -7,8 +7,5 @@
         "app/api/**/*.ts": {
             "maxDuration": 60
         }
-    },
-    "env": {
-        "ANALYTICS_PROVIDER": "vemetric"
     }
 }

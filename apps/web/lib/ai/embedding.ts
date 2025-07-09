@@ -49,10 +49,11 @@ async function generateEmbeddingWithProvider(
     const input = text.replaceAll('\\n', ' ');
 
     // Only support Gemini models for now
-    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE];
+    // VT+ users can use server API key, free users need their own
+    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
         throw new Error(
-            'Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys.'
+            'Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys or upgrade to VT+.'
         );
     }
 
@@ -97,7 +98,8 @@ export const generateEmbeddings = async (
     );
 
     // For now, only support Gemini models - simplify logic
-    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE];
+    // VT+ users can use server API key, free users need their own
+    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
         const availableKeys = Object.keys(apiKeys || {}).filter((key) => key.endsWith('_API_KEY'));
         throw new Error(`RAG Knowledge Chat requires a Google Gemini API key.

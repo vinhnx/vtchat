@@ -1,21 +1,13 @@
 'use client';
 
 import { Footer, ShineText, UserTierBadge } from '@repo/common/components';
-import { useVemetricSubscriptionTracking } from '@repo/common/components/vemetric-subscription-tracker';
-import { useCreemSubscription, useVemetric } from '@repo/common/hooks';
+import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import { ANALYTICS_EVENTS } from '@repo/common/utils/analytics';
 import {
-    BUTTON_TEXT,
-    CURRENCIES,
-    PAYMENT_EVENT_TYPES,
-    PAYMENT_SERVICES,
-    SETTINGS_ACTIONS,
+    BUTTON_TEXT
 } from '@repo/shared/constants';
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
 import { TypographyH2, TypographyH3, TypographyMuted } from '@repo/ui';
 import { Check, CheckCircle, Sparkles } from 'lucide-react';
@@ -44,10 +36,6 @@ export default function PlusPage() {
     } = useCreemSubscription();
     const router = useRouter();
 
-    // Analytics tracking
-    const { trackEvent } = useVemetric();
-    const { trackUpgradeInitiated, trackPaymentEvent } = useVemetricSubscriptionTracking();
-
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
@@ -71,19 +59,6 @@ export default function PlusPage() {
         }
     }, [isSignedIn, refreshSubscriptionStatus, isSubscriptionLoading]);
 
-    // Track page access
-    useEffect(() => {
-        if (isSignedIn) {
-            trackEvent(ANALYTICS_EVENTS.PAGE_VIEWED, {
-                page: 'plus_page',
-                userTier: isCurrentlySubscribed ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE,
-                context: 'subscription_management',
-            }).catch((error) => {
-                log.error({ error }, 'Failed to track page view');
-            });
-        }
-    }, [isSignedIn, isCurrentlySubscribed, trackEvent]);
-
     const handleSubscribe = async () => {
         if (!isSignedIn) {
             router.push('/login?redirect_url=/plus');
@@ -92,36 +67,10 @@ export default function PlusPage() {
 
         if (isCurrentlySubscribed) {
             // If already subscribed, open customer portal to manage subscription
-            try {
-                await trackEvent(ANALYTICS_EVENTS.SETTINGS_CHANGED, {
-                    action: SETTINGS_ACTIONS.MANAGE_SUBSCRIPTION_ACCESSED,
-                    context: 'plus_page',
-                });
-                await openCustomerPortal();
-            } catch (error) {
-                log.error({ error }, 'Analytics tracking failed');
-                await openCustomerPortal(); // Continue even if tracking fails
-            }
+            await openCustomerPortal();
         } else {
             // Start new subscription
-            try {
-                // Track upgrade initiation
-                await trackUpgradeInitiated('plus_page');
-
-                // Track payment start
-                await trackPaymentEvent({
-                    event: PAYMENT_EVENT_TYPES.PAYMENT_STARTED,
-                    tier: PlanSlug.VT_PLUS,
-                    amount: PRICING_CONFIG.pricing.plus.price,
-                    currency: CURRENCIES.USD,
-                    paymentMethod: PAYMENT_SERVICES.CREEM,
-                });
-
-                await startVtPlusSubscription();
-            } catch (error) {
-                log.error({ error }, 'Analytics tracking failed');
-                await startVtPlusSubscription(); // Continue even if tracking fails
-            }
+            await startVtPlusSubscription();
         }
     };
 

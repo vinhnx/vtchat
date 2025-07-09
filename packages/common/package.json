@@ -25,11 +25,6 @@
         "./components/plus-defaults-provider": "./components/plus-defaults-provider.tsx",
         "./hooks/use-plus-defaults": "./hooks/use-plus-defaults.ts",
         "./utils/analytics": "./utils/analytics.ts",
-        "./components/vemetric-auth-provider": "./components/vemetric-auth-provider.tsx",
-        "./components/vemetric-chat-tracker": "./components/vemetric-chat-tracker.tsx",
-        "./components/vemetric-subscription-tracker": "./components/vemetric-subscription-tracker.tsx",
-        "./components/vemetric-settings-tracker": "./components/vemetric-settings-tracker.tsx",
-        "./hooks/use-vemetric": "./hooks/use-vemetric.ts",
         "./lib/analytics-config": "./lib/analytics-config.ts",
         "./lib/chat-mode-utils": "./lib/chat-mode-utils.ts"
     },

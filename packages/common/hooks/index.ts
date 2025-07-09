@@ -15,5 +15,5 @@ export * from './use-structured-extraction';
 export * from './use-subscription-access';
 export * from './use-text-selection';
 export * from './use-thread-auth';
-export * from './use-vemetric';
 export * from './use-web-search';
+
