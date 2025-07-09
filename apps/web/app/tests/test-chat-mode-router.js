@@ -1,6 +1,6 @@
 /**
  * Test Chat Mode Router Behavior
- * 
+ *
  * This test verifies that the chat mode router correctly handles different scenarios
  * for VT+ users with tools enabled.
  */

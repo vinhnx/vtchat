@@ -451,11 +451,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
             // Check if this is a free model that should use server-side API
             const isFreeModel = mode === ChatMode.GEMINI_2_5_FLASH_LITE;
-            
+
             // For VT+ users, all Gemini models should use server-side API directly
             const shouldUseServerSideAPI = isFreeModel || (hasVtPlusAccess && isGeminiModel(mode));
 
-            if (hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess) && !shouldUseServerSideAPI) {
+            if (
+                hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess) &&
+                !shouldUseServerSideAPI
+            ) {
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);

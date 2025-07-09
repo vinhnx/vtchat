@@ -3,8 +3,74 @@
 --
 ok go-> https://vtchat.io.vn/
 
+--
 
-oracle refactor and cleanup packages/common/components/chat-input/chat-actions.tsx
+https://xmcp.dev/docs
+
+--
+https://github.com/idosal/mcp-ui
+--
+
+
+✅ enable gemini web search check for VT+ users. automatically use gemini api key in env for VT+ users.
+
+✅ Fix VT+ users web search not working - FIXED: Updated generateObject and generateText functions to handle VT+ users without BYOK
+
+✅ Fix all tools (web search, math calculator, charts) to work for VT+ users without BYOK - FIXED: Updated all workflow tasks to pass userTier parameter
+
+✅ Fix VT+ users tools only working with gemini_2_5_flash_lite but not other Gemini models - FIXED: Updated chat-mode-router to only route Pro mode to gemini-web-search when web search is enabled, allowing math/charts tools to work
+
+✅ Fix VT+ users web search not working with ALL Gemini models - FIXED: Updated agent-provider to route all Gemini models for VT+ users to server-side API instead of worker, ensuring consistent behavior across all Gemini models (includes Deep Research, Pro Search, 2.5 Pro, 2.5 Flash, 2.5 Flash Lite, 2.0 Flash, 2.0 Flash Lite, and all preview versions)
+
+--
+
+✅ API Key Required modal still shown when click send chat button even though routing to chat details still work - FIXED: VT+ users now bypass all BYOK checks for Gemini models and tools
+
+--
+VTLAUNCH
+
+add promo code for plus page 20% off limited time, limited supply in VT+
+
+--
+
+~~extract this isPremiumMode logic in chatmodebutton to common for reuse later~~ ✅ COMPLETED
+
+--
+
+
+~~make sure VT+ user won't ever be shown "API Key Required" dialog BYOKValidationDialog in every route~~ ✅ COMPLETED
+~~->. currently when vt+ user selected pro search and deep research mode from chat options selection dropdown, it will show "API Key Required" dialog, this is not correct, vt+ user should not be shown this dialog at all.~~ ✅ COMPLETED
+
+--
+
+packages/ai/workflow/tasks/structured-extraction.ts
+
+update add more file type like txt, md, csv ...
+
+--> use default model for structured extraction -> gemini 2.5 Flash Lite
+
+--
+
+update plus tier benefits include GEMINI access for VT+ users without needing to set up BYOK. -> update plus page, VT+ settings and plan/benefits tier config.
+
+--
+
+remove GEMINI BYOK requirements for /RAG feature.
+
+--
+
+remove {/_ BYOK Setup Modal _/} for gemini api keys for VT+
+{pendingMode && (
+<BYOKSetupModal
+        isOpen={byokModalOpen}
+        modelName={pendingMode.modelName}
+        onApiKeySaved={handleBYOKSaved}
+        onClose={handleBYOKClose}
+        requiredApiKey={pendingMode.requiredApiKey}
+    />
+)}
+
+--
 
 --
 overall, VT+ users should have unlimited access to Gemini models without needing to set up GEMINI API BYOK specially, check for plus tiers benefits and unlock all of them and update the logic accordingly.
@@ -15,11 +81,7 @@ also offer VT+ users access to Deep Research and Pro Search and RAG without need
 oracle: please plan this change
 
 --
-✅ COMPLETED: for premium user, don't need to check BYOK setup for gemini. hence, should not show Setup API Key Required dialog when sending request to gemini models.
 
-SOLUTION: Modified handleModeSelect function in chat-actions.tsx to check for unlimited Gemini access for VT+ users before showing BYOK dialog. VT+ users with unlimited Gemini access now bypass the BYOK requirement completely.
-
---
 --
 
 Based on the Oracle's approval of Phase 1, here are the immediate next steps:
@@ -64,8 +126,7 @@ Phase 2: Add global budget governor with Redis counters
 Phase 3: Dynamic throttling + emergency controls
 Should I start implementing the GeminiBudgetManager service first?
 
---
---
+## --
 
 Based on my research, here's my analysis and proposed rate limiting plan for VT+ users:
 
@@ -179,7 +240,6 @@ PLUS_MINUTE: 10,
 
 --
 
-
 https://xmcp.dev/docs
 
 --
@@ -190,8 +250,7 @@ just disabe rag feature completedly
 
 RLS embeddings RAG feature
 
---
---
+## --
 
 replace /rag endpoint with /assistant endpoint
 

@@ -515,12 +515,14 @@ export const generateText = async ({
         // Handle API key logic for VT+ users and Gemini models
         const isGeminiModel = model.toString().toLowerCase().includes('gemini');
         const isVtPlusUser = userTier === 'PLUS';
-        
+
         if (isGeminiModel && isVtPlusUser) {
             // For VT+ users with Gemini models, check if they have BYOK
-            const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-            const hasSystemGeminiKey = typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
-            
+            const hasUserGeminiKey =
+                byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+            const hasSystemGeminiKey =
+                typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+
             if (!hasUserGeminiKey && hasSystemGeminiKey) {
                 // VT+ user without BYOK - use system key
                 byokKeys = undefined;
@@ -712,12 +714,14 @@ export const generateObject = async ({
         // Handle API key logic for VT+ users and Gemini models
         const isGeminiModel = model.toString().toLowerCase().includes('gemini');
         const isVtPlusUser = userTier === 'PLUS';
-        
+
         if (isGeminiModel && isVtPlusUser) {
             // For VT+ users with Gemini models, check if they have BYOK
-            const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-            const hasSystemGeminiKey = typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
-            
+            const hasUserGeminiKey =
+                byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+            const hasSystemGeminiKey =
+                typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+
             if (!hasUserGeminiKey && hasSystemGeminiKey) {
                 // VT+ user without BYOK - use system key
                 byokKeys = undefined;

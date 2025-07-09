@@ -303,7 +303,6 @@ function createCompletionStream({
 
     return new ReadableStream({
         async start(controller) {
-
             heartbeatInterval = setInterval(() => {
                 if (isControllerClosed) {
                     if (heartbeatInterval) {
