@@ -56,13 +56,21 @@ export function ChatModeButton() {
             <DropdownMenu onOpenChange={setIsChatModeOpen} open={isChatModeOpen}>
                 <DropdownMenuTrigger asChild>
                     {isGated ? (
-                        <Button className="opacity-70" size="xs" variant={'secondary'}>
+                        <Button
+                            className="opacity-70 border border-muted-foreground/30"
+                            size="xs"
+                            variant={'secondary'}
+                        >
                             {selectedIcon}
                             {selectedOption?.label} (VT+)
                             <ChevronDown size={14} strokeWidth={2} />
                         </Button>
                     ) : (
-                        <Button size="xs" variant={'secondary'}>
+                        <Button
+                            className="border border-muted-foreground/30"
+                            size="xs"
+                            variant={'secondary'}
+                        >
                             {selectedIcon}
                             {selectedOption?.label}
                             <ChevronDown size={14} strokeWidth={2} />

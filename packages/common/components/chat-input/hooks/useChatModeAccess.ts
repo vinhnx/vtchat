@@ -3,6 +3,7 @@
 import { useSubscriptionAccess } from '@repo/common/hooks';
 import { useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 
 interface AccessResult {
@@ -45,7 +46,7 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
         }
 
         // For free users, check if they have BYOK Gemini key
-        const hasByokGeminiKey = !!apiKeys[API_KEY_NAMES.GEMINI_API_KEY];
+        const hasByokGeminiKey = !!apiKeys[API_KEY_NAMES.GOOGLE];
         if (hasByokGeminiKey) {
             return { isGated: false }; // Free users can use BYOK
         }

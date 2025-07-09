@@ -21,6 +21,7 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
+    cn,
 } from '@repo/ui';
 import { Brain, Globe, Wrench } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -221,7 +222,11 @@ export function ChatModeOptions({
                     {chatOptions.map((option) => {
                         return (
                             <DropdownMenuItem
-                                className="h-auto"
+                                className={cn(
+                                    'h-auto',
+                                    option.value === _chatMode &&
+                                        'border border-muted-foreground/30'
+                                )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
                             >
@@ -277,7 +282,11 @@ export function ChatModeOptions({
 
                                 return (
                                     <DropdownMenuItem
-                                        className="h-auto pl-4"
+                                        className={cn(
+                                            'h-auto pl-4',
+                                            option.value === _chatMode &&
+                                                'border border-muted-foreground/30'
+                                        )}
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
                                     >
