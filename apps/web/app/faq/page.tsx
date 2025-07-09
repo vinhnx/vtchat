@@ -296,8 +296,8 @@ function HelpCenterContent() {
                                         research and analysis
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>AI Memory:</strong> Personal AI assistant with
-                                        agent (RAG)
+                                        <strong>AI Memory:</strong> Personal AI assistant with agent
+                                        (RAG)
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -884,10 +884,9 @@ function HelpCenterContent() {
                             <AccordionContent>
                                 <p className="text-muted-foreground">
                                     RAG Knowledge Chat is a VT+ exclusive feature that lets you
-                                    build and query your personal agent using
-                                    Retrieval-Augmented Generation (RAG) technology. It's like
-                                    having your own AI assistant with perfect memory of everything
-                                    you've shared:
+                                    build and query your personal agent using Retrieval-Augmented
+                                    Generation (RAG) technology. It's like having your own AI
+                                    assistant with perfect memory of everything you've shared:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
@@ -952,8 +951,7 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>User-Controlled:</strong> You can view, delete
-                                        individual items, or clear your entire agent
-                                        anytime
+                                        individual items, or clear your entire agent anytime
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>No Third-Party Sharing:</strong> Your data is never

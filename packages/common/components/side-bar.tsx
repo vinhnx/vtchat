@@ -48,7 +48,7 @@ import {
     Shield,
     Sparkles,
     User,
-    Zap
+    Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

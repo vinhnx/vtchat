@@ -32,7 +32,6 @@ import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-
 interface KnowledgeItem {
     id: string;
     content: string;
@@ -55,8 +54,6 @@ export function RAGChatbot() {
     const [isClearing, setIsClearing] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-
-
 
     // Mobile sidebar state
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -144,8 +141,6 @@ export function RAGChatbot() {
     // VT+ users can chat with or without BYOK (server API key used automatically)
     // Free users must have their own Gemini API key
     const canChat = hasVTPlusAccess || hasGeminiKey;
-
-
 
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -313,21 +308,21 @@ export function RAGChatbot() {
                 <ScrollArea className="w-full flex-1">
                     <div className="space-y-4 p-2 sm:p-4">
                         {messages.length === 0 && (
-                        <div className="text-muted-foreground py-16 text-center">
-                        <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-primary/20 bg-background overflow-hidden">
-                        <img
-                                alt="VT Assistant"
-                                className="h-full w-full object-cover"
-                            src="/icon-192x192.png"
-                        />
-                        </div>
+                            <div className="text-muted-foreground py-16 text-center">
+                                <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-primary/20 bg-background overflow-hidden">
+                                    <img
+                                        alt="VT Assistant"
+                                        className="h-full w-full object-cover"
+                                        src="/icon-192x192.png"
+                                    />
+                                </div>
                                 <h3 className="text-foreground mb-2 text-lg font-medium">
-                            VT Personal AI Assistant
-                        </h3>
-                        <p className="mx-auto max-w-sm text-sm text-muted-foreground">
-                        Start chatting to build your personal knowledge base
-                        </p>
-                        </div>
+                                    VT Personal AI Assistant
+                                </h3>
+                                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+                                    Start chatting to build your personal knowledge base
+                                </p>
+                            </div>
                         )}
 
                         {messages
@@ -516,8 +511,6 @@ export function RAGChatbot() {
                     />
                 </SheetContent>
             </Sheet>
-
-
         </div>
     );
 }
@@ -748,8 +741,6 @@ function RagSidebar({
                         </p>
                     </CardContent>
                 </Card>
-
-
             </div>
         </ScrollArea>
     );

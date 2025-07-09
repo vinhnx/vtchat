@@ -43,9 +43,6 @@ https://xmcp.dev/docs
 
 oracle: implement RLS embeddings RAG feature. use neon mcp if needed
 
---
-
-replace /rag endpoint with /assistant endpoint
 
 --
 
