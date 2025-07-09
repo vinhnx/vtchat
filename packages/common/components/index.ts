@@ -12,6 +12,7 @@ export * from './code-block/code-block';
 export * from './command-search';
 export * from './conditional-footer';
 export * from './custom-schema-builder';
+
 export * from './document-side-panel';
 export * from './error-boundary';
 export * from './error-placeholder';
