@@ -33,7 +33,6 @@ import {
     ChevronsUpDown,
     ChevronUp,
     Command,
-    Database,
     ExternalLink,
     FileText,
     HelpCircle,
@@ -49,6 +48,7 @@ import {
     Shield,
     Sparkles,
     User,
+    Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -515,7 +515,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                         )}
                         onClick={() => {
-                            push('/rag');
+                            push('/agent');
                             // Close mobile drawer if open
                             if (forceMobile) {
                                 setIsMobileSidebarOpen(false);
@@ -523,18 +523,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         }}
                         rounded="lg"
                         size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        tooltip={isSidebarOpen ? undefined : 'Knowledge Base'}
+                        tooltip={isSidebarOpen ? undefined : 'Agent'}
                         tooltipSide="right"
                         variant="ghost"
                     >
-                        <Database
+                        <Zap
                             className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                             size={16}
                             strokeWidth={2}
                         />
                         {isSidebarOpen && (
                             <span className="flex items-center gap-2">
-                                AI Assistant
+                                Agent
                                 {!isPlusFromGlobal && (
                                     <Badge
                                         className="vt-plus-glass border-[#D99A4E]/30 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"

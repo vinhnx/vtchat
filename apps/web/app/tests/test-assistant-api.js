@@ -1,11 +1,11 @@
 /**
- * Manual test for RAG API functionality
+ * Manual test for Assistant API functionality
  * Tests both VT+ users (no BYOK) and free users (BYOK required)
  */
 
 // Test configuration
 const BASE_URL = 'http://localhost:3001';
-const RAG_API_URL = `${BASE_URL}/api/chat/rag`;
+const ASSISTANT_API_URL = `${BASE_URL}/api/chat/assistant`;
 
 // Mock test data
 const mockMessages = [
@@ -22,10 +22,10 @@ const mockProfile = {
 
 // Test VT+ user (should work without API keys)
 async function testVTPlusUser() {
-    console.log('🧪 Testing VT+ user RAG functionality...');
+    console.log('🧪 Testing VT+ user Assistant functionality...');
 
     try {
-        const response = await fetch(RAG_API_URL, {
+        const response = await fetch(ASSISTANT_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ async function testVTPlusUser() {
         });
 
         if (response.ok) {
-            console.log('✅ VT+ user test passed - can use RAG without API keys');
+            console.log('✅ VT+ user test passed - can use Assistant without API keys');
             return true;
         } else {
             const errorData = await response.json();
@@ -57,11 +57,11 @@ async function testVTPlusUser() {
 
 // Test free user (should require API keys)
 async function testFreeUser() {
-    console.log('🧪 Testing free user RAG functionality...');
+    console.log('🧪 Testing free user Assistant functionality...');
 
     try {
         // First test without API keys (should fail)
-        const responseWithoutKeys = await fetch(RAG_API_URL, {
+        const responseWithoutKeys = await fetch(ASSISTANT_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ async function testFreeUser() {
         }
 
         // Test with API keys (should succeed)
-        const responseWithKeys = await fetch(RAG_API_URL, {
+        const responseWithKeys = await fetch(ASSISTANT_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ async function testNonGeminiModelRejection() {
     console.log('🧪 Testing non-Gemini model rejection...');
 
     try {
-        const response = await fetch(RAG_API_URL, {
+        const response = await fetch(ASSISTANT_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

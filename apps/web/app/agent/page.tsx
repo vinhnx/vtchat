@@ -36,7 +36,7 @@ export default function RAGPage() {
     // Handle redirect to login if not signed in
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
-            router.push('/login?redirect_url=/rag');
+            router.push('/login?redirect_url=/agent');
         }
     }, [isLoaded, isSignedIn, router]);
 
@@ -80,7 +80,7 @@ export default function RAGPage() {
                             <div className="bg-muted rounded-lg p-4">
                                 <h4 className="mb-2 text-sm font-medium">What you'll get:</h4>
                                 <ul className="text-muted-foreground space-y-1 text-sm">
-                                    <li>• Build your personal knowledge base</li>
+                                    <li>• Build your personal agent</li>
                                     <li>• Store and organize information</li>
                                     <li>• Query your data with AI</li>
                                 </ul>
@@ -142,7 +142,7 @@ export default function RAGPage() {
                         </Badge>
                     </h1>
                     <p className="text-muted-foreground text-xs md:text-sm">
-                        Build and query your personal knowledge base with AI
+                        Build and query your personal agent with AI
                     </p>
                 </div>
 

@@ -5,7 +5,7 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-✅ remove vemetric tracking custom events completely
+1. to prevent users even vt+ plus, from unlimited usages to quickly exhausted one gemini_api_key oracle. suggest implement a rate limit per day but not too strict for plus tiers users when using gemini models. search for gemini model pricing and limit. use mcp if needed. ask me for plan for approval first before executing
 
 --
 
@@ -38,27 +38,14 @@ https://nextjs.org/docs/app/guides/mdx
 
 https://xmcp.dev/docs
 
---
-
-just disabe rag feature completedly
 
 ==
 
-RLS embeddings RAG feature
+oracle: implement RLS embeddings RAG feature. use neon mcp if needed
 
-## --
+--
 
 replace /rag endpoint with /assistant endpoint
-
---
-
-fix structure output tool, it should be able to detect if a document has been uploaded on chat input
-
---
-check structure output. show "Upload a Document First" dialog even though the user has uploaded a document.
---
-
-replace attach images and pdf button to use image lucid icons
 
 --
 
@@ -73,9 +60,8 @@ https://ai-sdk.dev/docs/advanced/multiple-streamables
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
 
 --
-10:28:52.624 GET
-https://lh3.googleusercontent.com/ogw/AF2bZyhtwE-BhhWqE_Izb8Hctb7RLZJka37DQbjLaqPKGCBioKM=s32-c-mo
-NS_BINDING_ABORTED
+
+
 
 --
 
@@ -89,7 +75,7 @@ https://ai-sdk.dev/docs/guides/openai-responses
 [check ai sdk compatible ver] improve Anthropic support
 https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
 
-## --
+--
 
 Future plan
 

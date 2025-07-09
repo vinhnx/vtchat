@@ -14,21 +14,21 @@
 User-Agent: Googlebot
 Allow: /
 Disallow: /profile/
-Disallow: /rag/
+Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 
 User-Agent: Bingbot
 Allow: /
 Disallow: /profile/
-Disallow: /rag/
+Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 
 User-Agent: OAI-Searchbot
 Allow: /
 Disallow: /profile/
-Disallow: /rag/
+Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 
@@ -40,7 +40,7 @@ Allow: /privacy
 Allow: /terms
 Allow: /
 Disallow: /profile/
-Disallow: /rag/
+Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 

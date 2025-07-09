@@ -76,7 +76,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'AI Memory (Exclusive)',
                     description:
-                        'Personal AI assistant that remembers everything you share. Build your knowledge base for truly personalized conversations.',
+                        'Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations.',
                 },
                 {
                     name: 'Priority Support & No Limits',

@@ -39,7 +39,7 @@ VT implements the IETF AI Preferences (aipref) standard to control how automated
 **Protected Content Areas:**
 - **Private Conversations**: All chat threads are completely blocked from search engines and AI training crawlers
 - **User Profiles**: Personal account information is protected from indexing and data mining
-- **RAG Content**: Personal AI assistant knowledge base is fully blocked from external access
+- **RAG Content**: Personal AI assistant agent is fully blocked from external access
 - **API Endpoints**: All server APIs are protected with no-index and no-store policies
 
 **Public Content Policy:**

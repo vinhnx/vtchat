@@ -28,10 +28,10 @@ import {
     SheetContent,
 } from '@repo/ui';
 import { useChat } from 'ai/react';
-import { Database, Eye, Menu, Send, Settings, Shield, Trash2 } from 'lucide-react';
+import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { RagOnboarding } from './rag-onboarding';
+
 
 interface KnowledgeItem {
     id: string;
@@ -56,9 +56,7 @@ export function RAGChatbot() {
     const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Simple BYOK check - show onboarding if no required API keys
-    const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-    const [hasCheckedApiKeys, setHasCheckedApiKeys] = useState(false);
+
 
     // Mobile sidebar state
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -95,7 +93,7 @@ export function RAGChatbot() {
                         'Please configure your API keys in Settings to use the Knowledge Assistant.',
                     action: {
                         label: 'Add Keys',
-                        onClick: () => setShowApiKeyDialog(true),
+                        onClick: () => window.open('/settings', '_blank'),
                     },
                 });
             } else if (message.includes('rate limit') || message.includes('too many requests')) {
@@ -146,26 +144,14 @@ export function RAGChatbot() {
     // VT+ users can chat with or without BYOK (server API key used automatically)
     // Free users must have their own Gemini API key
     const canChat = hasVTPlusAccess || hasGeminiKey;
-    const needsApiKeys = !canChat;
 
-    // Check for required API keys on component mount and when keys change
-    useEffect(() => {
-        if (!hasCheckedApiKeys) {
-            setHasCheckedApiKeys(true);
-            if (needsApiKeys) {
-                setShowApiKeyDialog(true);
-            }
-        } else if (needsApiKeys && !showApiKeyDialog) {
-            // Only show dialog if keys are needed and dialog isn't already open
-            setShowApiKeyDialog(true);
-        }
-    }, [needsApiKeys, hasCheckedApiKeys, showApiKeyDialog]);
+
 
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
-        api: '/api/chat/rag',
+        api: '/api/chat/assistant',
         maxSteps: 3,
         body: {
             apiKeys: allApiKeys,
@@ -220,11 +206,11 @@ export function RAGChatbot() {
 
     const fetchKnowledgeBase = async () => {
         try {
-            const response = await fetch('/api/rag/knowledge');
+            const response = await fetch('/api/agent/knowledge');
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
-                log.info({ total: resources.length, data }, '📚 Knowledge Base fetched');
+                log.info({ total: resources.length, data }, '📚 Agent fetched');
                 setKnowledgeBase(resources);
             } else {
                 const errorText = await response.text();
@@ -248,7 +234,7 @@ export function RAGChatbot() {
 
         setIsClearing(true);
         try {
-            const response = await fetch('/api/rag/clear', {
+            const response = await fetch('/api/agent/clear', {
                 method: 'DELETE',
             });
             if (response.ok) {
@@ -275,7 +261,7 @@ export function RAGChatbot() {
     const deleteKnowledgeItem = async (id: string) => {
         setIsDeleting(true);
         try {
-            const response = await fetch(`/api/rag/delete?id=${id}`, {
+            const response = await fetch(`/api/agent/delete?id=${id}`, {
                 method: 'DELETE',
             });
             if (response.ok) {
@@ -327,45 +313,21 @@ export function RAGChatbot() {
                 <ScrollArea className="w-full flex-1">
                     <div className="space-y-4 p-2 sm:p-4">
                         {messages.length === 0 && (
-                            <div className="text-muted-foreground py-12 text-center">
-                                <h3 className="text-foreground mb-2 text-xl font-semibold">
-                                    Personal AI Assistant with Memory
-                                </h3>
-                                <p className="mx-auto mb-6 max-w-md text-sm">
-                                    Build your personal AI assistant with your own knowledge. Store
-                                    information and get intelligent answers.
-                                </p>
-
-                                <div className="mx-auto grid max-w-2xl grid-cols-1 gap-4 text-xs md:grid-cols-3">
-                                    <div className="bg-card rounded-xl border p-4">
-                                        <div className="mb-2 flex justify-center">
-                                            <Database className="text-muted-foreground h-6 w-6" />
-                                        </div>
-                                        <div className="font-medium">Smart Retrieval</div>
-                                        <div className="text-muted-foreground">
-                                            AI finds relevant info from your knowledge base
-                                        </div>
-                                    </div>
-                                    <div className="bg-card rounded-xl border p-4">
-                                        <div className="mb-2 flex justify-center">
-                                            <Shield className="text-muted-foreground h-6 w-6" />
-                                        </div>
-                                        <div className="font-medium">Private & Secure</div>
-                                        <div className="text-muted-foreground">
-                                            Your data stays secure and private
-                                        </div>
-                                    </div>
-                                    <div className="bg-card rounded-xl border p-4">
-                                        <div className="mb-2 flex justify-center">
-                                            <Database className="text-muted-foreground h-6 w-6" />
-                                        </div>
-                                        <div className="font-medium">Contextual Answers</div>
-                                        <div className="text-muted-foreground">
-                                            Get answers based on your personal knowledge
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="text-muted-foreground py-16 text-center">
+                        <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-primary/20 bg-background overflow-hidden">
+                        <img
+                                alt="VT Assistant"
+                                className="h-full w-full object-cover"
+                            src="/icon-192x192.png"
+                        />
+                        </div>
+                                <h3 className="text-foreground mb-2 text-lg font-medium">
+                            VT Personal AI Assistant
+                        </h3>
+                        <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+                        Start chatting to build your personal knowledge base
+                        </p>
+                        </div>
                         )}
 
                         {messages
@@ -383,19 +345,12 @@ export function RAGChatbot() {
                                             src={session?.user?.image ?? undefined}
                                         />
                                     ) : (
-                                        <div className="border-primary/20 bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
-                                            <svg
-                                                height="16"
-                                                viewBox="-7.5 0 32 32"
-                                                width="16"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    className="text-primary"
-                                                    d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
+                                        <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full border border-primary/20 bg-background">
+                                            <img
+                                                alt="VT Assistant"
+                                                className="h-full w-full object-cover"
+                                                src="/icon-192x192.png"
+                                            />
                                         </div>
                                     )}
                                     <div
@@ -431,20 +386,6 @@ export function RAGChatbot() {
                         {/* Single consolidated loading indicator */}
                         {isProcessing && (
                             <div className="flex gap-3" key="loading-indicator">
-                                <div className="border-primary/20 bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
-                                    <svg
-                                        height="16"
-                                        viewBox="-7.5 0 32 32"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            className="text-primary"
-                                            d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                </div>
                                 <div className="flex-1 space-y-2">
                                     <div className="bg-muted max-w-[80%] rounded-lg p-3">
                                         <div className="text-muted-foreground flex items-center gap-2 text-sm">
@@ -453,7 +394,7 @@ export function RAGChatbot() {
                                                 <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
                                                 <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
                                             </div>
-                                            <span className="ml-2">AI is thinking...</span>
+                                            <span className="ml-2">VT is thinking...</span>
                                         </div>
                                         <div className="text-muted-foreground/70 mt-1 text-xs">
                                             Searching knowledge base and generating response
@@ -469,61 +410,48 @@ export function RAGChatbot() {
                 </ScrollArea>
 
                 {/* Chat Input */}
-                <div className="border-t p-2 sm:p-4">
+                <div className="border-t p-4">
                     {/* Show message when no API keys */}
                     {!canChat && (
-                        <div className="mb-3 rounded-lg bg-amber-50 p-2 sm:p-3 text-xs sm:text-sm">
+                        <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <span className="text-amber-700">
-                                    Please add your Gemini API key to use the Knowledge Assistant
+                                    VT+ subscription or Gemini API key required
                                 </span>
                                 <Button
                                     className="text-xs w-full sm:w-auto"
-                                    onClick={() => setShowApiKeyDialog(true)}
+                                    onClick={() => setIsSettingsOpen(true)}
                                     size="sm"
                                     variant="outline"
                                 >
-                                    Add API Keys
+                                    Upgrade or Add Key
                                 </Button>
                             </div>
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-2">
-                        <div className="flex gap-2 md:hidden">
+                    <div className="flex flex-col gap-3">
+                        <div className="md:hidden">
                             <Button
                                 onClick={() => setIsMobileSidebarOpen(true)}
                                 size="sm"
                                 variant="outline"
-                                className="flex-1"
+                                className="w-full"
                             >
                                 <Menu className="mr-2 h-4 w-4" />
-                                Knowledge Base & Settings
+                                Agent
                             </Button>
-                            {process.env.NODE_ENV === 'development' && (
-                                <Button
-                                    onClick={() => {
-                                        log.info({}, 'Test error button clicked');
-                                        showErrorToast(new Error('Test error message'));
-                                    }}
-                                    size="sm"
-                                    variant="destructive"
-                                    className="shrink-0"
-                                >
-                                    Test Error
-                                </Button>
-                            )}
                         </div>
 
-                        <form className="flex gap-2" onSubmit={handleSubmit}>
+                        <form className="flex gap-3" onSubmit={handleSubmit}>
                             <Input
-                                className="flex-1 text-sm sm:text-base"
+                                className="flex-1"
                                 disabled={isLoading || !canChat}
                                 onChange={handleInputChange}
                                 placeholder={
                                     canChat
-                                        ? 'Ask anything or share knowledge...'
-                                        : 'Add Gemini API key to continue chatting...'
+                                        ? 'Message VT...'
+                                        : 'VT+ subscription or API key required...'
                                 }
                                 value={input}
                             />
@@ -541,7 +469,7 @@ export function RAGChatbot() {
             </div>
 
             {/* Desktop Sidebar */}
-            <div className="hidden md:flex w-80 border-l">
+            <div className="hidden md:flex w-72 border-l">
                 <RagSidebar
                     knowledgeBase={knowledgeBase}
                     isViewDialogOpen={isViewDialogOpen}
@@ -563,9 +491,9 @@ export function RAGChatbot() {
 
             {/* Mobile Sidebar Sheet */}
             <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
-                <SheetContent className="w-full" title="Knowledge Base & Settings">
+                <SheetContent className="w-full" title="Agent">
                     <div className="border-b p-4">
-                        <h2 className="text-lg font-semibold">Knowledge Base & Settings</h2>
+                        <h2 className="text-lg font-semibold">Agent</h2>
                     </div>
                     <RagSidebar
                         knowledgeBase={knowledgeBase}
@@ -589,18 +517,7 @@ export function RAGChatbot() {
                 </SheetContent>
             </Sheet>
 
-            {/* API Key Dialog */}
-            <RagOnboarding
-                isOpen={showApiKeyDialog}
-                onComplete={() => {
-                    setShowApiKeyDialog(false);
-                    setHasCheckedApiKeys(true);
-                }}
-                onSkip={() => {
-                    setShowApiKeyDialog(false);
-                    setHasCheckedApiKeys(true);
-                }}
-            />
+
         </div>
     );
 }
@@ -646,12 +563,12 @@ function RagSidebar({
     return (
         <ScrollArea className="h-full w-full">
             <div className="space-y-4 p-4">
-                {/* Knowledge Base Management */}
+                {/* Agent Management */}
                 <Card>
                     <CardHeader className="pb-3">
                         <CardTitle className="flex items-center gap-2 text-base">
                             <Database className="h-4 w-4" />
-                            Knowledge Base
+                            Agent
                             <Badge className="ml-auto" variant="secondary">
                                 {knowledgeBase.length}
                             </Badge>
@@ -677,7 +594,7 @@ function RagSidebar({
                                 <DialogContent className="max-h-[80vh] max-w-2xl">
                                     <DialogHeader>
                                         <DialogTitle>
-                                            Knowledge Base ({knowledgeBase.length} items)
+                                            Agent ({knowledgeBase.length} items)
                                         </DialogTitle>
                                         <DialogDescription>
                                             Your personal knowledge stored for AI assistance
@@ -731,7 +648,7 @@ function RagSidebar({
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Clear Knowledge Base</DialogTitle>
+                                        <DialogTitle>Clear Agent</DialogTitle>
                                         <DialogDescription>
                                             This will permanently delete all {knowledgeBase.length}{' '}
                                             items from your knowledge base. This action cannot be
@@ -832,32 +749,7 @@ function RagSidebar({
                     </CardContent>
                 </Card>
 
-                {/* Feature Benefits */}
-                <Card>
-                    <CardHeader className="pb-3">
-                        <CardTitle className="text-base">How it works</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4 text-sm">
-                        <div className="flex gap-2">
-                            <Database className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
-                            <div>
-                                <div className="font-medium">Smart Context</div>
-                                <div className="text-muted-foreground">
-                                    AI finds relevant info from your knowledge base
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
-                            <Database className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
-                            <div>
-                                <div className="font-medium">Persistent Memory</div>
-                                <div className="text-muted-foreground">
-                                    Build a growing knowledge base over time
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+
             </div>
         </ScrollArea>
     );

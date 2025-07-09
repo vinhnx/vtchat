@@ -238,7 +238,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         slug: FeatureSlug.RAG,
         name: 'Personal AI Assistant with Memory',
         description:
-            'Personal knowledge base with intelligent information storage and retrieval capabilities',
+            'Personal agent with intelligent information storage and retrieval capabilities',
     },
     [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
         slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,

@@ -297,7 +297,7 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>AI Memory:</strong> Personal AI assistant with
-                                        knowledge base (RAG)
+                                        agent (RAG)
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -884,7 +884,7 @@ function HelpCenterContent() {
                             <AccordionContent>
                                 <p className="text-muted-foreground">
                                     RAG Knowledge Chat is a VT+ exclusive feature that lets you
-                                    build and query your personal knowledge base using
+                                    build and query your personal agent using
                                     Retrieval-Augmented Generation (RAG) technology. It's like
                                     having your own AI assistant with perfect memory of everything
                                     you've shared:
@@ -914,14 +914,14 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Proactive Learning:</strong> AI encourages you to
-                                        build your knowledge base for more personalized assistance
+                                        build your agent for more personalized assistance
                                     </li>
                                 </ul>
                                 <h4 className="mb-2 mt-6 font-medium">Key Benefits:</h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Persistent Memory:</strong> Unlike regular chat,
-                                        your knowledge base grows over time and remembers everything
+                                        your agent grows over time and remembers everything
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Personalized Responses:</strong> Get answers
@@ -939,7 +939,7 @@ function HelpCenterContent() {
                                 <h4 className="mb-2 mt-6 font-medium">Privacy & Security:</h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Complete Isolation:</strong> Your knowledge base is
+                                        <strong>Complete Isolation:</strong> Your agent is
                                         completely private and isolated to your account only
                                     </li>
                                     <li className="text-muted-foreground">
@@ -952,7 +952,7 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>User-Controlled:</strong> You can view, delete
-                                        individual items, or clear your entire knowledge base
+                                        individual items, or clear your entire agent
                                         anytime
                                     </li>
                                     <li className="text-muted-foreground">

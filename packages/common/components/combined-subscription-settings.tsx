@@ -106,7 +106,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const analyzeKnowledgeBase = async () => {
         setIsAnalyzing(true);
         try {
-            const response = await fetch('/api/rag/knowledge');
+            const response = await fetch('/api/agent/knowledge');
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
@@ -732,20 +732,20 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     size="sm"
                                     variant="outline"
                                 >
-                                    {isAnalyzing ? 'Analyzing...' : 'Re-analyze Knowledge Base'}
+                                    {isAnalyzing ? 'Analyzing...' : 'Re-analyze Agent'}
                                 </Button>
                             </div>
                         </CardContent>
                     </Card>
                 )}
 
-                {/* Knowledge Base Management */}
+                {/* Agent Management */}
                 {isVtPlus && (
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                                 <Database className="h-5 w-5" />
-                                Knowledge Base Management
+                                Agent Management
                             </CardTitle>
                             <CardDescription>
                                 Manage your Personal AI Assistant's knowledge base. View stored
@@ -758,12 +758,12 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     className="flex-1"
                                     onClick={() => {
                                         // Open the AI Assistant page to view knowledge base
-                                        window.open('/rag', '_blank');
+                                        window.open('/agent', '_blank');
                                     }}
                                     variant="outline"
                                 >
                                     <Database className="mr-2 h-4 w-4" />
-                                    View Knowledge Base
+                                    View Agent
                                 </Button>
                                 <Button
                                     className="flex-1"
@@ -774,7 +774,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             )
                                         ) {
                                             try {
-                                                const response = await fetch('/api/rag/clear', {
+                                                const response = await fetch('/api/agent/clear', {
                                                     method: 'DELETE',
                                                 });
                                                 if (response.ok) {

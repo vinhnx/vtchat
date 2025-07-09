@@ -1,7 +1,7 @@
 import { MarkdownContent, markdownStyles } from '@repo/common/components';
 import { useCopyText } from '@repo/common/hooks';
 import type { ThreadItem } from '@repo/shared/types';
-import { Button, Card, CardContent, cn } from '@repo/ui';
+import { Button, cn } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Bot,
@@ -16,7 +16,7 @@ import {
     VolumeX,
     Zap,
 } from 'lucide-react';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 
 interface PremiumAIResponseProps {
     content: string;
@@ -206,7 +206,7 @@ export const PremiumAIResponse = memo(
                                                 />
                                             ))}
                                         </motion.div>
-                                        <span>AI is thinking...</span>
+                                        <span>VT is thinking...</span>
                                     </div>
                                 </motion.div>
                             )}

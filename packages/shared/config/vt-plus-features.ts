@@ -37,7 +37,7 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
         id: FeatureSlug.RAG,
         name: 'Personal AI Assistant with Memory',
         description:
-            'Personal knowledge base with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
+            'Personal agent with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
         enabled: true,
     },
     [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
