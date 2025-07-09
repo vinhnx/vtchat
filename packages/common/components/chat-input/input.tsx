@@ -8,7 +8,8 @@ import {
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore } from '@repo/common/store';
-import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
+import { isGeminiModel } from '@repo/common/utils';
+import { ChatMode, ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { cn, Flex } from '@repo/ui';
@@ -155,7 +156,16 @@ export const ChatInput = ({
 
         // Check if user has valid API key for the selected chat mode
         // This applies to all users (signed in or not) for modes that require API keys
-        if (!hasApiKeyForChatMode(chatMode, isSignedIn)) {
+        // SPECIAL CASE: VT+ users don't need API keys for any Gemini models
+        const needsApiKeyCheck = (() => {
+            if (isGeminiModel(chatMode)) {
+                // VT+ users don't need API keys for any Gemini models
+                return !isPlusTier;
+            }
+            return true;
+        })();
+
+        if (needsApiKeyCheck && !hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)) {
             if (isSignedIn) {
                 // For signed-in users, show BYOK dialog
                 setPendingMessage(() => sendMessage);

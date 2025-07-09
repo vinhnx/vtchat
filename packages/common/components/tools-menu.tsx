@@ -7,18 +7,20 @@ import { Wrench } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useApiKeysStore } from '../store/api-keys.store';
 import { useChatStore } from '../store/chat.store';
+import { useVtPlusAccess } from '../hooks';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const isPlusTier = useVtPlusAccess();
     const apiKeys = useApiKeysStore();
     const chatMode = useChatStore((state) => state.chatMode);
     const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const isToolsAvailable = useMemo(
-        () => hasApiKeyForChatMode(chatMode, isSignedIn),
-        [chatMode, hasApiKeyForChatMode, apiKeys, isSignedIn]
+        () => hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier),
+        [chatMode, hasApiKeyForChatMode, isSignedIn, isPlusTier]
     );
 
     return (

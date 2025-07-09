@@ -85,6 +85,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             messages: messages as any,
             signal,
             thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
         });
 
         context?.update('queries', (current) => [...(current ?? []), ...(object?.queries || [])]);

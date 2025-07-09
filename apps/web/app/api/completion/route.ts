@@ -298,13 +298,31 @@ function createCompletionStream({
     hasByokGeminiKey: boolean;
 }) {
     const _encoder = new TextEncoder();
+    let heartbeatInterval: NodeJS.Timeout | null = null;
+    let isControllerClosed = false;
 
     return new ReadableStream({
         async start(controller) {
-            let heartbeatInterval: NodeJS.Timeout | null = null;
 
             heartbeatInterval = setInterval(() => {
-                controller.enqueue(_encoder.encode(': heartbeat\n\n'));
+                if (isControllerClosed) {
+                    if (heartbeatInterval) {
+                        clearInterval(heartbeatInterval);
+                        heartbeatInterval = null;
+                    }
+                    return;
+                }
+
+                try {
+                    controller.enqueue(_encoder.encode(': heartbeat\n\n'));
+                } catch (error) {
+                    // Controller is closed, clear interval
+                    if ((error as any)?.code === 'ERR_INVALID_STATE' && heartbeatInterval) {
+                        isControllerClosed = true;
+                        clearInterval(heartbeatInterval);
+                        heartbeatInterval = null;
+                    }
+                }
             }, 15_000);
 
             try {
@@ -342,6 +360,7 @@ function createCompletionStream({
                     });
                 }
             } finally {
+                isControllerClosed = true;
                 if (heartbeatInterval) {
                     clearInterval(heartbeatInterval);
                 }
@@ -350,6 +369,11 @@ function createCompletionStream({
         },
         cancel() {
             log.info('cancelling stream');
+            isControllerClosed = true;
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
             abortController.abort();
         },
     });

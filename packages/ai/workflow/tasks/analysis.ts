@@ -84,6 +84,7 @@ ${s}
             signal,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
             onReasoning: (reasoning) => {
                 chunkBuffer.add(reasoning);
             },

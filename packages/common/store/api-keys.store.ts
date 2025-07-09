@@ -3,6 +3,7 @@ import { log } from '@repo/shared/logger';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { safeJsonParse } from '../utils/storage-cleanup';
+import { isGeminiModel } from '../utils';
 
 export type ApiKeys = {
     OPENAI_API_KEY?: string;
@@ -75,7 +76,7 @@ type ApiKeysState = {
     removeKey: (provider: keyof ApiKeys) => void;
     clearAllKeys: () => void;
     getAllKeys: () => ApiKeys;
-    hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => boolean;
+    hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean, isVtPlus?: boolean) => boolean;
     switchUserStorage: (userId: string | null) => void;
     forceRehydrate: () => void;
 };
@@ -185,8 +186,18 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 const userData = safeJsonParse(storedData, { state: { keys: {} } });
                 set({ keys: userData.state?.keys || {} });
             },
-            hasApiKeyForChatMode: (chatMode: ChatMode, isSignedIn: boolean) => {
+            hasApiKeyForChatMode: (
+                chatMode: ChatMode,
+                isSignedIn: boolean,
+                isVtPlus: boolean = false
+            ) => {
                 if (!isSignedIn) return false;
+
+                // VT+ users don't need API keys for Gemini models
+                if (isVtPlus && isGeminiModel(chatMode)) {
+                    return true; // VT+ users can use system API key
+                }
+
                 const apiKeys = get().keys;
 
                 // Helper function to check if API key exists and is not empty

@@ -30,7 +30,8 @@
         "./components/vemetric-subscription-tracker": "./components/vemetric-subscription-tracker.tsx",
         "./components/vemetric-settings-tracker": "./components/vemetric-settings-tracker.tsx",
         "./hooks/use-vemetric": "./hooks/use-vemetric.ts",
-        "./lib/analytics-config": "./lib/analytics-config.ts"
+        "./lib/analytics-config": "./lib/analytics-config.ts",
+        "./lib/chat-mode-utils": "./lib/chat-mode-utils.ts"
     },
     "scripts": {
         "lint": "oxlint",

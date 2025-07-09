@@ -12,6 +12,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
+import { isGeminiModel } from '../utils/document-processing';
 import { useVtPlusAccess } from './use-subscription-access';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
@@ -450,8 +451,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
             // Check if this is a free model that should use server-side API
             const isFreeModel = mode === ChatMode.GEMINI_2_5_FLASH_LITE;
+            
+            // For VT+ users, all Gemini models should use server-side API directly
+            const shouldUseServerSideAPI = isFreeModel || (hasVtPlusAccess && isGeminiModel(mode));
 
-            if (hasApiKeyForChatMode(mode, isSignedIn) && !isFreeModel) {
+            if (hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess) && !shouldUseServerSideAPI) {
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);
@@ -488,8 +492,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
-                // BUT NOT for free models which don't require user API keys
-                if (isSignedIn && !isFreeModel) {
+                // BUT NOT for free models or VT+ users with Gemini models which don't require user API keys
+                if (isSignedIn && !shouldUseServerSideAPI) {
                     setModalChatMode(mode);
                     setShowApiKeyModal(true);
                     setIsGenerating(false);

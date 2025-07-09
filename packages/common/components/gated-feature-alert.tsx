@@ -240,7 +240,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                             onClick={handleUpgrade}
                         >
                             <Sparkles size={16} />
-                            UPGRADE TO VT+
+                            Upgrade to VT+
                         </Button>
                     </DialogFooter>
                 </DialogContent>

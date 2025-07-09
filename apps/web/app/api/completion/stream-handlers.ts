@@ -59,8 +59,24 @@ export function sendMessage(
         const sanitizedPayload = sanitizePayloadForJSON(payload);
         const message = `event: ${payload.type}\ndata: ${JSON.stringify(sanitizedPayload)}\n\n`;
 
-        controller.enqueue(encoder.encode(message));
-        controller.enqueue(new Uint8Array(0));
+        // Check if controller is still open before enqueueing
+        try {
+            controller.enqueue(encoder.encode(message));
+            controller.enqueue(new Uint8Array(0));
+        } catch (controllerError) {
+            // Controller is closed, client likely disconnected
+            if ((controllerError as any)?.code === 'ERR_INVALID_STATE') {
+                log.warn(
+                    {
+                        payloadType: payload.type,
+                        threadId: payload.threadId,
+                    },
+                    'Controller closed, client likely disconnected'
+                );
+                return; // Exit silently when controller is closed
+            }
+            throw controllerError; // Re-throw other errors
+        }
     } catch (error) {
         // This is critical - we should log errors in message serialization
         log.error(

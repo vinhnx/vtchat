@@ -140,6 +140,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             tools: finalTools,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
             },

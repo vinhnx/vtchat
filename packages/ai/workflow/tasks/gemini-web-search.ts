@@ -26,17 +26,21 @@ Please include:
         try {
             // Use the user's selected model
             const mode = context?.get('mode') || '';
+            const userTier = context?.get('userTier') || 'FREE';
+            const userApiKeys = context?.get('apiKeys') || {};
+            const isVtPlusUser = userTier === 'PLUS';
+
             log.info('=== gemini-web-search EXECUTE START ===');
             log.info('Chat mode:', { data: mode });
+            log.info('User tier:', { userTier, isVtPlusUser });
             log.info('Context data:', {
                 hasQuestion: !!question,
                 questionLength: question?.length,
                 hasStepId: stepId !== undefined,
                 hasGl: !!gl,
-                hasApiKeys: !!context?.get('apiKeys'),
-                apiKeysKeys: context?.get('apiKeys')
-                    ? Object.keys(context.get('apiKeys') || {})
-                    : undefined,
+                hasApiKeys: !!userApiKeys,
+                apiKeysKeys: userApiKeys ? Object.keys(userApiKeys) : undefined,
+                isVtPlusUser,
             });
 
             const model = getModelFromChatMode(mode);
@@ -53,16 +57,19 @@ Please include:
             log.info('Calling generateTextWithGeminiSearch with:', {
                 model,
                 promptLength: prompt.length,
-                hasByokKeys: !!context?.get('apiKeys'),
+                hasByokKeys: !!userApiKeys,
                 hasSignal: !!signal,
+                isVtPlusUser,
+                hasUserApiKey: !!userApiKeys.GEMINI_API_KEY,
             });
 
             const result = await generateTextWithGeminiSearch({
                 model,
                 prompt,
-                byokKeys: context?.get('apiKeys'),
+                byokKeys: userApiKeys,
                 signal,
                 thinkingMode: context?.get('thinkingMode'),
+                userTier,
             });
 
             log.info('generateTextWithGeminiSearch result:', {
@@ -137,7 +144,9 @@ Please include:
 
             // Provide more user-friendly error messages based on model and API key status
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-            const hasUserApiKey = context?.get('apiKeys')?.['GEMINI_API_KEY'];
+            const hasUserApiKey = userApiKeys?.GEMINI_API_KEY;
+            const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
+            const isVtPlusUser = userTier === 'PLUS';
 
             if (error.message?.includes('Free Gemini model requires system configuration')) {
                 // System configuration issue for free model
@@ -146,6 +155,11 @@ Please include:
                 );
             }
             if (error.message?.includes('API key')) {
+                if (isVtPlusUser && !hasUserApiKey && !hasSystemApiKey) {
+                    throw new Error(
+                        'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.'
+                    );
+                }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
                         "Web search requires an API key. You can either:\n1. Add your own Gemini API key in settings for unlimited usage\n2. Try again later if you've reached the daily limit for free usage"
@@ -156,6 +170,11 @@ Please include:
                 );
             }
             if (error.message?.includes('unauthorized') || error.message?.includes('401')) {
+                if (isVtPlusUser && !hasUserApiKey) {
+                    throw new Error(
+                        'Web search service encountered an authentication issue. Please add your own Gemini API key in settings for unlimited usage.'
+                    );
+                }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
                         'Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.'
@@ -167,6 +186,11 @@ Please include:
                 throw new Error('Gemini API access denied. Please check your API key permissions.');
             }
             if (error.message?.includes('rate limit') || error.message?.includes('429')) {
+                if (isVtPlusUser && !hasUserApiKey) {
+                    throw new Error(
+                        'Web search rate limit reached. Add your own Gemini API key in settings for unlimited usage.'
+                    );
+                }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
                         'Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.'

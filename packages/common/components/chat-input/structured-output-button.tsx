@@ -1,6 +1,6 @@
 'use client';
 
-import { getProviderInstance, Providers } from '@repo/ai/providers';
+// Removed unused imports - now using server-side API route
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
@@ -9,7 +9,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, cn, useToast } from '@repo/ui';
-import { generateObject } from 'ai';
+// Removed unused generateObject import - now using server-side API route
 import { FileUp, ScanText, Sparkles } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { z } from 'zod';
@@ -277,55 +277,47 @@ const StructuredOutputButton = () => {
                 throw new Error('No text content found in the document');
             }
 
-            // Get document type and schema
-            const { type, schema } = getDocumentType(textContent, file.name);
+            // Get document type - schema is now handled server-side
+            const { type } = getDocumentType(textContent, file.name);
 
-            // Get BYOK keys for API authentication
-            const byokKeys = getAllKeys;
-
-            // Get the correct Google provider instance with BYOK keys
-            const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);
-
-            // Generate structured output using AI SDK
-            const { object } = await generateObject({
-                model: googleProvider(chatMode),
-                schema,
-                prompt: `You are an expert document analyzer. Extract structured data from the following ${type} document.
-                
-Be thorough and accurate in your extraction. Follow these guidelines:
-- Extract all relevant information that matches the schema
-- For optional fields, include them if the information is available
-- For dates, try to standardize the format
-- For amounts, include currency information when available
-- If information is not present, omit the field rather than guessing
-- Be precise and factual in your extraction
-
-Document content:
-${textContent}`,
+            // Call the server-side API route for structured extraction
+            const response = await fetch('/api/tools/structured-extract', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    textContent,
+                    documentType: type,
+                    fileName: file.name,
+                    chatMode,
+                    userApiKeys: getAllKeys, // Pass user's API keys for non-VT+ users
+                }),
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to extract structured data');
+            }
+
+            const result = await response.json();
 
             // Store the structured data
-            setStructuredData({
-                data: object,
-                type,
-                fileName: file.name,
-                extractedAt: new Date().toISOString(),
-                confidence: 0.9, // High confidence since we're using AI SDK
-            });
+            setStructuredData(result);
 
             // Show success toast
             toast({
                 title: 'Extraction Complete',
-                description: `Successfully extracted ${type} data from ${file.name}`,
+                description: `Successfully extracted ${result.type} data from ${result.fileName}`,
             });
 
             // Automatically prompt user to use the extracted data
-            const extractedDataString = JSON.stringify(object, null, 2);
+            const extractedDataString = JSON.stringify(result.data, null, 2);
             const chatInput = document.querySelector(
                 '[data-testid="chat-input"]'
             ) as HTMLTextAreaElement;
             if (chatInput) {
-                chatInput.value = `I've extracted structured data from ${file.name}. Here's the extracted ${type} data:
+                chatInput.value = `I've extracted structured data from ${result.fileName}. Here's the extracted ${result.type} data:
 
 \`\`\`json
 ${extractedDataString}

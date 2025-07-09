@@ -75,6 +75,7 @@ export const generateTextWithGeminiSearch = async ({
     signal,
     byokKeys,
     thinkingMode,
+    userTier,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -83,6 +84,7 @@ export const generateTextWithGeminiSearch = async ({
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
+    userTier?: 'FREE' | 'PLUS';
 }): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
     log.info({}, '=== generateTextWithGeminiSearch START ===');
@@ -116,6 +118,7 @@ export const generateTextWithGeminiSearch = async ({
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        const isVtPlusUser = userTier === 'PLUS';
 
         if (!(hasUserGeminiKey || hasSystemGeminiKey)) {
             if (isFreeGeminiModel) {
@@ -123,17 +126,24 @@ export const generateTextWithGeminiSearch = async ({
                     'Free Gemini model requires system configuration. Please contact support or upgrade to use your own API key.'
                 );
             }
+            if (isVtPlusUser) {
+                throw new Error(
+                    'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.'
+                );
+            }
             throw new Error('Gemini API key is required for web search functionality');
         }
 
         // If user has BYOK, use their key (unlimited usage)
         // If user doesn't have BYOK but using free model, use system key (counted usage)
-        const useSystemKey = !hasUserGeminiKey && isFreeGeminiModel;
+        // If VT+ user doesn't have BYOK, use system key (unlimited usage for VT+ users)
+        const useSystemKey = !hasUserGeminiKey && (isFreeGeminiModel || isVtPlusUser);
 
         log.info('API key usage decision:', {
             hasUserKey: hasUserGeminiKey,
             hasSystemKey: hasSystemGeminiKey,
             isFreeModel: isFreeGeminiModel,
+            isVtPlusUser,
             useSystemKey,
         });
 
@@ -447,6 +457,7 @@ export const generateText = async ({
     byokKeys,
     useSearchGrounding = false,
     thinkingMode,
+    userTier,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -463,6 +474,7 @@ export const generateText = async ({
     byokKeys?: Record<string, string>;
     useSearchGrounding?: boolean;
     thinkingMode?: ThinkingModeConfig;
+    userTier?: 'FREE' | 'PLUS';
 }) => {
     try {
         if (signal?.aborted) {
@@ -498,6 +510,22 @@ export const generateText = async ({
                 tagName: reasoningTagName,
                 separator: '\n',
             });
+        }
+
+        // Handle API key logic for VT+ users and Gemini models
+        const isGeminiModel = model.toString().toLowerCase().includes('gemini');
+        const isVtPlusUser = userTier === 'PLUS';
+        
+        if (isGeminiModel && isVtPlusUser) {
+            // For VT+ users with Gemini models, check if they have BYOK
+            const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+            const hasSystemGeminiKey = typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+            
+            if (!hasUserGeminiKey && hasSystemGeminiKey) {
+                // VT+ user without BYOK - use system key
+                byokKeys = undefined;
+                log.info('VT+ user without BYOK - using system API key for generateText');
+            }
         }
 
         const selectedModel = getLanguageModel(
@@ -618,6 +646,7 @@ export const generateObject = async ({
     signal,
     byokKeys,
     thinkingMode,
+    userTier,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -626,6 +655,7 @@ export const generateObject = async ({
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
+    userTier?: 'FREE' | 'PLUS';
 }) => {
     try {
         if (signal?.aborted) {
@@ -678,6 +708,22 @@ export const generateObject = async ({
 
         // Import reasoning utilities
         const { supportsReasoning, getReasoningType } = await import('../models');
+
+        // Handle API key logic for VT+ users and Gemini models
+        const isGeminiModel = model.toString().toLowerCase().includes('gemini');
+        const isVtPlusUser = userTier === 'PLUS';
+        
+        if (isGeminiModel && isVtPlusUser) {
+            // For VT+ users with Gemini models, check if they have BYOK
+            const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+            const hasSystemGeminiKey = typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+            
+            if (!hasUserGeminiKey && hasSystemGeminiKey) {
+                // VT+ user without BYOK - use system key
+                byokKeys = undefined;
+                log.info('VT+ user without BYOK - using system API key for generateObject');
+            }
+        }
 
         const selectedModel = getLanguageModel(
             model,

@@ -112,6 +112,7 @@ Current date: ${getHumanizedDate()}
             messages: messages as any,
             signal,
             thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
         });
 
         const newStepId = stepId + 1;
