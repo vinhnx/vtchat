@@ -1,13 +1,14 @@
+import { createResource } from '@/lib/actions/resources';
+import { findRelevantContent } from '@/lib/ai/embedding';
+import { auth } from '@/lib/auth-server';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
 import { ModelEnum } from '@repo/ai/models';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
-import { createResource } from '@/lib/actions/resources';
-import { findRelevantContent } from '@/lib/ai/embedding';
-import { auth } from '@/lib/auth-server';
 import { checkVTPlusAccess } from '../../subscription/access-control';
 
 // Allow streaming responses up to 30 seconds
@@ -20,12 +21,7 @@ const MODEL_PROVIDER_PREFIX = {
     GOOGLE: 'gemini-',
 } as const;
 
-// API key constants
-const API_KEY_NAMES = {
-    OPENAI: 'OPENAI_API_KEY',
-    ANTHROPIC: 'ANTHROPIC_API_KEY',
-    GOOGLE: 'GEMINI_API_KEY',
-} as const;
+// API key constants imported from shared location
 
 export async function POST(req: Request) {
     try {
@@ -156,11 +152,12 @@ export async function POST(req: Request) {
             - Enthusiastically use the addResource tool to save it to their private knowledge base
             - Give them a warm confirmation like "Perfect! I've saved that to your personal knowledge base 📝"
             - Examples of what to save: preferences, work details, personal facts, important notes, experiences, insights
+            - Do not use emoji, sound professional but friendly and helpful.
 
             🔍 **When users ask questions:**
             - First search their knowledge base with the getInformation tool
             - If you find relevant info, use it to give personalized answers based on what they've shared
-            - If nothing is found, say something like "I don't see that in your knowledge base yet. Would you like to add this information so I can remember it for next time? 🤔"
+            - If nothing is found, say something like "I don't see that in your knowledge base yet. Would you like to add this information so I can remember it for next time? "
 
             💡 **Be proactive and encouraging:**
             - When users mention something interesting, say "That's great information! Should I save that to your knowledge base so I can remember it?"

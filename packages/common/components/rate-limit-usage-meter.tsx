@@ -2,6 +2,7 @@
 
 import { ModelEnum } from '@repo/ai/models';
 import { GEMINI_FLASH_LIMITS, limitText } from '@repo/shared/constants/rate-limits';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import {
     Badge,
     Button,
@@ -119,7 +120,9 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
     // Detect VT+ subscription and BYOK API keys
     const isVtPlus = useVtPlusAccess();
     const apiKeys = useApiKeysStore((state) => state.getAllKeys());
-    const hasGeminiApiKey = !!(apiKeys.GEMINI_API_KEY && apiKeys.GEMINI_API_KEY.trim() !== '');
+    const hasGeminiApiKey = !!(
+        apiKeys[API_KEY_NAMES.GOOGLE] && apiKeys[API_KEY_NAMES.GOOGLE].trim() !== ''
+    );
 
     // Determine unlimited access status - BYOK takes priority over VT+
     const hasUnlimitedAccess = hasGeminiApiKey || isVtPlus;

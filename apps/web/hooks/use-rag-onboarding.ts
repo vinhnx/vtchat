@@ -1,5 +1,6 @@
 import { useApiKeysStore } from '@repo/common/store';
 import { useEffect, useState } from 'react';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 
 export function useRagOnboarding() {
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -7,7 +8,7 @@ export function useRagOnboarding() {
     const { getAllKeys } = useApiKeysStore();
     const apiKeys = getAllKeys();
     const hasApiKeys = Object.keys(apiKeys).some(
-        (key) => key === 'GEMINI_API_KEY' || key === 'OPENAI_API_KEY'
+        (key) => key === API_KEY_NAMES.GOOGLE || key === API_KEY_NAMES.OPENAI
     );
 
     useEffect(() => {

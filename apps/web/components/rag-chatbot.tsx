@@ -140,7 +140,7 @@ export function RAGChatbot() {
     };
 
     const allApiKeys = getAllKeys();
-    const hasGeminiKey = !!allApiKeys['GEMINI_API_KEY'];
+    const hasGeminiKey = !!allApiKeys[API_KEY_NAMES.GOOGLE];
     const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
     const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
 

@@ -11,6 +11,7 @@ import { RateLimitIndicator } from '@repo/common/components';
 import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
 import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
@@ -82,7 +83,7 @@ export function ChatModeOptions({
             }
 
             // For free users, check if they have BYOK Gemini key
-            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+            const hasByokGeminiKey = !!apiKeys[API_KEY_NAMES.GOOGLE];
             if (hasByokGeminiKey) {
                 return false; // Free users can use BYOK
             }
@@ -153,7 +154,7 @@ export function ChatModeOptions({
                 }
 
                 // Special handling for Gemini models: VT+ users don't need BYOK
-                if (requiredApiKey === API_KEY_NAMES.GEMINI_API_KEY) {
+                if (requiredApiKey === API_KEY_NAMES.GOOGLE) {
                     // If user has VT+ access, bypass BYOK requirement for all Gemini models
                     if (isVtPlus) {
                         setChatMode(mode);

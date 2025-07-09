@@ -2,6 +2,7 @@
 
 import { useApiKeysStore } from '@repo/common/store';
 import { log } from '@repo/shared/logger';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import {
     Button,
     Card,
@@ -40,7 +41,7 @@ export function RagOnboarding({ isOpen, onComplete, onSkip }: RagOnboardingProps
         setIsSubmitting(true);
         try {
             if (geminiKey) {
-                setKey('GEMINI_API_KEY', geminiKey);
+                setKey(API_KEY_NAMES.GOOGLE, geminiKey);
             }
             if (openaiKey) {
                 setKey('OPENAI_API_KEY', openaiKey);

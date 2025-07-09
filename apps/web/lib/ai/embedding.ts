@@ -7,6 +7,7 @@ import {
     type EmbeddingModel,
 } from '@repo/shared/config/embedding-models';
 import { log } from '@repo/shared/logger';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { and, cosineDistance, desc, eq, gt, sql } from 'drizzle-orm';
 import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
@@ -48,7 +49,7 @@ async function generateEmbeddingWithProvider(
     const input = text.replaceAll('\\n', ' ');
 
     // Only support Gemini models for now
-    const geminiApiKey = apiKeys?.GEMINI_API_KEY;
+    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE];
     if (!geminiApiKey) {
         throw new Error(
             'Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys.'
@@ -89,14 +90,14 @@ export const generateEmbeddings = async (
             userModel,
             resolvedModel: embeddingModel,
             isGemini: isGeminiModel(embeddingModel),
-            hasGeminiKey: !!apiKeys?.GEMINI_API_KEY,
+            hasGeminiKey: !!apiKeys?.[API_KEY_NAMES.GOOGLE],
             availableKeys: Object.keys(apiKeys || {}),
         },
         '🔍 RAG Debug'
     );
 
     // For now, only support Gemini models - simplify logic
-    const geminiApiKey = apiKeys?.GEMINI_API_KEY;
+    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE];
     if (!geminiApiKey) {
         const availableKeys = Object.keys(apiKeys || {}).filter((key) => key.endsWith('_API_KEY'));
         throw new Error(`RAG Knowledge Chat requires a Google Gemini API key.
