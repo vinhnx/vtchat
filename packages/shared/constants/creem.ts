@@ -10,23 +10,23 @@ import { isProductionEnvironment } from '../utils/env';
  */
 export const CREEM_API_CONFIG = {
     baseUrl: isProductionEnvironment() ? 'https://api.creem.io' : 'https://test-api.creem.io',
-    
+
     getBaseUrl() {
         return this.baseUrl;
     },
-    
+
     getCustomerBillingEndpoint() {
         return `${this.baseUrl}/v1/customers/billing`;
     },
-    
+
     getApiKey() {
         return process.env.CREEM_API_KEY;
     },
-    
+
     getWebhookSecret() {
         return process.env.CREEM_WEBHOOK_SECRET;
     },
-    
+
     getProductId() {
         return process.env.CREEM_PRODUCT_ID;
     },

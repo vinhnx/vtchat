@@ -314,7 +314,7 @@ export function RAGChatbot() {
     }, [messages, isLoading]);
 
     // Filter to only show Gemini models for RAG
-    const geminiModels = models.filter(m => m.id.startsWith('gemini-'));
+    const geminiModels = models.filter((m) => m.id.startsWith('gemini-'));
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
@@ -472,11 +472,11 @@ export function RAGChatbot() {
                 <div className="border-t p-2 sm:p-4">
                     {/* Show message when no API keys */}
                     {!canChat && (
-                    <div className="mb-3 rounded-lg bg-amber-50 p-2 sm:p-3 text-xs sm:text-sm">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <span className="text-amber-700">
-                                        Please add your Gemini API key to use the Knowledge Assistant
-                                    </span>
+                        <div className="mb-3 rounded-lg bg-amber-50 p-2 sm:p-3 text-xs sm:text-sm">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <span className="text-amber-700">
+                                    Please add your Gemini API key to use the Knowledge Assistant
+                                </span>
                                 <Button
                                     className="text-xs w-full sm:w-auto"
                                     onClick={() => setShowApiKeyDialog(true)}

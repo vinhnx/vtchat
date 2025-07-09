@@ -3,9 +3,7 @@
 import { Footer, ShineText, UserTierBadge } from '@repo/common/components';
 import { useCreemSubscription } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import {
-    BUTTON_TEXT
-} from '@repo/shared/constants';
+import { BUTTON_TEXT } from '@repo/shared/constants';
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
