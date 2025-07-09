@@ -1,5 +1,6 @@
 'use client';
 
+import { log } from '@repo/shared/logger';
 import { useEffect } from 'react';
 import { scan } from 'react-scan';
 import { REACT_SCAN_CONFIG } from '../lib/config/react-scan';
@@ -53,13 +54,16 @@ export function ReactScan() {
                         );
 
                         if (slowRenders.length > 0 && process.env.NODE_ENV === 'development') {
-                            console.debug('[React Scan] Slow renders detected:', {
-                                component: fiber.type?.name || fiber.type || 'Unknown',
-                                slowRenders: slowRenders.map((r) => ({
-                                    time: r.time,
-                                    phase: r.phase,
-                                })),
-                            });
+                            log.debug(
+                                {
+                                    component: fiber.type?.name || fiber.type || 'Unknown',
+                                    slowRenders: slowRenders.map((r) => ({
+                                        time: r.time,
+                                        phase: r.phase,
+                                    })),
+                                },
+                                '[React Scan] Slow renders detected'
+                            );
                         }
                     }
                 },
@@ -75,10 +79,11 @@ export function ReactScan() {
                         outlines.length > 5 &&
                         process.env.NODE_ENV === 'development'
                     ) {
-                        console.debug(
-                            '[React Scan] Heavy render cycle detected:',
-                            outlines.length,
-                            'components'
+                        log.debug(
+                            {
+                                outlinesCount: outlines.length,
+                            },
+                            '[React Scan] Heavy render cycle detected'
                         );
                     }
                 },
@@ -89,16 +94,19 @@ export function ReactScan() {
             });
 
             if (process.env.NODE_ENV === 'development') {
-                console.log('[React Scan] Performance monitoring initialized', {
-                    environment: process.env.NODE_ENV,
-                    trackUnnecessaryRenders: REACT_SCAN_CONFIG.trackUnnecessaryRenders,
-                    logging: REACT_SCAN_CONFIG.log,
-                    deployment: REACT_SCAN_CONFIG.isDeployment,
-                });
+                log.info(
+                    {
+                        environment: process.env.NODE_ENV,
+                        trackUnnecessaryRenders: REACT_SCAN_CONFIG.trackUnnecessaryRenders,
+                        logging: REACT_SCAN_CONFIG.log,
+                        deployment: REACT_SCAN_CONFIG.isDeployment,
+                    },
+                    '[React Scan] Performance monitoring initialized'
+                );
             }
         } catch (error) {
             // Always log errors
-            console.error('[React Scan] Failed to initialize:', error);
+            log.error({ error }, '[React Scan] Failed to initialize');
         }
     }, []);
 

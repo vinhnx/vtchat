@@ -205,9 +205,9 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.GPT_4_1:
                         return isValidKey(apiKeys['OPENAI_API_KEY']);
                     case ChatMode.Deep:
-                        // Deep Research mode requires Gemini API key (uses Gemini 2.5 Pro)
-                        return isValidKey(apiKeys['GEMINI_API_KEY']);
                     case ChatMode.Pro:
+                        // Deep Research and Pro Search modes support BYOK for free users
+                        return isValidKey(apiKeys['GEMINI_API_KEY']);
                     case ChatMode.GEMINI_2_0_FLASH:
                     case ChatMode.GEMINI_2_5_PRO:
                     case ChatMode.GEMINI_2_0_FLASH_LITE:

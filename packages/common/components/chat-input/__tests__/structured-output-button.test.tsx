@@ -50,7 +50,7 @@ vi.mock('ai', () => ({
 }));
 
 vi.mock('../login-required-dialog', () => ({
-    LoginRequiredDialog: ({ isOpen, children }: any) => isOpen ? <div>{children}</div> : null,
+    LoginRequiredDialog: ({ isOpen, children }: any) => (isOpen ? <div>{children}</div> : null),
 }));
 
 describe('StructuredOutputButton', () => {
@@ -87,7 +87,9 @@ describe('StructuredOutputButton', () => {
         render(<StructuredOutputButton />);
 
         const button = screen.getByRole('button');
-        expect(button.getAttribute('title')).toBe('Upload document to extract structured data (PDF, TXT, MD)');
+        expect(button.getAttribute('title')).toBe(
+            'Upload document to extract structured data (PDF, TXT, MD)'
+        );
     });
 
     it('should show login dialog when not signed in', () => {

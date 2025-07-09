@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
 import {
     getModelFromChatMode,
     ModelEnum,
@@ -9,9 +8,11 @@ import {
     supportsWebSearch,
 } from '@repo/ai/models';
 import { RateLimitIndicator } from '@repo/common/components';
+import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
 import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
 import {
     Badge,
@@ -22,12 +23,12 @@ import {
 } from '@repo/ui';
 import { Brain, Globe, Wrench } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
-import { useLoginPrompt } from '../../hooks/useLoginPrompt';
-import { useSubscriptionAccess } from '@repo/common/hooks';
+import { useState } from 'react';
 import { LoginRequiredDialog } from '../../../login-required-dialog';
-import { BYOKSetupModal } from '../../modals/BYOKSetupModal';
+import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
 import { getIconByName } from '../../config/icons';
+import { useLoginPrompt } from '../../hooks/useLoginPrompt';
+import { BYOKSetupModal } from '../../modals/BYOKSetupModal';
 
 interface ChatModeOptionsProps {
     chatMode: ChatMode;
@@ -51,6 +52,7 @@ export function ChatModeOptions({
     const { push } = useRouter();
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
+    const isVtPlus = useVtPlusAccess();
 
     // Helper function to check if a mode is gated (replaces useChatModeAccess hook logic)
     const isModeGated = (mode: ChatMode) => {
@@ -68,20 +70,25 @@ export function ChatModeOptions({
 
         // CRITICAL: Special handling for Deep Research and Pro Search
         if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
-            // Check BYOK bypass first for these specific modes
-            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
-            if (hasByokGeminiKey) {
-                return false; // Not gated if user has BYOK Gemini key
-            }
-
-            // For Deep Research and Pro Search, user MUST have VT+ subscription
-            const hasVtPlusAccess = hasAccess({ plan: 'VT_PLUS' as any });
+            // Check if user has VT+ subscription first
             const hasFeatureAccess =
                 mode === ChatMode.Deep
-                    ? hasAccess({ feature: 'DEEP_RESEARCH' as any })
-                    : hasAccess({ feature: 'PRO_SEARCH' as any });
+                    ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                    : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
-            return !(hasVtPlusAccess && hasFeatureAccess);
+            // If user has VT+ and feature access, they can use it without BYOK
+            if (isVtPlus && hasFeatureAccess) {
+                return false;
+            }
+
+            // For free users, check if they have BYOK Gemini key
+            const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
+            if (hasByokGeminiKey) {
+                return false; // Free users can use BYOK
+            }
+
+            // No VT+ subscription and no BYOK key - show gated
+            return true;
         }
 
         // For other modes, use regular logic
@@ -89,12 +96,12 @@ export function ChatModeOptions({
 
         if (config.requiredFeature) {
             hasRequiredAccess = hasAccess({
-                feature: config.requiredFeature as any,
+                feature: config.requiredFeature,
             });
         }
 
         if (config.requiredPlan && hasRequiredAccess) {
-            hasRequiredAccess = hasAccess({ plan: config.requiredPlan as any });
+            hasRequiredAccess = hasAccess({ plan: config.requiredPlan });
         }
 
         return !hasRequiredAccess;
@@ -131,6 +138,29 @@ export function ChatModeOptions({
             const hasRequiredApiKey = !!apiKeys[requiredApiKey];
 
             if (!hasRequiredApiKey) {
+                // Special handling for Deep Research and Pro Search: VT+ users don't need BYOK
+                if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
+                    const hasFeatureAccess =
+                        mode === ChatMode.Deep
+                            ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                            : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+
+                    // If user has VT+ access, bypass BYOK requirement
+                    if (isVtPlus && hasFeatureAccess) {
+                        setChatMode(mode);
+                        return;
+                    }
+                }
+
+                // Special handling for Gemini models: VT+ users don't need BYOK
+                if (requiredApiKey === API_KEY_NAMES.GEMINI_API_KEY) {
+                    // If user has VT+ access, bypass BYOK requirement for all Gemini models
+                    if (isVtPlus) {
+                        setChatMode(mode);
+                        return;
+                    }
+                }
+
                 // Store the pending mode selection and open BYOK modal
                 setPendingMode({
                     mode,

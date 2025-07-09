@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
 import { useChatStore } from '@repo/common/store';
 import {
     Button,
@@ -14,9 +13,10 @@ import {
 } from '@repo/ui';
 import { ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useChatModeAccess } from '../../hooks/useChatModeAccess';
+import React, { useState } from 'react';
 import { chatOptions, modelOptions } from '../../chat-config';
 import { getIconByName } from '../../config/icons';
+import { useChatModeAccess } from '../../hooks/useChatModeAccess';
 import { ChatModeOptions } from './ChatModeOptions';
 
 export function ChatModeButton() {

@@ -13,6 +13,20 @@ import { checkVTPlusAccess } from '../../subscription/access-control';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+// Model provider prefixes
+const MODEL_PROVIDER_PREFIX = {
+    OPENAI: 'gpt-',
+    ANTHROPIC: 'claude-',
+    GOOGLE: 'gemini-',
+} as const;
+
+// API key constants
+const API_KEY_NAMES = {
+    OPENAI: 'OPENAI_API_KEY',
+    ANTHROPIC: 'ANTHROPIC_API_KEY',
+    GOOGLE: 'GEMINI_API_KEY',
+} as const;
+
 export async function POST(req: Request) {
     try {
         // Check authentication
@@ -31,20 +45,7 @@ export async function POST(req: Request) {
         const headers = await import('next/headers').then((m) => m.headers());
         const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
-        if (!vtPlusCheck.hasAccess) {
-            return new Response(
-                JSON.stringify({
-                    error: 'VT+ subscription required',
-                    message:
-                        'Personal AI Assistant with Memory is a VT+ exclusive feature. Please upgrade to access this functionality.',
-                    code: 'VT_PLUS_REQUIRED',
-                }),
-                {
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-        }
+        const hasVTPlusAccess = vtPlusCheck.hasAccess;
 
         const {
             messages,
@@ -54,12 +55,17 @@ export async function POST(req: Request) {
             profile,
         } = await req.json();
 
-        // Validate API keys are provided
-        if (!apiKeys || typeof apiKeys !== 'object' || apiKeys === null) {
+        // For free users, require API keys. For VT+ users, API keys are optional (they can use BYOK or not)
+        if (!hasVTPlusAccess && (!apiKeys || typeof apiKeys !== 'object' || apiKeys === null)) {
             return new Response(
-                JSON.stringify({ error: 'API keys are required for RAG functionality' }),
+                JSON.stringify({
+                    error: 'VT+ subscription or API keys required',
+                    message:
+                        'Personal AI Assistant with Memory requires VT+ subscription or your own API keys.',
+                    code: 'VT_PLUS_OR_BYOK_REQUIRED',
+                }),
                 {
-                    status: 400,
+                    status: 403,
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
@@ -67,11 +73,16 @@ export async function POST(req: Request) {
 
         // Configure model based on user selection
         let model;
-        if (ragChatModel.startsWith('gpt-')) {
-            const openaiApiKey = apiKeys['OPENAI_API_KEY'];
+        if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.OPENAI)) {
+            const openaiApiKey = apiKeys?.[API_KEY_NAMES.OPENAI] || process.env.OPENAI_API_KEY;
             if (!openaiApiKey) {
                 return new Response(
-                    JSON.stringify({ error: 'OpenAI API key is required for GPT models' }),
+                    JSON.stringify({
+                        error: 'OpenAI API key is required for GPT models',
+                        message: hasVTPlusAccess
+                            ? 'OpenAI API key is required for GPT models'
+                            : 'OpenAI API key is required for GPT models. Please provide your API key or upgrade to VT+.',
+                    }),
                     {
                         status: 400,
                         headers: { 'Content-Type': 'application/json' },
@@ -80,11 +91,17 @@ export async function POST(req: Request) {
             }
             const openaiProvider = createOpenAI({ apiKey: openaiApiKey });
             model = openaiProvider(ragChatModel);
-        } else if (ragChatModel.startsWith('claude-')) {
-            const anthropicApiKey = apiKeys['ANTHROPIC_API_KEY'];
+        } else if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.ANTHROPIC)) {
+            const anthropicApiKey =
+                apiKeys?.[API_KEY_NAMES.ANTHROPIC] || process.env.ANTHROPIC_API_KEY;
             if (!anthropicApiKey) {
                 return new Response(
-                    JSON.stringify({ error: 'Anthropic API key is required for Claude models' }),
+                    JSON.stringify({
+                        error: 'Anthropic API key is required for Claude models',
+                        message: hasVTPlusAccess
+                            ? 'Anthropic API key is required for Claude models'
+                            : 'Anthropic API key is required for Claude models. Please provide your API key or upgrade to VT+.',
+                    }),
                     {
                         status: 400,
                         headers: { 'Content-Type': 'application/json' },
@@ -98,11 +115,16 @@ export async function POST(req: Request) {
                 },
             });
             model = anthropicProvider(ragChatModel);
-        } else if (ragChatModel.startsWith('gemini-')) {
-            const geminiApiKey = apiKeys['GEMINI_API_KEY'];
+        } else if (ragChatModel.startsWith(MODEL_PROVIDER_PREFIX.GOOGLE)) {
+            const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
             if (!geminiApiKey) {
                 return new Response(
-                    JSON.stringify({ error: 'Gemini API key is required for Gemini models' }),
+                    JSON.stringify({
+                        error: 'Gemini API key is required for Gemini models',
+                        message: hasVTPlusAccess
+                            ? 'Gemini API key is required for Gemini models'
+                            : 'Gemini API key is required for Gemini models. Please provide your API key or upgrade to VT+.',
+                    }),
                     {
                         status: 400,
                         headers: { 'Content-Type': 'application/json' },
@@ -164,7 +186,7 @@ export async function POST(req: Request) {
                             .describe('the content or resource to add to the knowledge base'),
                     }),
                     execute: async ({ content }) =>
-                        createResource({ content }, apiKeys, embeddingModel),
+                        createResource({ content }, apiKeys || {}, embeddingModel),
                 }),
                 getInformation: tool({
                     description:
@@ -175,7 +197,7 @@ export async function POST(req: Request) {
                     execute: async ({ question }) =>
                         findRelevantContent(
                             question,
-                            apiKeys,
+                            apiKeys || {},
                             embeddingModel,
                             session.user.id // CRITICAL: Pass user ID for data isolation
                         ),

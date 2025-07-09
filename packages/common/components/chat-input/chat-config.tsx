@@ -14,7 +14,7 @@ export const chatOptions = [
     },
     {
         label: 'Pro Search',
-        description: 'Enhanced web search with Gemini grounding',
+        description: 'Enhanced web search with advanced AI',
         value: ChatMode.Pro,
         iconName: 'Star',
     },

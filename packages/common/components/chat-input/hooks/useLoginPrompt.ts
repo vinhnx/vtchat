@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { useState } from 'react';
 
 export const useLoginPrompt = () => {
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);

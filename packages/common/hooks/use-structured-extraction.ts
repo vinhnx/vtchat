@@ -315,9 +315,10 @@ export const useStructuredExtraction = () => {
             }
 
             // Only support PDFs for now
-            const isValidPDF = documentAttachment.file?.type === 'application/pdf' || 
-                              documentAttachment.mimeType === 'application/pdf';
-            
+            const isValidPDF =
+                documentAttachment.file?.type === 'application/pdf' ||
+                documentAttachment.mimeType === 'application/pdf';
+
             if (!isValidPDF) {
                 toast({
                     title: 'Unsupported Format',
@@ -336,7 +337,7 @@ export const useStructuredExtraction = () => {
 
                 // Extract text from PDF
                 let documentText: string;
-                
+
                 if (documentAttachment.file) {
                     // Use the file directly if available
                     documentText = await extractTextFromPDF(documentAttachment.file);
@@ -348,9 +349,13 @@ export const useStructuredExtraction = () => {
                     for (let i = 0; i < binaryString.length; i++) {
                         bytes[i] = binaryString.charCodeAt(i);
                     }
-                    const reconstructedFile = new File([bytes], documentAttachment.fileName || 'document.pdf', {
-                        type: 'application/pdf'
-                    });
+                    const reconstructedFile = new File(
+                        [bytes],
+                        documentAttachment.fileName || 'document.pdf',
+                        {
+                            type: 'application/pdf',
+                        }
+                    );
                     documentText = await extractTextFromPDF(reconstructedFile);
                 } else {
                     throw new Error('No document data available');
@@ -438,6 +443,8 @@ ${documentText}`,
         createCustomSchema,
         isGeminiModel: isGeminiModel(chatMode),
         hasDocument: !!(documentAttachment?.file || documentAttachment?.base64),
-        isPDF: documentAttachment?.file?.type === 'application/pdf' || documentAttachment?.mimeType === 'application/pdf',
+        isPDF:
+            documentAttachment?.file?.type === 'application/pdf' ||
+            documentAttachment?.mimeType === 'application/pdf',
     };
 };

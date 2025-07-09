@@ -1,5 +1,5 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
-import { cosine, clearEmbeddingCache, getEmbeddingCacheStats } from '../utils/embeddings';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { clearEmbeddingCache, cosine, getEmbeddingCacheStats } from '../utils/embeddings';
 
 describe('Embeddings Utils', () => {
     beforeEach(() => {

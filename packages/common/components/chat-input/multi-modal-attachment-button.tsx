@@ -1,13 +1,12 @@
 'use client';
 
-import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
 import { supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { Attachment } from '@repo/shared/types';
 import { Button, Tooltip, useToast } from '@repo/ui';
-import { Paperclip } from 'lucide-react';
+import { Image } from 'lucide-react';
 import { type FC, useCallback, useRef, useState } from 'react';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
@@ -15,7 +14,7 @@ import { LoginRequiredDialog } from '../login-required-dialog';
 const PaperclipIcon: React.ComponentType<{
     size?: number;
     className?: string;
-}> = ({ size, className }) => <Paperclip className={className} size={size} />;
+}> = ({ size, className }) => <Image className={className} size={size} />;
 
 interface MultiModalAttachmentButtonProps {
     onAttachmentsChange: (attachments: Attachment[]) => void;
@@ -33,7 +32,6 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     const isSignedIn = !!session;
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const { canAccess } = useSubscriptionAccess();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const hasAttachments = attachments.length > 0;
@@ -125,13 +123,13 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
             const fileNames = attachments.map((a) => a.name).join(', ');
             return `${count} file${count > 1 ? 's' : ''} attached: ${fileNames}`;
         }
-        return 'Attach images and PDFs';
+        return 'Attach images';
     };
 
     const attachmentButton = (
         <>
             <input
-                accept="image/*,.pdf"
+                accept="image/*"
                 className="hidden"
                 disabled={disabled || uploading}
                 multiple
@@ -149,7 +147,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
                     size="icon-sm"
                     variant={hasAttachments ? 'default' : 'ghost'}
                 >
-                    <Paperclip size={16} strokeWidth={2} />
+                    <Image size={16} strokeWidth={2} />
                 </Button>
             </Tooltip>
 

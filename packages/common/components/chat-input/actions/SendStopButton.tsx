@@ -3,8 +3,8 @@
 import { Button } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, Square } from 'lucide-react';
-import { useIsChatPage } from '../hooks/useIsChatPage';
 import { ICON_SIZES } from '../config/constants';
+import { useIsChatPage } from '../hooks/useIsChatPage';
 
 interface SendStopButtonProps {
     isGenerating: boolean;

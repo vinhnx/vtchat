@@ -169,12 +169,36 @@ export async function POST(request: NextRequest) {
         // Check VT+ access for gated features
         const modeConfig = ChatModeConfig[data.mode];
         if (modeConfig?.requiredFeature || modeConfig?.requiredPlan) {
-            // BYOK bypass: If user has Gemini API key, allow Deep Research and Pro Search without subscription
-            const geminiApiKey = data.apiKeys?.['GEMINI_API_KEY'];
-            const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
+            // For Deep Research and Pro Search: VT+ users bypass BYOK, free users need BYOK
             const isByokEligibleMode = data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
 
-            if (!(isByokEligibleMode && hasByokGeminiKey)) {
+            if (isByokEligibleMode) {
+                // If user has VT+ access, allow without BYOK
+                if (accessResult.hasAccess) {
+                    // VT+ user, no BYOK needed
+                } else {
+                    // Free user, check for BYOK
+                    const geminiApiKey = data.apiKeys?.['GEMINI_API_KEY'];
+                    const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
+
+                    if (!hasByokGeminiKey) {
+                        return new Response(
+                            JSON.stringify({
+                                error: 'VT+ subscription or API key required',
+                                message:
+                                    'This feature requires VT+ subscription or your own Gemini API key.',
+                                requiredPlan: modeConfig.requiredPlan,
+                                requiredFeature: modeConfig.requiredFeature,
+                            }),
+                            {
+                                status: 403,
+                                headers: { 'Content-Type': 'application/json' },
+                            }
+                        );
+                    }
+                }
+            } else {
+                // For other modes, use regular subscription check
                 if (!accessResult.hasAccess) {
                     return new Response(
                         JSON.stringify({

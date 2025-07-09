@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import { ChatModeOptions } from '@repo/common/components';
 import { useAgentStream, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
@@ -14,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from '@repo/ui';
 import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
-import { forwardRef, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 
 type MessageActionsProps = {
     threadItem: ThreadItem;

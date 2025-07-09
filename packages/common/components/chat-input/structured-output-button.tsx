@@ -3,7 +3,6 @@
 import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
-import { useApiKeysStore } from '../../store/api-keys.store';
 import { isGeminiModel } from '@repo/common/utils';
 import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -14,6 +13,7 @@ import { generateObject } from 'ai';
 import { FileUp, ScanText, Sparkles } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { z } from 'zod';
+import { useApiKeysStore } from '../../store/api-keys.store';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
 const StructuredOutputButton = () => {
@@ -33,12 +33,20 @@ const StructuredOutputButton = () => {
     const hasProcessedData = !!structuredData;
 
     // Get the document type from file content
-    const getDocumentType = (content: string, fileName: string): { type: string; schema: z.ZodSchema } => {
+    const getDocumentType = (
+        content: string,
+        fileName: string
+    ): { type: string; schema: z.ZodSchema } => {
         const lowercaseContent = content.toLowerCase();
         const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
         // Email detection
-        if (lowercaseContent.includes('@') && (lowercaseContent.includes('subject:') || lowercaseContent.includes('from:') || lowercaseContent.includes('to:'))) {
+        if (
+            lowercaseContent.includes('@') &&
+            (lowercaseContent.includes('subject:') ||
+                lowercaseContent.includes('from:') ||
+                lowercaseContent.includes('to:'))
+        ) {
             return {
                 type: 'email',
                 schema: z.object({
@@ -48,12 +56,16 @@ const StructuredOutputButton = () => {
                     date: z.string().optional(),
                     body: z.string(),
                     attachments: z.array(z.string()).optional(),
-                })
+                }),
             };
         }
 
         // Invoice detection
-        if (lowercaseContent.includes('invoice') || lowercaseContent.includes('bill') || lowercaseContent.includes('amount due')) {
+        if (
+            lowercaseContent.includes('invoice') ||
+            lowercaseContent.includes('bill') ||
+            lowercaseContent.includes('amount due')
+        ) {
             return {
                 type: 'invoice',
                 schema: z.object({
@@ -69,24 +81,30 @@ const StructuredOutputButton = () => {
                         name: z.string(),
                         address: z.string().optional(),
                     }),
-                    items: z.array(z.object({
-                        description: z.string(),
-                        quantity: z.number().optional(),
-                        unitPrice: z.number().optional(),
-                        total: z.number().optional(),
-                    })),
+                    items: z.array(
+                        z.object({
+                            description: z.string(),
+                            quantity: z.number().optional(),
+                            unitPrice: z.number().optional(),
+                            total: z.number().optional(),
+                        })
+                    ),
                     totals: z.object({
                         subtotal: z.number().optional(),
                         tax: z.number().optional(),
                         total: z.number(),
                         currency: z.string().optional(),
                     }),
-                })
+                }),
             };
         }
 
         // Resume detection
-        if (lowercaseContent.includes('experience') && lowercaseContent.includes('education') && lowercaseContent.includes('skills')) {
+        if (
+            lowercaseContent.includes('experience') &&
+            lowercaseContent.includes('education') &&
+            lowercaseContent.includes('skills')
+        ) {
             return {
                 type: 'resume',
                 schema: z.object({
@@ -99,44 +117,56 @@ const StructuredOutputButton = () => {
                         website: z.string().optional(),
                     }),
                     summary: z.string().optional(),
-                    experience: z.array(z.object({
-                        company: z.string(),
-                        position: z.string(),
-                        startDate: z.string(),
-                        endDate: z.string().optional(),
-                        description: z.string().optional(),
-                    })),
-                    education: z.array(z.object({
-                        institution: z.string(),
-                        degree: z.string(),
-                        field: z.string().optional(),
-                        graduationDate: z.string().optional(),
-                    })),
+                    experience: z.array(
+                        z.object({
+                            company: z.string(),
+                            position: z.string(),
+                            startDate: z.string(),
+                            endDate: z.string().optional(),
+                            description: z.string().optional(),
+                        })
+                    ),
+                    education: z.array(
+                        z.object({
+                            institution: z.string(),
+                            degree: z.string(),
+                            field: z.string().optional(),
+                            graduationDate: z.string().optional(),
+                        })
+                    ),
                     skills: z.array(z.string()),
-                })
+                }),
             };
         }
 
         // Contract detection
-        if (lowercaseContent.includes('agreement') || lowercaseContent.includes('contract') || lowercaseContent.includes('terms and conditions')) {
+        if (
+            lowercaseContent.includes('agreement') ||
+            lowercaseContent.includes('contract') ||
+            lowercaseContent.includes('terms and conditions')
+        ) {
             return {
                 type: 'contract',
                 schema: z.object({
                     contractType: z.string(),
-                    parties: z.array(z.object({
-                        name: z.string(),
-                        role: z.string(),
-                        address: z.string().optional(),
-                    })),
+                    parties: z.array(
+                        z.object({
+                            name: z.string(),
+                            role: z.string(),
+                            address: z.string().optional(),
+                        })
+                    ),
                     effectiveDate: z.string().optional(),
                     expirationDate: z.string().optional(),
                     keyTerms: z.array(z.string()),
-                    financialTerms: z.object({
-                        amount: z.number().optional(),
-                        currency: z.string().optional(),
-                        paymentSchedule: z.string().optional(),
-                    }).optional(),
-                })
+                    financialTerms: z
+                        .object({
+                            amount: z.number().optional(),
+                            currency: z.string().optional(),
+                            paymentSchedule: z.string().optional(),
+                        })
+                        .optional(),
+                }),
             };
         }
 
@@ -146,23 +176,35 @@ const StructuredOutputButton = () => {
                 type: 'markdown-document',
                 schema: z.object({
                     title: z.string().optional(),
-                    headings: z.array(z.object({
-                        level: z.number(),
-                        text: z.string(),
-                    })),
-                    sections: z.array(z.object({
-                        heading: z.string(),
-                        content: z.string(),
-                    })),
-                    links: z.array(z.object({
-                        text: z.string(),
-                        url: z.string(),
-                    })).optional(),
-                    codeBlocks: z.array(z.object({
-                        language: z.string().optional(),
-                        code: z.string(),
-                    })).optional(),
-                })
+                    headings: z.array(
+                        z.object({
+                            level: z.number(),
+                            text: z.string(),
+                        })
+                    ),
+                    sections: z.array(
+                        z.object({
+                            heading: z.string(),
+                            content: z.string(),
+                        })
+                    ),
+                    links: z
+                        .array(
+                            z.object({
+                                text: z.string(),
+                                url: z.string(),
+                            })
+                        )
+                        .optional(),
+                    codeBlocks: z
+                        .array(
+                            z.object({
+                                language: z.string().optional(),
+                                code: z.string(),
+                            })
+                        )
+                        .optional(),
+                }),
             };
         }
 
@@ -183,23 +225,23 @@ const StructuredOutputButton = () => {
                     dates: z.array(z.string()).optional(),
                     amounts: z.array(z.string()).optional(),
                 }),
-            })
+            }),
         };
     };
 
     // Extract text from different file types
     const extractTextFromFile = async (file: File): Promise<string> => {
         const fileType = file.type;
-        
+
         if (fileType === 'application/pdf') {
             // Use PDF.js for PDF extraction (similar to current implementation)
             const pdfjsLib = await import('pdfjs-dist');
             pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
-            
+
             const arrayBuffer = await file.arrayBuffer();
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
             const pdf = await loadingTask.promise;
-            
+
             let fullText = '';
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
@@ -207,7 +249,7 @@ const StructuredOutputButton = () => {
                 const textItems = textContent.items.map((item: any) => item.str);
                 fullText += textItems.join(' ') + '\n';
             }
-            
+
             return fullText.trim();
         } else if (fileType === 'text/plain' || fileType === 'text/markdown') {
             // For text and markdown files, just read as text
@@ -220,7 +262,7 @@ const StructuredOutputButton = () => {
     // Process uploaded file and extract structured data
     const processFile = async (file: File) => {
         setIsProcessing(true);
-        
+
         try {
             // Show initial toast
             toast({
@@ -230,17 +272,17 @@ const StructuredOutputButton = () => {
 
             // Extract text content
             const textContent = await extractTextFromFile(file);
-            
+
             if (!textContent.trim()) {
                 throw new Error('No text content found in the document');
             }
 
             // Get document type and schema
             const { type, schema } = getDocumentType(textContent, file.name);
-            
+
             // Get BYOK keys for API authentication
             const byokKeys = getAllKeys;
-            
+
             // Get the correct Google provider instance with BYOK keys
             const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);
 
@@ -279,7 +321,9 @@ ${textContent}`,
 
             // Automatically prompt user to use the extracted data
             const extractedDataString = JSON.stringify(object, null, 2);
-            const chatInput = document.querySelector('[data-testid="chat-input"]') as HTMLTextAreaElement;
+            const chatInput = document.querySelector(
+                '[data-testid="chat-input"]'
+            ) as HTMLTextAreaElement;
             if (chatInput) {
                 chatInput.value = `I've extracted structured data from ${file.name}. Here's the extracted ${type} data:
 
@@ -288,17 +332,17 @@ ${extractedDataString}
 \`\`\`
 
 Please help me analyze this data and provide insights or answer any questions about it.`;
-                
+
                 // Trigger input change event to update the chat store
                 chatInput.dispatchEvent(new Event('input', { bubbles: true }));
                 chatInput.focus();
             }
-
         } catch (error) {
             log.error('Structured extraction failed:', { data: error });
             toast({
                 title: 'Extraction Failed',
-                description: error instanceof Error ? error.message : 'Failed to extract structured data',
+                description:
+                    error instanceof Error ? error.message : 'Failed to extract structured data',
                 variant: 'destructive',
             });
         } finally {
@@ -333,7 +377,7 @@ Please help me analyze this data and provide insights or answer any questions ab
         }
 
         await processFile(file);
-        
+
         // Reset file input
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -350,7 +394,8 @@ Please help me analyze this data and provide insights or answer any questions ab
         if (!hasStructuredOutputAccess) {
             toast({
                 title: 'VT+ Required',
-                description: 'Structured output extraction is a VT+ feature. Please upgrade to access this functionality.',
+                description:
+                    'Structured output extraction is a VT+ feature. Please upgrade to access this functionality.',
                 variant: 'destructive',
             });
             return;
@@ -359,7 +404,8 @@ Please help me analyze this data and provide insights or answer any questions ab
         if (!isGeminiModel(chatMode)) {
             toast({
                 title: 'Gemini Model Required',
-                description: 'Structured output extraction requires a Gemini model. Please switch to a Gemini model.',
+                description:
+                    'Structured output extraction requires a Gemini model. Please switch to a Gemini model.',
                 variant: 'destructive',
             });
             return;

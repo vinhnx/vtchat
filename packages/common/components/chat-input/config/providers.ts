@@ -1,4 +1,4 @@
-import { type ApiKeys } from '@repo/common/store';
+import type { ApiKeys } from '@repo/common/store';
 
 export const PROVIDERS: Record<
     keyof ApiKeys,

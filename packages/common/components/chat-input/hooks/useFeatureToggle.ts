@@ -1,8 +1,8 @@
 'use client';
 
 import { useChatStore } from '@repo/common/store';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { log } from '@repo/shared/logger';
+import type { FeatureSlug } from '@repo/shared/types/subscription';
 import { useLoginPrompt } from './useLoginPrompt';
 import { useSubscriptionGate } from './useSubscriptionGate';
 

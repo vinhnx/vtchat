@@ -4,6 +4,7 @@
  * Single source of truth for determining the application's base URL
  * across all environments (development, CI, production).
  */
+import { log } from '../lib/logger';
 
 interface BaseURLOptions {
     /**
@@ -46,7 +47,11 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
                 url = value;
                 // Warn about deprecated usage
                 if (typeof console !== 'undefined' && process.env.NODE_ENV !== 'test') {
-                    console.warn(
+                    log.warn(
+                        {
+                            deprecatedVar: varName,
+                            replacement: 'NEXT_PUBLIC_APP_URL',
+                        },
                         `[config] ${varName} is deprecated; please use NEXT_PUBLIC_APP_URL instead`
                     );
                 }

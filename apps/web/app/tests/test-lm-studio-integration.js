@@ -11,8 +11,8 @@
  *    Or with bun: `bun apps/web/app/tests/test-lm-studio-integration.js`
  */
 
-import { getLanguageModel } from '@repo/ai/providers';
 import { ModelEnum } from '@repo/ai/models';
+import { getLanguageModel } from '@repo/ai/providers';
 import { generateText } from 'ai';
 
 async function testLMStudioIntegration() {

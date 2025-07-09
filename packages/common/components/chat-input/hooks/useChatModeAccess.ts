@@ -1,7 +1,7 @@
 'use client';
 
-import { useApiKeysStore } from '@repo/common/store';
 import { useSubscriptionAccess } from '@repo/common/hooks';
+import { useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 
@@ -32,31 +32,34 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
 
     // CRITICAL: Special handling for Deep Research and Pro Search
     if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
-        // Check BYOK bypass first for these specific modes
-        const hasByokGeminiKey = !!apiKeys['GEMINI_API_KEY'];
-        if (hasByokGeminiKey) {
-            return { isGated: false }; // Not gated if user has BYOK Gemini key
-        }
-
-        // For Deep Research and Pro Search, user MUST have VT+ subscription
+        // Check if user has VT+ subscription first
         const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
         const hasFeatureAccess =
             mode === ChatMode.Deep
                 ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                 : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
-        if (!(hasVtPlusAccess && hasFeatureAccess)) {
-            return {
-                isGated: true,
-                reason: {
-                    requiredFeature:
-                        mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
-                    requiredPlan: PlanSlug.VT_PLUS,
-                },
-            };
+        // If user has VT+ and feature access, they can use it without BYOK
+        if (hasVtPlusAccess && hasFeatureAccess) {
+            return { isGated: false };
         }
 
-        return { isGated: false };
+        // For free users, check if they have BYOK Gemini key
+        const hasByokGeminiKey = !!apiKeys[API_KEY_NAMES.GEMINI_API_KEY];
+        if (hasByokGeminiKey) {
+            return { isGated: false }; // Free users can use BYOK
+        }
+
+        // No VT+ subscription and no BYOK key - show gated
+        return {
+            isGated: true,
+            reason: {
+                requiredFeature:
+                    mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
+                requiredPlan: PlanSlug.VT_PLUS,
+                missingApiKey: !hasByokGeminiKey,
+            },
+        };
     }
 
     // For other modes, use regular logic

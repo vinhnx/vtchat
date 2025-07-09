@@ -1,10 +1,10 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import {
-    TOOL_REGISTRY,
-    getToolById,
-    getAvailableTools,
-    hasToolAccess,
     getAllToolDescriptions,
+    getAvailableTools,
+    getToolById,
+    hasToolAccess,
+    TOOL_REGISTRY,
 } from '../tool-registry';
 
 describe('Tool Registry', () => {

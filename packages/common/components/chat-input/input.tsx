@@ -23,7 +23,7 @@ import { useChatStore } from '../../store';
 import { ExamplePrompts } from '../example-prompts';
 import { LMStudioSetupBanner } from '../lm-studio-setup-banner';
 import { LoginRequiredDialog } from '../login-required-dialog';
-
+import { PersonalizedGreeting } from '../personalized-greeting';
 import { StructuredDataDisplay } from '../structured-data-display';
 import { UserTierBadge } from '../user-tier-badge';
 import {
@@ -41,7 +41,6 @@ import { ImageUpload } from './image-upload';
 import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
 import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
 import { StructuredOutputButton } from './structured-output-button';
-import { PersonalizedGreeting } from '../personalized-greeting';
 
 export const ChatInput = ({
     showGreeting = true,

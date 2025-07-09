@@ -1,10 +1,12 @@
 'use client';
 
 import { models } from '@repo/ai/models';
+import { useSubscriptionAccess } from '@repo/common/hooks';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import {
     Avatar,
     Badge,
@@ -39,6 +41,8 @@ interface KnowledgeItem {
 export function RAGChatbot() {
     const { data: session } = useSession();
     const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
+    const { hasAccess } = useSubscriptionAccess();
+    const hasVTPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
     const embeddingModel = useAppStore((state) => state.embeddingModel);
     const ragChatModel = useAppStore((state) => state.ragChatModel);
     const profile = useAppStore((state) => state.profile);
@@ -140,18 +144,22 @@ export function RAGChatbot() {
     const hasOpenAIKey = !!allApiKeys['OPENAI_API_KEY'];
     const hasRequiredKeys = hasGeminiKey || hasOpenAIKey;
 
+    // For VT+ users, API keys are optional (they can use BYOK or not)
+    // For free users, API keys are required
+    const needsApiKeys = !hasVTPlusAccess && !hasRequiredKeys;
+
     // Check for required API keys on component mount and when keys change
     useEffect(() => {
         if (!hasCheckedApiKeys) {
             setHasCheckedApiKeys(true);
-            if (!hasRequiredKeys) {
+            if (needsApiKeys) {
                 setShowApiKeyDialog(true);
             }
-        } else if (!hasRequiredKeys && !showApiKeyDialog) {
-            // Only show dialog if keys were removed and dialog isn't already open
+        } else if (needsApiKeys && !showApiKeyDialog) {
+            // Only show dialog if keys are needed and dialog isn't already open
             setShowApiKeyDialog(true);
         }
-    }, [hasRequiredKeys, hasCheckedApiKeys, showApiKeyDialog]);
+    }, [needsApiKeys, hasCheckedApiKeys, showApiKeyDialog]);
 
     // Ref for auto-scroll functionality
     const messagesEndRef = useRef<HTMLDivElement>(null);

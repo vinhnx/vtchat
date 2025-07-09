@@ -62,7 +62,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
-        return [...threads].sort((a, b) => getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])));
+        return [...threads].sort((a, b) =>
+            getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy]))
+        );
     };
 
     const { data: session } = useSession();

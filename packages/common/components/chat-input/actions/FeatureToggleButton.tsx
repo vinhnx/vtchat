@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
 import { GatedFeatureAlert } from '@repo/common/components';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+import type { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, cn } from '@repo/ui';
+import React from 'react';
 import { LoginRequiredDialog } from '../../login-required-dialog';
 import { COLOUR_CLASSES } from '../config/constants';
 import { useFeatureToggle } from '../hooks/useFeatureToggle';
