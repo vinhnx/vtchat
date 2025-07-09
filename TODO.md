@@ -203,6 +203,10 @@ fix structure output tool, it should be able to detect if a document has been up
 check structure output. show "Upload a Document First" dialog even though the user has uploaded a document.
 --
 
+replace attach images and pdf button to use image lucid icons
+
+--
+
 rethink Plus tier offering -> maybe remove BYOK.
 
 --

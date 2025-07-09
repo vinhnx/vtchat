@@ -6,6 +6,7 @@ import { useSession } from '@repo/shared/lib/auth-client';
 
 import { log } from '@repo/shared/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
+import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
 import {
     Button,
     cn,
@@ -24,7 +25,6 @@ import {
     Kbd,
     useToast,
 } from '@repo/ui';
-import { isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
@@ -71,13 +71,13 @@ export const CommandSearch = () => {
 
     threads.forEach((thread) => {
         const createdAt = new Date(thread.createdAt);
-        if (isToday(createdAt)) {
+        if (getIsToday(createdAt)) {
             groupedThreads.today.push(thread);
-        } else if (isYesterday(createdAt)) {
+        } else if (getIsYesterday(createdAt)) {
             groupedThreads.yesterday.push(thread);
-        } else if (isAfter(createdAt, subDays(new Date(), 7))) {
+        } else if (getIsAfter(createdAt, getSubDays(new Date(), 7))) {
             groupedThreads.last7Days.push(thread);
-        } else if (isAfter(createdAt, subDays(new Date(), 30))) {
+        } else if (getIsAfter(createdAt, getSubDays(new Date(), 30))) {
             groupedThreads.last30Days.push(thread);
         } else {
             groupedThreads.previousMonths.push(thread);

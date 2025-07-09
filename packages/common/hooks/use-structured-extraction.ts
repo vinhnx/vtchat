@@ -305,7 +305,7 @@ export const useStructuredExtraction = () => {
                 return;
             }
 
-            if (!documentAttachment?.file) {
+            if (!documentAttachment?.file && !documentAttachment?.base64) {
                 toast({
                     title: 'No Document',
                     description: 'Please upload a document first.',
@@ -315,7 +315,10 @@ export const useStructuredExtraction = () => {
             }
 
             // Only support PDFs for now
-            if (documentAttachment.file.type !== 'application/pdf') {
+            const isValidPDF = documentAttachment.file?.type === 'application/pdf' || 
+                              documentAttachment.mimeType === 'application/pdf';
+            
+            if (!isValidPDF) {
                 toast({
                     title: 'Unsupported Format',
                     description: 'Structured extraction currently only supports PDF files.',
@@ -328,11 +331,30 @@ export const useStructuredExtraction = () => {
                 // Show loading toast
                 toast({
                     title: 'Extracting Data',
-                    description: `Analyzing ${documentAttachment.fileName} for structured content...`,
+                    description: `Analyzing ${documentAttachment.fileName || 'document.pdf'} for structured content...`,
                 });
 
                 // Extract text from PDF
-                const documentText = await extractTextFromPDF(documentAttachment.file);
+                let documentText: string;
+                
+                if (documentAttachment.file) {
+                    // Use the file directly if available
+                    documentText = await extractTextFromPDF(documentAttachment.file);
+                } else if (documentAttachment.base64) {
+                    // Convert base64 to file if only base64 is available
+                    const base64Data = documentAttachment.base64.split(',')[1]; // Remove data:application/pdf;base64, prefix
+                    const binaryString = atob(base64Data);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }
+                    const reconstructedFile = new File([bytes], documentAttachment.fileName || 'document.pdf', {
+                        type: 'application/pdf'
+                    });
+                    documentText = await extractTextFromPDF(reconstructedFile);
+                } else {
+                    throw new Error('No document data available');
+                }
 
                 if (!documentText.trim()) {
                     throw new Error('No text found in the PDF document');
@@ -382,14 +404,14 @@ ${documentText}`,
                 setStructuredData({
                     data: object,
                     type,
-                    fileName: documentAttachment.fileName,
+                    fileName: documentAttachment.fileName || 'document.pdf',
                     extractedAt: new Date().toISOString(),
                     confidence,
                 });
 
                 toast({
                     title: 'Extraction Complete',
-                    description: `Successfully extracted ${type} data from ${documentAttachment.fileName}${
+                    description: `Successfully extracted ${type} data from ${documentAttachment.fileName || 'document.pdf'}${
                         !customSchema && confidence < 0.8
                             ? ' (low confidence - manual review recommended)'
                             : ''
@@ -415,7 +437,7 @@ ${documentText}`,
         clearStructuredData,
         createCustomSchema,
         isGeminiModel: isGeminiModel(chatMode),
-        hasDocument: !!documentAttachment?.file,
-        isPDF: documentAttachment?.file?.type === 'application/pdf',
+        hasDocument: !!(documentAttachment?.file || documentAttachment?.base64),
+        isPDF: documentAttachment?.file?.type === 'application/pdf' || documentAttachment?.mimeType === 'application/pdf',
     };
 };

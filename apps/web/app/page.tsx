@@ -46,7 +46,6 @@ export default function HomePage() {
             )}
 
             {/* Debug component for development */}
-            
         </div>
     );
 }

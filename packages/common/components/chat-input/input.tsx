@@ -222,7 +222,8 @@ export const ChatInput = ({
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
         editor.commands.clearContent();
         clearImageAttachment();
-        clearDocumentAttachment();
+        // Don't clear document attachment to support structured output after message submission
+        // clearDocumentAttachment();
         setMultiModalAttachments([]);
     };
 

@@ -109,7 +109,6 @@ export type WorkflowContextSchema = {
         budget: number;
         includeThoughts: boolean;
     };
-
 };
 
 export const runWorkflow = ({

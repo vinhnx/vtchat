@@ -2,8 +2,8 @@
 
 import { useRootContext } from '@repo/common/context';
 import { useChatStore } from '@repo/common/store';
+import { getFormatDistanceToNow } from '@repo/shared/utils';
 import { Button } from '@repo/ui';
-import { formatDistanceToNow } from 'date-fns';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -56,7 +56,7 @@ export const RecentThreads = () => {
                                 {thread.title}
                             </p>
                             <p className="text-muted-foreground text-xs">
-                                {formatDistanceToNow(new Date(thread.createdAt), {
+                                {getFormatDistanceToNow(new Date(thread.createdAt), {
                                     addSuffix: true,
                                 })}
                             </p>

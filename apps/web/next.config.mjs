@@ -35,7 +35,6 @@ const nextConfig = {
             optimizePackageImports: [
                 'lucide-react',
                 '@radix-ui/react-icons',
-                'date-fns',
                 'lodash-es',
                 'recharts',
                 'framer-motion',
@@ -180,9 +179,18 @@ const nextConfig = {
                             reuseExistingChunk: true,
                             maxSize: 200_000, // ~200KB limit
                         },
+                        // Date utilities
+                        dateFns: {
+                            test: /[\\/]node_modules[\\/]date-fns[\\/]/,
+                            name: 'date-fns',
+                            priority: 20,
+                            chunks: 'all',
+                            reuseExistingChunk: true,
+                            enforce: true,
+                        },
                         // Utilities
                         utils: {
-                            test: /[\\/]node_modules[\\/](date-fns|clsx|tailwind-merge|zod|nanoid)[\\/]/,
+                            test: /[\\/]node_modules[\\/](clsx|tailwind-merge|zod|nanoid)[\\/]/,
                             name: 'utils',
                             priority: 15,
                             chunks: 'all',

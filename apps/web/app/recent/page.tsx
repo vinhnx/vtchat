@@ -2,6 +2,7 @@
 import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { getFormatDistanceToNow } from '@repo/shared/utils';
 import {
     Button,
     Command,
@@ -16,7 +17,6 @@ import {
     TypographyP,
 } from '@repo/ui';
 import { CommandItem } from 'cmdk';
-import { formatDistanceToNow } from 'date-fns';
 import { Clock, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -131,7 +131,7 @@ export default function ThreadsPage() {
                                                 )}
                                                 <TypographyMuted className="!mt-0 flex flex-row items-center gap-1 opacity-50">
                                                     <Clock size={12} strokeWidth={2} />
-                                                    {formatDistanceToNow(
+                                                    {getFormatDistanceToNow(
                                                         new Date(thread.createdAt),
                                                         {
                                                             addSuffix: true,

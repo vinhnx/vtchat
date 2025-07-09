@@ -98,7 +98,7 @@
         "better-auth": "^1.2.9",
         "better-auth-harmony": "^1.2.5",
         "creem": "^0.3.37",
-        "date-fns": "^4.1.0",
+        "date-fns": "3.6.0",
         "husky": "^9.1.7",
         "isbot": "^5.1.28",
         "next": "^15.3.3",

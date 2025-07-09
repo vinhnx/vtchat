@@ -111,8 +111,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
 
-
-
             const updatedItem: ThreadItem = {
                 ...prevItem,
                 query: eventData?.query || prevItem.query || '',

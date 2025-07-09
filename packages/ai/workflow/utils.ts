@@ -1,5 +1,6 @@
 import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { log } from '@repo/shared/logger';
+import { formatDate } from '@repo/shared/utils';
 import {
     type CoreMessage,
     extractReasoningMiddleware,
@@ -7,7 +8,6 @@ import {
     streamText,
     type ToolSet,
 } from 'ai';
-import { format } from 'date-fns';
 import type { ZodSchema } from 'zod';
 import { CLAUDE_4_CONFIG, ReasoningType } from '../constants/reasoning';
 import { ModelEnum } from '../models';
@@ -864,7 +864,7 @@ export function createEventManager<T extends Record<string, any>>(
 }
 
 export const getHumanizedDate = () => {
-    return format(new Date(), 'MMMM dd, yyyy, h:mm a');
+    return formatDate(new Date(), 'MMMM dd, yyyy, h:mm a');
 };
 
 export const getWebPageContent = async (url: string) => {

@@ -52,7 +52,7 @@
         "@tiptap/react": "^2.14.0",
         "@types/pdfkit": "^0.14.0",
         "@types/pino": "^7.0.5",
-        "date-fns": "^4.1.0",
+        "date-fns": "3.6.0",
         "drizzle-orm": "^0.33.0",
         "drizzle-zod": "^0.8.2",
         "html2pdf.js": "^0.10.3",

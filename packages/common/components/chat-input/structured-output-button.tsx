@@ -1,290 +1,416 @@
 'use client';
 
-import { useStructuredExtraction } from '@repo/common/hooks';
+import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useChatStore } from '@repo/common/store';
+import { useApiKeysStore } from '../../store/api-keys.store';
+import { isGeminiModel } from '@repo/common/utils';
+import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
-import {
-    Button,
-    cn,
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    useToast,
-} from '@repo/ui';
-import { FileText, FileUp, Info, ScanText, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { CustomSchemaBuilder } from '../custom-schema-builder';
+import { Button, cn, useToast } from '@repo/ui';
+import { generateObject } from 'ai';
+import { FileUp, ScanText, Sparkles } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { z } from 'zod';
 import { LoginRequiredDialog } from '../login-required-dialog';
 
-export const StructuredOutputButton = () => {
-    const { extractStructuredOutput, isGeminiModel, hasDocument, isPDF } =
-        useStructuredExtraction();
+const StructuredOutputButton = () => {
+    const chatMode = useChatStore((state) => state.chatMode);
+    const setStructuredData = useChatStore((state) => state.setStructuredData);
     const hasStructuredOutputAccess = useFeatureAccess(FeatureSlug.STRUCTURED_OUTPUT);
-    const [showDialog, setShowDialog] = useState(false);
-    const [showSchemaBuilder, setShowSchemaBuilder] = useState(false);
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys());
     const { toast } = useToast();
-    const router = useRouter();
     const { data: session } = useSession();
     const isSignedIn = !!session;
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Use individual selectors to avoid infinite re-renders
+    // Check if we have structured data already
     const structuredData = useChatStore((state) => state.structuredData);
-    const useStructuredOutput = useChatStore((state) => state.useStructuredOutput);
-    const setUseStructuredOutput = useChatStore((state) => state.setUseStructuredOutput);
+    const hasProcessedData = !!structuredData;
 
-    const isProcessed = !!structuredData;
+    // Get the document type from file content
+    const getDocumentType = (content: string, fileName: string): { type: string; schema: z.ZodSchema } => {
+        const lowercaseContent = content.toLowerCase();
+        const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
+        // Email detection
+        if (lowercaseContent.includes('@') && (lowercaseContent.includes('subject:') || lowercaseContent.includes('from:') || lowercaseContent.includes('to:'))) {
+            return {
+                type: 'email',
+                schema: z.object({
+                    subject: z.string().optional(),
+                    from: z.string().optional(),
+                    to: z.string().optional(),
+                    date: z.string().optional(),
+                    body: z.string(),
+                    attachments: z.array(z.string()).optional(),
+                })
+            };
+        }
+
+        // Invoice detection
+        if (lowercaseContent.includes('invoice') || lowercaseContent.includes('bill') || lowercaseContent.includes('amount due')) {
+            return {
+                type: 'invoice',
+                schema: z.object({
+                    invoiceNumber: z.string().optional(),
+                    date: z.string().optional(),
+                    dueDate: z.string().optional(),
+                    vendor: z.object({
+                        name: z.string(),
+                        address: z.string().optional(),
+                        email: z.string().optional(),
+                    }),
+                    customer: z.object({
+                        name: z.string(),
+                        address: z.string().optional(),
+                    }),
+                    items: z.array(z.object({
+                        description: z.string(),
+                        quantity: z.number().optional(),
+                        unitPrice: z.number().optional(),
+                        total: z.number().optional(),
+                    })),
+                    totals: z.object({
+                        subtotal: z.number().optional(),
+                        tax: z.number().optional(),
+                        total: z.number(),
+                        currency: z.string().optional(),
+                    }),
+                })
+            };
+        }
+
+        // Resume detection
+        if (lowercaseContent.includes('experience') && lowercaseContent.includes('education') && lowercaseContent.includes('skills')) {
+            return {
+                type: 'resume',
+                schema: z.object({
+                    personalInfo: z.object({
+                        name: z.string(),
+                        email: z.string().optional(),
+                        phone: z.string().optional(),
+                        location: z.string().optional(),
+                        linkedin: z.string().optional(),
+                        website: z.string().optional(),
+                    }),
+                    summary: z.string().optional(),
+                    experience: z.array(z.object({
+                        company: z.string(),
+                        position: z.string(),
+                        startDate: z.string(),
+                        endDate: z.string().optional(),
+                        description: z.string().optional(),
+                    })),
+                    education: z.array(z.object({
+                        institution: z.string(),
+                        degree: z.string(),
+                        field: z.string().optional(),
+                        graduationDate: z.string().optional(),
+                    })),
+                    skills: z.array(z.string()),
+                })
+            };
+        }
+
+        // Contract detection
+        if (lowercaseContent.includes('agreement') || lowercaseContent.includes('contract') || lowercaseContent.includes('terms and conditions')) {
+            return {
+                type: 'contract',
+                schema: z.object({
+                    contractType: z.string(),
+                    parties: z.array(z.object({
+                        name: z.string(),
+                        role: z.string(),
+                        address: z.string().optional(),
+                    })),
+                    effectiveDate: z.string().optional(),
+                    expirationDate: z.string().optional(),
+                    keyTerms: z.array(z.string()),
+                    financialTerms: z.object({
+                        amount: z.number().optional(),
+                        currency: z.string().optional(),
+                        paymentSchedule: z.string().optional(),
+                    }).optional(),
+                })
+            };
+        }
+
+        // Document structure for markdown files
+        if (fileExtension === 'md') {
+            return {
+                type: 'markdown-document',
+                schema: z.object({
+                    title: z.string().optional(),
+                    headings: z.array(z.object({
+                        level: z.number(),
+                        text: z.string(),
+                    })),
+                    sections: z.array(z.object({
+                        heading: z.string(),
+                        content: z.string(),
+                    })),
+                    links: z.array(z.object({
+                        text: z.string(),
+                        url: z.string(),
+                    })).optional(),
+                    codeBlocks: z.array(z.object({
+                        language: z.string().optional(),
+                        code: z.string(),
+                    })).optional(),
+                })
+            };
+        }
+
+        // Generic document schema
+        return {
+            type: 'document',
+            schema: z.object({
+                documentType: z.string(),
+                title: z.string().optional(),
+                date: z.string().optional(),
+                author: z.string().optional(),
+                summary: z.string(),
+                keyPoints: z.array(z.string()),
+                entities: z.object({
+                    people: z.array(z.string()).optional(),
+                    organizations: z.array(z.string()).optional(),
+                    locations: z.array(z.string()).optional(),
+                    dates: z.array(z.string()).optional(),
+                    amounts: z.array(z.string()).optional(),
+                }),
+            })
+        };
+    };
+
+    // Extract text from different file types
+    const extractTextFromFile = async (file: File): Promise<string> => {
+        const fileType = file.type;
+        
+        if (fileType === 'application/pdf') {
+            // Use PDF.js for PDF extraction (similar to current implementation)
+            const pdfjsLib = await import('pdfjs-dist');
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+            
+            const arrayBuffer = await file.arrayBuffer();
+            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+            const pdf = await loadingTask.promise;
+            
+            let fullText = '';
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const textItems = textContent.items.map((item: any) => item.str);
+                fullText += textItems.join(' ') + '\n';
+            }
+            
+            return fullText.trim();
+        } else if (fileType === 'text/plain' || fileType === 'text/markdown') {
+            // For text and markdown files, just read as text
+            return await file.text();
+        } else {
+            throw new Error(`Unsupported file type: ${fileType}`);
+        }
+    };
+
+    // Process uploaded file and extract structured data
+    const processFile = async (file: File) => {
+        setIsProcessing(true);
+        
+        try {
+            // Show initial toast
+            toast({
+                title: 'Processing Document',
+                description: `Analyzing ${file.name} for structured data extraction...`,
+            });
+
+            // Extract text content
+            const textContent = await extractTextFromFile(file);
+            
+            if (!textContent.trim()) {
+                throw new Error('No text content found in the document');
+            }
+
+            // Get document type and schema
+            const { type, schema } = getDocumentType(textContent, file.name);
+            
+            // Get BYOK keys for API authentication
+            const byokKeys = getAllKeys;
+            
+            // Get the correct Google provider instance with BYOK keys
+            const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);
+
+            // Generate structured output using AI SDK
+            const { object } = await generateObject({
+                model: googleProvider(chatMode),
+                schema,
+                prompt: `You are an expert document analyzer. Extract structured data from the following ${type} document.
+                
+Be thorough and accurate in your extraction. Follow these guidelines:
+- Extract all relevant information that matches the schema
+- For optional fields, include them if the information is available
+- For dates, try to standardize the format
+- For amounts, include currency information when available
+- If information is not present, omit the field rather than guessing
+- Be precise and factual in your extraction
+
+Document content:
+${textContent}`,
+            });
+
+            // Store the structured data
+            setStructuredData({
+                data: object,
+                type,
+                fileName: file.name,
+                extractedAt: new Date().toISOString(),
+                confidence: 0.9, // High confidence since we're using AI SDK
+            });
+
+            // Show success toast
+            toast({
+                title: 'Extraction Complete',
+                description: `Successfully extracted ${type} data from ${file.name}`,
+            });
+
+            // Automatically prompt user to use the extracted data
+            const extractedDataString = JSON.stringify(object, null, 2);
+            const chatInput = document.querySelector('[data-testid="chat-input"]') as HTMLTextAreaElement;
+            if (chatInput) {
+                chatInput.value = `I've extracted structured data from ${file.name}. Here's the extracted ${type} data:
+
+\`\`\`json
+${extractedDataString}
+\`\`\`
+
+Please help me analyze this data and provide insights or answer any questions about it.`;
+                
+                // Trigger input change event to update the chat store
+                chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                chatInput.focus();
+            }
+
+        } catch (error) {
+            log.error('Structured extraction failed:', { data: error });
+            toast({
+                title: 'Extraction Failed',
+                description: error instanceof Error ? error.message : 'Failed to extract structured data',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    // Handle file upload
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file size
+        if (file.size > DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE) {
+            toast({
+                title: 'File too large',
+                description: 'File size must be less than 10MB',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        // Validate file type
+        const isValidType = Object.keys(DOCUMENT_UPLOAD_CONFIG.ACCEPTED_TYPES).includes(file.type);
+        if (!isValidType) {
+            toast({
+                title: 'Unsupported File Type',
+                description: 'Please upload a PDF, DOC, DOCX, TXT, or MD file',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        await processFile(file);
+        
+        // Reset file input
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    // Handle button click
     const handleClick = () => {
-        // Check login first
         if (!isSignedIn) {
             setShowLoginPrompt(true);
             return;
         }
 
-        // Check subscription access first
         if (!hasStructuredOutputAccess) {
-            setShowDialog(true);
-            return;
-        }
-
-        // Check if document is attached
-        if (!hasDocument) {
-            setShowDialog(true);
-            return;
-        }
-
-        // Check if document is PDF
-        if (!isPDF) {
             toast({
-                title: 'Unsupported Document Type',
-                description:
-                    'Structured output extraction currently supports PDF files only. Please upload a PDF document.',
+                title: 'VT+ Required',
+                description: 'Structured output extraction is a VT+ feature. Please upgrade to access this functionality.',
                 variant: 'destructive',
             });
             return;
         }
 
-        // Check if model is Gemini
-        if (!isGeminiModel) {
-            setShowDialog(true);
-            return;
-        }
-
-        // All checks passed, toggle structured output mode and extract if enabling
-        if (useStructuredOutput) {
-            setUseStructuredOutput(false);
+        if (!isGeminiModel(chatMode)) {
             toast({
-                title: 'Structured Output Disabled',
-                description: 'Structured output parsing has been turned off.',
-            });
-        } else {
-            setUseStructuredOutput(true);
-            extractStructuredOutput();
-        }
-    };
-
-    const handleCustomSchemaCreate = (schemaData: { schema: any; type: string }) => {
-        if (!hasStructuredOutputAccess) {
-            toast({
-                title: 'Sign In Required',
-                description: 'Custom schema creation requires sign in.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        // Extract with custom schema
-        extractStructuredOutput(schemaData.schema);
-        setShowSchemaBuilder(false);
-        toast({
-            title: 'Custom Schema Applied',
-            description: `Using custom schema "${schemaData.type}" for structured extraction.`,
-        });
-    };
-
-    const getDialogContent = () => {
-        if (!hasStructuredOutputAccess) {
-            return {
-                title: 'Unlock Structured Output',
-                description:
-                    'Transform your PDFs into organized data with AI-powered extraction. This powerful feature analyzes documents and creates structured JSON output perfect for data processing, analysis, and automation.',
-                icon: <Sparkles className="h-6 w-6 text-yellow-500" />,
-                showUpgrade: true,
-            };
-        }
-
-        if (!hasDocument) {
-            return {
-                title: 'Upload a Document First',
-                description:
-                    'To use structured output extraction, please upload a PDF document first. This feature uses AI to extract organized data from your documents.',
-                icon: <FileUp className="h-6 w-6 text-blue-500" />,
-                showUpgrade: false,
-            };
-        }
-
-        if (!isGeminiModel) {
-            return {
                 title: 'Gemini Model Required',
-                description:
-                    'Structured output extraction is only available when using Gemini models. Please switch to a Gemini model to use this feature.',
-                icon: <Info className="h-6 w-6 text-orange-500" />,
-                showUpgrade: false,
-            };
+                description: 'Structured output extraction requires a Gemini model. Please switch to a Gemini model.',
+                variant: 'destructive',
+            });
+            return;
         }
 
-        return {
-            title: 'Feature Guide',
-            description: 'This feature extracts structured data from PDF documents using AI.',
-            icon: <FileText className="h-6 w-6 text-green-500" />,
-            showUpgrade: false,
-        };
+        // Trigger file upload
+        fileInputRef.current?.click();
     };
 
-    const dialogContent = getDialogContent();
+    // Only show for Gemini models
+    if (!isGeminiModel(chatMode)) return null;
 
-    // Always show the button, but with different states
     return (
         <>
             <Button
                 className={cn(
                     'text-muted-foreground hover:text-foreground',
-                    useStructuredOutput && 'bg-green-500/10 text-green-500 hover:text-green-600',
-                    isProcessed && 'text-green-600 hover:text-green-700',
-                    !hasStructuredOutputAccess && 'opacity-50'
+                    hasProcessedData && 'bg-green-500/10 text-green-500 hover:text-green-600',
+                    isProcessing && 'opacity-50 cursor-not-allowed'
                 )}
                 onClick={handleClick}
+                disabled={isProcessing}
                 size="icon-sm"
                 tooltip={
                     hasStructuredOutputAccess
-                        ? hasDocument
-                            ? isPDF
-                                ? isGeminiModel
-                                    ? isProcessed
-                                        ? `Structured data extracted from ${structuredData?.fileName}`
-                                        : 'Extract structured data from PDF (Gemini only)'
-                                    : 'Switch to Gemini model to use structured output'
-                                : 'Only PDF documents are supported'
-                            : 'Upload a PDF document to extract structured data'
+                        ? hasProcessedData
+                            ? `Structured data extracted from ${structuredData?.fileName}`
+                            : 'Upload document to extract structured data (PDF, TXT, MD)'
                         : 'Unlock AI-powered structured data extraction with VT+'
                 }
                 variant="ghost"
             >
-                {hasStructuredOutputAccess ? (
-                    hasDocument ? (
-                        isGeminiModel ? (
-                            <ScanText
-                                className={isProcessed ? 'text-green-600' : ''}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                        ) : (
-                            <Info size={16} strokeWidth={2} />
-                        )
-                    ) : (
-                        <FileUp size={16} strokeWidth={2} />
-                    )
+                {isProcessing ? (
+                    <ScanText className="animate-spin" size={16} strokeWidth={2} />
+                ) : hasProcessedData ? (
+                    <ScanText size={16} strokeWidth={2} />
+                ) : hasStructuredOutputAccess ? (
+                    <FileUp size={16} strokeWidth={2} />
                 ) : (
                     <Sparkles size={16} strokeWidth={2} />
                 )}
             </Button>
 
-            {/* Information/Guide Dialog */}
-            <Dialog onOpenChange={setShowDialog} open={showDialog}>
-                <DialogContent ariaTitle="Structured Output Information" className="sm:max-w-md">
-                    <DialogHeader>
-                        <div className="flex items-center gap-3">
-                            {dialogContent.icon}
-                            <DialogTitle>{dialogContent.title}</DialogTitle>
-                        </div>
-                        <DialogDescription className="text-left">
-                            {dialogContent.description}
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    {hasStructuredOutputAccess && hasDocument && isGeminiModel && (
-                        <div className="space-y-4">
-                            <div className="bg-muted/50 rounded-lg p-4">
-                                <h4 className="mb-2 font-medium">How Structured Output Works:</h4>
-                                <ul className="text-muted-foreground space-y-1 text-sm">
-                                    <li>• AI analyzes your PDF document</li>
-                                    <li>• Extracts organized data in JSON format</li>
-                                    <li>
-                                        • Automatically detects document type (invoice, receipt,
-                                        etc.)
-                                    </li>
-                                    <li>• Supports custom schemas for specific needs</li>
-                                </ul>
-                            </div>
-
-                            {hasStructuredOutputAccess && (
-                                <Button
-                                    className="w-full"
-                                    onClick={() => {
-                                        setShowDialog(false);
-                                        setShowSchemaBuilder(true);
-                                    }}
-                                    size="sm"
-                                    variant="outlined"
-                                >
-                                    <Sparkles className="mr-2" size={14} />
-                                    Create Custom Schema (VT+ Only)
-                                </Button>
-                            )}
-                        </div>
-                    )}
-
-                    <DialogFooter>
-                        {dialogContent.showUpgrade ? (
-                            <div className="flex w-full gap-2">
-                                <Button
-                                    className="flex-1"
-                                    onClick={() => setShowDialog(false)}
-                                    variant="outlined"
-                                >
-                                    Maybe Later
-                                </Button>
-                                <Button
-                                    className="flex-1"
-                                    onClick={() => {
-                                        setShowDialog(false);
-                                        router.push('/plus');
-                                    }}
-                                >
-                                    <Sparkles className="mr-2" size={14} />
-                                    Sign In
-                                </Button>
-                            </div>
-                        ) : (
-                            <Button className="w-full" onClick={() => setShowDialog(false)}>
-                                Got it!
-                            </Button>
-                        )}
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Custom Schema Builder Dialog */}
-            {showSchemaBuilder && (
-                <Dialog onOpenChange={setShowSchemaBuilder} open={showSchemaBuilder}>
-                    <DialogContent
-                        ariaTitle="Custom Schema Builder"
-                        className="max-h-[80vh] overflow-y-auto sm:max-w-4xl"
-                    >
-                        <CustomSchemaBuilder
-                            onClose={() => setShowSchemaBuilder(false)}
-                            onSchemaCreate={handleCustomSchemaCreate}
-                        />
-                    </DialogContent>
-                </Dialog>
-            )}
+            {/* Hidden file input */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept={DOCUMENT_UPLOAD_CONFIG.SUPPORTED_EXTENSIONS.join(',')}
+                onChange={handleFileUpload}
+                className="hidden"
+            />
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
@@ -296,3 +422,5 @@ export const StructuredOutputButton = () => {
         </>
     );
 };
+
+export { StructuredOutputButton };

@@ -1,21 +1,5 @@
 import { log } from '@repo/shared/logger';
-import { differenceInDays, format, startOfDay } from 'date-fns';
 import { customAlphabet } from 'nanoid';
-
-export const getRelativeDate = (date: string | Date) => {
-    const today = startOfDay(new Date());
-    const inputDate = startOfDay(new Date(date));
-
-    const diffDays = differenceInDays(today, inputDate);
-
-    if (diffDays === 0) {
-        return 'Today';
-    }
-    if (diffDays === 1) {
-        return 'Yesterday';
-    }
-    return format(inputDate, 'dd/MM/yyyy');
-};
 
 export function formatNumber(number: number) {
     if (number >= 1_000_000) {

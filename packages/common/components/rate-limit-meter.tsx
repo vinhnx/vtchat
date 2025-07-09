@@ -3,6 +3,7 @@
 import { ModelEnum } from '@repo/ai/models';
 import { useRateLimit } from '@repo/common/hooks';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { getFormatDistanceToNow } from '@repo/shared/utils';
 import {
     Card,
     CardContent,
@@ -12,7 +13,6 @@ import {
     Progress,
     Skeleton,
 } from '@repo/ui';
-import { formatDistanceToNow } from 'date-fns';
 import { AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
 export function RateLimitMeter() {
@@ -114,7 +114,7 @@ export function RateLimitMeter() {
                         />
                         <div className="text-muted-foreground text-xs">
                             {status.remainingDaily} requests remaining • Resets{' '}
-                            {formatDistanceToNow(status.resetTime.daily, { addSuffix: true })}
+                            {getFormatDistanceToNow(status.resetTime.daily, { addSuffix: true })}
                         </div>
                     </div>
 
@@ -137,7 +137,7 @@ export function RateLimitMeter() {
                                 <Clock size={12} />
                                 <span>
                                     Next request available{' '}
-                                    {formatDistanceToNow(status.resetTime.minute, {
+                                    {getFormatDistanceToNow(status.resetTime.minute, {
                                         addSuffix: true,
                                     })}
                                 </span>

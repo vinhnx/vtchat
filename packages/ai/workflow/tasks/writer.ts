@@ -1,6 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
-import { format } from 'date-fns';
+import { formatDate } from '@repo/shared/utils';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from '../utils';
@@ -17,7 +17,7 @@ export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>
         const stepId = nextStepId();
 
         const currentDate = new Date();
-        const humanizedDate = format(currentDate, 'MMMM dd, yyyy, h:mm a');
+        const humanizedDate = formatDate(currentDate, 'MMMM dd, yyyy, h:mm a');
 
         const prompt = `
 

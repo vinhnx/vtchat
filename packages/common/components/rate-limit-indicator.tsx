@@ -2,8 +2,8 @@
 
 import { ModelEnum } from '@repo/ai/models';
 import { useRateLimit } from '@repo/common/hooks';
+import { getFormatDistanceToNow } from '@repo/shared/utils';
 import { cn } from '@repo/ui';
-import { formatDistanceToNow } from 'date-fns';
 import { AlertTriangle, Clock } from 'lucide-react';
 
 interface RateLimitIndicatorProps {
@@ -69,7 +69,7 @@ export function RateLimitIndicator({
                     <Clock size={12} />
                     <span>
                         Rate limited • Resets{' '}
-                        {formatDistanceToNow(status.resetTime.minute, { addSuffix: true })}
+                        {getFormatDistanceToNow(status.resetTime.minute, { addSuffix: true })}
                     </span>
                 </div>
             )}

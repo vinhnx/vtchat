@@ -8,6 +8,13 @@ import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import type { Thread } from '@repo/shared/types';
 import {
+    getCompareDesc,
+    getIsAfter,
+    getIsToday,
+    getIsYesterday,
+    getSubDays,
+} from '@repo/shared/utils';
+import {
     Avatar,
     Badge,
     Button,
@@ -21,7 +28,6 @@ import {
     Flex,
     useToast,
 } from '@repo/ui';
-import { compareDesc, isAfter, isToday, isYesterday, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
     ChevronsUpDown,
@@ -56,7 +62,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
-        return [...threads].sort((a, b) => compareDesc(new Date(a[sortBy]), new Date(b[sortBy])));
+        return [...threads].sort((a, b) => getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])));
     };
 
     const { data: session } = useSession();
@@ -83,13 +89,13 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         const createdAt = new Date(thread.createdAt);
         const now = new Date();
 
-        if (isToday(createdAt)) {
+        if (getIsToday(createdAt)) {
             groupedThreads.today.push(thread);
-        } else if (isYesterday(createdAt)) {
+        } else if (getIsYesterday(createdAt)) {
             groupedThreads.yesterday.push(thread);
-        } else if (isAfter(createdAt, subDays(now, 7))) {
+        } else if (getIsAfter(createdAt, getSubDays(now, 7))) {
             groupedThreads.last7Days.push(thread);
-        } else if (isAfter(createdAt, subDays(now, 30))) {
+        } else if (getIsAfter(createdAt, getSubDays(now, 30))) {
             groupedThreads.last30Days.push(thread);
         } else {
             groupedThreads.previousMonths.push(thread);
