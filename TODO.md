@@ -38,11 +38,9 @@ https://nextjs.org/docs/app/guides/mdx
 
 https://xmcp.dev/docs
 
+--
 
-==
-
-oracle: implement RLS embeddings RAG feature. use neon mcp if needed
-
+tweet announce new vt+ features
 
 --
 
@@ -57,8 +55,6 @@ https://ai-sdk.dev/docs/advanced/multiple-streamables
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
 
 --
-
-
 
 --
 

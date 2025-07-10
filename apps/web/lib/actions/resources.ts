@@ -10,7 +10,6 @@ import { auth } from '../auth-server';
 import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
 
-
 // Schema for validating resource input
 const createResourceSchema = z.object({
     content: z.string().min(1, 'Content is required'),

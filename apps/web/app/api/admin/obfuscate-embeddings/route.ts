@@ -18,13 +18,16 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const isAdmin = session.user.email?.endsWith('@admin.com') || 
-                       (session.user as any).role === 'admin';
-        
+        const isAdmin =
+            session.user.email?.endsWith('@admin.com') || (session.user as any).role === 'admin';
+
         if (!isAdmin) {
-            return NextResponse.json({ 
-                error: 'Insufficient permissions - admin role required' 
-            }, { status: 403 });
+            return NextResponse.json(
+                {
+                    error: 'Insufficient permissions - admin role required',
+                },
+                { status: 403 }
+            );
         }
 
         // Apply obfuscation to existing embeddings
@@ -45,20 +48,20 @@ export async function POST(request: Request) {
         for (const embedding of candidateEmbeddings) {
             const originalContent = embedding.content;
             const securedContent = secureContentForEmbedding(originalContent);
-            
+
             if (originalContent !== securedContent) {
                 await db
                     .update(embeddings)
                     .set({ content: securedContent })
                     .where(sql`id = ${embedding.id}`);
-                
+
                 updates.push({
                     id: embedding.id,
                     originalLength: originalContent.length,
                     securedLength: securedContent.length,
                     hadPII: containsPII(originalContent),
                 });
-                
+
                 updatedCount++;
             } else {
                 skippedCount++;
@@ -84,15 +87,17 @@ export async function POST(request: Request) {
             message: 'Embeddings obfuscation completed successfully',
             result,
         });
-
     } catch (error) {
         console.error('Obfuscation error:', error);
         log.error({ error }, 'Failed to obfuscate embeddings');
-        
-        return NextResponse.json({ 
-            error: 'Obfuscation failed', 
-            details: error instanceof Error ? error.message : 'Unknown error' 
-        }, { status: 500 });
+
+        return NextResponse.json(
+            {
+                error: 'Obfuscation failed',
+                details: error instanceof Error ? error.message : 'Unknown error',
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -107,19 +112,20 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const isAdmin = session.user.email?.endsWith('@admin.com') || 
-                       (session.user as any).role === 'admin';
-        
+        const isAdmin =
+            session.user.email?.endsWith('@admin.com') || (session.user as any).role === 'admin';
+
         if (!isAdmin) {
-            return NextResponse.json({ 
-                error: 'Insufficient permissions - admin role required' 
-            }, { status: 403 });
+            return NextResponse.json(
+                {
+                    error: 'Insufficient permissions - admin role required',
+                },
+                { status: 403 }
+            );
         }
 
         // Check obfuscation status
-        const total = await db
-            .select({ count: sql<number>`count(*)` })
-            .from(embeddings);
+        const total = await db.select({ count: sql<number>`count(*)` }).from(embeddings);
 
         const obfuscated = await db
             .select({ count: sql<number>`count(*)` })
@@ -135,20 +141,22 @@ export async function GET(request: Request) {
             total: total[0].count,
             obfuscated: obfuscated[0].count,
             unprocessed: unprocessed[0].count,
-            obfuscationRate: total[0].count > 0 ? 
-                Math.round((obfuscated[0].count / total[0].count) * 100) : 0,
+            obfuscationRate:
+                total[0].count > 0 ? Math.round((obfuscated[0].count / total[0].count) * 100) : 0,
         };
 
         return NextResponse.json({
             message: 'Obfuscation status retrieved',
             status,
         });
-
     } catch (error) {
         console.error('Status check error:', error);
-        return NextResponse.json({ 
-            error: 'Status check failed', 
-            details: error instanceof Error ? error.message : 'Unknown error' 
-        }, { status: 500 });
+        return NextResponse.json(
+            {
+                error: 'Status check failed',
+                details: error instanceof Error ? error.message : 'Unknown error',
+            },
+            { status: 500 }
+        );
     }
 }

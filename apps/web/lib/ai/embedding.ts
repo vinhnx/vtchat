@@ -13,7 +13,6 @@ import { embeddings, resources } from '../database/schema';
 import { db } from '../database';
 import { maskPII } from '../utils/content-security';
 
-
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
     return (

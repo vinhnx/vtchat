@@ -16,7 +16,7 @@ interface EmbeddingRecord {
 
 async function obfuscateExistingEmbeddings() {
     console.log('🔒 Starting embeddings content obfuscation...');
-    
+
     try {
         // Get all embeddings that might need obfuscation
         const allEmbeddings = await db
@@ -35,22 +35,22 @@ async function obfuscateExistingEmbeddings() {
         for (const embedding of allEmbeddings) {
             const originalContent = embedding.content;
             const securedContent = secureContentForEmbedding(originalContent);
-            
+
             // Only update if content changed (was obfuscated)
             if (originalContent !== securedContent) {
                 console.log(`🔄 Obfuscating embedding ${embedding.id}`);
                 console.log(`   Original: ${originalContent}`);
                 console.log(`   Secured:  ${securedContent}`);
-                
+
                 await db
                     .update(embeddings)
-                    .set({ 
-                        content: securedContent 
+                    .set({
+                        content: securedContent,
                     })
                     .where(sql`id = ${embedding.id}`);
-                
+
                 updatedCount++;
-                
+
                 log.info(
                     {
                         embeddingId: embedding.id,
@@ -69,11 +69,10 @@ async function obfuscateExistingEmbeddings() {
         console.log(`✅ Obfuscation complete!`);
         console.log(`   Updated: ${updatedCount} embeddings`);
         console.log(`   Skipped: ${skippedCount} embeddings (no PII detected)`);
-        
+
         // Verify the obfuscation
         console.log('\n🔍 Verifying obfuscation...');
         await verifyObfuscation();
-
     } catch (error) {
         console.error('❌ Error during obfuscation:', error);
         log.error({ error }, 'Failed to obfuscate embeddings');
@@ -103,7 +102,7 @@ async function verifyObfuscation() {
 
         if (results.length > 0) {
             console.log(`⚠️  Found ${results.length} embeddings with potential ${type} exposure:`);
-            results.forEach(r => {
+            results.forEach((r) => {
                 console.log(`   - ${r.id}: ${r.content}`);
             });
             issuesFound += results.length;
