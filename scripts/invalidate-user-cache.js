@@ -13,7 +13,7 @@ import { log } from '@repo/shared/logger';
 
 const USER_ID = process.argv[2] || '84362f24-8643-4a1e-8615-bb605c3e7717';
 
-async function invalidateUserCache(userId) {
+async function _invalidateUserCache(userId) {
     console.log(`🔄 Invalidating cache for user: ${userId}`);
     log.info({ userId }, 'Starting cache invalidation for user');
 

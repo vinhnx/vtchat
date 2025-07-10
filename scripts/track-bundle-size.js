@@ -7,9 +7,9 @@
  * It can be used locally or in CI to monitor bundle size changes.
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+const { execSync } = require('node:child_process');
 const { log } = require('@repo/shared/logger');
 
 const BUNDLE_HISTORY_FILE = 'bundle-history.json';
@@ -98,7 +98,7 @@ function formatBytes(bytes) {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Number.parseFloat((bytes / k ** i).toFixed(2)) + ' ' + sizes[i];
+    return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }
 
 function loadBundleHistory() {

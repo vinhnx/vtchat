@@ -19,7 +19,7 @@ test.describe('Mobile Responsive Design', () => {
         ).toBeVisible();
 
         // Check hamburger menu button exists and is clickable
-        const hamburgerButton = page
+        const _hamburgerButton = page
             .locator('button')
             .filter({ hasText: /menu|hamburger/i })
             .or(
@@ -72,7 +72,7 @@ test.describe('Mobile Responsive Design', () => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Try to open settings - check for floating user button or settings access
-        const userButton = page
+        const _userButton = page
             .locator('button')
             .filter({ hasText: /user|profile|settings/i })
             .first();
@@ -119,7 +119,7 @@ test.describe('Mobile Responsive Design', () => {
         await page.setViewportSize(TABLET_VIEWPORT);
 
         // On tablet, desktop sidebar should be visible
-        const sidebar = page
+        const _sidebar = page
             .locator('.hidden.md\\:flex')
             .or(page.locator('[data-testid="sidebar"]'));
 
@@ -139,7 +139,7 @@ test.describe('Mobile Responsive Design', () => {
         await expect(page.locator('.md\\:hidden').first()).not.toBeVisible();
 
         // Desktop sidebar should be available
-        const sidebarElements = page.locator('.hidden.md\\:flex, .md\\:flex').first();
+        const _sidebarElements = page.locator('.hidden.md\\:flex, .md\\:flex').first();
 
         // Main content should be properly laid out
         const mainContent = page.locator('main, .flex-1').first();

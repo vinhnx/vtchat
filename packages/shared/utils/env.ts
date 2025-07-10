@@ -1,4 +1,3 @@
-import { log } from '@repo/shared/logger';
 import { EnvironmentType } from '../types/environment';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';

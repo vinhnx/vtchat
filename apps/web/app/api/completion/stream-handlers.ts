@@ -165,7 +165,7 @@ export async function executeStream({
             log.debug('Starting workflow', { threadId: data.threadId });
         }
 
-        await workflow.start('planner', {
+        await workflow.start('router', {
             question: data.prompt,
         });
 

@@ -17,8 +17,8 @@ export const SheetContent = ({ children, width = 'md', className, title }: TShee
                 aria-label={title || 'Dialog content'}
                 className={cn(
                     'fixed bottom-0 left-0 right-0 z-40 mx-auto mt-24 flex max-h-[80%] flex-col rounded-3xl outline-none md:bottom-4 md:left-[50%]',
-                    width == 'md' && 'w-full md:ml-[-250px] md:w-[500px]',
-                    width == 'sm' && 'w-full md:ml-[-200px] md:w-[400px]',
+                    width === 'md' && 'w-full md:ml-[-250px] md:w-[500px]',
+                    width === 'sm' && 'w-full md:ml-[-200px] md:w-[400px]',
                     className
                 )}
             >

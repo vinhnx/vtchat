@@ -50,7 +50,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, []);
+    }, [scrollRef.current]);
 
     useEffect(() => {
         if (!threadId) return;

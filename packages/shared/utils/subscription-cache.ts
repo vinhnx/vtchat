@@ -114,7 +114,7 @@ export function invalidateAllSubscriptionCaches(): void {
  * Get cache statistics
  */
 export function getCacheStats() {
-    const now = new Date();
+    const _now = new Date();
     let validEntries = 0;
     let expiredEntries = 0;
 
@@ -139,7 +139,7 @@ export function getCacheStats() {
  * Clean up expired cache entries
  */
 export function cleanupExpiredCache(): void {
-    const now = new Date();
+    const _now = new Date();
     let cleanedCount = 0;
 
     for (const [key, cached] of subscriptionCache.entries()) {

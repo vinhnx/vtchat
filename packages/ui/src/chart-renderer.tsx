@@ -220,7 +220,7 @@ export function ChartRenderer(props: ChartProps) {
                                 labelLine={false}
                                 outerRadius={80}
                             >
-                                {props.data.map((entry, index) => (
+                                {props.data.map((_entry, index) => (
                                     <Cell
                                         fill={pieColors[index % pieColors.length]}
                                         key={`cell-${index}`}

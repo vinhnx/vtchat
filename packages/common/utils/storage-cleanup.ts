@@ -25,7 +25,7 @@ export function cleanupCorruptedStorage(): void {
     for (const key of accountStorageKeys) {
         try {
             const value = localStorage.getItem(key);
-            if (value && value.trim()) {
+            if (value?.trim()) {
                 // Try to parse the JSON to validate it
                 JSON.parse(value);
             }

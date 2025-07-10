@@ -1,6 +1,6 @@
 import { useApiKeysStore } from '@repo/common/store';
-import { useEffect, useState } from 'react';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
+import { useEffect, useState } from 'react';
 
 export function useRagOnboarding() {
     const [showOnboarding, setShowOnboarding] = useState(false);

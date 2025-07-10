@@ -5,11 +5,30 @@ ok go-> https://vtchat.io.vn/
 
 
 --
+
+use mcp for ai.sdk, context7: check to show thinking log tool view for model that has reasoning capabliyt by default
+
+for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
+--
+
+add Grok 4 model
+
+𝚒𝚖𝚙𝚘𝚛𝚝 { 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎𝚃𝚎𝚡𝚝 } 𝚏𝚛𝚘𝚖 '𝚊𝚒'
+𝚌𝚘𝚗𝚜𝚝 { 𝚝𝚎𝚡𝚝 } = 𝚊𝚠𝚊𝚒𝚝 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎𝚃𝚎𝚡𝚝({
+  𝚖𝚘𝚍𝚎𝚕: '𝚡𝚊𝚒/𝚐𝚛𝚘𝚔-𝟺',
+  𝚙𝚛𝚘𝚖𝚙𝚝: 'T𝚑𝚎 𝚊𝚗𝚜𝚠𝚎𝚛 𝚝𝚘 𝚕𝚒𝚏𝚎'
+})
+
+--
+oracle: final review
+then if good. apply all thsese VT+ new offering to migrate production db as well, check journal and sql.
+use neon production mcp to apply the migration. will go live
+--
 review and update /about, /term, /privacy, /faq and documents and rag page about current state of the project
 
 --
 
-oracle: to prevent users even vt+ plus, from unlimited usages to quickly exhausted one gemini_api_key, currently we off access to GEmini models without user's API key. suggest implement a rate limit per day but not too strict for plus tiers users when using gemini models. search for gemini model pricing and limit. use mcp if needed. ask me for plan for approval first before executing
+add this changes to clarify on usage meter settings page. update faq, terms, privacy, about page and documents
 
 --
 
@@ -27,6 +46,7 @@ https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performa
 https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performance
 
 --
+
 
 https://nextjs.org/docs/app/guides/progressive-web-apps
 

@@ -17,7 +17,6 @@ import {
     PolarRadiusAxis,
     Radar,
     RadarChart,
-    ResponsiveContainer,
     XAxis,
     YAxis,
 } from 'recharts';
@@ -263,7 +262,7 @@ export function ChartRenderer(props: ChartProps) {
                                 labelLine={false}
                                 outerRadius={80}
                             >
-                                {props.data.map((entry, index) => (
+                                {props.data.map((_entry, index) => (
                                     <Cell
                                         fill={colors[index % colors.length]}
                                         key={`cell-${index}`}

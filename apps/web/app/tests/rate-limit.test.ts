@@ -148,7 +148,7 @@ describe('Rate Limiting Service', () => {
         it('should not record requests for non-rate-limited models', async () => {
             const mockDb = await import('@/lib/database/db');
 
-            await recordRequest(testUserId, ModelEnum.GPT_4o);
+            await recordRequest(testUserId, ModelEnum.GPT_4o, false);
 
             // Should not call database for non-rate-limited models
             expect(mockDb.db.select).not.toHaveBeenCalled();
@@ -173,7 +173,7 @@ describe('Rate Limiting Service', () => {
                 values: mockInsert,
             });
 
-            await recordRequest(testUserId, testModelId);
+            await recordRequest(testUserId, testModelId, false);
 
             expect(mockInsert).toHaveBeenCalledWith(
                 expect.objectContaining({

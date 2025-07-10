@@ -31,7 +31,7 @@ import { ChatEditor } from './chat-input';
 import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
-import RateLimitUsageMeter from './rate-limit-usage-meter';
+import MultiModelUsageMeter from './multi-model-usage-meter';
 import { UserProfileSettings } from './user-profile-settings';
 
 export const SettingsModal = () => {
@@ -86,9 +86,9 @@ export const SettingsModal = () => {
         },
         {
             title: 'Usage',
-            description: 'Track your VT usage and explore upgrade options',
+            description: 'View your LLMs usage',
             key: SETTING_TABS.USAGE,
-            component: <RateLimitUsageMeter userId={session?.user?.id} />,
+            component: <MultiModelUsageMeter userId={session?.user?.id} />,
         },
         {
             title: 'Profile',

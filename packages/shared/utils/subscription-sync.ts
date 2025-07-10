@@ -203,9 +203,10 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
             expiresAt = subscription.currentPeriodEnd;
             source = 'subscription';
         } else if (userPlanSlug === PlanSlug.VT_PLUS) {
-            // Fallback to user plan_slug if no subscription but user has vt_plus
+            // SECURITY: Do NOT trust plan_slug alone - require active subscription row
+            // If user has plan_slug=vt_plus but no subscription, they are cancelled
             finalPlan = PlanSlug.VT_PLUS;
-            isActive = true; // Assume active if explicitly set in plan_slug
+            isActive = false; // Require active subscription row for VT+ access
             source = 'user_plan';
         } else {
             // Default to free

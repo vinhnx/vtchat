@@ -13,6 +13,7 @@ export * from './card-premium';
 export * from './carousel';
 export * from './chart';
 export * from './checkbox';
+export * from './collapsible';
 export * from './command';
 export * from './context-menu';
 export * from './custom-scroll-area';

@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 import { db } from '@/lib/database';
 import { embeddings, resources } from '@/lib/database/schema';
 import { secureContentForEmbedding } from '@/lib/utils/content-security';
@@ -25,7 +25,7 @@ describe('Embedding Security Integration', () => {
     });
 
     it('should handle long content by creating hash', async () => {
-        const longContent = 'This is a very long document. ' + 'A'.repeat(500);
+        const longContent = `This is a very long document. ${'A'.repeat(500)}`;
         const securedContent = secureContentForEmbedding(longContent);
 
         expect(securedContent).toMatch(/\[HASH:[a-f0-9]{16}\]$/);

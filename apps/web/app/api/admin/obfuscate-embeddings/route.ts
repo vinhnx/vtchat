@@ -1,13 +1,12 @@
-import { NextResponse } from 'next/server';
+import { log } from '@repo/shared/logger';
 import { sql } from 'drizzle-orm';
+import { NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { embeddings } from '@/lib/database/schema';
-import { secureContentForEmbedding, containsPII } from '@/lib/utils/content-security';
+import { containsPII, secureContentForEmbedding } from '@/lib/utils/content-security';
 
-import { auth } from '@/lib/auth-server';
-import { log } from '@repo/shared/logger';
-
-export async function POST(request: Request) {
+export async function POST(_request: Request) {
     try {
         // Verify admin access
         const session = await auth.api.getSession({
@@ -102,7 +101,7 @@ export async function POST(request: Request) {
 }
 
 // GET endpoint to check obfuscation status
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
     try {
         const session = await auth.api.getSession({
             headers: await import('next/headers').then((m) => m.headers()),

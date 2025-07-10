@@ -4,10 +4,12 @@ import {
     boolean,
     customType,
     index,
+    integer,
     json,
     pgTable,
     text,
     timestamp,
+    uniqueIndex,
     uuid,
     varchar,
 } from 'drizzle-orm/pg-core';
@@ -175,8 +177,7 @@ export const userRateLimits = pgTable(
             .$defaultFn(() => crypto.randomUUID()),
         userId: text('user_id')
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' })
-            .unique(),
+            .references(() => users.id, { onDelete: 'cascade' }),
         modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
         dailyRequestCount: text('daily_request_count').notNull().default('0'),
         minuteRequestCount: text('minute_request_count').notNull().default('0'),
@@ -187,6 +188,30 @@ export const userRateLimits = pgTable(
     },
     (table) => ({
         userModelIndex: index('user_model_index').on(table.userId, table.modelId),
+        uniqueUserModel: uniqueIndex('unique_user_model').on(table.userId, table.modelId),
+    })
+);
+
+// Provider usage table for cost tracking and budget monitoring
+export const providerUsage = pgTable(
+    'provider_usage',
+    {
+        id: uuid('id')
+            .primaryKey()
+            .$defaultFn(() => crypto.randomUUID()),
+        userId: text('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
+        requestTimestamp: timestamp('request_timestamp').notNull().defaultNow(),
+        estimatedCostCents: integer('estimated_cost_cents').notNull(), // Cost in cents (USD * 100)
+        provider: text('provider').notNull().default('gemini'), // 'gemini', 'openai', etc.
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        userTimeIndex: index('user_time_index').on(table.userId, table.requestTimestamp),
+        monthlyUsageIndex: index('monthly_usage_index').on(table.requestTimestamp, table.provider),
+        costTrackingIndex: index('cost_tracking_index').on(table.provider, table.requestTimestamp),
     })
 );
 
@@ -196,3 +221,5 @@ export type Embedding = typeof embeddings.$inferSelect;
 export type NewEmbedding = typeof embeddings.$inferInsert;
 export type UserRateLimit = typeof userRateLimits.$inferSelect;
 export type NewUserRateLimit = typeof userRateLimits.$inferInsert;
+export type ProviderUsage = typeof providerUsage.$inferSelect;
+export type NewProviderUsage = typeof providerUsage.$inferInsert;

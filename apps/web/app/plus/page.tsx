@@ -141,46 +141,22 @@ export default function PlusPage() {
                 </div>
 
                 {/* Promotional Banner */}
-                <div className="mb-8 flex justify-center">
-                    <div className="relative rounded-lg bg-gradient-to-r from-[#BFB38F]/20 to-[#BFB38F]/30 p-1">
-                        <div className="rounded-lg bg-black/80 px-6 py-4 text-center backdrop-blur-sm">
-                            <div className="mb-2 flex items-center justify-center gap-2">
-                                <Sparkles className="h-5 w-5 text-[#BFB38F]" />
-                                <span className="text-sm font-semibold uppercase tracking-wide text-[#BFB38F]">
-                                    Limited Time Offer
-                                </span>
-                                <Sparkles className="h-5 w-5 text-[#BFB38F]" />
-                            </div>
-
-                            <p className="text-lg font-medium text-white">
-                                Get 20% off VT+ with code{' '}
-                                <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-mono text-[#BFB38F]">
-                                    VTLAUNCH
-                                </span>
-                            </p>
-
-                            <p className="mt-1 text-sm text-gray-300">
-                                Limited supply • Exclusive launch pricing • Subscribe now
-                            </p>
-                            <br />
-
-                            <ButtonAnimatedGradient
-                                className="flex w-full items-center justify-center"
-                                data-vmtrc="PremiumPlanSelected"
-                                data-vmtrc-context="pricing_page"
-                                data-vmtrc-plan="VT_PLUS"
-                                data-vmtrc-price="10"
-                                onClick={() => {
-                                    if (!(isPortalLoading || isPaymentLoading)) {
-                                        handleSubscribe();
-                                    }
-                                }}
-                            >
-                                {getSubscribeButtonText()}
-                            </ButtonAnimatedGradient>
-                        </div>
+                <CardSpotlightPricing
+                    className={`relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
+                        isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                    }`}
+                >
+                    <div className="mb-2 flex items-center justify-center gap-2">
+                        <Sparkles className="h-5 w-5 text-[#BFB38F]" />
+                        <span className="text-sm font-semibold uppercase tracking-wide text-[#BFB38F]">
+                            Get 20% off VT+ with code{' '}
+                            <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-mono text-[#BFB38F]">
+                                VTLAUNCH
+                            </span>
+                        </span>
+                        <Sparkles className="h-5 w-5 text-[#BFB38F]" />
                     </div>
-                </div>
+                </CardSpotlightPricing>
 
                 {/* Pricing Section */}
                 <div className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8" id="pricing">

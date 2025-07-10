@@ -117,7 +117,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
             updateStatus('COMPLETED');
         } else {
-            context?.update('question', (current) => object?.refinedQuery || question);
+            context?.update('question', (_current) => object?.refinedQuery || question);
         }
 
         return {

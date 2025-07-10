@@ -7,20 +7,6 @@ export const ChatFooter = () => {
             <div className="flex flex-col items-center gap-2 sm:gap-3">
                 {/* Badges */}
                 <div className="flex flex-row items-center justify-center gap-2 sm:gap-3">
-                    <a
-                        href="https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        <img
-                            src="https://startupfa.me/badges/featured-badge.webp"
-                            alt="Featured on Startup Fame"
-                            width="96"
-                            height="30"
-                            className="h-6 w-auto transition-opacity hover:opacity-80 sm:h-10 sm:w-32"
-                        />
-                    </a>
-
                     <a href="https://peerlist.io/vinhnx/project/vt" target="_blank" rel="noopener">
                         <img
                             src="/icons/peerlist_badge.svg"

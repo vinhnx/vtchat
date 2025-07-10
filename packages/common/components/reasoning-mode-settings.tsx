@@ -5,9 +5,18 @@ import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
 import { FeatureSlug } from '@repo/shared/types/subscription';
-import { Button, Label, Slider, Switch, TypographyH3, TypographyH4 } from '@repo/ui';
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Label,
+    Slider,
+    Switch,
+    TypographyH3,
+    TypographyH4,
+} from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Brain, Sparkles, Zap } from 'lucide-react';
 import { useMemo } from 'react';
 
 export const ReasoningModeSettings = () => {
@@ -48,224 +57,138 @@ export const ReasoningModeSettings = () => {
         });
     };
 
-    const handleToggleIncludeThoughts = (includeThoughts: boolean) => {
+    const handleMaxDepthChange = (value: number[]) => {
         setThinkingMode({
-            includeThoughts,
+            maxDepth: value[0],
         });
     };
 
-    const handleBudgetChange = (budget: number[]) => {
+    const handleBudgetChange = (value: number[]) => {
         setThinkingMode({
-            budget: budget[0],
+            budget: value[0],
         });
     };
 
+    // Check for access
     if (!hasThinkingModeAccess) {
         return (
-            <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                    <div className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 p-3">
-                        <Sparkles className="h-6 w-6 text-[#D99A4E]" />
-                    </div>
-                    <div>
-                        <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">
-                            Reasoning Mode
-                        </TypographyH3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Advanced AI reasoning and thinking capabilities
+            <Card>
+                <CardHeader>
+                    <TypographyH3 className="text-foreground">Reasoning Mode</TypographyH3>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-center py-6">
+                        <div className="mx-auto w-fit rounded-full bg-muted p-4">
+                            <div className="h-8 w-8 bg-foreground rounded" />
+                        </div>
+                        <p className="mt-3 text-base font-medium text-foreground">VT+ Feature</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Advanced reasoning capabilities for complex problem-solving. Available
+                            exclusively for VT+ subscribers.
                         </p>
+                        <Button
+                            className="mt-4"
+                            size="sm"
+                            onClick={() => {
+                                window.location.href = '/plus';
+                            }}
+                        >
+                            Upgrade to VT+
+                        </Button>
                     </div>
-                </div>
-
-                <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
-                    initial={{ opacity: 0, y: 10 }}
-                >
-                    <div className="space-y-4 text-center">
-                        <div className="mx-auto w-fit rounded-full bg-[#D99A4E]/10 p-4">
-                            <Brain className="h-8 w-8 text-[#D99A4E]" />
-                        </div>
-                        <div>
-                            <TypographyH4 className="mb-2 font-semibold text-blue-600">
-                                Sign In Required
-                            </TypographyH4>
-                            <p className="mb-4 text-sm text-blue-600/70">
-                                Reasoning Mode reveals the AI's step-by-step thinking process before
-                                generating responses. This advanced feature is available to all
-                                registered users.
-                            </p>
-                            <Button className="bg-blue-600 font-medium text-white hover:bg-blue-600/90">
-                                Sign In
-                            </Button>
-                        </div>
-                    </div>
-                </motion.div>
-            </div>
+                </CardContent>
+            </Card>
         );
     }
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-3">
-                <motion.div
-                    className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/10 to-[#BFB38F]/10 p-3"
-                    whileHover={{ scale: 1.05 }}
-                >
-                    <Sparkles className="h-6 w-6 text-[#D99A4E]" />
-                </motion.div>
-                <div>
-                    <TypographyH3 className="text-lg font-semibold text-[#BFB38F]">
-                        Reasoning Mode
-                    </TypographyH3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Configure AI reasoning and thinking capabilities
-                    </p>
-                </div>
-            </div>
-
-            <div className="space-y-6">
-                {/* Enable Reasoning Mode */}
-                <motion.div
-                    className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
-                    whileHover={{ scale: 1.01 }}
-                >
+            {/* Main toggle section */}
+            <Card>
+                <CardHeader>
+                    <TypographyH3 className="text-foreground">Reasoning Mode</TypographyH3>
+                </CardHeader>
+                <CardContent>
                     <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                                <Label
-                                    className="text-base font-medium text-[#BFB38F]"
-                                    htmlFor="reasoning-enabled"
-                                >
-                                    Enable Reasoning Mode
-                                </Label>
-                                <Zap className="h-4 w-4 text-[#D99A4E]" />
-                            </div>
-                            <p className="text-sm text-[#BFB38F]/70">
-                                Allow AI models to show their reasoning process
+                        <div className="space-y-0.5">
+                            <Label className="text-base font-medium text-foreground">
+                                Enable Reasoning
+                            </Label>
+                            <p className="text-sm text-muted-foreground">
+                                Show detailed thinking process when analyzing complex problems
                             </p>
                         </div>
                         <Switch
                             checked={thinkingMode.enabled}
-                            className="data-[state=checked]:bg-[#D99A4E]"
-                            id="reasoning-enabled"
                             onCheckedChange={handleToggleEnabled}
                         />
                     </div>
-                </motion.div>
+                </CardContent>
+            </Card>
 
-                <AnimatePresence>
-                    {thinkingMode.enabled && (
-                        <motion.div
-                            animate={{ opacity: 1, y: 0 }}
-                            className="space-y-6"
-                            exit={{ opacity: 0, y: 20 }}
-                            initial={{ opacity: 0, y: 20 }}
-                        >
-                            {/* Include Reasoning Details */}
-                            <motion.div
-                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
-                                whileHover={{ scale: 1.01 }}
-                            >
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-1">
-                                        <Label
-                                            className="text-base font-medium text-[#BFB38F]"
-                                            htmlFor="include-thoughts"
-                                        >
-                                            Show Reasoning Details
-                                        </Label>
-                                        <p className="text-sm text-[#BFB38F]/70">
-                                            Display the AI's step-by-step reasoning in responses
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={thinkingMode.includeThoughts}
-                                        className="data-[state=checked]:bg-[#D99A4E]"
-                                        id="include-thoughts"
-                                        onCheckedChange={handleToggleIncludeThoughts}
-                                    />
-                                </div>
-                            </motion.div>
-
-                            {/* Reasoning Budget */}
-                            <motion.div
-                                className="rounded-lg border border-[#BFB38F]/20 bg-gradient-to-br from-white/5 via-[#D99A4E]/5 to-[#BFB38F]/5 p-6 backdrop-blur-sm"
-                                whileHover={{ scale: 1.01 }}
-                            >
-                                <div className="space-y-4">
-                                    <div>
-                                        <Label
-                                            className="text-base font-medium text-[#BFB38F]"
-                                            htmlFor="reasoning-budget"
-                                        >
-                                            Reasoning Budget: {thinkingMode.budget.toLocaleString()}{' '}
-                                            tokens
-                                        </Label>
-                                        <p className="mt-1 text-sm text-[#BFB38F]/70">
-                                            Control how much the AI can reason (higher = more
-                                            thorough reasoning)
-                                        </p>
-                                    </div>
+            <AnimatePresence>
+                {thinkingMode.enabled && (
+                    <motion.div
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <Card>
+                            <CardContent className="pt-6">
+                                <div className="space-y-6">
+                                    {/* Max Depth Setting */}
                                     <div className="space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label className="text-base font-medium text-foreground">
+                                                Reasoning Depth
+                                            </Label>
+                                            <span className="text-sm text-muted-foreground">
+                                                {thinkingMode.maxDepth} steps
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">
+                                            Controls how deeply the AI reasons through problems
+                                        </p>
                                         <Slider
-                                            className="[&_.bg-primary]:bg-[#D99A4E] [&_[role=slider]]:border-[#D99A4E] [&_[role=slider]]:bg-[#D99A4E]"
-                                            id="reasoning-budget"
-                                            max={REASONING_BUDGETS.DEEP}
-                                            min={REASONING_BUDGETS.QUICK}
+                                            className="w-full"
+                                            max={10}
+                                            min={1}
+                                            onValueChange={handleMaxDepthChange}
+                                            step={1}
+                                            value={[thinkingMode.maxDepth]}
+                                        />
+                                    </div>
+
+                                    {/* Budget Setting */}
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label className="text-base font-medium text-foreground">
+                                                Thinking Budget
+                                            </Label>
+                                            <span className="text-sm text-muted-foreground">
+                                                {REASONING_BUDGETS[thinkingMode.budget]?.label ||
+                                                    'Custom'}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">
+                                            Balances response speed vs thinking thoroughness
+                                        </p>
+                                        <Slider
+                                            className="w-full"
+                                            max={Object.keys(REASONING_BUDGETS).length - 1}
+                                            min={0}
                                             onValueChange={handleBudgetChange}
-                                            step={1000}
+                                            step={1}
                                             value={[thinkingMode.budget]}
                                         />
-                                        <div className="flex justify-between text-xs text-[#BFB38F]/60">
-                                            <span>Quick ({REASONING_BUDGETS.QUICK / 1000}K)</span>
-                                            <span>
-                                                Balanced ({REASONING_BUDGETS.BALANCED / 1000}K)
-                                            </span>
-                                            <span>Deep ({REASONING_BUDGETS.DEEP / 1000}K)</span>
-                                        </div>
                                     </div>
                                 </div>
-                            </motion.div>
-
-                            {/* Reasoning Tips */}
-                            <motion.div
-                                animate={{ opacity: 1 }}
-                                className="rounded-lg border border-[#D99A4E]/20 bg-gradient-to-r from-[#D99A4E]/5 to-[#BFB38F]/5 p-6"
-                                initial={{ opacity: 0 }}
-                                transition={{ delay: 0.3 }}
-                            >
-                                <div className="flex items-start gap-3">
-                                    <Brain className="mt-0.5 h-5 w-5 text-[#D99A4E]" />
-                                    <div>
-                                        <TypographyH4 className="mb-2 font-medium text-[#BFB38F]">
-                                            Reasoning Mode Tips
-                                        </TypographyH4>
-                                        <ul className="space-y-1 text-sm text-[#BFB38F]/70">
-                                            <li>
-                                                • Higher budgets allow more detailed reasoning but
-                                                use more tokens
-                                            </li>
-                                            <li>
-                                                • Reasoning is most effective for complex analytical
-                                                tasks
-                                            </li>
-                                            <li>
-                                                • Some models show redacted content for sensitive
-                                                reasoning steps
-                                            </li>
-                                            <li>
-                                                • Reasoning content is rendered with full markdown
-                                                support
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

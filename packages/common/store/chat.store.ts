@@ -294,7 +294,7 @@ const debounce = <T extends (...args: any[]) => any>(
     };
 };
 
-const throttle = <T extends (...args: any[]) => any>(
+const _throttle = <T extends (...args: any[]) => any>(
     fn: T,
     limit: number
 ): ((...args: Parameters<T>) => void) => {
@@ -319,7 +319,7 @@ const throttle = <T extends (...args: any[]) => any>(
 };
 
 // Add batch update functionality
-const DB_UPDATE_THROTTLE = 1000; // 1 second between updates for the same item
+const _DB_UPDATE_THROTTLE = 1000; // 1 second between updates for the same item
 const BATCH_PROCESS_INTERVAL = 500; // Process batches every 500ms
 
 // Track the last time each item was updated
@@ -409,7 +409,7 @@ const initializeWorker = () => {
         dbWorker.port.onmessage = async (event) => {
             const message = event.data;
 
-            if (!(message && message.type)) return;
+            if (!message?.type) return;
 
             try {
                 // Handle different message types
@@ -582,7 +582,7 @@ const initializeTabSync = () => {
                 data: { threadId: null, id: null },
             }) as any;
 
-            if (!(syncData && syncData.type)) return;
+            if (!syncData?.type) return;
 
             switch (syncData.type) {
                 case 'thread-update':
@@ -667,7 +667,7 @@ const initializeTabSync = () => {
 
 // Function to notify the worker about a change with enhanced database operation support
 const notifyWorker = (type: string, data: any, dbOperation?: any) => {
-    if (!(dbWorker && dbWorker.port)) {
+    if (!dbWorker?.port) {
         // Use localStorage fallback if worker isn't available
         if (typeof window !== 'undefined' && window.notifyTabSync) {
             window.notifyTabSync(type, data);
@@ -696,12 +696,12 @@ const notifyWorker = (type: string, data: any, dbOperation?: any) => {
 };
 
 // Enhanced function for database operations through worker
-const performWorkerDatabaseOperation = async (
+const _performWorkerDatabaseOperation = async (
     operation: any,
     data: any,
     fallbackFn: () => Promise<any>
 ) => {
-    if (!(dbWorker && dbWorker.port)) {
+    if (!dbWorker?.port) {
         // Use direct database operation if worker isn't available
         return await fallbackFn();
     }
@@ -720,7 +720,7 @@ const performWorkerDatabaseOperation = async (
                     event.data.requestId === requestId
                 ) {
                     clearTimeout(timeout);
-                    dbWorker!.port.removeEventListener('message', handleMessage);
+                    dbWorker?.port.removeEventListener('message', handleMessage);
 
                     if (event.data.success) {
                         resolve(event.data.result);
@@ -798,6 +798,7 @@ export const useChatStore = create(
         threadItems: [],
         useWebSearch: false,
         useMathCalculator: false,
+        useCharts: false,
         customInstructions: '',
         currentThreadId: null,
         activeThreadItemView: null,
@@ -904,7 +905,7 @@ export const useChatStore = create(
             });
         },
 
-        setShowSuggestions: (showSuggestions: boolean) => {
+        setShowSuggestions: (_showSuggestions: boolean) => {
             // Always disable suggestions regardless of input value
             const disabledSuggestions = false;
 
@@ -1045,10 +1046,7 @@ export const useChatStore = create(
                     );
                 }
 
-                log.info(
-                    { context: 'ChatStore', chatMode, configKey: CONFIG_KEY },
-                    'Successfully persisted chat mode'
-                );
+                log.info({ context: 'ChatStore' }, 'Successfully persisted chat mode');
 
                 // Update state and reset button selections when chat mode changes
                 set((state) => {
@@ -1311,10 +1309,7 @@ export const useChatStore = create(
                     );
                 }
 
-                log.info(
-                    { context: 'ChatStore', modelId: model.id, configKey: CONFIG_KEY },
-                    'Successfully persisted model'
-                );
+                log.info({ context: 'ChatStore' }, 'Successfully persisted model');
 
                 // Update state
                 set((state) => {
@@ -1358,7 +1353,7 @@ export const useChatStore = create(
                 // Notify other tabs about the update
                 debouncedNotify('thread-update', { threadId: thread.id });
             } catch (error) {
-                log.error('Failed to update thread in database:', { data: error });
+                log.error({ data: error }, 'Failed to update thread in database');
             }
         },
 
@@ -1390,7 +1385,7 @@ export const useChatStore = create(
                     id: threadItem.id,
                 });
             } catch (error) {
-                log.error('Failed to create thread item:', { data: error });
+                log.error({ data: error }, 'Failed to create thread item');
                 // Handle error appropriately
             }
         },
@@ -1466,7 +1461,7 @@ export const useChatStore = create(
                 // Non-critical updates that are too soon after the last update
                 // won't be persisted yet, but will be in the UI state
             } catch (error) {
-                log.error('Error in updateThreadItem:', { data: error });
+                log.error({ data: error }, 'Error in updateThreadItem');
 
                 // Safety fallback - try to persist directly in case of errors in the main logic
                 try {
@@ -1690,7 +1685,6 @@ export const useChatStore = create(
                         {
                             context: 'ThreadDB',
                             userId: userId || 'anonymous',
-                            configKey: CONFIG_KEY,
                         },
                         'Persisted config for user'
                     );

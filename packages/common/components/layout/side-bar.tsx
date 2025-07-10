@@ -22,7 +22,7 @@ export const Sidebar = () => {
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         return [...threads].sort((a, b) => moment(b[sortBy]).diff(moment(a[sortBy])));
     };
-    const clearAllThreads = useChatStore((state) => state.clearAllThreads);
+    const _clearAllThreads = useChatStore((state) => state.clearAllThreads);
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
     const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
@@ -65,7 +65,7 @@ export const Sidebar = () => {
                     {threads.map((thread) => (
                         <HistoryItem
                             dismiss={() => {
-                                setIsSidebarOpen((prev) => false);
+                                setIsSidebarOpen((_prev) => false);
                             }}
                             isActive={thread.id === currentThreadId}
                             isPinned={thread.pinned}

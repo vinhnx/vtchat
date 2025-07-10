@@ -9,7 +9,7 @@ export function useAnimatedText(text: string, shouldAnimate = true) {
     const [cursor, setCursor] = useState(0);
     const [prevText, setPrevText] = useState(text);
     const [isSameText, setIsSameText] = useState(true);
-    const [isAnimationComplete, setIsAnimationComplete] = useState(!shouldAnimate);
+    const [_isAnimationComplete, setIsAnimationComplete] = useState(!shouldAnimate);
 
     if (prevText !== text) {
         setPrevText(text);

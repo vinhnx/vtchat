@@ -22,11 +22,11 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (20 requests/day, 5/minute rate limit; VT+ users get enhanced limits: 100/day, 10/minute)
+- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (20 requests/day, 5/minute rate limit; VT+ users get unlimited access)
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
-- **Document Processing**: Upload and analyze various document formats (VT+ feature)
-- **Web Search Integration**: Real-time information grounding (VT+ feature)
+- **Document Processing**: Upload and analyze various document formats (Free feature)
+- **Web Search Integration**: Real-time information grounding (Free feature)
 
 **AI Model Disclaimer**: Our platform provides interfaces for third-party AI models. We are not affiliated with the model providers and do not control the underlying AI model outputs.
 
@@ -114,12 +114,14 @@ VT_BASE is our free tier for logged-in users that includes:
 - **Registration Required**: Must be signed in to access free tier benefits
 - **Advanced Features**: Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, Web Search, Intelligent Tool Router, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
 - **Unlimited BYOK Usage**: No limits when using your own API keys
+- **Free Gemini Access**: Gemini 2.5 Flash Lite Preview (20/day, 5/minute) for registered users
+- **Enhanced Rate Limits**: Higher usage limits compared to free tier for all Gemini models
 
 ### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
 - **Three Exclusive Research Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
-- **All Gemini Models Without BYOK**: Access to all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys - system automatically handles API key management for VT+ users
+- **All Gemini Models Without BYOK**: Access to all Gemini models (Gemini 2.5 Pro 25/day, Gemini 2.5 Flash 50/day, Gemini 2.5 Flash Lite 100/day, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys - system automatically handles API key management for VT+ users
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

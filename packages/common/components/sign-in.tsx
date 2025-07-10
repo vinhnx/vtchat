@@ -17,7 +17,7 @@ export const CustomSignIn = ({
     onClose,
 }: CustomSignInProps) => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
-    const [email, setEmail] = useState('');
+    const [email, _setEmail] = useState('');
     const [error, setError] = useState('');
     const [verifying, setVerifying] = useState(false);
     const { signIn, isLoaded, setActive } = useSignIn();
@@ -47,7 +47,7 @@ export const CustomSignIn = ({
             }
         } catch (error: any) {
             log.error({ errorCount: error.errors?.length }, 'Sign-in validation errors');
-            if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
+            if (error.errors?.some((e: any) => e.code === 'client_state_invalid')) {
                 try {
                     const result = await signIn.attemptFirstFactor({
                         strategy: 'email_code',
@@ -108,7 +108,7 @@ export const CustomSignIn = ({
         }
     };
 
-    const handleAppleAuth = async () => {
+    const _handleAppleAuth = async () => {
         setIsLoading('apple');
 
         try {
@@ -130,7 +130,7 @@ export const CustomSignIn = ({
         return regex.test(email);
     };
 
-    const handleEmailAuth = async () => {
+    const _handleEmailAuth = async () => {
         setIsLoading('email');
         setError('');
 
@@ -152,7 +152,7 @@ export const CustomSignIn = ({
             // If sign-up is successful, send the magic link
             const protocol = window.location.protocol;
             const host = window.location.host;
-            const fullRedirectUrl = `${protocol}//${host}${redirectUrl}`;
+            const _fullRedirectUrl = `${protocol}//${host}${redirectUrl}`;
 
             await signUp.prepareEmailAddressVerification({
                 strategy: 'email_code',
@@ -160,10 +160,7 @@ export const CustomSignIn = ({
 
             setVerifying(true);
         } catch (error: any) {
-            if (
-                error.errors &&
-                error.errors.some((e: any) => e.code === 'form_identifier_exists')
-            ) {
+            if (error.errors?.some((e: any) => e.code === 'form_identifier_exists')) {
                 try {
                     // If the user already exists, sign them in instead
                     const signInAttempt = await signIn.create({
@@ -232,7 +229,7 @@ export const CustomSignIn = ({
             setError('');
         } catch (error: any) {
             // If error, try with signIn flow
-            if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
+            if (error.errors?.some((e: any) => e.code === 'client_state_invalid')) {
                 try {
                     const signInAttempt = await signIn.create({
                         identifier: email,

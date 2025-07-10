@@ -3,8 +3,8 @@
 // Custom server wrapper for Next.js standalone mode
 // Ensures proper hostname binding for Fly.io deployment
 
-const { execSync } = require('child_process');
-const path = require('path');
+const { execSync } = require('node:child_process');
+const path = require('node:path');
 
 // Simple inline logger to avoid monorepo dependency issues in standalone build
 // Only logs in non-production environments
@@ -61,7 +61,7 @@ const serverPath = path.join(process.cwd(), 'server.js');
 log.info({ serverPath }, 'Checking for server file');
 
 try {
-    require('fs').accessSync(serverPath);
+    require('node:fs').accessSync(serverPath);
     log.info('Server file found');
 } catch (error) {
     log.error({ error: error.message }, 'Server file not found');

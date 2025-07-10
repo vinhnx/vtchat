@@ -4,7 +4,7 @@ import { log } from '@repo/shared/logger';
 import { Button } from '@repo/ui';
 import { BarChart3 } from 'lucide-react';
 import { useMemo } from 'react';
-import { type ChartData, ChartPopup, useChartPopup } from './chart-popup';
+import { type ChartData, useChartPopup } from './chart-popup';
 
 type ChartMessageProps = {
     content: string;

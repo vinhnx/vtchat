@@ -15,6 +15,7 @@
         "./providers": "./providers.ts",
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
+        "./workflow/tasks/chat-mode-router": "./workflow/tasks/chat-mode-router.ts",
         "./worker": "./worker/index.ts",
         "./constants/reasoning": "./constants/reasoning.ts",
         "./cache": "./cache/gemini-cache.ts"

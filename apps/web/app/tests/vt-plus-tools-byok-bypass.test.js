@@ -3,8 +3,8 @@
  * Tests that VT+ users bypass BYOK checks for tools and function calling
  */
 
-import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { ChatMode } from '@repo/shared/config';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock the hasApiKeyForChatMode function behavior
 const mockHasApiKeyForChatMode = (chatMode, isSignedIn, isVtPlus = false) => {

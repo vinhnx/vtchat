@@ -163,7 +163,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
             expect(result.allowed).toBe(true);
 
             // Then record the request
-            await recordRequest(testUserId, freeModelId);
+            await recordRequest(testUserId, freeModelId, false);
 
             // Verify update was called
             expect(mockDb.update).toHaveBeenCalled();
@@ -371,7 +371,9 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 }),
             });
 
-            await expect(recordRequest(testUserId, freeModelId)).rejects.toThrow('Update failed');
+            await expect(recordRequest(testUserId, freeModelId, false)).rejects.toThrow(
+                'Update failed'
+            );
         });
     });
 
@@ -436,7 +438,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
                 expect(rateLimitResult.allowed).toBe(true);
                 expect(rateLimitResult.remainingDaily).toBe(10 - (i - 1));
 
-                await recordRequest(testUserId, freeModelId);
+                await recordRequest(testUserId, freeModelId, false);
 
                 // Verify state consistency
                 expect(stateTracker.dailyCount).toBe(i);
@@ -507,7 +509,7 @@ describe('Gemini 2.5 Flash Lite - Database Integration', () => {
             // and empty result when querying for user2
             mockDb.select.mockImplementation(() => ({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockImplementation((condition) => ({
+                    where: vi.fn().mockImplementation((_condition) => ({
                         limit: vi.fn().mockReturnValue({
                             then: vi.fn().mockImplementation(() => {
                                 // Check which user is being queried

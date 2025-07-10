@@ -11,12 +11,12 @@ describe('React Scan Integration', () => {
         expect(packageJson.scripts).toHaveProperty('dev:scan');
         expect(packageJson.scripts).toHaveProperty('scan');
         expect(packageJson.scripts['dev:scan']).toContain('react-scan');
-        expect(packageJson.scripts['scan']).toContain('react-scan');
+        expect(packageJson.scripts.scan).toContain('react-scan');
     });
 
     it('should have configuration constants defined', () => {
         // Test that configuration file exports expected constants
-        const fs = require('fs');
+        const fs = require('node:fs');
         const configPath = '../../lib/config/react-scan.ts';
         expect(fs.existsSync(configPath)).toBe(false); // File may not exist in test env
 

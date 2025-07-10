@@ -1,10 +1,10 @@
 import { getProviderInstance, Providers } from '@repo/ai/providers';
-import { checkVTPlusAccess } from '../../subscription/access-control';
 import { isGeminiModel } from '@repo/common/utils';
-import { generateObject } from 'ai';
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 import { log } from '@repo/shared/logger';
+import { generateObject } from 'ai';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { checkVTPlusAccess } from '../../subscription/access-control';
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({

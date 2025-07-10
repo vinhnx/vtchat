@@ -1,0 +1,66 @@
+# Page snapshot
+
+```yaml
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+- main:
+  - text: Free
+  - button "Upgrade"
+  - text: Good afternoon Good afternoon
+  - textbox:
+    - paragraph: Ask anything
+  - button "Gemini 2.5 Flash Lite Preview":
+    - img
+    - text: Gemini 2.5 Flash Lite Preview
+    - img
+  - button:
+    - img
+  - button:
+    - img
+  - button:
+    - img
+  - button "Send Message" [disabled]:
+    - img
+  - button "Choose File"
+  - button "How to":
+    - img
+    - text: How to
+  - button "Explain Concepts":
+    - img
+    - text: Explain Concepts
+  - button "Creative":
+    - img
+    - text: Creative
+  - button "Advice":
+    - img
+    - text: Advice
+  - button "Analysis":
+    - img
+    - text: Analysis
+  - link "Featured on Startup Fame":
+    - /url: https://startupfa.me/s/vt-chat?utm_source=vtchat.io.vn
+    - img "Featured on Startup Fame"
+  - link "VT Chat on Peerlist":
+    - /url: https://peerlist.io/vinhnx/project/vt
+    - img "VT Chat on Peerlist"
+  - text: © 2025 VT. All rights reserved.
+  - link "About":
+    - /url: /about
+  - text: •
+  - link "Terms":
+    - /url: /terms
+  - text: •
+  - link "Privacy":
+    - /url: /privacy
+  - text: •
+  - link "FAQ":
+    - /url: /faq
+  - text: •
+  - link "Support":
+    - /url: mailto:hello@vtchat.io.vn
+- region "Notifications alt+T"
+- button:
+  - img
+- region "Notifications alt+T"
+```

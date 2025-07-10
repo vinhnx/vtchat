@@ -172,7 +172,7 @@ async function runAllTests() {
     );
 
     const allPassed = Object.values(results).every((result) => result === true);
-    console.log('\n' + (allPassed ? '🎉 All tests passed!' : '⚠️  Some tests failed'));
+    console.log(`\n${allPassed ? '🎉 All tests passed!' : '⚠️  Some tests failed'}`);
 
     return allPassed;
 }

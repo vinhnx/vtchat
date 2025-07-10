@@ -93,7 +93,7 @@ test.describe('Lighthouse Performance Optimizations', () => {
             // Should have priority loading for above-the-fold image
             const imageElement = backgroundImage.first();
             const loading = await imageElement.getAttribute('loading');
-            const fetchPriority = await imageElement.getAttribute('fetchpriority');
+            const _fetchPriority = await imageElement.getAttribute('fetchpriority');
 
             // Login background should either have priority or no lazy loading
             expect(loading === null || loading === 'eager').toBeTruthy();

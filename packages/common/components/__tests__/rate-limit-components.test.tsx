@@ -1,7 +1,5 @@
 import { ModelEnum } from '@repo/ai/models';
-import { ChatMode } from '@repo/shared/config';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the hooks
@@ -18,7 +16,7 @@ vi.mock('@repo/common/hooks', () => ({
 
 // Mock date-fns
 vi.mock('date-fns', () => ({
-    formatDistanceToNow: vi.fn((date, options) => {
+    formatDistanceToNow: vi.fn((_date, options) => {
         if (options?.addSuffix) {
             return 'in 5 minutes';
         }

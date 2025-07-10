@@ -14,7 +14,7 @@ export const StructuredDataDisplay = () => {
 
     const handleDownload = () => {
         const dataStr = JSON.stringify(structuredData.data, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
 
         const exportFileDefaultName = `structured-data-${structuredData.fileName}.json`;
 

@@ -20,7 +20,7 @@ export interface LinkedAccount {
  * Get all linked accounts for a user from the database
  * This ensures we have the most up-to-date account linking information
  */
-export async function getLinkedAccountsFromDB(userId: string): Promise<LinkedAccount[]> {
+export async function getLinkedAccountsFromDB(_userId: string): Promise<LinkedAccount[]> {
     try {
         // For now, we'll use the Better Auth API to get linked accounts
         // In production, this would use Neon MCP to query the accounts table directly

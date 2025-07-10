@@ -5,7 +5,7 @@ export const getHostname = (url: string) => {
             return new URL(url).hostname.split('.')[1];
         }
         return hostname;
-    } catch (error) {
+    } catch (_error) {
         return url;
     }
 };
@@ -13,7 +13,7 @@ export const getHostname = (url: string) => {
 export const getHost = (url: string) => {
     try {
         return new URL(url).hostname;
-    } catch (error) {
+    } catch (_error) {
         return;
     }
 };

@@ -7,7 +7,7 @@ type PersistentStorageAdapter = {
     exists(key: string): Promise<boolean>;
 };
 
-type WorkflowPersistenceData<TEvent, TContext> = {
+type WorkflowPersistenceData<_TEvent, _TContext> = {
     id: string;
     workflowState: any;
     eventState: any;

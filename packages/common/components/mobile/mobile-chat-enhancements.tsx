@@ -174,7 +174,7 @@ export const SwipeableMessage = memo(
             setIsDragging(true);
         };
 
-        const handleDragEnd = (event: any, info: PanInfo) => {
+        const handleDragEnd = (_event: any, info: PanInfo) => {
             setIsDragging(false);
             const { offset } = info;
 
@@ -189,7 +189,7 @@ export const SwipeableMessage = memo(
             setDragOffset(0);
         };
 
-        const handleDrag = (event: any, info: PanInfo) => {
+        const handleDrag = (_event: any, info: PanInfo) => {
             setDragOffset(info.offset.x);
         };
 
@@ -372,7 +372,7 @@ export const MobilePullToRefresh = memo(
             }
         };
 
-        const handleDragEnd = async (event: any, info: PanInfo) => {
+        const handleDragEnd = async (_event: any, _info: PanInfo) => {
             if (canRefresh && pullDistance > threshold && !isRefreshing) {
                 setIsRefreshing(true);
                 try {
@@ -388,7 +388,7 @@ export const MobilePullToRefresh = memo(
             }
         };
 
-        const handleDrag = (event: any, info: PanInfo) => {
+        const handleDrag = (_event: any, info: PanInfo) => {
             if (canRefresh && info.offset.y > 0) {
                 setPullDistance(Math.min(info.offset.y, threshold * 1.5));
             }

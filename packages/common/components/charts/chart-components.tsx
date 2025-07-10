@@ -338,7 +338,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
                             nameKey="name"
                             strokeWidth={2}
                         >
-                            {data.map((entry: any, index: number) => {
+                            {data.map((_entry: any, index: number) => {
                                 const colorKeys = Object.keys(CHART_COLORS);
                                 const colorKey = colorKeys[index % colorKeys.length];
                                 return (

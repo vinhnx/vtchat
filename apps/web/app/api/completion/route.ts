@@ -5,6 +5,7 @@ import { log } from '@repo/shared/logger';
 import { type Geo, geolocation } from '@vercel/functions';
 import type { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth-server';
+import { shouldDisableGemini } from '@/lib/services/budget-monitor';
 import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/access-control';
 
@@ -61,21 +62,49 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Rate limiting for free Gemini 2.5 Flash Lite model
+        // Rate limiting for Gemini models
         const selectedModel = getModelFromChatMode(data.mode);
 
-        if (selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE) {
+        // Check if the selected model is a Gemini model that needs rate limiting
+        const isGeminiModel = [
+            ModelEnum.GEMINI_2_5_FLASH_LITE,
+            ModelEnum.GEMINI_2_5_FLASH,
+            ModelEnum.GEMINI_2_5_PRO,
+            ModelEnum.GEMINI_2_0_FLASH,
+            ModelEnum.GEMINI_2_0_FLASH_LITE,
+        ].includes(selectedModel);
+
+        if (isGeminiModel) {
             // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
-            const geminiApiKey = data.apiKeys?.['GEMINI_API_KEY'];
+            const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
             const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
             if (!hasByokGeminiKey) {
-                // Require authentication for free model access
+                // Check budget limits before rate limiting
+                const budgetCheck = await shouldDisableGemini();
+                if (budgetCheck.shouldDisable) {
+                    return new Response(
+                        JSON.stringify({
+                            error: 'Service temporarily unavailable',
+                            message:
+                                'Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.',
+                            reason: 'budget_exceeded',
+                            upgradeUrl: '/plus',
+                            usageSettingsAction: 'open_usage_settings',
+                        }),
+                        {
+                            status: 503,
+                            headers: { 'Content-Type': 'application/json' },
+                        }
+                    );
+                }
+                // Require authentication for server-funded model access
                 if (!userId) {
                     return new Response(
                         JSON.stringify({
                             error: 'Authentication required',
-                            message: 'Please register to use the free Gemini 2.5 Flash Lite model.',
+                            message:
+                                'Please register to use Gemini models or provide your own API key.',
                             redirect: '/auth/login',
                         }),
                         {
@@ -85,15 +114,28 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                // Check rate limits only for users without BYOK
-                let rateLimitResult;
-                let vtPlusAccess;
-                try {
-                    // Check VT+ status once for both rate limits and messages
-                    vtPlusAccess = await checkVTPlusAccess({ userId, ip });
-                    const isVTPlusUser = vtPlusAccess.hasAccess;
+                // VT+ REQUIRED for server-funded Gemini access
+                const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+                if (!vtPlusAccess.hasAccess) {
+                    return new Response(
+                        JSON.stringify({
+                            error: 'VT+ subscription required',
+                            message:
+                                'Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.',
+                            upgradeUrl: '/plus',
+                            usageSettingsAction: 'open_usage_settings',
+                        }),
+                        {
+                            status: 403,
+                            headers: { 'Content-Type': 'application/json' },
+                        }
+                    );
+                }
 
-                    rateLimitResult = await checkRateLimit(userId, selectedModel, isVTPlusUser);
+                // Check rate limits for VT+ users (isVTPlusUser is always true here)
+                let rateLimitResult;
+                try {
+                    rateLimitResult = await checkRateLimit(userId, selectedModel, true);
                 } catch (error) {
                     log.error({ error }, 'Rate limit check failed');
                     // Continue without rate limiting if check fails (graceful degradation)
@@ -106,8 +148,8 @@ export async function POST(request: NextRequest) {
                             ? rateLimitResult.resetTime.daily
                             : rateLimitResult.resetTime.minute;
 
-                    // Use already fetched VT+ status for appropriate message
-                    const isVTPlusUser = vtPlusAccess?.hasAccess || false;
+                    // VT+ users are guaranteed at this point (since we gated above)
+                    const isVTPlusUser = true;
 
                     const message =
                         rateLimitResult.reason === 'daily_limit_exceeded'
@@ -142,13 +184,9 @@ export async function POST(request: NextRequest) {
                 }
 
                 // Record request immediately after rate limit check passes to prevent abort bypass
-                if (
-                    userId &&
-                    selectedModel === ModelEnum.GEMINI_2_5_FLASH_LITE &&
-                    !hasByokGeminiKey
-                ) {
+                if (userId && isGeminiModel && !hasByokGeminiKey) {
                     try {
-                        await recordRequest(userId, selectedModel);
+                        await recordRequest(userId, selectedModel, vtPlusAccess.hasAccess);
                     } catch (error) {
                         log.error({ error }, 'Failed to record request for rate limiting');
                         // Continue - don't fail the request if rate limit recording fails
@@ -178,7 +216,7 @@ export async function POST(request: NextRequest) {
                     // VT+ user, no BYOK needed
                 } else {
                     // Free user, check for BYOK
-                    const geminiApiKey = data.apiKeys?.['GEMINI_API_KEY'];
+                    const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
                     const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
                     if (!hasByokGeminiKey) {
@@ -263,7 +301,7 @@ export async function POST(request: NextRequest) {
             gl,
             selectedModel,
             hasByokGeminiKey: !!(
-                data.apiKeys?.['GEMINI_API_KEY'] && data.apiKeys['GEMINI_API_KEY'].trim().length > 0
+                data.apiKeys?.GEMINI_API_KEY && data.apiKeys.GEMINI_API_KEY.trim().length > 0
             ),
         });
 

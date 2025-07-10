@@ -83,7 +83,7 @@ describe('Content Security', () => {
         });
 
         it('should mask PII in preview', () => {
-            const content = 'Contact john@example.com for more information. ' + 'A'.repeat(100);
+            const content = `Contact john@example.com for more information. ${'A'.repeat(100)}`;
             const result = createContentHash(content);
             expect(result).toContain('[EMAIL_REDACTED]');
             expect(result).toMatch(/\[HASH:[a-f0-9]{16}\]$/);
@@ -98,7 +98,7 @@ describe('Content Security', () => {
         });
 
         it('should truncate long non-PII content', () => {
-            const longContent = 'Clean content about cats. ' + 'A'.repeat(500);
+            const longContent = `Clean content about cats. ${'A'.repeat(500)}`;
             const result = secureContentForEmbedding(longContent);
             expect(result).toMatch(/\[HASH:[a-f0-9]{16}\]$/);
         });

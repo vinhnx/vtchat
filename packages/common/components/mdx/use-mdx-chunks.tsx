@@ -15,7 +15,7 @@ export const useMdxChunker = () => {
      * Extract the substring from the original MDX text for the given node's range.
      */
     const getNodeText = (node: any, lines: string[]): string => {
-        if (!(node.position && node.position.start && node.position.end)) {
+        if (!(node.position?.start && node.position.end)) {
             return '';
         }
         const startLine = node.position.start.line;
@@ -30,7 +30,7 @@ export const useMdxChunker = () => {
     /**
      * Extract the props/attributes from an mdxJsxFlowElement or mdxJsxTextElement node.
      */
-    const getMdxProps = (node: any): Record<string, any> => {
+    const _getMdxProps = (node: any): Record<string, any> => {
         if (!node.attributes) return {};
         return node.attributes.reduce((acc: Record<string, any>, attr: any) => {
             acc[attr.name] = attr.value;
@@ -47,7 +47,7 @@ export const useMdxChunker = () => {
         return closingRegex.test(text);
     };
 
-    const getListContext = (node: any): { type: string | null; items: any[] } => {
+    const _getListContext = (node: any): { type: string | null; items: any[] } => {
         if (node.type === 'list') {
             return {
                 type: node.ordered ? 'ol' : 'ul',
@@ -71,7 +71,7 @@ export const useMdxChunker = () => {
 
         // Handle list structures
         if (node.type === 'list') {
-            const listType = node.ordered ? 'ol' : 'ul';
+            const _listType = node.ordered ? 'ol' : 'ul';
             return nodeText;
         }
 
@@ -135,7 +135,7 @@ export const useMdxChunker = () => {
 
             const lines = mdxText.split('\n');
             const chunks: string[] = [];
-            const currentChunk: string | null = null;
+            const _currentChunk: string | null = null;
             let previousNode: any = null;
 
             if (Array.isArray(ast.children)) {
@@ -146,7 +146,7 @@ export const useMdxChunker = () => {
                         // Check if we should combine with the previous chunk based on content relationship
                         if (previousNode && shouldCombineWithPrevious(node, previousNode)) {
                             if (chunks.length > 0) {
-                                chunks[chunks.length - 1] += '\n' + processedText;
+                                chunks[chunks.length - 1] += `\n${processedText}`;
                             } else {
                                 chunks.push(processedText);
                             }

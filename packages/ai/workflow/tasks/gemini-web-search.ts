@@ -89,8 +89,7 @@ Please include:
                     const newSources = result.sources
                         ?.filter(
                             (source: any) =>
-                                source &&
-                                source.url &&
+                                source?.url &&
                                 typeof source.url === 'string' &&
                                 source.url.trim() !== '' &&
                                 !existingSources.some((existing) => existing.link === source.url)

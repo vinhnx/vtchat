@@ -4,7 +4,7 @@ const isValidUrl = (url: string) => {
     try {
         new URL(url);
         return true;
-    } catch (error) {
+    } catch (_error) {
         return false;
     }
 };
@@ -12,7 +12,7 @@ const isValidUrl = (url: string) => {
 const getHost = (url: string) => {
     try {
         return new URL(url).hostname;
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 };
@@ -30,7 +30,7 @@ const getFavIcon = (host?: string) => {
     }
     try {
         return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 };

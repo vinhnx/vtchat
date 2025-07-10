@@ -76,7 +76,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
     // For worker environments (use self)
     if (typeof self !== 'undefined') {
         // Check if AI_API_KEYS exists on self
-        if ((self as any).AI_API_KEYS && (self as any).AI_API_KEYS[provider]) {
+        if ((self as any).AI_API_KEYS?.[provider]) {
             return (self as any).AI_API_KEYS[provider];
         }
 
@@ -230,7 +230,7 @@ export const getProviderInstance = (
             }
 
             // Clean up URL and add /v1 endpoint
-            const baseURL = url.origin.replace(/\/+$/, '') + '/v1';
+            const baseURL = `${url.origin.replace(/\/+$/, '')}/v1`;
 
             return createOpenAI({
                 baseURL,

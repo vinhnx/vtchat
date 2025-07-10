@@ -9,13 +9,13 @@ import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
-import { ChatMode, ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
+import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
@@ -57,7 +57,7 @@ export const ChatInput = ({
     const isPlusTier = useVtPlusAccess();
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [showBYOKDialog, setShowBYOKDialog] = useState(false);
-    const [pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
+    const [_pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
 
     const { threadId: currentThreadId } = useParams();
@@ -104,7 +104,7 @@ export const ChatInput = ({
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
-    const clearDocumentAttachment = useChatStore((state) => state.clearDocumentAttachment);
+    const _clearDocumentAttachment = useChatStore((state) => state.clearDocumentAttachment);
     const stopGeneration = useChatStore((state) => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();

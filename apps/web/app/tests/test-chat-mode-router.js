@@ -5,10 +5,10 @@
  * for VT+ users with tools enabled.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 // Mock the chat mode router logic
-function chatModeRouter(mode, webSearch, mathCalculator, charts) {
+function chatModeRouter(mode, webSearch, _mathCalculator, _charts) {
     // Simulate the router logic
     if (mode === 'deep') {
         return 'refine-query';

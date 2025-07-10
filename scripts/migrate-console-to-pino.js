@@ -5,8 +5,8 @@
  * Focuses on main application code, excludes test files and build scripts
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const { log } = require('@repo/shared/logger');
 
 // Files/directories to exclude from migration
@@ -114,19 +114,22 @@ function replaceConsoleStatements(content) {
             `${consoleFn}\\((['"][^'"]*['"])[,\\s]+([^)]+)\\)`,
             'g'
         );
-        updatedContent = updatedContent.replace(withVariablePattern, (match, message, variable) => {
-            // Convert to structured logging format
-            const cleanMessage = message.replace(/['"]$/, '').replace(/^['"]/, '');
-            if (variable.trim().startsWith('{')) {
-                return `${loggerFn}('${cleanMessage}', ${variable})`;
+        updatedContent = updatedContent.replace(
+            withVariablePattern,
+            (_match, message, variable) => {
+                // Convert to structured logging format
+                const cleanMessage = message.replace(/['"]$/, '').replace(/^['"]/, '');
+                if (variable.trim().startsWith('{')) {
+                    return `${loggerFn}('${cleanMessage}', ${variable})`;
+                }
+                return `${loggerFn}('${cleanMessage}', { data: ${variable} })`;
             }
-            return `${loggerFn}('${cleanMessage}', { data: ${variable} })`;
-        });
+        );
 
         // Handle object-only cases: console.log({ key: value })
         const objectOnlyPattern = new RegExp(`${consoleFn}\\(\\s*\\{[^}]+\\}\\s*\\)`, 'g');
         updatedContent = updatedContent.replace(objectOnlyPattern, (match) => {
-            const objectPart = match.replace(consoleFn + '(', '').replace(')', '');
+            const objectPart = match.replace(`${consoleFn}(`, '').replace(')', '');
             return `${loggerFn}('Debug info', ${objectPart})`;
         });
     });

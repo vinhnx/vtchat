@@ -1,7 +1,7 @@
 'use client';
 import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { AgentProvider, useLogout } from '@repo/common/hooks';
+import { AgentProvider, useLogout, useVTPlusAnnouncement } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
@@ -37,6 +37,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
+
+    // Show VT+ announcement toast once
+    useVTPlusAnnouncement();
 
     const containerClass =
         'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';

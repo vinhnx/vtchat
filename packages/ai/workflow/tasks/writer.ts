@@ -107,7 +107,7 @@ Your report should demonstrate subject matter expertise while remaining intellec
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
-            onChunk: (chunk, fullText) => {
+            onChunk: (chunk, _fullText) => {
                 chunkBuffer.add(chunk);
             },
         });

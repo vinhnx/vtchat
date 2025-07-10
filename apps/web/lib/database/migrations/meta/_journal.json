@@ -43,6 +43,13 @@
             "when": 1751720323436,
             "tag": "0005_polite_green_goblin",
             "breakpoints": true
+        },
+        {
+            "idx": 6,
+            "version": "7",
+            "when": 1752134962973,
+            "tag": "0006_useful_mentallo",
+            "breakpoints": true
         }
     ]
 }

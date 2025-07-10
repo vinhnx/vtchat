@@ -1,12 +1,12 @@
-import { createResource } from '../../../../lib/actions/resources';
-import { findRelevantContent } from '../../../../lib/ai/embedding';
-import { auth } from '../../../../lib/auth-server';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { ModelEnum } from '@repo/ai/models';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
+import { createResource } from '../../../../lib/actions/resources';
+import { findRelevantContent } from '../../../../lib/ai/embedding';
+import { auth } from '../../../../lib/auth-server';
 import { checkVTPlusAccess } from '../../subscription/access-control';
 
 // Allow streaming responses up to 30 seconds

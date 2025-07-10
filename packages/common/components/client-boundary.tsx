@@ -17,7 +17,7 @@ export function ClientBoundary({ children, fallback }: ClientBoundaryProps) {
     const { isClient } = useRootContext();
 
     if (!isClient) {
-        return fallback ? <>{fallback}</> : <FullPageLoader />;
+        return fallback ? fallback : <FullPageLoader />;
     }
 
     return <>{children}</>;

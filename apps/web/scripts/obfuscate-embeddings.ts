@@ -3,11 +3,11 @@
  * This should be run as a one-time migration to secure existing data
  */
 
+import { log } from '@repo/shared/logger';
 import { sql } from 'drizzle-orm';
 import { db } from '../lib/database';
 import { embeddings } from '../lib/database/schema';
-import { secureContentForEmbedding, containsPII } from '../lib/utils/content-security';
-import { log } from '@repo/shared/logger';
+import { containsPII, secureContentForEmbedding } from '../lib/utils/content-security';
 
 interface EmbeddingRecord {
     id: string;
@@ -66,7 +66,7 @@ async function obfuscateExistingEmbeddings() {
             }
         }
 
-        console.log(`✅ Obfuscation complete!`);
+        console.log('✅ Obfuscation complete!');
         console.log(`   Updated: ${updatedCount} embeddings`);
         console.log(`   Skipped: ${skippedCount} embeddings (no PII detected)`);
 

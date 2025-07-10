@@ -7,7 +7,7 @@ import { ExternalLink } from 'lucide-react';
 import type React from 'react';
 import { memo, useState } from 'react';
 
-const ogCache = new Map<string, any>();
+const _ogCache = new Map<string, any>();
 
 export type LinkPreviewType = {
     source: Source;
@@ -41,8 +41,8 @@ export const LinkPreviewPopover = memo(({ source, children }: LinkPreviewType) =
 });
 
 export const LinkPreview = memo(({ source }: { source: Source }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [ogResult, setOgResult] = useState<any | null>(null);
+    const [_isLoading, _setIsLoading] = useState(false);
+    const [_ogResult, _setOgResult] = useState<any | null>(null);
 
     // const fetchOg = async (url: string) => {
     //     try {

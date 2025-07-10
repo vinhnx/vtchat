@@ -1,7 +1,7 @@
 import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
-import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import {
     type CoreMessage,
     extractReasoningMiddleware,
@@ -90,7 +90,7 @@ export const generateTextWithGeminiSearch = async ({
     // Add comprehensive runtime logging
     log.info({}, '=== generateTextWithGeminiSearch START ===');
     log.info({
-        prompt: prompt?.slice(0, 100) + '...',
+        prompt: `${prompt?.slice(0, 100)}...`,
         model,
         hasOnChunk: !!onChunk,
         messagesLength: messages?.length,
@@ -107,7 +107,7 @@ export const generateTextWithGeminiSearch = async ({
         let windowApiKey = false;
         try {
             windowApiKey = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS?.google;
-        } catch (error) {
+        } catch (_error) {
             // window is not available in this environment
             windowApiKey = false;
         }
@@ -667,7 +667,7 @@ export const generateObject = async ({
 
         log.info('=== generateObject START ===');
         log.info('Input parameters:', {
-            prompt: prompt?.slice(0, 100) + '...',
+            prompt: `${prompt?.slice(0, 100)}...`,
             model,
             hasSchema: !!schema,
             messagesLength: messages?.length,
@@ -886,7 +886,7 @@ export class EventEmitter<T extends Record<string, any>> {
 
 export function createEventManager<T extends Record<string, any>>(
     initialState?: Partial<T>,
-    schema?: EventSchema<T>
+    _schema?: EventSchema<T>
 ) {
     const emitter = new EventEmitter<T>(initialState);
 
@@ -945,7 +945,7 @@ const processContent = (content: string, maxLength = 10_000): string => {
 
     for (const chunk of chunks) {
         if ((result + chunk).length > maxLength) break;
-        result += chunk + '\n\n';
+        result += `${chunk}\n\n`;
     }
 
     return result.trim();
@@ -1173,11 +1173,11 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
     };
 
     const updateStatus = (status: 'PENDING' | 'COMPLETED' | 'ERROR') => {
-        events?.update('status', (prev) => status);
+        events?.update('status', (_prev) => status);
     };
 
     const updateObject = (object: any) => {
-        events?.update('object', (prev) => object);
+        events?.update('object', (_prev) => object);
     };
 
     return {
@@ -1206,13 +1206,13 @@ export const selectAvailableModel = (
 
     try {
         hasSelfApiKeys = typeof self !== 'undefined' && !!(self as any).AI_API_KEYS;
-    } catch (error) {
+    } catch (_error) {
         // self not available
     }
 
     try {
         hasWindowApiKeys = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS;
-    } catch (error) {
+    } catch (_error) {
         // window not available
     }
 
@@ -1224,7 +1224,7 @@ export const selectAvailableModel = (
         hasWindow: (() => {
             try {
                 return typeof window !== 'undefined';
-            } catch (error) {
+            } catch (_error) {
                 return false;
             }
         })(),
@@ -1296,7 +1296,7 @@ export const selectAvailableModel = (
                     return true;
                 }
             }
-        } catch (error) {
+        } catch (_error) {
             // self not available
         }
 
@@ -1319,7 +1319,7 @@ export const selectAvailableModel = (
                     return true;
                 }
             }
-        } catch (error) {
+        } catch (_error) {
             // window not available
         }
 

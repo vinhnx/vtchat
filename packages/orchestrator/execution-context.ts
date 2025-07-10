@@ -1,5 +1,5 @@
+import type { EventEmitter } from 'node:events';
 import { log } from '@repo/shared/logger';
-import type { EventEmitter } from 'events';
 import type { TaskTiming, WorkflowState } from './types';
 
 export class ExecutionContext {
@@ -109,7 +109,7 @@ export class ExecutionContext {
         if (!this.taskTimings.has(taskName)) {
             this.taskTimings.set(taskName, []);
         }
-        this.taskTimings.get(taskName)!.push(timing);
+        this.taskTimings.get(taskName)?.push(timing);
     }
 
     endTaskTiming(taskName: string, error?: Error) {

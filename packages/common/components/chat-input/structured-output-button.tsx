@@ -247,7 +247,7 @@ const StructuredOutputButton = () => {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
                 const textItems = textContent.items.map((item: any) => item.str);
-                fullText += textItems.join(' ') + '\n';
+                fullText += `${textItems.join(' ')}\n`;
             }
 
             return fullText.trim();

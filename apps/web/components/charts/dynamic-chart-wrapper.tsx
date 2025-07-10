@@ -1,7 +1,7 @@
 'use client';
 
 import { lazy, Suspense } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Dynamic import the chart renderer

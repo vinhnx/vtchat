@@ -11,7 +11,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [customOption, setCustomOption] = useState<string>('');
-    const [isCustomSelected, setIsCustomSelected] = useState<boolean>(false);
+    const [_isCustomSelected, setIsCustomSelected] = useState<boolean>(false);
     const { handleSubmit } = useAgentStream();
     const getThreadItems = useChatStore((state) => state.getThreadItems);
     const updateThreadItem = useChatStore((state) => state.updateThreadItem);

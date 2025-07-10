@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest';
 import { UserTier } from '@repo/shared/constants/user-tiers';
+import { describe, expect, test, vi } from 'vitest';
 import {
     getAllToolDescriptions,
     getAvailableTools,
@@ -125,10 +125,10 @@ describe('Tool Registry', () => {
             const calculatorDesc = descriptions.find((d) => d.id === 'calculator');
 
             expect(calculatorDesc).toBeDefined();
-            expect(calculatorDesc!.text).toContain('mathematical calculations');
-            expect(calculatorDesc!.text).toContain('calculate'); // keyword
-            expect(calculatorDesc!.text).toContain('solve'); // keyword
-            expect(calculatorDesc!.text).toContain('15% of 1000'); // example
+            expect(calculatorDesc?.text).toContain('mathematical calculations');
+            expect(calculatorDesc?.text).toContain('calculate'); // keyword
+            expect(calculatorDesc?.text).toContain('solve'); // keyword
+            expect(calculatorDesc?.text).toContain('15% of 1000'); // example
         });
     });
 

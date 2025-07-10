@@ -116,7 +116,7 @@ describe('Reasoning Parts', () => {
 
         expect(reasoningPart.type).toBe('reasoning');
         expect(reasoningPart.details).toHaveLength(2);
-        expect(reasoningPart.details![0].type).toBe('text');
-        expect(reasoningPart.details![1].type).toBe('redacted');
+        expect(reasoningPart.details?.[0].type).toBe('text');
+        expect(reasoningPart.details?.[1].type).toBe('redacted');
     });
 });

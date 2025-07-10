@@ -16,7 +16,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
     execute: async ({ events, context, data, signal }) => {
         const messages = context?.get('messages') || [];
         const question = context?.get('question') || '';
-        const currentYear = new Date().getFullYear();
+        const _currentYear = new Date().getFullYear();
         const { updateStep, nextStepId } = sendEvents(events);
 
         const stepId = nextStepId();

@@ -88,7 +88,7 @@ function parseCitationsWithSourceTags(markdown: string): string {
     let result = markdown;
 
     // Replace each citation with the wrapped version
-    result = result.replace(citationRegex, (match, p1) => {
+    result = result.replace(citationRegex, (_match, p1) => {
         return `<Source>${p1}</Source>`;
     });
 

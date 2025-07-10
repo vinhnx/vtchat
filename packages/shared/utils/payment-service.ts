@@ -113,9 +113,9 @@ export class CreemService {
             });
 
             // Determine if this is for VT+ subscription based on our internal mapping
-            const isSubscription =
+            const _isSubscription =
                 request.productId === PlanSlug.VT_PLUS || // Changed from 'vt_plus_monthly'
-                (request.successUrl && request.successUrl.includes(`plan=${PlanSlug.VT_PLUS}`)); // Used PlanSlug
+                request.successUrl?.includes(`plan=${PlanSlug.VT_PLUS}`); // Used PlanSlug
 
             // Get the base URL for success redirect
             const baseUrl = CreemService.getBaseUrl();
@@ -176,7 +176,7 @@ export class CreemService {
     /**
      * Get customer portal URL for managing subscriptions
      */
-    static async getPortalUrl(customerEmail?: string, userId?: string): Promise<PortalResponse> {
+    static async getPortalUrl(_customerEmail?: string, userId?: string): Promise<PortalResponse> {
         try {
             if (!CreemService.API_KEY) {
                 throw new Error('CREEM_API_KEY not configured');
@@ -201,7 +201,7 @@ export class CreemService {
                         customerId = userResults[0].creemCustomerId;
                         log.info({ userId }, '[CreemService] Found customer ID for user');
                     }
-                } catch (dbError) {
+                } catch (_dbError) {
                     log.info('[CreemService] Database lookup failed, proceeding with fallback');
                 }
             }

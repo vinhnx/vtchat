@@ -6,11 +6,11 @@ import {
     EMBEDDING_MODELS,
     type EmbeddingModel,
 } from '@repo/shared/config/embedding-models';
-import { log } from '@repo/shared/logger';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
+import { log } from '@repo/shared/logger';
 import { and, cosineDistance, desc, eq, gt, sql } from 'drizzle-orm';
-import { embeddings, resources } from '../database/schema';
 import { db } from '../database';
+import { embeddings, resources } from '../database/schema';
 import { maskPII } from '../utils/content-security';
 
 // Helper function to check if a model is a Gemini model

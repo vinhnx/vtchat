@@ -43,7 +43,7 @@ export const FormLabel = ({
                         {linkText}
                     </Link>
                 )}
-                {extra && extra()}
+                {extra?.()}
             </Flex>
             {children && (
                 <Type asChild size="xs" textColor="secondary">

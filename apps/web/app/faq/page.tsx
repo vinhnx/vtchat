@@ -509,7 +509,7 @@ function HelpCenterContent() {
                                         with advanced AI capabilities
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Regular Users:</strong> 20 requests per day, 5
+                                        <strong>Free Users:</strong> 20 requests per day, 5
                                         requests per minute
                                     </li>
                                     <li className="text-muted-foreground">
@@ -547,14 +547,15 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT+ users get access to all Gemini models and tools without
-                                    needing to provide their own API keys:
+                                    <strong>VT+ Required:</strong> Server-funded access to Gemini
+                                    models now requires VT+ subscription. VT+ users get access to
+                                    all Gemini models without needing to provide their own API keys:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>All Gemini Models:</strong> Access to Gemini 2.5
-                                        Flash Pro, Gemini 2.5 Pro, Gemini 2.0 Flash, and all other
-                                        Gemini models without BYOK
+                                        Flash Lite (100/day), Gemini 2.5 Flash (50/day), Gemini 2.5
+                                        Pro (25/day), and Gemini 2.0 models
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Enhanced Tools:</strong> Web search, math
@@ -571,14 +572,14 @@ function HelpCenterContent() {
                                         models
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Higher Limits:</strong> 100 requests per day, 10
-                                        requests per minute for all Gemini models
+                                        <strong>Budget Protection:</strong> Usage is monitored with
+                                        monthly budget caps to ensure service availability
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Free users still get Gemini 2.5 Flash Lite with rate limits, but
-                                    VT+ users enjoy full access to the entire Gemini model suite
-                                    plus enhanced tool integrations.
+                                    <strong>Free users:</strong> Must provide their own Gemini API
+                                    key for unlimited access. VT+ users get server-funded access
+                                    with rate limits for cost control.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -597,21 +598,23 @@ function HelpCenterContent() {
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Free tier (logged-in users):</strong> ALL premium AI
-                                        models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1,
-                                        Grok 3) + all advanced features - intelligent tool routing,
-                                        chart visualization, web search, dark mode, thinking mode,
-                                        structured output, document parsing, reasoning chain, Gemini
-                                        caching, multi-modal chat, and unlimited BYOK usage. Plus 9
-                                        free server models including Gemini 2.5 Flash Lite.
+                                        models (Claude 4, GPT-4.1, O3, DeepSeek R1, Grok 3) + all
+                                        advanced features - intelligent tool routing, chart
+                                        visualization, web search, dark mode, thinking mode,
+                                        structured output, document parsing, reasoning chain,
+                                        multi-modal chat, and unlimited BYOK usage.
+                                        <strong>Gemini access requires your own API key.</strong>
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
-                                        Everything free + only 3 exclusive research features:
-                                        PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep
-                                        Research capabilities), and RAG (Personal AI Assistant with
-                                        Memory). Plus access to all Gemini models (2.5 Flash Pro,
-                                        2.5 Pro, 2.0 Flash, etc.) and enhanced tools (web search,
-                                        math calculator, charts) without needing your own API keys.
+                                        Everything free + 3 exclusive research features: PRO_SEARCH
+                                        (Enhanced Web Search), DEEP_RESEARCH (Deep Research
+                                        capabilities), and RAG (Personal AI Assistant with Memory).{' '}
+                                        <strong>
+                                            Plus server-funded access to all Gemini models
+                                        </strong>
+                                        (2.5 Flash Lite, 2.5 Flash, 2.5 Pro, 2.0 Flash, etc.) with
+                                        rate limits and budget protection.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers include complete privacy with thread isolation

@@ -277,8 +277,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             });
 
             // Record requests for both users
-            await recordRequest(testUserId1, freeModelId);
-            await recordRequest(testUserId2, freeModelId);
+            await recordRequest(testUserId1, freeModelId, false);
+            await recordRequest(testUserId2, freeModelId, false);
 
             // Should create separate records for each user
             expect(mockInsert).toHaveBeenCalledTimes(2);
@@ -303,8 +303,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
 
         it('should not record requests for paid models', async () => {
-            await recordRequest(testUserId1, paidModelId);
-            await recordRequest(testUserId2, paidModelId);
+            await recordRequest(testUserId1, paidModelId, false);
+            await recordRequest(testUserId2, paidModelId, false);
 
             // Should not call database for paid models
             expect(mockDb.select).not.toHaveBeenCalled();

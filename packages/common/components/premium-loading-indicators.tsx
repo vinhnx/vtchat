@@ -1,6 +1,6 @@
 import { cn } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bot, Brain, Cpu, Loader2, Sparkles, Zap } from 'lucide-react';
+import { Bot, Brain, Cpu, Sparkles } from 'lucide-react';
 import { memo } from 'react';
 
 interface PremiumTypingIndicatorProps {

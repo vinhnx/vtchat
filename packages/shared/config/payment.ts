@@ -168,7 +168,7 @@ export class PaymentService {
             // Determine if this is for VT+ subscription
             const isSubscription =
                 request.productId === PlanSlug.VT_PLUS ||
-                (request.successUrl && request.successUrl.includes(`plan=${PlanSlug.VT_PLUS}`));
+                request.successUrl?.includes(`plan=${PlanSlug.VT_PLUS}`);
 
             // Get the base URL for success redirect
             const baseUrl = PaymentService.getBaseUrl();
@@ -233,7 +233,7 @@ export class PaymentService {
     /**
      * Get customer portal URL for managing subscriptions
      */
-    static async getPortalUrl(customerEmail?: string, userId?: string): Promise<PortalResponse> {
+    static async getPortalUrl(_customerEmail?: string, userId?: string): Promise<PortalResponse> {
         try {
             if (!PaymentService.API_KEY) {
                 throw new Error('CREEM_API_KEY not configured');

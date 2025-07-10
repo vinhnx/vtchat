@@ -5,8 +5,8 @@
  * Verifies all critical production environment configurations for VT Chat
  */
 
+import { existsSync } from 'node:fs';
 import { log } from '@repo/shared/logger';
-import { existsSync } from 'fs';
 
 const CONFIG_VERIFICATION = {
     environment: {

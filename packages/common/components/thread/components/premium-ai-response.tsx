@@ -27,7 +27,7 @@ interface PremiumAIResponseProps {
 
 export const PremiumAIResponse = memo(
     ({ content, threadItem, isGenerating = false, isLast = false }: PremiumAIResponseProps) => {
-        const [isExpanded, setIsExpanded] = useState(false);
+        const [_isExpanded, _setIsExpanded] = useState(false);
         const [showActions, setShowActions] = useState(false);
         const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
         const [isReading, setIsReading] = useState(false);

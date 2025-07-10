@@ -2,8 +2,8 @@ import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { safeJsonParse } from '../utils/storage-cleanup';
 import { isGeminiModel } from '../utils';
+import { safeJsonParse } from '../utils/storage-cleanup';
 
 export type ApiKeys = {
     OPENAI_API_KEY?: string;
@@ -214,26 +214,26 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.GPT_4_1_Mini:
                     case ChatMode.GPT_4_1_Nano:
                     case ChatMode.GPT_4_1:
-                        return isValidKey(apiKeys['OPENAI_API_KEY']);
+                        return isValidKey(apiKeys.OPENAI_API_KEY);
                     case ChatMode.Deep:
                     case ChatMode.Pro:
                         // Deep Research and Pro Search modes support BYOK for free users
-                        return isValidKey(apiKeys['GEMINI_API_KEY']);
+                        return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_0_FLASH:
                     case ChatMode.GEMINI_2_5_PRO:
                     case ChatMode.GEMINI_2_0_FLASH_LITE:
                     case ChatMode.GEMINI_2_5_FLASH:
-                        return isValidKey(apiKeys['GEMINI_API_KEY']);
+                        return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_5_FLASH_LITE:
                         return true; // Free model, no API key required
                     case ChatMode.CLAUDE_4_SONNET:
                     case ChatMode.CLAUDE_4_OPUS:
-                        return isValidKey(apiKeys['ANTHROPIC_API_KEY']);
+                        return isValidKey(apiKeys.ANTHROPIC_API_KEY);
                     case ChatMode.DEEPSEEK_R1:
-                        return isValidKey(apiKeys['FIREWORKS_API_KEY']);
+                        return isValidKey(apiKeys.FIREWORKS_API_KEY);
                     case ChatMode.GROK_3:
                     case ChatMode.GROK_3_MINI:
-                        return isValidKey(apiKeys['XAI_API_KEY']);
+                        return isValidKey(apiKeys.XAI_API_KEY);
                     // OpenRouter models
                     case ChatMode.DEEPSEEK_V3_0324_FREE:
                     case ChatMode.DEEPSEEK_V3_0324:
@@ -243,7 +243,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.QWEN3_32B:
                     case ChatMode.MISTRAL_NEMO:
                     case ChatMode.QWEN3_14B_FREE:
-                        return isValidKey(apiKeys['OPENROUTER_API_KEY']);
+                        return isValidKey(apiKeys.OPENROUTER_API_KEY);
                     // LM Studio local models - no API key required
                     case ChatMode.LMSTUDIO_LLAMA_3_8B:
                     case ChatMode.LMSTUDIO_QWEN_7B:

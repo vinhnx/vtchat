@@ -124,11 +124,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     let suggestedName = '';
                     for (const pattern of namePatterns) {
                         const match = pattern.exec(allContent);
-                        if (
-                            match &&
-                            match[1] &&
-                            !['The', 'A', 'An', 'This', 'That'].includes(match[1])
-                        ) {
+                        if (match?.[1] && !['The', 'A', 'An', 'This', 'That'].includes(match[1])) {
                             suggestedName = match[1];
                             break;
                         }
@@ -147,7 +143,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         if (match) {
                             suggestedWork = match[0].trim();
                             if (suggestedWork.length > 100) {
-                                suggestedWork = suggestedWork.substring(0, 100) + '...';
+                                suggestedWork = `${suggestedWork.substring(0, 100)}...`;
                             }
                             break;
                         }
@@ -693,10 +689,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             >
                                                 Use "
                                                 {knowledgeBaseSuggestions.work.length > 30
-                                                    ? knowledgeBaseSuggestions.work.substring(
+                                                    ? `${knowledgeBaseSuggestions.work.substring(
                                                           0,
                                                           30
-                                                      ) + '...'
+                                                      )}...`
                                                     : knowledgeBaseSuggestions.work}
                                                 "
                                             </Button>

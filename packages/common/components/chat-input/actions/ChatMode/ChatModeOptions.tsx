@@ -17,11 +17,11 @@ import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
 import {
     Badge,
+    cn,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    cn,
 } from '@repo/ui';
 import { Brain, Globe, Wrench } from 'lucide-react';
 import { useRouter } from 'next/navigation';

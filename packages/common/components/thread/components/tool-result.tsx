@@ -4,9 +4,9 @@ import { CodeBlock, ToolResultIcon } from '@repo/common/components';
 import { isChartTool } from '@repo/common/constants/chart-tools';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import type { ToolResult as ToolResultType } from '@repo/shared/types';
-import { Badge, Card, cn, DynamicChartRenderer } from '@repo/ui';
+import { Badge, Card, DynamicChartRenderer } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Activity, BarChart3, CheckCheck, CheckCircle, ChevronDown } from 'lucide-react';
+import { Activity, CheckCheck, CheckCircle, ChevronDown } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
 export type ToolResultProps = {

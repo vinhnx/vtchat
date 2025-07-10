@@ -73,9 +73,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const hasVtPlusAccess = useVtPlusAccess();
 
     // Store setters for syncing tool states
-    const setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
-    const setUseWebSearch = useChatStore((state) => state.setUseWebSearch);
-    const setUseCharts = useChatStore((state) => state.setUseCharts);
+    const _setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
+    const _setUseWebSearch = useChatStore((state) => state.setUseWebSearch);
+    const _setUseCharts = useChatStore((state) => state.setUseCharts);
 
     // In-memory store for thread items
     const threadItemMap = useMemo(() => new Map<string, ThreadItem>(), []);

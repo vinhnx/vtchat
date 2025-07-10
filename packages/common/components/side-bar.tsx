@@ -170,17 +170,21 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 <div
                     className={cn(
                         'w-full transition-all duration-200',
-                        isSidebarOpen ? 'px-4 py-3' : 'px-2 py-2'
+                        isSidebarOpen ? 'px-4 py-3' : 'flex justify-center px-2 py-2'
                     )}
+                    data-testid="sidebar-user-section"
                 >
                     {isSignedIn ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <div
                                     className={cn(
-                                        'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border shadow-sm transition-all duration-200',
-                                        isSidebarOpen ? 'px-3 py-2' : 'justify-center px-2 py-2'
+                                        'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
+                                        isSidebarOpen
+                                            ? 'w-full flex-row gap-3 px-3 py-2'
+                                            : 'h-8 w-8 p-1'
                                     )}
+                                    data-testid="sidebar-user-trigger"
                                     onClick={(e) => {
                                         // Prevent clicks on user profile trigger from closing mobile sidebar
                                         e.stopPropagation();

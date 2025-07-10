@@ -3,8 +3,8 @@
  * Tests that VT+ users automatically get access to Gemini web search using system API key
  */
 
-import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { geminiWebSearchTask } from '@repo/ai/workflow/tasks/gemini-web-search';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 describe('VT+ Gemini Web Search', () => {
     let mockContext;
@@ -72,7 +72,7 @@ describe('VT+ Gemini Web Search', () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (error) {
+        } catch (_error) {
             // Expected to fail due to incomplete mocking, but we can verify the API key was passed
         }
 
@@ -125,7 +125,7 @@ describe('VT+ Gemini Web Search', () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (error) {
+        } catch (_error) {
             // Expected to fail due to incomplete mocking
         }
 
@@ -178,7 +178,7 @@ describe('VT+ Gemini Web Search', () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (error) {
+        } catch (_error) {
             // Expected to fail due to incomplete mocking
         }
 
@@ -225,7 +225,7 @@ describe('VT+ Gemini Web Search', () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (error) {
+        } catch (_error) {
             // Expected to fail
         }
 

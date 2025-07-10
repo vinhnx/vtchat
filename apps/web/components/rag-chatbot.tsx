@@ -29,7 +29,7 @@ import {
 } from '@repo/ui';
 import { useChat } from 'ai/react';
 import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface KnowledgeItem {
@@ -199,7 +199,7 @@ export function RAGChatbot() {
     const isProcessing =
         isLoading || messages.some((msg) => msg.role === 'assistant' && !msg.content.trim());
 
-    const fetchKnowledgeBase = async () => {
+    const fetchKnowledgeBase = useCallback(async () => {
         try {
             const response = await fetch('/api/agent/knowledge');
             if (response.ok) {
@@ -222,7 +222,7 @@ export function RAGChatbot() {
             log.error({ error }, 'Error fetching knowledge base');
             showErrorToast(error as Error);
         }
-    };
+    }, []);
 
     const clearKnowledgeBase = async () => {
         if (!session?.user?.id) return;
@@ -281,18 +281,18 @@ export function RAGChatbot() {
     };
 
     // Auto-scroll to bottom when new messages arrive
-    const scrollToBottom = () => {
+    const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+    }, []);
 
     useEffect(() => {
         fetchKnowledgeBase();
-    }, []);
+    }, [fetchKnowledgeBase]);
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isLoading]);
+    }, [scrollToBottom]);
 
     // Filter to only show Gemini models for RAG
     const geminiModels = models.filter((m) => m.id.startsWith('gemini-'));
@@ -303,13 +303,13 @@ export function RAGChatbot() {
 
     return (
         <div className="flex h-full flex-col gap-4 md:flex-row md:gap-6">
-            <div className="flex flex-1 flex-col min-h-0">
+            <div className="flex min-h-0 flex-1 flex-col">
                 {/* Chat Messages */}
                 <ScrollArea className="w-full flex-1">
                     <div className="space-y-4 p-2 sm:p-4">
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-16 text-center">
-                                <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-primary/20 bg-background overflow-hidden">
+                                <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
                                     <img
                                         alt="VT Assistant"
                                         className="h-full w-full object-cover"
@@ -319,14 +319,14 @@ export function RAGChatbot() {
                                 <h3 className="text-foreground mb-2 text-lg font-medium">
                                     VT Personal AI Assistant
                                 </h3>
-                                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+                                <p className="text-muted-foreground mx-auto max-w-sm text-sm">
                                     Start chatting to build your personal knowledge base
                                 </p>
                             </div>
                         )}
 
                         {messages
-                            .filter((message) => message.content && message.content.trim())
+                            .filter((message) => message.content?.trim())
                             .map((message, index) => (
                                 <div
                                     className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
@@ -340,7 +340,7 @@ export function RAGChatbot() {
                                             src={session?.user?.image ?? undefined}
                                         />
                                     ) : (
-                                        <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full border border-primary/20 bg-background">
+                                        <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
                                             <img
                                                 alt="VT Assistant"
                                                 className="h-full w-full object-cover"
@@ -414,7 +414,7 @@ export function RAGChatbot() {
                                     VT+ subscription or Gemini API key required
                                 </span>
                                 <Button
-                                    className="text-xs w-full sm:w-auto"
+                                    className="w-full text-xs sm:w-auto"
                                     onClick={() => setIsSettingsOpen(true)}
                                     size="sm"
                                     variant="outline"
@@ -464,7 +464,7 @@ export function RAGChatbot() {
             </div>
 
             {/* Desktop Sidebar */}
-            <div className="hidden md:flex w-72 border-l">
+            <div className="hidden w-72 border-l md:flex">
                 <RagSidebar
                     knowledgeBase={knowledgeBase}
                     isViewDialogOpen={isViewDialogOpen}

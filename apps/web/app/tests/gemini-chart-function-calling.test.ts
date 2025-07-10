@@ -167,7 +167,7 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
     describe('Integration Scenarios', () => {
         it('should simulate a complete chart creation request', () => {
             // Simulate user request
-            const userPrompt = 'Create a bar chart showing sales data for Q1 2024';
+            const _userPrompt = 'Create a bar chart showing sales data for Q1 2024';
 
             // Simulate chart tools being available
             const tools = chartTools();

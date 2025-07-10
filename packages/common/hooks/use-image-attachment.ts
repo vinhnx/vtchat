@@ -27,7 +27,7 @@ export type TRenderImageUpload = {
 };
 
 export const useImageAttachment = () => {
-    const imageAttachment = useChatStore((state) => state.imageAttachment);
+    const _imageAttachment = useChatStore((state) => state.imageAttachment);
     const setImageAttachment = useChatStore((state) => state.setImageAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
 

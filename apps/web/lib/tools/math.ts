@@ -504,7 +504,7 @@ function evaluateExpression(expression: string) {
         // Evaluate the expression safely
         const result = Function(`"use strict"; return (${expr})`)();
 
-        if (typeof result !== 'number' || !isFinite(result)) {
+        if (typeof result !== 'number' || !Number.isFinite(result)) {
             return { error: 'Expression did not evaluate to a valid number' };
         }
 

@@ -3,8 +3,8 @@
  * Tests that VT+ users bypass BYOK checks for all Gemini models
  */
 
-import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { ChatMode } from '@repo/shared/config';
+import { describe, expect, test } from 'vitest';
 
 // Mock the chat input component's logic
 const mockIsGeminiModel = (chatMode) => {

@@ -1,5 +1,5 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +20,7 @@ const nextConfig = {
     // Note: analyticsId is not a valid Next.js config option
 
     // Server-side optimizations - exclude workspace packages from bundling
-    serverExternalPackages: ['@repo/ai', '@repo/shared', '@repo/common'],
+    serverExternalPackages: ['@repo/shared', '@repo/common', '@repo/orchestrator'],
 
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true,
@@ -129,6 +129,22 @@ const nextConfig = {
                         type: 'memory',
                     });
                 }
+            }
+
+            // Handle Node.js imports in client-side code
+            if (!isServer) {
+                config.resolve.fallback = {
+                    ...config.resolve.fallback,
+                    'node:events': 'events',
+                    'node:path': 'path-browserify',
+                    'node:fs': false,
+                    'node:crypto': 'crypto-browserify',
+                    'node:stream': 'stream-browserify',
+                    'node:util': 'util',
+                    'node:url': 'url',
+                    'node:querystring': 'querystring-es3',
+                    'node:buffer': 'buffer',
+                };
             }
 
             // Optimize bundle splitting
