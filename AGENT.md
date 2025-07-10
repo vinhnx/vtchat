@@ -171,3 +171,39 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 - **Help Center = FAQ**: When user mentions "help center", they mean the FAQ page for end users
 - After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
 - Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.
+
+### Session Commands
+
+**Continue Session**: 'continue_session [session_file' (alias continue)
+continue')
+
+- Resumes a previous Amp session with oracle-enhanced analysis
+- If no file provided, lists 5 most recent sessions from ./local_ai_docs/sessions/\*
+- Usage: Ask Amp to "run continue_session" or "use continue_session with [filename]"
+
+**Save Session**: save_session [options] (alias save')
+
+- Saves current session with comprehensive analysis
+- Options:
+- '--deepthink': Enhanced analysis using oracle tool for deeper insights
+- '--fast': Quick save without oracle analysis for faster execution
+- Creates files in •
+  •/local_ai_docs/sessions/ with format: "[datel-[title]-amp.md"
+- Usage: Ask Amp to "run save_session" or "save_session --deepthink"
+
+**Plan Loop**: 'plan_loop [spec_file] [options]' (alias 'plan\*)
+
+- Comprehensive feature planning with 7-step process
+- Options:
+- '--deepthink: Oracle-enhanced planning and peer review
+- Creates detailed implementation specifications
+- Usage: Ask Amp to "run plan_loop with spec.md --deepthink"
+
+**Implementation Loop**: "implementation_loop [spec_file] [options] (alias "impl')
+
+- Iterative implementation with testing and validation
+- Options:
+- '--deepthink': Oracle analysis for complex decisions
+- '--fast': Skip oracle analysis for rapid cycles
+- Includes quality gates and automatic testing
+- Usage: Ask Amp to "run implementation_loop with spec.md --deepthink"
