@@ -57,25 +57,20 @@
 All code changes **must** follow this ask-implement-review loop with the Oracle.
 
 1. **Task Intake**
-
     - Write a concise Problem Statement, goals, and acceptance criteria.
 
 2. **ASK-ORACLE (PLAN)**
-
     - Provide the above context plus key code excerpts.
     - Ask: "Oracle, please produce a detailed implementation plan."
 
 3. **Implementation**
-
     - Implement strictly according to the received plan.
 
 4. **REVIEW-ORACLE**
-
     - Present the diff or PR link and ask: "Oracle, please review and approve."
     - Address comments; iterate until Oracle replies **Approved**.
 
 5. **Merge & Document**
-
     - Merge only after approval.
     - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
 
@@ -115,13 +110,6 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 - MCP integration for external tools
 - Use promptBoost tools to enhance prompt quality
 - You can use playwright MCP tool to test web components integration
-
-## Analytics
-
-- **Primary Analytics**: Vemetric only (`@vemetric/react`, `@vemetric/node`)
-- **Vercel Analytics**: Explicitly disabled (configured in `next.config.mjs` and `vercel.json`)
-- **Configuration**: See `docs/analytics-setup.md` for complete setup guide
-- **CORS Issues**: Domains must be whitelisted in Vemetric dashboard
 
 ## Testing
 

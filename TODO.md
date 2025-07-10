@@ -3,9 +3,13 @@
 --
 ok go-> https://vtchat.io.vn/
 
+
+--
+review and update /about, /term, /privacy, /faq and documents and rag page about current state of the project
+
 --
 
-1. to prevent users even vt+ plus, from unlimited usages to quickly exhausted one gemini_api_key oracle. suggest implement a rate limit per day but not too strict for plus tiers users when using gemini models. search for gemini model pricing and limit. use mcp if needed. ask me for plan for approval first before executing
+oracle: to prevent users even vt+ plus, from unlimited usages to quickly exhausted one gemini_api_key, currently we off access to GEmini models without user's API key. suggest implement a rate limit per day but not too strict for plus tiers users when using gemini models. search for gemini model pricing and limit. use mcp if needed. ask me for plan for approval first before executing
 
 --
 

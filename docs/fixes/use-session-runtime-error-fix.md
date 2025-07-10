@@ -51,7 +51,5 @@ Added `'use client';` directive at the top of each component file that uses auth
 Components that already had the `'use client'` directive were not affected:
 
 - side-bar.tsx
-- vemetric-payment-tracker.tsx
-- vemetric-chat-tracker.tsx
 
 This fix ensures proper separation between server and client components in Next.js App Router.
