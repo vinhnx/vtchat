@@ -1,8 +1,26 @@
-import { useMediaQuery } from '@repo/common/hooks';
+'use client';
+
 import { Button, cn } from '@repo/ui';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { ChevronDown, Maximize2, Mic, Minimize2, MoreHorizontal, Plus, Send } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';
+
+// Simple media query hook
+function useMediaQuery(query: string) {
+    const [matches, setMatches] = useState(false);
+
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        const listener = () => setMatches(media.matches);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
+    }, [matches, query]);
+
+    return matches;
+}
 
 interface MobileChatHeaderProps {
     title?: string;
@@ -23,7 +41,7 @@ export const MobileChatHeader = memo(
         return (
             <motion.div
                 animate={{ y: 0, opacity: 1 }}
-                className="sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white md:hidden"
+                className="sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r gray-900 p-4 text-white md:hidden"
                 initial={{ y: -50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
             >

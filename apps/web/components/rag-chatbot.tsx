@@ -31,6 +31,14 @@ import { useChat } from 'ai/react';
 import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+// Import mobile enhancements
+import {
+    MobileChatHeader,
+    MobileOptimizedInput,
+    MobilePullToRefresh,
+    SwipeableMessage,
+} from '@repo/common/components';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface KnowledgeItem {
     id: string;
@@ -47,6 +55,7 @@ export function RAGChatbot() {
     const ragChatModel = useAppStore((state) => state.ragChatModel);
     const profile = useAppStore((state) => state.profile);
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const isMobile = useIsMobile();
 
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -57,6 +66,8 @@ export function RAGChatbot() {
 
     // Mobile sidebar state
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    // Mobile specific states
+    const [isMinimized, setIsMinimized] = useState(false);
 
     // Enhanced error handling function
     const showErrorToast = (error: any) => {
@@ -186,6 +197,7 @@ export function RAGChatbot() {
 
                     if (errorMatch) {
                         const errorMsg = errorMatch[1].trim();
+                        log.info({ errorMsg }, 'Extracted error from assistant message');
                         setTimeout(() => {
                             showErrorToast(new Error(errorMsg));
                         }, 100);
@@ -301,6 +313,248 @@ export function RAGChatbot() {
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
     const currentRagChatModel = geminiModels.find((m) => m.id === ragChatModel);
 
+    // Mobile form submission handler
+    const handleMobileSubmit = () => {
+        if (input.trim() && canChat && !isLoading) {
+            handleSubmit();
+        }
+    };
+
+    // Pull to refresh handler
+    const handleRefresh = async () => {
+        await fetchKnowledgeBase();
+        reload();
+    };
+
+    // Mobile optimized layout
+    if (isMobile) {
+        return (
+            <div className="flex h-full w-full flex-col overflow-hidden">
+                {/* Mobile Header */}
+                <MobileChatHeader
+                    title="AI Assistant"
+                    subtitle="Personal Knowledge Chat"
+                    isMinimized={isMinimized}
+                    onMinimize={() => setIsMinimized(true)}
+                    onMaximize={() => setIsMinimized(false)}
+                />
+
+                {/* Chat Container */}
+                <div className="flex min-h-0 flex-1 flex-col">
+                    {/* Chat Messages - Optimized for mobile */}
+                    <MobilePullToRefresh onRefresh={handleRefresh}>
+                        <div
+                            className="flex-1 overflow-hidden"
+                            style={{
+                                height: 'calc(100vh - 180px)', // Account for header + input + safe areas
+                                minHeight: '300px'
+                            }}
+                        >
+                            <ScrollArea className="h-full w-full">
+                                <div className="space-y-3 p-3 pb-20">
+                                    {messages.length === 0 && (
+                                        <div className="text-muted-foreground py-12 text-center">
+                                            <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
+                                                <img
+                                                    alt="VT Assistant"
+                                                    className="h-full w-full object-cover"
+                                                    src="/icon-192x192.png"
+                                                />
+                                            </div>
+                                            <h3 className="text-foreground mb-2 text-lg font-medium">
+                                                VT Personal AI Assistant
+                                            </h3>
+                                            <p className="text-muted-foreground mx-auto max-w-sm text-sm">
+                                                Start chatting to build your personal knowledge base
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {messages
+                                        .filter((message) => message.content?.trim())
+                                        .map((message, index) => (
+                                            <SwipeableMessage
+                                                key={index}
+                                                onSwipeLeft={() => {
+                                                    // Could implement message actions like copy/share
+                                                }}
+                                                onSwipeRight={() => {
+                                                    // Could implement message actions like save/bookmark
+                                                }}
+                                            >
+                                                <div
+                                                    className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                                >
+                                                    {message.role === 'user' ? (
+                                                        <Avatar
+                                                            className="h-8 w-8 shrink-0"
+                                                            name={session?.user?.name || 'User'}
+                                                            size="md"
+                                                            src={session?.user?.image ?? undefined}
+                                                        />
+                                                    ) : (
+                                                        <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
+                                                            <img
+                                                                alt="VT Assistant"
+                                                                className="h-full w-full object-cover"
+                                                                src="/icon-192x192.png"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <div
+                                                        className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
+                                                    >
+                                                        <div
+                                                            className={`max-w-[85%] rounded-2xl p-3 ${
+                                                                message.role === 'user'
+                                                                    ? 'bg-primary text-primary-foreground ml-auto'
+                                                                    : 'bg-muted'
+                                                            }`}
+                                                        >
+                                                            <div className="text-sm leading-relaxed">{message.content}</div>
+                                                            {message.role === 'assistant' && (
+                                                                <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span>
+                                                                            {currentRagChatModel?.name || 'Unknown'}
+                                                                        </span>
+                                                                        <span>•</span>
+                                                                        <span>
+                                                                            {currentEmbeddingModel?.name ||
+                                                                                'Unknown'}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </SwipeableMessage>
+                                        ))}
+
+                                    {/* Mobile loading indicator */}
+                                    {isProcessing && (
+                                        <div className="flex gap-3" key="loading-indicator">
+                                            <div className="flex-1 space-y-2">
+                                                <div className="bg-muted max-w-[85%] rounded-2xl p-3">
+                                                    <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                                                        <div className="flex items-center gap-1">
+                                                            <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                                                            <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                                                            <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
+                                                        </div>
+                                                        <span className="ml-2">VT is thinking...</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Scroll target */}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                            </ScrollArea>
+                        </div>
+                    </MobilePullToRefresh>
+
+                    {/* Mobile Chat Input */}
+                    <div className="border-t bg-background p-3">
+                        {/* Show message when no API keys */}
+                        {!canChat && (
+                            <div className="mb-3 rounded-lg bg-amber-50 p-3 text-sm">
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-amber-700">
+                                        VT+ subscription or Gemini API key required
+                                    </span>
+                                    <Button
+                                        className="w-full text-xs"
+                                        onClick={() => setIsSettingsOpen(true)}
+                                        size="sm"
+                                        variant="outline"
+                                    >
+                                        Upgrade or Add Key
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-3">
+                            {/* Mobile Agent Button */}
+                            <Button
+                                onClick={() => setIsMobileSidebarOpen(true)}
+                                size="sm"
+                                variant="outline"
+                                className="w-full"
+                            >
+                                <Menu className="mr-2 h-4 w-4" />
+                                Agent ({knowledgeBase.length} items)
+                            </Button>
+
+                            {/* Mobile Optimized Input */}
+                            <div className="flex gap-2">
+                                <MobileOptimizedInput
+                                    value={input}
+                                    onChange={(value) => {
+                                        // Simulate the event object that handleInputChange expects
+                                        const syntheticEvent = {
+                                            target: { value }
+                                        } as React.ChangeEvent<HTMLInputElement>;
+                                        handleInputChange(syntheticEvent);
+                                    }}
+                                    onSubmit={handleMobileSubmit}
+                                    placeholder={
+                                        canChat
+                                            ? 'Message VT...'
+                                            : 'VT+ subscription or API key required...'
+                                    }
+                                    disabled={isLoading || !canChat}
+                                    maxRows={4}
+                                />
+                                <Button
+                                    disabled={isLoading || !input.trim() || !canChat}
+                                    size="icon"
+                                    onClick={handleMobileSubmit}
+                                    className="shrink-0"
+                                >
+                                    <Send className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile Sidebar Sheet */}
+                <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
+                    <SheetContent className="w-full" title="Agent">
+                        <div className="border-b p-4">
+                            <h2 className="text-lg font-semibold">Agent</h2>
+                        </div>
+                        <RagSidebar
+                            knowledgeBase={knowledgeBase}
+                            isViewDialogOpen={isViewDialogOpen}
+                            setIsViewDialogOpen={setIsViewDialogOpen}
+                            fetchKnowledgeBase={fetchKnowledgeBase}
+                            isClearDialogOpen={isClearDialogOpen}
+                            setIsClearDialogOpen={setIsClearDialogOpen}
+                            clearKnowledgeBase={clearKnowledgeBase}
+                            isClearing={isClearing}
+                            deleteItemId={deleteItemId}
+                            setDeleteItemId={setDeleteItemId}
+                            deleteKnowledgeItem={deleteKnowledgeItem}
+                            isDeleting={isDeleting}
+                            currentRagChatModel={currentRagChatModel}
+                            currentEmbeddingModel={currentEmbeddingModel}
+                            setIsSettingsOpen={setIsSettingsOpen}
+                            isMobile={true}
+                            onClose={() => setIsMobileSidebarOpen(false)}
+                        />
+                    </SheetContent>
+                </Sheet>
+            </div>
+        );
+    }
+
+    // Desktop layout (unchanged)
     return (
         <div className="flex h-full flex-col gap-4 md:flex-row md:gap-6">
             <div className="flex min-h-0 flex-1 flex-col">

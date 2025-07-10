@@ -34,6 +34,7 @@ export * from './login-required-dialog';
 export * from './logo';
 export * from './math-calculator-indicator';
 export * from './mdx';
+export * from './mobile/mobile-chat-enhancements';
 export * from './mode-toggle';
 export * from './motion-skeleton';
 export { default as MultiModelUsageMeter } from './multi-model-usage-meter';
@@ -70,3 +71,4 @@ export * from './tools-panel';
 export * from './usage-credits-settings';
 export * from './user-tier-badge';
 export * from './with-client-only';
+

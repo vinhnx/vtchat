@@ -114,8 +114,9 @@ export default function RAGPage() {
     // Show RAG chatbot for plus subscribers
     return (
         <div className="flex h-dvh flex-col overflow-hidden">
-            <div className="container mx-auto flex min-h-0 flex-1 flex-col px-2 py-4 md:px-4 md:py-8">
-                <div className="mb-4 flex-shrink-0 md:mb-6">
+            {/* Desktop Header - Hidden on mobile */}
+            <div className="container mx-auto hidden flex-shrink-0 px-2 py-4 md:block md:px-4 md:py-8">
+                <div className="mb-4 md:mb-6">
                     <h1 className="flex items-center gap-2 text-xl font-bold md:text-2xl">
                         Personal AI Assistant with Memory
                         <Badge
@@ -129,14 +130,15 @@ export default function RAGPage() {
                         Build and query your personal agent with AI
                     </p>
                 </div>
-
-                <div className="min-h-0 flex-1">
-                    <RAGChatbot />
-                </div>
             </div>
 
-            {/* Footer */}
-            <footer className="border-border/50 bg-background border-t">
+            {/* Chat Container - Full height on mobile, constrained on desktop */}
+            <div className="min-h-0 flex-1 md:container md:mx-auto md:px-2 md:pb-4 lg:px-4 lg:pb-8">
+                <RAGChatbot />
+            </div>
+
+            {/* Footer - Hidden on mobile, shown on desktop */}
+            <footer className="border-border/50 bg-background hidden border-t md:block">
                 <div className="mx-auto max-w-7xl">
                     <Footer />
                 </div>
