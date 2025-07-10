@@ -61,7 +61,8 @@ function AboutContent() {
                         About VT
                     </TypographyH2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                        VT is a modern, privacy-first AI chat application with advanced AI capabilities.
+                        VT is a modern, privacy-first AI chat application with advanced AI
+                        capabilities.
                     </p>
                 </div>
 
