@@ -1,14 +1,15 @@
 -- Migration to secure existing embeddings content
--- This migration masks PII in existing embeddings content
+-- This migration prepares the schema for PII masking
 
--- Add a backup column temporarily
-ALTER TABLE embeddings ADD COLUMN content_backup text;
+-- Add a backup column temporarily (NULL by default to avoid large updates)
+DO $$ BEGIN
+    ALTER TABLE embeddings ADD COLUMN content_backup text;
+EXCEPTION
+    WHEN duplicate_column THEN NULL;
+END $$;
 
--- Backup existing content before masking
-UPDATE embeddings SET content_backup = content;
-
--- Note: The actual PII masking will be done through the application
--- This migration just prepares the schema for the security update
+-- Note: The actual PII masking and backup will be done through the application
+-- in batches to avoid locking large tables. This migration just prepares the schema.
 -- The masking will happen when the application code runs with the new security functions
 
 -- Add index for better performance on content queries

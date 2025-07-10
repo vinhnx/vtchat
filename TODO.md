@@ -23,7 +23,13 @@ add Grok 4 model
 oracle: final review
 then if good. apply all thsese VT+ new offering to migrate production db as well, check journal and sql.
 use neon production mcp to apply the migration. will go live
+
 --
+
+after migrate to production db, merge this gemini_plus_tier branch to main, then use ./deploy-fly.sh to deploy to production
+
+--
+
 review and update /about, /term, /privacy, /faq and documents and rag page about current state of the project
 
 --
