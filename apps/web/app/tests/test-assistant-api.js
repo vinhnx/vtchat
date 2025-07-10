@@ -5,7 +5,7 @@
 
 // Test configuration
 const BASE_URL = 'http://localhost:3001';
-const ASSISTANT_API_URL = `${BASE_URL}/api/chat/assistant`;
+const ASSISTANT_API_URL = `${BASE_URL}/api/agent/chat`;
 
 // Mock test data
 const mockMessages = [

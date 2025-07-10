@@ -146,7 +146,7 @@ export function RAGChatbot() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
-        api: '/api/chat/assistant',
+        api: '/api/agent/chat',
         maxSteps: 3,
         body: {
             apiKeys: allApiKeys,

@@ -10,6 +10,7 @@ import { auth } from '../auth-server';
 import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
 
+
 // Schema for validating resource input
 const createResourceSchema = z.object({
     content: z.string().min(1, 'Content is required'),
@@ -51,7 +52,7 @@ export const createResource = async (
             embeddingResults.map((embedding) => ({
                 resourceId: resource.id,
                 content: secureContentForEmbedding(embedding.content),
-                embedding: embedding.embedding, // Array should be properly handled by Drizzle
+                embedding: embedding.embedding,
             }))
         );
 

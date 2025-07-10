@@ -9,9 +9,10 @@ import {
 import { log } from '@repo/shared/logger';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { and, cosineDistance, desc, eq, gt, sql } from 'drizzle-orm';
-import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
+import { db } from '../database';
 import { maskPII } from '../utils/content-security';
+
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
@@ -158,17 +159,12 @@ export const findRelevantContent = async (
         userQueryEmbedded
     )})`;
 
-    // SECURITY: Only search within the current user's embeddings by joining with resources table
+    // Query for similar embeddings (filtering by user through resources table)
     const similarGuides = await db
         .select({ name: embeddings.content, similarity })
         .from(embeddings)
         .innerJoin(resources, eq(embeddings.resourceId, resources.id))
-        .where(
-            and(
-                eq(resources.userId, userId), // CRITICAL: Filter by user ID
-                gt(similarity, 0.5)
-            )
-        )
+        .where(and(gt(similarity, 0.5), eq(resources.userId, userId)))
         .orderBy((t) => desc(t.similarity))
         .limit(4);
 
