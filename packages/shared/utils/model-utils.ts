@@ -35,7 +35,7 @@ export const GEMINI_EMBEDDING_MODELS = [
 
 /**
  * Unified function to check if a model is a Gemini model
- * 
+ *
  * @param model - Can be ChatMode, ModelEnum, or embedding model string
  * @returns boolean indicating if the model is a Gemini model
  */
@@ -44,22 +44,22 @@ export function isGeminiModel(model: ChatMode | ModelEnum | string): boolean {
     if (GEMINI_CHAT_MODES.includes(model as ChatMode)) {
         return true;
     }
-    
+
     // Check for ModelEnum
     if (GEMINI_MODEL_ENUMS.includes(model as ModelEnum)) {
         return true;
     }
-    
+
     // Check for embedding models
     if (GEMINI_EMBEDDING_MODELS.includes(model as any)) {
         return true;
     }
-    
+
     // Check for string patterns (fallback for any model ID containing 'gemini')
     if (typeof model === 'string' && model.toLowerCase().includes('gemini')) {
         return true;
     }
-    
+
     return false;
 }
 

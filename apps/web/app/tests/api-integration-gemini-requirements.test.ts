@@ -254,13 +254,11 @@ describe('API Integration Tests - Gemini Requirements', () => {
                 return {
                     ...actual,
                     recordRequest: recordRequestSpy,
-                    checkRateLimit: vi
-                        .fn()
-                        .mockResolvedValue({
-                            allowed: true,
-                            remainingDaily: 100,
-                            remainingMinute: 10,
-                        }),
+                    checkRateLimit: vi.fn().mockResolvedValue({
+                        allowed: true,
+                        remainingDaily: 100,
+                        remainingMinute: 10,
+                    }),
                 };
             });
 

@@ -1,13 +1,16 @@
 import type { ChatMode } from '@repo/shared/config';
-import { GEMINI_MODELS } from '@repo/shared/constants/document-upload';
+import { isGeminiModel } from '@repo/shared/utils';
 
 /**
  * Check if a chat mode corresponds to a Gemini model
+ * @deprecated Use isGeminiModel from @repo/shared/utils instead
  */
-export const isGeminiModel = (chatMode: ChatMode): boolean => {
-    const geminiModelStrings = GEMINI_MODELS as readonly string[];
-    return geminiModelStrings.includes(chatMode as string);
+export const isGeminiModelDeprecated = (chatMode: ChatMode): boolean => {
+    return isGeminiModel(chatMode);
 };
+
+// Re-export the unified function for backward compatibility
+export { isGeminiModel };
 
 /**
  * Check if there are active document processing tool calls

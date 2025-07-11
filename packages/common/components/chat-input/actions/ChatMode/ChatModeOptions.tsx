@@ -48,7 +48,7 @@ export function ChatModeOptions({
 }: ChatModeOptionsProps) {
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const apiKeys = useApiKeysStore(state => state.getAllKeys());
+    const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const { push } = useRouter();
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
@@ -117,8 +117,8 @@ export function ChatModeOptions({
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
-        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
-        const modelOption = modelOptions.find(opt => opt.value === mode);
+        const option = [...chatOptions, ...modelOptions].find((opt) => opt.value === mode);
+        const modelOption = modelOptions.find((opt) => opt.value === mode);
 
         // Check if user is signed in for any model selection
         if (!isSignedIn) {
@@ -217,7 +217,7 @@ export function ChatModeOptions({
             >
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => {
+                    {chatOptions.map((option) => {
                         return (
                             <DropdownMenuItem
                                 className={cn(
@@ -275,7 +275,7 @@ export function ChatModeOptions({
                             <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
                                 {providerName}
                             </DropdownMenuLabel>
-                            {options.map(option => {
+                            {options.map((option) => {
                                 return (
                                     <DropdownMenuItem
                                         className={cn(

@@ -37,7 +37,7 @@ const MODEL_CONFIG = {
         name: 'Gemini 2.5 Pro',
         description: 'Advanced capabilities',
         limits: GEMINI_LIMITS.PRO,
-    }
+    },
 } as const;
 
 // Models array constant to prevent re-renders
@@ -285,7 +285,6 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 fill="var(--color-pro-2-5)"
                                 fillOpacity={0.8}
                             />
-
                         </AreaChart>
                     </ChartContainer>
 

@@ -2,6 +2,7 @@ import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
+import { isGeminiModel } from '@repo/shared/utils';
 import { type Geo, geolocation } from '@vercel/functions';
 import type { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth-server';
@@ -77,7 +78,6 @@ export async function POST(request: NextRequest) {
         const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
         if (isGeminiModel) {
-
             if (!hasByokGeminiKey) {
                 // Check budget limits before rate limiting
                 const budgetCheck = await shouldDisableGemini();

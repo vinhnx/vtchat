@@ -354,10 +354,7 @@ export async function checkRateLimit(
     }
 
     // VT+ users have unlimited access to Flash Lite models
-    if (
-        isVTPlusUser &&
-        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
-    ) {
+    if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
         return {
             allowed: true,
             remainingDaily: Number.POSITIVE_INFINITY,
@@ -372,8 +369,7 @@ export async function checkRateLimit(
     // VT+ users using other Gemini models must check both model-specific AND Flash Lite quotas
     if (
         isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
-            modelId === ModelEnum.GEMINI_2_5_PRO)
+        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         return await checkDualQuotaLimits(userId, modelId);
     }
@@ -537,10 +533,7 @@ export async function recordRequest(
     }
 
     // VT+ users with Flash Lite models: record for usage tracking but don't enforce limits
-    if (
-        isVTPlusUser &&
-        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
-    ) {
+    if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
         await incrementRateRecord(userId, modelId);
         return;
     }
@@ -548,8 +541,7 @@ export async function recordRequest(
     // VT+ users using other Gemini models must record in both quotas (model-specific + shared Flash Lite quota)
     if (
         isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
-            modelId === ModelEnum.GEMINI_2_5_PRO)
+        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         await recordDualQuotaUsage(userId, modelId);
         return;
@@ -624,10 +616,7 @@ export async function getRateLimitStatus(
     }
 
     // VT+ users have unlimited access to Flash Lite models but show actual usage
-    if (
-        isVTPlusUser &&
-        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
-    ) {
+    if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
         const now = new Date();
         const rateLimitRecord = await getOrCreateRateRecord(userId, modelId);
 
@@ -663,8 +652,7 @@ export async function getRateLimitStatus(
     // VT+ users using other Gemini models need dual quota status
     if (
         isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
-            modelId === ModelEnum.GEMINI_2_5_PRO)
+        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         return await getDualQuotaStatus(userId, modelId);
     }

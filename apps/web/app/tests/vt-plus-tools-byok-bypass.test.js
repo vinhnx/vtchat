@@ -202,7 +202,7 @@ describe('VT+ Tools BYOK Bypass', () => {
                     ChatMode.Pro,
                     ChatMode.GEMINI_2_5_PRO,
                     ChatMode.GEMINI_2_5_FLASH,
-                    ChatMode.GEMINI_2_5_FLASH_LITE
+                    ChatMode.GEMINI_2_5_FLASH_LITE,
                 ].includes(chatMode);
             };
 

@@ -516,8 +516,8 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ Users:</strong> Benefit from enhanced limits,
-                                        including 100 requests/day for Gemini 2.5 Flash Lite,
-                                        50/day for Gemini 2.5 Flash, and 25/day for Gemini 2.5 Pro.
+                                        including 100 requests/day for Gemini 2.5 Flash Lite, 50/day
+                                        for Gemini 2.5 Flash, and 25/day for Gemini 2.5 Pro.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Daily Reset:</strong> All usage limits reset at
@@ -596,11 +596,11 @@ function HelpCenterContent() {
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Tier (for all logged-in users):</strong>{' '}
-                                        Enjoy unlimited BYOK (Bring Your Own Key) access to all
-                                        premium AI models, including Claude 4, GPT-4.1, O3,
-                                        DeepSeek R1, and Grok 3. You also get access to a wide range
-                                        of advanced features like the intelligent tool router, chart
+                                        <strong>Free Tier (for all logged-in users):</strong> Enjoy
+                                        unlimited BYOK (Bring Your Own Key) access to all premium AI
+                                        models, including Claude 4, GPT-4.1, O3, DeepSeek R1, and
+                                        Grok 3. You also get access to a wide range of advanced
+                                        features like the intelligent tool router, chart
                                         visualization, web search, dark mode, thinking mode,
                                         structured output, document parsing, reasoning chain, and
                                         multi-modal chat. To access Gemini models, you'll need to
@@ -613,8 +613,8 @@ function HelpCenterContent() {
                                         DEEP_RESEARCH for in-depth analysis, and RAG for a personal
                                         AI assistant with memory. Additionally, VT+ provides
                                         server-funded access to all Gemini models (2.5 Flash Lite,
-                                        2.5 Flash, 2.5 Pro) with built-in rate limits and
-                                        budget protection.
+                                        2.5 Flash, 2.5 Pro) with built-in rate limits and budget
+                                        protection.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers are designed with privacy in mind, featuring

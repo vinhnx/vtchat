@@ -3,27 +3,25 @@
 --
 ok go-> https://vtchat.io.vn/
 
-
 --
 
 update VT+ gemini rate limite system:
 
-+ deep research == n of requests == number of api/completion requests
-+ pro search same  == n of requests == number of api/completion requests
+- deep research == n of requests == number of api/completion requests
+- pro search same == n of requests == number of api/completion requests
 
 --
 
 use mcp for ai.sdk, context7: check to show thinking log tool view for model that has reasoning capabliyt by default
 
-for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
---
+## for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
 
 add Grok 4 model
 
-𝚒𝚖𝚙𝚘𝚛𝚝 { 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎𝚃𝚎𝚡𝚝 } 𝚏𝚛𝚘𝚖 '𝚊𝚒'
-𝚌𝚘𝚗𝚜𝚝 { 𝚝𝚎𝚡𝚝 } = 𝚊𝚠𝚊𝚒𝚝 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎𝚃𝚎𝚡𝚝({
-  𝚖𝚘𝚍𝚎𝚕: '𝚡𝚊𝚒/𝚐𝚛𝚘𝚔-𝟺',
-  𝚙𝚛𝚘𝚖𝚙𝚝: 'T𝚑𝚎 𝚊𝚗𝚜𝚠𝚎𝚛 𝚝𝚘 𝚕𝚒𝚏𝚎'
+import { generateText } from 'ai';
+const { text } = await generateText({
+model: 'xai/grok-4',
+prompt: 'T𝚑𝚎 𝚊𝚗𝚜𝚠𝚎𝚛 𝚝𝚘 𝚕𝚒𝚏𝚎'
 })
 
 --
@@ -42,7 +40,6 @@ https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performa
 https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performance
 
 --
-
 
 https://nextjs.org/docs/app/guides/progressive-web-apps
 
