@@ -2,12 +2,10 @@
 
 import {
     getModelFromChatMode,
-    ModelEnum,
     supportsReasoning,
     supportsTools,
     supportsWebSearch,
 } from '@repo/ai/models';
-import { RateLimitIndicator } from '@repo/common/components';
 import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
 import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
@@ -50,7 +48,7 @@ export function ChatModeOptions({
 }: ChatModeOptionsProps) {
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const apiKeys = useApiKeysStore((state) => state.getAllKeys());
+    const apiKeys = useApiKeysStore(state => state.getAllKeys());
     const { push } = useRouter();
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
@@ -119,8 +117,8 @@ export function ChatModeOptions({
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
-        const option = [...chatOptions, ...modelOptions].find((opt) => opt.value === mode);
-        const modelOption = modelOptions.find((opt) => opt.value === mode);
+        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+        const modelOption = modelOptions.find(opt => opt.value === mode);
 
         // Check if user is signed in for any model selection
         if (!isSignedIn) {
@@ -219,13 +217,13 @@ export function ChatModeOptions({
             >
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map((option) => {
+                    {chatOptions.map(option => {
                         return (
                             <DropdownMenuItem
                                 className={cn(
                                     'h-auto',
                                     option.value === _chatMode &&
-                                        'border border-muted-foreground/30'
+                                        'border-muted-foreground/30 border'
                                 )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
@@ -277,15 +275,13 @@ export function ChatModeOptions({
                             <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
                                 {providerName}
                             </DropdownMenuLabel>
-                            {options.map((option) => {
-                                const isFreeModel = option.value === ChatMode.GEMINI_2_5_FLASH_LITE;
-
+                            {options.map(option => {
                                 return (
                                     <DropdownMenuItem
                                         className={cn(
                                             'h-auto pl-4',
                                             option.value === _chatMode &&
-                                                'border border-muted-foreground/30'
+                                                'border-muted-foreground/30 border'
                                         )}
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
@@ -295,17 +291,10 @@ export function ChatModeOptions({
                                                 <p className="text-sm font-medium">
                                                     {option.label}
                                                 </p>
-                                                {isFreeModel && (option as any).description && (
+                                                {(option as any).description && (
                                                     <p className="text-muted-foreground text-xs">
                                                         {(option as any).description}
                                                     </p>
-                                                )}
-                                                {isFreeModel && isSignedIn && (
-                                                    <RateLimitIndicator
-                                                        className="mt-1"
-                                                        compact
-                                                        modelId={ModelEnum.GEMINI_2_5_FLASH_LITE}
-                                                    />
                                                 )}
                                             </div>
                                             <div className="flex-1" />

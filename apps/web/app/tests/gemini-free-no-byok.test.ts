@@ -15,8 +15,6 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): string | null => {
         case ChatMode.GPT_4_1:
             return 'OPENAI_API_KEY';
         case ChatMode.Pro:
-        case ChatMode.GEMINI_2_0_FLASH:
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_PRO:
             return 'GEMINI_API_KEY';
@@ -61,6 +59,5 @@ describe('Gemini 2.5 Flash Lite Free Model', () => {
     it('should still require API keys for other Gemini models', () => {
         expect(getRequiredApiKeyForMode(ChatMode.GEMINI_2_5_FLASH)).toBe('GEMINI_API_KEY');
         expect(getRequiredApiKeyForMode(ChatMode.GEMINI_2_5_PRO)).toBe('GEMINI_API_KEY');
-        expect(getRequiredApiKeyForMode(ChatMode.GEMINI_2_0_FLASH)).toBe('GEMINI_API_KEY');
     });
 });

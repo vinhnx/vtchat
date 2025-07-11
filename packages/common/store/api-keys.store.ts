@@ -219,9 +219,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.Pro:
                         // Deep Research and Pro Search modes support BYOK for free users
                         return isValidKey(apiKeys.GEMINI_API_KEY);
-                    case ChatMode.GEMINI_2_0_FLASH:
                     case ChatMode.GEMINI_2_5_PRO:
-                    case ChatMode.GEMINI_2_0_FLASH_LITE:
                     case ChatMode.GEMINI_2_5_FLASH:
                         return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_5_FLASH_LITE:

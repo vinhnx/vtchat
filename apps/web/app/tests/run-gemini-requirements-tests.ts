@@ -2,7 +2,7 @@
 
 /**
  * Gemini Requirements Test Runner
- * 
+ *
  * This script runs all tests to verify the Gemini model usage refinements
  * and generates a requirements verification report.
  */
@@ -37,78 +37,81 @@ class GeminiRequirementsVerifier {
                 id: 'REQ-001',
                 description: 'VT+ Users Have Unlimited Flash Lite Access',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
-                id: 'REQ-002', 
+                id: 'REQ-002',
                 description: 'Dual Quota System for VT+ Users on Pro/Flash Models',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-003',
                 description: 'Free Users Follow Standard Rate Limits',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-004',
                 description: 'Non-Gemini Models Are Unlimited',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-005',
                 description: 'Dual Usage Recording for VT+ Users',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-006',
                 description: 'Charts Instead of Progress Bars in UI',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-007',
                 description: 'Remove Cost Information from UI',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-008',
                 description: 'Display Google Gemini Quota Policies',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-009',
                 description: 'API Integration with Rate Limiting',
                 tests: [],
-                overallStatus: 'FAIL'
+                overallStatus: 'FAIL',
             },
             {
                 id: 'REQ-010',
                 description: 'Error Handling and Edge Cases',
                 tests: [],
-                overallStatus: 'FAIL'
-            }
+                overallStatus: 'FAIL',
+            },
         ];
     }
 
     async runBackendTests(): Promise<void> {
         console.log('🔄 Running Backend Tests...');
-        
+
         try {
-            const output = execSync('bun test gemini-requirements-verification.test.ts --reporter=json', {
-                cwd: process.cwd(),
-                encoding: 'utf-8',
-                timeout: 30000
-            });
+            const output = execSync(
+                'bun test gemini-requirements-verification.test.ts --reporter=json',
+                {
+                    cwd: process.cwd(),
+                    encoding: 'utf-8',
+                    timeout: 30000,
+                }
+            );
 
             const testResults = this.parseTestOutput(output);
             this.mapBackendResults(testResults);
-            
+
             console.log('✅ Backend tests completed');
         } catch (error) {
             console.log('❌ Backend tests failed:', error);
@@ -118,17 +121,17 @@ class GeminiRequirementsVerifier {
 
     async runUITests(): Promise<void> {
         console.log('🔄 Running UI Component Tests...');
-        
+
         try {
             const output = execSync('bun test multi-model-usage-meter.test.tsx --reporter=json', {
                 cwd: '../../../packages/common/components/__tests__',
                 encoding: 'utf-8',
-                timeout: 30000
+                timeout: 30000,
             });
 
             const testResults = this.parseTestOutput(output);
             this.mapUIResults(testResults);
-            
+
             console.log('✅ UI tests completed');
         } catch (error) {
             console.log('❌ UI tests failed:', error);
@@ -138,17 +141,20 @@ class GeminiRequirementsVerifier {
 
     async runAPITests(): Promise<void> {
         console.log('🔄 Running API Integration Tests...');
-        
+
         try {
-            const output = execSync('bun test api-integration-gemini-requirements.test.ts --reporter=json', {
-                cwd: process.cwd(),
-                encoding: 'utf-8',
-                timeout: 45000
-            });
+            const output = execSync(
+                'bun test api-integration-gemini-requirements.test.ts --reporter=json',
+                {
+                    cwd: process.cwd(),
+                    encoding: 'utf-8',
+                    timeout: 45000,
+                }
+            );
 
             const testResults = this.parseTestOutput(output);
             this.mapAPIResults(testResults);
-            
+
             console.log('✅ API tests completed');
         } catch (error) {
             console.log('❌ API tests failed:', error);
@@ -158,15 +164,14 @@ class GeminiRequirementsVerifier {
 
     async runE2ETests(): Promise<void> {
         console.log('🔄 Running E2E Tests...');
-        
+
         try {
             // Note: E2E tests are placeholders for now
             console.log('⚠️  E2E tests are defined but not yet implemented with browser automation');
             console.log('   These would typically use Playwright or similar tools');
-            
+
             // For now, mark as partial since the test structure exists
             this.markRequirementsPartial(['REQ-006', 'REQ-007', 'REQ-008', 'REQ-009', 'REQ-010']);
-            
         } catch (error) {
             console.log('❌ E2E tests failed:', error);
         }
@@ -181,7 +186,7 @@ class GeminiRequirementsVerifier {
     private mapBackendResults(testResults: any[]): void {
         // Map test results to requirements
         // This would analyze the test names and outcomes
-        
+
         // For demo purposes, simulate successful tests
         this.markRequirementsPassed(['REQ-001', 'REQ-002', 'REQ-003', 'REQ-004', 'REQ-005']);
     }
@@ -197,8 +202,8 @@ class GeminiRequirementsVerifier {
     }
 
     private markRequirementsPassed(requirementIds: string[]): void {
-        requirementIds.forEach(id => {
-            const requirement = this.results.find(r => r.id === id);
+        requirementIds.forEach((id) => {
+            const requirement = this.results.find((r) => r.id === id);
             if (requirement) {
                 requirement.overallStatus = 'PASS';
             }
@@ -206,8 +211,8 @@ class GeminiRequirementsVerifier {
     }
 
     private markRequirementsFailed(requirementIds: string[]): void {
-        requirementIds.forEach(id => {
-            const requirement = this.results.find(r => r.id === id);
+        requirementIds.forEach((id) => {
+            const requirement = this.results.find((r) => r.id === id);
             if (requirement) {
                 requirement.overallStatus = 'FAIL';
             }
@@ -215,8 +220,8 @@ class GeminiRequirementsVerifier {
     }
 
     private markRequirementsPartial(requirementIds: string[]): void {
-        requirementIds.forEach(id => {
-            const requirement = this.results.find(r => r.id === id);
+        requirementIds.forEach((id) => {
+            const requirement = this.results.find((r) => r.id === id);
             if (requirement && requirement.overallStatus !== 'PASS') {
                 requirement.overallStatus = 'PARTIAL';
             }
@@ -247,20 +252,32 @@ ${this.generateRecommendations()}
 
 | Requirement | Description | Status | Notes |
 |-------------|-------------|--------|-------|
-${this.results.map(req => 
-    `| ${req.id} | ${req.description} | ${this.getStatusEmoji(req.overallStatus)} ${req.overallStatus} | ${this.getStatusNotes(req)} |`
-).join('\n')}
+${this.results
+    .map(
+        (req) =>
+            `| ${req.id} | ${req.description} | ${this.getStatusEmoji(req.overallStatus)} ${req.overallStatus} | ${this.getStatusNotes(req)} |`
+    )
+    .join('\n')}
 
 ## Implementation Verification
 
 ### ✅ Completed Requirements
-${this.results.filter(r => r.overallStatus === 'PASS').map(r => `- ${r.id}: ${r.description}`).join('\n')}
+${this.results
+    .filter((r) => r.overallStatus === 'PASS')
+    .map((r) => `- ${r.id}: ${r.description}`)
+    .join('\n')}
 
 ### ⚠️  Partial Requirements  
-${this.results.filter(r => r.overallStatus === 'PARTIAL').map(r => `- ${r.id}: ${r.description}`).join('\n')}
+${this.results
+    .filter((r) => r.overallStatus === 'PARTIAL')
+    .map((r) => `- ${r.id}: ${r.description}`)
+    .join('\n')}
 
 ### ❌ Failed Requirements
-${this.results.filter(r => r.overallStatus === 'FAIL').map(r => `- ${r.id}: ${r.description}`).join('\n')}
+${this.results
+    .filter((r) => r.overallStatus === 'FAIL')
+    .map((r) => `- ${r.id}: ${r.description}`)
+    .join('\n')}
 
 ## Next Steps
 
@@ -285,45 +302,49 @@ Total Test Cases: ${this.getTotalTestCount()}
 
     private generateSummary(): string {
         const total = this.results.length;
-        const passed = this.results.filter(r => r.overallStatus === 'PASS').length;
-        const partial = this.results.filter(r => r.overallStatus === 'PARTIAL').length;
-        const failed = this.results.filter(r => r.overallStatus === 'FAIL').length;
+        const passed = this.results.filter((r) => r.overallStatus === 'PASS').length;
+        const partial = this.results.filter((r) => r.overallStatus === 'PARTIAL').length;
+        const failed = this.results.filter((r) => r.overallStatus === 'FAIL').length;
 
         return `
 **Overall Status: ${passed === total ? '✅ ALL PASS' : partial > 0 ? '⚠️ PARTIAL' : '❌ NEEDS WORK'}**
 
-- ✅ Passed: ${passed}/${total} (${Math.round(passed/total*100)}%)
-- ⚠️ Partial: ${partial}/${total} (${Math.round(partial/total*100)}%)  
-- ❌ Failed: ${failed}/${total} (${Math.round(failed/total*100)}%)
+- ✅ Passed: ${passed}/${total} (${Math.round((passed / total) * 100)}%)
+- ⚠️ Partial: ${partial}/${total} (${Math.round((partial / total) * 100)}%)  
+- ❌ Failed: ${failed}/${total} (${Math.round((failed / total) * 100)}%)
 `;
     }
 
     private generateDetailedResults(): string {
-        return this.results.map(req => `
+        return this.results
+            .map(
+                (req) => `
 ### ${req.id}: ${req.description}
 
 **Status:** ${this.getStatusEmoji(req.overallStatus)} ${req.overallStatus}
 
 ${this.getRequirementDetails(req)}
-`).join('\n');
+`
+            )
+            .join('\n');
     }
 
     private generateRecommendations(): string {
-        const failedReqs = this.results.filter(r => r.overallStatus === 'FAIL');
-        const partialReqs = this.results.filter(r => r.overallStatus === 'PARTIAL');
+        const failedReqs = this.results.filter((r) => r.overallStatus === 'FAIL');
+        const partialReqs = this.results.filter((r) => r.overallStatus === 'PARTIAL');
 
         let recommendations = '';
 
         if (failedReqs.length > 0) {
             recommendations += '\n**Critical Actions Required:**\n';
-            failedReqs.forEach(req => {
+            failedReqs.forEach((req) => {
                 recommendations += `- Fix ${req.id}: ${req.description}\n`;
             });
         }
 
         if (partialReqs.length > 0) {
             recommendations += '\n**Improvements Needed:**\n';
-            partialReqs.forEach(req => {
+            partialReqs.forEach((req) => {
                 recommendations += `- Complete ${req.id}: ${req.description}\n`;
             });
         }
@@ -337,19 +358,27 @@ ${this.getRequirementDetails(req)}
 
     private getStatusEmoji(status: string): string {
         switch (status) {
-            case 'PASS': return '✅';
-            case 'PARTIAL': return '⚠️';
-            case 'FAIL': return '❌';
-            default: return '❓';
+            case 'PASS':
+                return '✅';
+            case 'PARTIAL':
+                return '⚠️';
+            case 'FAIL':
+                return '❌';
+            default:
+                return '❓';
         }
     }
 
     private getStatusNotes(req: RequirementStatus): string {
         switch (req.overallStatus) {
-            case 'PASS': return 'Fully implemented and tested';
-            case 'PARTIAL': return 'Implementation complete, tests need work';
-            case 'FAIL': return 'Needs implementation or fixes';
-            default: return 'Unknown status';
+            case 'PASS':
+                return 'Fully implemented and tested';
+            case 'PARTIAL':
+                return 'Implementation complete, tests need work';
+            case 'FAIL':
+                return 'Needs implementation or fixes';
+            default:
+                return 'Unknown status';
         }
     }
 
@@ -395,11 +424,11 @@ ${this.getRequirementDetails(req)}
         await this.runE2ETests();
 
         const report = this.generateReport();
-        
+
         // Write report to file
         const reportPath = './gemini-requirements-report.md';
         writeFileSync(reportPath, report);
-        
+
         console.log('\n📊 Verification Complete!');
         console.log(`📄 Report saved to: ${reportPath}`);
         console.log('\n' + this.generateSummary());

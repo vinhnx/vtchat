@@ -33,11 +33,7 @@ vi.mock('drizzle-orm', () => ({
 }));
 
 // Import after mocking
-import {
-    checkRateLimit,
-    recordRequest,
-    getRateLimitStatus,
-} from '@/lib/services/rate-limit';
+import { checkRateLimit, recordRequest, getRateLimitStatus } from '@/lib/services/rate-limit';
 
 describe('Gemini Requirements Verification Tests', () => {
     const FREE_USER_ID = 'free-user-123';
@@ -45,7 +41,7 @@ describe('Gemini Requirements Verification Tests', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        
+
         // Default mock setup
         mockDbOperations.select.mockReturnValue({
             from: vi.fn().mockReturnValue({
@@ -159,19 +155,17 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
-            const result = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                true
-            );
+            const result = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(true);
             // Remaining should be minimum of both quotas
@@ -201,19 +195,17 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteAtLimitRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteAtLimitRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
-            const result = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                true
-            );
+            const result = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('daily_limit_exceeded');
@@ -241,19 +233,17 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proAtLimitRecord : flashLiteRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proAtLimitRecord : flashLiteRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
-            const result = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                true
-            );
+            const result = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('daily_limit_exceeded');
@@ -280,11 +270,7 @@ describe('Gemini Requirements Verification Tests', () => {
                 }),
             });
 
-            const result = await checkRateLimit(
-                FREE_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                false
-            );
+            const result = await checkRateLimit(FREE_USER_ID, ModelEnum.GEMINI_2_5_PRO, false);
 
             expect(result.allowed).toBe(true);
             expect(result.remainingDaily).toBe(5); // 10 - 5
@@ -309,11 +295,7 @@ describe('Gemini Requirements Verification Tests', () => {
                 }),
             });
 
-            const result = await checkRateLimit(
-                FREE_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                false
-            );
+            const result = await checkRateLimit(FREE_USER_ID, ModelEnum.GEMINI_2_5_PRO, false);
 
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('daily_limit_exceeded');
@@ -322,17 +304,9 @@ describe('Gemini Requirements Verification Tests', () => {
 
     describe('Requirement 4: Non-Gemini Models Are Unlimited', () => {
         it('should allow unlimited access to non-Gemini models for all users', async () => {
-            const freeResult = await checkRateLimit(
-                FREE_USER_ID,
-                ModelEnum.GPT_4o,
-                false
-            );
+            const freeResult = await checkRateLimit(FREE_USER_ID, ModelEnum.GPT_4o, false);
 
-            const vtPlusResult = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GPT_4o,
-                true
-            );
+            const vtPlusResult = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GPT_4o, true);
 
             expect(freeResult.allowed).toBe(true);
             expect(freeResult.remainingDaily).toBe(Number.POSITIVE_INFINITY);
@@ -395,9 +369,11 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteRecord,
+                                ]),
                         }),
                     }),
                 }),
@@ -449,19 +425,17 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
-            const result = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                true
-            );
+            const result = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(true);
             expect(result.remainingMinute).toBe(2); // min(100-95, 100-98)
@@ -489,19 +463,17 @@ describe('Gemini Requirements Verification Tests', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteAtMinuteLimitRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteAtMinuteLimitRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
-            const result = await checkRateLimit(
-                VT_PLUS_USER_ID,
-                ModelEnum.GEMINI_2_5_PRO,
-                true
-            );
+            const result = await checkRateLimit(VT_PLUS_USER_ID, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('minute_limit_exceeded');

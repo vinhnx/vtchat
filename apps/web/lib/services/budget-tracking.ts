@@ -19,8 +19,6 @@ export async function recordProviderUsage(
         ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
-        ModelEnum.GEMINI_2_0_FLASH,
-        ModelEnum.GEMINI_2_0_FLASH_LITE,
     ].includes(modelId);
 
     if (!isGeminiModel) {
@@ -32,11 +30,9 @@ export async function recordProviderUsage(
 
     switch (modelId) {
         case ModelEnum.GEMINI_2_5_FLASH_LITE:
-        case ModelEnum.GEMINI_2_0_FLASH_LITE:
             estimatedCostCents = Math.round(GEMINI_PRICES.FLASH_LITE * 100);
             break;
         case ModelEnum.GEMINI_2_5_FLASH:
-        case ModelEnum.GEMINI_2_0_FLASH:
             estimatedCostCents = Math.round(GEMINI_PRICES.FLASH * 100);
             break;
         case ModelEnum.GEMINI_2_5_PRO:

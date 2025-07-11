@@ -15,9 +15,7 @@ const mockHasApiKeyForChatMode = (chatMode, isSignedIn, isVtPlus = false) => {
         switch (chatMode) {
             case ChatMode.Deep:
             case ChatMode.Pro:
-            case ChatMode.GEMINI_2_0_FLASH:
             case ChatMode.GEMINI_2_5_PRO:
-            case ChatMode.GEMINI_2_0_FLASH_LITE:
             case ChatMode.GEMINI_2_5_FLASH:
             case ChatMode.GEMINI_2_5_FLASH_LITE:
             case ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20:
@@ -56,11 +54,6 @@ describe('VT+ Tools BYOK Bypass', () => {
             expect(result).toBe(true);
         });
 
-        test('VT+ user should have access to Gemini 2.0 Flash without API key', () => {
-            const result = mockHasApiKeyForChatMode(ChatMode.GEMINI_2_0_FLASH, true, true);
-            expect(result).toBe(true);
-        });
-
         test('VT+ user should have access to all Gemini preview models without API key', () => {
             expect(
                 mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20, true, true)
@@ -78,7 +71,6 @@ describe('VT+ Tools BYOK Bypass', () => {
             expect(mockHasApiKeyForChatMode(ChatMode.Pro, true, false)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO, true, false)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_FLASH, true, false)).toBe(false);
-            expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_0_FLASH, true, false)).toBe(false);
         });
 
         test('VT+ user should not have access to non-Gemini models without API key', () => {
@@ -178,8 +170,6 @@ describe('VT+ Tools BYOK Bypass', () => {
                     ChatMode.GEMINI_2_5_PRO,
                     ChatMode.GEMINI_2_5_FLASH,
                     ChatMode.GEMINI_2_5_FLASH_LITE,
-                    ChatMode.GEMINI_2_0_FLASH,
-                    ChatMode.GEMINI_2_0_FLASH_LITE,
                     ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
                     ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
                     ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
@@ -212,9 +202,7 @@ describe('VT+ Tools BYOK Bypass', () => {
                     ChatMode.Pro,
                     ChatMode.GEMINI_2_5_PRO,
                     ChatMode.GEMINI_2_5_FLASH,
-                    ChatMode.GEMINI_2_5_FLASH_LITE,
-                    ChatMode.GEMINI_2_0_FLASH,
-                    ChatMode.GEMINI_2_0_FLASH_LITE,
+                    ChatMode.GEMINI_2_5_FLASH_LITE
                 ].includes(chatMode);
             };
 

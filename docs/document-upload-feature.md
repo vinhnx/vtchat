@@ -1,16 +1,21 @@
 # Document Upload Feature
 
+**Last Updated**: July 11, 2025
+
 ## Overview
 
 The VTChat application now supports document uploads for enhanced AI conversations. Users can upload PDF, DOC, DOCX, TXT, and MD files as attachments to their messages, allowing AI models to analyze and discuss document content.
+
+## Feature Tier
+
+- **Availability**: The document upload feature is **free** for all logged-in users.
+- **Model Dependency**: This feature is exclusively available when using **Gemini models**, as they are the only integrated models that currently support file-based input.
 
 ## Supported Models
 
 Document upload is currently **only available for Gemini models**:
 
-- gemini-2.0-flash
 - gemini-2.5-flash
-- gemini-2.0-flash-lite
 - gemini-2.5-flash-lite-preview-06-17
 - gemini-2.5-flash-preview-05-20
 - gemini-2.5-pro-preview-05-06

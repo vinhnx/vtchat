@@ -25,11 +25,9 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     // Map model names to ChatMode values - using exact names from models.ts
     const modelToChatModeMap: Record<string, ChatMode> = {
         // Google models
-        'Gemini 2.0 Flash Lite': ChatMode.GEMINI_2_0_FLASH_LITE,
-        'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
-        'Gemini 2.5 Flash Lite': ChatMode.GEMINI_2_5_FLASH_LITE,
         'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
-        'Gemini 2.0 Flash': ChatMode.GEMINI_2_0_FLASH,
+        'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
+        'Gemini 2.5 Flash Lite Preview': ChatMode.GEMINI_2_5_FLASH_LITE,
         // Anthropic models
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
         'Claude 4 Opus': ChatMode.CLAUDE_4_OPUS,
@@ -236,20 +234,6 @@ export const modelOptionsByProvider = {
             isFreeModel: true,
         },
         {
-            label: 'Gemini 2.0 Flash',
-            value: ChatMode.GEMINI_2_0_FLASH,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.0 Flash Lite',
-            value: ChatMode.GEMINI_2_0_FLASH_LITE,
-            webSearch: true,
-            icon: <Gift className="text-green-500" size={16} />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
             label: 'Gemini 2.5 Flash',
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
@@ -363,7 +347,7 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
     ],
-    'LM Studio': [
+    'LM Studio (Beta)': [
         {
             label: 'Llama 3 8B (Local)',
             value: ChatMode.LMSTUDIO_LLAMA_3_8B,

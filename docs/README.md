@@ -104,7 +104,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ### Free Tier (VT_BASE)
 
-- 9 AI models (5 Gemini + 4 OpenRouter)
+- Access to a suite of 9 free AI models, including 5 from the Gemini family (2.5 Flash Lite, 2.5 Flash, 2.5 Pro) and 4 from OpenRouter.
 - Advanced calculator with mathematical functions
 - Local-first privacy with IndexedDB storage
 - security protection
@@ -118,6 +118,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Web Search**: Real-time information grounding
 - **Document Upload**: PDF/DOC/DOCX processing up to 10MB
 - **Structured Extraction**: AI-powered JSON data extraction
+- **Personal AI Assistant (RAG)**: Build and query your own personal knowledge base.
 
 ## 🏗️ Architecture Highlights
 

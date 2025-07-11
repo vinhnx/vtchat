@@ -22,7 +22,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: Gemini 2.5 Flash Lite Preview access for registered users (20 requests/day, 5/minute rate limit; VT+ users get unlimited access)
+- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro.
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (Free feature)
@@ -62,7 +62,7 @@ By using VT, you acknowledge that we protect your private data from being used i
 ### 2.1 Account Creation
 - You may use VT anonymously for basic functionality
 - Account registration (via Google or GitHub OAuth) is required for:
-  - Free Gemini 2.5 Flash Lite Preview access (20 requests/day, 5/minute limit)
+  - Access to our free suite of AI models, including various versions of Gemini, with daily usage limits.
   - VT+ subscription features (Grounding Web Search, Dark Mode)
   - Daily usage tracking and fair usage enforcement
   - Thread synchronization and account-based management
@@ -109,19 +109,19 @@ By using VT, you acknowledge that we protect your private data from being used i
 ### 4.1 Free Tier Benefits (VT_BASE)
 VT_BASE is our free tier for logged-in users that includes:
 - **All Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys (BYOK)
-- **9 Free Server Models**: Gemini and OpenRouter models with VT's server API keys (no BYOK required)
+- **9 Free Server Models**: Access a suite of 9 server-funded models, including 5 Gemini versions (2.5 Flash Lite, 2.5 Flash, 2.5 Pro) and 4 OpenRouter models, all without needing your own API key.
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
 - **Advanced Features**: Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, Web Search, Intelligent Tool Router, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
 - **Unlimited BYOK Usage**: No limits when using your own API keys
-- **Free Gemini Access**: Gemini 2.5 Flash Lite Preview (20/day, 5/minute) for registered users
+- **Free Gemini Access**: Enjoy free access to a range of Gemini models with daily limits: 20 requests for 2.5 Flash Lite. VT+ users get expanded access.
 - **Enhanced Rate Limits**: Higher usage limits compared to free tier for all Gemini models
 
 ### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
 - **Three Exclusive Research Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
-- **All Gemini Models Without BYOK**: Access to all Gemini models (Gemini 2.5 Pro 25/day, Gemini 2.5 Flash 50/day, Gemini 2.5 Flash Lite 100/day, Gemini 2.0 Flash) plus enhanced tools (web search, math calculator, charts) without needing your own API keys - system automatically handles API key management for VT+ users
+- **Expanded Gemini Access**: VT+ subscribers receive expanded, server-funded access to all Gemini models, including Gemini 2.5 Pro (25 requests/day), Gemini 2.5 Flash (50 requests/day), and Gemini 2.5 Flash Lite (100 requests/day), all without needing your own API keys.
 - **Priority Support**: Enhanced customer support
 
 ### 4.3 Payment Terms

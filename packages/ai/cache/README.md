@@ -5,7 +5,7 @@ This module provides cost-effective caching for Gemini 2.5 and 2.0 models using 
 ## Features
 
 - **Cost Reduction**: Reuse conversation context across multiple queries to reduce API costs
-- **Supported Models**: Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, 1.5 Pro-001
+- **Supported Models**: Gemini 2.5 Pro, Gemini 2.5 Flash and Gemini 2.5 Flash Lite Preview.
 - **Configurable TTL**: Set cache duration from 1 minute to 1 hour
 - **Cache Management**: Manage up to 20 cached conversations simultaneously
 - **Authentication Integration**: Seamlessly integrated with VTChat's authentication system
@@ -103,9 +103,7 @@ export const DEFAULT_CACHE_SETTINGS = {
 
 - `models/gemini-2.5-pro`
 - `models/gemini-2.5-flash`
-- `models/gemini-2.0-flash`
-- `models/gemini-1.5-flash-001`
-- `models/gemini-1.5-pro-001`
+- `models/gemini-2.5-flash-lite`
 
 ## Cache Management
 

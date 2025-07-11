@@ -8,7 +8,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 - **OpenAI**: GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-3.5 Turbo, o-series reasoning models
 - **Anthropic**: Claude 3.5 Sonnet (new), Claude 3.5 Haiku, Claude 3 Opus
-- **Google**: Gemini 2.0 Flash, Gemini 2.5 Flash (Lite Preview free tier), Gemini 2.5 Pro
+- **Google**: Gemini 2.5 Pro, Gemini 2.5 Flash (Lite Preview free tier)
 - **OpenRouter**: DeepSeek V3, DeepSeek R1, Qwen3 14B, and other open-source models
 - **Together AI**: Open-source model hosting and inference
 - **xAI**: Grok models and other experimental models
@@ -298,4 +298,4 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 _For detailed implementation guides and technical documentation, see our [Documentation Directory](../docs/)_
 
-_Last Updated: June 30, 2025_
+_Last Updated: July 11, 2025_

@@ -283,7 +283,6 @@ The application now uses official Shadcn UI components with:
 #### 📋 Technical Implementation
 
 - **Next.js Configuration**: Updated `next.config.mjs` with performance optimizations
-
     - Enabled Turbopack for faster development builds
     - Added filesystem caching for development
     - Optimized bundle splitting and chunk generation
@@ -291,7 +290,6 @@ The application now uses official Shadcn UI components with:
     - Configured compiler settings to remove console.logs in production
 
 - **Turbo Configuration**: Enhanced `turbo.json` for better build caching
-
     - Added environment variable handling
     - Enabled remote caching capabilities
     - Optimized cache settings for lint and test tasks
@@ -708,16 +706,13 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **MAJOR ACHIEVEMENTS**:
 
 1. **GEMINI_2_5_FLASH_LITE Model Integration** ✅:
-
     - **UI Addition**: Added to Google provider section in chat-actions.tsx
     - **Visual Indicator**: Gift icon displays for free model identification
     - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
     - **Web Search Support**: Native web search capabilities enabled
 
 2. **Free Models Visual Enhancement** ✅:
-
     - **Gift Icons Added**: All free Gemini models now show 🎁 icon
-        - GEMINI_2_0_FLASH_LITE ✅
         - GEMINI_2_5_FLASH_LITE ✅ (newly added)
         - GEMINI_2_5_FLASH_PREVIEW ✅
         - GEMINI_2_5_PRO_PREVIEW ✅
@@ -725,14 +720,12 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
     - **Consistent UX**: Unified free model identification across providers
 
 3. **Subscription Benefits Update** ✅:
-
     - **Enhanced Description**: Updated "Access to Free Models" benefit
     - **Complete Model List**: Includes all Gemini + OpenRouter free models
     - **Mathematical Tools**: Detailed description of calculator capabilities
     - **Perfect for Getting Started**: Clear value proposition for free tier
 
 4. **Technical Configuration** ✅:
-
     - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
     - **Web Search Support**: Updated supportsNativeWebSearch function
     - **Fallback Mechanism**: Proper model selection with available API keys
@@ -748,10 +741,9 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **Google Gemini Models (Free)**:
 
-- **Gemini 2.0 Flash Lite** - Fast, efficient general-purpose model
-- **Gemini 2.5 Flash Lite** - Enhanced capabilities ✨ NEW
-- **Gemini 2.5 Flash Preview** - Latest preview features
-- **Gemini 2.5 Pro Preview** - Pro-level preview access
+- **Gemini 2.5 Pro** - Pro-level access
+- **Gemini 2.5 Flash** - Fast, efficient general-purpose model
+- **Gemini 2.5 Flash Lite Preview** - Latest preview features
 
 **OpenRouter Models (Free)**:
 
@@ -843,46 +835,39 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **Major Optimizations Implemented**:
 
 1. **Middleware Performance** (`apps/web/middleware.ts`) ✅:
-
     - **Static File Exclusion**: Skip auth checks for static files, API routes, Next.js internals
     - **5-Second Timeout**: Prevent hanging auth checks
     - **Graceful Error Handling**: Fallback to login redirect on failures
     - **Optimized Path Matching**: Reduced unnecessary middleware processing
 
 2. **Better Auth Configuration** (`apps/web/lib/auth.ts`) ✅:
-
     - **Session Cookie Cache**: 5-minute TTL for session caching
     - **Increased Rate Limits**: 100 → 200 requests per window
     - **10-Second Timeouts**: All auth operations timeout protection
     - **Performance Optimizations**: Faster ID generation and secure cookies
 
 3. **Subscription Provider Optimization** (`packages/common/providers/subscription-provider.tsx`) ✅:
-
     - **8-Second Request Timeout**: AbortController implementation
     - **Request Deduplication**: Prevent multiple identical subscription fetches
     - **Enhanced Error Handling**: Graceful timeout and error recovery
     - **Cache Control Headers**: Prevent stale subscription data
 
 4. **Client-Side Auth Optimization** (`packages/shared/lib/auth-client.ts`) ✅:
-
     - **10-Second Client Timeout**: Prevent hanging client requests
     - **Non-Throwing Error Handler**: Prevent app crashes on auth failures
     - **Improved URL Resolution**: Better baseURL detection logic
 
 5. **New Performance Monitoring** (`packages/shared/utils/performance-monitor.ts`) ✅:
-
     - **Operation Timing**: Track auth operation durations
     - **Slow Operation Detection**: Log operations >2 seconds
     - **Auth-Specific Monitors**: Dedicated session check and subscription monitoring
 
 6. **Request Deduplication System** (`packages/shared/utils/request-deduplication.ts`) ✅:
-
     - **Duplicate Prevention**: Deduplicate identical API calls
     - **Automatic Cleanup**: Remove expired pending requests
     - **Performance Logging**: Track deduplication effectiveness
 
 7. **Session Caching Layer** (`packages/shared/utils/session-cache.ts`) ✅:
-
     - **In-Memory Cache**: Reduce repetitive auth checks
     - **TTL Management**: Configurable cache expiration
     - **Auto Cleanup**: Background cache maintenance

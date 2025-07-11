@@ -15,7 +15,6 @@ import type { ModelEnum } from '../models';
 export type GoogleModelCacheableId =
     | 'models/gemini-2.5-pro'
     | 'models/gemini-2.5-flash'
-    | 'models/gemini-2.0-flash'
     | 'models/gemini-1.5-flash-001'
     | 'models/gemini-1.5-pro-001';
 
@@ -116,7 +115,6 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
     const cacheableModels: GoogleModelCacheableId[] = [
         'models/gemini-2.5-pro',
         'models/gemini-2.5-flash',
-        'models/gemini-2.0-flash',
         'models/gemini-1.5-flash-001',
         'models/gemini-1.5-pro-001',
     ];
@@ -132,12 +130,8 @@ export function getGeminiCacheableModelId(modelEnum: ModelEnum): GoogleModelCach
             return 'models/gemini-2.5-pro';
         case 'gemini-2.5-flash':
             return 'models/gemini-2.5-flash';
-        case 'gemini-2.0-flash':
-            return 'models/gemini-2.0-flash';
-        case 'gemini-1.5-flash-001':
-            return 'models/gemini-1.5-flash-001';
-        case 'gemini-1.5-pro-001':
-            return 'models/gemini-1.5-pro-001';
+        case 'gemini-2.5-flash-lite':
+            return 'models/gemini-2.5-flash-lite';
         default:
             return null;
     }

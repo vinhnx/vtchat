@@ -13,10 +13,10 @@ vi.mock('better-auth', () => ({
         api: {
             getSession: vi.fn().mockResolvedValue({
                 user: { id: 'test-user' },
-                session: { userId: 'test-user' }
-            })
-        }
-    })
+                session: { userId: 'test-user' },
+            }),
+        },
+    }),
 }));
 
 // Mock database operations
@@ -37,7 +37,7 @@ vi.mock('drizzle-orm', () => ({
 
 // Mock subscription service
 vi.mock('@repo/shared/utils/subscription-server', () => ({
-    getUserSubscriptionStatus: vi.fn()
+    getUserSubscriptionStatus: vi.fn(),
 }));
 
 describe('API Integration Tests - Gemini Requirements', () => {
@@ -46,7 +46,7 @@ describe('API Integration Tests - Gemini Requirements', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        
+
         // Setup default mocks
         mockDbOperations.select.mockReturnValue({
             from: vi.fn().mockReturnValue({
@@ -76,17 +76,19 @@ describe('API Integration Tests - Gemini Requirements', () => {
     describe('API Route: /api/rate-limit/status', () => {
         it('should return rate limit status for all Gemini models', async () => {
             // Mock subscription status
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: false });
 
             // Import and test the API route handler
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             expect(response.status).toBe(200);
-            
+
             const data = await response.json();
             expect(data).toHaveProperty(ModelEnum.GEMINI_2_5_FLASH_LITE);
             expect(data).toHaveProperty(ModelEnum.GEMINI_2_5_PRO);
@@ -94,17 +96,19 @@ describe('API Integration Tests - Gemini Requirements', () => {
         });
 
         it('should show unlimited Flash Lite for VT+ users', async () => {
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: true });
 
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             const data = await response.json();
             const flashLiteStatus = data[ModelEnum.GEMINI_2_5_FLASH_LITE];
-            
+
             expect(flashLiteStatus.remainingDaily).toBe(Number.POSITIVE_INFINITY);
             expect(flashLiteStatus.remainingMinute).toBe(Number.POSITIVE_INFINITY);
         });
@@ -114,16 +118,16 @@ describe('API Integration Tests - Gemini Requirements', () => {
             vi.doMock('better-auth', () => ({
                 auth: () => ({
                     api: {
-                        getSession: vi.fn().mockRejectedValue(new Error('Auth failed'))
-                    }
-                })
+                        getSession: vi.fn().mockRejectedValue(new Error('Auth failed')),
+                    },
+                }),
             }));
 
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             expect(response.status).toBe(401);
         });
     });
@@ -153,11 +157,13 @@ describe('API Integration Tests - Gemini Requirements', () => {
                 }),
             });
 
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: false });
 
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const requestBody = {
                 message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
@@ -171,9 +177,9 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const response = await POST(mockRequest);
-            
+
             expect(response.status).toBe(429); // Rate limited
-            
+
             const data = await response.json();
             expect(data.error).toContain('rate limit');
         });
@@ -202,19 +208,21 @@ describe('API Integration Tests - Gemini Requirements', () => {
                 }),
             });
 
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: false });
 
             // Mock the AI generation
             vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
                     text: 'Test response',
-                    usage: { totalTokens: 100 }
-                })
+                    usage: { totalTokens: 100 },
+                }),
             }));
 
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const requestBody = {
                 message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
@@ -228,13 +236,15 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const response = await POST(mockRequest);
-            
+
             // Should proceed to generate response (may fail due to mocking, but shouldn't be rate limited)
             expect(response.status).not.toBe(429);
         });
 
         it('should record dual quota usage for VT+ users on Pro models', async () => {
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: true });
 
             // Mock the recordRequest function to verify it's called with correct parameters
@@ -244,19 +254,25 @@ describe('API Integration Tests - Gemini Requirements', () => {
                 return {
                     ...actual,
                     recordRequest: recordRequestSpy,
-                    checkRateLimit: vi.fn().mockResolvedValue({ allowed: true, remainingDaily: 100, remainingMinute: 10 })
+                    checkRateLimit: vi
+                        .fn()
+                        .mockResolvedValue({
+                            allowed: true,
+                            remainingDaily: 100,
+                            remainingMinute: 10,
+                        }),
                 };
             });
 
             vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
                     text: 'Test response',
-                    usage: { totalTokens: 100 }
-                })
+                    usage: { totalTokens: 100 },
+                }),
             }));
 
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const requestBody = {
                 message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
@@ -282,7 +298,9 @@ describe('API Integration Tests - Gemini Requirements', () => {
 
     describe('VT+ Dual Quota API Behavior', () => {
         it('should return dual quota information for VT+ users on Pro models', async () => {
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: true });
 
             // Mock dual quota records
@@ -315,29 +333,33 @@ describe('API Integration Tests - Gemini Requirements', () => {
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([
-                                callCount++ === 0 ? proRecord : flashLiteRecord
-                            ]),
+                            then: vi
+                                .fn()
+                                .mockResolvedValue([
+                                    callCount++ === 0 ? proRecord : flashLiteRecord,
+                                ]),
                         }),
                     }),
                 }),
             }));
 
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             const data = await response.json();
             const proStatus = data[ModelEnum.GEMINI_2_5_PRO];
-            
+
             // Should reflect the effective limit (minimum of both quotas)
             expect(proStatus.remainingDaily).toBeLessThanOrEqual(800); // min(1000-100, 1000-200)
             expect(proStatus.remainingMinute).toBeLessThanOrEqual(80); // min(100-10, 100-20)
         });
 
         it('should show unlimited for VT+ Flash Lite regardless of usage', async () => {
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: true });
 
             // Mock high usage record
@@ -364,13 +386,13 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             const data = await response.json();
             const flashLiteStatus = data[ModelEnum.GEMINI_2_5_FLASH_LITE];
-            
+
             expect(flashLiteStatus.remainingDaily).toBe(Number.POSITIVE_INFINITY);
             expect(flashLiteStatus.remainingMinute).toBe(Number.POSITIVE_INFINITY);
         });
@@ -378,7 +400,9 @@ describe('API Integration Tests - Gemini Requirements', () => {
 
     describe('Non-Gemini Models API Behavior', () => {
         it('should allow unlimited access to non-Gemini models', async () => {
-            const { getUserSubscriptionStatus } = await import('@repo/shared/utils/subscription-server');
+            const { getUserSubscriptionStatus } = await import(
+                '@repo/shared/utils/subscription-server'
+            );
             (getUserSubscriptionStatus as any).mockResolvedValue({ isVTPlusUser: false });
 
             // Mock check rate limit for non-Gemini model
@@ -389,21 +413,21 @@ describe('API Integration Tests - Gemini Requirements', () => {
                     checkRateLimit: vi.fn().mockResolvedValue({
                         allowed: true,
                         remainingDaily: Number.POSITIVE_INFINITY,
-                        remainingMinute: Number.POSITIVE_INFINITY
+                        remainingMinute: Number.POSITIVE_INFINITY,
                     }),
-                    recordRequest: vi.fn()
+                    recordRequest: vi.fn(),
                 };
             });
 
             vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
                     text: 'Test response',
-                    usage: { totalTokens: 100 }
-                })
+                    usage: { totalTokens: 100 },
+                }),
             }));
 
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const requestBody = {
                 message: 'Test message',
                 model: ModelEnum.GPT_4o, // Non-Gemini model
@@ -417,7 +441,7 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const response = await POST(mockRequest);
-            
+
             // Should not be rate limited
             expect(response.status).not.toBe(429);
         });
@@ -430,16 +454,16 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const { GET } = await import('@/app/api/rate-limit/status/route');
-            
+
             const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
-            
+
             expect(response.status).toBe(500);
         });
 
         it('should handle malformed request bodies', async () => {
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const mockRequest = new Request('http://localhost/api/completion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -447,13 +471,13 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const response = await POST(mockRequest);
-            
+
             expect(response.status).toBe(400);
         });
 
         it('should validate model enum values', async () => {
             const { POST } = await import('@/app/api/completion/route');
-            
+
             const requestBody = {
                 message: 'Test message',
                 model: 'invalid-model', // Invalid model
@@ -467,7 +491,7 @@ describe('API Integration Tests - Gemini Requirements', () => {
             });
 
             const response = await POST(mockRequest);
-            
+
             expect(response.status).toBe(400);
         });
     });

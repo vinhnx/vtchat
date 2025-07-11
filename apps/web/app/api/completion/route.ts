@@ -70,14 +70,13 @@ export async function POST(request: NextRequest) {
             ModelEnum.GEMINI_2_5_FLASH_LITE,
             ModelEnum.GEMINI_2_5_FLASH,
             ModelEnum.GEMINI_2_5_PRO,
-            ModelEnum.GEMINI_2_0_FLASH,
-            ModelEnum.GEMINI_2_0_FLASH_LITE,
         ].includes(selectedModel);
 
+        // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
+        const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
+        const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
+
         if (isGeminiModel) {
-            // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
-            const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
-            const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
             if (!hasByokGeminiKey) {
                 // Check budget limits before rate limiting
@@ -183,15 +182,8 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                // Record request immediately after rate limit check passes to prevent abort bypass
-                if (userId && isGeminiModel && !hasByokGeminiKey) {
-                    try {
-                        await recordRequest(userId, selectedModel, vtPlusAccess.hasAccess);
-                    } catch (error) {
-                        log.error({ error }, 'Failed to record request for rate limiting');
-                        // Continue - don't fail the request if rate limit recording fails
-                    }
-                }
+                // Rate limiting will be recorded after successful completion
+                // Keep rate limit check to prevent exceeding limits
             }
         }
 
@@ -371,8 +363,21 @@ function createCompletionStream({
                     gl,
                     userId: userId ?? undefined,
                     onFinish: async () => {
-                        // Rate limiting recording moved to before streaming to prevent abort bypass
-                        // No additional actions needed on finish for rate limiting
+                        // Server-side safety net: record usage if client doesn't
+                        if (userId && isGeminiModel && !hasByokGeminiKey) {
+                            try {
+                                await recordRequest(userId, selectedModel, vtPlusAccess.hasAccess);
+                                log.info(
+                                    { userId, model: selectedModel },
+                                    'Rate limit recorded via server-side safety net'
+                                );
+                            } catch (error) {
+                                log.error(
+                                    { error, userId, model: selectedModel },
+                                    'Failed to record request in onFinish'
+                                );
+                            }
+                        }
                     },
                 });
             } catch (error) {

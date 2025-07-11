@@ -74,7 +74,7 @@ We never collect or store:
 **All Models Available to Logged-in Users:**
 
 - **Premium Models (Free with BYOK)**: Claude 4, GPT-4.1, O3/O3 Mini, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
-- **Free Server Models**: Gemini 2.0 Flash, Gemini 2.5 Flash Lite, DeepSeek V3, DeepSeek R1, Qwen3 14B, and 4 more OpenRouter models
+- **Free Server Models**: Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, DeepSeek V3, DeepSeek R1, Qwen3 14B, and 4 more OpenRouter models
 
 ### Model Access
 

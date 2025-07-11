@@ -1236,8 +1236,6 @@ export const selectAvailableModel = (
     const hasApiKeyForModel = (model: ModelEnum): boolean => {
         const providers = {
             // Gemini models
-            [ModelEnum.GEMINI_2_0_FLASH]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_0_FLASH_LITE]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
             // OpenAI models

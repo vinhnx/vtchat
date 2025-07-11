@@ -14,7 +14,7 @@ vi.mock('@repo/common/hooks/use-subscription-access', () => ({
 
 vi.mock('@repo/common/store', () => ({
     useChatStore: vi.fn((selector) => {
-        if (selector.toString().includes('chatMode')) return 'gemini-2.0-flash-thinking-exp';
+        if (selector.toString().includes('chatMode')) return 'gemini-2.5-flash';
         if (selector.toString().includes('structuredData')) return null;
         if (selector.toString().includes('setStructuredData')) return vi.fn();
         return vi.fn();

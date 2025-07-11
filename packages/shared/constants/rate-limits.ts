@@ -4,7 +4,7 @@
  *
  * NOTE: Only VT+ users get server-funded access. FREE limits are unused
  * for server-funded access (free users must use BYOK).
- * 
+ *
  * Updated limits based on current VT+ offering and usage patterns.
  */
 export const GEMINI_LIMITS = {

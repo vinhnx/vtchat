@@ -1,5 +1,6 @@
 'use client';
 
+import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { getRateLimitMessage } from '@repo/shared/constants';
@@ -288,6 +289,29 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             },
                                             'done event received'
                                         );
+
+                                        // Record rate limit usage for successful Gemini completions
+                                        if (data.status !== 'error' && data.status !== 'aborted') {
+                                            const modelId = getModelFromChatMode(body.mode);
+                                            const isGemini = [
+                                                ModelEnum.GEMINI_2_5_FLASH_LITE,
+                                                ModelEnum.GEMINI_2_5_FLASH,
+                                                ModelEnum.GEMINI_2_5_PRO,
+                                            ].includes(modelId);
+
+                                            if (isGemini) {
+                                                fetch(
+                                                    `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`,
+                                                    {
+                                                        method: 'POST',
+                                                        credentials: 'include',
+                                                    }
+                                                ).catch(() => {
+                                                    // Fail silently - server-side safety net will handle recording
+                                                });
+                                            }
+                                        }
+
                                         if (data.threadItemId) {
                                             threadItemMap.delete(data.threadItemId);
                                         }

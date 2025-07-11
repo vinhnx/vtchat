@@ -12,18 +12,21 @@ console.log('🧪 Testing Mobile RAG Chat Optimizations\n');
 
 // Test 1: Check if mobile components are properly exported
 console.log('1. Checking mobile component exports...');
-const mobileEnhancementsPath = path.join(__dirname, '../packages/common/components/mobile/mobile-chat-enhancements.tsx');
+const mobileEnhancementsPath = path.join(
+    __dirname,
+    '../packages/common/components/mobile/mobile-chat-enhancements.tsx'
+);
 const mobileEnhancementsContent = fs.readFileSync(mobileEnhancementsPath, 'utf8');
 
 const requiredComponents = [
     'MobileChatHeader',
     'MobileOptimizedInput',
     'SwipeableMessage',
-    'MobilePullToRefresh'
+    'MobilePullToRefresh',
 ];
 
-const missingComponents = requiredComponents.filter(component =>
-    !mobileEnhancementsContent.includes(`export const ${component}`)
+const missingComponents = requiredComponents.filter(
+    (component) => !mobileEnhancementsContent.includes(`export const ${component}`)
 );
 
 if (missingComponents.length === 0) {
@@ -37,7 +40,7 @@ console.log('\n2. Checking mobile component imports in RAG chatbot...');
 const ragChatbotPath = path.join(__dirname, '../apps/web/components/rag-chatbot.tsx');
 const ragChatbotContent = fs.readFileSync(ragChatbotPath, 'utf8');
 
-const hasCorrectImports = requiredComponents.every(component =>
+const hasCorrectImports = requiredComponents.every((component) =>
     ragChatbotContent.includes(component)
 );
 
@@ -70,9 +73,10 @@ console.log('\n5. Checking mobile-specific CSS...');
 const globalCssPath = path.join(__dirname, '../apps/web/app/globals.css');
 const globalCssContent = fs.readFileSync(globalCssPath, 'utf8');
 
-const hasMobileStyles = globalCssContent.includes('mobile-chat-container') &&
-                       globalCssContent.includes('mobile-chat-scroll') &&
-                       globalCssContent.includes('@media (max-width: 768px)');
+const hasMobileStyles =
+    globalCssContent.includes('mobile-chat-container') &&
+    globalCssContent.includes('mobile-chat-scroll') &&
+    globalCssContent.includes('@media (max-width: 768px)');
 
 if (hasMobileStyles) {
     console.log('   ✅ Mobile-specific CSS styles are present');
@@ -85,9 +89,10 @@ console.log('\n6. Checking page layout mobile optimizations...');
 const pagePath = path.join(__dirname, '../apps/web/app/agent/page.tsx');
 const pageContent = fs.readFileSync(pagePath, 'utf8');
 
-const hasPageOptimizations = pageContent.includes('hidden') &&
-                            pageContent.includes('md:block') &&
-                            pageContent.includes('h-dvh');
+const hasPageOptimizations =
+    pageContent.includes('hidden') &&
+    pageContent.includes('md:block') &&
+    pageContent.includes('h-dvh');
 
 if (hasPageOptimizations) {
     console.log('   ✅ Page layout mobile optimizations are present');

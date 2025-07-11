@@ -191,15 +191,17 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT offers free tier with unlimited BYOK access to all AI models. VT+
-                                focuses on 3 exclusive research capabilities: Deep Research, Pro
-                                Search, and RAG (Personal AI Assistant with Memory).{' '}
+                                VT offers a generous free tier with BYOK (Bring Your Own Key) access
+                                to all supported AI models. VT+, our premium subscription, enhances
+                                your experience with three exclusive research capabilities: Deep
+                                Research, Pro Search, and a personal AI Assistant with Memory (RAG).{' '}
                                 <strong>
-                                    VT+ users also get server-funded access to all Gemini models
-                                </strong>{' '}
-                                (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, Gemini 2.0
-                                Flash) with rate limits and budget protection. Free users must
-                                provide their own Gemini API key.
+                                    VT+ subscribers also receive server-funded access to all Gemini
+                                    models
+                                </strong>
+                                , including the latest versions, with built-in rate limits and
+                                budget protection. Free users can access Gemini models by providing
+                                their own API key.
                             </p>
                             <div className="text-center">
                                 <Link href="/plus">
@@ -284,7 +286,7 @@ function AboutContent() {
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >
-                                    Source Code on GitHub
+                                    View Source Code on GitHub
                                 </Link>
                             </div>
 
@@ -295,7 +297,7 @@ function AboutContent() {
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >
-                                    Share VT on X/Twitter
+                                    Share VT on X
                                 </Link>
                             </div>
                         </div>

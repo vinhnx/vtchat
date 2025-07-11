@@ -98,11 +98,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
                 }),
             });
 
-            const result = await checkRateLimit(
-                freeUserId,
-                ModelEnum.GEMINI_2_5_FLASH_LITE,
-                false
-            );
+            const result = await checkRateLimit(freeUserId, ModelEnum.GEMINI_2_5_FLASH_LITE, false);
 
             expect(result.allowed).toBe(false);
             expect(result.reason).toBe('daily_limit_exceeded');
@@ -112,7 +108,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
     describe('Dual Quota Logic for VT+ Users on Pro/Flash Models', () => {
         it('should check both model-specific and Flash Lite quotas for VT+ users on Pro models', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             // Mock records for both Pro and Flash Lite quotas
             const mockProRecord = {
                 id: 'record-pro',
@@ -165,7 +161,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
 
         it('should reject when Flash Lite quota is exceeded even if Pro quota is available', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             const mockProRecord = {
                 id: 'record-pro',
                 userId: vtPlusUserId,
@@ -210,7 +206,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
     describe('Dual Quota Recording for VT+ Users', () => {
         it('should record usage in both model-specific and Flash Lite quotas for VT+ users', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             // Mock the database operations
             const mockSelect = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -248,7 +244,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
 
         it('should NOT record dual quota for free users', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             const mockSelect = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
@@ -269,7 +265,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
 
         it('should NOT record dual quota for Flash Lite requests by VT+ users', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             const mockSelect = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
@@ -292,7 +288,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
     describe('getRateLimitStatus with Dual Quota Display', () => {
         it('should show dual quota status for VT+ users on Pro models', async () => {
             const mockDb = await import('@/lib/database');
-            
+
             const mockProRecord = {
                 id: 'record-pro',
                 userId: vtPlusUserId,

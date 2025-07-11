@@ -891,7 +891,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     ModelEnum.CLAUDE_4_OPUS,
                                                     ModelEnum.GEMINI_2_5_PRO,
                                                     ModelEnum.GEMINI_2_5_FLASH,
-                                                    ModelEnum.GEMINI_2_0_FLASH,
+                                                    ModelEnum.GEMINI_2_5_FLASH_LITE
                                                 ].includes(model.id)
                                             )
                                             .map((model) => ({

@@ -13,10 +13,6 @@ update VT+ gemini rate limite system:
 
 --
 
-fix rag page chat area and whole display on mobile device
-
---
-
 use mcp for ai.sdk, context7: check to show thinking log tool view for model that has reasoning capabliyt by default
 
 for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
@@ -29,15 +25,6 @@ add Grok 4 model
   𝚖𝚘𝚍𝚎𝚕: '𝚡𝚊𝚒/𝚐𝚛𝚘𝚔-𝟺',
   𝚙𝚛𝚘𝚖𝚙𝚝: 'T𝚑𝚎 𝚊𝚗𝚜𝚠𝚎𝚛 𝚝𝚘 𝚕𝚒𝚏𝚎'
 })
-
---
---
-
-review and update /about, /term, /privacy, /faq and documents and rag page about current state of the project
-
---
-
-add this changes to clarify on usage meter settings page. update faq, terms, privacy, about page and documents
 
 --
 

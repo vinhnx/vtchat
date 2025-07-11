@@ -3,7 +3,7 @@ import { log } from '@repo/shared/logger';
 import type { NextRequest } from 'next/server';
 import { checkVTPlusAccess } from '@/app/api/subscription/access-control';
 import { auth } from '@/lib/auth-server';
-import { getRateLimitStatus } from '@/lib/services/rate-limit';
+import { getRateLimitStatus, recordRequest } from '@/lib/services/rate-limit';
 
 export async function GET(request: NextRequest) {
     try {
@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
         const modelId = searchParams.get('model') as ModelEnum;
 
         // Check VT+ status for proper limit calculation
-        const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+        const ip =
+            request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
         const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
         const isVTPlusUser = vtPlusAccess.hasAccess;
 
@@ -32,14 +33,12 @@ export async function GET(request: NextRequest) {
             const { ModelEnum } = await import('@repo/ai/models');
             const geminiModels = [
                 ModelEnum.GEMINI_2_5_FLASH_LITE,
-                ModelEnum.GEMINI_2_5_FLASH, 
+                ModelEnum.GEMINI_2_5_FLASH,
                 ModelEnum.GEMINI_2_5_PRO,
-                ModelEnum.GEMINI_2_0_FLASH,
-                ModelEnum.GEMINI_2_0_FLASH_LITE
             ];
 
             const allStatuses: Record<string, any> = {};
-            
+
             for (const model of geminiModels) {
                 try {
                     const status = await getRateLimitStatus(userId, model, isVTPlusUser);
@@ -72,6 +71,68 @@ export async function GET(request: NextRequest) {
         });
     } catch (error) {
         log.error({ error }, 'Error getting rate limit status');
+        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
+}
+
+export async function POST(request: NextRequest) {
+    try {
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+
+        if (!session?.user?.id) {
+            return new Response(JSON.stringify({ error: 'Authentication required' }), {
+                status: 401,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        const userId = session.user.id;
+
+        // Model can be from query string or JSON body
+        const searchParams = request.nextUrl.searchParams;
+        let modelId = searchParams.get('model') as ModelEnum;
+
+        if (!modelId) {
+            try {
+                const body = await request.json();
+                modelId = body.model as ModelEnum;
+            } catch {
+                // Ignore JSON parsing error, modelId remains undefined
+            }
+        }
+
+        if (!modelId) {
+            return new Response(JSON.stringify({ error: 'Missing model parameter' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        // Check VT+ access
+        const ip =
+            request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+        const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+
+        // Record the successful request
+        await recordRequest(userId, modelId, vtPlusAccess.hasAccess);
+
+        // Return fresh status so UI can update instantly
+        const status = await getRateLimitStatus(userId, modelId, vtPlusAccess.hasAccess);
+
+        return new Response(JSON.stringify(status), {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, max-age=0',
+            },
+        });
+    } catch (error) {
+        log.error({ error }, 'Error recording rate limit usage');
         return new Response(JSON.stringify({ error: 'Internal server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },

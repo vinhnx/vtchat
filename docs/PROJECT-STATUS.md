@@ -2,7 +2,7 @@
 
 **Status**: ✅ **PRODUCTION READY**
 **Version**: v1.0
-**Last Updated**: June 30, 2025
+**Last Updated**: July 17, 2025
 **Live URL**: [vtchat.io.vn](https://vtchat.io.vn)
 
 ## 🎯 Executive Summary
@@ -15,9 +15,9 @@ VT (VTChat) has successfully reached production readiness as a comprehensive, pr
 
 - ✅ **Multi-Provider Support**: OpenAI, Anthropic, Google, OpenRouter, Together AI, xAI
 - ✅ **9 Free AI Models**: 5 Gemini models + 4 OpenRouter models for all users
-- ✅ **Reasoning Mode (VT+ Exclusive)**: Complete AI SDK reasoning tokens support
-- ✅ **Document Processing (VT+ Exclusive)**: PDF/DOC/DOCX/TXT/MD up to 10MB
-- ✅ **Structured Output Extraction (VT+ Exclusive)**: AI-powered JSON extraction
+- ✅ **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support
+- ✅ **Document Processing (Free)**: PDF/DOC/DOCX/TXT/MD up to 10MB
+- ✅ **Structured Output Extraction (Free)**: AI-powered JSON extraction
 - ✅ **Web Search Integration (VT+ Exclusive)**: Real-time grounding capabilities
 - ✅ **Mathematical Calculator**: Advanced functions including trigonometry and logarithms
 
@@ -32,7 +32,7 @@ VT (VTChat) has successfully reached production readiness as a comprehensive, pr
 ### 🎨 User Interface & Experience
 
 - ✅ **Complete Shadcn UI Integration**: Zero breaking changes, consistent design system
-- ✅ **Dark Mode (VT+ Exclusive)**: Premium theming with official Shadcn variables
+- ✅ **Dark Mode**: Premium theming with official Shadcn variables
 - ✅ **Mobile Responsive**: Optimized interface for all device sizes
 - ✅ **Settings Modal Redesign**: Modern two-column layout with improved navigation
 - ✅ **Accessibility**: WCAG compliance with keyboard navigation and screen reader support
@@ -126,19 +126,21 @@ vtchat/
 
 ## 🎯 Feature Comparison
 
-| Feature                   | VT_BASE (Free)                     | VT_PLUS ($10/month)            |
-| ------------------------- | ---------------------------------- | ------------------------------ |
-| **AI Models**             | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features  |
-| **Basic Chat**            | ✅                                 | ✅                             |
-| **Local Privacy**         | ✅ (IndexedDB + Thread Isolation)  | ✅ (Enhanced Security)         |
-| **Calculator**            | ✅                                 | ✅                             |
-| **Security Protection**   | ✅ (Arcjet + Better Auth)          | ✅ (Priority Support)          |
-| **Reasoning Mode**        | ❌                                 | ✅ (AI SDK Reasoning Tokens)   |
-| **Dark Theme**            | ❌                                 | ✅ (Official Shadcn Variables) |
-| **Web Search**            | ❌                                 | ✅ (Real-time Grounding)       |
-| **Document Upload**       | ❌                                 | ✅ (PDF/DOC/DOCX up to 10MB)   |
-| **Structured Extraction** | ❌                                 | ✅ (AI-powered JSON)           |
-| **Rate Limiting**         | 10 requests/day (free models)      | Unlimited Premium Models       |
+| Feature                      | VT_BASE (Free)                     | VT+ ($5.99/month)             |
+| ---------------------------- | ---------------------------------- | ----------------------------- |
+| **AI Models**                | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
+| **Basic Chat**               | ✅                                 | ✅                            |
+| **Local Privacy**            | ✅ (IndexedDB + Thread Isolation)  | ✅ (Enhanced Security)        |
+| **Calculator**               | ✅                                 | ✅                            |
+| **Security Protection**      | ✅ (Arcjet + Better Auth)          | ✅ (Priority Support)         |
+| **Thinking Mode**            | ✅                                 | ✅                            |
+| **Dark Theme**               | ✅                                 | ✅                            |
+| **Document Upload**          | ✅ (PDF/DOC/DOCX up to 10MB)       | ✅                            |
+| **Structured Extraction**    | ✅ (AI-powered JSON)               | ✅                            |
+| **Web Search (PRO_SEARCH)**  | ❌                                 | ✅ (Real-time Grounding)      |
+| **Deep Research**            | ❌                                 | ✅ (Comprehensive Analysis)   |
+| **Personal AI Memory (RAG)** | ❌                                 | ✅ (AI Assistant with Memory) |
+| **Rate Limiting**            | 10 requests/day (free models)      | Unlimited Premium Models      |
 
 ## 🧪 Testing Status
 

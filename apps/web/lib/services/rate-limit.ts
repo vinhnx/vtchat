@@ -10,8 +10,6 @@ const MODEL_LIMITS_MAP = {
     [ModelEnum.GEMINI_2_5_FLASH_LITE]: GEMINI_LIMITS.FLASH_LITE,
     [ModelEnum.GEMINI_2_5_FLASH]: GEMINI_LIMITS.FLASH,
     [ModelEnum.GEMINI_2_5_PRO]: GEMINI_LIMITS.PRO,
-    [ModelEnum.GEMINI_2_0_FLASH]: GEMINI_LIMITS.FLASH_2_0,
-    [ModelEnum.GEMINI_2_0_FLASH_LITE]: GEMINI_LIMITS.FLASH_LITE_2_0,
 } as const;
 
 // Legacy support
@@ -40,7 +38,7 @@ function getModelLimits(modelId: ModelEnum) {
  */
 async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
     const now = new Date();
-    
+
     let rateLimitRecord = await db
         .select()
         .from(userRateLimits)
@@ -71,10 +69,12 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)
-                    .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
+                    .where(
+                        and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId))
+                    )
                     .limit(1)
                     .then((rows) => rows[0]);
-                
+
                 if (existingRecord) {
                     rateLimitRecord = existingRecord;
                 } else {
@@ -94,7 +94,7 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
  */
 async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<void> {
     const now = new Date();
-    
+
     const rateLimitRecord = await getOrCreateRateRecord(userId, modelId);
 
     // Check if resets are needed
@@ -145,7 +145,7 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
 async function recordDualQuotaUsage(userId: string, modelId: ModelEnum): Promise<void> {
     // Record in the model-specific quota
     await incrementRateRecord(userId, modelId);
-    
+
     // Also record in the Flash Lite shared quota
     await incrementRateRecord(userId, ModelEnum.GEMINI_2_5_FLASH_LITE);
 }
@@ -156,41 +156,49 @@ async function recordDualQuotaUsage(userId: string, modelId: ModelEnum): Promise
  */
 async function getDualQuotaStatus(userId: string, modelId: ModelEnum): Promise<RateLimitStatus> {
     const now = new Date();
-    
+
     // Get both records
     const modelRecord = await getOrCreateRateRecord(userId, modelId);
     const flashLiteRecord = await getOrCreateRateRecord(userId, ModelEnum.GEMINI_2_5_FLASH_LITE);
-    
+
     // Get limits for both
     const modelConfig = getModelLimits(modelId);
     const flashLiteConfig = GEMINI_LIMITS.FLASH_LITE;
-    
+
     const modelDailyLimit = modelConfig.PLUS_DAY;
     const modelMinuteLimit = modelConfig.PLUS_MINUTE;
     const flashLiteDailyLimit = flashLiteConfig.PLUS_DAY;
     const flashLiteMinuteLimit = flashLiteConfig.PLUS_MINUTE;
-    
+
     // Calculate current usage (with resets)
     const modelNeedsDailyReset = isNewDay(modelRecord.lastDailyReset, now);
     const modelNeedsMinuteReset = isNewMinute(modelRecord.lastMinuteReset, now);
     const flashLiteNeedsDailyReset = isNewDay(flashLiteRecord.lastDailyReset, now);
     const flashLiteNeedsMinuteReset = isNewMinute(flashLiteRecord.lastMinuteReset, now);
-    
-    const modelDailyUsed = modelNeedsDailyReset ? 0 : Number.parseInt(modelRecord.dailyRequestCount, 10);
-    const modelMinuteUsed = modelNeedsMinuteReset ? 0 : Number.parseInt(modelRecord.minuteRequestCount, 10);
-    const flashLiteDailyUsed = flashLiteNeedsDailyReset ? 0 : Number.parseInt(flashLiteRecord.dailyRequestCount, 10);
-    const flashLiteMinuteUsed = flashLiteNeedsMinuteReset ? 0 : Number.parseInt(flashLiteRecord.minuteRequestCount, 10);
-    
+
+    const modelDailyUsed = modelNeedsDailyReset
+        ? 0
+        : Number.parseInt(modelRecord.dailyRequestCount, 10);
+    const modelMinuteUsed = modelNeedsMinuteReset
+        ? 0
+        : Number.parseInt(modelRecord.minuteRequestCount, 10);
+    const flashLiteDailyUsed = flashLiteNeedsDailyReset
+        ? 0
+        : Number.parseInt(flashLiteRecord.dailyRequestCount, 10);
+    const flashLiteMinuteUsed = flashLiteNeedsMinuteReset
+        ? 0
+        : Number.parseInt(flashLiteRecord.minuteRequestCount, 10);
+
     // Calculate remaining for both quotas
     const modelRemainingDaily = modelDailyLimit - modelDailyUsed;
     const modelRemainingMinute = modelMinuteLimit - modelMinuteUsed;
     const flashLiteRemainingDaily = flashLiteDailyLimit - flashLiteDailyUsed;
     const flashLiteRemainingMinute = flashLiteMinuteLimit - flashLiteMinuteUsed;
-    
+
     // The effective remaining is the minimum of both quotas
     const effectiveRemainingDaily = Math.min(modelRemainingDaily, flashLiteRemainingDaily);
     const effectiveRemainingMinute = Math.min(modelRemainingMinute, flashLiteRemainingMinute);
-    
+
     return {
         dailyUsed: modelDailyUsed,
         minuteUsed: modelMinuteUsed,
@@ -211,45 +219,53 @@ async function getDualQuotaStatus(userId: string, modelId: ModelEnum): Promise<R
  */
 async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise<RateLimitResult> {
     const now = new Date();
-    
+
     // Get both records
     const modelRecord = await getOrCreateRateRecord(userId, modelId);
     const flashLiteRecord = await getOrCreateRateRecord(userId, ModelEnum.GEMINI_2_5_FLASH_LITE);
-    
+
     // Get limits for both
     const modelConfig = getModelLimits(modelId);
     const flashLiteConfig = GEMINI_LIMITS.FLASH_LITE;
-    
+
     const modelDailyLimit = modelConfig.PLUS_DAY;
     const modelMinuteLimit = modelConfig.PLUS_MINUTE;
     const flashLiteDailyLimit = flashLiteConfig.PLUS_DAY;
     const flashLiteMinuteLimit = flashLiteConfig.PLUS_MINUTE;
-    
+
     // Calculate current usage (with resets)
     const modelNeedsDailyReset = isNewDay(modelRecord.lastDailyReset, now);
     const modelNeedsMinuteReset = isNewMinute(modelRecord.lastMinuteReset, now);
     const flashLiteNeedsDailyReset = isNewDay(flashLiteRecord.lastDailyReset, now);
     const flashLiteNeedsMinuteReset = isNewMinute(flashLiteRecord.lastMinuteReset, now);
-    
-    const modelDailyUsed = modelNeedsDailyReset ? 0 : Number.parseInt(modelRecord.dailyRequestCount, 10);
-    const modelMinuteUsed = modelNeedsMinuteReset ? 0 : Number.parseInt(modelRecord.minuteRequestCount, 10);
-    const flashLiteDailyUsed = flashLiteNeedsDailyReset ? 0 : Number.parseInt(flashLiteRecord.dailyRequestCount, 10);
-    const flashLiteMinuteUsed = flashLiteNeedsMinuteReset ? 0 : Number.parseInt(flashLiteRecord.minuteRequestCount, 10);
-    
+
+    const modelDailyUsed = modelNeedsDailyReset
+        ? 0
+        : Number.parseInt(modelRecord.dailyRequestCount, 10);
+    const modelMinuteUsed = modelNeedsMinuteReset
+        ? 0
+        : Number.parseInt(modelRecord.minuteRequestCount, 10);
+    const flashLiteDailyUsed = flashLiteNeedsDailyReset
+        ? 0
+        : Number.parseInt(flashLiteRecord.dailyRequestCount, 10);
+    const flashLiteMinuteUsed = flashLiteNeedsMinuteReset
+        ? 0
+        : Number.parseInt(flashLiteRecord.minuteRequestCount, 10);
+
     // Calculate remaining for both quotas
     const modelRemainingDaily = modelDailyLimit - modelDailyUsed;
     const modelRemainingMinute = modelMinuteLimit - modelMinuteUsed;
     const flashLiteRemainingDaily = flashLiteDailyLimit - flashLiteDailyUsed;
     const flashLiteRemainingMinute = flashLiteMinuteLimit - flashLiteMinuteUsed;
-    
+
     // The effective remaining is the minimum of both quotas
     const effectiveRemainingDaily = Math.min(modelRemainingDaily, flashLiteRemainingDaily);
     const effectiveRemainingMinute = Math.min(modelRemainingMinute, flashLiteRemainingMinute);
-    
+
     // Calculate reset times
     const nextDailyReset = getNextDailyReset();
     const nextMinuteReset = getNextMinuteReset();
-    
+
     // Check limits - fail if either quota is exhausted
     if (effectiveRemainingDaily <= 0) {
         return {
@@ -338,7 +354,10 @@ export async function checkRateLimit(
     }
 
     // VT+ users have unlimited access to Flash Lite models
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH_LITE || modelId === ModelEnum.GEMINI_2_0_FLASH_LITE)) {
+    if (
+        isVTPlusUser &&
+        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
+    ) {
         return {
             allowed: true,
             remainingDaily: Number.POSITIVE_INFINITY,
@@ -351,7 +370,11 @@ export async function checkRateLimit(
     }
 
     // VT+ users using other Gemini models must check both model-specific AND Flash Lite quotas
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO || modelId === ModelEnum.GEMINI_2_0_FLASH)) {
+    if (
+        isVTPlusUser &&
+        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
+            modelId === ModelEnum.GEMINI_2_5_PRO)
+    ) {
         return await checkDualQuotaLimits(userId, modelId);
     }
 
@@ -514,13 +537,20 @@ export async function recordRequest(
     }
 
     // VT+ users with Flash Lite models: record for usage tracking but don't enforce limits
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH_LITE || modelId === ModelEnum.GEMINI_2_0_FLASH_LITE)) {
+    if (
+        isVTPlusUser &&
+        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
+    ) {
         await incrementRateRecord(userId, modelId);
         return;
     }
 
     // VT+ users using other Gemini models must record in both quotas (model-specific + shared Flash Lite quota)
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO || modelId === ModelEnum.GEMINI_2_0_FLASH)) {
+    if (
+        isVTPlusUser &&
+        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
+            modelId === ModelEnum.GEMINI_2_5_PRO)
+    ) {
         await recordDualQuotaUsage(userId, modelId);
         return;
     }
@@ -594,10 +624,13 @@ export async function getRateLimitStatus(
     }
 
     // VT+ users have unlimited access to Flash Lite models but show actual usage
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH_LITE || modelId === ModelEnum.GEMINI_2_0_FLASH_LITE)) {
+    if (
+        isVTPlusUser &&
+        modelId === ModelEnum.GEMINI_2_5_FLASH_LITE
+    ) {
         const now = new Date();
         const rateLimitRecord = await getOrCreateRateRecord(userId, modelId);
-        
+
         // Check if resets are needed
         const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
         const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
@@ -628,7 +661,11 @@ export async function getRateLimitStatus(
     }
 
     // VT+ users using other Gemini models need dual quota status
-    if (isVTPlusUser && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO || modelId === ModelEnum.GEMINI_2_0_FLASH)) {
+    if (
+        isVTPlusUser &&
+        (modelId === ModelEnum.GEMINI_2_5_FLASH ||
+            modelId === ModelEnum.GEMINI_2_5_PRO)
+    ) {
         return await getDualQuotaStatus(userId, modelId);
     }
 

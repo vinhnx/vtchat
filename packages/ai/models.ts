@@ -7,8 +7,6 @@ export const ModelEnum = {
     CLAUDE_4_SONNET: 'claude-4-sonnet-20250514',
     Deepseek_R1: 'accounts/fireworks/models/deepseek-r1',
     GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_0_FLASH: 'gemini-2.0-flash',
-    GEMINI_2_0_FLASH_LITE: 'gemini-2.0-flash-lite',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     CLAUDE_4_OPUS: 'claude-4-opus-20250514',
@@ -136,20 +134,6 @@ export const models: Model[] = [
         isFree: true,
     },
     {
-        id: ModelEnum.GEMINI_2_0_FLASH,
-        name: 'Gemini 2.0 Flash',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.GEMINI_2_0_FLASH_LITE,
-        name: 'Gemini 2.0 Flash Lite',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
         id: ModelEnum.GEMINI_2_5_PRO,
         name: 'Gemini 2.5 Pro',
         provider: 'google',
@@ -252,10 +236,6 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
         case ChatMode.GEMINI_2_5_PRO:
             return ModelEnum.GEMINI_2_5_PRO;
-        case ChatMode.GEMINI_2_0_FLASH:
-            return ModelEnum.GEMINI_2_0_FLASH;
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
-            return ModelEnum.GEMINI_2_0_FLASH_LITE;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.Deepseek_R1;
         case ChatMode.CLAUDE_4_SONNET:
@@ -320,8 +300,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_PRO:
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_FLASH_LITE:
-        case ChatMode.GEMINI_2_0_FLASH:
-        case ChatMode.GEMINI_2_0_FLASH_LITE:
             return 1_048_576;
         case ChatMode.DEEPSEEK_R1:
             return 128_000;
@@ -395,8 +373,6 @@ export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
 
 export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     const googleModels = [
-        ModelEnum.GEMINI_2_0_FLASH,
-        ModelEnum.GEMINI_2_0_FLASH_LITE,
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_2_5_PRO,
@@ -526,8 +502,6 @@ export const supportsTools = (model: ModelEnum): boolean => {
 
     // Google models that support tools
     const googleToolModels = [
-        ModelEnum.GEMINI_2_0_FLASH,
-        ModelEnum.GEMINI_2_0_FLASH_LITE,
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,

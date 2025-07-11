@@ -10,6 +10,7 @@ export * from './date-utils';
 export * from './env';
 export * from './hotjar';
 export * from './messages';
+export * from './model-utils';
 export * from './subscription';
 export * from './subscription-verification';
 export * from './tiptap-extensions';

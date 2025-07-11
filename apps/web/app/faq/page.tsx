@@ -435,7 +435,7 @@ function HelpCenterContent() {
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Supported Models:</strong> Available for Gemini 2.5
-                                        Pro, 2.5 Flash, 2.0 Flash, 1.5 Flash-001, and 1.5 Pro-001
+                                        Pro, 2.5 Flash
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Cost Reduction:</strong> Significantly reduces API
@@ -496,46 +496,46 @@ function HelpCenterContent() {
                         {/* Free Gemini Model */}
                         <AccordionItem value="free-gemini-model">
                             <AccordionTrigger className="font-medium">
-                                What is the new free Gemini model offering?
+                                What are the free AI models offerings?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT now offers free access to Gemini 2.5 Flash Lite Preview for
-                                    registered users with tiered limits:
+                                    VT offers free access to a variety of AI models for registered
+                                    users, with specific rate limits for each tier:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Model:</strong> Gemini 2.5 Flash Lite Preview
-                                        with advanced AI capabilities
+                                        <strong>Free Models:</strong> Access to 9 powerful models,
+                                        including 5 from the Gemini family (2.5 Flash Lite, 2.5
+                                        Flash, 2.5 Pro) and 4 from OpenRouter.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Free Users:</strong> 20 requests per day, 5
-                                        requests per minute
+                                        <strong>Free Users:</strong> Enjoy a daily limit of 20
+                                        requests for Gemini 2.5 Flash Lite, with a rate limit of 5
+                                        requests per minute.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Users:</strong> Enhanced limits - 100 requests
-                                        per day, 10 requests per minute
+                                        <strong>VT+ Users:</strong> Benefit from enhanced limits,
+                                        including 100 requests/day for Gemini 2.5 Flash Lite,
+                                        50/day for Gemini 2.5 Flash, and 25/day for Gemini 2.5 Pro.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Reset Time:</strong> Daily limits reset at 00:00 UTC
+                                        <strong>Daily Reset:</strong> All usage limits reset at
+                                        00:00 UTC each day.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Registration Required:</strong> Must be signed in to
-                                        access free model
+                                        <strong>Server-Funded:</strong> These models use VT's
+                                        server-side API keys, so you don't need to bring your own.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Server API Key:</strong> Uses VT's server-side API
-                                        key (no need for BYOK)
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Unlimited with BYOK:</strong> Set up your own Gemini
-                                        API key for unlimited usage
+                                        <strong>Unlimited with BYOK:</strong> For unrestricted
+                                        usage, you can always use your own API key.
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Upgrade to VT+ for enhanced limits and exclusive features like
-                                    web search, deep research, and personal AI assistant. Or set up
-                                    your own Gemini API key for unlimited usage.
+                                    To access these free models, simply sign in to your VT account.
+                                    For even higher limits and exclusive features, consider
+                                    upgrading to VT+.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -591,34 +591,35 @@ function HelpCenterContent() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT offers free tier, and with VT+ focusing only on 3 exclusive
-                                    research capabilities: Deep Research, Pro Search, and RAG
-                                    (Personal AI Assistant with Memory).
+                                    VT offers a comprehensive free tier and a premium VT+
+                                    subscription. Here’s a breakdown of what each tier includes:
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free tier (logged-in users):</strong> ALL premium AI
-                                        models (Claude 4, GPT-4.1, O3, DeepSeek R1, Grok 3) + all
-                                        advanced features - intelligent tool routing, chart
+                                        <strong>Free Tier (for all logged-in users):</strong>{' '}
+                                        Enjoy unlimited BYOK (Bring Your Own Key) access to all
+                                        premium AI models, including Claude 4, GPT-4.1, O3,
+                                        DeepSeek R1, and Grok 3. You also get access to a wide range
+                                        of advanced features like the intelligent tool router, chart
                                         visualization, web search, dark mode, thinking mode,
-                                        structured output, document parsing, reasoning chain,
-                                        multi-modal chat, and unlimited BYOK usage.
-                                        <strong>Gemini access requires your own API key.</strong>
+                                        structured output, document parsing, reasoning chain, and
+                                        multi-modal chat. To access Gemini models, you'll need to
+                                        provide your own API key.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
-                                        Everything free + 3 exclusive research features: PRO_SEARCH
-                                        (Enhanced Web Search), DEEP_RESEARCH (Deep Research
-                                        capabilities), and RAG (Personal AI Assistant with Memory).{' '}
-                                        <strong>
-                                            Plus server-funded access to all Gemini models
-                                        </strong>
-                                        (2.5 Flash Lite, 2.5 Flash, 2.5 Pro, 2.0 Flash, etc.) with
-                                        rate limits and budget protection.
+                                        Includes everything in the free tier, plus three exclusive
+                                        research features: PRO_SEARCH for enhanced web searches,
+                                        DEEP_RESEARCH for in-depth analysis, and RAG for a personal
+                                        AI assistant with memory. Additionally, VT+ provides
+                                        server-funded access to all Gemini models (2.5 Flash Lite,
+                                        2.5 Flash, 2.5 Pro) with built-in rate limits and
+                                        budget protection.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Both tiers include complete privacy with thread isolation
-                                        and local storage.
+                                        Both tiers are designed with privacy in mind, featuring
+                                        complete thread isolation and local storage to ensure your
+                                        data remains secure.
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -820,61 +821,66 @@ function HelpCenterContent() {
                         {/* RAG Getting Started */}
                         <AccordionItem value="rag-getting-started">
                             <AccordionTrigger className="font-medium">
-                                How do I get started with Personal AI Assistant with Memory?
+                                How do I get started with the Personal AI Assistant?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    Getting started with Personal AI Assistant with Memory is
-                                    simple! Here's how to build your personal AI assistant:
+                                    Getting started with your Personal AI Assistant is easy. Follow
+                                    these simple steps to build your own intelligent assistant:
                                 </p>
                                 <ol className="mt-4 list-outside list-decimal space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Get VT+ subscription:</strong> Personal AI Assistant
-                                        with Memory is exclusive to VT+ users for enhanced privacy
-                                        and features
+                                        <strong>Subscribe to VT+:</strong> The Personal AI Assistant
+                                        is an exclusive feature for VT+ users, offering enhanced
+                                        privacy and advanced capabilities.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Set up API keys:</strong> Add your Google Gemini API
-                                        key in Settings → API Keys (required for embeddings)
+                                        <strong>Set up your API keys:</strong> Add your Google
+                                        Gemini API key in Settings → API Keys. This is required for
+                                        the embedding technology that powers the assistant's memory.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Access AI Assistant:</strong> Click "AI Assistant"
-                                        in the sidebar navigation
+                                        <strong>Access the AI Assistant:</strong> Click on "AI
+                                        Assistant" in the sidebar to start interacting with your
+                                        assistant.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Start sharing information:</strong> Tell the AI
-                                        about yourself, your work, preferences, or important facts
+                                        <strong>Share information:</strong> Start by telling the AI
+                                        about yourself, your work, your preferences, or any other
+                                        important facts you want it to remember.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Ask questions:</strong> Query your stored knowledge
-                                        by asking questions about anything you've shared
+                                        <strong>Ask questions:</strong> Once you've shared some
+                                        information, you can query your knowledge base by asking
+                                        questions.
                                     </li>
                                 </ol>
                                 <h4 className="mb-2 mt-6 font-medium">
-                                    Example conversations to start:
+                                    Here are a few examples to get you started:
                                 </h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        "My name is John and I work as a software engineer at
-                                        Google"
+                                        "My name is Alex, and I'm a product manager at a tech
+                                        startup."
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "I prefer working remotely and my favorite programming
-                                        languages are Python and TypeScript"
+                                        "I enjoy hiking on the weekends and my favorite author is
+                                        Haruki Murakami."
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "I have a meeting with the product team every Tuesday at 2
-                                        PM"
+                                        "I have a recurring meeting with the engineering team every
+                                        Wednesday at 10 AM."
                                     </li>
                                     <li className="text-muted-foreground">
-                                        "What did I tell you about my work schedule?" (after sharing
-                                        information)
+                                        "What did I tell you about my weekly meetings?" (after
+                                        sharing the information)
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    The AI will automatically save information you share and help
-                                    you retrieve it later through natural conversation. The more you
-                                    share, the more personalized your assistant becomes!
+                                    The more you interact with your assistant, the more personalized
+                                    and helpful it will become. It automatically saves the
+                                    information you provide, making it easy to retrieve later
+                                    through natural conversation.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -882,90 +888,96 @@ function HelpCenterContent() {
                         {/* RAG Knowledge Chat */}
                         <AccordionItem value="rag-knowledge-chat">
                             <AccordionTrigger className="font-medium">
-                                What is Personal AI Assistant with Memory and how does it work?
+                                What is the Personal AI Assistant and how does it work?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    RAG Knowledge Chat is a VT+ exclusive feature that lets you
-                                    build and query your personal agent using Retrieval-Augmented
-                                    Generation (RAG) technology. It's like having your own AI
-                                    assistant with perfect memory of everything you've shared:
+                                    The Personal AI Assistant is a VT+ exclusive feature that allows
+                                    you to create and interact with a personalized knowledge base
+                                    using Retrieval-Augmented Generation (RAG). It acts as an AI
+                                    assistant with a perfect memory of everything you've shared.
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ Exclusive:</strong> Available only to VT+
-                                        subscribers with enhanced privacy and security features
+                                        <strong>Exclusive to VT+:</strong> This feature is available
+                                        only to VT+ subscribers and comes with enhanced privacy and
+                                        security.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Personal AI Assistant:</strong> Build your own
-                                        intelligent knowledge repository that remembers everything
-                                        you share
+                                        <strong>Personalized Knowledge Base:</strong> Build an
+                                        intelligent repository that remembers all the information
+                                        you share with it.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Smart Auto-Storage:</strong> Information is
-                                        automatically processed, chunked, and embedded using
-                                        advanced vector embeddings
+                                        automatically processed, chunked, and stored using advanced
+                                        vector embeddings.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Semantic Search:</strong> AI finds relevant
-                                        information using meaning-based search, not just keywords
+                                        <strong>Semantic Search:</strong> The AI finds relevant
+                                        information based on meaning, not just keywords.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Natural Conversations:</strong> Share facts,
-                                        preferences, experiences, or ask questions in plain English
+                                        <strong>Natural Interaction:</strong> Share facts,
+                                        preferences, and experiences, or ask questions in plain
+                                        English.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Proactive Learning:</strong> AI encourages you to
-                                        build your agent for more personalized assistance
+                                        <strong>Proactive Learning:</strong> The AI encourages you
+                                        to build out your knowledge base for more personalized
+                                        assistance.
                                     </li>
                                 </ul>
                                 <h4 className="mb-2 mt-6 font-medium">Key Benefits:</h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Persistent Memory:</strong> Unlike regular chat,
-                                        your agent grows over time and remembers everything
+                                        <strong>Persistent Memory:</strong> Unlike a standard chat,
+                                        your assistant's knowledge grows over time.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Personalized Responses:</strong> Get answers
-                                        tailored to your specific information and preferences
+                                        <strong>Tailored Responses:</strong> Get answers that are
+                                        personalized to your specific information and preferences.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Intelligent Organization:</strong> No need to
-                                        manually organize - AI finds connections automatically
+                                        <strong>Intelligent Organization:</strong> The AI
+                                        automatically finds connections in your information, so you
+                                        don't have to.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Instant Access:</strong> Quickly retrieve any stored
-                                        information through natural conversation
+                                        <strong>Instant Retrieval:</strong> Quickly access any
+                                        stored information through natural conversation.
                                     </li>
                                 </ul>
                                 <h4 className="mb-2 mt-6 font-medium">Privacy & Security:</h4>
                                 <ul className="list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Complete Isolation:</strong> Your agent is
-                                        completely private and isolated to your account only
+                                        <strong>Complete Isolation:</strong> Your assistant is
+                                        private and isolated to your account.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Zero Data Sharing:</strong> No other users can
-                                        access your stored information - guaranteed
+                                        <strong>Zero Data Sharing:</strong> Your stored information
+                                        is never shared with other users.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Secure Storage:</strong> All embeddings and data are
-                                        encrypted and stored securely in our database
+                                        encrypted and stored securely in our database.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>User-Controlled:</strong> You can view, delete
-                                        individual items, or clear your entire agent anytime
+                                        <strong>User Control:</strong> You can view, delete
+                                        individual entries, or clear your entire knowledge base at
+                                        any time.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>No Third-Party Sharing:</strong> Your data is never
-                                        shared with any third parties and only used to improve your
-                                        VT experience
+                                        shared with third parties and is only used to enhance your
+                                        VT experience.
                                     </li>
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
-                                    Access RAG Knowledge Chat from the sidebar (VT+ users) and start
-                                    building your personalized AI assistant by sharing information
-                                    about yourself, your work, preferences, and important facts.
+                                    You can access the Personal AI Assistant from the sidebar (VT+
+                                    users only). Start building your personalized assistant by
+                                    sharing information about yourself, your work, and your
+                                    preferences.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -973,28 +985,30 @@ function HelpCenterContent() {
                         {/* Tool Integration */}
                         <AccordionItem value="tool-integration">
                             <AccordionTrigger className="font-medium">
-                                What about external tool integration?
+                                What about third-party tool integration?
                             </AccordionTrigger>
                             <AccordionContent>
                                 <p className="text-muted-foreground">
-                                    VT's tool integration features are temporarily optimized to
-                                    improve app performance:
+                                    To optimize performance and streamline the user experience, VT's
+                                    external tool integration features have been temporarily
+                                    adjusted.
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        External tool connectivity framework is preserved for future
-                                        restoration
+                                        The underlying framework for external tool connectivity is
+                                        preserved and can be restored in the future.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Core chat, research, and AI capabilities remain fully
-                                        functional
+                                        Core functionalities, including chat, research, and AI
+                                        capabilities, remain fully operational.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Tool features will be re-enabled based on user demand
+                                        Tool integration will be re-enabled based on user feedback
+                                        and demand.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        The app is now lighter and faster without external
-                                        dependencies
+                                        This adjustment has made the app lighter and faster by
+                                        reducing external dependencies.
                                     </li>
                                 </ul>
                             </AccordionContent>

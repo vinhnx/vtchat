@@ -6,12 +6,16 @@ import { MultiModelUsageMeter } from '../multi-model-usage-meter';
 
 // Mock the chart components to avoid rendering issues in tests
 vi.mock('recharts', () => ({
-    AreaChart: ({ children }: { children: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+    AreaChart: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="area-chart">{children}</div>
+    ),
     Area: () => <div data-testid="area" />,
     CartesianGrid: () => <div data-testid="cartesian-grid" />,
     XAxis: () => <div data-testid="x-axis" />,
     YAxis: () => <div data-testid="y-axis" />,
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="responsive-container">{children}</div>,
+    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="responsive-container">{children}</div>
+    ),
 }));
 
 // Mock fetch globally
@@ -21,7 +25,7 @@ global.fetch = mockFetch;
 describe('MultiModelUsageMeter Component - Requirements Verification', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        
+
         // Default successful fetch response
         mockFetch.mockResolvedValue({
             ok: true,
@@ -110,9 +114,17 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('VT+ Dual Quota System')).toBeInTheDocument();
-                expect(screen.getByText(/Flash Lite.*Unlimited access for VT\+ users/)).toBeInTheDocument();
-                expect(screen.getByText(/Flash & Pro.*count against both their own limits AND the Flash Lite quota/)).toBeInTheDocument();
-                expect(screen.getByText(/Effective limit.*stricter of the two quotas applies/)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/Flash Lite.*Unlimited access for VT\+ users/)
+                ).toBeInTheDocument();
+                expect(
+                    screen.getByText(
+                        /Flash & Pro.*count against both their own limits AND the Flash Lite quota/
+                    )
+                ).toBeInTheDocument();
+                expect(
+                    screen.getByText(/Effective limit.*stricter of the two quotas applies/)
+                ).toBeInTheDocument();
             });
         });
 
@@ -120,7 +132,9 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
             render(<MultiModelUsageMeter />);
 
             await waitFor(() => {
-                const vtPlusNotes = screen.getAllByText(/VT\+ Note.*Also counts against Flash Lite quota/);
+                const vtPlusNotes = screen.getAllByText(
+                    /VT\+ Note.*Also counts against Flash Lite quota/
+                );
                 expect(vtPlusNotes).toHaveLength(2); // One for Flash, one for Pro
             });
         });
@@ -142,10 +156,10 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
             await waitFor(() => {
                 // Should show Flash Lite limits
                 expect(screen.getByText('Gemini 2.5 Flash Lite')).toBeInTheDocument();
-                
-                // Should show Flash limits  
+
+                // Should show Flash limits
                 expect(screen.getByText('Gemini 2.5 Flash')).toBeInTheDocument();
-                
+
                 // Should show Pro limits
                 expect(screen.getByText('Gemini 2.5 Pro')).toBeInTheDocument();
             });
@@ -189,7 +203,7 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
         it('should handle loading states', () => {
             // Mock a pending fetch
             mockFetch.mockImplementation(() => new Promise(() => {}));
-            
+
             render(<MultiModelUsageMeter />);
 
             // Should show loading state initially
@@ -237,7 +251,9 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
             render(<MultiModelUsageMeter />);
 
             await waitFor(() => {
-                expect(screen.getByText(/Server-funded access requires VT\+ subscription/)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/Server-funded access requires VT\+ subscription/)
+                ).toBeInTheDocument();
             });
         });
 
@@ -289,7 +305,9 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
             render(<MultiModelUsageMeter />);
 
             await waitFor(() => {
-                expect(screen.getByText(/Server-funded access requires VT\+ subscription/)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/Server-funded access requires VT\+ subscription/)
+                ).toBeInTheDocument();
                 expect(screen.getByText(/Unlimited access for VT\+ users/)).toBeInTheDocument();
             });
         });
@@ -310,7 +328,9 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
             render(<MultiModelUsageMeter />);
 
             await waitFor(() => {
-                expect(screen.getByText(/count against both their own limits AND the Flash Lite quota/)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/count against both their own limits AND the Flash Lite quota/)
+                ).toBeInTheDocument();
                 expect(screen.getByText(/stricter of the two quotas applies/)).toBeInTheDocument();
             });
         });

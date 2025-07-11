@@ -14,8 +14,6 @@ const mockIsGeminiModel = (chatMode) => {
         chatMode === ChatMode.GEMINI_2_5_PRO ||
         chatMode === ChatMode.GEMINI_2_5_FLASH ||
         chatMode === ChatMode.GEMINI_2_5_FLASH_LITE ||
-        chatMode === ChatMode.GEMINI_2_0_FLASH ||
-        chatMode === ChatMode.GEMINI_2_0_FLASH_LITE ||
         chatMode === ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20 ||
         chatMode === ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06 ||
         chatMode === ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05
@@ -62,12 +60,6 @@ describe('VT+ Gemini BYOK Bypass', () => {
         expect(needsApiKeyCheck).toBe(false);
     });
 
-    test('VT+ users should not need API key check for Gemini 2.0 Flash', () => {
-        const isPlusTier = true;
-        const needsApiKeyCheck = mockNeedsApiKeyCheck(ChatMode.GEMINI_2_0_FLASH, isPlusTier);
-        expect(needsApiKeyCheck).toBe(false);
-    });
-
     test('Free users should need API key check for Gemini models (except free model)', () => {
         const isPlusTier = false;
 
@@ -75,7 +67,6 @@ describe('VT+ Gemini BYOK Bypass', () => {
         expect(mockNeedsApiKeyCheck(ChatMode.Pro, isPlusTier)).toBe(true);
         expect(mockNeedsApiKeyCheck(ChatMode.GEMINI_2_5_PRO, isPlusTier)).toBe(true);
         expect(mockNeedsApiKeyCheck(ChatMode.GEMINI_2_5_FLASH, isPlusTier)).toBe(true);
-        expect(mockNeedsApiKeyCheck(ChatMode.GEMINI_2_0_FLASH, isPlusTier)).toBe(true);
     });
 
     test('VT+ users should still need API key check for non-Gemini models', () => {
@@ -102,8 +93,6 @@ describe('VT+ Gemini BYOK Bypass', () => {
         expect(mockIsGeminiModel(ChatMode.GEMINI_2_5_PRO)).toBe(true);
         expect(mockIsGeminiModel(ChatMode.GEMINI_2_5_FLASH)).toBe(true);
         expect(mockIsGeminiModel(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe(true);
-        expect(mockIsGeminiModel(ChatMode.GEMINI_2_0_FLASH)).toBe(true);
-        expect(mockIsGeminiModel(ChatMode.GEMINI_2_0_FLASH_LITE)).toBe(true);
 
         // Should not detect non-Gemini models
         expect(mockIsGeminiModel(ChatMode.GPT_4o)).toBe(false);

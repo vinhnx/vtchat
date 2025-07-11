@@ -347,7 +347,7 @@ export function RAGChatbot() {
                             className="flex-1 overflow-hidden"
                             style={{
                                 height: 'calc(100vh - 180px)', // Account for header + input + safe areas
-                                minHeight: '300px'
+                                minHeight: '300px',
                             }}
                         >
                             <ScrollArea className="h-full w-full">
@@ -411,12 +411,15 @@ export function RAGChatbot() {
                                                                     : 'bg-muted'
                                                             }`}
                                                         >
-                                                            <div className="text-sm leading-relaxed">{message.content}</div>
+                                                            <div className="text-sm leading-relaxed">
+                                                                {message.content}
+                                                            </div>
                                                             {message.role === 'assistant' && (
                                                                 <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
                                                                     <div className="flex items-center gap-2">
                                                                         <span>
-                                                                            {currentRagChatModel?.name || 'Unknown'}
+                                                                            {currentRagChatModel?.name ||
+                                                                                'Unknown'}
                                                                         </span>
                                                                         <span>•</span>
                                                                         <span>
@@ -443,7 +446,9 @@ export function RAGChatbot() {
                                                             <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
                                                             <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
                                                         </div>
-                                                        <span className="ml-2">VT is thinking...</span>
+                                                        <span className="ml-2">
+                                                            VT is thinking...
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -497,7 +502,7 @@ export function RAGChatbot() {
                                     onChange={(value) => {
                                         // Simulate the event object that handleInputChange expects
                                         const syntheticEvent = {
-                                            target: { value }
+                                            target: { value },
                                         } as React.ChangeEvent<HTMLInputElement>;
                                         handleInputChange(syntheticEvent);
                                     }}

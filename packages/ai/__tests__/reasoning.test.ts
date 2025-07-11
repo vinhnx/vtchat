@@ -21,11 +21,6 @@ describe('Reasoning Support', () => {
             expect(supportsReasoning(ModelEnum.CLAUDE_4_SONNET)).toBe(true);
             expect(supportsReasoning(ModelEnum.CLAUDE_4_OPUS)).toBe(true);
         });
-
-        it('should return false for non-reasoning models', () => {
-            expect(supportsReasoning(ModelEnum.GEMINI_2_0_FLASH)).toBe(false);
-            expect(supportsReasoning(ModelEnum.GPT_4o)).toBe(false);
-        });
     });
 
     describe('getReasoningType', () => {
@@ -54,11 +49,6 @@ describe('Reasoning Support', () => {
             // Ensure Claude 4 models support both reasoning and tools
             expect(supportsTools(ModelEnum.CLAUDE_4_SONNET)).toBe(true);
             expect(supportsTools(ModelEnum.CLAUDE_4_OPUS)).toBe(true);
-        });
-
-        it('should return none for non-reasoning models', () => {
-            expect(getReasoningType(ModelEnum.GEMINI_2_0_FLASH)).toBe(ReasoningType.NONE);
-            expect(getReasoningType(ModelEnum.GPT_4o)).toBe(ReasoningType.NONE);
         });
     });
 });

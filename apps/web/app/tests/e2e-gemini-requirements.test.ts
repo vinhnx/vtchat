@@ -14,7 +14,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Open the usage meter component
             // 3. Verify area charts are displayed
             // 4. Verify no progress bars are present
-            
+
             // Expected Results:
             // - Area chart component is visible
             // - Chart shows usage data for all Gemini models
@@ -29,7 +29,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 3. Verify dual quota system explanation is visible
             // 4. Verify Flash Lite shows unlimited for VT+
             // 5. Verify Pro/Flash show dual quota notes
-            
+
             // Expected Results:
             // - "VT+ Dual Quota System" section is present
             // - Flash Lite shows "Unlimited" for VT+ users
@@ -44,7 +44,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 3. Click refresh button
             // 4. Verify API call is made
             // 5. Verify UI updates with new data
-            
+
             // Expected Results:
             // - Refresh button is clickable
             // - API call to /api/rate-limit/status is made
@@ -60,7 +60,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Make requests up to daily limit for Gemini Pro
             // 3. Attempt one more request
             // 4. Verify rate limiting message is shown
-            
+
             // Expected Results:
             // - Requests are successful up to limit
             // - Rate limit error is shown when exceeded
@@ -74,7 +74,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Make many requests to Flash Lite model
             // 3. Verify all requests are successful
             // 4. Check usage meter shows unlimited access
-            
+
             // Expected Results:
             // - All Flash Lite requests succeed
             // - Usage meter shows infinite remaining quota
@@ -88,7 +88,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Use Flash Lite to approach its VT+ limit
             // 3. Try to use Pro model
             // 4. Verify rate limiting based on Flash Lite quota
-            
+
             // Expected Results:
             // - Pro model requests are limited by Flash Lite quota
             // - Error message explains dual quota system
@@ -104,7 +104,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Logout and login as VT+ user
             // 3. Verify limits are different
             // 4. Check that VT+ features are highlighted
-            
+
             // Expected Results:
             // - Free users see standard limits
             // - VT+ users see enhanced limits
@@ -118,7 +118,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Simulate subscription upgrade
             // 3. Refresh usage meter
             // 4. Verify new VT+ limits are applied
-            
+
             // Expected Results:
             // - Limits update immediately after subscription change
             // - UI reflects new subscription status
@@ -134,7 +134,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Verify usage meter shows appropriate error state
             // 3. Attempt to retry loading
             // 4. Verify recovery when API is restored
-            
+
             // Expected Results:
             // - Error state is shown when API fails
             // - User can retry loading
@@ -148,7 +148,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Simulate session expiration
             // 3. Attempt to view usage meter
             // 4. Verify redirect to login
-            
+
             // Expected Results:
             // - User is redirected to login when unauthenticated
             // - Usage meter is protected behind authentication
@@ -162,7 +162,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Simulate network disconnection
             // 3. Attempt to refresh usage data
             // 4. Verify appropriate offline message
-            
+
             // Expected Results:
             // - Offline state is clearly indicated
             // - User can retry when connection is restored
@@ -178,7 +178,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Test keyboard navigation
             // 3. Test screen reader compatibility
             // 4. Verify color contrast ratios
-            
+
             // Expected Results:
             // - All WCAG guidelines are met
             // - Keyboard navigation works properly
@@ -193,7 +193,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Resize to tablet dimensions
             // 3. Resize to mobile dimensions
             // 4. Verify responsive layout
-            
+
             // Expected Results:
             // - Layout adapts to different screen sizes
             // - All information remains accessible
@@ -207,7 +207,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Click refresh button
             // 3. Observe loading states
             // 4. Verify visual feedback
-            
+
             // Expected Results:
             // - Hover states are clearly visible
             // - Loading states are indicated
@@ -223,7 +223,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Measure time to first meaningful paint
             // 3. Measure time to data load completion
             // 4. Verify performance metrics
-            
+
             // Expected Results:
             // - Initial render < 500ms
             // - Data loads < 2000ms
@@ -237,7 +237,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Scroll through usage information
             // 3. Click various UI elements
             // 4. Verify smooth animations
-            
+
             // Expected Results:
             // - Animations are smooth (60fps)
             // - No jank during interactions
@@ -251,7 +251,7 @@ describe('End-to-End Gemini Requirements Tests', () => {
             // 2. Verify no conflicts in data display
             // 3. Check that rate limiting works per-user
             // 4. Verify performance under load
-            
+
             // Expected Results:
             // - Each user sees their own data
             // - Rate limiting is applied per-user
@@ -357,7 +357,7 @@ export class GeminiTestDataFactory {
         // Create status that reflects dual quota constraints
         const modelLimit = 1000;
         const flashLiteLimit = 1000;
-        
+
         const effectiveRemaining = Math.min(
             modelLimit - modelUsage,
             flashLiteLimit - flashLiteUsage
@@ -369,7 +369,10 @@ export class GeminiTestDataFactory {
             dailyLimit: modelLimit,
             minuteLimit: 100,
             remainingDaily: effectiveRemaining,
-            remainingMinute: Math.min(100 - Math.floor(modelUsage / 10), 100 - Math.floor(flashLiteUsage / 10)),
+            remainingMinute: Math.min(
+                100 - Math.floor(modelUsage / 10),
+                100 - Math.floor(flashLiteUsage / 10)
+            ),
             resetTime: {
                 daily: new Date(),
                 minute: new Date(),

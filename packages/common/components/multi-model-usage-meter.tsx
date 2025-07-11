@@ -37,17 +37,7 @@ const MODEL_CONFIG = {
         name: 'Gemini 2.5 Pro',
         description: 'Advanced capabilities',
         limits: GEMINI_LIMITS.PRO,
-    },
-    [ModelEnum.GEMINI_2_0_FLASH]: {
-        name: 'Gemini 2.0 Flash',
-        description: 'Latest generation',
-        limits: GEMINI_LIMITS.FLASH_2_0,
-    },
-    [ModelEnum.GEMINI_2_0_FLASH_LITE]: {
-        name: 'Gemini 2.0 Flash Lite',
-        description: 'Latest efficient',
-        limits: GEMINI_LIMITS.FLASH_LITE_2_0,
-    },
+    }
 } as const;
 
 // Models array constant to prevent re-renders
@@ -184,7 +174,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     Free users must provide their own API key.
                     <br />
                     <span className="text-xs text-muted-foreground/80">
-                        Note: Usage is tracked for server-funded requests only. VT+ Flash Lite has unlimited access but usage is shown for transparency. BYOK usage is not counted.
+                        Note: Usage is tracked for server-funded requests only. VT+ Flash Lite has
+                        unlimited access but usage is shown for transparency. BYOK usage is not
+                        counted.
                         <br />
                         <a
                             href="https://ai.google.dev/gemini-api/docs/models"
@@ -221,14 +213,6 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_PRO].name}`,
                                 color: 'hsl(var(--chart-3))',
                             },
-                            'flash-2-0': {
-                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_0_FLASH].name}`,
-                                color: 'hsl(var(--chart-4))',
-                            },
-                            'flash-lite-2-0': {
-                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_0_FLASH_LITE].name}`,
-                                color: 'hsl(var(--chart-5))',
-                            },
                         }}
                         className="min-h-[240px]"
                     >
@@ -239,21 +223,16 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     'flash-lite-2-5': 0,
                                     'flash-2-5': 0,
                                     'pro-2-5': 0,
-                                    'flash-2-0': 0,
-                                    'flash-lite-2-0': 0,
                                 },
                                 {
                                     time: 'Current',
                                     'flash-lite-2-5':
-                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed || 0,
+                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed ||
+                                        0,
                                     'flash-2-5':
                                         modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0,
                                     'pro-2-5':
                                         modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed || 0,
-                                    'flash-2-0':
-                                        modelStatuses[ModelEnum.GEMINI_2_0_FLASH]?.dailyUsed || 0,
-                                    'flash-lite-2-0':
-                                        modelStatuses[ModelEnum.GEMINI_2_0_FLASH_LITE]?.dailyUsed || 0,
                                 },
                             ]}
                             margin={{ top: 20, right: 30, left: 20, bottom: 45 }}
@@ -274,7 +253,10 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 tickLine={{ stroke: 'hsl(var(--border))' }}
                                 axisLine={{ stroke: 'hsl(var(--border))' }}
                                 allowDecimals={false}
-                                domain={[0, (dataMax: number) => Math.max(5, Math.ceil(dataMax * 1.2))]}
+                                domain={[
+                                    0,
+                                    (dataMax: number) => Math.max(5, Math.ceil(dataMax * 1.2)),
+                                ]}
                                 tickCount={6}
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
@@ -303,22 +285,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 fill="var(--color-pro-2-5)"
                                 fillOpacity={0.8}
                             />
-                            <Area
-                                type="monotone"
-                                dataKey="flash-2-0"
-                                stackId="1"
-                                stroke="var(--color-flash-2-0)"
-                                fill="var(--color-flash-2-0)"
-                                fillOpacity={0.8}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="flash-lite-2-0"
-                                stackId="1"
-                                stroke="var(--color-flash-lite-2-0)"
-                                fill="var(--color-flash-lite-2-0)"
-                                fillOpacity={0.8}
-                            />
+
                         </AreaChart>
                     </ChartContainer>
 
@@ -372,19 +339,24 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
                                 <div className="h-3 w-3 rounded-full bg-chart-1" />
-                                <div className="font-medium text-foreground">
-                                    VT+ Subscription
-                                </div>
+                                <div className="font-medium text-foreground">VT+ Subscription</div>
                             </div>
                             <div className="p-4 bg-background/50 rounded-lg border border-chart-1/20">
                                 <div className="text-sm text-muted-foreground space-y-2">
-                                    <div className="font-medium text-foreground mb-3">Server-funded Access</div>
-                                    <div>• <strong>Unlimited</strong> Gemini 2.5 Flash Lite access</div>
+                                    <div className="font-medium text-foreground mb-3">
+                                        Server-funded Access
+                                    </div>
+                                    <div>
+                                        • <strong>Unlimited</strong> Gemini 2.5 Flash Lite access
+                                    </div>
                                     <div>• Enhanced limits for all Gemini models</div>
                                     <div>• No API key required for Gemini models</div>
                                     <div>• Immediate access without setup</div>
                                     <div>• Priority support</div>
-                                    <div>• 3 exclusive research features (Deep Research, Pro Search, AI Memory)</div>
+                                    <div>
+                                        • 3 exclusive research features (Deep Research, Pro Search,
+                                        AI Memory)
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -399,8 +371,14 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             </div>
                             <div className="p-4 bg-background/50 rounded-lg border border-chart-2/20">
                                 <div className="text-sm text-muted-foreground space-y-2">
-                                    <div className="font-medium text-foreground mb-3">Limited Server Access + BYOK</div>
-                                    <div>• Gemini 2.5 Flash Lite: <strong>{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day</strong>, {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min</div>
+                                    <div className="font-medium text-foreground mb-3">
+                                        Limited Server Access + BYOK
+                                    </div>
+                                    <div>
+                                        • Gemini 2.5 Flash Lite:{' '}
+                                        <strong>{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day</strong>,{' '}
+                                        {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min
+                                    </div>
                                     <div>• Must provide own API key for other models</div>
                                     <div>• Unlimited usage with BYOK</div>
                                     <div>• All advanced features included</div>
@@ -424,8 +402,19 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     Gemini 2.5 Flash Lite
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
-                                    <div>VT+: <span className="font-medium">Unlimited</span> <span className="text-xs text-muted-foreground/70">(usage tracked)</span></div>
-                                    <div>Free: <span className="font-medium">{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day, {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min</span></div>
+                                    <div>
+                                        VT+: <span className="font-medium">Unlimited</span>{' '}
+                                        <span className="text-xs text-muted-foreground/70">
+                                            (usage tracked)
+                                        </span>
+                                    </div>
+                                    <div>
+                                        Free:{' '}
+                                        <span className="font-medium">
+                                            {GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="p-3 bg-background/50 rounded-lg">
@@ -433,8 +422,16 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     Gemini 2.5 Flash
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
-                                    <div>VT+: <span className="font-medium">{GEMINI_LIMITS.FLASH.PLUS_DAY}/day, {GEMINI_LIMITS.FLASH.PLUS_MINUTE}/min</span></div>
-                                    <div>Free: <span className="font-medium">BYOK Required</span></div>
+                                    <div>
+                                        VT+:{' '}
+                                        <span className="font-medium">
+                                            {GEMINI_LIMITS.FLASH.PLUS_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.FLASH.PLUS_MINUTE}/min
+                                        </span>
+                                    </div>
+                                    <div>
+                                        Free: <span className="font-medium">BYOK Required</span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="p-3 bg-background/50 rounded-lg">
@@ -442,26 +439,16 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     Gemini 2.5 Pro
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
-                                    <div>VT+: <span className="font-medium">{GEMINI_LIMITS.PRO.PLUS_DAY}/day, {GEMINI_LIMITS.PRO.PLUS_MINUTE}/min</span></div>
-                                    <div>Free: <span className="font-medium">BYOK Required</span></div>
-                                </div>
-                            </div>
-                            <div className="p-3 bg-background/50 rounded-lg">
-                                <div className="font-medium text-foreground mb-2 text-sm">
-                                    Gemini 2.0 Flash
-                                </div>
-                                <div className="text-xs text-muted-foreground space-y-1">
-                                    <div>VT+: <span className="font-medium">{GEMINI_LIMITS.FLASH_2_0.PLUS_DAY}/day, {GEMINI_LIMITS.FLASH_2_0.PLUS_MINUTE}/min</span></div>
-                                    <div>Free: <span className="font-medium">BYOK Required</span></div>
-                                </div>
-                            </div>
-                            <div className="p-3 bg-background/50 rounded-lg">
-                                <div className="font-medium text-foreground mb-2 text-sm">
-                                    Gemini 2.0 Flash Lite
-                                </div>
-                                <div className="text-xs text-muted-foreground space-y-1">
-                                    <div>VT+: <span className="font-medium">Unlimited</span> <span className="text-xs text-muted-foreground/70">(usage tracked)</span></div>
-                                    <div>Free: <span className="font-medium">{GEMINI_LIMITS.FLASH_LITE_2_0.FREE_DAY}/day, {GEMINI_LIMITS.FLASH_LITE_2_0.FREE_MINUTE}/min</span></div>
+                                    <div>
+                                        VT+:{' '}
+                                        <span className="font-medium">
+                                            {GEMINI_LIMITS.PRO.PLUS_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.PRO.PLUS_MINUTE}/min
+                                        </span>
+                                    </div>
+                                    <div>
+                                        Free: <span className="font-medium">BYOK Required</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -477,9 +464,19 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         VT+ Usage Tracking
                                     </div>
                                     <div className="text-muted-foreground space-y-1">
-                                        <div>• <strong>Flash Lite (2.5 & 2.0):</strong> Unlimited access with usage tracked for display purposes</div>
-                                        <div>• <strong>Flash & Pro (2.5 & 2.0):</strong> Count against both model-specific limits AND Flash Lite quota (stricter limit applies)</div>
-                                        <div>• <strong>All models:</strong> Usage is tracked and displayed in the chart for transparency</div>
+                                        <div>
+                                            • <strong>Flash Lite (2.5 & 2.0):</strong> Unlimited
+                                            access with usage tracked for display purposes
+                                        </div>
+                                        <div>
+                                            • <strong>Flash & Pro (2.5 & 2.0):</strong> Count
+                                            against both model-specific limits AND Flash Lite quota
+                                            (stricter limit applies)
+                                        </div>
+                                        <div>
+                                            • <strong>All models:</strong> Usage is tracked and
+                                            displayed in the chart for transparency
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -493,7 +490,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         BYOK (Bring Your Own Key)
                                     </div>
                                     <div className="text-muted-foreground">
-                                        Free users can access all Gemini models unlimited by providing their own Google API key. Keys are encrypted and stored locally.
+                                        Free users can access all Gemini models unlimited by
+                                        providing their own Google API key. Keys are encrypted and
+                                        stored locally.
                                     </div>
                                 </div>
                             </div>
@@ -507,7 +506,8 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         Google's Pricing Reference
                                     </div>
                                     <div className="text-muted-foreground">
-                                        Flash Lite: $0.10/1M tokens • Flash: $0.30/1M tokens • Pro: $1.25/1M tokens (Input pricing)
+                                        Flash Lite: $0.10/1M tokens • Flash: $0.30/1M tokens • Pro:
+                                        $1.25/1M tokens (Input pricing)
                                     </div>
                                 </div>
                             </div>
