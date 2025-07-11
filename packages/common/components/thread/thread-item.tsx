@@ -130,12 +130,6 @@ export const ThreadItem = memo(
                                 threadItem={threadItem}
                             />
                         )}
-
-                        <div className="text-muted-foreground flex flex-row items-center gap-1.5 text-xs font-medium">
-                            <Book size={16} strokeWidth={2} />
-                            Answer
-                        </div>
-
                         {threadItem.steps && <Steps steps={steps} threadItem={threadItem} />}
 
                         <ToolsPanel threadItem={threadItem} />

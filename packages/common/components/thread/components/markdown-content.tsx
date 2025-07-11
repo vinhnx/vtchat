@@ -28,7 +28,7 @@ export const markdownStyles = {
     'prose-li:text-muted-foreground prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0': true,
 
     // Code styles
-    'prose-code:font-mono prose-code:text-sm prose-code:font-normal': true,
+    'prose-code:font-sans prose-code:text-sm prose-code:font-normal': true,
     'prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5': true,
 
     // Table styles

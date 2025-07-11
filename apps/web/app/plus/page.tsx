@@ -150,7 +150,7 @@ export default function PlusPage() {
                         <Sparkles className="h-5 w-5 text-[#BFB38F]" />
                         <span className="text-sm font-semibold uppercase tracking-wide text-[#BFB38F]">
                             Get 20% off VT+ with code{' '}
-                            <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-mono text-[#BFB38F]">
+                            <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-sans text-[#BFB38F]">
                                 VTLAUNCH
                             </span>
                         </span>

@@ -88,7 +88,7 @@ export function BYOKSetupModal({
                         <div className="space-y-2">
                             <label className="text-sm font-medium">{provider.name} API Key</label>
                             <Input
-                                className="font-mono"
+                                className="font-sans"
                                 onChange={(e) => setApiKeyValue(e.target.value)}
                                 placeholder={provider.placeholder}
                                 type="password"

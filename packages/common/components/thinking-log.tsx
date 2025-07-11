@@ -27,7 +27,7 @@ function ThinkingStep({ step, index }: ThinkingStepProps) {
             transition={{ delay: index * 0.05, duration: 0.3 }}
         >
             <div className="rounded-lg border border-border bg-muted/20 p-4">
-                <div className="text-sm text-muted-foreground font-mono whitespace-pre-wrap">
+                <div className="text-sm text-muted-foreground font-sans whitespace-pre-wrap">
                     {step.content}
                 </div>
             </div>

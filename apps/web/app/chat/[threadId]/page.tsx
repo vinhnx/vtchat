@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 
+
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
     () =>
@@ -50,7 +51,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [scrollRef.current]);
+    }, []);
 
     useEffect(() => {
         if (!threadId) return;

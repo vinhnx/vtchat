@@ -25,7 +25,7 @@ export const DeepResearchIcon = () => {
 
 export const BYOKIcon = () => {
     return (
-        <div className="flex-inline flex h-5 items-center justify-center gap-1 rounded-md bg-emerald-500/20 p-0.5 px-1 font-mono text-xs font-medium text-emerald-600">
+        <div className="flex-inline flex h-5 items-center justify-center gap-1 rounded-md bg-emerald-500/20 p-0.5 px-1 font-sans text-xs font-medium text-emerald-600">
             BYOK
         </div>
     );
@@ -33,7 +33,7 @@ export const BYOKIcon = () => {
 
 export const NewIcon = () => {
     return (
-        <div className="flex-inline flex h-5 items-center justify-center gap-1 rounded-md bg-emerald-500/20 p-0.5 px-1 font-mono text-xs font-medium text-emerald-500">
+        <div className="flex-inline flex h-5 items-center justify-center gap-1 rounded-md bg-emerald-500/20 p-0.5 px-1 font-sans text-xs font-medium text-emerald-500">
             New
         </div>
     );
@@ -49,7 +49,7 @@ export const CreditIcon = ({
     return (
         <div
             className={cn(
-                'flex-inline text-muted-foreground flex h-5 items-center justify-center gap-0.5 rounded-md border border-none font-mono text-xs font-medium opacity-50',
+                'flex-inline text-muted-foreground flex h-5 items-center justify-center gap-0.5 rounded-md border border-none font-sans text-xs font-medium opacity-50',
                 variant === 'muted' && 'border-none'
             )}
         >

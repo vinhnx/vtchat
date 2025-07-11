@@ -79,7 +79,7 @@ export function LMStudioSetupBanner() {
                                             {step.icon}
                                         </a>
                                     ) : (
-                                        <code className="bg-gray-700 px-2 py-1 rounded text-gray-100 text-sm font-mono">
+                                        <code className="bg-gray-700 px-2 py-1 rounded text-gray-100 text-sm font-sans">
                                             {step.action}
                                         </code>
                                     )}

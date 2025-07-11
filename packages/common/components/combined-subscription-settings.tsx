@@ -345,12 +345,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <CardTitle className="flex items-center gap-2">
                                 <Brain className="h-5 w-5" />
                                 Thinking Mode
-                                <Badge
-                                    className="bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                                    variant="secondary"
-                                >
-                                    Free Feature
-                                </Badge>
                             </CardTitle>
                             <CardDescription>
                                 Advanced reasoning mode that shows AI thought process for better
@@ -469,12 +463,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <CardTitle className="flex items-center gap-2">
                                 <Zap className="h-5 w-5" />
                                 Gemini Explicit Caching
-                                <Badge
-                                    className="bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                                    variant="secondary"
-                                >
-                                    Free Feature
-                                </Badge>
                             </CardTitle>
                             <CardDescription>
                                 Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API
@@ -969,12 +957,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                                 <div className="text-foreground font-medium">
                                                                     {details.benefit}
                                                                 </div>
-                                                                <Badge
-                                                                    className="bg-slate-100 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                                                                    variant="secondary"
-                                                                >
-                                                                    Free for All Users
-                                                                </Badge>
                                                                 <Check className="h-4 w-4 text-green-600" />
                                                             </div>
                                                             <div className="text-muted-foreground text-xs leading-relaxed">
@@ -1007,12 +989,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                                 <div className="text-foreground font-medium">
                                                                     {feature.name}
                                                                 </div>
-                                                                <Badge
-                                                                    className="bg-blue-100 text-xs text-blue-800"
-                                                                    variant="secondary"
-                                                                >
-                                                                    VT+ Exclusive
-                                                                </Badge>
                                                                 <Check className="h-4 w-4" />
                                                             </div>
                                                             <div className="text-muted-foreground mb-2 text-sm">

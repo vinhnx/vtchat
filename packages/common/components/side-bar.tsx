@@ -433,7 +433,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             {isSidebarOpen && 'New Chat'}
                         </div>
                         {isSidebarOpen && (
-                            // <span className="text-xs opacity-60 font-mono">⌘⌃⌥N</span>
+                            // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
                             <div className="ml-auto flex flex-row items-center gap-1">
                                 <Badge
                                     className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"

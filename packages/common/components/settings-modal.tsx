@@ -443,7 +443,7 @@ export const ApiKeySettings = () => {
                                 ) : (
                                     <div className="flex w-full items-center gap-3">
                                         <button
-                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-mono text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                             onClick={() => handleEdit(apiKey.key)}
                                         >
                                             {apiKey.value ? (
