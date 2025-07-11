@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 
-
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
     () =>

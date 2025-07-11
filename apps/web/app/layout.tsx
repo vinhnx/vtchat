@@ -15,6 +15,7 @@ import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
+import { PWAManager } from '../components/pwa-manager';
 import { ReactScan } from '../components/react-scan';
 
 // Force dynamic rendering to prevent SSR issues during build
@@ -137,6 +138,8 @@ export default function ParentLayout({
                                                 <RootProvider>
                                                     {/* React Scan for performance monitoring in development */}
                                                     <ReactScan />
+                                                    {/* PWA Manager for install prompts and service worker */}
+                                                    <PWAManager />
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
                                                         <main className="flex flex-1 flex-col">

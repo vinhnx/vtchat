@@ -218,24 +218,38 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                         className="min-h-[240px]"
                     >
                         <AreaChart
-                            data={[
-                                {
-                                    time: '00:00',
-                                    'flash-lite-2-5': 0,
-                                    'flash-2-5': 0,
-                                    'pro-2-5': 0,
-                                },
-                                {
-                                    time: 'Current',
-                                    'flash-lite-2-5':
-                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed ||
-                                        0,
-                                    'flash-2-5':
-                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0,
-                                    'pro-2-5':
-                                        modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed || 0,
-                                },
-                            ]}
+                            data={(() => {
+                                const now = new Date();
+                                const currentHour = now.getHours();
+                                const hourlyData = [];
+
+                                // Generate hourly data points from 00:00 to current hour + 2 offset
+                                for (let hour = 0; hour <= Math.min(currentHour + 2, 23); hour++) {
+                                    const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
+                                    const isCurrentOrPast = hour <= currentHour;
+
+                                    hourlyData.push({
+                                        time: timeLabel,
+                                        'flash-lite-2-5': isCurrentOrPast
+                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]
+                                                  ?.dailyUsed || 0) *
+                                              (hour / Math.max(currentHour, 1))
+                                            : 0,
+                                        'flash-2-5': isCurrentOrPast
+                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_FLASH]
+                                                  ?.dailyUsed || 0) *
+                                              (hour / Math.max(currentHour, 1))
+                                            : 0,
+                                        'pro-2-5': isCurrentOrPast
+                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed ||
+                                                  0) *
+                                              (hour / Math.max(currentHour, 1))
+                                            : 0,
+                                    });
+                                }
+
+                                return hourlyData;
+                            })()}
                             margin={{ top: 20, right: 30, left: 20, bottom: 45 }}
                         >
                             <CartesianGrid
@@ -268,7 +282,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 stackId="1"
                                 stroke="var(--color-flash-lite-2-5)"
                                 fill="var(--color-flash-lite-2-5)"
-                                fillOpacity={0.8}
+                                fillOpacity={0.3}
                             />
                             <Area
                                 type="monotone"
@@ -276,7 +290,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 stackId="1"
                                 stroke="var(--color-flash-2-5)"
                                 fill="var(--color-flash-2-5)"
-                                fillOpacity={0.8}
+                                fillOpacity={0.3}
                             />
                             <Area
                                 type="monotone"
@@ -284,7 +298,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 stackId="1"
                                 stroke="var(--color-pro-2-5)"
                                 fill="var(--color-pro-2-5)"
-                                fillOpacity={0.8}
+                                fillOpacity={0.3}
                             />
                         </AreaChart>
                     </ChartContainer>

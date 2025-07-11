@@ -9,6 +9,7 @@ export * from './use-image-attachment';
 export * from './use-is-client';
 export * from './use-logout';
 export * from './use-math-calculator';
+export * from './use-mobile-pwa-notification';
 export * from './use-payment-subscription';
 export * from './use-rate-limit';
 export * from './use-structured-extraction';

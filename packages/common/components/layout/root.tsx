@@ -1,7 +1,12 @@
 'use client';
 import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { AgentProvider, useLogout, useVTPlusAnnouncement } from '@repo/common/hooks';
+import {
+    AgentProvider,
+    useLogout,
+    useMobilePWANotification,
+    useVTPlusAnnouncement,
+} from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
@@ -40,6 +45,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
     // Show VT+ announcement toast once
     useVTPlusAnnouncement();
+
+    // Show mobile PWA installation notification
+    useMobilePWANotification();
 
     const containerClass =
         'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';

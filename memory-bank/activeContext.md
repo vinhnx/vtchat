@@ -163,6 +163,72 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Verified build passes successfully without any Arcjet-related errors
     - **Result**: Arcjet has been completely removed from the codebase with no remaining references or dependencies
 
+- **Mobile PWA Installation Notification - COMPLETE ✅**:
+
+    - **Issue Resolved**: Added Sonner toast notification for mobile users to guide them on installing the VT app as a PWA
+    - **Implementation Details**:
+        - Created `useMobilePWANotification` hook that detects mobile devices and shows a one-time notification
+        - Notification appears only on mobile devices (screen width < 768px) using existing `useIsMobile` hook
+        - Uses localStorage (`vt-mobile-pwa-notification-seen`) to ensure notification is shown only once per device
+        - Toast appears after 2-second delay to allow app to load properly
+        - Includes "Got it" action button and auto-dismisses after 8 seconds
+        - Follows same pattern as existing `useVTPlusAnnouncement` hook for consistency
+    - **Files Created/Modified**:
+        - `packages/common/hooks/use-mobile-pwa-notification.ts` - Main hook implementation
+        - `packages/common/hooks/index.ts` - Added export for new hook
+        - `packages/common/components/layout/root.tsx` - Integrated hook call
+    - **User Experience**:
+        - Clear, actionable message: "Install VT on your mobile device"
+        - Helpful description: "Tap share button then tap 'Add to Home Screen' for a better experience"
+        - Non-intrusive with close button and auto-dismiss functionality
+        - Respects user choice and never shows again once dismissed
+    - **Result**: Mobile users now receive helpful guidance on installing VT as a PWA for improved mobile experience
+
+- **Comprehensive PWA Enhancement - COMPLETE ✅**:
+
+    - **Issue Resolved**: Enhanced VTChat's Progressive Web App capabilities following Next.js PWA best practices
+    - **PWA Manager Component**:
+        - Created advanced `PWAManager` component for handling install prompts and PWA detection
+        - Supports both Chrome/Edge `beforeinstallprompt` events and iOS manual installation
+        - Shows floating install button on mobile devices when PWA installation is available
+        - Provides detailed iOS installation instructions with step-by-step modal
+        - Detects if app is already installed using `display-mode: standalone` media query
+        - Registers service worker automatically with proper error handling
+    - **Enhanced Web App Manifest**:
+        - Updated manifest with comprehensive PWA metadata and features
+        - Added app shortcuts for "New Chat" and "Settings" for quick access
+        - Included screenshots for app store listings and better discoverability
+        - Added proper categories, orientation preferences, and maskable icons
+        - Enhanced descriptions highlighting AI chat capabilities with multiple models
+    - **Advanced Service Worker**:
+        - Upgraded service worker with push notification support and better caching
+        - Added comprehensive push notification handling with actions and proper click behavior
+        - Enhanced offline support with custom offline page showing VT branding
+        - Improved caching strategy for static assets including icons and fonts
+        - Added background sync capabilities for future enhancements
+        - Implemented proper cache versioning and cleanup of old caches
+    - **Security Headers**:
+        - Added PWA-specific security headers in `next.config.mjs`
+        - Service worker served with proper Content-Security-Policy restrictions
+        - Web app manifest served with correct content type and caching headers
+        - Enhanced security while maintaining PWA functionality
+    - **Files Created/Modified**:
+        - `apps/web/components/pwa-manager.tsx` - Advanced PWA manager component
+        - `apps/web/app/layout.tsx` - Integrated PWA manager into app layout
+        - `apps/web/app/manifest.ts` - Enhanced manifest with PWA features
+        - `apps/web/public/sw.js` - Advanced service worker with push notifications
+        - `apps/web/next.config.mjs` - Added PWA security headers
+    - **PWA Features Implemented**:
+        - ✅ Automatic service worker registration
+        - ✅ Install prompts for Chrome/Edge and iOS
+        - ✅ App shortcuts and enhanced manifest
+        - ✅ Push notification support (foundation)
+        - ✅ Offline support with branded offline page
+        - ✅ Proper icon handling with maskable support
+        - ✅ Security headers for PWA assets
+        - ✅ Background sync capabilities
+    - **Result**: VTChat now provides a full native app-like experience on mobile devices with proper PWA standards compliance
+
 ## Next Steps
 
 - Address high-priority items from the refined `TODO.md`.
