@@ -8,5 +8,7 @@ export * from './question-prompt';
 export * from './source-grid';
 export * from './source-list';
 export * from './tool-call';
-
 export * from './tool-result';
+
+// Enhanced tool invocation step (includes both ToolInvocationStep and legacy components)
+export { ToolInvocationStep, ToolResultStep } from './tool-result';

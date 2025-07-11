@@ -42,6 +42,8 @@ function shouldSkipWebSearch(question: string): boolean {
         /^(how to|how do i|how can i)\s+(code|program|write|create|implement|build)\s+(a|an|the)?\s*(function|component|class|algorithm)/,
         /^(what is the difference between|compare|difference between)\s+\w+\s+(and|vs|versus)\s+\w+/,
         /^(help|assist|support)\s*(me)?\s*(with)?\s*(coding|programming|development)/,
+        /^explain how \w+ hooks? work$/,
+        /^explain how \w+ works?$/,
     ];
 
     // Simple conversational queries (narrow patterns to avoid false positives)
@@ -49,7 +51,27 @@ function shouldSkipWebSearch(question: string): boolean {
         /^(yes|no|okay|ok|sure|alright|fine)[!?.]?$/,
         /^(sorry|excuse me|pardon)/,
         /^(thank you|thanks|bye|goodbye|see you|farewell)[!?.]?$/,
+        /^hello,?\s+how are you\??$/,
     ];
+
+    // IMPORTANT: Do NOT skip web search for queries that likely need current information
+    // These patterns identify queries that should NEVER skip web search
+    const needsWebSearchPatterns = [
+        /\b(current|latest|recent|today|now|this week|this month|this year)\b/,
+        /\b(weather|temperature|forecast)\b/,
+        /\b(news|breaking|update|announcement)\b/,
+        /\b(stock|price|market|exchange rate|cryptocurrency|bitcoin)\b/,
+        /\b(score|game|match|tournament|championship)\b/,
+        /\b(status|available|open|closed|schedule|hours)\b/,
+        /what.*(happening|going on|new)/,
+        /\b(in.*vietnam|in.*tri ton|in.*an giang|in.*ho chi minh|in.*hanoi|in.*saigon)\b/,
+        /\b(restaurant|hotel|business|company|store|shop)\b.*\b(near|in|at)\b/,
+    ];
+
+    // If the query needs web search, don't skip it
+    if (needsWebSearchPatterns.some((pattern) => pattern.test(query))) {
+        return false;
+    }
 
     return [
         ...identityPatterns,
@@ -84,9 +106,15 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
         if (mode === ChatMode.Deep) {
             redirectTo('refine-query');
-        } else if (mode === ChatMode.Pro && webSearch && !shouldSkip) {
-            // Pro Search mode with web search enabled - but skip for simple queries
-            redirectTo('gemini-web-search');
+        } else if (mode === ChatMode.Pro) {
+            // Pro Search mode - ALWAYS trigger web search unless it's a query that definitely doesn't need it
+            if (shouldSkip) {
+                // For queries that don't need web search, use completion
+                redirectTo('completion');
+            } else {
+                // For all other queries, use web search (default behavior for Pro Search)
+                redirectTo('gemini-web-search');
+            }
         } else if (webSearch === true && !shouldSkip) {
             // Only trigger web search when explicitly enabled AND query needs external info
             // Support web search for both Gemini and OpenAI models

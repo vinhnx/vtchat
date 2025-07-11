@@ -87,7 +87,6 @@ export async function POST(_request: Request) {
             result,
         });
     } catch (error) {
-        console.error('Obfuscation error:', error);
         log.error({ error }, 'Failed to obfuscate embeddings');
 
         return NextResponse.json(
@@ -149,7 +148,7 @@ export async function GET(_request: Request) {
             status,
         });
     } catch (error) {
-        console.error('Status check error:', error);
+        log.error({ error }, 'Status check error');
         return NextResponse.json(
             {
                 error: 'Status check failed',

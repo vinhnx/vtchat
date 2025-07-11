@@ -2,6 +2,7 @@ import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { isGeminiModel } from '@repo/shared/utils';
 import { type Geo, geolocation } from '@vercel/functions';
 import type { NextRequest } from 'next/server';
@@ -400,15 +401,34 @@ function createCompletionStream({
                         parentThreadItemId: data.parentThreadItemId,
                     });
                 } else {
-                    log.info('sending error message');
-                    sendMessage(controller, _encoder, {
-                        type: 'done',
-                        status: 'error',
-                        error: error instanceof Error ? error.message : String(error),
-                        threadId: data.threadId,
-                        threadItemId: data.threadItemId,
-                        parentThreadItemId: data.parentThreadItemId,
-                    });
+                    // Check for VT+ quota exceeded error
+                    const isQuotaError =
+                        error instanceof Error &&
+                        (error.message.includes('VT+ quota exceeded') ||
+                            error.name === 'QuotaExceededError');
+
+                    if (isQuotaError) {
+                        log.warn({ error, userId }, 'VT+ quota exceeded during request');
+                        sendMessage(controller, _encoder, {
+                            type: 'done',
+                            status: 'quota_exceeded',
+                            error: 'VT+ monthly quota exceeded. Your quota will reset next month.',
+                            quotaType: PlanSlug.VT_PLUS,
+                            threadId: data.threadId,
+                            threadItemId: data.threadItemId,
+                            parentThreadItemId: data.parentThreadItemId,
+                        });
+                    } else {
+                        log.info('sending error message');
+                        sendMessage(controller, _encoder, {
+                            type: 'done',
+                            status: 'error',
+                            error: error instanceof Error ? error.message : String(error),
+                            threadId: data.threadId,
+                            threadItemId: data.threadItemId,
+                            parentThreadItemId: data.parentThreadItemId,
+                        });
+                    }
                 }
             } finally {
                 isControllerClosed = true;

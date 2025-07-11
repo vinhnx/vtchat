@@ -246,33 +246,6 @@ function AboutContent() {
                         </div>
 
                         <div>
-                            <h3 className="mb-4 text-xl font-semibold">
-                                Performance & Reliability
-                            </h3>
-                            <p className="text-muted-foreground mb-4">
-                                VT is production-ready with performance optimization:
-                            </p>
-                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
-                                <li>
-                                    <strong>87% Faster Compilation:</strong> Build time reduced from
-                                    24s to 3s
-                                </li>
-                                <li>
-                                    <strong>Auth Performance:</strong> 80-90% faster session
-                                    validation
-                                </li>
-                                <li>
-                                    <strong>Database Optimization:</strong> 70-80% faster queries
-                                    with proper indexing
-                                </li>
-                                <li>
-                                    <strong>Production Deployment:</strong> Auto-scaling with health
-                                    monitoring
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
                             <h3 className="mb-4 text-xl font-semibold">Open Source & Community</h3>
                             <p className="text-muted-foreground mb-4">
                                 VT is built with transparency and community in mind. We believe in
@@ -287,6 +260,16 @@ function AboutContent() {
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                 >
                                     View Source Code on GitHub
+                                </Link>
+                            </div>
+                            <div className="mt-6 flex flex-wrap items-center gap-4">
+                                <Link
+                                    href="https://x.com/intent/tweet?text=VT&url=https%3A%2F%2Fvtchat.io.vn%2F"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                >
+                                    Share VT on X/Twitter
                                 </Link>
                             </div>
 

@@ -7,7 +7,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 ## Recent Changes
 
 - **Chat Input Button Selection Logic - COMPLETE ✅**:
-
     - **Issue Resolved**: Implemented comprehensive button selection logic to ensure only one button and only one mode is selected at a time
     - **Key Features**:
         - Only one button can be active at any given time (webSearch, mathCalculator, structuredOutput)
@@ -28,7 +27,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - **Result**: Users can now only have one input mode active at a time, providing a clear and consistent UX
 
 - **Auth Client 404 Error Fix - COMPLETE ✅**:
-
     - **Issue Resolved**: Fixed 404 error on `/api/auth/fetch-options/method/to-upper-case` caused by incorrect auth client configuration
     - **Root Cause**: The `createAuthClient` from better-auth was receiving invalid `fetchOptions` configuration with `timeout` and `onError` properties that don't belong in the client config
     - **Solution**: Removed `fetchOptions` from the auth client configuration as these are server-side only options
@@ -37,7 +35,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - **Result**: Auth client now correctly communicates with server endpoints without malformed URLs
 
 - **React Fragment Error Fix - COMPLETE ✅**:
-
     - **Issue Resolved**: Fixed React console error "Invalid prop `onClick` supplied to `React.Fragment`"
     - **Root Cause**: `GatedFeatureAlert` component was trying to clone React Fragment children and add `onClick` props
     - **Solution**: Removed unnecessary `<div>` wrapper in `image-upload.tsx` when passing children to `GatedFeatureAlert`
@@ -45,7 +42,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - **Result**: Clean console output with no React Fragment prop errors
 
 - **🚀 Vitest Testing Framework Integration - COMPLETE ✅**:
-
     - **Full Monorepo Testing Setup**: Successfully integrated Vitest across the entire VTChat monorepo
     - **Dependencies Installed**: Added Vitest 3.2.4, Testing Library, Happy DOM, and coverage tools
     - **Root Configuration**: Created comprehensive `vitest.config.ts` with monorepo path aliases
@@ -66,7 +62,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Monorepo-aware path resolution for all packages
 
 - **Background Fix for Legal Pages:** Fixed background consistency issues on Help Center, Terms, and Privacy pages:
-
     - Changed header background from `bg-background/80` to `bg-background` for better consistency
     - Added explicit `bg-background` to main content areas to ensure proper background coverage
     - Changed footer background from `bg-muted/20` to `bg-background` for unified appearance
@@ -75,7 +70,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - **Unified Footer Navigation:** Added Help Center link to Footer component to complete the navigation triad:
 
 - Terms of Service | Privacy Policy | Help Center - All three legal pages now have consistent footer navigation between each other - Footer component provides unified navigation across the entire application
-
     - **Full-Width Layout Implementation:** Updated all three pages to use full-width layout:
         - Changed max width from `max-w-screen-lg` to `max-w-7xl` for wider content area
         - Updated header, main content, and footer containers to use full width
@@ -86,7 +80,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Enhanced user experience when expanding/collapsing Help Center sections
 
 - **Database Connection Error Fix:** Resolved Neon database connection termination errors (error code 57P01):
-
     - Updated connection pool configuration in `apps/web/lib/database/index.ts` with improved settings:
         - Increased max connections from 1 to 3 for better concurrency
         - Set appropriate timeout values (30s idle, 10s connection, 60s statement/query)
@@ -100,7 +93,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Tested the fix successfully - database connections now handle errors gracefully and provide user-friendly error messages
 
 - **User Button Functional Grouping Enhancement:** Improved the user popover by connecting the Settings menu item to the actual settings modal:
-
     - Connected the "Settings" item in the user dropdown to open the settings modal using `setIsSettingsOpen(true)`
     - Maintained the existing functional grouping structure:
         - **Account Management:** Settings (now functional), Profile
@@ -109,14 +101,12 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Added proper integration between user button and settings modal for better UX
 
 - **Sidebar Blocking Indicator Fix:** Resolved the issue where a full-page loader blocked the sidebar during logout:
-
     - Replaced `FullPageLoader` with a non-blocking empty state message when no threads are present
     - Sidebar remains functional during logout process and thread clearing
     - Improved user experience by preventing interface blocking during authentication state changes
     - Removed unused `FullPageLoader` import to clean up linting warnings
 
 - **Sidebar User Dropdown Functional Grouping:** Added proper functional grouping to the sidebar's user dropdown menu:
-
     - Added `DropdownMenuLabel` and `DropdownMenuSeparator` components for clear section organization
     - Organized menu items into logical groups:
         - **Account Management:** Settings
@@ -153,7 +143,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 - Verified all credit-related files were already removed.
 
 - **Arcjet Security Removal - COMPLETE ✅**:
-
     - **Issue Resolved**: Successfully completed full removal of Arcjet from the codebase as requested
     - **Actions Taken**:
         - Deleted duplicate protected route file: `apps/web/app/api/auth/[...better-auth]/route.protected.ts`
@@ -164,7 +153,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - **Result**: Arcjet has been completely removed from the codebase with no remaining references or dependencies
 
 - **Mobile PWA Installation Notification - COMPLETE ✅**:
-
     - **Issue Resolved**: Added Sonner toast notification for mobile users to guide them on installing the VT app as a PWA
     - **Implementation Details**:
         - Created `useMobilePWANotification` hook that detects mobile devices and shows a one-time notification
@@ -184,8 +172,26 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Respects user choice and never shows again once dismissed
     - **Result**: Mobile users now receive helpful guidance on installing VT as a PWA for improved mobile experience
 
-- **Comprehensive PWA Enhancement - COMPLETE ✅**:
+- **Enhanced PWA Mobile Installation Notification - COMPLETE ✅**:
+    - **Issue Resolved**: Enhanced the PWA installation notification toast to include clear visual guidance about finding the share button
+    - **Implementation Details**:
+        - Added 📤 share button emoji in the description to visually represent what users should look for
+        - Included step-by-step instructions: "1. Look for the 📤 Share button in your browser toolbar"
+        - Added directional guidance: "↓ Share button is usually in the browser menu or toolbar"
+        - Extended toast duration to 12 seconds to give users more time to read the detailed instructions
+        - Maintained the existing "Got it" action button and auto-dismiss functionality
+        - Used emoji and visual cues to make the instructions more intuitive and user-friendly
+    - **Files Modified**:
+        - `packages/common/hooks/use-mobile-pwa-notification.ts` - Enhanced toast content with visual share button guidance
+        - `TODO.md` - Marked PWA notification task as completed
+    - **User Experience**:
+        - Clear visual representation of the share button users need to find
+        - Step-by-step instructions that are easy to follow
+        - Longer display time allows users to properly read and understand the instructions
+        - More intuitive guidance about where to find the share button in different mobile browsers
+    - **Result**: Mobile users now receive much clearer, visually-guided instructions for installing VT as a PWA with specific share button identification
 
+- **Comprehensive PWA Enhancement - COMPLETE ✅**:
     - **Issue Resolved**: Enhanced VTChat's Progressive Web App capabilities following Next.js PWA best practices
     - **PWA Manager Component**:
         - Created advanced `PWAManager` component for handling install prompts and PWA detection
@@ -243,7 +249,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 ## Recent Code Cleanup - COMPLETE ✅
 
 - **SmoothStream Utility Removal - COMPLETE ✅**:
-
     - **Removed**: All SmoothStream utility code and exports from the `@repo/ai` package
     - **Files Removed**:
         - `packages/ai/utils/smooth-stream.ts` - Main utility implementation
@@ -274,7 +279,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 ## UI Improvements Completed
 
 - **Sidebar Revamp Complete:** Reorganized the sidebar for better visual hierarchy:
-
     - Made "New Chat" the primary action with default button styling
     - Improved spacing and grouping of primary actions (New Chat, Search)
     - Separated subscription section with visual divider for better organization
@@ -282,7 +286,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Maintained consistent styling with shadcn/ui components
 
 - **New Chat Button Fix Complete:** Fixed the "New Chat" button functionality:
-
     - Added proper onClick handler that creates new threads using `useChatStore.getState().createThread()`
     - Fixed navigation logic for both chat page and non-chat page contexts
     - Improved button behavior in collapsed sidebar state
@@ -290,7 +293,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
     - Enhanced icon spacing with proper margin classes
 
 - **User Button Enhancement Complete:** Added clear thread functionality and grouped popup by functions:
-
     - Added "Clear all threads" option with confirmation dialog
     - Organized dropdown menu into logical sections: Account, Conversations, Support & Legal
     - Added section labels for better organization

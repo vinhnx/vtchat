@@ -85,6 +85,8 @@ ${s}
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            mode: context?.get('mode'),
             onReasoning: (reasoning) => {
                 chunkBuffer.add(reasoning);
             },

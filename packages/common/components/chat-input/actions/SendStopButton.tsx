@@ -1,8 +1,9 @@
 'use client';
 
+import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Square } from 'lucide-react';
+import { ArrowUp, Clock, Square } from 'lucide-react';
 import { ICON_SIZES } from '../config/constants';
 import { useIsChatPage } from '../hooks/useIsChatPage';
 
@@ -20,6 +21,27 @@ export function SendStopButton({
     sendMessage,
 }: SendStopButtonProps) {
     const isChatPage = useIsChatPage();
+    const showTimeoutIndicator = useChatStore((state) => state.showTimeoutIndicator);
+    const generationStartTime = useChatStore((state) => state.generationStartTime);
+
+    // Calculate dynamic tooltip based on generation state
+    const getStopTooltip = () => {
+        if (!isGenerating) return 'Stop Generation';
+
+        if (showTimeoutIndicator) {
+            return 'Generation taking longer than usual - Click to stop';
+        }
+
+        const elapsedSeconds = generationStartTime
+            ? Math.floor((Date.now() - generationStartTime) / 1000)
+            : 0;
+
+        if (elapsedSeconds > 3) {
+            return `Stop Generation (${elapsedSeconds}s)`;
+        }
+
+        return 'Stop Generation';
+    };
 
     return (
         <div className="flex flex-row items-center gap-2">
@@ -36,10 +58,14 @@ export function SendStopButton({
                             aria-label="Stop Generation"
                             onClick={stopGeneration}
                             size="icon-sm"
-                            tooltip="Stop Generation"
-                            variant="default"
+                            tooltip={getStopTooltip()}
+                            variant={showTimeoutIndicator ? 'destructive' : 'default'}
                         >
-                            <Square size={ICON_SIZES.small} strokeWidth={2} />
+                            {showTimeoutIndicator ? (
+                                <Clock size={ICON_SIZES.small} strokeWidth={2} />
+                            ) : (
+                                <Square size={ICON_SIZES.small} strokeWidth={2} />
+                            )}
                         </Button>
                     </motion.div>
                 ) : (

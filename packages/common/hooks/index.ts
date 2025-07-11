@@ -5,6 +5,7 @@ export * from './use-copy-text';
 export * from './use-document-attachment';
 export * from './use-editor';
 export * from './use-gemini-caching';
+export * from './use-generation-timeout';
 export * from './use-image-attachment';
 export * from './use-is-client';
 export * from './use-logout';
@@ -18,3 +19,4 @@ export * from './use-text-selection';
 export * from './use-thread-auth';
 export * from './use-vt-plus-announcement';
 export * from './use-web-search';
+

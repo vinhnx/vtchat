@@ -7,6 +7,7 @@
 
 import { THINKING_MODE } from '../constants/thinking-mode';
 import { FeatureSlug, PlanSlug } from '../types/subscription';
+import { hasVTPlusAccessByPlan } from './access-control';
 
 /**
  * Default thinking mode settings for plus users
@@ -64,7 +65,7 @@ export interface PlusDefaultSettings {
  * Get default settings based on user's subscription plan
  */
 export function getDefaultSettingsForPlan(plan: PlanSlug): PlusDefaultSettings {
-    const isPlusUser = plan === PlanSlug.VT_PLUS;
+    const isPlusUser = hasVTPlusAccessByPlan(plan);
 
     return {
         thinkingMode: isPlusUser ? PLUS_THINKING_MODE_DEFAULTS : BASE_THINKING_MODE_DEFAULTS,
@@ -122,7 +123,7 @@ export function mergeWithPlusDefaults(
     }
 
     // For plus users, enable features but preserve custom budgets/ttl if set
-    if (plan === PlanSlug.VT_PLUS) {
+    if (hasVTPlusAccessByPlan(plan)) {
         return {
             thinkingMode: {
                 enabled: defaultSettings.thinkingMode.enabled, // Always enable for plus

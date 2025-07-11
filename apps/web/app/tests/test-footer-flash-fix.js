@@ -12,7 +12,7 @@ test.describe('Footer Flash Fix', () => {
         await page.addInitScript(() => {
             // Mock the session loading state
             window.__TEST_SESSION_LOADING__ = true;
-            window.__TEST_SESSION_DATA__ = { user: { id: '123', plan: 'vt_plus' } };
+            window.__TEST_SESSION_DATA__ = { user: { id: '123', planSlug: 'vt_plus' } };
 
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
@@ -60,7 +60,7 @@ test.describe('Footer Flash Fix', () => {
         // Mock VT+ user
         await page.addInitScript(() => {
             window.__TEST_SESSION_LOADING__ = true;
-            window.__TEST_SESSION_DATA__ = { user: { id: '123', plan: 'vt_plus' } };
+            window.__TEST_SESSION_DATA__ = { user: { id: '123', planSlug: 'vt_plus' } };
 
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;

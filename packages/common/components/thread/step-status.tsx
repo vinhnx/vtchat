@@ -5,34 +5,97 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
     switch (status) {
         case 'PENDING':
             return (
-                <span className="relative flex size-3 items-center justify-center">
-                    <span className="bg-brand/50 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
-                    <span className="bg-brand relative inline-flex size-1 rounded-full" />
-                </span>
+                <motion.span
+                    className="relative flex size-3 items-center justify-center"
+                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                >
+                    <motion.span
+                        className="bg-foreground/20 absolute inline-flex h-full w-full rounded-full"
+                        animate={{
+                            scale: [1, 1.4, 1],
+                            opacity: [0.5, 0.1, 0.5]
+                        }}
+                        transition={{
+                            duration: 2,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: "easeInOut"
+                        }}
+                    />
+                    <motion.span
+                        className="bg-foreground relative inline-flex size-1.5 rounded-full"
+                        animate={{
+                            scale: [1, 1.1, 1]
+                        }}
+                        transition={{
+                            duration: 1.5,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: "easeInOut"
+                        }}
+                    />
+                </motion.span>
             );
         case 'COMPLETED':
             return (
-                <span className="relative flex size-3 items-center justify-center">
-                    <span className="relative flex size-1">
-                        <span className="bg-brand relative inline-flex size-1 rounded-full" />
-                    </span>
-                </span>
+                <motion.span
+                    className="relative flex size-3 items-center justify-center"
+                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                        duration: 0.4,
+                        ease: [0.23, 1, 0.32, 1],
+                        delay: 0.1
+                    }}
+                >
+                    <motion.span
+                        className="relative flex size-1.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                            duration: 0.3,
+                            delay: 0.2,
+                            ease: [0.68, -0.55, 0.265, 1.55]
+                        }}
+                    >
+                        <span className="bg-foreground/80 relative inline-flex size-1.5 rounded-full" />
+                    </motion.span>
+                </motion.span>
             );
         case 'ERROR':
             return (
-                <span className="relative flex size-3 items-center justify-center">
-                    <span className="relative flex size-1">
-                        <span className="relative inline-flex size-1 rounded-full bg-rose-400" />
-                    </span>
-                </span>
+                <motion.span
+                    className="relative flex size-3 items-center justify-center"
+                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                >
+                    <motion.span
+                        className="relative flex size-1.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                            duration: 0.3,
+                            delay: 0.1,
+                            ease: [0.68, -0.55, 0.265, 1.55]
+                        }}
+                    >
+                        <span className="relative inline-flex size-1.5 rounded-full bg-red-400/80" />
+                    </motion.span>
+                </motion.span>
             );
         default:
             return (
-                <span className="relative flex size-3 items-center justify-center">
+                <motion.span
+                    className="relative flex size-3 items-center justify-center"
+                    initial={{ scale: 0.8, opacity: 0.3 }}
+                    animate={{ scale: 1, opacity: 0.6 }}
+                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                >
                     <span className="relative flex size-1">
-                        <span className="bg-tertiary relative inline-flex size-1 rounded-full" />
+                        <span className="bg-muted-foreground/40 relative inline-flex size-1 rounded-full" />
                     </span>
-                </span>
+                </motion.span>
             );
     }
 };

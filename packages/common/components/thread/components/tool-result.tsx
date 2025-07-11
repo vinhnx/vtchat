@@ -13,7 +13,7 @@ export type ToolResultProps = {
     toolResult: ToolResultType;
 };
 
-export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
+export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
 
@@ -107,4 +107,9 @@ export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
     );
 });
 
-ToolResultStep.displayName = 'ToolResultStep';
+ToolInvocationStep.displayName = 'ToolInvocationStep';
+
+// Keep the original component for backward compatibility
+export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
+    return <ToolInvocationStep toolResult={toolResult} />;
+});

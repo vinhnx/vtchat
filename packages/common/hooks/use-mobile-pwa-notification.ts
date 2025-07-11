@@ -34,9 +34,10 @@ export function useMobilePWANotification() {
 
         toastShown.current = true;
 
-        toast('Install VT on your mobile device', {
-            description: 'Tap share button then tap "Add to Home Screen" for a better experience',
-            duration: 8000, // 8 seconds
+        toast('Install VT as an App', {
+            description:
+                '1. Look for the Share button in your browser toolbar\n2. Tap "Add to Home Screen" for the best mobile experience\n\n↓ Share button is usually in the browser menu or toolbar',
+            duration: 12000, // 12 seconds for more time to read the instructions
             action: {
                 label: 'Got it',
                 onClick: () => {

@@ -1,5 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { z } from 'zod';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -74,6 +75,15 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             mode === ChatMode.Deep ? ModelEnum.GEMINI_2_5_PRO : getModelFromChatMode(mode);
         const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
+        // Determine VT+ feature based on mode
+        const chatMode = context?.get('mode');
+        const vtplusFeature =
+            chatMode === ChatMode.Deep
+                ? VtPlusFeature.DEEP_RESEARCH
+                : chatMode === ChatMode.Pro
+                  ? VtPlusFeature.PRO_SEARCH
+                  : VtPlusFeature.DEEP_RESEARCH;
+
         const object = await generateObject({
             prompt,
             model,
@@ -86,6 +96,8 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             signal,
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            feature: vtplusFeature,
         });
 
         context?.update('queries', (current) => [...(current ?? []), ...(object?.queries || [])]);

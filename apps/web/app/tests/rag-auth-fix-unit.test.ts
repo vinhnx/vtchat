@@ -4,6 +4,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
+import { PlanSlug } from '@repo/shared/types/subscription';
 
 describe('RAG Authentication Fix - Unit Test', () => {
     it('should verify checkVTPlusAccess receives object with userId property', () => {
@@ -17,7 +18,7 @@ describe('RAG Authentication Fix - Unit Test', () => {
 
             return Promise.resolve({
                 hasAccess: true,
-                planSlug: 'vt_plus',
+                planSlug: PlanSlug.VT_PLUS,
             });
         });
 
@@ -51,7 +52,7 @@ describe('RAG Authentication Fix - Unit Test', () => {
 
             return Promise.resolve({
                 hasAccess: true,
-                planSlug: 'vt_plus',
+                planSlug: PlanSlug.VT_PLUS,
             });
         });
 

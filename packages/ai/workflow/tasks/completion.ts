@@ -59,6 +59,31 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         Today is ${getHumanizedDate()}.
         ${mathCalculator ? MATH_CALCULATOR_PROMPT : ''}
         ${charts ? 'You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart.' : ''}
+        ${
+            webSearch && supportsOpenAISearch
+                ? `
+        IMPORTANT: You have access to web search tools. ALWAYS use web search tools when users ask about:
+        - Current events, news, or recent developments
+        - Real-time information (weather, stock prices, sports scores, etc.)
+        - Current status of companies, products, or services
+        - Recent statistics, data, or research
+        - Information that might have changed recently
+        - Specific locations, addresses, or business information
+        - Any question that requires up-to-date information
+
+        Examples of queries that MUST use web search:
+        - "What is the current weather in [location]?"
+        - "What are the latest news about [topic]?"
+        - "What is the stock price of [company]?"
+        - "What are the current exchange rates?"
+        - "What are the latest updates on [product/service]?"
+        - "What is happening in [location] right now?"
+        - "Who is [person]?"
+
+        Do NOT answer these types of questions without using web search first, even if you think you know the answer.
+        `
+                : ''
+        }
         `;
 
         const reasoningBuffer = new ChunkBuffer({
@@ -141,6 +166,8 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            mode: context?.get('mode'),
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
             },

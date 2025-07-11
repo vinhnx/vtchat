@@ -26,7 +26,10 @@
         "./hooks/use-plus-defaults": "./hooks/use-plus-defaults.ts",
         "./utils/analytics": "./utils/analytics.ts",
         "./lib/analytics-config": "./lib/analytics-config.ts",
-        "./lib/chat-mode-utils": "./lib/chat-mode-utils.ts"
+        "./lib/chat-mode-utils": "./lib/chat-mode-utils.ts",
+        "./config/vtPlusLimits": "./src/config/vtPlusLimits.ts",
+        "./lib/vtplusRateLimiter": "./src/lib/vtplusRateLimiter.ts",
+        "./lib/geminiWithQuota": "./src/lib/geminiWithQuota.ts"
     },
     "scripts": {
         "lint": "oxlint",

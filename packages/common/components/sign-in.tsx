@@ -3,6 +3,7 @@ import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
 import { log } from '@repo/shared/logger';
 import { Button, InputOTP, InputOTPGroup, InputOTPSlot, TypographyH2 } from '@repo/ui';
 import { X } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
@@ -364,13 +365,13 @@ export const CustomSignIn = ({
                     <span className="text-muted-foreground/50">
                         By using this app, you agree to the{' '}
                     </span>
-                    <a className="hover:text-foreground underline" href="/terms">
+                    <Link className="hover:text-foreground underline" href="/terms">
                         Terms of Service
-                    </a>{' '}
+                    </Link>{' '}
                     and{' '}
-                    <a className="hover:text-foreground underline" href="/privacy">
+                    <Link className="hover:text-foreground underline" href="/privacy">
                         Privacy Policy
-                    </a>
+                    </Link>
                 </div>
                 <Button className="w-full" onClick={onClose} size="sm" variant="ghost">
                     Close

@@ -1,6 +1,6 @@
 'use client';
 
-import { ToolCallStep, ToolResultStep } from '@repo/common/components';
+import { ToolInvocationStep } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';
 import { Badge, Card, Separator } from '@repo/ui';
@@ -79,8 +79,11 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
                             key={tool.id}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <ToolCallStep toolCall={tool.toolCall} />
-                            {tool.toolResult && <ToolResultStep toolResult={tool.toolResult} />}
+                            {/* Use the enhanced ToolInvocationStep that handles both calls and results */}
+                            <ToolInvocationStep
+                                toolCall={tool.toolCall}
+                                toolResult={tool.toolResult}
+                            />
                             {index < toolsData.length - 1 && <Separator className="my-3" />}
                         </motion.div>
                     ))}

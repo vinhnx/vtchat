@@ -8,6 +8,7 @@ import { log } from '@repo/shared/logger';
 import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
 import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from '../types/subscription';
 import { SubscriptionStatusEnum } from '../types/subscription-status';
+import { hasVTPlusAccessByPlan, canUpgrade as canUserUpgrade } from './access-control';
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -271,9 +272,9 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
         planConfig,
         status,
         isPremium: isPremiumPlan(subscriptionData.planSlug),
-        isVtPlus: subscriptionData.planSlug === PlanSlug.VT_PLUS,
+        isVtPlus: hasVTPlusAccessByPlan(subscriptionData.planSlug),
         isVtBase: subscriptionData.planSlug === PlanSlug.VT_BASE,
-        canUpgrade: subscriptionData.planSlug !== PlanSlug.VT_PLUS,
+        canUpgrade: canUserUpgrade({ planSlug: subscriptionData.planSlug }),
         isActive: overallIsActive,
         expiresAt: parsedExpiresAt,
         source: subscriptionData.source,

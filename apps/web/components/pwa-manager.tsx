@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@repo/ui';
 import { Download, Smartphone, X } from 'lucide-react';
+import { log } from '@repo/shared/lib/logger';
 
 interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
@@ -40,10 +41,10 @@ export function PWAManager() {
                     updateViaCache: 'none',
                 })
                 .then((registration) => {
-                    console.log('Service Worker registered successfully:', registration);
+                    log.info({ registration }, 'Service Worker registered successfully');
                 })
                 .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
+                    log.error({ error }, 'Service Worker registration failed');
                 });
         }
 

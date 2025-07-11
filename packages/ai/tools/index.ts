@@ -4,6 +4,18 @@ export {
     supportsOpenAIWebSearch,
 } from './openai-web-search';
 
+// Enhanced streaming utilities
+export * from './streaming-utils';
+
+// Tool registry and management
+export * from './registry';
+
+// Re-export types
+export type {
+    ToolCall,
+    ToolResult,
+} from '@repo/shared/types';
+
 import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
 import { openaiWebSearchTool } from './openai-web-search';
 

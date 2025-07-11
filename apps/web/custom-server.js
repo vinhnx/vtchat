@@ -6,45 +6,51 @@
 const { execSync } = require('node:child_process');
 const path = require('node:path');
 
-// Simple inline logger to avoid monorepo dependency issues in standalone build
-// Only logs in non-production environments
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-
-const log = {
-    info: (msg, obj) => {
-        if (IS_PRODUCTION) return;
-        const timestamp = new Date().toISOString();
-        if (typeof msg === 'object') {
-            console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
-        } else if (obj) {
-            console.log(`[${timestamp}] INFO: ${msg}`, JSON.stringify(obj));
-        } else {
-            console.log(`[${timestamp}] INFO: ${msg}`);
-        }
-    },
-    error: (msg, obj) => {
-        // Always log errors even in production
-        const timestamp = new Date().toISOString();
-        if (typeof msg === 'object') {
-            console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
-        } else if (obj) {
-            console.error(`[${timestamp}] ERROR: ${msg}`, JSON.stringify(obj));
-        } else {
-            console.error(`[${timestamp}] ERROR: ${msg}`);
-        }
-    },
-    warn: (msg, obj) => {
-        // Always log warnings even in production
-        const timestamp = new Date().toISOString();
-        if (typeof msg === 'object') {
-            console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
-        } else if (obj) {
-            console.warn(`[${timestamp}] WARN: ${msg}`, JSON.stringify(obj));
-        } else {
-            console.warn(`[${timestamp}] WARN: ${msg}`);
-        }
-    },
-};
+// Try to use the proper logger, fall back to console if not available in standalone build
+let log;
+try {
+    const { log: pinoLog } = require('@repo/shared/lib/logger');
+    log = pinoLog;
+} catch (error) {
+    // Fallback logger for standalone build
+    const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+    
+    log = {
+        info: (msg, obj) => {
+            if (IS_PRODUCTION) return;
+            const timestamp = new Date().toISOString();
+            if (typeof msg === 'object') {
+                console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
+            } else if (obj) {
+                console.log(`[${timestamp}] INFO: ${msg}`, JSON.stringify(obj));
+            } else {
+                console.log(`[${timestamp}] INFO: ${msg}`);
+            }
+        },
+        error: (msg, obj) => {
+            // Always log errors even in production
+            const timestamp = new Date().toISOString();
+            if (typeof msg === 'object') {
+                console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
+            } else if (obj) {
+                console.error(`[${timestamp}] ERROR: ${msg}`, JSON.stringify(obj));
+            } else {
+                console.error(`[${timestamp}] ERROR: ${msg}`);
+            }
+        },
+        warn: (msg, obj) => {
+            // Always log warnings even in production
+            const timestamp = new Date().toISOString();
+            if (typeof msg === 'object') {
+                console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
+            } else if (obj) {
+                console.warn(`[${timestamp}] WARN: ${msg}`, JSON.stringify(obj));
+            } else {
+                console.warn(`[${timestamp}] WARN: ${msg}`);
+            }
+        },
+    };
+}
 
 // Set environment variables with fallbacks
 const PORT = process.env.PORT || '3000';

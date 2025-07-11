@@ -4,6 +4,7 @@
 
 import { renderHook } from '@testing-library/react';
 import { useLogout } from '../use-logout';
+import { PlanSlug } from '@repo/shared/types/subscription';
 
 // Mock dependencies
 jest.mock('next-themes', () => ({
@@ -56,7 +57,10 @@ describe('useLogout', () => {
     it('should clear all premium cache on logout', async () => {
         // Set up localStorage with premium feature data
         localStorage.setItem('theme', 'dark');
-        localStorage.setItem('subscription_status_user123', JSON.stringify({ plan: 'vt_plus' }));
+        localStorage.setItem(
+            'subscription_status_user123',
+            JSON.stringify({ plan: PlanSlug.VT_PLUS })
+        );
         localStorage.setItem('creem_token', 'token123');
         localStorage.setItem('vt_plus_feature_cache', JSON.stringify({ darkMode: true }));
         localStorage.setItem('vtchat-preferences', JSON.stringify({ showExamplePrompts: false }));

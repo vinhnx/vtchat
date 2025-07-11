@@ -67,6 +67,11 @@ let globalSubscriptionStatus: SubscriptionStatus | null = null;
 let globalIsLoading = true;
 let globalError: string | null = null;
 
+// Export function to access global subscription status synchronously
+export function getGlobalSubscriptionStatus(): SubscriptionStatus | null {
+    return globalSubscriptionStatus;
+}
+
 interface SubscriptionProviderProps {
     children: React.ReactNode;
 }

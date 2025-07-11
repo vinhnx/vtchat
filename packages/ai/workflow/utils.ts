@@ -2,6 +2,9 @@ import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { ChatMode } from '@repo/shared/config';
+import { isEligibleForQuotaConsumption, ACCESS_CONTROL } from '@repo/shared/utils/access-control';
 import {
     type CoreMessage,
     extractReasoningMiddleware,
@@ -77,6 +80,7 @@ export const generateTextWithGeminiSearch = async ({
     byokKeys,
     thinkingMode,
     userTier,
+    userId,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -86,6 +90,7 @@ export const generateTextWithGeminiSearch = async ({
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
     userTier?: UserTierType;
+    userId?: string;
 }): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
     log.info({}, '=== generateTextWithGeminiSearch START ===');
@@ -274,7 +279,23 @@ export const generateTextWithGeminiSearch = async ({
                 hasProviderOptions: Object.keys(providerOptions).length > 0,
             });
 
-            streamResult = streamText(streamTextConfig as any);
+            // Use quota-enforced streamText for VT+ users with Pro Search
+            const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN };
+            const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
+
+            if (userId && userTier === 'PLUS' && isEligibleForQuotaConsumption(user, isByokKey)) {
+                const { streamTextWithQuota } = await import('@repo/common/lib/geminiWithQuota');
+                const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
+
+                streamResult = await streamTextWithQuota(streamTextConfig as any, {
+                    user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
+                    feature: VtPlusFeature.PRO_SEARCH,
+                    amount: 1,
+                    isByokKey: isUsingByokKeys(byokKeys),
+                });
+            } else {
+                streamResult = streamText(streamTextConfig as any);
+            }
             log.info('StreamText call successful, result type:', {
                 data: typeof streamResult,
             });
@@ -459,6 +480,8 @@ export const generateText = async ({
     useSearchGrounding = false,
     thinkingMode,
     userTier,
+    userId,
+    mode,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -476,6 +499,8 @@ export const generateText = async ({
     useSearchGrounding?: boolean;
     thinkingMode?: ThinkingModeConfig;
     userTier?: UserTierType;
+    userId?: string;
+    mode?: string;
 }) => {
     try {
         if (signal?.aborted) {
@@ -591,7 +616,32 @@ export const generateText = async ({
                   ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
               };
 
-        const streamResult = streamText(streamConfig);
+        // Use quota-enforced streamText for VT+ users with correct feature based on mode
+        let streamResult;
+        const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN };
+        const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
+
+        if (userId && userTier === 'PLUS' && isEligibleForQuotaConsumption(user, isByokKey)) {
+            const { streamTextWithQuota } = await import('@repo/common/lib/geminiWithQuota');
+            const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
+
+            // Determine VT+ feature based on mode
+            const vtplusFeature =
+                mode === ChatMode.Deep
+                    ? VtPlusFeature.DEEP_RESEARCH
+                    : mode === ChatMode.Pro
+                      ? VtPlusFeature.PRO_SEARCH
+                      : VtPlusFeature.DEEP_RESEARCH;
+
+            streamResult = await streamTextWithQuota(streamConfig, {
+                user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
+                feature: vtplusFeature,
+                amount: 1,
+                isByokKey: isUsingByokKeys(byokKeys),
+            });
+        } else {
+            streamResult = streamText(streamConfig);
+        }
         const { fullStream } = streamResult;
         let fullText = '';
         let reasoning = '';
@@ -650,6 +700,8 @@ export const generateObject = async ({
     byokKeys,
     thinkingMode,
     userTier,
+    userId,
+    feature,
 }: {
     prompt: string;
     model: ModelEnum;
@@ -659,6 +711,8 @@ export const generateObject = async ({
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
     userTier?: UserTierType;
+    userId?: string;
+    feature?: string; // VtPlusFeature
 }) => {
     try {
         if (signal?.aborted) {
@@ -797,6 +851,26 @@ export const generateObject = async ({
                   abortSignal: signal,
                   ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
               };
+
+        // Consume quota for VT+ users if using server-funded models
+        if (userId && userTier === 'PLUS' && !byokKeys && feature) {
+            const { consumeQuota } = await import('@repo/common/lib/vtplusRateLimiter');
+
+            log.info(
+                {
+                    userId,
+                    feature,
+                    amount: 1,
+                },
+                'Consuming VT+ quota for generateObject'
+            );
+
+            await consumeQuota({
+                userId,
+                feature,
+                amount: 1,
+            });
+        }
 
         const { object } = await generateObjectAi(generateConfig);
 

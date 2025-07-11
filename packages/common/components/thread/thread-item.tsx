@@ -13,6 +13,7 @@ import {
     SourceGrid,
     Steps,
     ThinkingLog,
+    ThreadLoadingIndicator,
     ToolsPanel,
 } from '@repo/common/components';
 import { isChartTool } from '@repo/common/constants/chart-tools';
@@ -21,7 +22,7 @@ import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { Alert, AlertDescription, cn } from '@repo/ui';
-import { AlertCircle, Book } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
@@ -136,7 +137,16 @@ export const ThreadItem = memo(
 
                         {isCalculatingMath && <MathCalculatorIndicator isCalculating={true} />}
 
-                        {!hasResponse && (
+                        {/* Enhanced loading indicator for generating responses */}
+                        {isLast && isGenerating && !hasResponse && (
+                            <ThreadLoadingIndicator
+                                className="mb-4"
+                                size="md"
+                                showElapsedTime={true}
+                            />
+                        )}
+
+                        {!hasResponse && !(isLast && isGenerating) && (
                             <div className="flex w-full flex-col items-start gap-2 opacity-10">
                                 <MotionSkeleton className="bg-muted-foreground/40 mb-2 h-4 !w-[100px] rounded-sm" />
                                 <MotionSkeleton className="w-full bg-gradient-to-r" />
@@ -207,7 +217,7 @@ export const ThreadItem = memo(
 
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
-                                        <div className="mt-4 space-y-4">
+                                        <div className="mt-4 w-full space-y-4">
                                             {chartToolResults.map((toolResult) => (
                                                 <ChartComponent
                                                     chartData={toolResult.result}

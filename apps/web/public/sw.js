@@ -221,7 +221,6 @@ self.addEventListener('fetch', (event) => {
                             </style>
                         </head>
                         <body>
-                            <div class="icon">📱</div>
                             <h1>You're offline</h1>
                             <p>Check your internet connection and try again.</p>
                             <button class="retry" onclick="window.location.reload()">Try Again</button>

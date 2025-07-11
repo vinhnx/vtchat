@@ -1,6 +1,6 @@
 'use client';
 
-import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
+import { getModelFromChatMode } from '@repo/ai/models';
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { getRateLimitMessage } from '@repo/shared/constants';
@@ -8,15 +8,15 @@ import { UserTier } from '@repo/shared/constants/user-tiers';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
-import { buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
+import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
 import { isGeminiModel } from '../utils/document-processing';
+import { useGenerationTimeout } from './use-generation-timeout';
 import { useVtPlusAccess } from './use-subscription-access';
-import { GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -78,6 +78,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const _setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
     const _setUseWebSearch = useChatStore((state) => state.setUseWebSearch);
     const _setUseCharts = useChatStore((state) => state.setUseCharts);
+
+    // Enable timeout tracking for generation
+    useGenerationTimeout({
+        timeoutThreshold: 5000, // Show timeout indicator after 5 seconds
+        slowResponseThreshold: 15000, // Consider slow after 15 seconds
+        enabled: true,
+    });
 
     // In-memory store for thread items
     const threadItemMap = useMemo(() => new Map<string, ThreadItem>(), []);

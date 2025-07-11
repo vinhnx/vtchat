@@ -9,8 +9,17 @@ import Dexie, { type Table } from 'dexie';
 import { nanoid } from 'nanoid';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { getGlobalSubscriptionStatus } from '../providers/subscription-provider';
 import { safeJsonParse } from '../utils/storage-cleanup';
 import { useAppStore } from './app.store';
+
+// Helper function to check if user has VT+ subscription
+function isVtPlusUser(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    const subscriptionStatus = getGlobalSubscriptionStatus();
+    return subscriptionStatus?.isPlusSubscriber === true;
+}
 
 class ThreadDatabase extends Dexie {
     threads!: Table<Thread>;
@@ -129,7 +138,8 @@ const loadInitialData = async () => {
 
     // Get settings from app store
     const appStore = useAppStore.getState();
-    const useWebSearch = appStore.useWebSearch;
+    // Pro Search automatically enables web search for VT+ users only
+    const useWebSearch = chatMode === ChatMode.Pro && isVtPlusUser() ? true : appStore.useWebSearch;
     const useMathCalculator = appStore.useMathCalculator;
     const useCharts = appStore.useCharts;
     const customInstructions = appStore.customInstructions;
@@ -164,6 +174,8 @@ type ActiveButtonType = 'webSearch' | 'mathCalculator' | 'charts' | 'structuredO
 type State = {
     model: Model;
     isGenerating: boolean;
+    generationStartTime: number | null;
+    showTimeoutIndicator: boolean;
     useWebSearch: boolean;
     useMathCalculator: boolean;
     useCharts: boolean;
@@ -236,6 +248,7 @@ type Actions = {
     }) => void;
     clearStructuredData: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
+    setShowTimeoutIndicator: (show: boolean) => void;
     stopGeneration: () => void;
     setAbortController: (abortController: AbortController) => void;
     createThread: (optimisticId: string, thread?: Pick<Thread, 'title'>) => Promise<Thread>;
@@ -791,6 +804,8 @@ export const useChatStore = create(
     immer<State & Actions>((set, get) => ({
         model: models[0],
         isGenerating: false,
+        generationStartTime: null,
+        showTimeoutIndicator: false,
         editor: undefined,
         context: '',
         threads: [],
@@ -1053,7 +1068,8 @@ export const useChatStore = create(
                     state.chatMode = chatMode;
                     // Reset button states when changing chat mode
                     state.activeButton = null;
-                    state.useWebSearch = false;
+                    // Pro Search automatically enables web search for VT+ users only
+                    state.useWebSearch = chatMode === ChatMode.Pro && isVtPlusUser();
                     state.useMathCalculator = false;
                 });
             } catch (error) {
@@ -1062,7 +1078,8 @@ export const useChatStore = create(
                 set((state) => {
                     state.chatMode = chatMode;
                     state.activeButton = null;
-                    state.useWebSearch = false;
+                    // Pro Search automatically enables web search for VT+ users only
+                    state.useWebSearch = chatMode === ChatMode.Pro && isVtPlusUser();
                     state.useMathCalculator = false;
                 });
                 throw error; // Propagate error for handling by caller
@@ -1221,12 +1238,24 @@ export const useChatStore = create(
             useAppStore.getState().dismissSideDrawer();
             set((state) => {
                 state.isGenerating = isGenerating;
+                state.generationStartTime = isGenerating ? Date.now() : null;
+                if (!isGenerating) {
+                    state.showTimeoutIndicator = false;
+                }
+            });
+        },
+
+        setShowTimeoutIndicator: (show) => {
+            set((state) => {
+                state.showTimeoutIndicator = show;
             });
         },
 
         stopGeneration: () => {
             set((state) => {
                 state.isGenerating = false;
+                state.generationStartTime = null;
+                state.showTimeoutIndicator = false;
                 state.abortController?.abort();
             });
         },

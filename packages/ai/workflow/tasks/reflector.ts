@@ -1,4 +1,6 @@
 import { createTask } from '@repo/orchestrator';
+import { ChatMode } from '@repo/shared/config';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -101,6 +103,15 @@ Current date: ${getHumanizedDate()}
         // Select an appropriate model based on available API keys
         const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_PRO, byokKeys);
 
+        // Determine VT+ feature based on mode
+        const chatMode = context?.get('mode');
+        const vtplusFeature =
+            chatMode === ChatMode.Deep
+                ? VtPlusFeature.DEEP_RESEARCH
+                : chatMode === ChatMode.Pro
+                  ? VtPlusFeature.PRO_SEARCH
+                  : VtPlusFeature.DEEP_RESEARCH;
+
         const object = await generateObject({
             prompt,
             model: selectedModel,
@@ -113,6 +124,8 @@ Current date: ${getHumanizedDate()}
             signal,
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            feature: vtplusFeature,
         });
 
         const newStepId = stepId + 1;

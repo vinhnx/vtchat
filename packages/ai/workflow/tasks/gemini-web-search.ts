@@ -71,6 +71,7 @@ Please include:
                 signal,
                 thinkingMode: context?.get('thinkingMode'),
                 userTier,
+                userId: context?.get('userId'),
             });
 
             log.info('generateTextWithGeminiSearch result:', {

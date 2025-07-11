@@ -1,8 +1,10 @@
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import {
+    bigserial,
     boolean,
     customType,
+    date,
     index,
     integer,
     json,
@@ -221,5 +223,35 @@ export type Embedding = typeof embeddings.$inferSelect;
 export type NewEmbedding = typeof embeddings.$inferInsert;
 export type UserRateLimit = typeof userRateLimits.$inferSelect;
 export type NewUserRateLimit = typeof userRateLimits.$inferInsert;
+// VT+ usage tracking table for rate limiting
+export const vtplusUsage = pgTable(
+    'vtplus_usage',
+    {
+        id: bigserial('id', { mode: 'number' }).primaryKey(),
+        userId: text('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        feature: text('feature').notNull(), // VtPlusFeature enum value
+        periodStart: date('period_start').notNull(), // First day of the month (UTC)
+        used: integer('used').notNull().default(0),
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        lookupIndex: index('vtplus_usage_lookup_index').on(
+            table.userId,
+            table.feature,
+            table.periodStart
+        ),
+        uniqueUserFeaturePeriod: uniqueIndex('vtplus_usage_user_feature_period_unique').on(
+            table.userId,
+            table.feature,
+            table.periodStart
+        ),
+    })
+);
+
 export type ProviderUsage = typeof providerUsage.$inferSelect;
 export type NewProviderUsage = typeof providerUsage.$inferInsert;
+export type VtplusUsage = typeof vtplusUsage.$inferSelect;
+export type NewVtplusUsage = typeof vtplusUsage.$inferInsert;

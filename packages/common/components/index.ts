@@ -65,9 +65,12 @@ export * from './theme-provider';
 export * from './theme-switcher';
 export * from './thinking-log';
 export * from './thread';
+export * from './thread-loading-indicator';
 export * from './thread/components/attachment-display';
 export * from './tools-menu';
 export * from './tools-panel';
 export * from './usage-credits-settings';
 export * from './user-tier-badge';
+export * from './vtplus-usage-meter';
 export * from './with-client-only';
+

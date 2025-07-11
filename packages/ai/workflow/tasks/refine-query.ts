@@ -1,5 +1,7 @@
 import { createTask } from '@repo/orchestrator';
 import { log } from '@repo/shared/logger';
+import { ChatMode } from '@repo/shared/config';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -109,6 +111,15 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
         // Select an appropriate model based on available API keys
         const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_PRO, byokKeys);
 
+        // Determine VT+ feature based on mode
+        const chatMode = context?.get('mode');
+        const vtplusFeature =
+            chatMode === ChatMode.Deep
+                ? VtPlusFeature.DEEP_RESEARCH
+                : chatMode === ChatMode.Pro
+                  ? VtPlusFeature.PRO_SEARCH
+                  : VtPlusFeature.DEEP_RESEARCH;
+
         const object = await generateObject({
             prompt,
             model: selectedModel,
@@ -118,6 +129,8 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             byokKeys,
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            feature: vtplusFeature,
         });
 
         if (object?.needsClarification) {

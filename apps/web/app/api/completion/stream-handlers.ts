@@ -145,6 +145,7 @@ export async function executeStream({
             apiKeys: data.apiKeys,
             thinkingMode: getThinkingModeForChatMode(data.mode, data.thinkingMode),
             userTier: data.userTier ?? 'FREE',
+            userId,
         });
 
         workflow.onAll((event, payload) => {

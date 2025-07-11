@@ -2,7 +2,11 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { ModelEnum } from '@repo/ai/models';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
-import { streamText, tool } from 'ai';
+import { tool } from 'ai';
+import { streamTextWithQuota } from '@repo/common/lib/geminiWithQuota';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
 import { z } from 'zod';
 import { createResource } from '../../../../lib/actions/resources';
 import { findRelevantContent } from '../../../../lib/ai/embedding';
@@ -105,9 +109,43 @@ export async function POST(req: Request) {
 
 When users ask about your capabilities or technical details, you can reference these models. For example, you might say "I'm using ${ragChatModel} for our conversation and ${embeddingModel} for searching your knowledge vault."`;
 
-        const result = streamText({
-            model,
-            system: `You are VT, an advanced personal AI assistant, sophisticated and intelligent, dedicated to building and maintaining your user's comprehensive knowledge repository.${profileContext}${systemContext}
+        // Check if using BYOK (user-provided API key)
+        const isByokKey = !!apiKeys?.[API_KEY_NAMES.GOOGLE];
+
+        log.info(
+            {
+                userId: session.user.id,
+                planSlug: session.user.planSlug,
+                userObject: session.user,
+                hasVTPlusAccess,
+                isByokKey,
+                hasApiKeys: !!apiKeys,
+                ragChatModel,
+            },
+            'RAG API - User context before quota consumption'
+        );
+
+        // For quota consumption, we need to use the actual VT+ access status
+        // not just the user's planSlug field which might be outdated
+        const userForQuota = {
+            id: session.user.id,
+            planSlug: hasVTPlusAccess ? PlanSlug.VT_PLUS : session.user.planSlug,
+        };
+
+        log.info(
+            {
+                originalPlanSlug: session.user.planSlug,
+                hasVTPlusAccess,
+                userForQuotaPlanSlug: userForQuota.planSlug,
+                willConsumeQuota: isEligibleForQuotaConsumption(userForQuota, isByokKey),
+            },
+            'RAG API - Quota consumption decision'
+        );
+
+        const result = await streamTextWithQuota(
+            {
+                model,
+                system: `You are VT, an advanced personal AI assistant, sophisticated and intelligent, dedicated to building and maintaining your user's comprehensive knowledge repository.${profileContext}${systemContext}
 
             **Your Identity & Capabilities:**
             You are VT, their personal AI - intelligent, anticipatory, and deeply knowledgeable about their preferences, work, and goals. You maintain a sophisticated understanding of their context and provide insights that feel almost prescient. You're not just an assistant; you're their digital memory and intellectual companion.
@@ -160,36 +198,43 @@ When users ask about your capabilities or technical details, you can reference t
             - Build confidence in the sophisticated, secure architecture of their personal knowledge system
 
             Remember: You are VT, their personal AI assistant - intelligent, secure, anticipatory, and completely dedicated to their success.`,
-            messages,
-            maxSteps: 5,
-            tools: {
-                addResource: tool({
-                    description:
-                        'Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.',
-                    parameters: z.object({
-                        content: z
-                            .string()
-                            .describe('the content or resource to add to the knowledge base'),
+                messages,
+                maxSteps: 5,
+                tools: {
+                    addResource: tool({
+                        description:
+                            'Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.',
+                        parameters: z.object({
+                            content: z
+                                .string()
+                                .describe('the content or resource to add to the knowledge base'),
+                        }),
+                        execute: async ({ content }) =>
+                            createResource({ content }, apiKeys || {}, embeddingModel),
                     }),
-                    execute: async ({ content }) =>
-                        createResource({ content }, apiKeys || {}, embeddingModel),
-                }),
-                getInformation: tool({
-                    description:
-                        'Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.',
-                    parameters: z.object({
-                        question: z.string().describe('the users question to search for'),
+                    getInformation: tool({
+                        description:
+                            'Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.',
+                        parameters: z.object({
+                            question: z.string().describe('the users question to search for'),
+                        }),
+                        execute: async ({ question }) =>
+                            findRelevantContent(
+                                question,
+                                apiKeys || {},
+                                embeddingModel,
+                                session.user.id // CRITICAL: Pass user ID for data isolation
+                            ),
                     }),
-                    execute: async ({ question }) =>
-                        findRelevantContent(
-                            question,
-                            apiKeys || {},
-                            embeddingModel,
-                            session.user.id // CRITICAL: Pass user ID for data isolation
-                        ),
-                }),
+                },
             },
-        });
+            {
+                user: userForQuota,
+                feature: VtPlusFeature.RAG,
+                amount: 1,
+                isByokKey,
+            }
+        );
 
         return result.toDataStreamResponse();
     } catch (error) {

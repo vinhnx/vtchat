@@ -110,6 +110,8 @@ export type WorkflowContextSchema = {
         budget: number;
         includeThoughts: boolean;
     };
+    userTier?: UserTierType;
+    userId?: string;
 };
 
 export const runWorkflow = ({
@@ -130,6 +132,7 @@ export const runWorkflow = ({
     apiKeys,
     thinkingMode,
     userTier = UserTier.FREE,
+    userId,
 }: {
     mode: ChatMode;
     question: string;
@@ -152,6 +155,7 @@ export const runWorkflow = ({
         includeThoughts: boolean;
     };
     userTier?: UserTierType;
+    userId?: string;
 }) => {
     log.info('🔥 runWorkflow called with params:', {
         webSearch,
@@ -213,6 +217,7 @@ export const runWorkflow = ({
         apiKeys,
         thinkingMode,
         userTier,
+        userId,
     });
 
     // Use the typed builder

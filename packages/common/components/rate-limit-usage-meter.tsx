@@ -3,6 +3,7 @@
 import { ModelEnum } from '@repo/ai/models';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import {
     Badge,
     Button,
@@ -82,7 +83,7 @@ export default function RateLimitUsageMeter({
 
     // Determine enhanced access status (BYOK = unlimited, VT+ = higher limits)
     const hasEnhancedAccess = hasGeminiApiKey || isVtPlus;
-    const accessType = hasGeminiApiKey ? 'byok' : 'vt_plus';
+    const accessType = hasGeminiApiKey ? 'byok' : PlanSlug.VT_PLUS;
 
     const fetchUsage = useCallback(async () => {
         if (!userId) {
