@@ -55,10 +55,8 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
 
     // For OpenRouter models with duplicate names, use model ID mapping
     const modelIdToChatModeMap: Record<string, ChatMode> = {
-        'deepseek/deepseek-chat-v3-0324:free': ChatMode.DEEPSEEK_V3_0324_FREE,
         'deepseek/deepseek-chat-v3-0324': ChatMode.DEEPSEEK_V3_0324,
         'deepseek/deepseek-r1:free': ChatMode.DEEPSEEK_R1_FREE,
-        'deepseek/deepseek-r1-0528:free': ChatMode.DEEPSEEK_R1_0528_FREE,
         'qwen/qwen3-235b-a22b': ChatMode.QWEN3_235B_A22B,
         'qwen/qwen3-32b': ChatMode.QWEN3_32B,
         'mistralai/mistral-nemo': ChatMode.MISTRAL_NEMO,
@@ -81,13 +79,11 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
     const reasoningModels = [
         // OpenAI o-series models
         ChatMode.O3,
-        ChatMode.O1_PREVIEW,
+        ChatMode.O1,
 
         // DeepSeek reasoning models
         ChatMode.DEEPSEEK_R1,
-        ChatMode.DEEPSEEK_R1_MAIN,
         ChatMode.DEEPSEEK_R1_FREE,
-        ChatMode.DEEPSEEK_R1_0528_FREE,
 
         // Anthropic reasoning models
         ChatMode.CLAUDE_4_SONNET,
@@ -297,13 +293,6 @@ export const modelOptionsByProvider = {
     ],
     OpenRouter: [
         {
-            label: 'DeepSeek V3 0324',
-            value: ChatMode.DEEPSEEK_V3_0324_FREE,
-            webSearch: true,
-            icon: <Gift className="text-green-500" size={16} />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
             label: 'DeepSeek V3 0324 Pro',
             value: ChatMode.DEEPSEEK_V3_0324,
             webSearch: true,
@@ -313,13 +302,6 @@ export const modelOptionsByProvider = {
         {
             label: 'DeepSeek R1',
             value: ChatMode.DEEPSEEK_R1_FREE,
-            webSearch: true,
-            icon: <Gift className="text-green-500" size={16} />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'DeepSeek R1 0528',
-            value: ChatMode.DEEPSEEK_R1_0528_FREE,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,

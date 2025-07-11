@@ -9,7 +9,7 @@ export const ChatMode = {
     O3_Mini: 'o3-mini',
     O4_Mini: 'o4-mini',
     O1_MINI: 'o1-mini',
-    O1_PREVIEW: 'o1-preview',
+    O1: 'o1',
     GPT_4_1: 'gpt-4.1',
     GPT_4_1_Mini: 'gpt-4.1-mini',
     GPT_4_1_Nano: 'gpt-4.1-nano',
@@ -21,8 +21,7 @@ export const ChatMode = {
 
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
-    DEEPSEEK_R1: 'deepseek-r1-0528',
-    DEEPSEEK_R1_MAIN: 'deepseek-r1',
+    DEEPSEEK_R1: 'deepseek-r1',
     GROK_3: 'grok-3',
     GROK_3_MINI: 'grok-3-mini',
     GROK_4: 'grok-4',
@@ -222,14 +221,7 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    [ChatMode.DEEPSEEK_R1_0528_FREE]: {
-        webSearch: true,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
+
     [ChatMode.QWEN3_235B_A22B]: {
         webSearch: true,
         imageUpload: false,
@@ -302,17 +294,8 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
     },
-    [ChatMode.O1_PREVIEW]: {
+    [ChatMode.O1]: {
         webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-    },
-
-
-    [ChatMode.DEEPSEEK_R1_MAIN]: {
-        webSearch: true,
         imageUpload: false,
         multiModal: false,
         retry: true,
@@ -451,14 +434,10 @@ export const getChatModeName = (mode: ChatMode) => {
         case ChatMode.GROK_4:
             return 'xAI Grok 4';
         // OpenRouter models
-        case ChatMode.DEEPSEEK_V3_0324_FREE:
-            return 'OpenRouter DeepSeek V3 0324';
         case ChatMode.DEEPSEEK_V3_0324:
             return 'OpenRouter DeepSeek V3 0324 Pro';
         case ChatMode.DEEPSEEK_R1_FREE:
             return 'OpenRouter DeepSeek R1';
-        case ChatMode.DEEPSEEK_R1_0528_FREE:
-            return 'OpenRouter DeepSeek R1 0528';
         case ChatMode.QWEN3_235B_A22B:
             return 'OpenRouter Qwen3 235B A22B';
         case ChatMode.QWEN3_32B:
@@ -478,12 +457,7 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'LM Studio Gemma 3 1B (Local)';
         case ChatMode.O1_MINI:
             return 'OpenAI o1-mini';
-        case ChatMode.O1_PREVIEW:
-            return 'OpenAI o1-preview';
-
-        case ChatMode.CLAUDE_3_7_SONNET:
-            return 'Claude 3.7 Sonnet';
-        case ChatMode.DEEPSEEK_R1_MAIN:
-            return 'DeepSeek R1';
+        case ChatMode.O1:
+            return 'OpenAI o1';
     }
 };

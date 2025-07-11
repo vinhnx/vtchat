@@ -28,7 +28,6 @@ export function isPremiumMode(mode: ChatMode): boolean {
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,
         ChatMode.DEEPSEEK_R1,
-        ChatMode.DEEPSEEK_R1_MAIN,
         ChatMode.GPT_4o,
         ChatMode.GPT_4_1,
         ChatMode.GROK_3,

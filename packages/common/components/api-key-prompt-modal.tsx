@@ -47,10 +47,8 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.GROK_3_MINI:
             return 'XAI_API_KEY';
         // OpenRouter models
-        case ChatMode.DEEPSEEK_V3_0324_FREE:
         case ChatMode.DEEPSEEK_V3_0324:
         case ChatMode.DEEPSEEK_R1_FREE:
-        case ChatMode.DEEPSEEK_R1_0528_FREE:
         case ChatMode.QWEN3_235B_A22B:
         case ChatMode.QWEN3_32B:
         case ChatMode.MISTRAL_NEMO:

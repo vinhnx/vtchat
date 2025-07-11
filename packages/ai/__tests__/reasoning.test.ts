@@ -14,7 +14,7 @@ describe('Reasoning Support', () => {
         it('should return true for DeepSeek reasoning models', () => {
             expect(supportsReasoning(ModelEnum.Deepseek_R1)).toBe(true);
             expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FREE)).toBe(true);
-            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_0528_FREE)).toBe(true);
+            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FREE)).toBe(true);
         });
 
         it('should return true for Anthropic reasoning models', () => {

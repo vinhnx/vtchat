@@ -1256,10 +1256,8 @@ export const selectAvailableModel = (
             [ModelEnum.GROK_3]: 'XAI_API_KEY',
             [ModelEnum.GROK_3_MINI]: 'XAI_API_KEY',
             // OpenRouter models
-            [ModelEnum.DEEPSEEK_V3_0324_FREE]: 'OPENROUTER_API_KEY',
             [ModelEnum.DEEPSEEK_V3_0324]: 'OPENROUTER_API_KEY',
             [ModelEnum.DEEPSEEK_R1_FREE]: 'OPENROUTER_API_KEY',
-            [ModelEnum.DEEPSEEK_R1_0528_FREE]: 'OPENROUTER_API_KEY',
             [ModelEnum.QWEN3_235B_A22B]: 'OPENROUTER_API_KEY',
             [ModelEnum.QWEN3_32B]: 'OPENROUTER_API_KEY',
             [ModelEnum.MISTRAL_NEMO]: 'OPENROUTER_API_KEY',

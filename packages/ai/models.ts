@@ -560,10 +560,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     }
 
     // DeepSeek models use reasoning middleware with <think> tags
-    const deepseekReasoningModels = [
-        ModelEnum.Deepseek_R1,
-        ModelEnum.DEEPSEEK_R1_FREE,
-    ];
+    const deepseekReasoningModels = [ModelEnum.Deepseek_R1, ModelEnum.DEEPSEEK_R1_FREE];
 
     if (deepseekReasoningModels.includes(model)) {
         return ReasoningType.DEEPSEEK_REASONING;

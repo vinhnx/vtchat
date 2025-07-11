@@ -33,18 +33,16 @@ export const ReasoningModeSettings = () => {
             ChatMode.GEMINI_2_5_FLASH_LITE,
 
             // DeepSeek reasoning models
-            ChatMode.DEEPSEEK_R1_MAIN,
+            ChatMode.DEEPSEEK_R1,
             ChatMode.DEEPSEEK_R1_FREE,
-            ChatMode.DEEPSEEK_R1_0528_FREE,
             // Anthropic reasoning models
             ChatMode.CLAUDE_4_SONNET,
             ChatMode.CLAUDE_4_OPUS,
-            ChatMode.CLAUDE_3_7_SONNET,
             // OpenAI o-series models
             ChatMode.O4_Mini,
             ChatMode.O3_Mini,
             ChatMode.O1_MINI,
-            ChatMode.O1_PREVIEW,
+            ChatMode.O1,
         ];
         return reasoningModels.some((model) => chatMode.includes(model.replace(/-/g, '_')));
     }, [chatMode]);
