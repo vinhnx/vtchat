@@ -20,11 +20,10 @@ export const ModelEnum = {
     O4_Mini: 'o4-mini',
     GROK_3: 'grok-3',
     GROK_3_MINI: 'grok-3-mini',
+    GROK_4: 'grok-4',
     // OpenRouter models
-    DEEPSEEK_V3_0324_FREE: 'deepseek/deepseek-chat-v3-0324:free',
     DEEPSEEK_V3_0324: 'deepseek/deepseek-chat-v3-0324',
     DEEPSEEK_R1_FREE: 'deepseek/deepseek-r1:free',
-    DEEPSEEK_R1_0528_FREE: 'deepseek/deepseek-r1-0528:free',
     QWEN3_235B_A22B: 'qwen/qwen3-235b-a22b',
     QWEN3_32B: 'qwen/qwen3-32b',
     MISTRAL_NEMO: 'mistralai/mistral-nemo',
@@ -154,6 +153,13 @@ export const models: Model[] = [
         maxTokens: 131_072,
         contextWindow: 131_072,
     },
+    {
+        id: ModelEnum.GROK_4,
+        name: 'Grok 4',
+        provider: 'xai',
+        maxTokens: 256_000,
+        contextWindow: 256_000,
+    },
     // OpenRouter models
     {
         id: ModelEnum.DEEPSEEK_V3_0324,
@@ -262,15 +268,13 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GROK_3;
         case ChatMode.GROK_3_MINI:
             return ModelEnum.GROK_3_MINI;
+        case ChatMode.GROK_4:
+            return ModelEnum.GROK_4;
         // OpenRouter models
-        case ChatMode.DEEPSEEK_V3_0324_FREE:
-            return ModelEnum.DEEPSEEK_V3_0324_FREE;
         case ChatMode.DEEPSEEK_V3_0324:
             return ModelEnum.DEEPSEEK_V3_0324;
         case ChatMode.DEEPSEEK_R1_FREE:
             return ModelEnum.DEEPSEEK_R1_FREE;
-        case ChatMode.DEEPSEEK_R1_0528_FREE:
-            return ModelEnum.DEEPSEEK_R1_0528_FREE;
         case ChatMode.QWEN3_235B_A22B:
             return ModelEnum.QWEN3_235B_A22B;
         case ChatMode.QWEN3_32B:
@@ -318,12 +322,11 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
             return 1_047_576;
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
+        case ChatMode.GROK_4:
             return 131_072;
         // OpenRouter models
-        case ChatMode.DEEPSEEK_V3_0324_FREE:
         case ChatMode.DEEPSEEK_V3_0324:
         case ChatMode.DEEPSEEK_R1_FREE:
-        case ChatMode.DEEPSEEK_R1_0528_FREE:
             return 163_840;
         case ChatMode.QWEN3_235B_A22B:
         case ChatMode.QWEN3_32B:
@@ -455,7 +458,6 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     const deepseekReasoningModels = [
         ModelEnum.Deepseek_R1, // Fireworks
         ModelEnum.DEEPSEEK_R1_FREE, // OpenRouter
-        ModelEnum.DEEPSEEK_R1_0528_FREE, // OpenRouter
     ];
 
     // Anthropic reasoning models
@@ -510,7 +512,6 @@ export const supportsTools = (model: ModelEnum): boolean => {
     // OpenRouter models that support tools
     const openrouterToolModels = [
         ModelEnum.DEEPSEEK_V3_0324,
-        ModelEnum.DEEPSEEK_V3_0324_FREE,
         ModelEnum.QWEN3_235B_A22B,
         ModelEnum.QWEN3_32B,
         ModelEnum.QWEN3_14B_FREE,
@@ -518,7 +519,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ];
 
     // xAI models that support tools
-    const xaiToolModels = [ModelEnum.GROK_3, ModelEnum.GROK_3_MINI];
+    const xaiToolModels = [ModelEnum.GROK_3, ModelEnum.GROK_3_MINI, ModelEnum.GROK_4];
 
     return [
         ...openaiToolModels,
@@ -562,7 +563,6 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     const deepseekReasoningModels = [
         ModelEnum.Deepseek_R1,
         ModelEnum.DEEPSEEK_R1_FREE,
-        ModelEnum.DEEPSEEK_R1_0528_FREE,
     ];
 
     if (deepseekReasoningModels.includes(model)) {

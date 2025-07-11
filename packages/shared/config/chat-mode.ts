@@ -21,16 +21,14 @@ export const ChatMode = {
 
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
-    CLAUDE_3_7_SONNET: 'claude-3-7-sonnet-20250219',
     DEEPSEEK_R1: 'deepseek-r1-0528',
     DEEPSEEK_R1_MAIN: 'deepseek-r1',
     GROK_3: 'grok-3',
     GROK_3_MINI: 'grok-3-mini',
+    GROK_4: 'grok-4',
     // OpenRouter models
-    DEEPSEEK_V3_0324_FREE: 'deepseek-v3-0324-free',
     DEEPSEEK_V3_0324: 'deepseek-v3-0324',
     DEEPSEEK_R1_FREE: 'deepseek-r1-free',
-    DEEPSEEK_R1_0528_FREE: 'deepseek-r1-0528-free',
     QWEN3_235B_A22B: 'qwen3-235b-a22b',
     QWEN3_32B: 'qwen3-32b',
     MISTRAL_NEMO: 'mistral-nemo',
@@ -198,15 +196,16 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    // OpenRouter models
-    [ChatMode.DEEPSEEK_V3_0324_FREE]: {
+    [ChatMode.GROK_4]: {
         webSearch: true,
-        imageUpload: false,
+        imageUpload: true,
         multiModal: false,
         retry: true,
         isAuthRequired: true,
         isNew: true,
     },
+    // OpenRouter models
+
     [ChatMode.DEEPSEEK_V3_0324]: {
         webSearch: true,
         imageUpload: false,
@@ -311,13 +310,7 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
 
-    [ChatMode.CLAUDE_3_7_SONNET]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-    },
+
     [ChatMode.DEEPSEEK_R1_MAIN]: {
         webSearch: true,
         imageUpload: false,
@@ -455,6 +448,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:
             return 'xAI Grok 3 Mini';
+        case ChatMode.GROK_4:
+            return 'xAI Grok 4';
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324_FREE:
             return 'OpenRouter DeepSeek V3 0324';

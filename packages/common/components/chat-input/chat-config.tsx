@@ -41,6 +41,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'o3 mini': ChatMode.O3_Mini,
         'o4 mini': ChatMode.O4_Mini,
         // xAI models
+        'Grok 4': ChatMode.GROK_4,
         'Grok 3': ChatMode.GROK_3,
         'Grok 3 Mini': ChatMode.GROK_3_MINI,
         // Fireworks models
@@ -80,25 +81,25 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
     const reasoningModels = [
         // OpenAI o-series models
         ChatMode.O3,
-        ChatMode.O3_Mini,
-        ChatMode.O4_Mini,
-        ChatMode.O1_MINI,
         ChatMode.O1_PREVIEW,
+
         // DeepSeek reasoning models
         ChatMode.DEEPSEEK_R1,
         ChatMode.DEEPSEEK_R1_MAIN,
         ChatMode.DEEPSEEK_R1_FREE,
         ChatMode.DEEPSEEK_R1_0528_FREE,
+
         // Anthropic reasoning models
         ChatMode.CLAUDE_4_SONNET,
         ChatMode.CLAUDE_4_OPUS,
-        ChatMode.CLAUDE_3_7_SONNET,
+
         // Gemini models with thinking support
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,
         ChatMode.GEMINI_2_5_FLASH_LITE,
 
         // xAI reasoning models
+        ChatMode.GROK_4,
         ChatMode.GROK_3_MINI,
     ];
     return reasoningModels.includes(chatMode);
@@ -272,6 +273,13 @@ export const modelOptionsByProvider = {
         },
     ],
     xAI: [
+        {
+            label: 'Grok 4',
+            value: ChatMode.GROK_4,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+        },
         {
             label: 'Grok 3',
             value: ChatMode.GROK_3,

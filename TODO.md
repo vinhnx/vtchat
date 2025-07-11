@@ -22,16 +22,6 @@ for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
 
 --
 
-add Grok 4 model
-
-import { generateText } from 'ai';
-const { text } = await generateText({
-model: 'xai/grok-4',
-prompt: 'T𝚑𝚎 𝚊𝚗𝚜𝚠𝚎𝚛 𝚝𝚘 𝚕𝚒𝚏𝚎'
-})
-
---
-
 https://xmcp.dev/docs
 
 --
