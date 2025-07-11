@@ -4,20 +4,12 @@
  */
 
 import { ChatMode } from '@repo/shared/config';
+import { GEMINI_CHAT_MODES } from '@repo/shared/utils';
 import { describe, expect, test } from 'vitest';
 
 // Mock the chat input component's logic
 const mockIsGeminiModel = (chatMode) => {
-    return (
-        chatMode === ChatMode.Deep ||
-        chatMode === ChatMode.Pro ||
-        chatMode === ChatMode.GEMINI_2_5_PRO ||
-        chatMode === ChatMode.GEMINI_2_5_FLASH ||
-        chatMode === ChatMode.GEMINI_2_5_FLASH_LITE ||
-        chatMode === ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20 ||
-        chatMode === ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06 ||
-        chatMode === ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05
-    );
+    return GEMINI_CHAT_MODES.includes(chatMode);
 };
 
 const mockNeedsApiKeyCheck = (chatMode, isPlusTier) => {

@@ -97,9 +97,7 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,
         ChatMode.GEMINI_2_5_FLASH_LITE,
-        ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-        ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-        ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
+
         // xAI reasoning models
         ChatMode.GROK_3_MINI,
     ];

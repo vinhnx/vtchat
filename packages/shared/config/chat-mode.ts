@@ -18,9 +18,7 @@ export const ChatMode = {
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_5_FLASH_PREVIEW_05_20: 'gemini-2.5-flash-preview-05-20',
-    GEMINI_2_5_PRO_PREVIEW_05_06: 'gemini-2.5-pro-preview-05-06',
-    GEMINI_2_5_PRO_PREVIEW_06_05: 'gemini-2.5-pro-preview-06-05',
+
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
     CLAUDE_3_7_SONNET: 'claude-3-7-sonnet-20250219',
@@ -312,27 +310,7 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
     },
-    [ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-    },
+
     [ChatMode.CLAUDE_3_7_SONNET]: {
         webSearch: true,
         imageUpload: true,
@@ -507,12 +485,7 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI o1-mini';
         case ChatMode.O1_PREVIEW:
             return 'OpenAI o1-preview';
-        case ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20:
-            return 'Gemini 2.5 Flash Preview (05-20)';
-        case ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06:
-            return 'Gemini 2.5 Pro Preview (05-06)';
-        case ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05:
-            return 'Gemini 2.5 Pro Preview (06-05)';
+
         case ChatMode.CLAUDE_3_7_SONNET:
             return 'Claude 3.7 Sonnet';
         case ChatMode.DEEPSEEK_R1_MAIN:

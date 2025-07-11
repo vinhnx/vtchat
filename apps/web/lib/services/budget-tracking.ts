@@ -1,6 +1,7 @@
 import { ModelEnum } from '@repo/ai/models';
 import { BUDGET_LIMITS, GEMINI_PRICES } from '@repo/shared/constants/rate-limits';
 import { log } from '@repo/shared/logger';
+import { isGeminiModel } from '@repo/shared/utils';
 import { and, eq, gte, sql } from 'drizzle-orm';
 import { db } from '@/lib/database';
 import { providerUsage } from '@/lib/database/schema';
@@ -15,13 +16,7 @@ export async function recordProviderUsage(
     provider: string = 'gemini'
 ): Promise<void> {
     // Only track costs for models we have pricing data for
-    const isGeminiModel = [
-        ModelEnum.GEMINI_2_5_FLASH_LITE,
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_PRO,
-    ].includes(modelId);
-
-    if (!isGeminiModel) {
+    if (!isGeminiModel(modelId)) {
         return; // Don't track costs for non-Gemini models
     }
 

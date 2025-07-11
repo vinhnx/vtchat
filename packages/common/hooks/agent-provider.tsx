@@ -16,6 +16,7 @@ import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
 import { isGeminiModel } from '../utils/document-processing';
 import { useVtPlusAccess } from './use-subscription-access';
+import { GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -293,11 +294,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                         // Record rate limit usage for successful Gemini completions
                                         if (data.status !== 'error' && data.status !== 'aborted') {
                                             const modelId = getModelFromChatMode(body.mode);
-                                            const isGemini = [
-                                                ModelEnum.GEMINI_2_5_FLASH_LITE,
-                                                ModelEnum.GEMINI_2_5_FLASH,
-                                                ModelEnum.GEMINI_2_5_PRO,
-                                            ].includes(modelId);
+                                            const isGemini =
+                                                GEMINI_MODEL_ENUMS_ARRAY.includes(modelId);
 
                                             if (isGemini) {
                                                 fetch(

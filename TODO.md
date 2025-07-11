@@ -12,9 +12,15 @@ update VT+ gemini rate limite system:
 
 --
 
+https://github.com/MiguelsPizza/WebMCP
+
+--
+
 use mcp for ai.sdk, context7: check to show thinking log tool view for model that has reasoning capabliyt by default
 
-## for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
+for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
+
+--
 
 add Grok 4 model
 

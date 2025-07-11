@@ -938,12 +938,12 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     {/* Free features available to all users */}
                                     {currentPlan.features
                                         .filter(
-                                            (f) =>
+                                            (feature) =>
                                                 ![
                                                     FeatureSlug.PRO_SEARCH,
                                                     FeatureSlug.DEEP_RESEARCH,
                                                     FeatureSlug.RAG,
-                                                ].includes(f)
+                                                ].includes(feature)
                                         )
                                         .filter(
                                             (f) =>

@@ -13,13 +13,12 @@ import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
 import { maskPII } from '../utils/content-security';
 
+// Import the unified function for better consistency
+import { isGeminiModel as isGeminiModelUnified } from '@repo/shared/utils';
+
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
-    return (
-        model === EMBEDDING_MODELS.GEMINI_004 ||
-        model === EMBEDDING_MODELS.GEMINI_EXP ||
-        model === EMBEDDING_MODELS.GEMINI_001
-    );
+    return isGeminiModelUnified(model);
 }
 
 // Get embedding model from user preference, environment, or use default

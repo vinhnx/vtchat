@@ -67,17 +67,16 @@ export async function POST(request: NextRequest) {
         const selectedModel = getModelFromChatMode(data.mode);
 
         // Check if the selected model is a Gemini model that needs rate limiting
-        const isGeminiModel = [
-            ModelEnum.GEMINI_2_5_FLASH_LITE,
-            ModelEnum.GEMINI_2_5_FLASH,
-            ModelEnum.GEMINI_2_5_PRO,
-        ].includes(selectedModel);
+        const isGeminiModelResult = isGeminiModel(selectedModel);
 
         // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
         const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
         const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
-        if (isGeminiModel) {
+        // Declare vtPlusAccess in outer scope for access in onFinish callback
+        let vtPlusAccess: { hasAccess: boolean; reason?: string } | undefined;
+
+        if (isGeminiModelResult) {
             if (!hasByokGeminiKey) {
                 // Check budget limits before rate limiting
                 const budgetCheck = await shouldDisableGemini();
@@ -114,7 +113,7 @@ export async function POST(request: NextRequest) {
                 }
 
                 // VT+ REQUIRED for server-funded Gemini access
-                const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+                vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                 if (!vtPlusAccess.hasAccess) {
                     return new Response(
                         JSON.stringify({
@@ -295,6 +294,8 @@ export async function POST(request: NextRequest) {
             hasByokGeminiKey: !!(
                 data.apiKeys?.GEMINI_API_KEY && data.apiKeys.GEMINI_API_KEY.trim().length > 0
             ),
+            isGeminiModelResult,
+            vtPlusAccess,
         });
 
         return new Response(stream, { headers: enhancedHeaders });
@@ -318,6 +319,8 @@ function createCompletionStream({
     gl,
     selectedModel: _selectedModel,
     hasByokGeminiKey: _hasByokGeminiKey,
+    isGeminiModelResult,
+    vtPlusAccess,
 }: {
     data: any;
     userId?: string;
@@ -326,6 +329,8 @@ function createCompletionStream({
     gl: Geo;
     selectedModel: ModelEnum;
     hasByokGeminiKey: boolean;
+    isGeminiModelResult: boolean;
+    vtPlusAccess: { hasAccess: boolean; reason?: string } | undefined;
 }) {
     const _encoder = new TextEncoder();
     let heartbeatInterval: NodeJS.Timeout | null = null;
@@ -364,16 +369,20 @@ function createCompletionStream({
                     userId: userId ?? undefined,
                     onFinish: async () => {
                         // Server-side safety net: record usage if client doesn't
-                        if (userId && isGeminiModel && !hasByokGeminiKey) {
+                        if (userId && isGeminiModelResult && !_hasByokGeminiKey) {
                             try {
-                                await recordRequest(userId, selectedModel, vtPlusAccess.hasAccess);
+                                await recordRequest(
+                                    userId,
+                                    _selectedModel,
+                                    vtPlusAccess?.hasAccess ?? false
+                                );
                                 log.info(
-                                    { userId, model: selectedModel },
+                                    { userId, model: _selectedModel },
                                     'Rate limit recorded via server-side safety net'
                                 );
                             } catch (error) {
                                 log.error(
-                                    { error, userId, model: selectedModel },
+                                    { error, userId, model: _selectedModel },
                                     'Failed to record request in onFinish'
                                 );
                             }

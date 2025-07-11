@@ -31,9 +31,7 @@ export const ReasoningModeSettings = () => {
             // Gemini models with thinking support
             ChatMode.GEMINI_2_5_FLASH,
             ChatMode.GEMINI_2_5_FLASH_LITE,
-            ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-            ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-            ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
+
             // DeepSeek reasoning models
             ChatMode.DEEPSEEK_R1_MAIN,
             ChatMode.DEEPSEEK_R1_FREE,

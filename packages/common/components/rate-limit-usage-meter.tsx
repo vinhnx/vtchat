@@ -23,9 +23,19 @@ import { useApiKeysStore } from '../store/api-keys.store';
 // Model configuration for display
 const MODEL_CONFIG = {
     [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
-        name: 'Flash Lite',
+        name: 'Gemini 2.5 Flash Lite',
         description: 'Fast and efficient',
         limits: GEMINI_LIMITS.FLASH_LITE,
+    },
+    [ModelEnum.GEMINI_2_5_FLASH]: {
+        name: 'Gemini 2.5 Flash',
+        description: 'Fast performance',
+        limits: GEMINI_LIMITS.FLASH,
+    },
+    [ModelEnum.GEMINI_2_5_PRO]: {
+        name: 'Gemini 2.5 Pro',
+        description: 'Most capable',
+        limits: GEMINI_LIMITS.PRO,
     },
 } as const;
 
@@ -43,12 +53,22 @@ interface RateLimitStatus {
     };
 }
 
+type GeminiModelId =
+    | ModelEnum.GEMINI_2_5_FLASH_LITE
+    | ModelEnum.GEMINI_2_5_FLASH
+    | ModelEnum.GEMINI_2_5_PRO;
+
 interface RateLimitUsageMeterProps {
     userId?: string;
     className?: string;
+    modelId?: GeminiModelId;
 }
 
-export default function RateLimitUsageMeter({ userId, className }: RateLimitUsageMeterProps) {
+export default function RateLimitUsageMeter({
+    userId,
+    className,
+    modelId = ModelEnum.GEMINI_2_5_FLASH_LITE,
+}: RateLimitUsageMeterProps) {
     const [status, setStatus] = useState<RateLimitStatus | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -73,9 +93,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
         try {
             setLoading(true);
 
-            const response = await fetch(
-                `/api/rate-limit/status?model=${ModelEnum.GEMINI_2_5_FLASH_LITE}`
-            );
+            const response = await fetch(`/api/rate-limit/status?model=${modelId}`);
             if (response.ok) {
                 const data = await response.json();
                 setStatus(data);
@@ -88,7 +106,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
         } finally {
             setLoading(false);
         }
-    }, [userId]);
+    }, [userId, modelId]);
 
     useEffect(() => {
         fetchUsage();
@@ -143,7 +161,7 @@ export default function RateLimitUsageMeter({ userId, className }: RateLimitUsag
         );
     }
 
-    const config = MODEL_CONFIG[ModelEnum.GEMINI_2_5_FLASH_LITE];
+    const config = MODEL_CONFIG[modelId];
     const isVtPlusUser = isVtPlus;
     const dailyLimit = isVtPlusUser ? config.limits.PLUS_DAY : config.limits.FREE_DAY;
     const dailyPercentage = (status.dailyUsed / dailyLimit) * 100;

@@ -1,6 +1,7 @@
 'use client';
 
 import { ModelEnum } from '@repo/ai/models';
+import { GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
 import {
     Button,

@@ -30,12 +30,8 @@ export async function GET(request: NextRequest) {
 
         // If no model specified, return all Gemini models
         if (!modelId) {
-            const { ModelEnum } = await import('@repo/ai/models');
-            const geminiModels = [
-                ModelEnum.GEMINI_2_5_FLASH_LITE,
-                ModelEnum.GEMINI_2_5_FLASH,
-                ModelEnum.GEMINI_2_5_PRO,
-            ];
+            const { GEMINI_MODEL_ENUMS_ARRAY } = await import('@repo/shared/utils');
+            const geminiModels = GEMINI_MODEL_ENUMS_ARRAY;
 
             const allStatuses: Record<string, any> = {};
 

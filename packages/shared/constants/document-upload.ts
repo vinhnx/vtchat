@@ -1,4 +1,5 @@
 import { ChatMode } from '../config';
+import { GEMINI_CHAT_MODES } from '../utils/model-utils';
 
 export const DOCUMENT_UPLOAD_CONFIG = {
     ACCEPTED_TYPES: {
@@ -12,13 +13,4 @@ export const DOCUMENT_UPLOAD_CONFIG = {
     SUPPORTED_EXTENSIONS: ['.pdf', '.doc', '.docx', '.txt', '.md'],
 } as const;
 
-export const GEMINI_MODELS = [
-    ChatMode.Deep,
-    ChatMode.Pro,
-    ChatMode.GEMINI_2_5_PRO,
-    ChatMode.GEMINI_2_5_FLASH,
-    ChatMode.GEMINI_2_5_FLASH_LITE,
-    ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-    ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-    ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
-] as const;
+export const GEMINI_MODELS = GEMINI_CHAT_MODES;

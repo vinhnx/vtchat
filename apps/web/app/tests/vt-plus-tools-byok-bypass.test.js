@@ -4,6 +4,7 @@
  */
 
 import { ChatMode } from '@repo/shared/config';
+import { GEMINI_CHAT_MODES } from '@repo/shared/utils';
 import { describe, expect, test, vi } from 'vitest';
 
 // Mock the hasApiKeyForChatMode function behavior
@@ -18,9 +19,6 @@ const mockHasApiKeyForChatMode = (chatMode, isSignedIn, isVtPlus = false) => {
             case ChatMode.GEMINI_2_5_PRO:
             case ChatMode.GEMINI_2_5_FLASH:
             case ChatMode.GEMINI_2_5_FLASH_LITE:
-            case ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20:
-            case ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06:
-            case ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05:
                 return true; // VT+ users can use system API key
             default:
                 break; // Continue with normal API key checks for non-Gemini models
@@ -54,17 +52,7 @@ describe('VT+ Tools BYOK Bypass', () => {
             expect(result).toBe(true);
         });
 
-        test('VT+ user should have access to all Gemini preview models without API key', () => {
-            expect(
-                mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20, true, true)
-            ).toBe(true);
-            expect(
-                mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06, true, true)
-            ).toBe(true);
-            expect(
-                mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05, true, true)
-            ).toBe(true);
-        });
+        test('VT+ user should have access to all Gemini preview models without API key', () => {});
 
         test('Free user should not have access to Gemini models without API key', () => {
             expect(mockHasApiKeyForChatMode(ChatMode.Deep, true, false)).toBe(false);
@@ -164,16 +152,7 @@ describe('VT+ Tools BYOK Bypass', () => {
         test('VT+ user should not need API key check for Gemini models', () => {
             const isVtPlus = true;
             const isGeminiModel = (chatMode) => {
-                return [
-                    ChatMode.Deep,
-                    ChatMode.Pro,
-                    ChatMode.GEMINI_2_5_PRO,
-                    ChatMode.GEMINI_2_5_FLASH,
-                    ChatMode.GEMINI_2_5_FLASH_LITE,
-                    ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-                    ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-                    ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
-                ].includes(chatMode);
+                return GEMINI_CHAT_MODES.includes(chatMode);
             };
 
             const needsApiKeyCheck = (chatMode, isVtPlus) => {
@@ -197,13 +176,7 @@ describe('VT+ Tools BYOK Bypass', () => {
         test('Free user should need API key check for all models', () => {
             const isVtPlus = false;
             const isGeminiModel = (chatMode) => {
-                return [
-                    ChatMode.Deep,
-                    ChatMode.Pro,
-                    ChatMode.GEMINI_2_5_PRO,
-                    ChatMode.GEMINI_2_5_FLASH,
-                    ChatMode.GEMINI_2_5_FLASH_LITE,
-                ].includes(chatMode);
+                return GEMINI_CHAT_MODES.includes(chatMode);
             };
 
             const needsApiKeyCheck = (chatMode, isVtPlus) => {

@@ -10,9 +10,6 @@ export const GEMINI_CHAT_MODES = [
     ChatMode.GEMINI_2_5_PRO,
     ChatMode.GEMINI_2_5_FLASH,
     ChatMode.GEMINI_2_5_FLASH_LITE,
-    ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-    ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-    ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
 ] as const;
 
 /**
@@ -32,6 +29,12 @@ export const GEMINI_EMBEDDING_MODELS = [
     'text-embedding-preview-0409',
     'text-embedding-001',
 ] as const;
+
+/**
+ * Unified constant for Gemini ModelEnum values used across the codebase
+ * Use this instead of hardcoded arrays
+ */
+export const GEMINI_MODEL_ENUMS_ARRAY = GEMINI_MODEL_ENUMS;
 
 /**
  * Unified function to check if a model is a Gemini model

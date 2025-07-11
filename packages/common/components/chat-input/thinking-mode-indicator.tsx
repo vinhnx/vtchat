@@ -17,13 +17,7 @@ export const ThinkingModeIndicator = () => {
 
     // Check if current model supports thinking mode (specific Gemini 2.5 models only)
     const isThinkingCapableModel = useMemo(() => {
-        const thinkingModeModels = [
-            ChatMode.GEMINI_2_5_FLASH,
-            ChatMode.GEMINI_2_5_FLASH_LITE,
-            ChatMode.GEMINI_2_5_FLASH_PREVIEW_05_20,
-            ChatMode.GEMINI_2_5_PRO_PREVIEW_05_06,
-            ChatMode.GEMINI_2_5_PRO_PREVIEW_06_05,
-        ];
+        const thinkingModeModels = [ChatMode.GEMINI_2_5_FLASH, ChatMode.GEMINI_2_5_FLASH_LITE];
         return thinkingModeModels.includes(chatMode);
     }, [chatMode]);
 
