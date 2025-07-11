@@ -1,6 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
-import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
@@ -105,12 +105,7 @@ Current date: ${getHumanizedDate()}
 
         // Determine VT+ feature based on mode
         const chatMode = context?.get('mode');
-        const vtplusFeature =
-            chatMode === ChatMode.Deep
-                ? VtPlusFeature.DEEP_RESEARCH
-                : chatMode === ChatMode.Pro
-                  ? VtPlusFeature.PRO_SEARCH
-                  : VtPlusFeature.DEEP_RESEARCH;
+        const vtplusFeature = getVTPlusFeatureFromChatMode(chatMode);
 
         const object = await generateObject({
             prompt,

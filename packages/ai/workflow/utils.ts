@@ -2,9 +2,12 @@ import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
-import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { ChatMode } from '@repo/shared/config';
-import { isEligibleForQuotaConsumption, ACCESS_CONTROL } from '@repo/shared/utils/access-control';
+import {
+    isEligibleForQuotaConsumption,
+    ACCESS_CONTROL,
+    getVTPlusFeatureFromChatMode,
+} from '@repo/shared/utils/access-control';
 import {
     type CoreMessage,
     extractReasoningMiddleware,
@@ -626,12 +629,7 @@ export const generateText = async ({
             const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
 
             // Determine VT+ feature based on mode
-            const vtplusFeature =
-                mode === ChatMode.Deep
-                    ? VtPlusFeature.DEEP_RESEARCH
-                    : mode === ChatMode.Pro
-                      ? VtPlusFeature.PRO_SEARCH
-                      : VtPlusFeature.DEEP_RESEARCH;
+            const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
 
             streamResult = await streamTextWithQuota(streamConfig, {
                 user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },

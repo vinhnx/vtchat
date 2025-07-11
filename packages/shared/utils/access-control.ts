@@ -127,6 +127,34 @@ export function validateUserForQuota(user: UserContext): {
 }
 
 /**
+ * Determine VT+ feature based on chat mode
+ * Centralizes the logic for mapping chat modes to VT+ features
+ */
+export function getVTPlusFeatureFromChatMode(mode?: string): string {
+    // Import VtPlusFeature enum values as constants to avoid circular imports
+    const VT_PLUS_FEATURES = {
+        DEEP_RESEARCH: 'DR',
+        PRO_SEARCH: 'PS',
+        RAG: 'RAG',
+    } as const;
+
+    // ChatMode constants to avoid imports
+    const CHAT_MODES = {
+        Deep: 'deep',
+        Pro: 'pro',
+    } as const;
+
+    switch (mode) {
+        case CHAT_MODES.Deep:
+            return VT_PLUS_FEATURES.DEEP_RESEARCH;
+        case CHAT_MODES.Pro:
+            return VT_PLUS_FEATURES.PRO_SEARCH;
+        default:
+            return VT_PLUS_FEATURES.DEEP_RESEARCH;
+    }
+}
+
+/**
  * Common access control constants
  */
 export const ACCESS_CONTROL = {
