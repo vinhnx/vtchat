@@ -3,23 +3,152 @@
 --
 ok go-> https://vtchat.io.vn/
 
+
 --
 
+DRY on these code block
 
-update VT+ gemini rate limite system:
+"// Determine VT+ feature based on mode"
 
-- deep research == n of requests == number of api/completion requests
-- pro search same == n of requests == number of api/completion requests
+--
+
+make sure every subscription check in the codebase use 1 single unidifed logic in packages/shared/utils/access-control.ts
+
+==
+
+impotant fix pro search web search agent tool auto trigger
+
+make sure pro search activate "native web search" tool by default. update the prompt to proactive use tool call.
+
+for example -> i ask "what is the current weather in Tri Ton, An Giang" -> should use web search tool. user don't need to manually click "Native Web Search" button on chat input
+
+
+--
+
+add/update loading indicator thread chat when waiting for api/completion response
+
+add timeout tracking, if more than a few second show indicator
+
+--
+
+https://tailwindcss.com/docs/upgrade-guide
+
+--
+https://nextjs.org/docs/app/guides/upgrading/version-15
+--
+check
+June 2025 - radix-ui
+
+We've added a new command to migrate to the new radix-ui package. This command will replace all @radix-ui/react-* imports with radix-ui.
+
+bunx --bun shadcn@latest migrate radix
+
+It will automatically update all imports in your ui components and install radix-ui as a dependency.
+components/ui/alert-dialog.tsx
+
+- import * as AlertDialogPrimitive from "@radix-ui/react-dialog"
++ import { AlertDialog as AlertDialogPrimitive } from "radix-ui"
+
+Make sure to test your components and project after running the command.
+
+Note: To update imports for newly added components, run the migration command again.
+
+--
+
+add new Deep Research, Pro search, Rag usage chart in Usage Overview, use data from rate limit and usage limit logic and db
+
+--
+
+use this chart reesponsive template for new chart and existing chart. make sure response on mobile
+
+import React, { PureComponent } from 'react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const data = [
+{
+name: 'Page A',
+uv: 4000,
+pv: 2400,
+amt: 2400,
+},
+{
+name: 'Page B',
+uv: 3000,
+pv: 1398,
+amt: 2210,
+},
+{
+name: 'Page C',
+uv: 2000,
+pv: 9800,
+amt: 2290,
+},
+{
+name: 'Page D',
+uv: 2780,
+pv: 3908,
+amt: 2000,
+},
+{
+name: 'Page E',
+uv: 1890,
+pv: 4800,
+amt: 2181,
+},
+{
+name: 'Page F',
+uv: 2390,
+pv: 3800,
+amt: 2500,
+},
+{
+name: 'Page G',
+uv: 3490,
+pv: 4300,
+amt: 2100,
+},
+];
+
+export default class Example extends PureComponent {
+
+render() {
+return (
+<div style={{ width: '100%', height: 300 }}>
+<ResponsiveContainer>
+<AreaChart
+data={data}
+margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }} >
+<CartesianGrid strokeDasharray="3 3" />
+<XAxis dataKey="name" />
+<YAxis />
+<Tooltip />
+<Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+</AreaChart>
+</ResponsiveContainer>
+</div>
+);
+}
+}
+
+--
+
+what is the current weather in Tri Ton, An Giang
+Grounding Web Search
+1 Step
+I'm sorry, but I cannot provide real-time weather updates. My capabilities do not include accessing live, up-to-the-minute weather information.
+
+--
+
+I only set VT+ tier as 5.99 usd what should i do
 
 --
 
 https://github.com/MiguelsPizza/WebMCP
-
---
-
-use mcp for ai.sdk, context7: check to show thinking log tool view for model that has reasoning capabliyt by default
-
-for example: Claude 4, Grok 4, Gemini 2.5 Pro, DeepSeek, O1, o3...
 
 --
 
@@ -29,8 +158,6 @@ https://xmcp.dev/docs
 https://github.com/idosal/mcp-ui
 
 --
-
-https://nextjs.org/docs/app/guides/mdx
 
 --
 
@@ -131,17 +258,8 @@ https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
 
 --
 
---
-
-https://ai-sdk.dev/docs/ai-sdk-core/testing
-
-==
 v5 improve openai response api support
 https://ai-sdk.dev/docs/guides/openai-responses
-
---
-[check ai sdk compatible ver] improve Anthropic support
-https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
 
 --
 
@@ -149,7 +267,6 @@ Future plan
 
 - improve openai response api support https://ai-sdk.dev/docs/guides/openai-responses
 - improve Anthropic support https://ai-sdk.dev/providers/ai-sdk-providers/anthropic
-- [done] improve Claude 4 support https://ai-sdk.dev/docs/guides/claude-4
 - Adding username/password login option https://www.better-auth.com/docs/plugins/username
 - forgot password
 - update profile

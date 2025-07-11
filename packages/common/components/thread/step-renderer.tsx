@@ -18,18 +18,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     animate={{
                         opacity: 1,
                         y: 0,
-                        scale: 1
+                        scale: 1,
                     }}
                     className="text-muted-foreground text-sm leading-relaxed"
                     initial={{
                         opacity: 0,
                         y: 8,
-                        scale: 0.98
+                        scale: 0.98,
                     }}
                     transition={{
                         duration: 0.4,
                         delay: 0.1,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <MarkdownContent
@@ -51,18 +51,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     animate={{
                         opacity: 1,
                         y: 0,
-                        scale: 1
+                        scale: 1,
                     }}
                     className="flex flex-col gap-3"
                     initial={{
                         opacity: 0,
                         y: 8,
-                        scale: 0.98
+                        scale: 0.98,
                     }}
                     transition={{
                         duration: 0.4,
                         delay: 0.2,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <div className="flex flex-col gap-3">
@@ -72,7 +72,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3, duration: 0.3 }}
                         >
-                            <Label className="text-xs font-medium text-muted-foreground/80">Searching</Label>
+                            <Label className="text-xs font-medium text-muted-foreground/80">
+                                Searching
+                            </Label>
                         </motion.div>
 
                         <motion.div
@@ -87,18 +89,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                                         animate={{
                                             opacity: 1,
                                             y: 0,
-                                            scale: 1
+                                            scale: 1,
                                         }}
                                         initial={{
                                             opacity: 0,
                                             y: 4,
-                                            scale: 0.95
+                                            scale: 0.95,
                                         }}
                                         key={index}
                                         transition={{
                                             duration: 0.3,
                                             delay: 0.5 + index * 0.08,
-                                            ease: [0.23, 1, 0.32, 1]
+                                            ease: [0.23, 1, 0.32, 1],
                                         }}
                                     >
                                         <Badge className="bg-muted/50 hover:bg-muted/70 border-border/50 transition-colors duration-200">
@@ -121,18 +123,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     animate={{
                         opacity: 1,
                         y: 0,
-                        scale: 1
+                        scale: 1,
                     }}
                     className="flex flex-col gap-3"
                     initial={{
                         opacity: 0,
                         y: 8,
-                        scale: 0.98
+                        scale: 0.98,
                     }}
                     transition={{
                         duration: 0.4,
                         delay: 0.3,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <motion.div
@@ -141,7 +143,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4, duration: 0.3 }}
                     >
-                        <Label className="text-xs font-medium text-muted-foreground/80">Reading</Label>
+                        <Label className="text-xs font-medium text-muted-foreground/80">
+                            Reading
+                        </Label>
                     </motion.div>
                     <motion.div
                         initial={{ opacity: 0, y: 5 }}
@@ -149,7 +153,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                         transition={{ delay: 0.5, duration: 0.3 }}
                     >
                         <SearchResultsList
-                            sources={Array.isArray(step.steps?.read?.data) ? step.steps.read.data : []}
+                            sources={
+                                Array.isArray(step.steps?.read?.data) ? step.steps.read.data : []
+                            }
                         />
                     </motion.div>
                 </motion.div>
@@ -168,18 +174,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     animate={{
                         opacity: 1,
                         y: 0,
-                        scale: 1
+                        scale: 1,
                     }}
                     className="flex flex-col gap-3"
                     initial={{
                         opacity: 0,
                         y: 8,
-                        scale: 0.98
+                        scale: 0.98,
                     }}
                     transition={{
                         duration: 0.4,
                         delay: 0.4,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <motion.div
@@ -188,7 +194,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.5, duration: 0.3 }}
                     >
-                        <Label className="text-xs font-medium text-muted-foreground/80">Analyzing</Label>
+                        <Label className="text-xs font-medium text-muted-foreground/80">
+                            Analyzing
+                        </Label>
                     </motion.div>
                     <motion.div
                         className="text-muted-foreground text-sm leading-relaxed"
@@ -216,18 +224,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     animate={{
                         opacity: 1,
                         y: 0,
-                        scale: 1
+                        scale: 1,
                     }}
                     className="flex flex-col gap-3"
                     initial={{
                         opacity: 0,
                         y: 8,
-                        scale: 0.98
+                        scale: 0.98,
                     }}
                     transition={{
                         duration: 0.4,
                         delay: 0.5,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <motion.div
@@ -236,7 +244,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.6, duration: 0.3 }}
                     >
-                        <Label className="text-xs font-medium text-muted-foreground/80">Wrapping up</Label>
+                        <Label className="text-xs font-medium text-muted-foreground/80">
+                            Wrapping up
+                        </Label>
                     </motion.div>
                     <motion.div
                         className="text-muted-foreground text-sm leading-relaxed"
@@ -264,7 +274,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{
                 duration: 0.5,
-                ease: [0.23, 1, 0.32, 1]
+                ease: [0.23, 1, 0.32, 1],
             }}
         >
             {/* Enhanced timeline indicator */}
@@ -283,7 +293,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                     transition={{
                         delay: 0.2,
                         duration: 0.4,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 >
                     <StepStatus status={step.status} />
@@ -292,14 +302,14 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                 <motion.div
                     animate={{
                         height: '100%',
-                        opacity: isCompleted ? 0.6 : 0.3
+                        opacity: isCompleted ? 0.6 : 0.3,
                     }}
                     className="border-border/40 min-h-full w-[1px] flex-1 border-l border-dashed transition-opacity duration-500"
                     initial={{ height: 0, opacity: 0.1 }}
                     transition={{
                         duration: 0.6,
                         delay: 0.3,
-                        ease: [0.23, 1, 0.32, 1]
+                        ease: [0.23, 1, 0.32, 1],
                     }}
                 />
             </div>
@@ -309,18 +319,18 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                 animate={{
                     opacity: 1,
                     y: 0,
-                    x: 0
+                    x: 0,
                 }}
                 className="flex w-full flex-1 flex-col gap-5 overflow-hidden pb-3 pr-2"
                 initial={{
                     opacity: 0,
                     y: 10,
-                    x: -5
+                    x: -5,
                 }}
                 transition={{
                     duration: 0.4,
                     delay: 0.15,
-                    ease: [0.23, 1, 0.32, 1]
+                    ease: [0.23, 1, 0.32, 1],
                 }}
             >
                 {renderWrapupStep()}

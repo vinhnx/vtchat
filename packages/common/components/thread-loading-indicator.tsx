@@ -172,9 +172,7 @@ export const ThreadLoadingIndicator = memo(
                             )}
                             transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                         >
-                            <VTIcon
-                                size={iconSizes[size]}
-                            />
+                            <VTIcon size={iconSizes[size]} />
 
                             {/* Status indicator */}
                             <motion.div

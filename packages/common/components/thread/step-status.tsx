@@ -15,23 +15,23 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                         className="bg-foreground/20 absolute inline-flex h-full w-full rounded-full"
                         animate={{
                             scale: [1, 1.4, 1],
-                            opacity: [0.5, 0.1, 0.5]
+                            opacity: [0.5, 0.1, 0.5],
                         }}
                         transition={{
                             duration: 2,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: "easeInOut"
+                            ease: 'easeInOut',
                         }}
                     />
                     <motion.span
                         className="bg-foreground relative inline-flex size-1.5 rounded-full"
                         animate={{
-                            scale: [1, 1.1, 1]
+                            scale: [1, 1.1, 1],
                         }}
                         transition={{
                             duration: 1.5,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: "easeInOut"
+                            ease: 'easeInOut',
                         }}
                     />
                 </motion.span>
@@ -45,7 +45,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                     transition={{
                         duration: 0.4,
                         ease: [0.23, 1, 0.32, 1],
-                        delay: 0.1
+                        delay: 0.1,
                     }}
                 >
                     <motion.span
@@ -55,7 +55,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                         transition={{
                             duration: 0.3,
                             delay: 0.2,
-                            ease: [0.68, -0.55, 0.265, 1.55]
+                            ease: [0.68, -0.55, 0.265, 1.55],
                         }}
                     >
                         <span className="bg-foreground/80 relative inline-flex size-1.5 rounded-full" />
@@ -77,7 +77,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                         transition={{
                             duration: 0.3,
                             delay: 0.1,
-                            ease: [0.68, -0.55, 0.265, 1.55]
+                            ease: [0.68, -0.55, 0.265, 1.55],
                         }}
                     >
                         <span className="relative inline-flex size-1.5 rounded-full bg-red-400/80" />

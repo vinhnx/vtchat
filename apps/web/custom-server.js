@@ -14,7 +14,7 @@ try {
 } catch (error) {
     // Fallback logger for standalone build
     const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-    
+
     log = {
         info: (msg, obj) => {
             if (IS_PRODUCTION) return;
