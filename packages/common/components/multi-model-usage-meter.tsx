@@ -20,7 +20,7 @@ import {
     TypographyMuted,
 } from '@repo/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 // Model configuration for display
 const MODEL_CONFIG = {
@@ -217,90 +217,109 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                         }}
                         className="min-h-[240px]"
                     >
-                        <AreaChart
-                            data={(() => {
-                                const now = new Date();
-                                const currentHour = now.getHours();
-                                const hourlyData = [];
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart
+                                data={(() => {
+                                    const now = new Date();
+                                    const currentHour = now.getHours();
+                                    const hourlyData = [];
 
-                                // Generate hourly data points from 00:00 to current hour + 2 offset
-                                for (let hour = 0; hour <= Math.min(currentHour + 2, 23); hour++) {
-                                    const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
-                                    const isCurrentOrPast = hour <= currentHour;
+                                    // Get actual daily usage values
+                                    const flashLiteUsage =
+                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed ||
+                                        0;
+                                    const flashUsage =
+                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0;
+                                    const proUsage =
+                                        modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed || 0;
 
-                                    hourlyData.push({
-                                        time: timeLabel,
-                                        'flash-lite-2-5': isCurrentOrPast
-                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]
-                                                  ?.dailyUsed || 0) *
-                                              (hour / Math.max(currentHour, 1))
-                                            : 0,
-                                        'flash-2-5': isCurrentOrPast
-                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_FLASH]
-                                                  ?.dailyUsed || 0) *
-                                              (hour / Math.max(currentHour, 1))
-                                            : 0,
-                                        'pro-2-5': isCurrentOrPast
-                                            ? (modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed ||
-                                                  0) *
-                                              (hour / Math.max(currentHour, 1))
-                                            : 0,
-                                    });
-                                }
+                                    // Generate hourly data points from 00:00 to current hour + 2 offset
+                                    for (
+                                        let hour = 0;
+                                        hour <= Math.min(currentHour + 2, 23);
+                                        hour++
+                                    ) {
+                                        const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
 
-                                return hourlyData;
-                            })()}
-                            margin={{ top: 20, right: 30, left: 20, bottom: 45 }}
-                        >
-                            <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="hsl(var(--border))"
-                                opacity={0.3}
-                            />
-                            <XAxis
-                                dataKey="time"
-                                tick={{ fontSize: 12 }}
-                                tickLine={{ stroke: 'hsl(var(--border))' }}
-                                axisLine={{ stroke: 'hsl(var(--border))' }}
-                            />
-                            <YAxis
-                                tick={{ fontSize: 12 }}
-                                tickLine={{ stroke: 'hsl(var(--border))' }}
-                                axisLine={{ stroke: 'hsl(var(--border))' }}
-                                allowDecimals={false}
-                                domain={[
-                                    0,
-                                    (dataMax: number) => Math.max(5, Math.ceil(dataMax * 1.2)),
-                                ]}
-                                tickCount={6}
-                            />
-                            <ChartTooltip content={<ChartTooltipContent />} />
-                            <ChartLegend content={<ChartLegendContent />} />
-                            <Area
-                                type="monotone"
-                                dataKey="flash-lite-2-5"
-                                stackId="1"
-                                stroke="var(--color-flash-lite-2-5)"
-                                fill="var(--color-flash-lite-2-5)"
-                                fillOpacity={0.3}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="flash-2-5"
-                                stackId="1"
-                                stroke="var(--color-flash-2-5)"
-                                fill="var(--color-flash-2-5)"
-                                fillOpacity={0.3}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="pro-2-5"
-                                stackId="1"
-                                stroke="var(--color-pro-2-5)"
-                                fill="var(--color-pro-2-5)"
-                                fillOpacity={0.3}
-                            />
-                        </AreaChart>
+                                        if (hour === 0) {
+                                            // Start at 0
+                                            hourlyData.push({
+                                                time: timeLabel,
+                                                'flash-lite-2-5': 0,
+                                                'flash-2-5': 0,
+                                                'pro-2-5': 0,
+                                            });
+                                        } else if (hour <= currentHour) {
+                                            // Gradually increase to current usage at current hour
+                                            const progress = hour / currentHour;
+                                            hourlyData.push({
+                                                time: timeLabel,
+                                                'flash-lite-2-5': Math.round(
+                                                    flashLiteUsage * progress
+                                                ),
+                                                'flash-2-5': Math.round(flashUsage * progress),
+                                                'pro-2-5': Math.round(proUsage * progress),
+                                            });
+                                        } else {
+                                            // Future hours show current total (flat line)
+                                            hourlyData.push({
+                                                time: timeLabel,
+                                                'flash-lite-2-5': flashLiteUsage,
+                                                'flash-2-5': flashUsage,
+                                                'pro-2-5': proUsage,
+                                            });
+                                        }
+                                    }
+
+                                    return hourlyData;
+                                })()}
+                                margin={{ top: 20, right: 50, left: 20, bottom: 5 }}
+                            >
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke="hsl(var(--border))"
+                                    opacity={0.3}
+                                />
+                                <XAxis
+                                    dataKey="time"
+                                    tick={{ fontSize: 12 }}
+                                    tickLine={{ stroke: 'hsl(var(--border))' }}
+                                    axisLine={{ stroke: 'hsl(var(--border))' }}
+                                />
+                                <YAxis
+                                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                                    tickLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
+                                    axisLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
+                                    allowDecimals={false}
+                                />
+                                <ChartTooltip content={<ChartTooltipContent />} />
+                                <ChartLegend content={<ChartLegendContent />} />
+                                <Line
+                                    type="monotone"
+                                    dataKey="flash-lite-2-5"
+                                    stroke="var(--color-flash-lite-2-5)"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-flash-lite-2-5)' }}
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="flash-2-5"
+                                    stroke="var(--color-flash-2-5)"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-flash-2-5)' }}
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="pro-2-5"
+                                    stroke="var(--color-pro-2-5)"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-pro-2-5)' }}
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </ChartContainer>
 
                     {/* Usage Statistics Grid */}

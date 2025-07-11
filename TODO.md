@@ -30,22 +30,6 @@ https://github.com/idosal/mcp-ui
 
 --
 
-https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performance
-
---
-
-https://nextjs.org/docs/app/guides/redirecting#2-optimizing-data-lookup-performance
-
---
-
-https://nextjs.org/docs/app/guides/progressive-web-apps
-
---
-
-https://nextjs.org/docs/app/guides/progressive-web-apps#6-adding-to-home-screen
-
---
-
 https://nextjs.org/docs/app/guides/mdx
 
 --
