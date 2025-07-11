@@ -300,7 +300,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     stroke="var(--color-flash-lite-2-5)"
                                     strokeWidth={2}
                                     dot={false}
-                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-flash-lite-2-5)' }}
+                                    activeDot={{
+                                        r: 6,
+                                        strokeWidth: 2,
+                                        fill: 'var(--color-flash-lite-2-5)',
+                                    }}
                                 />
                                 <Line
                                     type="monotone"
@@ -308,7 +312,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     stroke="var(--color-flash-2-5)"
                                     strokeWidth={2}
                                     dot={false}
-                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-flash-2-5)' }}
+                                    activeDot={{
+                                        r: 6,
+                                        strokeWidth: 2,
+                                        fill: 'var(--color-flash-2-5)',
+                                    }}
                                 />
                                 <Line
                                     type="monotone"
@@ -316,7 +324,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     stroke="var(--color-pro-2-5)"
                                     strokeWidth={2}
                                     dot={false}
-                                    activeDot={{ r: 6, strokeWidth: 2, fill: 'var(--color-pro-2-5)' }}
+                                    activeDot={{
+                                        r: 6,
+                                        strokeWidth: 2,
+                                        fill: 'var(--color-pro-2-5)',
+                                    }}
                                 />
                             </LineChart>
                         </ResponsiveContainer>
