@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: 'VT - AI Chat Assistant',
         short_name: 'VT',
-        description: 'Minimal AI chat application with advanced conversational capabilities. Chat with multiple AI models including OpenAI, Anthropic, Google, and more.',
+        description:
+            'Minimal AI chat application with advanced conversational capabilities. Chat with multiple AI models including OpenAI, Anthropic, Google, and more.',
         start_url: '/',
         scope: '/',
         display: 'standalone',

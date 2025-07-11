@@ -7,7 +7,7 @@ const STATIC_ASSETS = [
     '/icon-256x256.png',
     '/icon-384x384.png',
     '/icon-512x512.png',
-    '/manifest.webmanifest'
+    '/manifest.webmanifest',
 ];
 
 // Install event - cache static assets
@@ -77,20 +77,18 @@ self.addEventListener('push', (event) => {
                     {
                         action: 'open',
                         title: 'Open VT',
-                        icon: '/icon-192x192.png'
+                        icon: '/icon-192x192.png',
                     },
                     {
                         action: 'close',
                         title: 'Close',
-                    }
+                    },
                 ],
                 requireInteraction: false,
                 silent: false,
             };
 
-            event.waitUntil(
-                self.registration.showNotification(data.title || 'VT Chat', options)
-            );
+            event.waitUntil(self.registration.showNotification(data.title || 'VT Chat', options));
         } catch (error) {
             console.error('Error handling push notification:', error);
             // Fallback notification
@@ -121,7 +119,8 @@ self.addEventListener('notificationclick', (event) => {
     const urlToOpen = notificationData.url || '/';
 
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true })
+        clients
+            .matchAll({ type: 'window', includeUncontrolled: true })
             .then((clientList) => {
                 // Check if there's already a window/tab open with the target URL
                 for (const client of clientList) {
