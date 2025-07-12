@@ -56,11 +56,11 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     // For OpenRouter models with duplicate names, use model ID mapping
     const modelIdToChatModeMap: Record<string, ChatMode> = {
         'deepseek/deepseek-chat-v3-0324': ChatMode.DEEPSEEK_V3_0324,
-        'deepseek/deepseek-r1:free': ChatMode.DEEPSEEK_R1_FREE,
+        'deepseek/deepseek-r1': ChatMode.DEEPSEEK_R1,
         'qwen/qwen3-235b-a22b': ChatMode.QWEN3_235B_A22B,
         'qwen/qwen3-32b': ChatMode.QWEN3_32B,
         'mistralai/mistral-nemo': ChatMode.MISTRAL_NEMO,
-        'qwen/qwen3-14b:free': ChatMode.QWEN3_14B_FREE,
+        'qwen/qwen3-14b': ChatMode.QWEN3_14B,
     };
 
     // First try model name mapping
@@ -83,7 +83,7 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
 
         // DeepSeek reasoning models
         ChatMode.DEEPSEEK_R1,
-        ChatMode.DEEPSEEK_R1_FREE,
+        ChatMode.DEEPSEEK_R1,
 
         // Anthropic reasoning models
         ChatMode.CLAUDE_4_SONNET,
@@ -132,14 +132,13 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
             if (provider === 'openrouter') {
                 // Custom labels for OpenRouter models
                 const customLabels: Record<string, string> = {
-                    'deepseek/deepseek-chat-v3-0324:free': 'DeepSeek V3 0324',
-                    'deepseek/deepseek-chat-v3-0324': 'DeepSeek V3 0324 Pro',
-                    'deepseek/deepseek-r1:free': 'DeepSeek R1',
-                    'deepseek/deepseek-r1-0528:free': 'DeepSeek R1 0528',
+                    'deepseek/deepseek-chat-v3-0324': 'DeepSeek V3 0324',
+                    'deepseek/deepseek-r1': 'DeepSeek R1',
                     'qwen/qwen3-235b-a22b': 'Qwen3 235B A22B',
                     'qwen/qwen3-32b': 'Qwen3 32B',
                     'mistralai/mistral-nemo': 'Mistral Nemo',
-                    'qwen/qwen3-14b:free': 'Qwen3 14B',
+                    'qwen/qwen3-14b': 'Qwen3 14B',
+                    'moonshot/kimi-k2': 'Kimi K2',
                 };
                 label = customLabels[model.id] || model.name;
             }
@@ -161,6 +160,47 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
 
 // BYOK-only models - all models require API keys, grouped by provider
 export const modelOptionsByProvider = {
+    Anthropic: [
+        {
+            label: 'Claude 4 Sonnet',
+            value: ChatMode.CLAUDE_4_SONNET,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Claude 4 Opus',
+            value: ChatMode.CLAUDE_4_OPUS,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+        },
+    ],
+
+    Google: [
+        {
+            label: 'Gemini 2.5 Flash Lite Preview',
+            value: ChatMode.GEMINI_2_5_FLASH_LITE,
+            webSearch: true,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: 'Free model',
+            isFreeModel: true,
+        },
+        {
+            label: 'Gemini 2.5 Flash',
+            value: ChatMode.GEMINI_2_5_FLASH,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 2.5 Pro',
+            value: ChatMode.GEMINI_2_5_PRO,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+    ],
     OpenAI: [
         {
             label: 'GPT 4o Mini',
@@ -219,46 +259,6 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
         },
     ],
-    Google: [
-        {
-            label: 'Gemini 2.5 Flash Lite Preview',
-            value: ChatMode.GEMINI_2_5_FLASH_LITE,
-            webSearch: true,
-            icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free model',
-            isFreeModel: true,
-        },
-        {
-            label: 'Gemini 2.5 Flash',
-            value: ChatMode.GEMINI_2_5_FLASH,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 2.5 Pro',
-            value: ChatMode.GEMINI_2_5_PRO,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-    ],
-    Anthropic: [
-        {
-            label: 'Claude 4 Sonnet',
-            value: ChatMode.CLAUDE_4_SONNET,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Claude 4 Opus',
-            value: ChatMode.CLAUDE_4_OPUS,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
-        },
-    ],
     Fireworks: [
         {
             label: 'DeepSeek R1',
@@ -293,6 +293,13 @@ export const modelOptionsByProvider = {
     ],
     OpenRouter: [
         {
+            label: 'Kimi K2',
+            value: ChatMode.KIMI_K2,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+        },
+        {
             label: 'DeepSeek V3 0324 Pro',
             value: ChatMode.DEEPSEEK_V3_0324,
             webSearch: true,
@@ -301,9 +308,9 @@ export const modelOptionsByProvider = {
         },
         {
             label: 'DeepSeek R1',
-            value: ChatMode.DEEPSEEK_R1_FREE,
+            value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
-            icon: <Gift className="text-green-500" size={16} />,
+            icon: undefined,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
         },
         {
@@ -329,7 +336,7 @@ export const modelOptionsByProvider = {
         },
         {
             label: 'Qwen3 14B',
-            value: ChatMode.QWEN3_14B_FREE,
+            value: ChatMode.QWEN3_14B,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,

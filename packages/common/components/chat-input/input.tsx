@@ -425,8 +425,6 @@ export const ChatInput = ({
                     )}
 
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
-
-                    {/* ChatFooter moved to chat layout */}
                 </Flex>
             </div>
             {showLoginPrompt && (
