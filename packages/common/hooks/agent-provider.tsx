@@ -10,6 +10,7 @@ import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
+import { generateThreadIdSync } from '@repo/shared/lib/thread-id';
 import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
@@ -505,7 +506,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             // Update thread title
             updateThread({ id: threadId, title: formData.get('query') as string });
 
-            const optimisticAiThreadItemId = existingThreadItemId || nanoid();
+            const optimisticAiThreadItemId = existingThreadItemId || generateThreadIdSync();
             const query = formData.get('query') as string;
             const imageAttachment = formData.get('imageAttachment') as string;
             const documentAttachment = formData.get('documentAttachment') as string;

@@ -7,6 +7,7 @@ import { log } from '@repo/shared/logger';
 import type { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
 import Dexie, { type Table } from 'dexie';
 import { nanoid } from 'nanoid';
+import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { getGlobalSubscriptionStatus } from '../providers/subscription-provider';
@@ -1292,7 +1293,7 @@ export const useChatStore = create(
         },
 
         createThread: async (optimisticId: string, thread?: Pick<Thread, 'title'>) => {
-            const threadId = optimisticId || nanoid();
+            const threadId = optimisticId || (await generateThreadId());
             const newThread = {
                 id: threadId,
                 title: thread?.title || 'New Thread',
