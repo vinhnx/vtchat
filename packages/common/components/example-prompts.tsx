@@ -5,59 +5,59 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import { ButtonWithIcon } from '@repo/ui';
 import type { Editor } from '@tiptap/react';
-import { BarChart, Book, HelpCircle, Lightbulb, Pencil } from 'lucide-react';
+import { Calculator, HelpCircle, Lightbulb, Pencil, Search } from 'lucide-react';
 import { useState } from 'react';
 import { LoginRequiredDialog } from './login-required-dialog';
 
 export const examplePrompts = {
     howTo: [
         'How to use AI tools to improve daily productivity?',
+        'Search for the latest job market trends in 2025 and create a career roadmap',
         'How to start a successful newsletter in 2025?',
-        'How to create engaging short-form video content for social media?',
+        'Find current social media engagement rates and calculate my content ROI',
         'How to navigate the complexities of personal data privacy online?',
         'How to build a personal brand online effectively?',
-        'How to identify and avoid online phishing scams?',
-        'How to create a compelling presentation for a diverse audience?',
+        'Search for top cybersecurity threats in 2025 and create a protection plan',
     ],
 
     explainConcepts: [
         'Explain how Large Language Models work.',
-        'Explain the concept of "prompt engineering" for AI models.',
+        'Search for the latest AI breakthroughs and explain their significance',
         'What is the metaverse and what are its potential real-world applications?',
-        'Explain the current state of quantum computing and its near-term impact.',
+        'Find current quantum computing developments and explain their impact',
         'Explain the role of decentralized autonomous organizations (DAOs).',
-        'Explain the concept of digital twins and their applications.',
-        'What is edge computing and how does it relate to IoT?',
+        'Search for edge computing use cases and create a comparison chart',
+        'Explain Swift programming language'
     ],
 
     creative: [
         'Write a news headline from the year 2042.',
-        'Imagine a dialogue between an AI assistant and a philosopher about consciousness.',
+        'Search for current space exploration missions and write a sci-fi story',
         'Draft a pitch for a startup leveraging AI to solve a global challenge.',
-        'Describe a day in the life of someone living in a fully smart city.',
+        'Find climate change data and create a visualization of future scenarios',
         'Develop a concept for a documentary exploring the future of work.',
-        'Write a short script for a podcast episode discussing future technologies.',
-        'Design an innovative solution for reducing plastic waste using current tech.',
+        'Search for renewable energy trends and design an innovative solution',
+        'Create a chart comparing different AI model capabilities and costs',
     ],
 
     advice: [
         'What are key skills to develop for the future job market shaped by AI?',
-        'How can individuals combat misinformation in the digital age?',
+        'Search for salary data in tech and calculate the best career path ROI',
         'What are some ethical guidelines for using generative AI in creative work?',
-        'How to adapt to rapidly changing technologies in the workplace?',
-        'What are effective strategies for lifelong learning in a fast-changing world?',
-        'What are practical steps to improve critical thinking skills?',
-        'How to foster innovation within a team or organization?',
+        'Find remote work statistics and create a productivity optimization plan',
+        'Search for learning platform reviews and recommend the best options',
+        'Calculate the compound growth of investing in different skill areas',
+        'Find innovation metrics and chart successful team management strategies',
     ],
 
     analysis: [
-        'Analyze the societal impact of widespread AI adoption in various industries.',
-        'Compare the potential benefits and risks of advanced AI systems.',
-        'Examine the role of AI in accelerating scientific discovery.',
-        'Analyze the future of remote work and its effect on urban planning.',
-        'Evaluate the impact of generative AI on creative industries.',
-        'Analyze the challenges and opportunities of global supply chain resilience.',
-        'Evaluate the effectiveness of different cybersecurity measures for small businesses.',
+        'Search for AI adoption rates by industry and create a comprehensive analysis',
+        'Find current AI investment data and chart the market growth trends',
+        'Search for scientific AI breakthroughs and analyze their research impact',
+        'Find urban planning data and calculate the cost-benefit of remote work',
+        'Search for creative industry AI usage and visualize the disruption patterns',
+        'Find supply chain resilience data and create a risk assessment chart',
+        'Calculate cybersecurity ROI for small businesses using current breach costs',
     ],
 };
 
@@ -83,8 +83,8 @@ const categoryIcons = {
         color: '!text-gray-600',
     },
     creative: { name: 'Creative', icon: Pencil, color: '!text-gray-600' },
-    advice: { name: 'Advice', icon: Book, color: '!text-gray-600' },
-    analysis: { name: 'Analysis', icon: BarChart, color: '!text-gray-600' },
+    advice: { name: 'Advice', icon: Calculator, color: '!text-gray-600' },
+    analysis: { name: 'Analysis', icon: Search, color: '!text-gray-600' },
 };
 
 export const ExamplePrompts = () => {
@@ -107,6 +107,35 @@ export const ExamplePrompts = () => {
         const randomPrompt = getRandomPrompt(category);
         editor.commands.clearContent();
         editor.commands.insertContent(randomPrompt);
+
+        // Auto-activate appropriate tools based on prompt content
+        const setActiveButton = useChatStore.getState().setActiveButton;
+        const promptLower = randomPrompt.toLowerCase();
+
+        if (promptLower.includes('search') || promptLower.includes('find')) {
+            // Enable web search for prompts containing search terms
+            if (!useChatStore.getState().useWebSearch) {
+                setActiveButton('webSearch');
+            }
+        } else if (
+            promptLower.includes('calculate') ||
+            promptLower.includes('roi') ||
+            promptLower.includes('cost')
+        ) {
+            // Enable calculator for prompts containing math terms
+            if (!useChatStore.getState().useMathCalculator) {
+                setActiveButton('mathCalculator');
+            }
+        } else if (
+            promptLower.includes('chart') ||
+            promptLower.includes('visuali') ||
+            promptLower.includes('comparison')
+        ) {
+            // Enable charts for prompts containing chart terms
+            if (!useChatStore.getState().useCharts) {
+                setActiveButton('charts');
+            }
+        }
     };
 
     // Don't show if user has disabled it in settings

@@ -3,144 +3,14 @@
 --
 ok go-> https://vtchat.io.vn/
 
-
 --
 
-DRY on these code block
-
-"// Determine VT+ feature based on mode"
-
 --
-
-make sure every subscription check in the codebase use 1 single unidifed logic in packages/shared/utils/access-control.ts
-
-==
-
-impotant fix pro search web search agent tool auto trigger
-
-make sure pro search activate "native web search" tool by default. update the prompt to proactive use tool call.
-
-for example -> i ask "what is the current weather in Tri Ton, An Giang" -> should use web search tool. user don't need to manually click "Native Web Search" button on chat input
-
-
---
-
-add/update loading indicator thread chat when waiting for api/completion response
-
-add timeout tracking, if more than a few second show indicator
-
---
-
 https://tailwindcss.com/docs/upgrade-guide
 
 --
 https://nextjs.org/docs/app/guides/upgrading/version-15
 --
-check
-June 2025 - radix-ui
-
-We've added a new command to migrate to the new radix-ui package. This command will replace all @radix-ui/react-* imports with radix-ui.
-
-bunx --bun shadcn@latest migrate radix
-
-It will automatically update all imports in your ui components and install radix-ui as a dependency.
-components/ui/alert-dialog.tsx
-
-- import * as AlertDialogPrimitive from "@radix-ui/react-dialog"
-+ import { AlertDialog as AlertDialogPrimitive } from "radix-ui"
-
-Make sure to test your components and project after running the command.
-
-Note: To update imports for newly added components, run the migration command again.
-
---
-
-add new Deep Research, Pro search, Rag usage chart in Usage Overview, use data from rate limit and usage limit logic and db
-
---
-
-use this chart reesponsive template for new chart and existing chart. make sure response on mobile
-
-import React, { PureComponent } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-{
-name: 'Page A',
-uv: 4000,
-pv: 2400,
-amt: 2400,
-},
-{
-name: 'Page B',
-uv: 3000,
-pv: 1398,
-amt: 2210,
-},
-{
-name: 'Page C',
-uv: 2000,
-pv: 9800,
-amt: 2290,
-},
-{
-name: 'Page D',
-uv: 2780,
-pv: 3908,
-amt: 2000,
-},
-{
-name: 'Page E',
-uv: 1890,
-pv: 4800,
-amt: 2181,
-},
-{
-name: 'Page F',
-uv: 2390,
-pv: 3800,
-amt: 2500,
-},
-{
-name: 'Page G',
-uv: 3490,
-pv: 4300,
-amt: 2100,
-},
-];
-
-export default class Example extends PureComponent {
-
-render() {
-return (
-<div style={{ width: '100%', height: 300 }}>
-<ResponsiveContainer>
-<AreaChart
-data={data}
-margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }} >
-<CartesianGrid strokeDasharray="3 3" />
-<XAxis dataKey="name" />
-<YAxis />
-<Tooltip />
-<Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
-</AreaChart>
-</ResponsiveContainer>
-</div>
-);
-}
-}
-
---
-
-what is the current weather in Tri Ton, An Giang
-Grounding Web Search
-1 Step
-I'm sorry, but I cannot provide real-time weather updates. My capabilities do not include accessing live, up-to-the-minute weather information.
 
 --
 
@@ -161,13 +31,9 @@ https://github.com/idosal/mcp-ui
 
 --
 
-https://xmcp.dev/docs
-
---
-
 rethink Plus tier offering -> maybe remove BYOK.
 
-vinhnguyenxuan-ct: base on the current state of project can you help me
+base on the current state of project can you help me
 rethink Plus tier offering
 
 Workspace: Collecting workspace informationOf course. Based on the current state of the project, the free tier is very generous, offering access to all premium AI models via "Bring Your Own Key" (BYOK) and including many advanced features. The VT+ tier's value is concentrated in three exclusive research features: `PRO_SEARCH`, `DEEP_RESEARCH`, and `RAG`.
@@ -250,12 +116,20 @@ The value of VT+ becomes access to your proprietary, high-value, server-intensiv
 This approach aligns your business model with your budget, reduces financial risk, and builds a solid foundation for sustainable growth.
 
 --
-https://ai-sdk.dev/docs/advanced/multiple-streamables
-
---
 
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
 
+
+--
+
+enhance playwright auth script
+https://playwright.dev/docs/auth#introduction
+
+allow then when seeing /login, click through google oauth and use the first account to sign in
+
+--
+
+https://playwright.dev/docs/best-practices
 --
 
 v5 improve openai response api support

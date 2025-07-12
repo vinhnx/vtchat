@@ -7,7 +7,6 @@ import {
     BarChart,
     CartesianGrid,
     Cell,
-    Legend,
     Line,
     LineChart,
     Pie,
@@ -17,11 +16,18 @@ import {
     PolarRadiusAxis,
     Radar,
     RadarChart,
-    ResponsiveContainer,
     XAxis,
     YAxis,
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+    ChartLegend,
+    ChartLegendContent,
+    type ChartConfig,
+} from './components/chart';
 
 interface BaseChartData {
     name: string;
@@ -94,14 +100,52 @@ export type ChartProps =
     | PieChartProps
     | RadarChartProps;
 
-// Color palettes
-const chartColors = {
-    blue: ['#3b82f6', '#60a5fa', '#93c5fd'],
-    red: ['#ef4444', '#f87171', '#fca5a5'],
-    green: ['#10b981', '#34d399', '#6ee7b7'],
-    purple: ['#8b5cf6', '#a78bfa', '#c4b5fd'],
-    orange: ['#f97316', '#fb923c', '#fdba74'],
-    default: ['#3b82f6', '#60a5fa', '#93c5fd'],
+// Custom color palette
+const CHART_COLORS = [
+    '#D9487D', // Pink/Magenta
+    '#262626', // Dark Gray
+    '#BFB38F', // Beige/Tan
+    '#D99A4E', // Orange/Gold
+    '#BF4545', // Red
+];
+
+// Chart configurations with custom color palette
+const getChartConfig = (data: any[], type: string): ChartConfig => {
+    const config: ChartConfig = {};
+
+    if (type === 'pie') {
+        data.forEach((item, index) => {
+            config[item.name] = {
+                label: item.name,
+                color: CHART_COLORS[index % CHART_COLORS.length],
+            };
+        });
+    } else if (type === 'bar') {
+        config.value = {
+            label: 'Value',
+            color: CHART_COLORS[0],
+        };
+    } else if (type === 'line' || type === 'area') {
+        config.series1 = {
+            label: 'Series 1',
+            color: CHART_COLORS[0],
+        };
+        config.series2 = {
+            label: 'Series 2',
+            color: CHART_COLORS[1],
+        };
+        config.series3 = {
+            label: 'Series 3',
+            color: CHART_COLORS[2],
+        };
+    } else if (type === 'radar') {
+        config.value = {
+            label: 'Value',
+            color: CHART_COLORS[0],
+        };
+    }
+
+    return config;
 };
 
 const RADIAN = Math.PI / 180;
@@ -132,124 +176,212 @@ export function ChartRenderer(props: ChartProps) {
     const renderChart = () => {
         switch (type) {
             case 'barChart': {
-                const colors = chartColors[(props as any).color] || chartColors.default;
+                const chartConfig = getChartConfig(props.data, 'bar');
                 return (
-                    <ResponsiveContainer height={300} width="100%">
-                        <BarChart data={props.data}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Bar dataKey="value" fill={colors[0]} />
+                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                        <BarChart
+                            data={props.data}
+                            accessibilityLayer
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="name"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <Bar
+                                dataKey="value"
+                                fill="var(--color-value)"
+                                radius={[4, 4, 0, 0]}
+                                className="transition-opacity hover:opacity-80"
+                            />
                         </BarChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                 );
             }
 
             case 'lineChart': {
-                const lineColors = chartColors.default;
+                const chartConfig = getChartConfig(props.data, 'line');
                 return (
-                    <ResponsiveContainer height={300} width="100%">
-                        <LineChart data={props.data}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
+                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                        <LineChart
+                            data={props.data}
+                            accessibilityLayer
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="name"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
                             <Line
-                                dataKey="series1"
-                                dot={{ fill: lineColors[0] }}
-                                stroke={lineColors[0]}
-                                strokeWidth={2}
                                 type="monotone"
+                                dataKey="series1"
+                                stroke="var(--color-series1)"
+                                strokeWidth={2}
+                                dot={{ fill: 'var(--color-series1)', strokeWidth: 2, r: 4 }}
+                                activeDot={{
+                                    r: 6,
+                                    strokeWidth: 2,
+                                    stroke: 'var(--color-series1)',
+                                }}
+                                className="drop-shadow-sm"
                             />
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
-                                    dataKey="series2"
-                                    dot={{ fill: lineColors[1] }}
-                                    stroke={lineColors[1]}
-                                    strokeWidth={2}
                                     type="monotone"
+                                    dataKey="series2"
+                                    stroke="var(--color-series2)"
+                                    strokeWidth={2}
+                                    dot={{ fill: 'var(--color-series2)', strokeWidth: 2, r: 4 }}
+                                    activeDot={{
+                                        r: 6,
+                                        strokeWidth: 2,
+                                        stroke: 'var(--color-series2)',
+                                    }}
+                                    className="drop-shadow-sm"
                                 />
                             )}
                         </LineChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                 );
             }
 
             case 'areaChart': {
-                const areaColors = chartColors.default;
+                const chartConfig = getChartConfig(props.data, 'area');
                 return (
-                    <ResponsiveContainer height={300} width="100%">
-                        <AreaChart data={props.data}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
+                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                        <AreaChart
+                            data={props.data}
+                            accessibilityLayer
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="name"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
                             <Area
-                                dataKey="series1"
-                                fill={areaColors[0]}
-                                fillOpacity={0.6}
-                                stackId={props.stacked ? '1' : undefined}
-                                stroke={areaColors[0]}
                                 type="monotone"
+                                dataKey="series1"
+                                stroke="var(--color-series1)"
+                                fill="var(--color-series1)"
+                                fillOpacity={0.6}
+                                strokeWidth={2}
+                                stackId={props.stacked ? '1' : undefined}
+                                className="drop-shadow-sm"
+                                activeDot={{
+                                    r: 6,
+                                    strokeWidth: 2,
+                                    stroke: 'var(--color-series1)',
+                                }}
                             />
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Area
-                                    dataKey="series2"
-                                    fill={areaColors[1]}
-                                    fillOpacity={0.6}
-                                    stackId={props.stacked ? '1' : undefined}
-                                    stroke={areaColors[1]}
                                     type="monotone"
+                                    dataKey="series2"
+                                    stroke="var(--color-series2)"
+                                    fill="var(--color-series2)"
+                                    fillOpacity={0.6}
+                                    strokeWidth={2}
+                                    stackId={props.stacked ? '1' : undefined}
+                                    className="drop-shadow-sm"
+                                    activeDot={{
+                                        r: 6,
+                                        strokeWidth: 2,
+                                        stroke: 'var(--color-series2)',
+                                    }}
                                 />
                             )}
                         </AreaChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                 );
             }
 
             case 'pieChart': {
-                const pieColors = chartColors.default;
+                const chartConfig = getChartConfig(props.data, 'pie');
                 return (
-                    <ResponsiveContainer height={300} width="100%">
+                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
                         <PieChart>
+                            <ChartTooltip
+                                content={<ChartTooltipContent nameKey="name" />}
+                                cursor={false}
+                            />
                             <Pie
                                 cx="50%"
                                 cy="50%"
                                 data={props.data}
                                 dataKey="value"
-                                fill="#8884d8"
+                                nameKey="name"
                                 label={props.showLabels ? renderCustomizedLabel : false}
                                 labelLine={false}
                                 outerRadius={80}
                             >
-                                {props.data.map((_entry, index) => (
+                                {props.data.map((entry, index) => (
                                     <Cell
-                                        fill={pieColors[index % pieColors.length]}
+                                        fill={CHART_COLORS[index % CHART_COLORS.length]}
                                         key={`cell-${index}`}
                                     />
                                 ))}
                             </Pie>
-                            {props.showLegend && <Legend />}
+                            {props.showLegend && (
+                                <ChartLegend
+                                    content={<ChartLegendContent />}
+                                    verticalAlign="bottom"
+                                />
+                            )}
                         </PieChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                 );
             }
 
-            case 'radarChart':
+            case 'radarChart': {
+                const chartConfig = getChartConfig(props.data, 'radar');
                 return (
-                    <ResponsiveContainer height={300} width="100%">
+                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
                         <RadarChart data={props.data}>
+                            <ChartTooltip content={<ChartTooltipContent nameKey="category" />} />
                             <PolarGrid />
                             <PolarAngleAxis dataKey="category" />
                             <PolarRadiusAxis angle={90} domain={[0, props.maxValue || 100]} />
                             <Radar
                                 dataKey="value"
-                                fill={chartColors.default[0]}
+                                fill="var(--color-value)"
                                 fillOpacity={0.3}
                                 name="Value"
-                                stroke={chartColors.default[0]}
+                                stroke="var(--color-value)"
                             />
                         </RadarChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                 );
+            }
 
             default:
                 return <div>Unsupported chart type</div>;

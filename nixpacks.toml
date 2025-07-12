@@ -1,2 +1,0 @@
-# Minimal nixpacks config - let auto-detection handle everything
-providers = ["node"]

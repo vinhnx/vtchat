@@ -2,59 +2,101 @@
 
 ## Architecture Overview
 
-VT Chat is a **Turborepo monorepo** with privacy-first AI chat capabilities. Key structure:
-- `apps/web/` - Next.js 14 App Router application
-- `packages/ai/` - Agentic Graph System with multi-provider support (OpenAI, Anthropic, Google, etc.)
-- `packages/common/` - Shared React components, hooks, stores (Zustand)
-- `packages/shared/` - Type-safe constants, utilities, types
-- `packages/ui/` - Shadcn/ui base components
+VT Chat is a **privacy-first AI chat Turborepo monorepo** with sophisticated subscription tiers. Core structure:
+- `apps/web/` - Next.js 14 App Router application (main entry point)
+- `packages/ai/` - Agentic Graph System supporting 30+ models (OpenAI, Anthropic, Google, etc.)
+- `packages/common/` - Shared React components, hooks, Zustand stores with IndexedDB persistence
+- `packages/shared/` - Type-safe constants, utilities, types, Pino logger, Better-Auth integration
+- `packages/ui/` - Shadcn/ui base components with minimal design principles
+- `packages/actions/` - Server actions for feedback and form handling
+- `packages/orchestrator/` - Task orchestration and workflow management
 
 ## Critical Development Patterns
 
-### Constants & Configuration
-**Never hardcode values** - use centralized enums in `packages/shared/constants/`:
+### Constants & Configuration (NEVER Hardcode)
+**All values must use centralized enums** from `packages/shared/constants/`:
 ```typescript
-// ✅ Use constants
+// ✅ Use typed constants
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
-const limit = GEMINI_LIMITS.FLASH_LITE.FREE_DAY;
+import { STORAGE_KEYS } from '@repo/shared/constants/storage';
+const limit = GEMINI_LIMITS.FLASH_LITE.FREE_DAY; // 20
 
-// ❌ Never hardcode
-const limit = 20; // Wrong!
+// ❌ Never hardcode - will break build
+const limit = 20; // Wrong! Use enum pattern
 ```
 
-Key constants: `rate-limits.ts`, `routes.ts`, `storage.ts`, `features.ts`, `pricing.ts`, `thinking-mode.ts`
+Key constants files: `rate-limits.ts`, `routes.ts`, `storage.ts`, `features.ts`, `pricing.ts`, `thinking-mode.ts`, `user-tiers.ts`, `creem.ts`
 
-### Zustand State Management
-**Always use individual selectors** to prevent infinite re-renders:
+### Zustand State Management (Critical Pattern)
+**Always use individual selectors** to prevent infinite re-renders (common source of bugs):
 ```typescript
-// ✅ Correct
-const value1 = useStore(state => state.value1);
-const value2 = useStore(state => state.value2);
+// ✅ Correct - prevents infinite loops
+const isThinking = useChatStore(state => state.isThinking);
+const currentModel = useChatStore(state => state.currentModel);
 
-// ❌ Wrong - causes infinite loops
-const { value1, value2 } = useStore(state => ({ value1: state.value1, value2: state.value2 }));
+// ❌ Wrong - causes infinite re-renders and crashes
+const { isThinking, currentModel } = useChatStore(state => ({
+    isThinking: state.isThinking,
+    currentModel: state.currentModel
+}));
 ```
 
-### Environment Variables
-Use typed environment utilities from `@repo/shared/utils/env`:
-- `isProduction`, `isDevelopment` for environment checks
-- `devLog`, `prodSafeLog` for safe logging
-- Centralized config in `packages/shared/constants/creem.ts` for payment integration
+### Per-Account Data Isolation
+**Privacy-first architecture** with user-specific IndexedDB databases:
+```typescript
+// Each user gets isolated storage: ThreadDatabase_${userId}
+class ThreadDatabase extends Dexie {
+    constructor(userId?: string) {
+        const dbName = userId ? `ThreadDatabase_${userId}` : 'ThreadDatabase_anonymous';
+        super(dbName);
+    }
+}
+```
+
+### Structured Logging (NEVER use console.*)
+**Always use Pino logger** with automatic PII redaction:
+```typescript
+// ✅ Use structured logger with PII protection
+import { log } from '@repo/shared/logger';
+log.info({ userId, action: 'chat_started' }, 'User started new chat');
+log.error({ error: err.message }, 'Failed to process request');
+
+// ❌ Never use console methods - security risk
+console.log('User:', userId); // Exposes PII!
+```
 
 ## Development Workflow
 
 ### Required Tools & Commands
-- **Package Manager**: Use `bun` for all operations (not npm/yarn)
+- **Package Manager**: Use `bun` exclusively (not npm/yarn/pnpm)
 - **Linting**: `bun run lint` (oxlint) - fast comprehensive checking
 - **Format**: `bun run biome:format` - auto-fix formatting issues
-- **Build**: `bun run build` - verify compilation
-- **Test**: `bun test` or `vitest` for unit tests
-- **Dev**: `bun dev` - development server with React Scan support
+- **Build**: `bun run build` - verify compilation across all packages
+- **Test**: `bun test` (vitest) with jsdom environment for React components
+- **Dev**: `bun dev` - development server with optional React Scan (`bun run dev:scan`)
 
-### Pre-Implementation Requirements
+### Oracle Consultation Workflow (MANDATORY)
+**All significant changes require Oracle approval** following ask-implement-review pattern:
+
+1. **ASK-ORACLE**: Provide problem statement + code context, request detailed implementation plan
+2. **Implement**: Follow Oracle's plan strictly
+3. **REVIEW-ORACLE**: Present diff/changes for approval before merge
+4. **Document**: Record plan + approval in `memory-bank/<date>-oracle.md`
+
+Exceptions: Sev-1 production fixes (implement first, seek retroactive approval within 24h)
+
+### Pre-Implementation Checklist
 1. **Always run `bun dev`** and check console for errors before starting new tasks
-2. **Consult Oracle workflow** for complex features (documented in `AGENT.md`)
-3. **Never commit changes** - DO NOT use `git commit` or commit tools
+2. **Run `bun run biome:format`** to auto-fix formatting
+3. **Consult Oracle workflow** for complex features (see AGENT.md)
+4. **Never commit changes yourself** - DO NOT execute `git commit` or use commit tools
+
+### Shadcn/ui Component Installation
+```bash
+# Navigate to packages/ui first, then use bunx
+cd packages/ui
+bunx shadcn@latest add label
+```
 
 ## Code Style & Standards
 
@@ -77,15 +119,28 @@ Use typed environment utilities from `@repo/shared/utils/env`:
 
 ## Testing Patterns
 
-Tests located in:
-- `apps/web/app/tests/` - Integration tests
-- `packages/*/components/__tests__/` - Component unit tests
+### Test Organization
+- **Integration tests**: `apps/web/app/tests/` (main application testing)
+- **Component tests**: `packages/*/components/__tests__/` (unit testing for components)
+- **Setup files**: Multiple setup files loaded in sequence by vitest config
 
-Use vitest with jsdom environment. Example structure:
+### Testing Environment
 ```typescript
+// vitest with jsdom, React Testing Library
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+// Required for all component tests
+expect.extend(matchers);
 ```
+
+### Test Structure Requirements
+- Use `@testing-library/react` for component rendering
+- Use `@testing-library/user-event` for interactions
+- Use `@testing-library/jest-dom/vitest` for custom matchers
+- Cover critical paths and edge cases for all features
+- Test timeout: 10 seconds (configured globally)
 
 ## Deployment & Production
 
@@ -102,28 +157,55 @@ Critical env vars managed through:
 ## AI System Integration
 
 ### Model Configuration
-- Models defined in `packages/ai/models.ts` and `packages/shared/config/chat-mode.ts`
-- Rate limiting through `packages/shared/constants/rate-limits.ts`
-- Provider configuration in `packages/ai/providers.ts`
+- **Model definitions**: `packages/ai/models.ts` - Centralized enum with 30+ models
+- **Provider setup**: `packages/ai/providers.ts` - OpenAI, Anthropic, Google, Groq, etc.
+- **Rate limiting**: `packages/shared/constants/rate-limits.ts` - Per-model, per-tier limits
+- **Chat modes**: `packages/shared/config/chat-mode.ts` - Thinking, standard, etc.
 
-### Subscription Tiers
-- **Free**: All premium models with BYOK + 9 free models
-- **VT+**: Additional research features (PRO_SEARCH, DEEP_RESEARCH, RAG)
-- Configuration in `packages/shared/constants/features.ts`
+### Subscription Tiers & Access Control
+- **Free Tier**: All premium models with BYOK + 9 server-funded models
+- **VT+ Tier**: Exclusive access to PRO_SEARCH, DEEP_RESEARCH, RAG features
+- **Feature gates**: `packages/shared/constants/features.ts` - Centralized feature definitions
+- **User tier checks**: `getGlobalSubscriptionStatus()` for runtime access control
+
+### AI Workflow Architecture
+```typescript
+// Agentic Graph System in packages/ai/
+// - workflow/ - Multi-step reasoning chains
+// - tools/ - External tool integrations (MCP protocol)
+// - prompts/ - System and user prompt templates
+// - cache/ - Response caching for performance
+```
 
 ## Key Integration Points
 
-### Data Flow
-1. **Chat Store** (`packages/common/store/`) - Zustand with persistence
-2. **Local Storage** - IndexedDB via Dexie.js for privacy-first approach
-3. **Authentication** - Better Auth with user tier management
-4. **Payment** - Creem.io integration with webhook handling
+### Data Flow Architecture
+1. **Chat Store** (`packages/common/store/chat.store.ts`) - Zustand with IndexedDB persistence via Dexie
+2. **Per-User Isolation** - `ThreadDatabase_${userId}` ensures complete data separation
+3. **Authentication** - Better Auth with subscription tier integration
+4. **Payment System** - Creem.io webhooks with automatic tier upgrades
 
-### Cross-Package Communication
-- `@repo/shared` - Constants, types, utilities (foundation layer)
-- `@repo/common` - React components, hooks consuming shared layer
-- `@repo/ai` - AI providers, models, workflow engine
-- `apps/web` - Main application consuming all packages
+### Cross-Package Communication Patterns
+```typescript
+// Foundation layer - never imports from other @repo packages
+'@repo/shared' - Constants, types, utilities, logger
+
+// Consumer layer - imports from @repo/shared only
+'@repo/common' - React components, hooks, Zustand stores
+
+// Application layer - can import from any package
+'apps/web' - Next.js app consuming all packages
+'@repo/ai' - AI system with workflow engine
+
+// UI layer - minimal dependencies
+'@repo/ui' - Pure shadcn/ui components, no business logic
+```
+
+### Critical Service Boundaries
+- **Client-side AI**: Models run in browser via Web Workers (`packages/ai/worker/`)
+- **Server Actions**: Form handling and feedback in `packages/actions/`
+- **Task Orchestration**: Background workflows in `packages/orchestrator/`
+- **Database Layer**: All queries centralized in `packages/shared/lib/database-queries.ts`
 
 ## Memory Bank Documentation
 

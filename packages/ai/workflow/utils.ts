@@ -297,7 +297,23 @@ export const generateTextWithGeminiSearch = async ({
                     isByokKey: isUsingByokKeys(byokKeys),
                 });
             } else {
-                streamResult = streamText(streamTextConfig as any);
+                // Import streamText dynamically to ensure proper loading
+                log.info('Importing streamText function...');
+                const { streamText: streamTextFn } = await import('ai');
+                log.info('StreamText imported successfully:', { hasFunction: typeof streamTextFn });
+
+                // Validate model before passing to streamText
+                if (!streamTextConfig.model) {
+                    throw new Error('Model is required for streamText configuration');
+                }
+
+                log.info('Calling streamText with config:', {
+                    hasModel: !!streamTextConfig.model,
+                    modelType: typeof streamTextConfig.model,
+                    configKeys: Object.keys(streamTextConfig),
+                });
+
+                streamResult = streamTextFn(streamTextConfig as any);
             }
             log.info('StreamText call successful, result type:', {
                 data: typeof streamResult,

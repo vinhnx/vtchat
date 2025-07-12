@@ -15,6 +15,7 @@ import {
     DropdownMenuTrigger,
 } from '@repo/ui';
 import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAppStore } from '../store/app.store';
 import { GatedFeatureAlert } from './gated-feature-alert';
@@ -42,7 +43,13 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     variant="secondary"
                 >
                     {user.image ? (
-                        <img className="rounded-full" height={24} src={user.image} width={24} />
+                        <Image
+                            alt={user.name || user.email || 'User'}
+                            className="rounded-full"
+                            height={24}
+                            src={user.image}
+                            width={24}
+                        />
                     ) : (
                         <Avatar name={user.name || user.email} size="sm" />
                     )}
@@ -55,7 +62,6 @@ export function UserButton({ showName = false }: UserButtonProps) {
                 {/* User Info Section */}
                 <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">{user.name || 'User'}</p>
-                    <p className="text-muted-foreground text-xs">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
 

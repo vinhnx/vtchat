@@ -25,13 +25,21 @@ export const RATE_LIMIT_MESSAGES = {
  * Helper functions to get appropriate rate limit messages
  */
 export const getRateLimitMessage = {
-    dailyLimit: (isSignedIn: boolean): string =>
-        isSignedIn
+    dailyLimit: (isSignedIn: boolean, isVtPlus: boolean = false): string => {
+        if (isVtPlus) {
+            return RATE_LIMIT_MESSAGES.DAILY_LIMIT_VT_PLUS;
+        }
+        return isSignedIn
             ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
-            : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_OUT,
+            : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_OUT;
+    },
 
-    minuteLimit: (isSignedIn: boolean): string =>
-        isSignedIn
+    minuteLimit: (isSignedIn: boolean, isVtPlus: boolean = false): string => {
+        if (isVtPlus) {
+            return RATE_LIMIT_MESSAGES.MINUTE_LIMIT_VT_PLUS;
+        }
+        return isSignedIn
             ? RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN
-            : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_OUT,
+            : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_OUT;
+    },
 } as const;

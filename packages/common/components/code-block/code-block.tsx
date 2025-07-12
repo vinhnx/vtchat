@@ -9,6 +9,57 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-yaml';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-scss';
+import 'prismjs/components/prism-sass';
+import 'prismjs/components/prism-less';
+import 'prismjs/components/prism-stylus';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-php';
+import 'prismjs/components/prism-ruby';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-rust';
+import 'prismjs/components/prism-kotlin';
+import 'prismjs/components/prism-swift';
+import 'prismjs/components/prism-r';
+import 'prismjs/components/prism-scala';
+import 'prismjs/components/prism-clojure';
+import 'prismjs/components/prism-haskell';
+import 'prismjs/components/prism-lua';
+import 'prismjs/components/prism-perl';
+import 'prismjs/components/prism-powershell';
+import 'prismjs/components/prism-docker';
+import 'prismjs/components/prism-nginx';
+import 'prismjs/components/prism-graphql';
+import 'prismjs/components/prism-xml-doc';
+import 'prismjs/components/prism-markup-templating';
+import 'prismjs/components/prism-handlebars';
+import 'prismjs/components/prism-django';
+import 'prismjs/components/prism-twig';
+import 'prismjs/components/prism-vim';
+import 'prismjs/components/prism-git';
+import 'prismjs/components/prism-diff';
+import 'prismjs/components/prism-makefile';
+import 'prismjs/components/prism-toml';
+import 'prismjs/components/prism-ini';
+import 'prismjs/components/prism-properties';
+import 'prismjs/components/prism-log';
+import 'prismjs/components/prism-regex';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-solidity';
+import 'prismjs/components/prism-dart';
+import 'prismjs/components/prism-elixir';
+import 'prismjs/components/prism-erlang';
+import 'prismjs/components/prism-elm';
+import 'prismjs/components/prism-fsharp';
+import 'prismjs/components/prism-ocaml';
+import 'prismjs/components/prism-reason';
+import 'prismjs/components/prism-purescript';
+import 'prismjs/components/prism-zig';
 
 import { Button, cn } from '@repo/ui';
 import { Check, Copy, File, FileCode, FileJson, FileText, Terminal } from 'lucide-react';
@@ -30,7 +81,7 @@ export const CodeBlock = ({
     code,
     showHeader = true,
     variant = 'default',
-    maxHeight = 400,
+    maxHeight: _maxHeight = 400,
     className,
 }: CodeBlockProps) => {
     const ref = useRef<HTMLElement>(null);
@@ -39,29 +90,141 @@ export const CodeBlock = ({
 
     useEffect(() => {
         if (ref?.current && code) {
-            Prism.highlightElement(ref.current);
+            try {
+                // Clear any existing highlighting
+                ref.current.innerHTML = code;
+
+                // Normalize language name for better compatibility
+                const normalizedLang = lang.toLowerCase();
+
+                // Check if language is supported
+                if (Prism.languages[normalizedLang]) {
+                    Prism.highlightElement(ref.current);
+                } else {
+                    // Try common language aliases
+                    const langAliases: Record<string, string> = {
+                        js: 'javascript',
+                        ts: 'typescript',
+                        py: 'python',
+                        rb: 'ruby',
+                        sh: 'bash',
+                        zsh: 'bash',
+                        yml: 'yaml',
+                        dockerfile: 'docker',
+                        md: 'markdown',
+                        cs: 'csharp',
+                        cpp: 'cpp',
+                        'c++': 'cpp',
+                        fs: 'fsharp',
+                        kt: 'kotlin',
+                        rs: 'rust',
+                        gql: 'graphql',
+                        ps1: 'powershell',
+                        text: 'plaintext',
+                        txt: 'plaintext',
+                    };
+
+                    const aliasedLang = langAliases[normalizedLang];
+                    if (aliasedLang && Prism.languages[aliasedLang]) {
+                        // Update the ref className to use the aliased language
+                        ref.current.className = `language-${aliasedLang}`;
+                        Prism.highlightElement(ref.current);
+                    } else {
+                        // Fallback to plaintext if language not supported
+                        ref.current.className = 'language-plaintext';
+                        Prism.highlightElement(ref.current);
+                    }
+                }
+            } catch (error) {
+                log.error({ error, lang, codeLength: code?.length }, 'Error highlighting code');
+                // Fallback to plain text if highlighting fails
+                if (ref.current) {
+                    ref.current.innerHTML = code;
+                }
+            }
         }
     }, [code, lang]);
 
     const getLangIcon = () => {
         switch (lang) {
             case 'bash':
+            case 'sh':
+            case 'zsh':
+            case 'powershell':
                 return <Terminal size={14} />;
             case 'json':
-                return <FileJson size={14} />;
             case 'yaml':
+            case 'yml':
+            case 'toml':
+            case 'xml':
+            case 'ini':
+            case 'properties':
                 return <FileJson size={14} />;
             case 'python':
-                return <FileCode size={14} />;
             case 'javascript':
-                return <FileCode size={14} />;
+            case 'js':
             case 'typescript':
-                return <FileCode size={14} />;
+            case 'ts':
             case 'jsx':
+            case 'tsx':
+            case 'java':
+            case 'c':
+            case 'cpp':
+            case 'csharp':
+            case 'cs':
+            case 'php':
+            case 'ruby':
+            case 'go':
+            case 'rust':
+            case 'kotlin':
+            case 'swift':
+            case 'r':
+            case 'scala':
+            case 'clojure':
+            case 'haskell':
+            case 'lua':
+            case 'perl':
+            case 'dart':
+            case 'elixir':
+            case 'erlang':
+            case 'elm':
+            case 'fsharp':
+            case 'ocaml':
+            case 'reason':
+            case 'purescript':
+            case 'zig':
+            case 'solidity':
+                return <FileCode size={14} />;
+            case 'css':
+            case 'scss':
+            case 'sass':
+            case 'less':
+            case 'stylus':
+                return <FileCode size={14} />;
+            case 'html':
+            case 'handlebars':
+            case 'django':
+            case 'twig':
                 return <FileCode size={14} />;
             case 'markdown':
+            case 'md':
                 return <FileText size={14} />;
+            case 'sql':
+            case 'graphql':
+            case 'gql':
+                return <FileCode size={14} />;
+            case 'docker':
+            case 'dockerfile':
+            case 'nginx':
+            case 'vim':
+            case 'git':
+            case 'diff':
+            case 'makefile':
+            case 'log':
+            case 'regex':
+                return <FileCode size={14} />;
             case 'plaintext':
+            case 'text':
                 return <File size={14} />;
             default:
                 return <File size={14} />;
@@ -103,7 +266,7 @@ export const CodeBlock = ({
                 )}
                 ref={preRef}
             >
-                <code className={cn(`language-${lang}`)} ref={ref}>
+                <code className={cn(`language-${lang.toLowerCase()}`)} ref={ref}>
                     {code}
                 </code>
             </pre>

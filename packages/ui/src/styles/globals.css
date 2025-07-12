@@ -38,6 +38,8 @@
         --sidebar-accent-foreground: oklch(0.205 0 0);
         --sidebar-border: oklch(0.922 0 0);
         --sidebar-ring: oklch(0.708 0 0);
+        --quaternary: oklch(0.93 0 0);
+        --quaternary-foreground: oklch(0.35 0 0);
     }
 
     .dark {
@@ -73,6 +75,8 @@
         --sidebar-accent-foreground: oklch(0.985 0 0);
         --sidebar-border: oklch(1 0 0 / 10%);
         --sidebar-ring: oklch(0.439 0 0);
+        --quaternary: oklch(0.269 0 0);
+        --quaternary-foreground: oklch(0.85 0 0);
     }
 
     * {
@@ -81,5 +85,50 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+
+    /* Accessible focus styles */
+    :focus-visible {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+    }
+
+    /* Link focus styles */
+    a:focus-visible {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+        border-radius: 3px;
+    }
+
+    /* Monospace font stack with Menlo as primary choice */
+    .font-mono,
+    code,
+    pre,
+    kbd,
+    samp {
+        font-family: "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+        font-variant-numeric: tabular-nums;
+        font-variant-ligatures: none;
+    }
+
+    /* Enhanced code block styling */
+    pre code {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 }

@@ -29,6 +29,7 @@ import {
 } from '@repo/ui';
 import { useChat } from 'ai/react';
 import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 // Import mobile enhancements
@@ -355,10 +356,13 @@ export function RAGChatbot() {
                                     {messages.length === 0 && (
                                         <div className="text-muted-foreground py-12 text-center">
                                             <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
-                                                <img
+                                                <Image
                                                     alt="VT Assistant"
                                                     className="h-full w-full object-cover"
                                                     src="/icon-192x192.png"
+                                                    width={48}
+                                                    height={48}
+                                                    priority
                                                 />
                                             </div>
                                             <h3 className="text-foreground mb-2 text-lg font-medium">
@@ -394,10 +398,12 @@ export function RAGChatbot() {
                                                         />
                                                     ) : (
                                                         <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
-                                                            <img
+                                                            <Image
                                                                 alt="VT Assistant"
                                                                 className="h-full w-full object-cover"
                                                                 src="/icon-192x192.png"
+                                                                width={32}
+                                                                height={32}
                                                             />
                                                         </div>
                                                     )}
@@ -569,10 +575,13 @@ export function RAGChatbot() {
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-16 text-center">
                                 <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
-                                    <img
+                                    <Image
                                         alt="VT Assistant"
                                         className="h-full w-full object-cover"
                                         src="/icon-192x192.png"
+                                        width={48}
+                                        height={48}
+                                        priority
                                     />
                                 </div>
                                 <h3 className="text-foreground mb-2 text-lg font-medium">
@@ -600,10 +609,12 @@ export function RAGChatbot() {
                                         />
                                     ) : (
                                         <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
-                                            <img
+                                            <Image
                                                 alt="VT Assistant"
                                                 className="h-full w-full object-cover"
                                                 src="/icon-192x192.png"
+                                                width={32}
+                                                height={32}
                                             />
                                         </div>
                                     )}

@@ -38,6 +38,16 @@ export type ChartComponentData = {
     type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
     title: string;
     data: any[];
+    // Area chart specific properties
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    series1Name?: string;
+    series2Name?: string;
+    series3Name?: string;
+    dataKey1?: string;
+    dataKey2?: string;
+    dataKey3?: string;
+    stacked?: boolean;
     [key: string]: any;
 };
 
@@ -62,7 +72,7 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
     return (
         <Card className="w-full">
             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+                <div className="flex flex-1 flex-col justify-center gap-1 px-8 py-6 sm:py-8">
                     <CardTitle className="flex items-center gap-2">
                         <BarChart3 className="h-4 w-4" />
                         {title}
@@ -74,7 +84,7 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
                     </CardDescription>
                 </div>
             </CardHeader>
-            <CardContent className="px-2 sm:p-6">
+            <CardContent className="px-8 py-8">
                 <ChartContainer className="aspect-auto h-[250px] w-full" config={chartConfig}>
                     <BarChart
                         accessibilityLayer
@@ -140,7 +150,7 @@ const InteractiveLineChart = ({
 
     return (
         <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="px-8 py-6">
                 <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4" />
                     {title}
@@ -151,7 +161,7 @@ const InteractiveLineChart = ({
                         : 'Trending data over time'}
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-8 py-8">
                 <ChartContainer className="h-[300px] w-full" config={chartConfig}>
                     <LineChart
                         accessibilityLayer
@@ -233,24 +243,34 @@ const InteractiveAreaChart = ({
     yAxisLabel,
     series1Name,
     series2Name,
+    series3Name,
     stacked,
+    dataKey1,
+    dataKey2,
+    dataKey3,
 }: any) => {
     const chartConfig = {
-        series1: {
+        [dataKey1 || 'uv']: {
             label: series1Name || 'Series 1',
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
-            series2: {
+            [dataKey2 || 'pv']: {
                 label: series2Name,
                 color: CHART_COLORS.secondary,
+            },
+        }),
+        ...(series3Name && {
+            [dataKey3 || 'amt']: {
+                label: series3Name,
+                color: CHART_COLORS.tertiary,
             },
         }),
     } satisfies ChartConfig;
 
     return (
         <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="px-8 py-6">
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
                     {xAxisLabel && yAxisLabel
@@ -259,45 +279,68 @@ const InteractiveAreaChart = ({
                     {stacked && ' (Stacked)'}
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer className="h-[300px] w-full" config={chartConfig}>
-                    <AreaChart
-                        accessibilityLayer
-                        data={data}
-                        margin={{
-                            left: 12,
-                            right: 12,
-                        }}
-                    >
-                        <CartesianGrid vertical={false} />
-                        <XAxis axisLine={false} dataKey="name" tickLine={false} tickMargin={8} />
-                        <YAxis axisLine={false} tickLine={false} tickMargin={8} />
-                        <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
-                        <ChartLegend content={<ChartLegendContent />} />
-                        <Area
-                            className="drop-shadow-sm"
-                            dataKey="series1"
-                            fill="var(--color-series1)"
-                            fillOpacity={0.6}
-                            stackId={stacked ? 'stack' : undefined}
-                            stroke="var(--color-series1)"
-                            strokeWidth={2}
-                            type="natural"
-                        />
-                        {series2Name && (
-                            <Area
-                                className="drop-shadow-sm"
-                                dataKey="series2"
-                                fill="var(--color-series2)"
-                                fillOpacity={0.6}
-                                stackId={stacked ? 'stack' : undefined}
-                                stroke="var(--color-series2)"
-                                strokeWidth={2}
-                                type="natural"
+            <CardContent className="px-8 py-8">
+                <div style={{ width: '100%', height: 300 }}>
+                    <ChartContainer className="h-full w-full" config={chartConfig}>
+                        <AreaChart
+                            accessibilityLayer
+                            data={data}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                                dataKey="name"
+                                axisLine={false}
+                                tickLine={false}
+                                tickMargin={8}
                             />
-                        )}
-                    </AreaChart>
-                </ChartContainer>
+                            <YAxis axisLine={false} tickLine={false} tickMargin={8} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
+                            {(series2Name || series3Name) && (
+                                <ChartLegend content={<ChartLegendContent />} />
+                            )}
+                            <Area
+                                type="monotone"
+                                dataKey={dataKey1 || 'uv'}
+                                stroke="var(--color-uv)"
+                                fill="var(--color-uv)"
+                                fillOpacity={0.6}
+                                strokeWidth={2}
+                                stackId={stacked ? 'stack' : undefined}
+                                className="drop-shadow-sm"
+                            />
+                            {series2Name && (
+                                <Area
+                                    type="monotone"
+                                    dataKey={dataKey2 || 'pv'}
+                                    stroke="var(--color-pv)"
+                                    fill="var(--color-pv)"
+                                    fillOpacity={0.6}
+                                    strokeWidth={2}
+                                    stackId={stacked ? 'stack' : undefined}
+                                    className="drop-shadow-sm"
+                                />
+                            )}
+                            {series3Name && (
+                                <Area
+                                    type="monotone"
+                                    dataKey={dataKey3 || 'amt'}
+                                    stroke="var(--color-amt)"
+                                    fill="var(--color-amt)"
+                                    fillOpacity={0.6}
+                                    strokeWidth={2}
+                                    stackId={stacked ? 'stack' : undefined}
+                                    className="drop-shadow-sm"
+                                />
+                            )}
+                        </AreaChart>
+                    </ChartContainer>
+                </div>
             </CardContent>
         </Card>
     );
@@ -319,11 +362,11 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
 
     return (
         <Card className="w-full">
-            <CardHeader className="items-center pb-0">
+            <CardHeader className="items-center px-8 py-6">
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>Distribution across {data.length} categories</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="flex-1 px-8 py-8">
                 <ChartContainer
                     className="mx-auto aspect-square max-h-[300px]"
                     config={chartConfig}
@@ -376,13 +419,13 @@ const InteractiveRadarChart = ({ title, data, maxValue }: any) => {
 
     return (
         <Card className="w-full">
-            <CardHeader className="items-center pb-4">
+            <CardHeader className="items-center px-8 py-6">
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
                     Multi-dimensional analysis across {data.length} metrics
                 </CardDescription>
             </CardHeader>
-            <CardContent className="pb-0">
+            <CardContent className="px-8 py-8">
                 <ChartContainer
                     className="mx-auto aspect-square max-h-[300px]"
                     config={chartConfig}
@@ -422,7 +465,7 @@ export const ChartComponent = ({ chartData }: { chartData: ChartComponentData })
         default:
             return (
                 <Card className="w-full">
-                    <CardContent className="flex h-[200px] items-center justify-center">
+                    <CardContent className="flex h-[200px] items-center justify-center px-8 py-8">
                         <p className="text-muted-foreground">
                             Unsupported chart type: {chartData.type}
                         </p>

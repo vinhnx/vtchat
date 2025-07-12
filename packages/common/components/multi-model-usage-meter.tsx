@@ -1,7 +1,6 @@
 'use client';
 
 import { ModelEnum } from '@repo/ai/models';
-import { GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
 import {
     Button,
@@ -20,7 +19,7 @@ import {
     TypographyMuted,
 } from '@repo/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 // Model configuration for display
 const MODEL_CONFIG = {
@@ -215,127 +214,132 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 color: 'hsl(var(--chart-3))',
                             },
                         }}
-                        className="min-h-[240px]"
+                        className="min-h-[240px] w-full max-w-full overflow-hidden"
                     >
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart
-                                data={(() => {
-                                    const now = new Date();
-                                    const currentHour = now.getHours();
-                                    const hourlyData = [];
+                        <LineChart
+                            data={(() => {
+                                const now = new Date();
+                                const currentHour = now.getHours();
+                                const hourlyData = [];
 
-                                    // Get actual daily usage values
-                                    const flashLiteUsage =
-                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed ||
-                                        0;
-                                    const flashUsage =
-                                        modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0;
-                                    const proUsage =
-                                        modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed || 0;
+                                // Get actual daily usage values
+                                const flashLiteUsage =
+                                    modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed || 0;
+                                const flashUsage =
+                                    modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0;
+                                const proUsage =
+                                    modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed || 0;
 
-                                    // Generate hourly data points from 00:00 to current hour + 2 offset
-                                    for (
-                                        let hour = 0;
-                                        hour <= Math.min(currentHour + 2, 23);
-                                        hour++
-                                    ) {
-                                        const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
+                                // Generate hourly data points from 00:00 to current hour + 2 offset
+                                for (let hour = 0; hour <= Math.min(currentHour + 2, 23); hour++) {
+                                    const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
 
-                                        if (hour === 0) {
-                                            // Start at 0
-                                            hourlyData.push({
-                                                time: timeLabel,
-                                                'flash-lite-2-5': 0,
-                                                'flash-2-5': 0,
-                                                'pro-2-5': 0,
-                                            });
-                                        } else if (hour <= currentHour) {
-                                            // Gradually increase to current usage at current hour
-                                            const progress = hour / currentHour;
-                                            hourlyData.push({
-                                                time: timeLabel,
-                                                'flash-lite-2-5': Math.round(
-                                                    flashLiteUsage * progress
-                                                ),
-                                                'flash-2-5': Math.round(flashUsage * progress),
-                                                'pro-2-5': Math.round(proUsage * progress),
-                                            });
-                                        } else {
-                                            // Future hours show current total (flat line)
-                                            hourlyData.push({
-                                                time: timeLabel,
-                                                'flash-lite-2-5': flashLiteUsage,
-                                                'flash-2-5': flashUsage,
-                                                'pro-2-5': proUsage,
-                                            });
-                                        }
+                                    if (hour === 0) {
+                                        // Start at 0
+                                        hourlyData.push({
+                                            time: timeLabel,
+                                            'flash-lite-2-5': 0,
+                                            'flash-2-5': 0,
+                                            'pro-2-5': 0,
+                                        });
+                                    } else if (hour <= currentHour) {
+                                        // Gradually increase to current usage at current hour
+                                        const progress = hour / currentHour;
+                                        hourlyData.push({
+                                            time: timeLabel,
+                                            'flash-lite-2-5': Math.round(flashLiteUsage * progress),
+                                            'flash-2-5': Math.round(flashUsage * progress),
+                                            'pro-2-5': Math.round(proUsage * progress),
+                                        });
+                                    } else {
+                                        // Future hours show current total (flat line)
+                                        hourlyData.push({
+                                            time: timeLabel,
+                                            'flash-lite-2-5': flashLiteUsage,
+                                            'flash-2-5': flashUsage,
+                                            'pro-2-5': proUsage,
+                                        });
                                     }
+                                }
 
-                                    return hourlyData;
-                                })()}
-                                margin={{ top: 20, right: 50, left: 20, bottom: 5 }}
-                            >
-                                <CartesianGrid
-                                    strokeDasharray="3 3"
-                                    stroke="hsl(var(--border))"
-                                    opacity={0.3}
-                                />
-                                <XAxis
-                                    dataKey="time"
-                                    tick={{ fontSize: 12 }}
-                                    tickLine={{ stroke: 'hsl(var(--border))' }}
-                                    axisLine={{ stroke: 'hsl(var(--border))' }}
-                                />
-                                <YAxis
-                                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                                    tickLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
-                                    axisLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
-                                    allowDecimals={false}
-                                />
-                                <ChartTooltip content={<ChartTooltipContent />} />
-                                <ChartLegend content={<ChartLegendContent />} />
-                                <Line
-                                    type="monotone"
-                                    dataKey="flash-lite-2-5"
-                                    stroke="var(--color-flash-lite-2-5)"
-                                    strokeWidth={2}
-                                    dot={false}
-                                    activeDot={{
-                                        r: 6,
-                                        strokeWidth: 2,
-                                        fill: 'var(--color-flash-lite-2-5)',
-                                    }}
-                                />
-                                <Line
-                                    type="monotone"
-                                    dataKey="flash-2-5"
-                                    stroke="var(--color-flash-2-5)"
-                                    strokeWidth={2}
-                                    dot={false}
-                                    activeDot={{
-                                        r: 6,
-                                        strokeWidth: 2,
-                                        fill: 'var(--color-flash-2-5)',
-                                    }}
-                                />
-                                <Line
-                                    type="monotone"
-                                    dataKey="pro-2-5"
-                                    stroke="var(--color-pro-2-5)"
-                                    strokeWidth={2}
-                                    dot={false}
-                                    activeDot={{
-                                        r: 6,
-                                        strokeWidth: 2,
-                                        fill: 'var(--color-pro-2-5)',
-                                    }}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
+                                return hourlyData;
+                            })()}
+                            margin={{
+                                top: 20,
+                                right: 10,
+                                left: 5,
+                                bottom: 5,
+                            }}
+                            accessibilityLayer
+                        >
+                            <CartesianGrid
+                                vertical={false}
+                                stroke="hsl(var(--border))"
+                                opacity={0.3}
+                            />
+                            <XAxis
+                                dataKey="time"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tick={{ fontSize: 10 }}
+                                interval="preserveStartEnd"
+                                minTickGap={40}
+                            />
+                            <YAxis
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tick={{ fontSize: 10 }}
+                                allowDecimals={false}
+                                width={25}
+                            />
+                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <ChartLegend
+                                content={<ChartLegendContent />}
+                                className="flex-wrap justify-center text-xs"
+                            />
+                            <Line
+                                type="monotone"
+                                dataKey="flash-lite-2-5"
+                                stroke="var(--color-flash-lite-2-5)"
+                                strokeWidth={2}
+                                dot={false}
+                                activeDot={{
+                                    r: 4,
+                                    strokeWidth: 2,
+                                    fill: 'var(--color-flash-lite-2-5)',
+                                }}
+                            />
+                            <Line
+                                type="monotone"
+                                dataKey="flash-2-5"
+                                stroke="var(--color-flash-2-5)"
+                                strokeWidth={2}
+                                dot={false}
+                                activeDot={{
+                                    r: 4,
+                                    strokeWidth: 2,
+                                    fill: 'var(--color-flash-2-5)',
+                                }}
+                            />
+                            <Line
+                                type="monotone"
+                                dataKey="pro-2-5"
+                                stroke="var(--color-pro-2-5)"
+                                strokeWidth={2}
+                                dot={false}
+                                activeDot={{
+                                    r: 4,
+                                    strokeWidth: 2,
+                                    fill: 'var(--color-pro-2-5)',
+                                }}
+                            />
+                        </LineChart>
                     </ChartContainer>
 
                     {/* Usage Statistics Grid */}
-                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         <div className="text-center p-4 bg-muted/20 rounded-lg">
                             <div className="text-2xl font-bold text-foreground">
                                 {totalRequestsToday}
@@ -561,6 +565,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 </CardContent>
             </Card>
 
+            {/* VT+ Features Usage Chart */}
+            <VtPlusUsageChart userId={userId} />
+
             {/* Refresh Button */}
             <div className="flex justify-center">
                 <Button
@@ -574,5 +581,204 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 </Button>
             </div>
         </div>
+    );
+}
+
+// VT+ Features Usage Chart Component
+interface VtPlusUsageChartProps {
+    userId?: string;
+}
+
+function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
+    const [vtPlusUsage, setVtPlusUsage] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!userId) {
+            setLoading(false);
+            return;
+        }
+
+        const fetchVtPlusUsage = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/vtplus/usage');
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        setError('Please sign in to view VT+ usage');
+                        return;
+                    }
+                    throw new Error('Failed to fetch VT+ usage data');
+                }
+
+                const data = await response.json();
+                setVtPlusUsage(data);
+                setError(null);
+            } catch {
+                setError('Failed to load VT+ usage data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVtPlusUsage();
+    }, [userId]);
+
+    if (!userId || loading) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-foreground">VT+ Research Features Usage</CardTitle>
+                    <CardDescription>
+                        {!userId
+                            ? 'Sign in to track VT+ feature usage'
+                            : 'Loading VT+ usage data...'}
+                    </CardDescription>
+                </CardHeader>
+                {loading && (
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="h-4 w-32 rounded bg-muted animate-pulse" />
+                            <div className="h-[200px] w-full rounded bg-muted animate-pulse" />
+                        </div>
+                    </CardContent>
+                )}
+            </Card>
+        );
+    }
+
+    if (error || !vtPlusUsage) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-foreground">VT+ Research Features Usage</CardTitle>
+                    <CardDescription>
+                        Track your exclusive VT+ research features usage
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="py-8 text-center">
+                        <p className="text-sm text-muted-foreground">
+                            {error || 'VT+ usage data not available'}
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    // Prepare chart data
+    const chartData = [
+        {
+            feature: 'Deep Research',
+            used: vtPlusUsage.deepResearch?.used || 0,
+            limit: vtPlusUsage.deepResearch?.limit || 0,
+            percentage: vtPlusUsage.deepResearch?.percentage || 0,
+        },
+        {
+            feature: 'Pro Search',
+            used: vtPlusUsage.proSearch?.used || 0,
+            limit: vtPlusUsage.proSearch?.limit || 0,
+            percentage: vtPlusUsage.proSearch?.percentage || 0,
+        },
+        {
+            feature: 'Personal AI Assistant',
+            used: vtPlusUsage.rag?.used || 0,
+            limit: vtPlusUsage.rag?.limit || 0,
+            percentage: vtPlusUsage.rag?.percentage || 0,
+        },
+    ];
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-foreground">VT+ Research Features Usage</CardTitle>
+                <CardDescription>
+                    Monthly usage tracking for exclusive VT+ research capabilities
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer
+                    config={{
+                        used: {
+                            label: 'Used',
+                            color: 'hsl(var(--chart-1))',
+                        },
+                        remaining: {
+                            label: 'Remaining',
+                            color: 'hsl(var(--chart-2))',
+                        },
+                    }}
+                    className="min-h-[200px] w-full max-w-full overflow-hidden"
+                >
+                    <BarChart
+                        data={chartData.map((item) => ({
+                            feature: item.feature,
+                            used: item.used,
+                            remaining: Math.max(0, item.limit - item.used),
+                        }))}
+                        margin={{
+                            top: 20,
+                            right: 10,
+                            left: 5,
+                            bottom: 5,
+                        }}
+                        accessibilityLayer
+                    >
+                        <CartesianGrid vertical={false} stroke="hsl(var(--border))" opacity={0.3} />
+                        <XAxis
+                            dataKey="feature"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            tick={{ fontSize: 10 }}
+                            interval={0}
+                        />
+                        <YAxis
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            tick={{ fontSize: 10 }}
+                            allowDecimals={false}
+                            width={25}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <ChartLegend
+                            content={<ChartLegendContent />}
+                            className="flex-wrap justify-center text-xs"
+                        />
+                        <Bar
+                            dataKey="used"
+                            stackId="a"
+                            fill="var(--color-used)"
+                            radius={[0, 0, 4, 4]}
+                        />
+                        <Bar
+                            dataKey="remaining"
+                            stackId="a"
+                            fill="var(--color-remaining)"
+                            radius={[4, 4, 0, 0]}
+                        />
+                    </BarChart>
+                </ChartContainer>
+
+                {/* Usage Statistics */}
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    {chartData.map((item, index) => (
+                        <div key={index} className="text-center p-4 bg-muted/20 rounded-lg">
+                            <div className="text-lg font-bold text-foreground">
+                                {item.percentage}%
+                            </div>
+                            <div className="text-sm text-muted-foreground">{item.feature}</div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                                {item.used} / {item.limit} requests
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     );
 }

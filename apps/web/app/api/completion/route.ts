@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                // Check rate limits for VT+ users (isVTPlusUser is always true here)
+                // Check rate limits for VT+ users (guaranteed by access check above)
                 let rateLimitResult;
                 try {
                     rateLimitResult = await checkRateLimit(userId, selectedModel, true);

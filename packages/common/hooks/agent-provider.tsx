@@ -214,13 +214,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             if (errorData.message) {
                                 errorText = errorData.message;
                             } else if (errorData.limitType === 'daily_limit_exceeded') {
-                                errorText = getRateLimitMessage.dailyLimit(isSignedIn);
+                                errorText = getRateLimitMessage.dailyLimit(
+                                    isSignedIn,
+                                    hasVtPlusAccess
+                                );
                             } else {
-                                errorText = getRateLimitMessage.minuteLimit(isSignedIn);
+                                errorText = getRateLimitMessage.minuteLimit(
+                                    isSignedIn,
+                                    hasVtPlusAccess
+                                );
                             }
                         } catch {
                             // Fallback if JSON parsing fails
-                            errorText = getRateLimitMessage.dailyLimit(isSignedIn);
+                            errorText = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
                         }
                     }
 
@@ -360,7 +366,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
                         status: 'ERROR',
-                        error: getRateLimitMessage.dailyLimit(isSignedIn),
+                        error: getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess),
                     });
                 } else {
                     updateThreadItem(body.threadId, {
@@ -382,6 +388,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             updateThreadItem,
             handleThreadItemUpdate,
             isSignedIn,
+            hasVtPlusAccess,
             threadItemMap,
         ]
     );

@@ -182,7 +182,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
                                         isSidebarOpen
                                             ? 'w-full flex-row gap-3 px-3 py-2'
-                                            : 'h-8 w-8 p-1'
+                                            : 'h-7 w-7 p-0'
                                     )}
                                     data-testid="sidebar-user-trigger"
                                     onClick={(e) => {

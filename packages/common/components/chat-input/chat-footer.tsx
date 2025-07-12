@@ -1,4 +1,5 @@
 import { Flex } from '@repo/ui';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const ChatFooter = () => {
@@ -7,12 +8,16 @@ export const ChatFooter = () => {
             <div className="flex flex-col items-center gap-2 sm:gap-3">
                 {/* Badges */}
                 <div className="flex flex-row items-center justify-center gap-2 sm:gap-3">
-                    <a href="https://peerlist.io/vinhnx/project/vt" target="_blank" rel="noopener">
-                        <img
+                    <a
+                        href="https://peerlist.io/vinhnx/project/vt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Image
                             src="/icons/peerlist_badge.svg"
                             alt="VT Chat on Peerlist"
-                            width="221"
-                            height="60"
+                            width={221}
+                            height={60}
                             className="h-6 w-auto sm:w-56 sm:h-15"
                         />
                     </a>

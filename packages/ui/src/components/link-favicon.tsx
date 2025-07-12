@@ -1,5 +1,6 @@
 'use client';
 import { Globe } from 'lucide-react';
+import Image from 'next/image';
 import { type FC, useState } from 'react';
 import { cn } from '../lib/utils';
 
@@ -54,11 +55,13 @@ export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = 'sm' 
             )}
         >
             <div className="border-foreground/10 absolute inset-0 z-[2] rounded-full border" />
-            <img
+            <Image
                 alt="favicon"
                 className={cn('absolute inset-0 h-full w-full rounded-sm object-cover', className)}
                 onError={() => setError(true)}
                 src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+                width={128}
+                height={128}
             />
         </div>
     );
