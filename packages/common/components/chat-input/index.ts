@@ -1,6 +1,5 @@
 export * from './chat-actions';
 export * from './chat-editor';
-export * from './chat-footer';
 export * from './document-attachment';
 export * from './image-attachment';
 export * from './image-dropzone';
