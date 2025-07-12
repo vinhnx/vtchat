@@ -21,12 +21,12 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 import {
+    type ChartConfig,
     ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
     ChartLegend,
     ChartLegendContent,
-    type ChartConfig,
+    ChartTooltip,
+    ChartTooltipContent,
 } from './components/chart';
 
 interface BaseChartData {
@@ -103,10 +103,10 @@ export type ChartProps =
 // Custom color palette
 const CHART_COLORS = [
     '#D9487D', // Pink/Magenta
-    '#262626', // Dark Gray
+    '#383B73', // Dark Blue
+    '#171C26', // Dark Navy
     '#BFB38F', // Beige/Tan
-    '#D99A4E', // Orange/Gold
-    '#BF4545', // Red
+    '#A63333', // Dark Red
 ];
 
 // Chart configurations with custom color palette

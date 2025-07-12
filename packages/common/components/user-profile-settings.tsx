@@ -27,6 +27,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useOptimizedAuth } from '../providers/optimized-auth-provider';
 import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
 import { MultiSessionPanel } from './multi-session-panel';
+import { getSessionCacheBustedAvatarUrl } from '../utils/avatar-cache';
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
@@ -384,7 +385,11 @@ export const UserProfileSettings = () => {
                                     className="border-border/20 border-2"
                                     name={session.user.name || session.user.email || 'User'}
                                     size="lg"
-                                    src={session.user.image || undefined}
+                                    src={
+                                        getSessionCacheBustedAvatarUrl(session.user.image) ||
+                                        session.user.image ||
+                                        undefined
+                                    }
                                 />
                                 <div>
                                     <div className="text-foreground font-semibold">

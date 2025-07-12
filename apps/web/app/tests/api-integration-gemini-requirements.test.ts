@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ModelEnum } from '@repo/ai/models';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Set test environment
 process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';

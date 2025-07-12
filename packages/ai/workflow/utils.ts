@@ -2,11 +2,10 @@ import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
-import { ChatMode } from '@repo/shared/config';
 import {
-    isEligibleForQuotaConsumption,
     ACCESS_CONTROL,
     getVTPlusFeatureFromChatMode,
+    isEligibleForQuotaConsumption,
 } from '@repo/shared/utils/access-control';
 import {
     type CoreMessage,
@@ -292,7 +291,7 @@ export const generateTextWithGeminiSearch = async ({
 
                 streamResult = await streamTextWithQuota(streamTextConfig as any, {
                     user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                    feature: VtPlusFeature.PRO_SEARCH,
+                    feature: 'PS', // PRO_SEARCH constant to avoid circular imports
                     amount: 1,
                     isByokKey: isUsingByokKeys(byokKeys),
                 });
@@ -1345,11 +1344,11 @@ export const selectAvailableModel = (
             [ModelEnum.GROK_3_MINI]: 'XAI_API_KEY',
             // OpenRouter models
             [ModelEnum.DEEPSEEK_V3_0324]: 'OPENROUTER_API_KEY',
-            [ModelEnum.DEEPSEEK_R1_FREE]: 'OPENROUTER_API_KEY',
+            [ModelEnum.DEEPSEEK_R1]: 'OPENROUTER_API_KEY',
             [ModelEnum.QWEN3_235B_A22B]: 'OPENROUTER_API_KEY',
             [ModelEnum.QWEN3_32B]: 'OPENROUTER_API_KEY',
             [ModelEnum.MISTRAL_NEMO]: 'OPENROUTER_API_KEY',
-            [ModelEnum.QWEN3_14B_FREE]: 'OPENROUTER_API_KEY',
+            [ModelEnum.QWEN3_14B]: 'OPENROUTER_API_KEY',
         };
 
         const requiredKey = providers[model];

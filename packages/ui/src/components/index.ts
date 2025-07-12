@@ -65,4 +65,5 @@ export * from './typography';
 export * from './use-confirm-popover';
 export * from './use-sonner-toast';
 export * from './use-toast';
+export * from './visually-hidden';
 export * from './vt-plus-badge';

@@ -70,6 +70,23 @@ code[class*="language-"] {
     color: #da4e52;
 }
 
+/* Bash-specific enhancements */
+.token.shebang {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.token.bash-operator,
+.token.operator.bash {
+    color: #ca8a04;
+    font-weight: bold;
+}
+
+.token.variable.bash {
+    color: #9f42f5;
+    font-weight: 500;
+}
+
 /* Dark mode styles using .dark class */
 .dark pre[class*="language-"],
 .dark code[class*="language-"] {
@@ -132,4 +149,21 @@ code[class*="language-"] {
 
 .dark .token.parameter {
     color: #fca5a5;
+}
+
+/* Dark mode bash-specific enhancements */
+.dark .token.shebang {
+    color: #86efac;
+    font-weight: bold;
+}
+
+.dark .token.bash-operator,
+.dark .token.operator.bash {
+    color: #fbbf24;
+    font-weight: bold;
+}
+
+.dark .token.variable.bash {
+    color: #b8a6ff;
+    font-weight: 500;
 }

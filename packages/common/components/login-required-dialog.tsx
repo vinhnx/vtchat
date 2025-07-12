@@ -83,7 +83,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
 
         return (
             <Dialog onOpenChange={onClose} open={isOpen}>
-                <DialogContent ariaTitle={title} className="max-w-md">
+                <DialogContent className="max-w-md">
                     <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>
                         <DialogDescription>{description}</DialogDescription>

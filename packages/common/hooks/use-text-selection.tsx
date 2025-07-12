@@ -7,6 +7,8 @@ export const useTextSelection = () => {
     const [showPopup, setShowPopup] = useState<boolean>(false);
 
     useEffect(() => {
+        if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
         const handleMouseUp = () => {
             const selection = window.getSelection();
 
@@ -36,14 +38,16 @@ export const useTextSelection = () => {
         document.addEventListener('selectionchange', handleMouseUp);
 
         return () => {
-            chatContainer.removeEventListener('selectionchange', handleMouseUp);
+            document.removeEventListener('selectionchange', handleMouseUp);
         };
     }, [showPopup]);
 
     const handleClearSelection = () => {
         setShowPopup(false);
         setSelectedText('');
-        window.getSelection()?.removeAllRanges();
+        if (typeof window !== 'undefined') {
+            window.getSelection()?.removeAllRanges();
+        }
     };
 
     return { selectedText, showPopup, handleClearSelection };

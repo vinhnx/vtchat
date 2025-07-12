@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('login with preset cookies', async ({ page, context }) => {
     // Method A: Set cookies before navigation
@@ -29,7 +29,7 @@ test('login with preset cookies', async ({ page, context }) => {
 
     // Verify you're logged in
     await expect(page.locator('body')).toBeVisible();
-    
+
     // Add assertions to verify authentication worked
     // Example: check for user menu, profile, etc.
 });
@@ -38,7 +38,7 @@ test('login with cookies from file', async ({ page, context }) => {
     // Method B: Load cookies from a JSON file
     const fs = require('fs');
     const cookiesFile = './e2e/cookies.json';
-    
+
     if (fs.existsSync(cookiesFile)) {
         const cookies = JSON.parse(fs.readFileSync(cookiesFile, 'utf8'));
         await context.addCookies(cookies);

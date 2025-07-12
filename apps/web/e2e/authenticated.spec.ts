@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Authenticated User Tests', () => {
     test.beforeEach(async ({ page }) => {
@@ -6,18 +6,18 @@ test.describe('Authenticated User Tests', () => {
         await page.context().clearCookies();
         await page.context().clearPermissions();
     });
-    
+
     test('should be able to access authenticated pages', async ({ page }) => {
         // Navigate to a protected page (assumes you have one)
         await page.goto('/');
-        
+
         // Verify user is logged in by checking for user indicators
         // This should work since we're using the authenticated state
         await expect(page.locator('body')).toBeVisible();
-        
+
         // Check that we're not redirected to login page
         await expect(page).not.toHaveURL(/\/login/);
-        
+
         // Look for user session indicators
         // Adjust these selectors based on your app's UI
         const userIndicators = [
@@ -27,9 +27,9 @@ test.describe('Authenticated User Tests', () => {
             'button:has-text("Profile")',
             'button:has-text("Settings")',
             'button:has-text("Sign out")',
-            'button:has-text("Logout")'
+            'button:has-text("Logout")',
         ];
-        
+
         let foundUserIndicator = false;
         for (const selector of userIndicators) {
             try {
@@ -40,19 +40,19 @@ test.describe('Authenticated User Tests', () => {
                 // Continue to next selector
             }
         }
-        
+
         // If no specific user indicator found, verify we can access the main app
         if (!foundUserIndicator) {
             await expect(page.locator('body')).toBeVisible();
         }
     });
-    
+
     test('should maintain session across page reloads', async ({ page }) => {
         await page.goto('/');
-        
+
         // Reload the page
         await page.reload();
-        
+
         // Verify we're still authenticated
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator('body')).toBeVisible();

@@ -1,20 +1,18 @@
+// Re-export types
+export type {
+    ToolCall,
+    ToolResult,
+} from '@repo/shared/types';
 export {
     openaiWebSearchTool,
     openaiWebSearchWithModel,
     supportsOpenAIWebSearch,
 } from './openai-web-search';
 
-// Enhanced streaming utilities
-export * from './streaming-utils';
-
 // Tool registry and management
 export * from './registry';
-
-// Re-export types
-export type {
-    ToolCall,
-    ToolResult,
-} from '@repo/shared/types';
+// Enhanced streaming utilities
+export * from './streaming-utils';
 
 import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
 import { openaiWebSearchTool } from './openai-web-search';

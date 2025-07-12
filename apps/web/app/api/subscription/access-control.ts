@@ -11,6 +11,7 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import type { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth-server';
+import { checkSubscriptionOptimized } from '../../../lib/auth/optimized-subscription-check';
 
 /**
  * Get comprehensive subscription status for a user
@@ -146,7 +147,21 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
     }
 
     try {
-        // Get comprehensive subscription status from database
+        // Use optimized subscription check first (10x faster)
+        const optimizedResult = await checkSubscriptionOptimized(userId);
+
+        if (optimizedResult) {
+            return {
+                hasAccess: optimizedResult.isVtPlus,
+                reason: optimizedResult.isVtPlus ? undefined : 'VT+ subscription required',
+                subscriptionStatus: optimizedResult.isVtPlus
+                    ? SubscriptionStatusEnum.ACTIVE
+                    : SubscriptionStatusEnum.NONE,
+                planSlug: (optimizedResult.planSlug as PlanSlug) || PlanSlug.VT_BASE,
+            };
+        }
+
+        // Fallback to comprehensive check if optimized fails
         const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
 
         const hasVTPlus =

@@ -3,8 +3,8 @@
  * Tests that checkVTPlusAccess is called with correct object format
  */
 
-import { describe, expect, it, vi } from 'vitest';
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('RAG Authentication Fix - Unit Test', () => {
     it('should verify checkVTPlusAccess receives object with userId property', () => {

@@ -22,11 +22,11 @@ import { ModelEnum } from '@repo/ai/models';
 
 // Import the functions we want to test
 import {
-    checkRateLimit,
     checkDualQuotaLimits,
-    recordRequest,
-    recordDualQuotaUsage,
+    checkRateLimit,
     getRateLimitStatus,
+    recordDualQuotaUsage,
+    recordRequest,
 } from '@/lib/services/rate-limit';
 
 describe('Dual Quota Logic for VT+ Users', () => {

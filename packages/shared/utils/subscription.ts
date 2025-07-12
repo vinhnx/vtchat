@@ -8,7 +8,7 @@ import { log } from '@repo/shared/logger';
 import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
 import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from '../types/subscription';
 import { SubscriptionStatusEnum } from '../types/subscription-status';
-import { hasVTPlusAccessByPlan, canUpgrade as canUserUpgrade } from './access-control';
+import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from './access-control';
 
 // Type for subscription access context
 export interface SubscriptionContext {

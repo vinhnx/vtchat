@@ -7,8 +7,15 @@ import { BUTTON_TEXT } from '@repo/shared/constants';
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
-import { TypographyH2, TypographyH3, TypographyMuted } from '@repo/ui';
-import { Check, CheckCircle, Sparkles } from 'lucide-react';
+import {
+    Announcement,
+    AnnouncementTag,
+    AnnouncementTitle,
+    TypographyH2,
+    TypographyH3,
+    TypographyMuted,
+} from '@repo/ui';
+import { ArrowUpRight, Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AnimatedBadge } from '../../components/animated-badge';
@@ -140,23 +147,16 @@ export default function PlusPage() {
                     </div>
                 </div>
 
-                {/* Promotional Banner */}
-                <CardSpotlightPricing
-                    className={`relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
-                        isCurrentlySubscribed ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
-                    }`}
-                >
-                    <div className="mb-2 flex items-center justify-center gap-2">
-                        <Sparkles className="h-5 w-5 text-[#BFB38F]" />
-                        <span className="text-sm font-semibold uppercase tracking-wide text-[#BFB38F]">
-                            Get 20% off VT+ with code{' '}
-                            <span className="rounded bg-[#BFB38F]/20 px-2 py-1 font-sans text-[#BFB38F]">
-                                VTLAUNCH
-                            </span>
-                        </span>
-                        <Sparkles className="h-5 w-5 text-[#BFB38F]" />
-                    </div>
-                </CardSpotlightPricing>
+                {/* VT LAUNCH Promo Announcement */}
+                <div className="mb-6 flex justify-center">
+                    <Announcement themed>
+                        <AnnouncementTag>Welcome</AnnouncementTag>
+                        <AnnouncementTitle>
+                            Get 20% off VT+ with code VTLAUNCH
+                            <ArrowUpRight className="shrink-0 text-muted-foreground" size={16} />
+                        </AnnouncementTitle>
+                    </Announcement>
+                </div>
 
                 {/* Pricing Section */}
                 <div className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8" id="pricing">

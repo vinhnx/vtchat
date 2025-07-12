@@ -308,7 +308,7 @@ export const CommandSearch = () => {
             />
 
             <Dialog onOpenChange={setShowSubscriptionDialog} open={showSubscriptionDialog}>
-                <DialogContent ariaTitle="Sign In Required" className="max-w-md">
+                <DialogContent className="max-w-md">
                     <DialogHeader>
                         <DialogTitle>Sign In Required</DialogTitle>
                         <DialogDescription>

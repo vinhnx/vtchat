@@ -234,11 +234,11 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return isValidKey(apiKeys.XAI_API_KEY);
                     // OpenRouter models
                     case ChatMode.DEEPSEEK_V3_0324:
-                    case ChatMode.DEEPSEEK_R1_FREE:
+                    case ChatMode.DEEPSEEK_R1:
                     case ChatMode.QWEN3_235B_A22B:
                     case ChatMode.QWEN3_32B:
                     case ChatMode.MISTRAL_NEMO:
-                    case ChatMode.QWEN3_14B_FREE:
+                    case ChatMode.QWEN3_14B:
                         return isValidKey(apiKeys.OPENROUTER_API_KEY);
                     // LM Studio local models - no API key required
                     case ChatMode.LMSTUDIO_LLAMA_3_8B:

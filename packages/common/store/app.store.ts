@@ -25,6 +25,7 @@ export const SETTING_TABS = {
     ACTIVE_SESSIONS: 'active-sessions',
     TERMS: 'terms',
     PRIVACY: 'privacy',
+    CACHE: 'cache',
 } as const;
 
 type SideDrawerProps = {
@@ -152,7 +153,7 @@ export const useAppStore = create<State & Actions>()(
                 settingTab: SETTING_TABS.USAGE_CREDITS,
                 showSignInModal: false,
                 // Default settings - using base plan defaults initially
-                showExamplePrompts: true, // Enable by default for better onboarding
+                showExamplePrompts: false, // Disable by default for cleaner interface
                 customInstructions: '',
                 useWebSearch: false,
                 useMathCalculator: false,
@@ -344,7 +345,7 @@ export const useAppStore = create<State & Actions>()(
                         // Reset all user preferences to base plan defaults
                         const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
-                        state.showExamplePrompts = true; // Enable by default for better onboarding
+                        state.showExamplePrompts = false; // Disable by default for cleaner interface
                         state.customInstructions = '';
                         state.useWebSearch = false;
                         state.useMathCalculator = false;

@@ -1,8 +1,8 @@
-import { streamText, generateText } from 'ai';
-import { consumeQuota } from './vtplusRateLimiter';
-import { VtPlusFeature } from '../config/vtPlusLimits';
 import { log } from '@repo/shared/logger';
 import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
+import { generateText, streamText } from 'ai';
+import type { VtPlusFeature } from '../config/vtPlusLimits';
+import { consumeQuota } from './vtplusRateLimiter';
 
 export interface QuotaOptions {
     user: { id: string; planSlug?: string };

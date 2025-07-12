@@ -3,6 +3,7 @@ import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import {
     AgentProvider,
+    useAdmin,
     useLogout,
     useMobilePWANotification,
     useVTPlusAnnouncement,
@@ -11,7 +12,7 @@ import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import {
-    Avatar,
+    AvatarLegacy as Avatar,
     Badge,
     Button,
     DropdownMenu,
@@ -23,7 +24,18 @@ import {
     SonnerToaster,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FileText, HelpCircle, Info, LogOut, Menu, Settings, Shield, User, X } from 'lucide-react';
+import {
+    Database,
+    FileText,
+    HelpCircle,
+    Info,
+    LogOut,
+    Menu,
+    Settings,
+    Shield,
+    User,
+    X,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { type FC, useEffect } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
@@ -38,6 +50,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         useRootContext();
     const pathname = usePathname();
     const { data: session } = useSession();
+    const { isAdmin } = useAdmin();
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const router = useRouter();
@@ -256,6 +269,17 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 <Settings className="mr-2" size={16} strokeWidth={2} />
                                 Settings
                             </DropdownMenuItem>
+
+                            {/* Admin Menu Item */}
+                            {isAdmin && (
+                                <DropdownMenuItem
+                                    onClick={() => router.push('/admin/database-maintenance')}
+                                >
+                                    <Database className="mr-2" size={16} strokeWidth={2} />
+                                    Admin Dashboard
+                                </DropdownMenuItem>
+                            )}
+
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => router.push('/about')}>
                                 <Info className="mr-2" size={16} strokeWidth={2} />

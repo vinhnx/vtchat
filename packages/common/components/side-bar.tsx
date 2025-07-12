@@ -1,7 +1,7 @@
 'use client';
 import { HistoryItem, Logo } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { useCreemSubscription, useLogout } from '@repo/common/hooks';
+import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
@@ -47,6 +47,7 @@ import {
     Settings,
     Shield,
     Sparkles,
+    Terminal,
     User,
     Zap,
 } from 'lucide-react';
@@ -79,6 +80,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { logout, isLoggingOut } = useLogout();
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const { toast } = useToast();
+    const { isAdmin } = useAdmin();
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -550,6 +552,37 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </span>
                         )}
                     </Button>
+
+                    {/* Admin Button */}
+                    {isAdmin && (
+                        <Button
+                            className={cn(
+                                'relative transition-all duration-200',
+                                isSidebarOpen
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                            )}
+                            onClick={() => {
+                                push('/admin');
+                                // Close mobile drawer if open
+                                if (forceMobile) {
+                                    setIsMobileSidebarOpen(false);
+                                }
+                            }}
+                            rounded="lg"
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            tooltip={isSidebarOpen ? undefined : 'Admin'}
+                            tooltipSide="right"
+                            variant="ghost"
+                        >
+                            <Terminal
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                size={16}
+                                strokeWidth={2}
+                            />
+                            {isSidebarOpen && 'Admin'}
+                        </Button>
+                    )}
                 </Flex>
 
                 {/* Divider */}

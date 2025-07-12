@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatFooter, InlineLoader, Thread } from '@repo/common/components';
+import { Footer, InlineLoader, Thread } from '@repo/common/components';
 import { useSession } from '@repo/shared/lib/auth-client';
 import dynamic from 'next/dynamic';
 
@@ -36,16 +36,14 @@ export default function HomePage() {
                 <ChatInput showGreeting={true} />
             </div>
 
-            {/* ChatFooter pinned to bottom with padding for non-logged users */}
+            {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
                     <div className="pointer-events-auto">
-                        <ChatFooter />
+                        <Footer />
                     </div>
                 </div>
             )}
-
-            {/* Debug component for development */}
         </div>
     );
 }

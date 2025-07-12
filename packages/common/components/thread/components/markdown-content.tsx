@@ -1,11 +1,6 @@
 'use client';
 
-import {
-    ErrorBoundary,
-    ErrorPlaceholder,
-    mdxComponents,
-    useMdxChunker,
-} from '@repo/common/components';
+import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from '@repo/common/components';
 import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
@@ -55,12 +50,6 @@ type MarkdownContentProps = {
     isLast?: boolean;
 };
 
-type NestedChunk = {
-    id: string;
-    content: string;
-    children: NestedChunk[];
-};
-
 export const removeIncompleteTags = (content: string) => {
     // A simpler approach that handles most cases:
     // 1. If the last < doesn't have a matching >, remove from that point onward
@@ -108,36 +97,20 @@ export const MarkdownContent = memo(
     ({ content, className, isCompleted, isLast }: MarkdownContentProps) => {
         const [previousContent, setPreviousContent] = useState<string[]>([]);
         const [currentContent, setCurrentContent] = useState<string>('');
-        const { chunkMdx } = useMdxChunker();
 
         useEffect(() => {
             if (!content) return;
 
-            (async () => {
-                try {
-                    const normalizedContent = normalizeContent(content);
-                    const contentWithCitations = parseCitationsWithSourceTags(normalizedContent);
+            try {
+                const normalizedContent = normalizeContent(content);
+                const contentWithCitations = parseCitationsWithSourceTags(normalizedContent);
 
-                    if (isCompleted) {
-                        setPreviousContent([]);
-                        setCurrentContent(contentWithCitations);
-                    } else {
-                        const { chunks } = await chunkMdx(contentWithCitations);
-
-                        if (chunks.length > 0) {
-                            if (chunks.length > 1) {
-                                setPreviousContent(chunks.slice(0, -1));
-                            } else {
-                                setPreviousContent([]);
-                            }
-                            setCurrentContent(chunks[chunks.length - 1] || '');
-                        }
-                    }
-                } catch (error) {
-                    log.error('Error processing MDX chunks:', { data: error });
-                }
-            })();
-        }, [content, isCompleted]); // chunkMdx no longer needs to be in dependencies since it's stable
+                setPreviousContent([]);
+                setCurrentContent(contentWithCitations);
+            } catch (error) {
+                log.error('Error processing content:', { data: error });
+            }
+        }, [content, isCompleted]);
 
         if (isCompleted && !isLast) {
             return (

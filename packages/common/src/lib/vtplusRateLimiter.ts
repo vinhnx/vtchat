@@ -1,7 +1,7 @@
 import { db, schema } from '@repo/shared/lib/database';
-import { eq, and, sql } from 'drizzle-orm';
-import { QuotaExceededError, VtPlusFeature, VT_PLUS_LIMITS } from '../config/vtPlusLimits';
 import { log } from '@repo/shared/lib/logger';
+import { and, eq, sql } from 'drizzle-orm';
+import { QuotaExceededError, VT_PLUS_LIMITS, VtPlusFeature } from '../config/vtPlusLimits';
 
 export interface ConsumeOptions {
     userId: string;

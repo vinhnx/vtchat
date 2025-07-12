@@ -13,8 +13,8 @@ describe('Reasoning Support', () => {
 
         it('should return true for DeepSeek reasoning models', () => {
             expect(supportsReasoning(ModelEnum.Deepseek_R1)).toBe(true);
-            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FREE)).toBe(true);
-            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FREE)).toBe(true);
+            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1)).toBe(true);
+            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1)).toBe(true);
         });
 
         it('should return true for Anthropic reasoning models', () => {
@@ -33,9 +33,7 @@ describe('Reasoning Support', () => {
 
         it('should return deepseek-reasoning for DeepSeek models', () => {
             expect(getReasoningType(ModelEnum.Deepseek_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
-            expect(getReasoningType(ModelEnum.DEEPSEEK_R1_FREE)).toBe(
-                ReasoningType.DEEPSEEK_REASONING
-            );
+            expect(getReasoningType(ModelEnum.DEEPSEEK_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
         });
 
         it('should return anthropic-reasoning for Anthropic models', () => {

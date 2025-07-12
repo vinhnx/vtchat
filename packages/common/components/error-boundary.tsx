@@ -1,53 +1,98 @@
 'use client';
 
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+import React from 'react';
+import { log } from '@repo/shared/lib/logger';
 
-type ErrorBoundaryProps = {
-    children: ReactNode;
-    fallback?: ReactNode;
-    onError?: (error: Error, errorInfo: ErrorInfo) => void;
-};
-
-type ErrorBoundaryState = {
+interface ErrorBoundaryState {
     hasError: boolean;
-    error: Error | null;
-};
+    error?: Error;
+}
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+interface ErrorBoundaryProps {
+    children: React.ReactNode;
+    fallback?: React.ComponentType<{ error?: Error; resetError: () => void }>;
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     constructor(props: ErrorBoundaryProps) {
         super(props);
-        this.state = {
-            hasError: false,
-            error: null,
-        };
+        this.state = { hasError: false };
     }
 
     static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-        return {
-            hasError: true,
-            error,
-        };
+        return { hasError: true, error };
     }
 
-    componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        if (this.props.onError) {
-            this.props.onError(error, errorInfo);
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        // Filter out development-mode Turbopack errors
+        if (
+            process.env.NODE_ENV === 'development' &&
+            (error.message.includes('__turbopack_context__') ||
+                error.message.includes('register is not a function'))
+        ) {
+            // Log but don't crash the app for known development issues
+            log.debug({ error: error.message }, 'Development mode error (ignored)');
+            return;
         }
+
+        // Log actual errors
+        log.error(
+            { error: error.message, stack: error.stack },
+            'React Error Boundary caught error'
+        );
+
+        // Call optional error handler
+        this.props.onError?.(error, errorInfo);
     }
 
-    render(): ReactNode {
+    resetError = () => {
+        this.setState({ hasError: false, error: undefined });
+    };
+
+    render() {
         if (this.state.hasError) {
+            // Don't show error UI for development Turbopack issues
+            if (
+                process.env.NODE_ENV === 'development' &&
+                this.state.error &&
+                (this.state.error.message.includes('__turbopack_context__') ||
+                    this.state.error.message.includes('register is not a function'))
+            ) {
+                return this.props.children;
+            }
+
+            // Use custom fallback or default error UI
             if (this.props.fallback) {
-                return this.props.fallback;
+                const FallbackComponent = this.props.fallback;
+                return <FallbackComponent error={this.state.error} resetError={this.resetError} />;
             }
 
             return (
-                <div className="error-boundary-fallback">
-                    <h2>Something went wrong</h2>
-                    <details>
-                        <summary>Error details</summary>
-                        <pre>{this.state.error?.toString()}</pre>
-                    </details>
+                <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 p-8">
+                    <h2 className="mb-2 text-lg font-semibold text-red-900">
+                        Something went wrong
+                    </h2>
+                    <p className="mb-4 text-sm text-red-700">
+                        An error occurred while rendering this component.
+                    </p>
+                    {process.env.NODE_ENV === 'development' && this.state.error && (
+                        <details className="mb-4 max-w-lg">
+                            <summary className="cursor-pointer text-sm font-medium text-red-800">
+                                Error Details (Development)
+                            </summary>
+                            <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-900">
+                                {this.state.error.message}
+                                {this.state.error.stack}
+                            </pre>
+                        </details>
+                    )}
+                    <button
+                        className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+                        onClick={this.resetError}
+                    >
+                        Try Again
+                    </button>
                 </div>
             );
         }
@@ -55,3 +100,5 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.children;
     }
 }
+
+export default ErrorBoundary;

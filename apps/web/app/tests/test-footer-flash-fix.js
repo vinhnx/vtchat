@@ -70,13 +70,13 @@ test.describe('Footer Flash Fix', () => {
         await page.goto('/');
 
         // Chat footer should not be visible initially or after session loads
-        const chatFooter = page.locator('[data-testid="chat-footer"]').first();
-        await expect(chatFooter).not.toBeVisible();
+        const footer = page.locator('footer').first();
+        await expect(footer).not.toBeVisible();
 
         // Wait for session to load
         await page.waitForTimeout(150);
 
         // Should still not be visible for logged-in users
-        await expect(chatFooter).not.toBeVisible();
+        await expect(footer).not.toBeVisible();
     });
 });

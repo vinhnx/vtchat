@@ -19,7 +19,7 @@ import {
     TypographyMuted,
 } from '@repo/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 // Model configuration for display
 const MODEL_CONFIG = {
@@ -170,13 +170,18 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
             <div>
                 <TypographyH3>Usage Overview</TypographyH3>
                 <TypographyMuted>
-                    Track your Gemini model usage. Server-funded access requires VT+ subscription.
-                    Free users must provide their own API key.
+                    Track your Gemini model usage. Server-funded access requires VT+ subscription
+                    with monthly budget cap of $80 USD for cost control.
                     <br />
                     <span className="text-xs text-muted-foreground/80">
-                        Note: Usage is tracked for server-funded requests only. VT+ Flash Lite has
-                        unlimited access but usage is shown for transparency. BYOK usage is not
-                        counted.
+                        <strong>VT+ Users:</strong> Server-funded access with rate limits (Flash
+                        Lite: 100/day, Flash: 50/day, Pro: 25/day).
+                        <br />
+                        <strong>Free Users:</strong> Must provide own Gemini API key (BYOK) - no
+                        server costs apply.
+                        <br />
+                        <strong>Budget Policy:</strong> Service may be temporarily unavailable if
+                        monthly budget is exceeded.
                         <br />
                         <a
                             href="https://ai.google.dev/gemini-api/docs/models"
@@ -189,6 +194,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     </span>
                 </TypographyMuted>
             </div>
+
+            {/* VT+ Features Usage Chart */}
+            <VtPlusUsageChart userId={userId} />
 
             {/* Overall Usage Summary Chart */}
             <Card>
@@ -292,7 +300,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 tickMargin={8}
                                 tick={{ fontSize: 10 }}
                                 allowDecimals={false}
-                                width={25}
+                                width={50}
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <ChartLegend
@@ -565,9 +573,6 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 </CardContent>
             </Card>
 
-            {/* VT+ Features Usage Chart */}
-            <VtPlusUsageChart userId={userId} />
-
             {/* Refresh Button */}
             <div className="flex justify-center">
                 <Button
@@ -669,116 +674,131 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
         );
     }
 
-    // Prepare chart data
-    const chartData = [
+    // Individual feature data
+    const features = [
         {
-            feature: 'Deep Research',
-            used: vtPlusUsage.deepResearch?.used || 0,
-            limit: vtPlusUsage.deepResearch?.limit || 0,
-            percentage: vtPlusUsage.deepResearch?.percentage || 0,
+            name: 'Deep Research',
+            data: vtPlusUsage.deepResearch || { used: 0, limit: 0, percentage: 0 },
+            color: 'hsl(var(--chart-1))',
         },
         {
-            feature: 'Pro Search',
-            used: vtPlusUsage.proSearch?.used || 0,
-            limit: vtPlusUsage.proSearch?.limit || 0,
-            percentage: vtPlusUsage.proSearch?.percentage || 0,
+            name: 'Pro Search',
+            data: vtPlusUsage.proSearch || { used: 0, limit: 0, percentage: 0 },
+            color: 'hsl(var(--chart-2))',
         },
         {
-            feature: 'Personal AI Assistant',
-            used: vtPlusUsage.rag?.used || 0,
-            limit: vtPlusUsage.rag?.limit || 0,
-            percentage: vtPlusUsage.rag?.percentage || 0,
+            name: 'Personal AI Assistant',
+            data: vtPlusUsage.rag || { used: 0, limit: 0, percentage: 0 },
+            color: 'hsl(var(--chart-3))',
         },
     ];
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-foreground">VT+ Research Features Usage</CardTitle>
-                <CardDescription>
+        <div className="space-y-6">
+            <div>
+                <h3 className="text-lg font-semibold text-foreground">
+                    VT+ Research Features Usage
+                </h3>
+                <p className="text-sm text-muted-foreground">
                     Monthly usage tracking for exclusive VT+ research capabilities
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ChartContainer
-                    config={{
-                        used: {
-                            label: 'Used',
-                            color: 'hsl(var(--chart-1))',
-                        },
-                        remaining: {
-                            label: 'Remaining',
-                            color: 'hsl(var(--chart-2))',
-                        },
-                    }}
-                    className="min-h-[200px] w-full max-w-full overflow-hidden"
-                >
-                    <BarChart
-                        data={chartData.map((item) => ({
-                            feature: item.feature,
-                            used: item.used,
-                            remaining: Math.max(0, item.limit - item.used),
-                        }))}
-                        margin={{
-                            top: 20,
-                            right: 10,
-                            left: 5,
-                            bottom: 5,
-                        }}
-                        accessibilityLayer
-                    >
-                        <CartesianGrid vertical={false} stroke="hsl(var(--border))" opacity={0.3} />
-                        <XAxis
-                            dataKey="feature"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            tick={{ fontSize: 10 }}
-                            interval={0}
-                        />
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            tick={{ fontSize: 10 }}
-                            allowDecimals={false}
-                            width={25}
-                        />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <ChartLegend
-                            content={<ChartLegendContent />}
-                            className="flex-wrap justify-center text-xs"
-                        />
-                        <Bar
-                            dataKey="used"
-                            stackId="a"
-                            fill="var(--color-used)"
-                            radius={[0, 0, 4, 4]}
-                        />
-                        <Bar
-                            dataKey="remaining"
-                            stackId="a"
-                            fill="var(--color-remaining)"
-                            radius={[4, 4, 0, 0]}
-                        />
-                    </BarChart>
-                </ChartContainer>
+                </p>
+            </div>
 
-                {/* Usage Statistics */}
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    {chartData.map((item, index) => (
-                        <div key={index} className="text-center p-4 bg-muted/20 rounded-lg">
-                            <div className="text-lg font-bold text-foreground">
-                                {item.percentage}%
+            {/* Individual Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {features.map((feature, index) => (
+                    <Card key={index}>
+                        <CardHeader className="pb-3">
+                            <CardTitle className="text-base">{feature.name}</CardTitle>
+                            <CardDescription>
+                                {feature.data.used.toLocaleString()} /{' '}
+                                {feature.data.limit.toLocaleString()} requests
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ChartContainer
+                                config={{
+                                    used: {
+                                        label: 'Used',
+                                        color: feature.color,
+                                    },
+                                    quota: {
+                                        label: 'Quota Limit',
+                                        color: 'hsl(var(--muted))',
+                                    },
+                                }}
+                                className="min-h-[150px] w-full"
+                            >
+                                <AreaChart
+                                    data={[
+                                        {
+                                            name: 'Used',
+                                            used: feature.data.used,
+                                            quota: feature.data.limit,
+                                        },
+                                    ]}
+                                    margin={{
+                                        top: 20,
+                                        right: 10,
+                                        left: 10,
+                                        bottom: 5,
+                                    }}
+                                    accessibilityLayer
+                                >
+                                    <CartesianGrid
+                                        vertical={false}
+                                        stroke="hsl(var(--border))"
+                                        opacity={0.3}
+                                    />
+                                    <XAxis
+                                        dataKey="name"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        tick={{ fontSize: 10 }}
+                                        hide
+                                    />
+                                    <YAxis
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        tick={{ fontSize: 10 }}
+                                        allowDecimals={false}
+                                        width={60}
+                                    />
+                                    <ChartTooltip content={<ChartTooltipContent />} />
+                                    <Area
+                                        dataKey="quota"
+                                        stroke="var(--color-quota)"
+                                        fill="var(--color-quota)"
+                                        fillOpacity={0.2}
+                                        strokeWidth={2}
+                                        type="monotone"
+                                    />
+                                    <Area
+                                        dataKey="used"
+                                        stroke="var(--color-used)"
+                                        fill="var(--color-used)"
+                                        fillOpacity={0.6}
+                                        strokeWidth={2}
+                                        type="monotone"
+                                    />
+                                </AreaChart>
+                            </ChartContainer>
+
+                            {/* Usage Statistics */}
+                            <div className="mt-4 text-center p-3 bg-muted/20 rounded-lg">
+                                <div className="text-xl font-bold text-foreground">
+                                    {feature.data.percentage}%
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-1">
+                                    Usage Percentage
+                                </div>
                             </div>
-                            <div className="text-sm text-muted-foreground">{item.feature}</div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                                {item.used} / {item.limit} requests
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </div>
     );
 }

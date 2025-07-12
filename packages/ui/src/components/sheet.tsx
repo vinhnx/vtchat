@@ -42,5 +42,32 @@ export const SheetTrigger = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof Drawer.Trigger>
 >(({ ...props }, ref) => <Drawer.Trigger {...props} asChild className="text-left" ref={ref} />);
 
+export const SheetHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+    ({ className, ...props }, ref) => (
+        <div
+            ref={ref}
+            className={cn('flex flex-col space-y-2 text-center sm:text-left px-6', className)}
+            {...props}
+        />
+    )
+);
+
+export const SheetTitle = React.forwardRef<
+    HTMLHeadingElement,
+    React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+    <h2 ref={ref} className={cn('text-lg font-semibold text-foreground', className)} {...props} />
+));
+
+export const SheetDescription = React.forwardRef<
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+    <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+));
+
 SheetTrigger.displayName = 'SheetTrigger';
+SheetHeader.displayName = 'SheetHeader';
+SheetTitle.displayName = 'SheetTitle';
+SheetDescription.displayName = 'SheetDescription';
 Sheet.displayName = 'Sheet';

@@ -222,8 +222,6 @@ type State = {
         ttlSeconds: number; // Cache time-to-live in seconds
         maxCaches: number; // Maximum number of cached conversations
     };
-    // Internal cache for selector results to prevent infinite loops
-    _cache?: Record<string, { result: any; length: number }>;
 };
 
 type Actions = {
@@ -1608,17 +1606,6 @@ export const useChatStore = create(
 
         getPreviousThreadItems: (threadId) => {
             const state = get();
-            const cacheKey = `prev_${threadId}`;
-
-            // Simple cache to prevent infinite loops
-            if (state._cache?.[cacheKey]) {
-                const cached = state._cache[cacheKey];
-                // Check if thread items for this thread have changed
-                const currentItems = state.threadItems.filter((item) => item.threadId === threadId);
-                if (cached.length === currentItems.length) {
-                    return cached.result;
-                }
-            }
 
             const allThreadItems = state.threadItems
                 .filter((item) => item.threadId === threadId)
@@ -1627,30 +1614,11 @@ export const useChatStore = create(
                 });
 
             const result = allThreadItems.length > 1 ? allThreadItems.slice(0, -1) : [];
-
-            // Cache the result
-            set((state) => {
-                if (!state._cache) state._cache = {};
-                state._cache[cacheKey] = { result, length: allThreadItems.length };
-            });
-
             return result;
         },
 
         getCurrentThreadItem: () => {
             const state = get();
-            const cacheKey = `current_${state.currentThreadId}`;
-
-            // Simple cache to prevent infinite loops
-            if (state._cache?.[cacheKey]) {
-                const cached = state._cache[cacheKey];
-                const currentItems = state.threadItems.filter(
-                    (item) => item.threadId === state.currentThreadId
-                );
-                if (cached.length === currentItems.length) {
-                    return cached.result;
-                }
-            }
 
             const allThreadItems = state.threadItems
                 .filter((item) => item.threadId === state.currentThreadId)
@@ -1658,15 +1626,7 @@ export const useChatStore = create(
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
 
-            const result = allThreadItems[allThreadItems.length - 1] || null;
-
-            // Cache the result
-            set((state) => {
-                if (!state._cache) state._cache = {};
-                state._cache[cacheKey] = { result, length: allThreadItems.length };
-            });
-
-            return result;
+            return allThreadItems[allThreadItems.length - 1] || null;
         },
 
         getCurrentThread: () => {

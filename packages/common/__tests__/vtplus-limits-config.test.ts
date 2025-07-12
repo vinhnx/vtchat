@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { VtPlusFeature, VT_PLUS_LIMITS, QuotaExceededError } from '../src/config/vtPlusLimits';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { QuotaExceededError, VT_PLUS_LIMITS, VtPlusFeature } from '../src/config/vtPlusLimits';
 
 describe('VT+ Limits Configuration', () => {
     beforeEach(() => {

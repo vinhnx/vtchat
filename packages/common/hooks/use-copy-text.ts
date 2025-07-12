@@ -10,6 +10,10 @@ export const useCopyText = () => {
     const [markdownCopyStatus, setMarkdownCopyStatus] = useState<CopyStatus>('idle');
 
     const copyToClipboard = useCallback(async (element: HTMLElement) => {
+        if (typeof window === 'undefined' || typeof document === 'undefined') {
+            return false;
+        }
+
         try {
             const range = document.createRange();
             const selection = window.getSelection();
@@ -38,7 +42,7 @@ export const useCopyText = () => {
     }, []);
 
     const copyMarkdown = useCallback(async (text?: string) => {
-        if (!text) return;
+        if (!text || typeof window === 'undefined' || typeof document === 'undefined') return;
 
         try {
             // Try modern clipboard API first

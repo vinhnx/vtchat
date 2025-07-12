@@ -1,6 +1,6 @@
 /**
  * Instructions to get real cookies from your browser:
- * 
+ *
  * 1. Open http://localhost:3000 in your browser
  * 2. Log in normally through OAuth
  * 3. Open Developer Tools (F12)
@@ -11,8 +11,8 @@
 
 // Run this in browser console after logging in:
 function extractCookiesForPlaywright() {
-    const cookies = document.cookie.split(';').map(cookie => {
-        const [name, value] = cookie.split('=').map(s => s.trim());
+    const cookies = document.cookie.split(';').map((cookie) => {
+        const [name, value] = cookie.split('=').map((s) => s.trim());
         return {
             name,
             value: value || '',
@@ -20,13 +20,13 @@ function extractCookiesForPlaywright() {
             path: '/',
             httpOnly: false, // These are client-side accessible cookies
             secure: false,
-            sameSite: 'Lax'
+            sameSite: 'Lax',
         };
     });
-    
+
     console.log('Playwright cookies format:');
     console.log(JSON.stringify(cookies, null, 2));
-    
+
     return cookies;
 }
 
@@ -38,10 +38,10 @@ function getAllCookies() {
 
 /**
  * Usage in Playwright test:
- * 
+ *
  * const cookies = [
  *     // Paste the output from above here
  * ];
- * 
+ *
  * await context.addCookies(cookies);
  */

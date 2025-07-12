@@ -1,4 +1,4 @@
-import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
+import { getModelFromChatMode, type ModelEnum } from '@repo/ai/models';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
@@ -14,7 +14,9 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/a
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
 
+import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
 import { executeStream, sendMessage } from './stream-handlers';
+import { registerStream, unregisterStream } from './stream-registry';
 import { completionRequestSchema, SSE_HEADERS } from './types';
 import { getIp } from './utils';
 
@@ -272,9 +274,17 @@ export async function POST(request: NextRequest) {
 
         const _encoder = new TextEncoder();
         const abortController = new AbortController();
+        const requestId = crypto.randomUUID();
+
+        // Register stream for memory leak prevention
+        registerStream(requestId, abortController, {
+            userId,
+            threadId: data.threadId,
+        });
 
         request.signal.addEventListener('abort', () => {
             abortController.abort();
+            unregisterStream(requestId);
         });
 
         const gl = geolocation(request);
@@ -290,6 +300,7 @@ export async function POST(request: NextRequest) {
             userId,
             _ip: ip,
             abortController,
+            requestId,
             gl,
             selectedModel,
             hasByokGeminiKey: !!(
@@ -317,6 +328,7 @@ function createCompletionStream({
     userId,
     ip: _ip,
     abortController,
+    requestId,
     gl,
     selectedModel: _selectedModel,
     hasByokGeminiKey: _hasByokGeminiKey,
@@ -327,6 +339,7 @@ function createCompletionStream({
     userId?: string;
     _ip?: string;
     abortController: AbortController;
+    requestId: string;
     gl: Geo;
     selectedModel: ModelEnum;
     hasByokGeminiKey: boolean;
@@ -339,26 +352,32 @@ function createCompletionStream({
 
     return new ReadableStream({
         async start(controller) {
-            heartbeatInterval = setInterval(() => {
-                if (isControllerClosed) {
-                    if (heartbeatInterval) {
-                        clearInterval(heartbeatInterval);
-                        heartbeatInterval = null;
+            heartbeatInterval = setInterval(
+                () => {
+                    if (isControllerClosed) {
+                        if (heartbeatInterval) {
+                            clearInterval(heartbeatInterval);
+                            heartbeatInterval = null;
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                try {
-                    controller.enqueue(_encoder.encode(': heartbeat\n\n'));
-                } catch (error) {
-                    // Controller is closed, clear interval
-                    if ((error as any)?.code === 'ERR_INVALID_STATE' && heartbeatInterval) {
-                        isControllerClosed = true;
-                        clearInterval(heartbeatInterval);
-                        heartbeatInterval = null;
+                    try {
+                        controller.enqueue(_encoder.encode(HEARTBEAT_COMMENT));
+                    } catch (error) {
+                        // Controller is closed, clear interval
+                        if ((error as any)?.code === 'ERR_INVALID_STATE' && heartbeatInterval) {
+                            isControllerClosed = true;
+                            clearInterval(heartbeatInterval);
+                            heartbeatInterval = null;
+                            // Abort the request to clean up resources
+                            abortController.abort();
+                            unregisterStream(requestId);
+                        }
                     }
-                }
-            }, 15_000);
+                },
+                HEARTBEAT_INTERVAL_MS + Math.random() * HEARTBEAT_JITTER_MS
+            );
 
             try {
                 await executeStream({
@@ -393,7 +412,7 @@ function createCompletionStream({
             } catch (error) {
                 if (abortController.signal.aborted) {
                     log.info('abortController.signal.aborted');
-                    sendMessage(controller, _encoder, {
+                    await sendMessage(controller, _encoder, {
                         type: 'done',
                         status: 'aborted',
                         threadId: data.threadId,
@@ -409,7 +428,7 @@ function createCompletionStream({
 
                     if (isQuotaError) {
                         log.warn({ error, userId }, 'VT+ quota exceeded during request');
-                        sendMessage(controller, _encoder, {
+                        await sendMessage(controller, _encoder, {
                             type: 'done',
                             status: 'quota_exceeded',
                             error: 'VT+ monthly quota exceeded. Your quota will reset next month.',
@@ -420,7 +439,7 @@ function createCompletionStream({
                         });
                     } else {
                         log.info('sending error message');
-                        sendMessage(controller, _encoder, {
+                        await sendMessage(controller, _encoder, {
                             type: 'done',
                             status: 'error',
                             error: error instanceof Error ? error.message : String(error),
@@ -434,8 +453,14 @@ function createCompletionStream({
                 isControllerClosed = true;
                 if (heartbeatInterval) {
                     clearInterval(heartbeatInterval);
+                    heartbeatInterval = null;
                 }
+                unregisterStream(requestId);
                 controller.close();
+
+                // Break object references to help GC
+                // @ts-ignore
+                data = null;
             }
         },
         cancel() {
@@ -445,6 +470,7 @@ function createCompletionStream({
                 clearInterval(heartbeatInterval);
                 heartbeatInterval = null;
             }
+            unregisterStream(requestId);
             abortController.abort();
         },
     });

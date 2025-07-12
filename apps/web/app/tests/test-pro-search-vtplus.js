@@ -9,7 +9,7 @@
  * 3. Chat mode switching works correctly
  */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the getGlobalSubscriptionStatus function
 const mockGetGlobalSubscriptionStatus = vi.fn();

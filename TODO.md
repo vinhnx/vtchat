@@ -1,11 +1,30 @@
 # TODO
 
 --
+
 ok go-> https://vtchat.io.vn/
 
 --
+limit deep research to 5 queries for VT+ users
+limit pro research to 10 queries for VT+ users
+--
+
+
+https://www.better-auth.com/docs/plugins/mcp
+--
+https://github.com/vercel/mcp-adapter
 
 --
+
+replace chat thread id gen with
+
+https://github.com/shuding/legid
+
+migrate existing thread from cache to legid
+
+--
+
+
 https://tailwindcss.com/docs/upgrade-guide
 
 --
@@ -19,6 +38,7 @@ I only set VT+ tier as 5.99 usd what should i do
 --
 
 https://github.com/MiguelsPizza/WebMCP
+
 
 --
 

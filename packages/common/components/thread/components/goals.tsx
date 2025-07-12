@@ -118,7 +118,12 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                 renderContent: () => (
                     <div className="flex w-full flex-1 flex-col px-2 py-4">
                         {steps.map((step, index) => (
-                            <StepRenderer key={index} step={step} />
+                            <StepRenderer
+                                key={index}
+                                step={step}
+                                toolCalls={threadItem?.toolCalls}
+                                toolResults={threadItem?.toolResults}
+                            />
                         ))}
                         {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
                             <ToolStep
@@ -144,7 +149,12 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
             renderContent: () => (
                 <div className="flex w-full flex-1 flex-col px-2 py-4">
                     {steps.map((step, index) => (
-                        <StepRenderer key={index} step={step} />
+                        <StepRenderer
+                            key={index}
+                            step={step}
+                            toolCalls={threadItem?.toolCalls}
+                            toolResults={threadItem?.toolResults}
+                        />
                     ))}
                     {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
                         <ToolStep

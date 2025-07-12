@@ -1,4 +1,4 @@
-import { multiSessionClient } from 'better-auth/client/plugins';
+import { adminClient, multiSessionClient } from 'better-auth/client/plugins';
 import { createAuthClient } from 'better-auth/react';
 
 // Import performance utilities
@@ -32,7 +32,7 @@ const getBaseURL = () => {
 // Create the auth client that will be used across all packages
 export const authClient = createAuthClient({
     baseURL: getBaseURL(),
-    plugins: [multiSessionClient()],
+    plugins: [multiSessionClient(), adminClient()],
     // Remove fetchOptions from client config - this is server-side only
 });
 
@@ -65,6 +65,7 @@ export const {
     unlinkAccount,
     listAccounts,
     multiSession,
+    admin,
 } = authClient;
 
 // Create compatibility aliases for Better Auth

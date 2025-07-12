@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { isGeminiModel, GEMINI_MODEL_ENUMS_ARRAY, GEMINI_CHAT_MODES } from '../model-utils';
-import { ChatMode } from '../../config';
 import { ModelEnum } from '@repo/ai/models';
+import { describe, expect, it } from 'vitest';
+import { ChatMode } from '../../config';
+import { GEMINI_CHAT_MODES, GEMINI_MODEL_ENUMS_ARRAY, isGeminiModel } from '../model-utils';
 
 describe('isGeminiModel', () => {
     it('should return true for Gemini ChatMode values', () => {

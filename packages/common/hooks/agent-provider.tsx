@@ -11,10 +11,20 @@ import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import {
+    createContext,
+    type ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
 import { isGeminiModel } from '../utils/document-processing';
+
 import { useGenerationTimeout } from './use-generation-timeout';
 import { useVtPlusAccess } from './use-subscription-access';
 
@@ -73,6 +83,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
     const hasVtPlusAccess = useVtPlusAccess();
+
+    // Track active abort controllers for cleanup
+    const activeControllersRef = useRef<Set<AbortController>>(new Set());
+
+    // Debounce rapid submission attempts
+    const lastSubmissionRef = useRef<number>(0);
+    const SUBMISSION_DEBOUNCE_MS = 500;
 
     // Store setters for syncing tool states
     const _setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
@@ -178,10 +195,49 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         )
     );
 
+    // Setup page cleanup listeners
+    useEffect(() => {
+        const activeControllers = activeControllersRef.current;
+
+        const handleBeforeUnload = () => {
+            log.info('Page unloading, aborting active connections');
+            activeControllers.forEach((controller) => {
+                if (!controller.signal.aborted) {
+                    controller.abort();
+                }
+            });
+            activeControllers.clear();
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                log.debug('Tab hidden, connections will timeout naturally');
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            // Cleanup any remaining connections
+            activeControllers.forEach((controller) => {
+                if (!controller.signal.aborted) {
+                    controller.abort();
+                }
+            });
+        };
+    }, []);
+
     const runAgent = useCallback(
         async (body: any) => {
             const abortController = new AbortController();
             setAbortController(abortController);
+
+            // Track this controller for cleanup
+            activeControllersRef.current.add(abortController);
+
             setIsGenerating(true);
             const startTime = performance.now();
 
@@ -193,6 +249,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     status: 'ABORTED',
                     persistToDB: true,
                 });
+                // Remove from tracking
+                activeControllersRef.current.delete(abortController);
             });
 
             try {
@@ -378,6 +436,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             } finally {
                 setIsGenerating(false);
 
+                // Remove from tracking and cleanup
+                activeControllersRef.current.delete(abortController);
+
                 const totalTime = performance.now() - startTime;
                 log.info({ totalTimeMs: totalTime.toFixed(2) }, 'Stream completed');
             }
@@ -415,6 +476,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
+            // Debounce rapid submissions
+            const now = Date.now();
+            if (now - lastSubmissionRef.current < SUBMISSION_DEBOUNCE_MS) {
+                log.debug('Submission debounced - too frequent');
+                return;
+            }
+            lastSubmissionRef.current = now;
+
             log.info(
                 { useWebSearch, useMathCalculator, useCharts },
                 'Agent provider received flags'

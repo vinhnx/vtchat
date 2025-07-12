@@ -5,7 +5,6 @@ import type { ProviderEnumType } from './providers';
 
 export const ModelEnum = {
     CLAUDE_4_SONNET: 'claude-4-sonnet-20250514',
-    Deepseek_R1: 'accounts/fireworks/models/deepseek-r1',
     GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
@@ -23,11 +22,12 @@ export const ModelEnum = {
     GROK_4: 'grok-4',
     // OpenRouter models
     DEEPSEEK_V3_0324: 'deepseek/deepseek-chat-v3-0324',
-    DEEPSEEK_R1_FREE: 'deepseek/deepseek-r1:free',
+    DEEPSEEK_R1: 'deepseek/deepseek-r1',
     QWEN3_235B_A22B: 'qwen/qwen3-235b-a22b',
     QWEN3_32B: 'qwen/qwen3-32b',
     MISTRAL_NEMO: 'mistralai/mistral-nemo',
-    QWEN3_14B_FREE: 'qwen/qwen3-14b:free',
+    QWEN3_14B: 'qwen/qwen3-14b',
+    KIMI_K2: 'moonshot/kimi-k2',
     // LM Studio models (using generic model names)
     LMSTUDIO_LLAMA_3_8B: 'llama-3-8b-instruct',
     LMSTUDIO_QWEN_7B: 'qwen2.5-7b-instruct',
@@ -94,13 +94,6 @@ export const models: Model[] = [
         name: 'GPT-4o Mini',
         provider: 'openai',
         maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.Deepseek_R1,
-        name: 'DeepSeek R1',
-        provider: 'fireworks',
-        maxTokens: 32_768,
         contextWindow: 200_000,
     },
     {
@@ -190,12 +183,19 @@ export const models: Model[] = [
         contextWindow: 131_072,
     },
     {
-        id: ModelEnum.QWEN3_14B_FREE,
+        id: ModelEnum.QWEN3_14B,
         name: 'Qwen3 14B',
         provider: 'openrouter',
         maxTokens: 8192,
         contextWindow: 40_960,
         isFree: true,
+    },
+    {
+        id: ModelEnum.KIMI_K2,
+        name: 'Kimi K2',
+        provider: 'openrouter',
+        maxTokens: 4096,
+        contextWindow: 131_072,
     },
     // LM Studio models
     {
@@ -273,16 +273,18 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
             return ModelEnum.DEEPSEEK_V3_0324;
-        case ChatMode.DEEPSEEK_R1_FREE:
-            return ModelEnum.DEEPSEEK_R1_FREE;
+        case ChatMode.DEEPSEEK_R1:
+            return ModelEnum.DEEPSEEK_R1;
         case ChatMode.QWEN3_235B_A22B:
             return ModelEnum.QWEN3_235B_A22B;
         case ChatMode.QWEN3_32B:
             return ModelEnum.QWEN3_32B;
         case ChatMode.MISTRAL_NEMO:
             return ModelEnum.MISTRAL_NEMO;
-        case ChatMode.QWEN3_14B_FREE:
-            return ModelEnum.QWEN3_14B_FREE;
+        case ChatMode.QWEN3_14B:
+            return ModelEnum.QWEN3_14B;
+        case ChatMode.KIMI_K2:
+            return ModelEnum.KIMI_K2;
         // LM Studio local models
         case ChatMode.LMSTUDIO_LLAMA_3_8B:
             return ModelEnum.LMSTUDIO_LLAMA_3_8B;
@@ -326,13 +328,14 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
             return 131_072;
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
-        case ChatMode.DEEPSEEK_R1_FREE:
+        case ChatMode.DEEPSEEK_R1:
             return 163_840;
         case ChatMode.QWEN3_235B_A22B:
         case ChatMode.QWEN3_32B:
-        case ChatMode.QWEN3_14B_FREE:
+        case ChatMode.QWEN3_14B:
             return 40_960;
         case ChatMode.MISTRAL_NEMO:
+        case ChatMode.KIMI_K2:
             return 131_072;
         // LM Studio local models
         case ChatMode.LMSTUDIO_LLAMA_3_8B:
@@ -457,7 +460,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     // DeepSeek reasoning models (via Fireworks, OpenRouter)
     const deepseekReasoningModels = [
         ModelEnum.Deepseek_R1, // Fireworks
-        ModelEnum.DEEPSEEK_R1_FREE, // OpenRouter
+        ModelEnum.DEEPSEEK_R1, // OpenRouter
     ];
 
     // Anthropic reasoning models
@@ -514,8 +517,9 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.DEEPSEEK_V3_0324,
         ModelEnum.QWEN3_235B_A22B,
         ModelEnum.QWEN3_32B,
-        ModelEnum.QWEN3_14B_FREE,
+        ModelEnum.QWEN3_14B,
         ModelEnum.MISTRAL_NEMO,
+        ModelEnum.KIMI_K2,
     ];
 
     // xAI models that support tools
@@ -560,7 +564,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     }
 
     // DeepSeek models use reasoning middleware with <think> tags
-    const deepseekReasoningModels = [ModelEnum.Deepseek_R1, ModelEnum.DEEPSEEK_R1_FREE];
+    const deepseekReasoningModels = [ModelEnum.Deepseek_R1, ModelEnum.DEEPSEEK_R1];
 
     if (deepseekReasoningModels.includes(model)) {
         return ReasoningType.DEEPSEEK_REASONING;

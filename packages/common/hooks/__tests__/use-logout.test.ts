@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
+import { PlanSlug } from '@repo/shared/types/subscription';
 import { renderHook } from '@testing-library/react';
 import { useLogout } from '../use-logout';
-import { PlanSlug } from '@repo/shared/types/subscription';
 
 // Mock dependencies
 jest.mock('next-themes', () => ({

@@ -1,45 +1,56 @@
-import { TypographySmall } from '@repo/ui';
 import Link from 'next/link';
-import { AIDisclaimer } from './ai-disclaimer';
+
+const links = [
+    {
+        title: 'Home',
+        href: '/',
+    },
+    {
+        title: 'Terms',
+        href: '/terms',
+    },
+    {
+        title: 'Privacy',
+        href: '/privacy',
+    },
+    {
+        title: 'VT+',
+        href: '/plus',
+    },
+    {
+        title: 'Contact',
+        href: 'mailto:hello@vtdotai.io.vn',
+    },
+    {
+        title: 'X/Twitter',
+        href: 'https://x.com/vtdotai',
+    },
+    {
+        title: 'About',
+        href: '/about',
+    },
+];
 
 export const Footer = () => {
-    const links = [
-        {
-            href: '/terms',
-            label: 'Terms of Service',
-        },
-        {
-            href: '/privacy',
-            label: 'Privacy Policy',
-        },
-        {
-            href: '/faq',
-            label: 'Help Center',
-        },
-        {
-            href: 'mailto:hello@vtchat.io.vn',
-            label: 'Support',
-        },
-    ];
-
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-4 p-6">
-            <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-6">
-                {links.map((link) => (
-                    <Link
-                        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                        href={link.href}
-                        key={link.href}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
+        <footer className="py-4 md:py-16">
+            <div className="mx-auto max-w-5xl px-4 md:px-6">
+                <div className="my-2 md:my-8 flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm">
+                    {links.map((link, index) => (
+                        <Link
+                            key={index}
+                            href={link.href}
+                            className="text-muted-foreground hover:text-primary block duration-150"
+                        >
+                            <span>{link.title}</span>
+                        </Link>
+                    ))}
+                </div>
+                <span className="text-muted-foreground block text-center text-xs md:text-sm">
+                    {' '}
+                    © {new Date().getFullYear()} VT, All rights reserved
+                </span>
             </div>
-
-            <AIDisclaimer className="mb-2" />
-            <TypographySmall className="text-muted-foreground text-xs">
-                © 2025 VT. All rights reserved.
-            </TypographySmall>
-        </div>
+        </footer>
     );
 };

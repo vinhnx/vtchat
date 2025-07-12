@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { log } from '@repo/shared/lib/logger';
 import {
     Badge,
     Card,
@@ -10,8 +10,8 @@ import {
     CardTitle,
     Progress,
 } from '@repo/ui';
-import { CalendarClock, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
-import { log } from '@repo/shared/lib/logger';
+import { AlertTriangle, CalendarClock, CheckCircle, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface VtPlusUsageData {
     deepResearch: {

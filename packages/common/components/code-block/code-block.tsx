@@ -108,7 +108,12 @@ export const CodeBlock = ({
                         py: 'python',
                         rb: 'ruby',
                         sh: 'bash',
+                        shell: 'bash',
                         zsh: 'bash',
+                        fish: 'bash',
+                        ksh: 'bash',
+                        csh: 'bash',
+                        tcsh: 'bash',
                         yml: 'yaml',
                         dockerfile: 'docker',
                         md: 'markdown',
@@ -149,7 +154,12 @@ export const CodeBlock = ({
         switch (lang) {
             case 'bash':
             case 'sh':
+            case 'shell':
             case 'zsh':
+            case 'fish':
+            case 'ksh':
+            case 'csh':
+            case 'tcsh':
             case 'powershell':
                 return <Terminal size={14} />;
             case 'json':

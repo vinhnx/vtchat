@@ -1,5 +1,5 @@
 'use client';
-import { ChatFooter, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
+import { Footer, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import dynamic from 'next/dynamic';
@@ -121,7 +121,7 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
             {!(isPending || session) && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
                     <div className="pointer-events-auto">
-                        <ChatFooter />
+                        <Footer />
                     </div>
                 </div>
             )}

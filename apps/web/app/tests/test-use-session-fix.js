@@ -1,10 +1,10 @@
-// Test file to verify useSession fix in ChatFooter
-// This test verifies that the ChatFooter component no longer throws "useSession is not defined" error
+// Test file to verify useSession fix in Footer
+// This test verifies that the Footer component no longer throws "useSession is not defined" error
 
 import { expect, test } from '@playwright/test';
 
-test.describe('ChatFooter useSession Fix', () => {
-    test('should render ChatFooter without useSession error', async ({ page }) => {
+test.describe('Footer useSession Fix', () => {
+    test('should render Footer without useSession error', async ({ page }) => {
         // Navigate to the home page
         await page.goto('/');
 
@@ -31,7 +31,7 @@ test.describe('ChatFooter useSession Fix', () => {
         const footer = page.locator('footer').first();
         await expect(footer).toBeVisible();
 
-        console.log('✅ ChatFooter renders without useSession errors');
+        console.log('✅ Footer renders without useSession errors');
     });
 
     test('should show footer for non-logged users', async ({ page }) => {

@@ -94,14 +94,14 @@ interface RadarChartProps {
 
 type ChartProps = BarChartProps | LineChartProps | AreaChartProps | PieChartProps | RadarChartProps;
 
-// Color palettes
+// Color palettes using new color scheme
 const chartColors = {
-    blue: ['#3b82f6', '#60a5fa', '#93c5fd'],
-    red: ['#ef4444', '#f87171', '#fca5a5'],
-    green: ['#10b981', '#34d399', '#6ee7b7'],
-    purple: ['#8b5cf6', '#a78bfa', '#c4b5fd'],
-    orange: ['#f97316', '#fb923c', '#fdba74'],
-    default: ['#3b82f6', '#60a5fa', '#93c5fd'],
+    blue: ['#D9487D', '#383B73', '#171C26'],
+    red: ['#A63333', '#D9487D', '#BFB38F'],
+    green: ['#BFB38F', '#383B73', '#D9487D'],
+    purple: ['#383B73', '#171C26', '#D9487D'],
+    orange: ['#BFB38F', '#A63333', '#D9487D'],
+    default: ['#D9487D', '#383B73', '#171C26'],
 };
 
 const RADIAN = Math.PI / 180;
@@ -257,7 +257,7 @@ export function ChartRenderer(props: ChartProps) {
                                 cy="50%"
                                 data={props.data}
                                 dataKey="value"
-                                fill="#8884d8"
+                                fill="#D9487D"
                                 label={props.showLabels ? renderCustomizedLabel : false}
                                 labelLine={false}
                                 outerRadius={80}

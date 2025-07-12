@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { log } from '@repo/shared/lib/logger';
 import { Button } from '@repo/ui';
 import { Download, Smartphone, X } from 'lucide-react';
-import { log } from '@repo/shared/lib/logger';
+import { useEffect, useState } from 'react';
+import { swManager } from '../lib/service-worker-manager';
 
 interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
@@ -33,19 +34,11 @@ export function PWAManager() {
             /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
         setIsIOS(isIOSDevice);
 
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker
-                .register('/sw.js', {
-                    scope: '/',
-                    updateViaCache: 'none',
-                })
-                .then((registration) => {
-                    log.info({ registration }, 'Service Worker registered successfully');
-                })
-                .catch((error) => {
-                    log.error({ error }, 'Service Worker registration failed');
-                });
+        // Register service worker using our manager (production only)
+        if (process.env.NODE_ENV === 'production') {
+            swManager.register().catch((error) => {
+                log.error({ error }, 'Service Worker registration failed');
+            });
         }
 
         // Listen for beforeinstallprompt event (Chrome/Edge)

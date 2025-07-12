@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>VT - Offline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --muted: 210 40% 98%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --border: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: 222.2 84% 4.9%;
+                --foreground: 210 40% 98%;
+                --muted: 217.2 32.6% 17.5%;
+                --muted-foreground: 215 20.2% 65.1%;
+                --border: 217.2 32.6% 17.5%;
+                --ring: 212.7 26.8% 83.9%;
+            }
+        }
+
+        * {
+            border-color: hsl(var(--border));
+        }
+
+        body {
+            margin: 0;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 28rem;
+            text-align: center;
+        }
+
+        .status-icon {
+            margin-bottom: 0.5rem;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+        }
+
+        .title {
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
+
+        .description {
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            height: 2.25rem;
+            padding: 0.5rem 1rem;
+            background-color: hsl(var(--foreground));
+            color: hsl(var(--background));
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .button:focus {
+            outline: 2px solid hsl(var(--ring));
+            outline-offset: 2px;
+        }
+
+        .button:active {
+            transform: translateY(1px);
+        }
+
+        .status-indicator {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            background-color: hsl(var(--muted));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="status-icon">📶</div>
+            <div>
+                <h2 class="title">You're offline</h2>
+                <p class="description">
+                    VT Chat is currently offline. We'll automatically retry when your connection is restored.
+                </p>
+            </div>
+            
+            <div class="status-indicator">
+                <div class="status-text" id="status-text">Checking connection...</div>
+            </div>
+            
+            <button class="button" onclick="checkConnection()" id="retry-button">
+                <span id="button-text">Retry Now</span>
+                <span id="button-loading" class="hidden pulse">Checking...</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let retryCount = 0;
+        let retryInterval;
+        
+        function updateStatus(message, isRetrying = false) {
+            const statusText = document.getElementById('status-text');
+            const buttonText = document.getElementById('button-text');
+            const buttonLoading = document.getElementById('button-loading');
+            const retryButton = document.getElementById('retry-button');
+            
+            statusText.textContent = message;
+            
+            if (isRetrying) {
+                buttonText.classList.add('hidden');
+                buttonLoading.classList.remove('hidden');
+                retryButton.disabled = true;
+            } else {
+                buttonText.classList.remove('hidden');
+                buttonLoading.classList.add('hidden');
+                retryButton.disabled = false;
+            }
+        }
+        
+        async function checkConnection() {
+            updateStatus('Checking connection...', true);
+            retryCount++;
+            
+            try {
+                // Try to fetch the favicon (small, fast request)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch('/favicon.ico?' + Date.now(), {
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    updateStatus('Connection restored! Redirecting...', true);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                    return;
+                }
+            } catch (error) {
+                console.log('Connection check failed:', error.message);
+            }
+            
+            updateStatus(`Still offline (attempt ${retryCount})`, false);
+            
+            // Auto-retry with exponential backoff
+            const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 30000); // Max 30s
+            setTimeout(() => {
+                updateStatus(`Auto-retry in ${Math.ceil(delay / 1000)}s...`, false);
+                setTimeout(checkConnection, delay);
+            }, 1000);
+        }
+        
+        // Auto-retry when page becomes visible
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                checkConnection();
+            }
+        });
+        
+        // Auto-retry when online event fires
+        window.addEventListener('online', () => {
+            updateStatus('Connection detected! Checking...', true);
+            setTimeout(checkConnection, 500);
+        });
+        
+        // Update status when offline
+        window.addEventListener('offline', () => {
+            updateStatus('Connection lost. Will retry automatically.', false);
+        });
+        
+        // Start initial check
+        setTimeout(checkConnection, 1000);
+    </script>
+</body>
+</html>

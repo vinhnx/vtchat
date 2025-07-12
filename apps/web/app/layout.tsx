@@ -14,6 +14,7 @@ import { GeistMono } from 'geist/font/mono';
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { BetterAuthProvider } from '../components/better-auth-provider';
+import { OfflineIndicator } from '../components/offline-indicator';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 import { PWAManager } from '../components/pwa-manager';
 import { ReactScan } from '../components/react-scan';
@@ -140,6 +141,8 @@ export default function ParentLayout({
                                                     <ReactScan />
                                                     {/* PWA Manager for install prompts and service worker */}
                                                     <PWAManager />
+                                                    {/* Offline status indicator */}
+                                                    <OfflineIndicator />
                                                     {/* @ts-ignore - Type compatibility issue between React versions */}
                                                     <RootLayout>
                                                         <main className="flex flex-1 flex-col">

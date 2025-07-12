@@ -8,13 +8,12 @@ import {
 } from '@repo/shared/config/embedding-models';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
+// Import the unified function for better consistency
+import { isGeminiModel as isGeminiModelUnified } from '@repo/shared/utils';
 import { and, cosineDistance, desc, eq, gt, sql } from 'drizzle-orm';
 import { db } from '../database';
 import { embeddings, resources } from '../database/schema';
 import { maskPII } from '../utils/content-security';
-
-// Import the unified function for better consistency
-import { isGeminiModel as isGeminiModelUnified } from '@repo/shared/utils';
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {

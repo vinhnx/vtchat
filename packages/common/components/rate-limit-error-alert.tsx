@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, Button } from '@repo/ui';
-import { AlertCircle, ArrowRight, Settings, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowRight, Mail, Settings, Sparkles } from 'lucide-react';
 import { SETTING_TABS, useAppStore } from '../store';
 
 interface RateLimitErrorAlertProps {
@@ -17,6 +17,13 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
 
     const handleUpgrade = () => {
         window.open('/plus', '_blank');
+    };
+
+    const handleContactSupport = () => {
+        window.open(
+            'mailto:hello@vtchat.io.vn?subject=Support Request - Unexpected Error',
+            '_blank'
+        );
     };
 
     // Check if this is a rate limit error
@@ -71,6 +78,15 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                                     >
                                         Refresh Page
                                     </Button>
+                                    <Button
+                                        className="h-8 text-xs"
+                                        onClick={handleContactSupport}
+                                        size="sm"
+                                        variant="outline"
+                                    >
+                                        <Mail className="mr-1 h-3 w-3" />
+                                        Contact Support
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +100,28 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                 <AlertDescription>
                     <div className="flex items-start gap-2">
                         <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
-                        <span>{error}</span>
+                        <div className="flex-1">
+                            <p className="mb-3">{error}</p>
+                            <div className="flex flex-wrap gap-2">
+                                <Button
+                                    className="h-8 text-xs"
+                                    onClick={() => window.location.reload()}
+                                    size="sm"
+                                    variant="outline"
+                                >
+                                    Refresh Page
+                                </Button>
+                                <Button
+                                    className="h-8 text-xs"
+                                    onClick={handleContactSupport}
+                                    size="sm"
+                                    variant="outline"
+                                >
+                                    <Mail className="mr-1 h-3 w-3" />
+                                    Contact Support
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </AlertDescription>
             </Alert>

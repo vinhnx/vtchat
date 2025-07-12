@@ -7,11 +7,11 @@ import path from 'path';
  * This will open a browser where you can log in with your OAuth
  */
 async function extractMyCookies() {
-    const browser = await chromium.launch({ 
+    const browser = await chromium.launch({
         headless: false,
-        slowMo: 1000 // Slow down for better interaction
+        slowMo: 1000, // Slow down for better interaction
     });
-    
+
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -22,9 +22,9 @@ async function extractMyCookies() {
     console.log('1. Complete the OAuth login in the opened browser');
     console.log('2. Make sure you are fully logged in');
     console.log('3. Come back to this terminal and press ENTER when done');
-    
+
     // Wait for user input
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
         process.stdin.resume();
         process.stdin.once('data', resolve);
     });
@@ -34,12 +34,13 @@ async function extractMyCookies() {
     const allCookies = await context.cookies();
 
     // Filter for important cookies
-    const authCookies = allCookies.filter(cookie => 
-        cookie.name.includes('session') ||
-        cookie.name.includes('auth') ||
-        cookie.name.includes('csrf') ||
-        cookie.name.includes('token') ||
-        cookie.name.includes('better')
+    const authCookies = allCookies.filter(
+        (cookie) =>
+            cookie.name.includes('session') ||
+            cookie.name.includes('auth') ||
+            cookie.name.includes('csrf') ||
+            cookie.name.includes('token') ||
+            cookie.name.includes('better')
     );
 
     // Save complete storage state (recommended)
@@ -58,9 +59,9 @@ async function extractMyCookies() {
     console.log('\n✅ Authentication data extracted!');
     console.log('📁 Full session state saved to:', authFile);
     console.log('🍪 Auth cookies saved to:', cookieFile);
-    
+
     console.log('\n🔍 Found authentication cookies:');
-    authCookies.forEach(cookie => {
+    authCookies.forEach((cookie) => {
         console.log(`  - ${cookie.name}: ${cookie.value.substring(0, 20)}...`);
     });
 

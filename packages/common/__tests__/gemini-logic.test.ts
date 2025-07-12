@@ -1,8 +1,9 @@
 // Gemini Quota Logic Tests
-import { describe, it, expect } from 'vitest';
-import { VtPlusFeature } from '../src/config/vtPlusLimits';
-import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
+
 import { PlanSlug } from '@repo/shared/types/subscription';
+import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
+import { describe, expect, it } from 'vitest';
+import { VtPlusFeature } from '../src/config/vtPlusLimits';
 
 describe('Gemini Quota Logic', () => {
     const mockUser = { id: 'test-user-123', planSlug: PlanSlug.VT_PLUS };

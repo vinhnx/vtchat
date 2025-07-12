@@ -27,7 +27,7 @@ export const examplePrompts = {
         'Find current quantum computing developments and explain their impact',
         'Explain the role of decentralized autonomous organizations (DAOs).',
         'Search for edge computing use cases and create a comparison chart',
-        'Explain Swift programming language'
+        'Explain Swift programming language',
     ],
 
     creative: [

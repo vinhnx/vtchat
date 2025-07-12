@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ModelEnum } from '@repo/ai/models';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Set environment for testing
 process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
@@ -33,7 +33,7 @@ vi.mock('drizzle-orm', () => ({
 }));
 
 // Import after mocking
-import { checkRateLimit, recordRequest, getRateLimitStatus } from '@/lib/services/rate-limit';
+import { checkRateLimit, getRateLimitStatus, recordRequest } from '@/lib/services/rate-limit';
 
 describe('Gemini Requirements Verification Tests', () => {
     const FREE_USER_ID = 'free-user-123';

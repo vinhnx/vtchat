@@ -3,13 +3,23 @@
  * Centralized configuration for Creem payment integration
  */
 
-import { isProductionEnvironment } from '../utils/env';
+/**
+ * Check if environment is production (client-safe)
+ */
+const isProduction = () => {
+    if (typeof window !== 'undefined') {
+        return window.location.hostname !== 'localhost';
+    }
+    return process.env.NODE_ENV === 'production';
+};
 
 /**
  * Creem API endpoints based on environment
  */
 export const CREEM_API_CONFIG = {
-    baseUrl: isProductionEnvironment() ? 'https://api.creem.io' : 'https://test-api.creem.io',
+    get baseUrl() {
+        return isProduction() ? 'https://api.creem.io' : 'https://test-api.creem.io';
+    },
 
     getBaseUrl() {
         return this.baseUrl;

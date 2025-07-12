@@ -3311,6 +3311,39 @@
             }
         }
     },
+    "openrouter": {
+        "id": "openrouter",
+        "env": ["OPENROUTER_API_KEY"],
+        "npm": "@openrouter/ai-sdk-provider",
+        "name": "OpenRouter",
+        "doc": "https://openrouter.ai/docs",
+        "models": {
+            "moonshot/kimi-k2": {
+                "id": "moonshot/kimi-k2",
+                "name": "Kimi K2",
+                "attachment": true,
+                "reasoning": false,
+                "temperature": true,
+                "tool_call": true,
+                "knowledge": "2024-10",
+                "input_modalities": ["text"],
+                "output_modalities": ["text"],
+                "cost": {
+                    "input": 0.07,
+                    "output": 0.07
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 4096
+                },
+                "app_capabilities": {
+                    "web_search": true,
+                    "math_calculator": true,
+                    "charts": true
+                }
+            }
+        }
+    },
     "google": {
         "id": "google",
         "env": ["GOOGLE_GENERATIVE_AI_API_KEY"],

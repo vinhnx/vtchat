@@ -175,7 +175,7 @@ export const PremiumAIResponse = memo(
                                 content={content}
                                 isCompleted={threadItem.status === 'COMPLETED'}
                                 isLast={isLast}
-                                shouldAnimate={isGenerating}
+                                shouldAnimate={threadItem.status !== 'COMPLETED'}
                             />
                         </div>
 

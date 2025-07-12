@@ -1,6 +1,13 @@
 'use client';
 
 import { models } from '@repo/ai/models';
+// Import mobile enhancements
+import {
+    MobileChatHeader,
+    MobileOptimizedInput,
+    MobilePullToRefresh,
+    SwipeableMessage,
+} from '@repo/common/components';
 import { useSubscriptionAccess } from '@repo/common/hooks';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
@@ -32,13 +39,6 @@ import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-// Import mobile enhancements
-import {
-    MobileChatHeader,
-    MobileOptimizedInput,
-    MobilePullToRefresh,
-    SwipeableMessage,
-} from '@repo/common/components';
 import { useIsMobile } from '../hooks/use-mobile';
 
 interface KnowledgeItem {

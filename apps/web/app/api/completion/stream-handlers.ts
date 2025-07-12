@@ -4,8 +4,56 @@ import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
 import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
 import type { Geo } from '@vercel/functions';
+import { LARGE_PAYLOAD_THRESHOLD, PING_COMMENT, PING_TIMEOUT_MS } from './constants';
 import type { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
+
+/**
+ * Safely send a message through SSE with optional connection health check for large payloads
+ */
+export async function safeSend(
+    controller: StreamController,
+    encoder: TextEncoder,
+    message: string,
+    opts: { isLarge?: boolean } = {}
+): Promise<boolean> {
+    try {
+        // Perform health check for large payloads
+        if (opts.isLarge) {
+            try {
+                controller.enqueue(encoder.encode(PING_COMMENT));
+                // Micro-sleep to allow enqueue() failure to surface before sending large chunk
+                await new Promise((resolve) => setTimeout(resolve, PING_TIMEOUT_MS));
+            } catch (pingError) {
+                // Connection is dead; bail out silently
+                log.warn(
+                    {
+                        size: message.length,
+                        error: pingError instanceof Error ? pingError.message : String(pingError),
+                    },
+                    'SSE health check failed before large payload'
+                );
+                return false;
+            }
+        }
+
+        // Send the actual message
+        controller.enqueue(encoder.encode(message));
+        // Send empty chunk to ensure flushing on edge environments
+        controller.enqueue(new Uint8Array(0));
+        return true;
+    } catch (error) {
+        // Connection is dead
+        log.warn(
+            {
+                size: message.length,
+                error: error instanceof Error ? error.message : String(error),
+            },
+            'Failed to send SSE message'
+        );
+        return false;
+    }
+}
 
 /**
  * Get thinking mode configuration for specific chat modes
@@ -46,11 +94,12 @@ function getThinkingModeForChatMode(
     );
 }
 
-export function sendMessage(
+export async function sendMessage(
     controller: StreamController,
     encoder: TextEncoder,
-    payload: Record<string, any>
-) {
+    payload: Record<string, any>,
+    isLargePayload = false
+): Promise<boolean> {
     try {
         if (payload.content && typeof payload.content === 'string') {
             payload.content = normalizeMarkdownContent(payload.content);
@@ -59,24 +108,22 @@ export function sendMessage(
         const sanitizedPayload = sanitizePayloadForJSON(payload);
         const message = `event: ${payload.type}\ndata: ${JSON.stringify(sanitizedPayload)}\n\n`;
 
-        // Check if controller is still open before enqueueing
-        try {
-            controller.enqueue(encoder.encode(message));
-            controller.enqueue(new Uint8Array(0));
-        } catch (controllerError) {
-            // Controller is closed, client likely disconnected
-            if ((controllerError as any)?.code === 'ERR_INVALID_STATE') {
-                log.warn(
-                    {
-                        payloadType: payload.type,
-                        threadId: payload.threadId,
-                    },
-                    'Controller closed, client likely disconnected'
-                );
-                return; // Exit silently when controller is closed
-            }
-            throw controllerError; // Re-throw other errors
+        // Use safeSend with health check for large payloads
+        const isLarge = isLargePayload || message.length > LARGE_PAYLOAD_THRESHOLD;
+        const success = await safeSend(controller, encoder, message, { isLarge });
+
+        if (!success) {
+            log.debug(
+                {
+                    payloadType: payload.type,
+                    threadId: payload.threadId,
+                    payloadSize: message.length,
+                },
+                'Failed to send message, client likely disconnected'
+            );
         }
+
+        return success;
     } catch (error) {
         // This is critical - we should log errors in message serialization
         log.error(
@@ -88,15 +135,22 @@ export function sendMessage(
             'Error serializing message payload'
         );
 
-        const errorMessage = `event: done\ndata: ${JSON.stringify({
-            type: 'done',
-            status: 'error',
-            error: 'Failed to serialize payload',
-            threadId: payload.threadId,
-            threadItemId: payload.threadItemId,
-            parentThreadItemId: payload.parentThreadItemId,
-        })}\n\n`;
-        controller.enqueue(encoder.encode(errorMessage));
+        // Only try to send error message if controller is still open
+        try {
+            const errorMessage = `event: done\ndata: ${JSON.stringify({
+                type: 'done',
+                status: 'error',
+                error: 'Failed to serialize payload',
+                threadId: payload.threadId,
+                threadItemId: payload.threadItemId,
+                parentThreadItemId: payload.parentThreadItemId,
+            })}\n\n`;
+            return await safeSend(controller, encoder, errorMessage);
+        } catch {
+            // Controller closed during error handling, ignore
+            log.debug('Controller closed during error message sending');
+            return false;
+        }
     }
 }
 
@@ -148,8 +202,8 @@ export async function executeStream({
             userId,
         });
 
-        workflow.onAll((event, payload) => {
-            sendMessage(controller, encoder, {
+        workflow.onAll(async (event, payload) => {
+            const messagePayload = {
                 type: event,
                 threadId: data.threadId,
                 threadItemId: data.threadItemId,
@@ -159,7 +213,15 @@ export async function executeStream({
                 webSearch: data.webSearch,
                 showSuggestions: data.showSuggestions,
                 [event]: payload,
-            });
+            };
+
+            // Detect large payloads (answers, reasoning, content over 5KB)
+            const isLargePayload =
+                event === 'answer' ||
+                event === 'reasoning' ||
+                (payload && typeof payload === 'object' && JSON.stringify(payload).length > 5000);
+
+            await sendMessage(controller, encoder, messagePayload, isLargePayload);
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
@@ -174,7 +236,7 @@ export async function executeStream({
             log.debug('Workflow completed', { threadId: data.threadId });
         }
 
-        sendMessage(controller, encoder, {
+        await sendMessage(controller, encoder, {
             type: 'done',
             status: 'complete',
             threadId: data.threadId,
@@ -190,7 +252,7 @@ export async function executeStream({
                 log.debug('Workflow aborted', { threadId: data.threadId });
             }
 
-            sendMessage(controller, encoder, {
+            await sendMessage(controller, encoder, {
                 type: 'done',
                 status: 'aborted',
                 threadId: data.threadId,
@@ -209,7 +271,7 @@ export async function executeStream({
                 'Workflow execution error'
             );
 
-            sendMessage(controller, encoder, {
+            await sendMessage(controller, encoder, {
                 type: 'done',
                 status: 'error',
                 error: error instanceof Error ? error.message : String(error),

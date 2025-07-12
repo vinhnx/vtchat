@@ -1,10 +1,10 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { ModelEnum } from '@repo/ai/models';
+import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { streamTextWithQuota } from '@repo/common/lib/geminiWithQuota';
 import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
 import { log } from '@repo/shared/logger';
 import { streamText, tool } from 'ai';
-import { streamTextWithQuota } from '@repo/common/lib/geminiWithQuota';
-import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { z } from 'zod';
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';

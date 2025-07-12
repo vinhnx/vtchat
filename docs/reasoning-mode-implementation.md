@@ -75,7 +75,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_PRO,
         // DeepSeek reasoning
         ModelEnum.Deepseek_R1,
-        ModelEnum.DEEPSEEK_R1_FREE,
+        ModelEnum.DEEPSEEK_R1,
         // Anthropic Claude 4
         ModelEnum.CLAUDE_4_SONNET,
         ModelEnum.CLAUDE_4_OPUS,

@@ -55,3 +55,16 @@ better-auth-mcp.log
 apps/web/.env*
 !apps/web/.env.example
 apps/web/.env.build
+
+# playwright authentication files (contains session tokens and cookies)
+apps/web/e2e/playwright/.auth/
+**/playwright/.auth/
+**/*session*.json
+**/*auth-cookies*.json
+**/manual-user.json
+apps/web/e2e/cookies.json
+apps/web/e2e/session-cookies.json
+
+# playwright reports and test artifacts
+apps/web/test-results/
+apps/web/playwright-report/

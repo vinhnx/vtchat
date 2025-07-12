@@ -27,11 +27,12 @@ export const ChatMode = {
     GROK_4: 'grok-4',
     // OpenRouter models
     DEEPSEEK_V3_0324: 'deepseek-v3-0324',
-    DEEPSEEK_R1_FREE: 'deepseek-r1-free',
+    DEEPSEEK_R1: 'deepseek-r1',
     QWEN3_235B_A22B: 'qwen3-235b-a22b',
     QWEN3_32B: 'qwen3-32b',
     MISTRAL_NEMO: 'mistral-nemo',
-    QWEN3_14B_FREE: 'qwen3-14b-free',
+    QWEN3_14B: 'qwen3-14b',
+    KIMI_K2: 'kimi-k2',
     // LM Studio local models
     LMSTUDIO_LLAMA_3_8B: 'lmstudio-llama-3-8b',
     LMSTUDIO_QWEN_7B: 'lmstudio-qwen-7b',
@@ -213,7 +214,7 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    [ChatMode.DEEPSEEK_R1_FREE]: {
+    [ChatMode.DEEPSEEK_R1]: {
         webSearch: true,
         imageUpload: false,
         multiModal: false,
@@ -246,7 +247,15 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    [ChatMode.QWEN3_14B_FREE]: {
+    [ChatMode.QWEN3_14B]: {
+        webSearch: true,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.KIMI_K2]: {
         webSearch: true,
         imageUpload: false,
         multiModal: false,
@@ -419,8 +428,6 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI o3 mini';
         case ChatMode.O4_Mini:
             return 'OpenAI o4 mini';
-        case ChatMode.DEEPSEEK_R1:
-            return 'Fireworks DeepSeek R1';
         case ChatMode.GEMINI_2_5_PRO:
             return 'Google Gemini 2.5 Pro';
         case ChatMode.GEMINI_2_5_FLASH:
@@ -436,7 +443,7 @@ export const getChatModeName = (mode: ChatMode) => {
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
             return 'OpenRouter DeepSeek V3 0324 Pro';
-        case ChatMode.DEEPSEEK_R1_FREE:
+        case ChatMode.DEEPSEEK_R1:
             return 'OpenRouter DeepSeek R1';
         case ChatMode.QWEN3_235B_A22B:
             return 'OpenRouter Qwen3 235B A22B';
@@ -444,8 +451,10 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenRouter Qwen3 32B';
         case ChatMode.MISTRAL_NEMO:
             return 'OpenRouter Mistral Nemo';
-        case ChatMode.QWEN3_14B_FREE:
+        case ChatMode.QWEN3_14B:
             return 'OpenRouter Qwen3 14B';
+        case ChatMode.KIMI_K2:
+            return 'OpenRouter Kimi K2';
         // LM Studio local models
         case ChatMode.LMSTUDIO_LLAMA_3_8B:
             return 'LM Studio Llama 3 8B (Local)';

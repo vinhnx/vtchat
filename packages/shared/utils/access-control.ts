@@ -6,7 +6,7 @@
  */
 
 import { PlanSlug } from '../types/subscription';
-import { SubscriptionStatusEnum } from '../types/subscription-status';
+import type { SubscriptionStatusEnum } from '../types/subscription-status';
 
 export interface UserContext {
     id?: string;

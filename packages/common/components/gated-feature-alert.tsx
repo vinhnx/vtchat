@@ -198,10 +198,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         <>
             {gatedChildren}
             <Dialog onOpenChange={setShowUpgradeAlert} open={showUpgradeAlert}>
-                <DialogContent
-                    ariaTitle={title}
-                    className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl"
-                >
+                <DialogContent className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl">
                     <DialogHeader className="pb-4 text-center">
                         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg">
                             <Sparkles className="text-white" size={24} />

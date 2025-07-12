@@ -1,6 +1,6 @@
 // VT+ Configuration Tests
-import { describe, it, expect } from 'vitest';
-import { VtPlusFeature, QuotaExceededError, VT_PLUS_LIMITS } from '../src/config/vtPlusLimits';
+import { describe, expect, it } from 'vitest';
+import { QuotaExceededError, VT_PLUS_LIMITS, VtPlusFeature } from '../src/config/vtPlusLimits';
 
 describe('VT+ Configuration', () => {
     describe('VT+ Limits', () => {

@@ -4,9 +4,9 @@
  */
 
 import type { ToolCall, ToolResult } from '@repo/shared/types';
+import { ModelEnum } from '../models';
 import { openaiWebSearchTool, supportsOpenAIWebSearch } from './openai-web-search';
 import { StreamingToolExecutor } from './streaming-utils';
-import { ModelEnum } from '../models';
 
 // Type aliases for plan-based tool access
 export type UserTier = 'VT_BASE' | 'VT_PLUS';

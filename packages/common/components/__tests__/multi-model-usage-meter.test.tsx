@@ -1,7 +1,7 @@
+import { ModelEnum } from '@repo/ai/models';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ModelEnum } from '@repo/ai/models';
 import { MultiModelUsageMeter } from '../multi-model-usage-meter';
 
 // Mock the chart components to avoid rendering issues in tests

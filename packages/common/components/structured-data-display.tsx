@@ -13,6 +13,8 @@ export const StructuredDataDisplay = () => {
     if (!structuredData) return null;
 
     const handleDownload = () => {
+        if (typeof document === 'undefined') return;
+
         const dataStr = JSON.stringify(structuredData.data, null, 2);
         const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
 

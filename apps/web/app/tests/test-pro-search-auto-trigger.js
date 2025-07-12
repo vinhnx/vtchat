@@ -162,7 +162,7 @@ const testCases = [
 console.log('🧪 Testing Pro Search Auto-Trigger Web Search Functionality\n');
 
 let passedTests = 0;
-let totalTests = testCases.length;
+const totalTests = testCases.length;
 
 testCases.forEach((testCase, index) => {
     const result = mockProSearchRouting(testCase.mode, testCase.query);

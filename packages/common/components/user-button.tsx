@@ -2,10 +2,12 @@
 
 import { useLogout } from '@repo/common/hooks';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/lib/logger';
+// import { log } from '@repo/shared/lib/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Avatar,
+    AvatarFallback,
+    AvatarImage,
     Button,
     DropdownMenu,
     DropdownMenuContent,
@@ -15,7 +17,6 @@ import {
     DropdownMenuTrigger,
 } from '@repo/ui';
 import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useAppStore } from '../store/app.store';
 import { GatedFeatureAlert } from './gated-feature-alert';
@@ -31,7 +32,9 @@ export function UserButton({ showName = false }: UserButtonProps) {
     const { logout, isLoggingOut } = useLogout();
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
-    if (!session?.user) return null;
+    if (!session?.user) {
+        return null;
+    }
 
     const user = session.user;
 
@@ -42,17 +45,15 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     className="bg-background flex h-auto items-center gap-2 border p-1 shadow-sm"
                     variant="secondary"
                 >
-                    {user.image ? (
-                        <Image
-                            alt={user.name || user.email || 'User'}
-                            className="rounded-full"
-                            height={24}
-                            src={user.image}
-                            width={24}
+                    <Avatar className="h-6 w-6">
+                        <AvatarImage
+                            src={getSessionCacheBustedAvatarUrl(user.image)}
+                            alt={user.name || 'User'}
                         />
-                    ) : (
-                        <Avatar name={user.name || user.email} size="sm" />
-                    )}
+                        <AvatarFallback className="text-xs">
+                            {(user.name || user.email)?.[0]?.toUpperCase() ?? 'U'}
+                        </AvatarFallback>
+                    </Avatar>
                     {showName && (
                         <span className="text-sm font-medium">{user.name || user.email}</span>
                     )}
@@ -86,9 +87,6 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     </div>
                     <GatedFeatureAlert
                         message="Dark theme is available to all registered users. Please sign in to access this feature."
-                        onGatedClick={() => {
-                            log.info('User attempted to use dark theme without signing in');
-                        }}
                         requiredFeature={FeatureSlug.DARK_THEME}
                         title="Sign In Required"
                     >
@@ -131,4 +129,11 @@ export function UserButton({ showName = false }: UserButtonProps) {
             </DropdownMenuContent>
         </DropdownMenu>
     );
+}
+
+// Utility to append a cache-busting query param to the avatar URL
+function getSessionCacheBustedAvatarUrl(url?: string | null): string | undefined {
+    if (!url) return undefined;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}cb=${Date.now()}`;
 }

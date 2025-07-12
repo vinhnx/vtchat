@@ -16,11 +16,11 @@ async function extractCookies() {
 
     console.log('📝 Please manually log in through OAuth in the opened browser window...');
     console.log('⏳ After login, press any key in this terminal to continue...');
-    
+
     // Wait for user input
     process.stdin.setRawMode(true);
     process.stdin.resume();
-    await new Promise(resolve => process.stdin.once('data', resolve));
+    await new Promise((resolve) => process.stdin.once('data', resolve));
     process.stdin.setRawMode(false);
     process.stdin.pause();
 
@@ -38,7 +38,7 @@ async function extractCookies() {
     fs.writeFileSync(authFile, JSON.stringify(storageState, null, 2));
 
     console.log('✅ Cookies extracted and saved to:', authFile);
-    console.log('🍪 Found cookies:', cookies.map(c => c.name).join(', '));
+    console.log('🍪 Found cookies:', cookies.map((c) => c.name).join(', '));
 
     await browser.close();
 }

@@ -30,32 +30,61 @@ const vector = customType<{ data: number[]; notNull: false; default: false }>({
 });
 
 // Users table for Better Auth
-export const users = pgTable('users', {
-    id: text('id').primaryKey(),
-    name: text('name').notNull(), // Using name as the username field (non-unique to allow display names)
-    email: text('email').notNull().unique(),
-    normalizedEmail: text('normalized_email').unique(), // emailHarmony plugin field
-    emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
-    image: text('image'),
-    planSlug: text('plan_slug').default(PlanSlug.VT_BASE), // Subscription plan (vt_base, vt_plus, etc.)
-    creemCustomerId: text('creem_customer_id'), // Creem.io customer ID for portal access
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+export const users = pgTable(
+    'users',
+    {
+        id: text('id').primaryKey(),
+        name: text('name').notNull(), // Using name as the username field (non-unique to allow display names)
+        email: text('email').notNull().unique(),
+        normalizedEmail: text('normalized_email').unique(), // emailHarmony plugin field
+        emailVerified: boolean('email_verified').notNull().default(false), // Better Auth requires this field
+        image: text('image'),
+        role: text('role').default('user'), // User role: 'user' | 'admin'
+        banned: boolean('banned').default(false), // Better-Auth admin plugin: user ban status
+        banReason: text('ban_reason'), // Better-Auth admin plugin: reason for ban
+        banExpires: timestamp('ban_expires'), // Better-Auth admin plugin: ban expiration
+        protected: boolean('protected').default(false), // Protected admin users cannot be deleted/demoted
+        planSlug: text('plan_slug').default(PlanSlug.VT_BASE), // Subscription plan (vt_base, vt_plus, etc.)
+        creemCustomerId: text('creem_customer_id'), // Creem.io customer ID for portal access
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        // Indexes for better admin performance
+        roleIdx: index('users_role_idx').on(table.role),
+        bannedIdx: index('users_banned_idx').on(table.banned),
+        protectedIdx: index('users_protected_idx').on(table.protected),
+        planSlugIdx: index('users_plan_slug_idx').on(table.planSlug),
+        emailIdx: index('users_email_idx').on(table.email),
+    })
+);
 
 // Sessions table for Better Auth
-export const sessions = pgTable('sessions', {
-    id: text('id').primaryKey(),
-    expiresAt: timestamp('expires_at').notNull(),
-    ipAddress: text('ip_address'),
-    userAgent: text('user_agent'),
-    token: text('token'),
-    userId: text('user_id')
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+export const sessions = pgTable(
+    'sessions',
+    {
+        id: text('id').primaryKey(),
+        expiresAt: timestamp('expires_at').notNull(),
+        ipAddress: text('ip_address'),
+        userAgent: text('user_agent'),
+        token: text('token'),
+        userId: text('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        impersonatedBy: text('impersonated_by'), // Better-Auth admin plugin: impersonation tracking
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    },
+    (table) => ({
+        // Indexes for session management and admin features
+        userIdIdx: index('sessions_user_id_idx').on(table.userId),
+        tokenIdx: index('sessions_token_idx').on(table.token),
+        userIdTokenIdx: index('sessions_user_id_token_idx').on(table.userId, table.token),
+        expiresAtIdx: index('sessions_expires_at_idx').on(table.expiresAt),
+        userExpiresIdx: index('sessions_user_expires_idx').on(table.userId, table.expiresAt),
+        impersonatedByIdx: index('sessions_impersonated_by_idx').on(table.impersonatedBy),
+    })
+);
 
 // Accounts table for OAuth providers
 export const accounts = pgTable(

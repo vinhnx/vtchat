@@ -48,11 +48,11 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
             return 'XAI_API_KEY';
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
-        case ChatMode.DEEPSEEK_R1_FREE:
+        case ChatMode.DEEPSEEK_R1:
         case ChatMode.QWEN3_235B_A22B:
         case ChatMode.QWEN3_32B:
         case ChatMode.MISTRAL_NEMO:
-        case ChatMode.QWEN3_14B_FREE:
+        case ChatMode.QWEN3_14B:
             return 'OPENROUTER_API_KEY';
         default:
             return null;
@@ -155,7 +155,7 @@ export const ApiKeyPromptModal = ({
 
     return (
         <Dialog onOpenChange={handleClose} open={isOpen}>
-            <DialogContent ariaTitle="API Key Required" className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Key className="h-5 w-5" />

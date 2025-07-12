@@ -1,6 +1,7 @@
 import { log } from '@repo/shared/logger';
 import { sql } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
+import { isUserAdmin } from '@/lib/admin';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { embeddings } from '@/lib/database/schema';
@@ -17,10 +18,9 @@ export async function POST(_request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const isAdmin =
-            session.user.email?.endsWith('@admin.com') || (session.user as any).role === 'admin';
+        const adminStatus = await isUserAdmin(session.user.id);
 
-        if (!isAdmin) {
+        if (!adminStatus) {
             return NextResponse.json(
                 {
                     error: 'Insufficient permissions - admin role required',
@@ -110,10 +110,9 @@ export async function GET(_request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const isAdmin =
-            session.user.email?.endsWith('@admin.com') || (session.user as any).role === 'admin';
+        const adminStatus = await isUserAdmin(session.user.id);
 
-        if (!isAdmin) {
+        if (!adminStatus) {
             return NextResponse.json(
                 {
                     error: 'Insufficient permissions - admin role required',

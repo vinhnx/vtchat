@@ -2,7 +2,7 @@ import { log } from '@repo/shared/logger';
 import { EnvironmentType } from '@repo/shared/types/environment';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { multiSession } from 'better-auth/plugins';
+import { admin, multiSession } from 'better-auth/plugins';
 import { emailHarmony } from 'better-auth-harmony';
 import { botDetection } from './bot-detection-plugin';
 import { db } from './database';
@@ -28,6 +28,13 @@ export const auth = betterAuth({
         emailHarmony(),
         multiSession({
             maximumSessions: 5,
+        }),
+        admin({
+            adminUserIds: (process.env.ADMIN_USER_IDS || process.env.ADMIN_USER_ID || '')
+                .split(',')
+                .filter(Boolean),
+            defaultRole: 'user',
+            adminRoles: ['admin'],
         }),
         botDetection({
             protectedEndpoints: ['/api/auth/*'],

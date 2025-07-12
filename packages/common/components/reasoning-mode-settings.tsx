@@ -14,7 +14,6 @@ import {
     Slider,
     Switch,
     TypographyH3,
-    TypographyH4,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo } from 'react';
@@ -34,7 +33,7 @@ export const ReasoningModeSettings = () => {
 
             // DeepSeek reasoning models
             ChatMode.DEEPSEEK_R1,
-            ChatMode.DEEPSEEK_R1_FREE,
+            ChatMode.DEEPSEEK_R1,
             // Anthropic reasoning models
             ChatMode.CLAUDE_4_SONNET,
             ChatMode.CLAUDE_4_OPUS,

@@ -6,6 +6,7 @@ export * from './charts/chart-components';
 export * from './charts/chart-message';
 export * from './charts/chart-popup';
 export * from './chat-input';
+export { default as ErrorBoundary } from './error-boundary';
 export * from './chat-input/multi-modal-attachment-button';
 export * from './chat-input/multi-modal-attachments-display';
 export * from './client-boundary';
@@ -66,8 +67,8 @@ export * from './theme-provider';
 export * from './theme-switcher';
 export * from './thinking-log';
 export * from './thread';
-export * from './thread-loading-indicator';
 export * from './thread/components/attachment-display';
+export * from './thread-loading-indicator';
 
 export * from './tools-menu';
 export * from './tools-panel';

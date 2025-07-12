@@ -24,10 +24,10 @@ import {
 } from '@repo/ui';
 import { AlertCircle, Info, Key, Settings, Trash, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { CacheManagement } from '../../../apps/web/components/cache-management';
 import { SETTING_TABS, useAppStore } from '../store';
 import { type ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 import { ChatEditor } from './chat-input';
-
 import { CombinedSubscriptionSettings } from './combined-subscription-settings';
 import { LoginRequiredDialog } from './login-required-dialog';
 import { ModeToggle } from './mode-toggle';
@@ -107,6 +107,12 @@ export const SettingsModal = () => {
             description: 'Connect your own AI providers',
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
+        },
+        {
+            title: 'Cache & Offline',
+            description: 'Manage app cache and offline features',
+            key: SETTING_TABS.CACHE,
+            component: <CacheManagement />,
         },
     ];
 
