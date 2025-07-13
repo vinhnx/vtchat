@@ -192,8 +192,9 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 isVtPlus: boolean = false,
             ) => {
                 // Check if this is a local model first (Ollama or LM Studio)
-                const isLocalModel = chatMode.startsWith("ollama-") || chatMode.startsWith("lmstudio-");
-                
+                const isLocalModel =
+                    chatMode.startsWith("ollama-") || chatMode.startsWith("lmstudio-");
+
                 // Local models don't require authentication or API keys
                 if (isLocalModel) {
                     return true;
