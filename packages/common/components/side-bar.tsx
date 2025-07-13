@@ -7,6 +7,7 @@ import { useAppStore, useChatStore } from '@repo/common/store';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
 import type { Thread } from '@repo/shared/types';
 import {
     getCompareDesc,
@@ -16,7 +17,6 @@ import {
     getSubDays,
 } from '@repo/shared/utils';
 import {
-    AvatarLegacy as Avatar,
     Badge,
     Button,
     cn,
@@ -27,6 +27,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
     Flex,
+    UnifiedAvatar,
     useToast,
 } from '@repo/ui';
 import { motion } from 'framer-motion';
@@ -60,9 +61,9 @@ import { UserTierBadge } from './user-tier-badge';
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
-    const threads = useChatStore((state) => state.threads);
-    const pinThread = useChatStore((state) => state.pinThread);
-    const unpinThread = useChatStore((state) => state.unpinThread);
+    const threads = useChatStore(state => state.threads);
+    const pinThread = useChatStore(state => state.pinThread);
+    const unpinThread = useChatStore(state => state.unpinThread);
     const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         return [...threads].sort((a, b) =>
             getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy]))
@@ -72,9 +73,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const user = session?.user;
-    const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
-    const isSidebarOpen = forceMobile || useAppStore((state) => state.isSidebarOpen);
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const setIsSidebarOpen = useAppStore(state => state.setIsSidebarOpen);
+    const isSidebarOpen = forceMobile || useAppStore(state => state.isSidebarOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
@@ -90,7 +91,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         previousMonths: [],
     };
 
-    sortThreads(threads, 'createdAt')?.forEach((thread) => {
+    sortThreads(threads, 'createdAt')?.forEach(thread => {
         const createdAt = new Date(thread.createdAt);
         const now = new Date();
 
@@ -132,7 +133,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     renderEmptyState()
                 ) : (
                     <Flex className="w-full gap-0.5" direction="col" gap="none">
-                        {threads.map((thread) => (
+                        {threads.map(thread => (
                             <HistoryItem
                                 dismiss={() => {
                                     if (forceMobile) {
@@ -188,23 +189,28 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                             : 'h-7 w-7 p-0'
                                     )}
                                     data-testid="sidebar-user-trigger"
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         // Prevent clicks on user profile trigger from closing mobile sidebar
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
-                                    onTouchEnd={(e) => {
+                                    onTouchEnd={e => {
                                         // Handle iOS touch events specifically
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
                                 >
-                                    <Avatar
+                                    <UnifiedAvatar
                                         name={user?.name || user?.email || 'User'}
                                         size="sm"
                                         src={
                                             getSessionCacheBustedAvatarUrl(user?.image) || undefined
                                         }
+                                        onImageError={() => {
+                                            log.warn(
+                                                'Avatar failed to load in sidebar, using fallback initials'
+                                            );
+                                        }}
                                     />
 
                                     {isSidebarOpen && (
@@ -227,17 +233,17 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <DropdownMenuContent
                                 align="start"
                                 className="w-56 pl-2"
-                                onClick={(e) => {
+                                onClick={e => {
                                     // Prevent clicks inside dropdown from closing mobile sidebar
                                     e.stopPropagation();
                                 }}
-                                onEscapeKeyDown={(e) => {
+                                onEscapeKeyDown={e => {
                                     // Allow escape key to close dropdown but not sidebar
                                     if (forceMobile) {
                                         e.stopPropagation();
                                     }
                                 }}
-                                onPointerDownOutside={(e) => {
+                                onPointerDownOutside={e => {
                                     // Prevent dropdown from closing when clicking outside on mobile
                                     if (forceMobile) {
                                         e.preventDefault();
@@ -247,7 +253,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {/* Account Management */}
                                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         push('/profile');
                                     }}
@@ -256,7 +262,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     Profile
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         setIsSettingsOpen(true);
                                     }}
@@ -269,7 +275,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 {/* Support & Legal */}
                                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         push('/about');
                                     }}
@@ -278,7 +284,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     About
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         push('/faq');
                                     }}
@@ -287,7 +293,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     Help Center
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         push('/privacy');
                                     }}
@@ -296,7 +302,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     Privacy Policy
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         push('/terms');
                                     }}
@@ -310,7 +316,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
                                     disabled={isLoggingOut}
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.stopPropagation();
                                         logout();
                                     }}
@@ -381,7 +387,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             onClick={() =>
                                 forceMobile
                                     ? setIsMobileSidebarOpen(false)
-                                    : setIsSidebarOpen((prev) => !prev)
+                                    : setIsSidebarOpen(prev => !prev)
                             }
                             size="icon-sm"
                             tooltip="Close Sidebar"
@@ -725,7 +731,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             {renderGroup({
                                 title: 'Pinned',
                                 threads: threads
-                                    .filter((thread) => thread.pinned)
+                                    .filter(thread => thread.pinned)
                                     .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
                                 groupIcon: <Pin size={14} strokeWidth={2} />,
                                 renderEmptyState: () => (
@@ -770,7 +776,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         <div className="flex flex-col items-center gap-3">
                             <Button
                                 className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
-                                onClick={() => setIsSidebarOpen((prev) => !prev)}
+                                onClick={() => setIsSidebarOpen(prev => !prev)}
                                 size="icon-sm"
                                 tooltip="Open Sidebar"
                                 tooltipSide="right"

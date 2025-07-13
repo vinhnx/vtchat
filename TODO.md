@@ -5,11 +5,16 @@
 ok go-> https://vtchat.io.vn/
 
 
+make the ThreadLoadingIndicator fit on mobile viewport
+--
+
+move user floating avatar to the left side, below the menu button
+
 --
 oracle:
 limit deep research to 5 queries/day for VT+ users
 limit pro research to 10 queries/day for VT+ users
-use neon mcp 
+use neon mcp
 --
 
 

@@ -20,6 +20,7 @@ import {
     Input,
     TypographyH3,
     TypographyMuted,
+    UnifiedAvatar,
 } from '@repo/ui';
 import { CheckCircle2, ExternalLink, Github, Loader2, Unlink, XCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -108,7 +109,7 @@ export const UserProfileSettings = () => {
 
                         // Check if the provider was successfully linked
                         const isNowLinked = accounts.some(
-                            (acc) => acc.providerId === linkingProvider
+                            acc => acc.providerId === linkingProvider
                         );
 
                         if (isNowLinked) {
@@ -207,7 +208,7 @@ export const UserProfileSettings = () => {
     };
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({
+        setFormData(prev => ({
             ...prev,
             [field]: value,
         }));
@@ -334,7 +335,7 @@ export const UserProfileSettings = () => {
                                     <FormLabel isOptional label="Display Name">
                                         <Input
                                             className="mt-1 h-[42px]"
-                                            onChange={(e) =>
+                                            onChange={e =>
                                                 handleInputChange('name', e.target.value)
                                             }
                                             placeholder="Enter your display name"
@@ -380,13 +381,21 @@ export const UserProfileSettings = () => {
                         <div className="space-y-4">
                             {/* Profile Avatar Section */}
                             <div className="border-border/50 flex items-center gap-4 border-b pb-4">
-                                <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full border-2 border-border/20">
-                                    <span className="text-foreground text-sm font-medium">
-                                        {(session.user.name || session.user.email || 'U')
-                                            .charAt(0)
-                                            .toUpperCase()}
-                                    </span>
-                                </div>
+                                <UnifiedAvatar
+                                    name={session.user.name || session.user.email || 'User'}
+                                    src={getSessionCacheBustedAvatarUrl(session.user.image)}
+                                    size="lg"
+                                    className="border-border/20 border-2"
+                                    onImageError={() => {
+                                        log.warn(
+                                            {
+                                                avatarUrl: session.user.image,
+                                                userEmail: session.user.email,
+                                            },
+                                            'Avatar failed to load in profile settings, using fallback initials'
+                                        );
+                                    }}
+                                />
                                 <div>
                                     <div className="text-foreground font-semibold">
                                         {session.user.name || 'User'}
@@ -509,7 +518,7 @@ export const UserProfileSettings = () => {
                     {/* Google Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'google')
+                            linkedAccounts.some(acc => acc.providerId === 'google')
                                 ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
                                 : 'border-border/50 bg-muted/20'
                         }`}
@@ -518,7 +527,7 @@ export const UserProfileSettings = () => {
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'google')
+                                        linkedAccounts.some(acc => acc.providerId === 'google')
                                             ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:shadow-green-900/50'
                                             : 'border-border bg-white'
                                     }`}
@@ -542,7 +551,7 @@ export const UserProfileSettings = () => {
                                         />
                                     </svg>
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'google') && (
+                                    {linkedAccounts.some(acc => acc.providerId === 'google') && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
@@ -560,7 +569,7 @@ export const UserProfileSettings = () => {
                                             Google
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'google'
+                                            acc => acc.providerId === 'google'
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
@@ -573,7 +582,7 @@ export const UserProfileSettings = () => {
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'google'
+                                              acc => acc.providerId === 'google'
                                           ) ? (
                                             'Account successfully connected'
                                         ) : (
@@ -583,7 +592,7 @@ export const UserProfileSettings = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'google') ? (
+                                {linkedAccounts.some(acc => acc.providerId === 'google') ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
@@ -640,7 +649,7 @@ export const UserProfileSettings = () => {
                     {/* GitHub Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'github')
+                            linkedAccounts.some(acc => acc.providerId === 'github')
                                 ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
                                 : 'border-border/50 bg-muted/20'
                         }`}
@@ -649,14 +658,14 @@ export const UserProfileSettings = () => {
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'github')
+                                        linkedAccounts.some(acc => acc.providerId === 'github')
                                             ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
                                             : 'border-border bg-white dark:bg-gray-900'
                                     }`}
                                 >
                                     <Github className="h-5 w-5 text-gray-900 dark:text-gray-100" />
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'github') && (
+                                    {linkedAccounts.some(acc => acc.providerId === 'github') && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
@@ -674,7 +683,7 @@ export const UserProfileSettings = () => {
                                             GitHub
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'github'
+                                            acc => acc.providerId === 'github'
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
@@ -687,7 +696,7 @@ export const UserProfileSettings = () => {
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'github'
+                                              acc => acc.providerId === 'github'
                                           ) ? (
                                             'Account successfully connected'
                                         ) : (
@@ -697,7 +706,7 @@ export const UserProfileSettings = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'github') ? (
+                                {linkedAccounts.some(acc => acc.providerId === 'github') ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
@@ -754,7 +763,7 @@ export const UserProfileSettings = () => {
                     {/* Twitter/X Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'twitter')
+                            linkedAccounts.some(acc => acc.providerId === 'twitter')
                                 ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
                                 : 'border-border/50 bg-muted/20'
                         }`}
@@ -763,7 +772,7 @@ export const UserProfileSettings = () => {
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'twitter')
+                                        linkedAccounts.some(acc => acc.providerId === 'twitter')
                                             ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
                                             : 'border-border bg-white dark:bg-gray-900'
                                     }`}
@@ -781,7 +790,7 @@ export const UserProfileSettings = () => {
                                         />
                                     </svg>
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'twitter') && (
+                                    {linkedAccounts.some(acc => acc.providerId === 'twitter') && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
@@ -799,7 +808,7 @@ export const UserProfileSettings = () => {
                                             X (Twitter)
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'twitter'
+                                            acc => acc.providerId === 'twitter'
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
@@ -812,7 +821,7 @@ export const UserProfileSettings = () => {
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'twitter'
+                                              acc => acc.providerId === 'twitter'
                                           ) ? (
                                             'Account successfully connected'
                                         ) : (
@@ -822,7 +831,7 @@ export const UserProfileSettings = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'twitter') ? (
+                                {linkedAccounts.some(acc => acc.providerId === 'twitter') ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${

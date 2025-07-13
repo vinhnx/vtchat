@@ -1,13 +1,11 @@
 'use client';
 
 import { useLogout } from '@repo/common/hooks';
+import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { useSession } from '@repo/shared/lib/auth-client';
 // import { log } from '@repo/shared/lib/logger';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
     Button,
     DropdownMenu,
     DropdownMenuContent,
@@ -15,6 +13,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    UnifiedAvatar,
 } from '@repo/ui';
 import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
 import Link from 'next/link';
@@ -30,7 +29,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
 
     if (!session?.user) {
         return null;
@@ -45,15 +44,12 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     className="bg-background flex h-auto items-center gap-2 border p-1 shadow-sm"
                     variant="secondary"
                 >
-                    <Avatar className="h-6 w-6">
-                        <AvatarImage
-                            src={getSessionCacheBustedAvatarUrl(user.image)}
-                            alt={user.name || 'User'}
-                        />
-                        <AvatarFallback className="text-xs">
-                            {(user.name || user.email)?.[0]?.toUpperCase() ?? 'U'}
-                        </AvatarFallback>
-                    </Avatar>
+                    <UnifiedAvatar
+                        name={user.name || user.email || 'User'}
+                        src={getSessionCacheBustedAvatarUrl(user.image)}
+                        size="xs"
+                        className="h-6 w-6"
+                    />
                     {showName && (
                         <span className="text-sm font-medium">{user.name || user.email}</span>
                     )}
@@ -129,11 +125,4 @@ export function UserButton({ showName = false }: UserButtonProps) {
             </DropdownMenuContent>
         </DropdownMenu>
     );
-}
-
-// Utility to append a cache-busting query param to the avatar URL
-function getSessionCacheBustedAvatarUrl(url?: string | null): string | undefined {
-    if (!url) return undefined;
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}cb=${Date.now()}`;
 }
