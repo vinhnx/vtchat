@@ -1,20 +1,20 @@
 // Force dynamic rendering for this webhook route
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import crypto from "node:crypto";
-import { log } from "@repo/shared/logger";
-import { EnvironmentType, getCurrentEnvironment } from "@repo/shared/types/environment";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { db } from "@/lib/database";
-import { sessions, userSubscriptions, users } from "@/lib/database/schema";
-import { invalidateSubscriptionCache } from "@/lib/subscription-cache";
-import { invalidateSessionSubscriptionCache } from "@/lib/subscription-session-cache";
+import { db } from '@/lib/database';
+import { sessions, userSubscriptions, users } from '@/lib/database/schema';
+import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
+import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
+import { log } from '@repo/shared/logger';
+import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import crypto from 'node:crypto';
+import { z } from 'zod';
 
 // Creem.io webhook event schemas - Updated to match actual Creem events
 const CreemWebhookEventSchema = z.object({
@@ -26,7 +26,7 @@ const CreemWebhookEventSchema = z.object({
 
 const CreemCheckoutEventSchema = z.object({
     id: z.string(),
-    eventType: z.literal("checkout.completed"),
+    eventType: z.literal('checkout.completed'),
     created_at: z.number(),
     object: z.object({
         id: z.string(),
@@ -59,11 +59,12 @@ const CreemCheckoutEventSchema = z.object({
 const CreemSubscriptionEventSchema = z.object({
     id: z.string(),
     eventType: z.enum([
-        "subscription.active",
-        "subscription.paid",
-        "subscription.canceled",
-        "subscription.expired",
-        "subscription.update",
+        'subscription.active',
+        'subscription.paid',
+        'subscription.canceled',
+        'subscription.expired',
+        'subscription.update',
+        'subscription.trialing',
     ]),
     created_at: z.number(),
     object: z.object({
@@ -96,7 +97,7 @@ function mapCreemProductToPlan(productName: string, metadata?: Record<string, st
     // Check metadata first for explicit package mapping
     if (metadata?.packageId) {
         const packageId = metadata.packageId;
-        if (packageId === PlanSlug.VT_PLUS || packageId.includes("plus")) {
+        if (packageId === PlanSlug.VT_PLUS || packageId.includes('plus')) {
             return PlanSlug.VT_PLUS;
         }
     }
@@ -104,9 +105,9 @@ function mapCreemProductToPlan(productName: string, metadata?: Record<string, st
     const productLower = productName.toLowerCase();
 
     if (
-        productLower.includes("plus") ||
-        productLower.includes("premium") ||
-        productLower.includes("vt+")
+        productLower.includes('plus') ||
+        productLower.includes('premium') ||
+        productLower.includes('vt+')
     ) {
         return PlanSlug.VT_PLUS;
     }
@@ -125,14 +126,14 @@ async function findUserByCreemData(customerEmail: string): Promise<string | null
             .limit(1);
 
         if (userByEmail.length > 0) {
-            log.info("[Creem Webhook] Found user by email");
+            log.info('[Creem Webhook] Found user by email');
             return userByEmail[0].id;
         }
 
-        log.error("[Creem Webhook] No user found for email");
+        log.error('[Creem Webhook] No user found for email');
         return null;
     } catch (error) {
-        log.error("[Creem Webhook] Error finding user:", { error });
+        log.error('[Creem Webhook] Error finding user:', { error });
         return null;
     }
 }
@@ -141,18 +142,18 @@ async function findUserByCreemData(customerEmail: string): Promise<string | null
 async function updateUserSubscription(
     userId: string,
     planSlug: string,
-    isActive: boolean,
+    status: SubscriptionStatusEnum,
     subscriptionId?: string,
     expiresAt?: Date,
-    creemCustomerId?: string,
+    creemCustomerId?: string
 ) {
     try {
         log.info(
-            `[Creem Webhook] Updating subscription for user ${userId}: ${planSlug} (${isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE})`,
+            `[Creem Webhook] Updating subscription for user ${userId}: ${planSlug} (${status})`
         );
 
         // Start a transaction to ensure data consistency
-        await db.transaction(async (tx) => {
+        await db.transaction(async tx => {
             // Update user's plan and customer ID in the users table
             const userUpdateData: any = {
                 planSlug,
@@ -174,7 +175,7 @@ async function updateUserSubscription(
 
             const subscriptionData = {
                 plan: planSlug,
-                status: isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.CANCELED, // Use enum
+                status: status, // Use the provided status directly
                 ...(expiresAt && { currentPeriodEnd: expiresAt }),
                 ...(subscriptionId && { creemSubscriptionId: subscriptionId }), // Store Creem subscription ID
                 updatedAt: new Date(),
@@ -198,7 +199,7 @@ async function updateUserSubscription(
         });
 
         log.info(
-            `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${isActive ? SubscriptionStatusEnum.ACTIVE : SubscriptionStatusEnum.INACTIVE})`,
+            `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${status})`
         );
 
         // Invalidate subscription cache to force fresh data on next request
@@ -212,7 +213,7 @@ async function updateUserSubscription(
         // Invalidate user sessions to force fresh subscription data
         await invalidateUserSessions(userId);
     } catch (error) {
-        log.error("[Creem Webhook] Failed to update user subscription:", { error });
+        log.error('[Creem Webhook] Failed to update user subscription:', { error });
         throw error;
     }
 }
@@ -237,7 +238,7 @@ async function invalidateUserSessions(userId: string) {
             log.info(`[Creem Webhook] Updated ${userSessions.length} sessions for user ${userId}`);
         }
     } catch (error) {
-        log.error("[Creem Webhook] Error updating user sessions:", { error });
+        log.error('[Creem Webhook] Error updating user sessions:', { error });
         // Don't throw here as this is not critical for the main operation
     }
 }
@@ -246,7 +247,7 @@ async function invalidateUserSessions(userId: string) {
 async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventSchema>) {
     const { object: data } = event;
 
-    log.info("[Creem Webhook] Processing checkout completed:", {
+    log.info('[Creem Webhook] Processing checkout completed:', {
         checkoutId: data.id,
         productName: data.product.name,
         amount: data.order.amount,
@@ -257,7 +258,7 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
     const userId = await findUserByCreemData(data.customer.email);
 
     if (!userId) {
-        log.error("[Creem Webhook] No user found for checkout event");
+        log.error('[Creem Webhook] No user found for checkout event');
         return;
     }
 
@@ -269,10 +270,10 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
         await updateUserSubscription(
             userId,
             planSlug,
-            true, // active since checkout completed
+            SubscriptionStatusEnum.ACTIVE, // active since checkout completed
             data.subscription.id,
             undefined, // expiry will be set by subscription events
-            data.customer.id,
+            data.customer.id
         );
         log.info(`[Creem Webhook] Updated subscription for checkout: ${data.id}`);
     }
@@ -284,7 +285,7 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
 async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEventSchema>) {
     const { object: data } = event;
 
-    log.info("[Creem Webhook] Processing subscription event:", {
+    log.info('[Creem Webhook] Processing subscription event:', {
         eventType: event.eventType,
         subscriptionId: data.id,
         status: data.status,
@@ -294,13 +295,33 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
     const userId = await findUserByCreemData(data.customer.email);
 
     if (!userId) {
-        log.error("[Creem Webhook] No user found for subscription event");
+        log.error('[Creem Webhook] No user found for subscription event');
         return;
     }
 
     const productName = data.product.name;
     const planSlug = mapCreemProductToPlan(productName, data.metadata);
-    const isActive = data.status === SubscriptionStatusEnum.ACTIVE;
+
+    // Map event type to appropriate subscription status
+    let subscriptionStatus: SubscriptionStatusEnum;
+    switch (event.eventType) {
+        case 'subscription.expired':
+            subscriptionStatus = SubscriptionStatusEnum.EXPIRED;
+            break;
+        case 'subscription.canceled':
+            subscriptionStatus = SubscriptionStatusEnum.CANCELED;
+            break;
+        case 'subscription.trialing':
+            subscriptionStatus = SubscriptionStatusEnum.TRIALING;
+            break;
+        case 'subscription.active':
+        case 'subscription.paid':
+        case 'subscription.update':
+        default:
+            // Use the status from the webhook data, fallback to data.status
+            subscriptionStatus = data.status;
+            break;
+    }
 
     // Parse expiration date if available
     let expiresAt: Date | undefined;
@@ -312,68 +333,66 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
     await updateUserSubscription(
         userId,
         planSlug,
-        isActive,
+        subscriptionStatus,
         data.id, // subscription ID
         expiresAt,
-        data.customer.id, // Creem customer ID
+        data.customer.id // Creem customer ID
     );
 
     // Handle specific event types
     switch (event.eventType) {
-        case "subscription.active":
+        case 'subscription.active':
             log.info(
-                `[Creem Webhook] New subscription activated: ${data.id} for plan: ${planSlug}`,
+                `[Creem Webhook] New subscription activated: ${data.id} for plan: ${planSlug}`
             );
             break;
 
-        case "subscription.paid":
+        case 'subscription.paid':
             log.info(
-                `[Creem Webhook] Subscription payment received: ${data.id} for plan: ${planSlug}`,
+                `[Creem Webhook] Subscription payment received: ${data.id} for plan: ${planSlug}`
             );
             break;
 
-        case "subscription.update":
+        case 'subscription.update':
             // Handle subscription updates (e.g., plan changes, renewals)
             log.info(`[Creem Webhook] Subscription updated: ${data.id} for plan: ${planSlug}`);
             break;
 
-        case "subscription.canceled":
+        case 'subscription.canceled':
             // For cancelled subscriptions, user retains access until period end
             log.info(
-                `[Creem Webhook] Subscription cancelled: ${data.id}. User retains access until period end.`,
+                `[Creem Webhook] Subscription cancelled: ${data.id}. User retains access until period end.`
             );
             break;
 
-        case "subscription.expired":
+        case 'subscription.expired':
             log.info(`[Creem Webhook] Subscription expired: ${data.id}. Access should be revoked.`);
+            break;
+
+        case 'subscription.trialing':
+            log.info(`[Creem Webhook] Subscription trialing: ${data.id} for plan: ${planSlug}`);
             break;
     }
 
     log.info(
-        `[Creem Webhook] Successfully processed subscription event: ${event.eventType} for user ${userId}`,
+        `[Creem Webhook] Successfully processed subscription event: ${event.eventType} for user ${userId}`
     );
 }
 
-// Verify webhook signature based on Creem's documentation
+// Verify webhook signature based on Creem's official documentation
+// https://docs.creem.io/webhooks/verify-webhook-requests
 function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
     try {
-        // Generate expected signature using HMAC-SHA256
-        const expectedSignature = crypto.createHmac("sha256", secret).update(payload).digest("hex");
-
-        log.info("[Creem Webhook] Signature verification debug:", {
-            receivedSignature: signature,
-            expectedSignature,
-            secretLength: secret.length,
-            payloadLength: payload.length,
-        });
+        // Generate signature using HMAC-SHA256 as specified by Creem
+        const computedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
 
         // Compare signatures using timing-safe comparison
         return crypto.timingSafeEqual(
-            Buffer.from(signature, "hex"),
-            Buffer.from(expectedSignature, "hex"),
+            Buffer.from(signature, 'hex'),
+            Buffer.from(computedSignature, 'hex')
         );
     } catch (error) {
-        log.error("[Creem Webhook] Signature verification failed:", { error });
+        log.error('[Creem Webhook] Signature verification failed:', { error });
         return false;
     }
 }
@@ -382,13 +401,13 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.text();
 
-        log.info("[Creem Webhook] =================================");
-        log.info("[Creem Webhook] Received webhook request at /api/webhook/creem");
-        log.info("[Creem Webhook] Headers:", {
+        log.info('[Creem Webhook] =================================');
+        log.info('[Creem Webhook] Received webhook request at /api/webhook/creem');
+        log.info('[Creem Webhook] Headers:', {
             headers: Object.fromEntries(request.headers.entries()),
         });
-        log.info("[Creem Webhook] Body length:", { bodyLength: body.length });
-        log.info("[Creem Webhook] Raw body:", { body });
+        log.info('[Creem Webhook] Body length:', { bodyLength: body.length });
+        log.info('[Creem Webhook] Raw body:', { body });
 
         // Get webhook secret from environment
         const webhookSecret = process.env.CREEM_WEBHOOK_SECRET;
@@ -397,27 +416,27 @@ export async function POST(request: NextRequest) {
         const isDevelopment = getCurrentEnvironment() === EnvironmentType.DEVELOPMENT;
 
         if (!(webhookSecret || isDevelopment)) {
-            log.error("[Creem Webhook] CREEM_WEBHOOK_SECRET not configured");
-            return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+            log.error('[Creem Webhook] CREEM_WEBHOOK_SECRET not configured');
+            return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
         }
 
         // Verify webhook signature if secret is available and not in development
         if (webhookSecret && !isDevelopment) {
-            const signature = request.headers.get("creem-signature");
+            const signature = request.headers.get('creem-signature');
             if (!signature) {
-                log.error("[Creem Webhook] No creem-signature header found");
-                return NextResponse.json({ error: "Missing signature" }, { status: 401 });
+                log.error('[Creem Webhook] No creem-signature header found');
+                return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
             }
 
             if (!verifyWebhookSignature(body, signature, webhookSecret)) {
-                log.error("[Creem Webhook] Invalid webhook signature");
-                return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+                log.error('[Creem Webhook] Invalid webhook signature');
+                return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
             }
 
-            log.info("[Creem Webhook] Signature verified successfully");
+            log.info('[Creem Webhook] Signature verified successfully');
         } else {
             log.warn(
-                "[Creem Webhook] Running in development mode - skipping signature verification",
+                '[Creem Webhook] Running in development mode - skipping signature verification'
             );
         }
 
@@ -426,64 +445,70 @@ export async function POST(request: NextRequest) {
         try {
             event = JSON.parse(body);
         } catch (parseError) {
-            log.error("[Creem Webhook] Failed to parse webhook body:", {
+            log.error('[Creem Webhook] Failed to parse webhook body:', {
                 error: parseError,
             });
-            return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+            return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
         }
 
         const validatedEvent = CreemWebhookEventSchema.parse(event);
 
-        log.info("[Creem Webhook] Processing event:", {
+        log.info('[Creem Webhook] Processing event:', {
             eventType: validatedEvent.eventType,
             id: validatedEvent.object?.id,
         });
 
         // Route to appropriate handler
         switch (validatedEvent.eventType) {
-            case "checkout.completed": {
+            case 'checkout.completed': {
                 const checkoutEvent = CreemCheckoutEventSchema.parse(event);
                 await handleCheckoutCompleted(checkoutEvent);
                 break;
             }
 
-            case "subscription.active":
-            case "subscription.paid":
-            case "subscription.update":
-            case "subscription.canceled":
-            case "subscription.expired": {
+            case 'subscription.active':
+            case 'subscription.paid':
+            case 'subscription.update':
+            case 'subscription.canceled':
+            case 'subscription.expired':
+            case 'subscription.trialing': {
                 const subscriptionEvent = CreemSubscriptionEventSchema.parse(event);
                 await handleSubscriptionEvent(subscriptionEvent);
                 break;
             }
 
             default:
-                log.info("[Creem Webhook] Unhandled webhook event type:", {
+                log.info('[Creem Webhook] Unhandled webhook event type:', {
                     data: validatedEvent.eventType,
                 });
+                // Still return success for unknown events to prevent retries
+                break;
         }
 
-        log.info("[Creem Webhook] Event processed successfully");
-        return NextResponse.json({ received: true, processed: true });
+        log.info('[Creem Webhook] Event processed successfully');
+
+        // Return HTTP 200 OK as required by Creem.io documentation
+        // This signals successful delivery and prevents retries
+        return NextResponse.json({ received: true, processed: true }, { status: 200 });
     } catch (error) {
-        log.error("[Creem Webhook] Webhook error:", { error });
+        log.error('[Creem Webhook] Webhook error:', { error });
 
         if (error instanceof z.ZodError) {
-            log.error("[Creem Webhook] Schema validation failed:", {
+            log.error('[Creem Webhook] Schema validation failed:', {
                 data: error.errors,
             });
             return NextResponse.json(
-                { error: "Invalid webhook payload", details: error.errors },
-                { status: 400 },
+                { error: 'Invalid webhook payload', details: error.errors },
+                { status: 400 }
             );
         }
 
         return NextResponse.json(
             {
-                error: "Internal server error",
-                message: error instanceof Error ? error.message : "Unknown error",
+                error: 'Internal server error',
+                message: error instanceof Error ? error.message : 'Unknown error',
             },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
