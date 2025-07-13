@@ -73,13 +73,9 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                VT democratizes access to cutting-edge AI capabilities by providing
-                                ALL premium AI models completely free to logged-in users with their
-                                own API keys, while offering exclusive research-focused features for
-                                professionals. Built with a privacy-first architecture, VT ensures
-                                your conversations never leave your device while delivering
-                                state-of-the-art AI reasoning, document processing, web search
-                                integration, and comprehensive multi-AI provider support.
+                                VT empowers users with secure, privacy-first AI conversations by
+                                offering unlimited access to premium AI models through BYOK while
+                                maintaining complete data sovereignty.
                             </p>
                         </div>
 
@@ -136,7 +132,7 @@ function AboutContent() {
                                     keys required
                                 </li>
                                 <li>
-                                    <strong>🆓 Free Local AI:</strong> Run AI models on your own
+                                    <strong>Free Local AI:</strong> Run AI models on your own
                                     computer with Ollama and LM Studio - completely free, private,
                                     and no API costs
                                 </li>
@@ -198,85 +194,6 @@ function AboutContent() {
                                     and stored locally only
                                 </li>
                             </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
-                            <p className="text-muted-foreground mb-4">
-                                VT offers an extremely generous free tier with access to all premium
-                                AI models through BYOK (Bring Your Own Key), plus 9 completely free
-                                server-funded models. VT+ subscription focuses exclusively on 3
-                                powerful research capabilities for professionals.
-                            </p>
-
-                            <div className="mb-6">
-                                <h4 className="text-lg font-semibold mb-2">Free Tier (VT_BASE)</h4>
-                                <ul className="text-muted-foreground list-inside list-disc space-y-1 ml-4">
-                                    <li>
-                                        <strong>ALL Premium AI Models (Free with BYOK):</strong>{" "}
-                                        Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1,
-                                        Grok 3
-                                    </li>
-                                    <li>
-                                        <strong>9 Free Server Models:</strong> 5 Gemini models + 4
-                                        OpenRouter models (no API keys needed)
-                                    </li>
-                                    <li>
-                                        <strong>🆓 Free Local AI:</strong> Ollama and LM Studio
-                                        support for complete privacy
-                                    </li>
-                                    <li>
-                                        <strong>All Advanced Features:</strong> Thinking Mode,
-                                        Document Processing, Structured Output, Charts, Web Search,
-                                        Mathematical Calculator
-                                    </li>
-                                    <li>
-                                        <strong>Dark Mode & Modern UI:</strong> Premium theming and
-                                        responsive design
-                                    </li>
-                                    <li>
-                                        <strong>Unlimited BYOK Usage:</strong> No limits when using
-                                        your own API keys
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div className="mb-6">
-                                <h4 className="text-lg font-semibold mb-2">
-                                    VT+ Premium ($5.99/month)
-                                </h4>
-                                <p className="text-muted-foreground mb-2">
-                                    All free features plus 3 exclusive research capabilities:
-                                </p>
-                                <ul className="text-muted-foreground list-inside list-disc space-y-1 ml-4">
-                                    <li>
-                                        <strong>PRO_SEARCH (Enhanced Web Search):</strong> 10
-                                        requests per day - Lightning-fast web search with AI
-                                        grounding
-                                    </li>
-                                    <li>
-                                        <strong>DEEP_RESEARCH:</strong> 5 requests per day -
-                                        Comprehensive multi-step research with detailed analysis
-                                    </li>
-                                    <li>
-                                        <strong>RAG (Personal AI Assistant with Memory):</strong>{" "}
-                                        2,000 completions per month - Build your personal AI
-                                        knowledge base
-                                    </li>
-                                    <li>
-                                        <strong>Priority Support:</strong> Enhanced customer support
-                                        and faster response times
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div className="text-center">
-                                <Link href="/plus">
-                                    <Button className="gap-2" size="lg">
-                                        View Subscription Plans
-                                    </Button>
-                                </Link>
-                            </div>
                         </div>
 
                         <div>

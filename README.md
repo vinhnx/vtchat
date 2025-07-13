@@ -69,7 +69,7 @@ Live at [https://vtchat.io.vn](https://vtchat.io.vn)
 - **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search - 10/day), DEEP_RESEARCH (Deep Research capabilities - 5/day), and RAG (Personal AI Assistant with Memory - 2,000/month)
 - **Seamless Management**: Creem.io integration with customer portal and real-time subscription status
 
-### 🚀 Local AI Setup Guides
+### Local AI Setup Guides
 
 Run AI models on your computer for **free** with complete privacy:
 
@@ -266,13 +266,14 @@ VT is production-ready and deployed on Fly.io:
 
 ## Documentation
 
-### **📚 Core Documentation**
+### **Core Documentation**
 
 - **[Project Status](docs/PROJECT-STATUS.md)**: Complete production readiness overview with live metrics
 - **[Features Guide](docs/FEATURES.md)**: Comprehensive feature documentation and capabilities
 - **[Architecture Overview](docs/ARCHITECTURE.md)**: System design, tech stack, and component architecture
 - **[Security Implementation](docs/SECURITY.md)**: Privacy-first architecture and security measures
 - **[Final Project Report](docs/FINAL-PROJECT-REPORT.md)**: Comprehensive technical and business analysis
+- **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: v1.0 production achievements and features
 
 ### **🚀 Setup & Deployment**
 
@@ -282,55 +283,80 @@ VT is production-ready and deployed on Fly.io:
 - **[Deployment Guide](docs/DEPLOYMENT.md)**: Production deployment instructions
 - **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Pre-deployment verification
 - **[Fly.io Deployment Guide](docs/fly-deployment-guide.md)**: Specific Fly.io deployment instructions
+- **[DNS Configuration Guide](docs/dns-configuration-guide.md)**: Domain setup and SSL configuration
 
-### **🔧 Development & Integration**
+### **Development & Integration**
 
 - **[Development Guidelines](AGENT.md)**: Code standards, conventions, and best practices
 - **[Subscription System](docs/subscription-system.md)**: Plan management and Creem.io integration
 - **[Creem Webhook Setup](docs/CREEM_WEBHOOK_SETUP.md)**: Payment webhook configuration
 - **[Account Linking](docs/ACCOUNT_LINKING.md)**: Multi-provider authentication setup
-- **[Database Maintenance](docs/DATABASE_MAINTENANCE.md)**: Ongoing database management
+- **[Database Maintenance](docs/DATABASE_MAINTENANCE.md)**: Ongoing database management and cron jobs
+- **[Admin System](docs/admin-system.md)**: Comprehensive admin panel documentation
+- **[Unified Access Control](docs/unified-access-control-implementation.md)**: Feature gating and subscription management
 
-### **🛠️ Local AI Setup Guides**
+### **Local AI & Advanced Features**
 
 - **[Complete Local AI Guide](docs/guides/local-ai-setup.md)**: Choose between Ollama and LM Studio
 - **[Ollama Setup Guide](docs/guides/ollama-setup.md)**: Command-line local AI (5-minute setup)
 - **[LM Studio Setup Guide](docs/guides/lm-studio-setup.md)**: GUI local AI (10-minute setup)
 - **[Premium Components Guide](docs/guides/premium-components.md)**: VT+ exclusive features
 - **[Logging Best Practices](docs/guides/logging-best-practices.md)**: Structured logging implementation
+- **[Embedding Security](docs/guides/embedding-security.md)**: Secure AI embeddings and content protection
 
-### **📊 Monitoring & Performance**
+### **Monitoring & Performance**
 
 - **[Production Monitoring Setup](docs/production-monitoring-setup.md)**: Error tracking, performance monitoring, and alerting
 - **[Production Readiness Report](docs/production-readiness-report.md)**: Comprehensive readiness assessment
+- **[Production Verification Report](docs/production-verification-report.md)**: Live deployment validation
 - **[Performance Optimizations](docs/auth-performance-optimizations.md)**: Authentication and runtime optimizations
 - **[Caching Optimization Report](docs/caching-optimization-report.md)**: Performance improvements and metrics
+- **[Fly Cost Optimization](docs/fly-cost-optimization.md)**: Infrastructure cost management
 
-### **🎯 Feature Implementation**
+### **Feature Implementation**
 
 - **[Thinking Mode Implementation](docs/reasoning-mode-implementation.md)**: AI reasoning capabilities
 - **[Document Upload Feature](docs/document-upload-feature.md)**: File processing implementation
 - **[Structured Output Implementation](docs/structured-output-implementation-summary.md)**: JSON extraction features
 - **[Enhanced Tool System](docs/enhanced-tool-system-implementation.md)**: Advanced tool routing
 - **[Rate Limiting Improvements](docs/rate-limiting-improvements.md)**: Usage control and limits
+- **[Content Signals Implementation](docs/contentsignals-implementation.md)**: Advanced content analysis
+- **[VT+ Reasoning Background](docs/vt-plus-reasoning-background-improvements.md)**: Premium tier enhancements
 
-### **🧪 Testing & Quality**
+### **Security & Privacy**
+
+- **[Arcjet Security Guide](docs/guides/arcjet-security.md)**: Comprehensive security implementation
+- **[Privacy Monitoring](docs/privacy-monitoring.md)**: Privacy-safe analytics approach
+- **[Customer Support Policy](docs/customer-support-policy.md)**: Support guidelines and data handling
+- **[Enhanced Subscription Verification](docs/enhanced-subscription-verification.md)**: Secure tier validation
+- **[Thread Isolation Implementation](docs/thread-isolation-implementation.md)**: Per-user data separation
+
+### **Testing & Quality**
 
 - **[Vitest Testing Setup](docs/vitest-testing-setup.md)**: Testing framework configuration
 - **[Structured Output Testing](docs/structured-output-testing.md)**: Feature-specific test suites
+- **[Error Diagnostic Examples](docs/error-diagnostic-examples.md)**: Debugging and troubleshooting
+- **[React Scan Usage](docs/react-scan-usage.md)**: Performance monitoring tools
+
+### **Project Management**
+
+- **[UI Audit Report](docs/ui-audit-report.md)**: User interface assessment and improvements
+- **[Chat UI Improvements Status](docs/chat-ui-improvements-status.md)**: Interface enhancement tracking
+- **[Tooling Setup](docs/tooling-setup.md)**: Development environment configuration
+- **[Shadcn UI Migration Completion](docs/shadcn-ui-migration-completion.md)**: UI library migration status
 - **[UI Audit Report](docs/ui-audit-report.md)**: Interface quality assessment
 
-### **📝 Release & Project Management**
+### **Release & Project Management**
 
 - **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: Complete feature summary and achievements
 - **[Customer Support Policy](docs/customer-support-policy.md)**: Support procedures and guidelines
 
-### **📞 User Support & Help**
+### **User Support & Help**
 
 - **[Help Center](docs/help-center/README.md)**: Complete user guides, FAQ, and troubleshooting
 - **[Usage Settings Implementation](docs/USAGE_SETTINGS_IMPLEMENTATION.md)**: User configuration and preferences
 
-### **📋 Project Context & Evolution**
+### **Project Context & Evolution**
 
 The **[memory-bank/](memory-bank/)** directory contains contextual documents tracking project evolution, feature implementations, and development insights. These documents provide historical context and decision rationale for continuous improvement.
 
@@ -343,7 +369,7 @@ Key memory bank documents:
 
 ---
 
-> **💡 Navigation Tip**: Start with [Project Status](docs/PROJECT-STATUS.md) for a complete overview, then explore specific areas using the categorized documentation links above.
+> **Navigation Tip**: Start with [Project Status](docs/PROJECT-STATUS.md) for a complete overview, then explore specific areas using the categorized documentation links above.
 
 ## Security
 
