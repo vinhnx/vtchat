@@ -5,6 +5,27 @@ import { eq, sql } from 'drizzle-orm';
 import { type NextRequest, NextResponse } from 'next/server';
 import { log } from '@repo/shared/lib/logger';
 
+/**
+ * Database metrics query constants for better maintainability
+ */
+const DatabaseMetricsQueries = {
+    SCHEMA_NAME: 'public',
+    CURRENT_DATABASE: 'current_database()',
+    LIMITS: {
+        STATS_LIMIT: 10,
+        TABLE_STATS_LIMIT: 5,
+    },
+} as const;
+
+/**
+ * Database health thresholds in milliseconds
+ */
+const HealthThresholds = {
+    CRITICAL: 1000,
+    WARNING: 500,
+    GOOD: 100,
+} as const;
+
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
         headers: request.headers,
@@ -24,12 +45,12 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        // Database connection metrics
+        // Database connection metrics with optimized query
         const connectionStart = Date.now();
-        await db.select().from(users).limit(1);
+        await db.select({ id: users.id }).from(users).limit(1);
         const connectionTime = Date.now() - connectionStart;
 
-        // Database size and table metrics
+        // Database size and table metrics with type-safe constants
         const dbMetrics = await db.execute(
             sql`
             SELECT 
@@ -39,12 +60,12 @@ export async function GET(request: NextRequest) {
                 n_distinct,
                 correlation
             FROM pg_stats 
-            WHERE schemaname = 'public'
-            LIMIT 10
+            WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
+            LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
             `
         );
 
-        // Get database activity statistics
+        // Get database activity statistics with type-safe query
         const dbActivity = await db.execute(
             sql`
             SELECT 
@@ -59,11 +80,11 @@ export async function GET(request: NextRequest) {
                 tup_updated as tuples_updated,
                 tup_deleted as tuples_deleted
             FROM pg_stat_database 
-            WHERE datname = current_database()
+            WHERE datname = ${sql.raw(DatabaseMetricsQueries.CURRENT_DATABASE)}
             `
         );
 
-        // Get table sizes
+        // Get table sizes with optimized query
         const tableSizes = await db.execute(
             sql`
             SELECT 
@@ -72,13 +93,13 @@ export async function GET(request: NextRequest) {
                 pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
                 pg_total_relation_size(schemaname||'.'||tablename) as size_bytes
             FROM pg_tables 
-            WHERE schemaname = 'public'
+            WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
             ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
-            LIMIT 10
+            LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
             `
         );
 
-        // Get index usage statistics
+        // Get index usage statistics with type-safe query
         const indexStats = await db.execute(
             sql`
             SELECT 
@@ -88,9 +109,9 @@ export async function GET(request: NextRequest) {
                 idx_tup_read,
                 idx_tup_fetch
             FROM pg_stat_user_indexes 
-            WHERE schemaname = 'public'
+            WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
             ORDER BY idx_tup_read DESC
-            LIMIT 10
+            LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
             `
         );
 
@@ -102,13 +123,13 @@ export async function GET(request: NextRequest) {
               )
             : '0';
 
-        // Determine database health based on metrics
+        // Determine database health based on connection time thresholds
         let dbHealth = 'excellent';
-        if (connectionTime > 1000) {
+        if (connectionTime > HealthThresholds.CRITICAL) {
             dbHealth = 'critical';
-        } else if (connectionTime > 500) {
+        } else if (connectionTime > HealthThresholds.WARNING) {
             dbHealth = 'warning';
-        } else if (connectionTime > 100) {
+        } else if (connectionTime > HealthThresholds.GOOD) {
             dbHealth = 'good';
         }
 
@@ -142,13 +163,15 @@ export async function GET(request: NextRequest) {
                     tuplesRead: row.idx_tup_read,
                     tuplesFetched: row.idx_tup_fetch,
                 })),
-                statistics: dbMetrics.rows.slice(0, 5).map((row: any) => ({
-                    schema: row.schemaname,
-                    table: row.tablename,
-                    column: row.attname,
-                    distinctValues: row.n_distinct,
-                    correlation: row.correlation,
-                })),
+                statistics: dbMetrics.rows
+                    .slice(0, DatabaseMetricsQueries.LIMITS.TABLE_STATS_LIMIT)
+                    .map((row: any) => ({
+                        schema: row.schemaname,
+                        table: row.tablename,
+                        column: row.attname,
+                        distinctValues: row.n_distinct,
+                        correlation: row.correlation,
+                    })),
             },
         });
     } catch (error) {

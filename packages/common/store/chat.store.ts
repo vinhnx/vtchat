@@ -6,7 +6,6 @@ import { THINKING_MODE } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
 import type { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
 import Dexie, { type Table } from 'dexie';
-import { nanoid } from 'nanoid';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';

@@ -120,7 +120,7 @@ Current date: ${getHumanizedDate()}
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
             userId: context?.get('userId'),
-            feature: vtplusFeature,
+            feature: vtplusFeature || undefined,
         });
 
         const newStepId = stepId + 1;

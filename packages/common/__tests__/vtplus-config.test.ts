@@ -1,13 +1,28 @@
 // VT+ Configuration Tests
 import { describe, expect, it } from 'vitest';
-import { QuotaExceededError, VT_PLUS_LIMITS, VtPlusFeature } from '../src/config/vtPlusLimits';
+import {
+    QuotaExceededError,
+    VT_PLUS_LIMITS,
+    VtPlusFeature,
+    QuotaConfig,
+    QUOTA_WINDOW,
+} from '../src/config/vtPlusLimits';
 
 describe('VT+ Configuration', () => {
     describe('VT+ Limits', () => {
-        it('should have correct default limits', () => {
-            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBe(500);
-            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBe(800);
-            expect(VT_PLUS_LIMITS[VtPlusFeature.RAG]).toBe(2000);
+        it('should have correct default limits with windows', () => {
+            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toEqual({
+                limit: 5,
+                window: QUOTA_WINDOW.DAILY,
+            });
+            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toEqual({
+                limit: 10,
+                window: QUOTA_WINDOW.DAILY,
+            });
+            expect(VT_PLUS_LIMITS[VtPlusFeature.RAG]).toEqual({
+                limit: 2000,
+                window: QUOTA_WINDOW.MONTHLY,
+            });
         });
 
         it('should have all required VT+ features', () => {
@@ -15,9 +30,10 @@ describe('VT+ Configuration', () => {
         });
 
         it('should only have positive limits', () => {
-            Object.values(VT_PLUS_LIMITS).forEach((limit) => {
-                expect(limit).toBeGreaterThan(0);
-                expect(Number.isInteger(limit)).toBe(true);
+            Object.values(VT_PLUS_LIMITS).forEach((config: QuotaConfig) => {
+                expect(config.limit).toBeGreaterThan(0);
+                expect(Number.isInteger(config.limit)).toBe(true);
+                expect([QUOTA_WINDOW.DAILY, QUOTA_WINDOW.MONTHLY]).toContain(config.window);
             });
         });
     });
@@ -35,7 +51,9 @@ describe('VT+ Configuration', () => {
 
             features.forEach((feature) => {
                 expect(VT_PLUS_LIMITS[feature]).toBeDefined();
-                expect(typeof VT_PLUS_LIMITS[feature]).toBe('number');
+                expect(typeof VT_PLUS_LIMITS[feature]).toBe('object');
+                expect(typeof VT_PLUS_LIMITS[feature].limit).toBe('number');
+                expect(typeof VT_PLUS_LIMITS[feature].window).toBe('string');
             });
         });
     });
@@ -77,25 +95,25 @@ describe('VT+ Configuration', () => {
 
     describe('Quota Validation Logic', () => {
         it('should allow usage within limits', () => {
-            const currentUsed = 100;
-            const requestedAmount = 50;
-            const limit = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
+            const currentUsed = 1;
+            const requestedAmount = 2;
+            const { limit } = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
 
             const wouldExceed = currentUsed + requestedAmount > limit;
             expect(wouldExceed).toBe(false);
         });
 
         it('should detect quota exceeded', () => {
-            const currentUsed = 450;
-            const requestedAmount = 100;
-            const limit = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
+            const currentUsed = 4;
+            const requestedAmount = 2;
+            const { limit } = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
 
             const wouldExceed = currentUsed + requestedAmount > limit;
             expect(wouldExceed).toBe(true);
         });
 
         it('should handle edge case at exact limit', () => {
-            const limit = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
+            const { limit } = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
 
             // Should allow reaching exactly the limit
             const atLimit = limit - 1 + 1 > limit;

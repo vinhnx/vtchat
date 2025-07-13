@@ -33,13 +33,18 @@ The VT+ rate limiting system provides quota-based access control for three premi
 
 ## Features and Limits
 
-### Default Monthly Limits
+### Current Quota System
 
-| Feature | Code | Default Limit | Estimated Cost |
-|---------|------|---------------|----------------|
-| Deep Research | `DR` | 500 completions | ~$30-40/month |
-| Pro Search | `PS` | 800 completions | ~$40-50/month |
-| RAG Assistant | `RAG` | 2000 completions | ~$80-100/month |
+| Feature | Code | Default Limit | Reset Window | Estimated Cost |
+|---------|------|---------------|--------------|----------------|
+| Deep Research | `DR` | 5 requests | Daily (00:00 UTC) | ~$1-2/day |
+| Pro Search | `PS` | 10 requests | Daily (00:00 UTC) | ~$2-3/day |
+| RAG Assistant | `RAG` | 2000 completions | Monthly (1st of month) | ~$80-100/month |
+
+**Important Changes:**
+- Deep Research and Pro Search now have **daily limits** that reset every day at 00:00 UTC
+- Personal AI Assistant (RAG) maintains monthly limits for document processing workflows
+- Daily limits are designed to prevent runaway costs while providing meaningful daily usage
 
 ### Environment Configuration
 
@@ -47,26 +52,38 @@ Override defaults with environment variables:
 
 ```bash
 # VT+ Rate Limiting Configuration
-VTPLUS_LIMIT_DR=500     # Deep Research - completions per month
-VTPLUS_LIMIT_PS=800     # Pro Search - completions per month  
-VTPLUS_LIMIT_RAG=2000   # RAG Personal Assistant - completions per month
+VTPLUS_DAILY_LIMIT_DR=5      # Deep Research - requests per day
+VTPLUS_DAILY_LIMIT_PS=10     # Pro Search - requests per day  
+VTPLUS_MONTHLY_LIMIT_RAG=2000 # RAG Personal Assistant - completions per month
+
+# Legacy monthly limits (for backward compatibility)
+VTPLUS_LIMIT_DR=500          # Legacy: Deep Research monthly limit
+VTPLUS_LIMIT_PS=800          # Legacy: Pro Search monthly limit
+VTPLUS_LIMIT_RAG=2000        # Legacy: RAG monthly limit
 ```
 
 ## Usage Tracking
 
-### Completion Call Counting
+### Quota Consumption Counting
 
-The system counts **individual AI model API calls**, not user requests:
+**Updated Counting Logic:**
 
-- **Deep Research**: 5 API calls per user request
-  - refine-query task: 1 call
-  - planner task: 1 call  
-  - gemini-web-search task: 1 call
-  - analysis task: 1 call
-  - writer task: 1 call
+- **Deep Research**: 1 quota unit per user request (regardless of internal API calls)
+  - Daily limit: 5 requests per day
+  - Resets every day at 00:00 UTC
+  - Each research request consumes 1 unit from daily quota
 
-- **Pro Search**: 1-2 API calls per user request
-- **RAG Assistant**: 1 API call per conversation turn
+- **Pro Search**: 1 quota unit per user request  
+  - Daily limit: 10 requests per day
+  - Resets every day at 00:00 UTC
+  - Each search request consumes 1 unit from daily quota
+
+- **RAG Assistant**: 1 quota unit per API call (unchanged)
+  - Monthly limit: 2000 completions per month
+  - Resets on 1st of each month
+  - Each conversation turn consumes 1 unit from monthly quota
+
+**Note:** The quota system now counts user requests for Deep Research and Pro Search rather than individual AI model API calls, making limits more predictable and user-friendly.
 
 ### Quota Consumption Logic
 
@@ -183,8 +200,10 @@ VT+ usage is displayed in the settings modal via:
 ### Features
 
 - Current usage vs. limits for all three features
-- Monthly usage periods (resets on billing cycle)
+- Mixed reset periods: Daily for Deep Research & Pro Search, Monthly for RAG
 - Visual progress bars and warnings at 90% usage
+- Individual reset countdown for each feature
+- Daily/Monthly badges to distinguish quota windows
 - Upgrade prompts when limits are reached
 
 ## Testing
@@ -214,23 +233,48 @@ bun test packages/common/__tests__/vtplus-concurrency.test.ts
 
 ### Database Migration
 
-1. **Preparation**:
-   ```sql
-   CREATE TABLE vtplus_usage_new (...);
-   -- Copy existing data if any
-   ALTER TABLE vtplus_usage RENAME TO vtplus_usage_backup;
-   ALTER TABLE vtplus_usage_new RENAME TO vtplus_usage;
+✅ **Schema Status**: Database schema is ready for daily quotas!
+
+The existing `vtplus_usage` table already supports daily/monthly tracking with:
+- `period_start` DATE column for day-level granularity
+- Unique constraint on `(user_id, feature, period_start)`
+- Proper indexes for performance
+- `consume_vtplus_quota()` function deployed for Neon MCP integration
+
+**No migration needed** - the system is backward compatible and ready for production.
+
+**Deployment Steps**:
+1. Update environment variables:
+   ```bash
+   VTPLUS_DAILY_LIMIT_DR=5
+   VTPLUS_DAILY_LIMIT_PS=10
+   VTPLUS_MONTHLY_LIMIT_RAG=2000
    ```
 
-2. **Application Deployment**:
+2. Deploy application:
    ```bash
    ./deploy-fly.sh --auto --version patch
    ```
 
-3. **Verification**:
+3. Verification:
    - Monitor logs for quota consumption
    - Test VT+ features in staging
    - Verify usage tracking in UI
+
+### Data Cleanup
+
+Daily quota tracking creates one row per user per feature per day. Set up periodic cleanup:
+
+```bash
+# Weekly cleanup of daily quota rows older than 30 days
+# Recommended: Run Sundays at 02:00 UTC
+psql -f apps/web/lib/database/cleanup-daily-quotas.sql
+
+# Or schedule via cron:
+# 0 2 * * 0 psql -f cleanup-daily-quotas.sql
+```
+
+**Note**: Monthly RAG quota rows are preserved for historical tracking.
 
 ### Rollback Plan
 

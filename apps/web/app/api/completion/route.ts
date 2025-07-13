@@ -2,7 +2,7 @@ import { getModelFromChatMode, type ModelEnum } from '@repo/ai/models';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
+
 import { isGeminiModel } from '@repo/shared/utils';
 import { type Geo, geolocation } from '@vercel/functions';
 import type { NextRequest } from 'next/server';
@@ -15,7 +15,7 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/a
 export const dynamic = 'force-dynamic';
 
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
-import { executeStream, sendMessage } from './stream-handlers';
+import { executeStream } from './stream-handlers';
 import { registerStream, unregisterStream } from './stream-registry';
 import { completionRequestSchema, SSE_HEADERS } from './types';
 import { getIp } from './utils';
@@ -313,12 +313,38 @@ export async function POST(request: NextRequest) {
         return new Response(stream, { headers: enhancedHeaders });
     } catch (error) {
         log.error({ error }, 'Error in POST handler');
+
+        // Provide specific error messages based on error type
+        let errorMessage = 'Internal server error';
+        let statusCode = 500;
+
+        if (error instanceof Error) {
+            const errorString = error.message.toLowerCase();
+
+            if (errorString.includes('unauthorized') || errorString.includes('forbidden')) {
+                errorMessage = 'Authentication required. Please sign in and try again.';
+                statusCode = 401;
+            } else if (errorString.includes('rate limit') || errorString.includes('429')) {
+                errorMessage = 'Rate limit exceeded. Please wait a moment before trying again.';
+                statusCode = 429;
+            } else if (errorString.includes('network') || errorString.includes('fetch')) {
+                errorMessage = 'Network connection error. Please check your internet connection.';
+                statusCode = 503;
+            } else if (errorString.includes('timeout')) {
+                errorMessage = 'Request timed out. Please try again.';
+                statusCode = 408;
+            } else if (errorString.includes('parse') || errorString.includes('invalid')) {
+                errorMessage = 'Invalid request format. Please refresh the page and try again.';
+                statusCode = 400;
+            }
+        }
+
         return new Response(
             JSON.stringify({
-                error: 'Internal server error',
-                details: String(error),
+                error: errorMessage,
+                details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
             }),
-            { status: 500, headers: { 'Content-Type': 'application/json' } }
+            { status: statusCode, headers: { 'Content-Type': 'application/json' } }
         );
     }
 }
@@ -410,45 +436,15 @@ function createCompletionStream({
                     },
                 });
             } catch (error) {
-                if (abortController.signal.aborted) {
-                    log.info('abortController.signal.aborted');
-                    await sendMessage(controller, _encoder, {
-                        type: 'done',
-                        status: 'aborted',
-                        threadId: data.threadId,
-                        threadItemId: data.threadItemId,
-                        parentThreadItemId: data.parentThreadItemId,
-                    });
-                } else {
-                    // Check for VT+ quota exceeded error
-                    const isQuotaError =
-                        error instanceof Error &&
-                        (error.message.includes('VT+ quota exceeded') ||
-                            error.name === 'QuotaExceededError');
-
-                    if (isQuotaError) {
-                        log.warn({ error, userId }, 'VT+ quota exceeded during request');
-                        await sendMessage(controller, _encoder, {
-                            type: 'done',
-                            status: 'quota_exceeded',
-                            error: 'VT+ monthly quota exceeded. Your quota will reset next month.',
-                            quotaType: PlanSlug.VT_PLUS,
-                            threadId: data.threadId,
-                            threadItemId: data.threadItemId,
-                            parentThreadItemId: data.parentThreadItemId,
-                        });
-                    } else {
-                        log.info('sending error message');
-                        await sendMessage(controller, _encoder, {
-                            type: 'done',
-                            status: 'error',
-                            error: error instanceof Error ? error.message : String(error),
-                            threadId: data.threadId,
-                            threadItemId: data.threadItemId,
-                            parentThreadItemId: data.parentThreadItemId,
-                        });
-                    }
-                }
+                const { handleStreamError } = await import('./stream-error-handler');
+                await handleStreamError({
+                    error,
+                    controller,
+                    encoder: _encoder,
+                    data,
+                    userId,
+                    abortController,
+                });
             } finally {
                 isControllerClosed = true;
                 if (heartbeatInterval) {

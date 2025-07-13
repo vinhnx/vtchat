@@ -639,20 +639,26 @@ export const generateText = async ({
         const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN };
         const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
 
-        if (userId && userTier === 'PLUS' && isEligibleForQuotaConsumption(user, isByokKey)) {
+        // Determine if this mode requires VT+ quota consumption
+        const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
+        const requiresQuotaConsumption =
+            userId &&
+            userTier === 'PLUS' &&
+            isEligibleForQuotaConsumption(user, isByokKey) &&
+            vtplusFeature !== null;
+
+        if (requiresQuotaConsumption) {
             const { streamTextWithQuota } = await import('@repo/common/lib/geminiWithQuota');
             const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
 
-            // Determine VT+ feature based on mode
-            const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
-
             streamResult = await streamTextWithQuota(streamConfig, {
                 user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                feature: vtplusFeature,
+                feature: vtplusFeature!,
                 amount: 1,
                 isByokKey: isUsingByokKeys(byokKeys),
             });
         } else {
+            // Regular chat or VT+ user with unlimited models
             streamResult = streamText(streamConfig);
         }
         const { fullStream } = streamResult;

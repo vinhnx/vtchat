@@ -22,7 +22,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro.
+- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro plus exclusive research features (Pro Search: 10/day, Deep Research: 5/day, AI Memory: 2,000/month).
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (Free feature)
@@ -120,9 +120,13 @@ VT_BASE is our free tier for logged-in users that includes:
 ### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
-- **Three Exclusive Research Features**: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), and Personal AI Assistant with Memory (RAG)
+- **Three Exclusive Research Features with Daily Quotas**:
+  - **Enhanced Web Search (PRO_SEARCH)**: 10 requests per day (resets at 00:00 UTC)
+  - **Deep Research (DEEP_RESEARCH)**: 5 requests per day (resets at 00:00 UTC)
+  - **Personal AI Assistant with Memory (RAG)**: 2,000 completions per month (resets on 1st of month)
 - **Expanded Gemini Access**: VT+ subscribers receive expanded, server-funded access to all Gemini models, including Gemini 2.5 Pro (25 requests/day), Gemini 2.5 Flash (50 requests/day), and Gemini 2.5 Flash Lite (100 requests/day), all without needing your own API keys.
 - **Priority Support**: Enhanced customer support
+- **Daily Reset Schedule**: Pro Search and Deep Research quotas reset every day at 00:00 UTC to provide consistent daily usage
 
 ### 4.3 Payment Terms
 - All payments are processed securely through **Creem.io**

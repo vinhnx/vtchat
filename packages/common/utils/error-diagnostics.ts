@@ -21,7 +21,27 @@ export const generateErrorDiagnostic = (error: unknown): ErrorDiagnostic => {
 
     const errorLower = errorString.toLowerCase();
 
-    // Rate limit errors
+    // VT+ quota exceeded errors (more specific)
+    if (
+        errorLower.includes('daily deep research limit reached') ||
+        errorLower.includes('daily pro search limit reached') ||
+        errorLower.includes('monthly rag limit reached') ||
+        errorLower.includes('vt+ quota exceeded')
+    ) {
+        return {
+            message: errorString,
+            suggestions: [
+                'Your daily/monthly quota has been reached',
+                'Try using a different VT+ feature with remaining quota',
+                'Use regular chat models which are unlimited',
+                'Your quota will reset automatically at the scheduled time',
+                'Check your usage in Settings → Usage',
+            ],
+            category: 'rate_limit',
+        };
+    }
+
+    // General rate limit errors
     if (
         errorLower.includes('rate limit') ||
         errorLower.includes('daily limit') ||

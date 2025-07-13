@@ -15,8 +15,6 @@ interface EmbeddingRecord {
 }
 
 async function obfuscateExistingEmbeddings() {
-    console.log('🔒 Starting embeddings content obfuscation...');
-
     try {
         // Get all embeddings that might need obfuscation
         const allEmbeddings = await db
@@ -27,8 +25,6 @@ async function obfuscateExistingEmbeddings() {
             .from(embeddings)
             .where(sql`content NOT LIKE '%_REDACTED%'`);
 
-        console.log(`Found ${allEmbeddings.length} embeddings to check for obfuscation`);
-
         let updatedCount = 0;
         let skippedCount = 0;
 
@@ -38,10 +34,6 @@ async function obfuscateExistingEmbeddings() {
 
             // Only update if content changed (was obfuscated)
             if (originalContent !== securedContent) {
-                console.log(`🔄 Obfuscating embedding ${embedding.id}`);
-                console.log(`   Original: ${originalContent}`);
-                console.log(`   Secured:  ${securedContent}`);
-
                 await db
                     .update(embeddings)
                     .set({
@@ -54,7 +46,6 @@ async function obfuscateExistingEmbeddings() {
                 log.info(
                     {
                         embeddingId: embedding.id,
-                        ownerId: embedding.owner_id,
                         hadPII: containsPII(originalContent),
                         originalLength: originalContent.length,
                         securedLength: securedContent.length,
@@ -130,4 +121,5 @@ if (require.main === module) {
             console.error('❌ Embeddings obfuscation failed:', error);
             process.exit(1);
         });
+}
 }

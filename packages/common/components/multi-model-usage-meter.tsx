@@ -2,6 +2,7 @@
 
 import { ModelEnum } from '@repo/ai/models';
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
+import { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
 import {
     Button,
     Card,
@@ -678,18 +679,36 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
     const features = [
         {
             name: 'Deep Research',
-            data: vtPlusUsage.deepResearch || { used: 0, limit: 0, percentage: 0 },
+            data: vtPlusUsage.deepResearch || {
+                used: 0,
+                limit: 0,
+                percentage: 0,
+                window: QUOTA_WINDOW.DAILY,
+            },
             color: 'hsl(var(--chart-1))',
+            resetPeriod: 'Daily Reset',
         },
         {
             name: 'Pro Search',
-            data: vtPlusUsage.proSearch || { used: 0, limit: 0, percentage: 0 },
+            data: vtPlusUsage.proSearch || {
+                used: 0,
+                limit: 0,
+                percentage: 0,
+                window: QUOTA_WINDOW.DAILY,
+            },
             color: 'hsl(var(--chart-2))',
+            resetPeriod: 'Daily Reset',
         },
         {
             name: 'Personal AI Assistant',
-            data: vtPlusUsage.rag || { used: 0, limit: 0, percentage: 0 },
+            data: vtPlusUsage.rag || {
+                used: 0,
+                limit: 0,
+                percentage: 0,
+                window: QUOTA_WINDOW.MONTHLY,
+            },
             color: 'hsl(var(--chart-3))',
+            resetPeriod: 'Monthly Reset',
         },
     ];
 
@@ -700,7 +719,7 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                     VT+ Research Features Usage
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                    Monthly usage tracking for exclusive VT+ research capabilities
+                    Usage tracking for exclusive VT+ research capabilities
                 </p>
             </div>
 
@@ -712,7 +731,8 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                             <CardTitle className="text-base">{feature.name}</CardTitle>
                             <CardDescription>
                                 {feature.data.used.toLocaleString()} /{' '}
-                                {feature.data.limit.toLocaleString()} requests
+                                {feature.data.limit.toLocaleString()} requests ·{' '}
+                                {feature.resetPeriod}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>

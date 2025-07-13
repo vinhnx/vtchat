@@ -11,10 +11,43 @@ export enum VtPlusFeature {
     RAG = 'RAG',
 }
 
-export const VT_PLUS_LIMITS: Record<VtPlusFeature, number> = {
-    [VtPlusFeature.DEEP_RESEARCH]: Number(process.env.VTPLUS_LIMIT_DR) || 500, // completions / month (~$30-40/month)
-    [VtPlusFeature.PRO_SEARCH]: Number(process.env.VTPLUS_LIMIT_PS) || 800, // completions / month (~$40-50/month)
-    [VtPlusFeature.RAG]: Number(process.env.VTPLUS_LIMIT_RAG) || 2000, // completions / month (~$80-100/month)
+// Quota Window Constants
+export const QUOTA_WINDOW = {
+    DAILY: 'daily',
+    MONTHLY: 'monthly',
+} as const;
+
+export type QuotaWindow = (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW];
+
+export interface QuotaConfig {
+    limit: number;
+    window: QuotaWindow;
+}
+
+/** VT+ limits with daily/monthly window configuration */
+export const VT_PLUS_LIMITS: Record<VtPlusFeature, QuotaConfig> = {
+    [VtPlusFeature.DEEP_RESEARCH]: {
+        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_DR ?? '5', 10),
+        window: QUOTA_WINDOW.DAILY,
+    },
+    [VtPlusFeature.PRO_SEARCH]: {
+        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_PS ?? '10', 10),
+        window: QUOTA_WINDOW.DAILY,
+    },
+    [VtPlusFeature.RAG]: {
+        limit: parseInt(process.env.VTPLUS_MONTHLY_LIMIT_RAG ?? '2000', 10),
+        window: QUOTA_WINDOW.MONTHLY,
+    },
+};
+
+/**
+ * @deprecated Legacy monthly limits for backward compatibility - DO NOT USE
+ * Use VT_PLUS_LIMITS instead which includes window configuration
+ */
+export const VT_PLUS_MONTHLY_LIMITS: Record<VtPlusFeature, number> = {
+    [VtPlusFeature.DEEP_RESEARCH]: parseInt(process.env.VTPLUS_LIMIT_DR ?? '500', 10),
+    [VtPlusFeature.PRO_SEARCH]: parseInt(process.env.VTPLUS_LIMIT_PS ?? '800', 10),
+    [VtPlusFeature.RAG]: parseInt(process.env.VTPLUS_LIMIT_RAG ?? '2000', 10),
 };
 
 export class QuotaExceededError extends Error {

@@ -38,10 +38,12 @@ Available to all logged-in users:
 
 All free features plus 3 research-focused exclusives:
 
-- **Enhanced Web Search (PRO_SEARCH)**: AI can search the web for current information
-- **Deep Research (DEEP_RESEARCH)**: Comprehensive analysis of complex topics
-- **Personal AI Memory (RAG)**: AI assistant with memory capabilities
+- **Enhanced Web Search (PRO_SEARCH)**: AI can search the web for current information (10 requests/day)
+- **Deep Research (DEEP_RESEARCH)**: Comprehensive analysis of complex topics (5 requests/day)
+- **Personal AI Memory (RAG)**: AI assistant with memory capabilities (2,000 completions/month)
 - **Priority Support**: Faster support response times
+
+**Daily Quotas**: Deep Research and Pro Search have daily limits that reset every day at 00:00 UTC to provide meaningful daily usage while controlling costs.
 
 ## 🛡️ Privacy & Security
 
@@ -114,7 +116,7 @@ All logged-in users can access basic web search functionality:
 - Real-time data and statistics
 - Latest research and publications
 
-**Note**: VT+ subscribers get enhanced PRO_SEARCH capabilities with more comprehensive results and faster processing.
+**Note**: VT+ subscribers get enhanced PRO_SEARCH capabilities with more comprehensive results and faster processing. VT+ includes 10 Pro Search requests per day, while free users have basic web search functionality.
 
 ### How to Use Web Search
 

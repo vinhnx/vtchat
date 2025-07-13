@@ -28,20 +28,20 @@ describe('VT+ Limits Configuration', () => {
         });
 
         it('should have positive numeric limits', () => {
-            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBe('number');
-            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBe('number');
-            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBeGreaterThan(0);
-            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBeGreaterThan(0);
+            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBe('object');
+            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBe('object');
+            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit).toBeGreaterThan(0);
+            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit).toBeGreaterThan(0);
         });
 
         it('should use default values when env vars not set', () => {
             // Test the fallback logic directly
-            expect(Number(undefined) || 500).toBe(500);
-            expect(Number(undefined) || 800).toBe(800);
+            expect(Number(undefined) || 5).toBe(5);
+            expect(Number(undefined) || 10).toBe(10);
 
             // Verify current config has reasonable defaults
-            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBeGreaterThan(0);
-            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBeGreaterThan(0);
+            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit).toBeGreaterThan(0);
+            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit).toBeGreaterThan(0);
         });
 
         it('should use environment variables when set', () => {
@@ -50,8 +50,8 @@ describe('VT+ Limits Configuration', () => {
             expect(Number('1500') || 800).toBe(1500);
 
             // Verify current config structure
-            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBe('number');
-            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBe('number');
+            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBe('object');
+            expect(typeof VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBe('object');
         });
 
         it('should handle invalid environment variables gracefully', () => {
@@ -140,9 +140,11 @@ describe('VT+ Limits Configuration', () => {
         });
 
         it('should have consistent types across the config', () => {
-            Object.entries(VT_PLUS_LIMITS).forEach(([feature, limit]) => {
+            Object.entries(VT_PLUS_LIMITS).forEach(([feature, config]) => {
                 expect(typeof feature).toBe('string');
-                expect(typeof limit).toBe('number');
+                expect(typeof config).toBe('object');
+                expect(typeof config.limit).toBe('number');
+                expect(typeof config.window).toBe('string');
                 expect(Object.values(VtPlusFeature)).toContain(feature);
             });
         });
@@ -151,24 +153,24 @@ describe('VT+ Limits Configuration', () => {
     describe('Budget considerations', () => {
         it('should have reasonable limits for budget constraints', () => {
             const totalRequests =
-                VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH] +
-                VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH];
+                VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit +
+                VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit;
 
-            // Assuming ~$0.05-0.10 per request, total should be under $100/month
-            expect(totalRequests).toBeLessThanOrEqual(2000);
+            // Daily limits should be reasonable for VT+ users
+            expect(totalRequests).toBeLessThanOrEqual(50);
         });
 
         it('should have Deep Research limit lower than Pro Search', () => {
             // Deep Research is typically more expensive per request
-            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBeLessThanOrEqual(
-                VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]
+            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit).toBeLessThanOrEqual(
+                VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit
             );
         });
 
         it('should provide meaningful usage for VT+ subscribers', () => {
-            // Should be enough for regular use but not excessive
-            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toBeGreaterThanOrEqual(100);
-            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toBeGreaterThanOrEqual(200);
+            // Daily limits should be meaningful but not excessive
+            expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit).toBeGreaterThanOrEqual(3);
+            expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit).toBeGreaterThanOrEqual(5);
         });
     });
 });

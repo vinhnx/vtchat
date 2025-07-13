@@ -5,7 +5,8 @@ export const PRICING_CONFIG = {
     // Product information
     product: {
         name: 'VT+',
-        description: 'Research-focused exclusives: Pro Search, Deep Research, and AI Memory',
+        description:
+            'Research-focused exclusives: Pro Search (10/day), Deep Research (5/day), and AI Memory (2,000/month)',
         id: process.env.CREEM_PRODUCT_ID || '',
     },
 
@@ -66,22 +67,22 @@ export const PRICING_CONFIG = {
                 {
                     name: 'Pro Search (Exclusive)',
                     description:
-                        'Lightning-fast web search with AI grounding for instant, accurate information retrieval',
+                        'Lightning-fast web search with AI grounding for instant, accurate information retrieval - 10 requests per day',
                 },
                 {
                     name: 'Deep Research (Exclusive)',
                     description:
-                        'Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics',
+                        'Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 5 requests per day',
                 },
                 {
                     name: 'AI Memory (Exclusive)',
                     description:
-                        'Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations.',
+                        'Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations - 2,000 completions per month',
                 },
                 {
-                    name: 'Priority Support & No Limits',
+                    name: 'Priority Support & Daily Reset',
                     description:
-                        'Priority customer support with unlimited usage of all VT+ exclusive features',
+                        'Priority customer support with daily quota reset for Pro Search and Deep Research features',
                 },
             ],
         },

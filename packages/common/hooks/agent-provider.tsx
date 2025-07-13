@@ -9,7 +9,6 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
-import { nanoid } from 'nanoid';
 import { generateThreadIdSync } from '@repo/shared/lib/thread-id';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -363,8 +362,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             'done event received'
                                         );
 
+                                        // Handle quota exceeded specifically  
+                                        if (data.status === 'quota_exceeded') {
+                                            log.warn({ error: data.error }, 'VT+ quota exceeded');
+                                            // Error will be handled by the thread item component
+                                        }
+
                                         // Record rate limit usage for successful Gemini completions
-                                        if (data.status !== 'error' && data.status !== 'aborted') {
+                                        if (data.status !== 'error' && data.status !== 'aborted' && data.status !== 'quota_exceeded') {
                                             const modelId = getModelFromChatMode(body.mode);
                                             const isGemini =
                                                 GEMINI_MODEL_ENUMS_ARRAY.includes(modelId);

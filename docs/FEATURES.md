@@ -121,7 +121,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 ### Sophisticated Subscription Tiers
 
 - **Free Tier**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
-- **VT+ ($5.99/month)**: All free features + 3 research-focused exclusives: Enhanced Web Search (PRO_SEARCH), Deep Research (DEEP_RESEARCH), Personal AI Assistant with Memory (RAG)
+- **VT+ ($5.99/month)**: All free features + 3 research-focused exclusives: Enhanced Web Search (PRO_SEARCH - 10/day), Deep Research (DEEP_RESEARCH - 5/day), Personal AI Assistant with Memory (RAG - 2,000/month)
 
 ### Advanced Payment Integration
 
@@ -266,10 +266,10 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅                                                              |
 | **Structured Output**             | ✅ (AI-powered JSON)                   | ✅                                                              |
 | **Chart Visualization**           | ✅                                     | ✅                                                              |
-| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding)                                        |
-| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis)                                     |
-| **Personal AI Memory (RAG)**      | ❌                                     | ✅ (AI Assistant with Memory)                                   |
-| **Rate Limiting**                 | 10 requests/day (free models)          | Unlimited Premium Models                                        |
+| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 10/day)                               |
+| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 5/day)                             |
+| **Personal AI Memory (RAG)**      | ❌                                     | ✅ (AI Assistant with Memory - 2,000/month)                     |
+| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models        |
 
 ## 🎯 Target Use Cases
 

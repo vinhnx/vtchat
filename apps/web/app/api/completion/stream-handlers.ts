@@ -91,7 +91,7 @@ export function sendMessage(
         const errorMessage = `event: done\ndata: ${JSON.stringify({
             type: 'done',
             status: 'error',
-            error: 'Failed to serialize payload',
+            error: 'Stream data serialization failed. Please refresh the page and try again.',
             threadId: payload.threadId,
             threadItemId: payload.threadItemId,
             parentThreadItemId: payload.parentThreadItemId,
@@ -198,24 +198,15 @@ export async function executeStream({
                 parentThreadItemId: data.parentThreadItemId,
             });
         } else {
-            // Actual errors during workflow execution are important
-            log.error(
-                {
-                    error,
-                    userId,
-                    threadId: data.threadId,
-                    mode: data.mode,
-                },
-                'Workflow execution error'
-            );
-
-            sendMessage(controller, encoder, {
-                type: 'done',
-                status: 'error',
-                error: error instanceof Error ? error.message : String(error),
-                threadId: data.threadId,
-                threadItemId: data.threadItemId,
-                parentThreadItemId: data.parentThreadItemId,
+            // Use comprehensive error handling for workflow execution errors
+            const { handleStreamError } = await import('./stream-error-handler');
+            await handleStreamError({
+                error,
+                controller,
+                encoder,
+                data,
+                userId,
+                abortController: { signal: { aborted: false } } as AbortController, // Not aborted if we're here
             });
         }
 

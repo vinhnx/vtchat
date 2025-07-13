@@ -1,6 +1,7 @@
 'use client';
 
 import { log } from '@repo/shared/lib/logger';
+import { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
 import {
     Badge,
     Card,
@@ -18,21 +19,27 @@ interface VtPlusUsageData {
         used: number;
         limit: number;
         feature: string;
+        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW];
         percentage: number;
+        resetAt: string;
     };
     proSearch: {
         used: number;
         limit: number;
         feature: string;
+        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW];
         percentage: number;
+        resetAt: string;
     };
     rag: {
         used: number;
         limit: number;
         feature: string;
+        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW];
         percentage: number;
+        resetAt: string;
     };
-    resetAt: string;
+    resetAt: string; // Legacy field for backward compatibility
     currentPeriod: string;
 }
 
@@ -116,8 +123,31 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
         );
     }
 
-    const resetDate = new Date(usage.resetAt);
-    const daysUntilReset = Math.ceil((resetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    const getResetInfo = (
+        resetAt: string,
+        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW]
+    ) => {
+        const resetDate = new Date(resetAt);
+        const now = Date.now();
+        const timeUntilReset = resetDate.getTime() - now;
+
+        if (window === QUOTA_WINDOW.DAILY) {
+            const hoursUntilReset = Math.ceil(timeUntilReset / (1000 * 60 * 60));
+            return {
+                text:
+                    hoursUntilReset <= 24
+                        ? `${hoursUntilReset}h`
+                        : `${Math.ceil(hoursUntilReset / 24)}d`,
+                full: `Resets ${hoursUntilReset <= 1 ? 'in less than 1 hour' : `in ${hoursUntilReset} hours`} (daily at 00:00 UTC)`,
+            };
+        } else {
+            const daysUntilReset = Math.ceil(timeUntilReset / (1000 * 60 * 60 * 24));
+            return {
+                text: `${daysUntilReset}d`,
+                full: `Resets in ${daysUntilReset} ${daysUntilReset === 1 ? 'day' : 'days'} (${resetDate.toLocaleDateString()})`,
+            };
+        }
+    };
 
     const getStatusColor = (percentage: number) => {
         if (percentage >= 90) return 'destructive';
@@ -136,7 +166,7 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
             <div className="space-y-1">
                 <h3 className="text-lg font-medium">VT+ Usage</h3>
                 <p className="text-sm text-muted-foreground">
-                    Track your monthly VT+ feature usage and quota limits.
+                    Track your VT+ feature usage and quota limits.
                 </p>
             </div>
 
@@ -145,7 +175,12 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                 <Card>
                     <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium">Deep Research</CardTitle>
+                            <div className="flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium">Deep Research</CardTitle>
+                                <Badge variant="secondary" className="text-xs">
+                                    Daily
+                                </Badge>
+                            </div>
                             <Badge
                                 variant={getStatusColor(usage.deepResearch.percentage)}
                                 className="flex items-center gap-1"
@@ -156,7 +191,11 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                         </div>
                         <CardDescription>
                             {usage.deepResearch.used.toLocaleString()} /{' '}
-                            {usage.deepResearch.limit.toLocaleString()} requests
+                            {usage.deepResearch.limit.toLocaleString()} requests •{' '}
+                            {
+                                getResetInfo(usage.deepResearch.resetAt, usage.deepResearch.window)
+                                    .text
+                            }
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -168,7 +207,12 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                 <Card>
                     <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium">Pro Search</CardTitle>
+                            <div className="flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium">Pro Search</CardTitle>
+                                <Badge variant="secondary" className="text-xs">
+                                    Daily
+                                </Badge>
+                            </div>
                             <Badge
                                 variant={getStatusColor(usage.proSearch.percentage)}
                                 className="flex items-center gap-1"
@@ -179,7 +223,8 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                         </div>
                         <CardDescription>
                             {usage.proSearch.used.toLocaleString()} /{' '}
-                            {usage.proSearch.limit.toLocaleString()} requests
+                            {usage.proSearch.limit.toLocaleString()} requests •{' '}
+                            {getResetInfo(usage.proSearch.resetAt, usage.proSearch.window).text}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -191,9 +236,14 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                 <Card>
                     <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium">
-                                Personal AI Assistant
-                            </CardTitle>
+                            <div className="flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Personal AI Assistant
+                                </CardTitle>
+                                <Badge variant="outline" className="text-xs">
+                                    Monthly
+                                </Badge>
+                            </div>
                             <Badge
                                 variant={getStatusColor(usage.rag.percentage)}
                                 className="flex items-center gap-1"
@@ -204,7 +254,7 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                         </div>
                         <CardDescription>
                             {usage.rag.used.toLocaleString()} / {usage.rag.limit.toLocaleString()}{' '}
-                            requests
+                            requests • {getResetInfo(usage.rag.resetAt, usage.rag.window).text}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -215,20 +265,23 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                 {/* Reset Information */}
                 <Card>
                     <CardContent className="pt-6">
-                        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                            <CalendarClock className="h-4 w-4" />
-                            <span>
-                                Quota resets in {daysUntilReset}{' '}
-                                {daysUntilReset === 1 ? 'day' : 'days'}(
-                                {resetDate.toLocaleDateString()})
-                            </span>
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                            <div className="flex items-center space-x-2">
+                                <CalendarClock className="h-4 w-4" />
+                                <span>Deep Research & Pro Search reset daily at 00:00 UTC</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <CalendarClock className="h-4 w-4" />
+                                <span>Personal AI Assistant resets monthly on the 1st</span>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
             <div className="text-xs text-muted-foreground space-y-1">
-                <p>• Usage is tracked per calendar month (UTC)</p>
+                <p>• Deep Research & Pro Search have daily quotas (5 & 10 per day)</p>
+                <p>• Personal AI Assistant has monthly quotas (2,000 per month)</p>
                 <p>• BYOK (Bring Your Own Key) users have unlimited usage</p>
                 <p>• Quotas are designed to fit within budget constraints</p>
             </div>

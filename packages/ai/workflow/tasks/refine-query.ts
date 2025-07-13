@@ -125,7 +125,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
             userId: context?.get('userId'),
-            feature: vtplusFeature,
+            feature: vtplusFeature || undefined,
         });
 
         if (object?.needsClarification) {

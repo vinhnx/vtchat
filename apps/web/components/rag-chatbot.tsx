@@ -78,6 +78,15 @@ export function RAGChatbot() {
             'showErrorToast called'
         );
 
+        // Check for specific quota_exceeded status from completion API
+        if (error?.status === 'quota_exceeded' || error?.data?.status === 'quota_exceeded') {
+            const quotaMessage = error?.error || error?.data?.error || 'VT+ quota exceeded.';
+            toast.error('Daily Limit Reached', {
+                description: quotaMessage,
+            });
+            return;
+        }
+
         // Extract error message from various possible structures
         let errorMessage = '';
         if (typeof error === 'string') {

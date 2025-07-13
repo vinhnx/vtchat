@@ -7,7 +7,21 @@ import {
 
 describe('Error Diagnostics', () => {
     describe('generateErrorDiagnostic', () => {
-        it('should detect rate limit errors', () => {
+        it('should detect VT+ quota exceeded errors', () => {
+            const error =
+                'Daily Deep Research limit reached (5/5). Try Pro Search or regular chat. Your quota will reset tomorrow.';
+            const diagnostic = generateErrorDiagnostic(error);
+
+            expect(diagnostic.category).toBe('rate_limit');
+            expect(diagnostic.message).toBe(error);
+            expect(diagnostic.suggestions).toContain('Your daily/monthly quota has been reached');
+            expect(diagnostic.suggestions).toContain(
+                'Try using a different VT+ feature with remaining quota'
+            );
+            expect(diagnostic.suggestions).toContain('Use regular chat models which are unlimited');
+        });
+
+        it('should detect general rate limit errors', () => {
             const error = 'You have reached the daily limit of requests';
             const diagnostic = generateErrorDiagnostic(error);
 
@@ -122,8 +136,8 @@ describe('Error Diagnostics', () => {
             const error = 'Quota exceeded for this billing period';
             const diagnostic = generateErrorDiagnostic(error);
 
-            expect(diagnostic.category).toBe('auth');
-            expect(diagnostic.suggestions).toContain('Check your account billing status');
+            expect(diagnostic.category).toBe('rate_limit');
+            expect(diagnostic.suggestions).toContain('Check your usage limits in Settings → Usage');
         });
 
         it('should detect cancelled requests', () => {

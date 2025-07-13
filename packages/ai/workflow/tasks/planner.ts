@@ -92,7 +92,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             thinkingMode: context?.get('thinkingMode'),
             userTier: context?.get('userTier'),
             userId: context?.get('userId'),
-            feature: vtplusFeature,
+            feature: vtplusFeature || undefined,
         });
 
         context?.update('queries', (current) => [...(current ?? []), ...(object?.queries || [])]);
