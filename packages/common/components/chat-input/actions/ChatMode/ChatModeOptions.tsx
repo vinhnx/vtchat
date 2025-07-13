@@ -120,15 +120,9 @@ export function ChatModeOptions({
         const option = [...chatOptions, ...modelOptions].find((opt) => opt.value === mode);
         const modelOption = modelOptions.find((opt) => opt.value === mode);
 
-        // Check if user is signed in for any model selection
-        if (!isSignedIn) {
-            setShowLoginPrompt(true);
-            return;
-        }
-
-        // Check auth requirement
+        // Check auth requirement - only require login for models that need authentication
         if (config?.isAuthRequired && !isSignedIn) {
-            push("/login");
+            setShowLoginPrompt(true);
             return;
         }
 

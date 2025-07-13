@@ -118,6 +118,16 @@ export function LMStudioSetupBanner() {
                             💡 <strong>Privacy First:</strong> All processing happens locally on
                             your machine. No data is sent to external servers.
                         </div>
+
+                        <div className="mt-2 text-xs text-gray-500">
+                            📖 <strong>Need help?</strong>{" "}
+                            <a
+                                href="https://github.com/vinhnx/vtchat/blob/main/docs/guides/lm-studio-setup.md"
+                                className="text-green-600 hover:text-green-800 underline"
+                            >
+                                View detailed setup guide
+                            </a>
+                        </div>
                     </div>
                 </div>
 

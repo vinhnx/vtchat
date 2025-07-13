@@ -14,7 +14,7 @@ export function OllamaSetupBanner() {
             title: "Install Ollama",
             description: "Download and install Ollama from the official website",
             action: "Download Ollama",
-            link: "https://ollama.ai/",
+            link: "https://ollama.com/",
             icon: <ExternalLink size={16} />,
         },
         {
@@ -122,7 +122,7 @@ export function OllamaSetupBanner() {
                         <div className="mt-2 text-xs text-gray-500">
                             📖 <strong>Need help?</strong>{" "}
                             <a
-                                href="/docs/guides/ollama-setup"
+                                href="https://github.com/vinhnx/vtchat/blob/main/docs/guides/ollama-setup.md"
                                 className="text-green-600 hover:text-green-800 underline"
                             >
                                 View detailed setup guide

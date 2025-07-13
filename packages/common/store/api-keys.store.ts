@@ -191,6 +191,15 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 isSignedIn: boolean,
                 isVtPlus: boolean = false,
             ) => {
+                // Check if this is a local model first (Ollama or LM Studio)
+                const isLocalModel = chatMode.startsWith("ollama-") || chatMode.startsWith("lmstudio-");
+                
+                // Local models don't require authentication or API keys
+                if (isLocalModel) {
+                    return true;
+                }
+
+                // For non-local models, user must be signed in
                 if (!isSignedIn) return false;
 
                 // VT+ users don't need API keys for Gemini models
@@ -227,7 +236,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.CLAUDE_4_SONNET:
                     case ChatMode.CLAUDE_4_OPUS:
                         return isValidKey(apiKeys.ANTHROPIC_API_KEY);
-                    case ChatMode.DEEPSEEK_R1:
+                    case ChatMode.DEEPSEEK_R1_FIREWORKS:
                         return isValidKey(apiKeys.FIREWORKS_API_KEY);
                     case ChatMode.GROK_3:
                     case ChatMode.GROK_3_MINI:
@@ -239,12 +248,27 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.QWEN3_32B:
                     case ChatMode.MISTRAL_NEMO:
                     case ChatMode.QWEN3_14B:
+                    case ChatMode.KIMI_K2:
                         return isValidKey(apiKeys.OPENROUTER_API_KEY);
                     // LM Studio local models - no API key required
                     case ChatMode.LMSTUDIO_LLAMA_3_8B:
                     case ChatMode.LMSTUDIO_QWEN_7B:
                     case ChatMode.LMSTUDIO_GEMMA_7B:
                     case ChatMode.LMSTUDIO_GEMMA_3_1B:
+                        return true; // Local models don't require API keys
+                    // Ollama local models - no API key required
+                    case ChatMode.OLLAMA_LLAMA_3_3:
+                    case ChatMode.OLLAMA_LLAMA_3_2:
+                    case ChatMode.OLLAMA_LLAMA_3_1:
+                    case ChatMode.OLLAMA_QWEN_3:
+                    case ChatMode.OLLAMA_QWEN_2_5:
+                    case ChatMode.OLLAMA_GEMMA_3:
+                    case ChatMode.OLLAMA_GEMMA_3N:
+                    case ChatMode.OLLAMA_GEMMA_2:
+                    case ChatMode.OLLAMA_DEEPSEEK_R1:
+                    case ChatMode.OLLAMA_MISTRAL:
+                    case ChatMode.OLLAMA_CODELLAMA:
+                    case ChatMode.OLLAMA_LLAVA:
                         return true; // Local models don't require API keys
                     default:
                         return false;
