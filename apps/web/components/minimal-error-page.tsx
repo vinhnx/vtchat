@@ -38,9 +38,7 @@ export function MinimalErrorPage({
                     {actionButton ? (
                         actionButton.href ? (
                             <Button size="sm" variant="default" asChild>
-                                <Link href={actionButton.href}>
-                                    {actionButton.text}
-                                </Link>
+                                <Link href={actionButton.href}>{actionButton.text}</Link>
                             </Button>
                         ) : (
                             <Button size="sm" variant="default" onClick={actionButton.onClick}>

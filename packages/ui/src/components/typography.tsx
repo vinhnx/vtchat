@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 // Typography variants based on Shadcn's typography system
 const typographyVariants = cva('', {
