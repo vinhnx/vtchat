@@ -9,9 +9,6 @@ import { log } from '@repo/shared/logger';
 import {
     Alert,
     AlertDescription,
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
     Badge,
     Button,
     Card,
@@ -383,31 +380,13 @@ export const UserProfileSettings = () => {
                         <div className="space-y-4">
                             {/* Profile Avatar Section */}
                             <div className="border-border/50 flex items-center gap-4 border-b pb-4">
-                                <Avatar className="border-border/20 h-12 w-12 border-2">
-                                    <AvatarImage
-                                        src={
-                                            getSessionCacheBustedAvatarUrl(session.user.image) ||
-                                            session.user.image ||
-                                            undefined
-                                        }
-                                        alt={session.user.name || session.user.email || 'User'}
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                        onError={() => {
-                                            log.warn(
-                                                {
-                                                    avatarUrl: session.user.image,
-                                                    userEmail: session.user.email,
-                                                },
-                                                'Avatar failed to load in profile settings, using fallback initials'
-                                            );
-                                        }}
-                                    />
-                                    <AvatarFallback className="text-sm font-medium">
+                                <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full border-2 border-border/20">
+                                    <span className="text-foreground text-sm font-medium">
                                         {(session.user.name || session.user.email || 'U')
                                             .charAt(0)
                                             .toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar>
+                                    </span>
+                                </div>
                                 <div>
                                     <div className="text-foreground font-semibold">
                                         {session.user.name || 'User'}

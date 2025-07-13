@@ -6,85 +6,10 @@ ok go-> https://vtchat.io.vn/
 
 
 --
-
-critical
-fix deploy fly.io use flymcp to debug
-
-                                                                0.4s
- => ERROR [builder 5/5] RUN cd apps/web &&     echo "=== BUILD ENVIRONMENT DEBUG ===" &&     echo "BASE_U  40.7s
-------
- > [builder 5/5] RUN cd apps/web &&     echo "=== BUILD ENVIRONMENT DEBUG ===" &&     echo "BASE_URL: " &&     echo "NEXT_PUBLIC_BASE_URL: " &&     echo "CREEM_ENVIRONMENT: " &&     echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" &&     echo "NODE_ENV will be automatically set by Next.js build process" &&     echo "NEXT_PHASE: phase-production-build" &&     echo "==============================" &&     bun run build:
-0.101 === BUILD ENVIRONMENT DEBUG ===
-0.101 BASE_URL:
-0.101 NEXT_PUBLIC_BASE_URL:
-0.101 CREEM_ENVIRONMENT:
-0.101 DATABASE_URL: [PLACEHOLDER - actual value set at runtime]
-0.101 NODE_ENV will be automatically set by Next.js build process
-0.101 NEXT_PHASE: phase-production-build
-0.101 ==============================
-0.115 $ next build
-1.278 Attention: Next.js now collects completely anonymous telemetry regarding usage.
-1.278 This information is used to shape Next.js' roadmap and prioritize features.
-1.278 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-1.278 https://nextjs.org/telemetry
-1.278
-1.378    ▲ Next.js 15.3.5
-1.379    - Environments: .env.local, .env.production
-1.379    - Experiments (use with caution):
-1.379      ⨯ serverMinification
-1.379
-1.503    Creating an optimized production build ...
-40.16 Failed to compile.
-40.16
-40.16 ../../packages/ui/src/components/accordion.tsx
-40.16 Module not found: Can't resolve 'radix-ui'
-40.16
-40.16 https://nextjs.org/docs/messages/module-not-found
-40.16
-40.16 ../../packages/ui/src/components/alert-dialog.tsx
-40.16 Module not found: Can't resolve 'radix-ui'
-40.16
-40.16 https://nextjs.org/docs/messages/module-not-found
-40.16
-40.16 ../../packages/ui/src/components/breadcrumb.tsx
-40.16 Module not found: Can't resolve 'radix-ui'
-40.16
-40.16 https://nextjs.org/docs/messages/module-not-found
-40.16
-40.16 Import trace for requested module:
-40.16 ../../packages/ui/src/components/index.ts
-40.16 ../../packages/ui/src/index.ts
-40.16 ../../packages/ui/index.ts
-40.16 ./components/offline-indicator.tsx
-40.16
-40.16 ../../packages/ui/src/components/button-premium.tsx
-40.16 Module not found: Can't resolve 'radix-ui'
-40.16
-40.16 https://nextjs.org/docs/messages/module-not-found
-40.16
-40.16 Import trace for requested module:
-40.16 ../../packages/ui/src/components/index.ts
-40.16 ../../packages/ui/src/index.ts
-40.16 ../../packages/ui/index.ts
-40.16 ./components/offline-indicator.tsx
-40.16
-40.16 ../../packages/ui/src/components/button.tsx
-40.16 Module not found: Can't resolve 'radix-ui'
-40.16
-40.16 https://nextjs.org/docs/messages/module-not-found
-40.16
-40.16 Import trace for requested module:
-40.16 ../../packages/ui/src/components/alert-dialog.tsx
-40.16
-40.16
-40.16 > Build failed because of webpack errors
-40.35 error: script "build" exited with code 1
-------
-Error: failed to fetch an image or build from source: error building: failed to solve: process "/bin/sh -c cd apps/web &&     echo \"=== BUILD ENVIRONMENT DEBUG ===\" &&     echo \"BASE_URL: $BASE_URL\" &&     echo \"NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL\" &&     echo \"CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT\" &&     echo \"DATABASE_URL: [PLACEHOLDER - actual value set at runtime]\" &&     echo \"NODE_ENV will be automatically set by Next.js build process\" &&     echo \"NEXT_PHASE: $NEXT_PHASE\" &&     echo \"==============================\" &&     bun run build" did not complete successfully: exit code: 1
-[ERROR] Deployment failed with exit code 1
---
+oracle:
 limit deep research to 5 queries/day for VT+ users
 limit pro research to 10 queries/day for VT+ users
+use neon mcp 
 --
 
 
