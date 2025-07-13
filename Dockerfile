@@ -23,17 +23,17 @@ COPY package.json bun.lock ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/ ./packages/
 
-# Install dependencies
-RUN bun install --ignore-scripts
+# Install all dependencies including workspace packages
+RUN bun install --ignore-scripts --frozen-lockfile
 
 # Stage 3: Build
 FROM base AS builder
 
 WORKDIR /app
 
-# Copy dependencies
+# Copy dependencies and packages
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+COPY --from=deps /app/packages ./packages
 
 # Copy source code
 COPY . .
