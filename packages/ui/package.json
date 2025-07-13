@@ -59,16 +59,16 @@
     },
     "devDependencies": {
         "@repo/typescript-config": "*",
-        "@types/react": "^18.3.0",
-        "@types/react-dom": "^18.3.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
         "@types/three": "^0.178.1",
         "autoprefixer": "^10.4.16",
         "postcss": "^8.4.31",
-        "react": "^18",
+        "react": "^19",
         "tailwindcss": "^3.3.5",
         "typescript": "^5.2.2"
     },
     "peerDependencies": {
-        "react": "^18"
+        "react": "^19"
     }
 }

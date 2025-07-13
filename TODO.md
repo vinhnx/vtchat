@@ -5,17 +5,6 @@
 ok go-> https://vtchat.io.vn/
 
 --
-oracle:
-limit deep research to 5 queries/day for VT+ users
-limit pro research to 10 queries/day for VT+ users
-use neon mcp
---
-
-- ⚠️ React: `18.3.1` (should upgrade to 19.0.0 for full compatibility)
-
-https://react.dev/blog/2024/04/25/react-19-upgrade-guide
-
---
 
 https://www.better-auth.com/docs/plugins/mcp
 --
@@ -26,16 +15,12 @@ https://github.com/vercel/mcp-adapter
 https://tailwindcss.com/docs/upgrade-guide
 
 --
---
-
---
 
 I only set VT+ tier as 5.99 usd what should i do
 
 --
 
 https://github.com/MiguelsPizza/WebMCP
-
 
 --
 
