@@ -33,7 +33,7 @@ primary_region = 'sin'
 
 [[http_service.checks]]
   grace_period = "15s"
-  interval = "30s"
+  interval = "60s"
   method = "GET"
   timeout = "10s"
   path = "/api/health"
@@ -41,10 +41,10 @@ primary_region = 'sin'
 [[http_service.checks]]
   type = "tcp"
   grace_period = "5s"
-  interval = "15s"
+  interval = "30s"
   timeout = "2s"
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1

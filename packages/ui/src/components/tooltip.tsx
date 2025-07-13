@@ -46,4 +46,4 @@ const Tooltip = ({ children, content, side, sideOffset }: TTooltip) => {
     );
 };
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export { Tooltip, TooltipBase, TooltipContent, TooltipProvider, TooltipTrigger };

@@ -2,19 +2,19 @@ name: Database Maintenance (Fixed)
 
 on:
   schedule:
-    # Hourly maintenance (every hour)
-    - cron: '0 * * * *'
-    # Weekly maintenance (Sundays at 2 AM UTC)
-    - cron: '0 2 * * 0'
+    # BUDGET OPTIMIZATION: Daily maintenance at 2 AM UTC (was hourly)
+    - cron: '0 2 * * *'
+    # Weekly deep maintenance (Sundays at 3 AM UTC)  
+    - cron: '0 3 * * 0'
   workflow_dispatch:
     inputs:
       maintenance_type:
         description: 'Type of maintenance to run'
         required: true
-        default: 'hourly'
+        default: 'daily'
         type: choice
         options:
-          - hourly
+          - daily
           - weekly
 
 concurrency:
@@ -77,10 +77,10 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "type=${{ inputs.maintenance_type }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.schedule }}" = "0 2 * * 0" ]; then
+          elif [ "${{ github.event.schedule }}" = "0 3 * * 0" ]; then
             echo "type=weekly" >> $GITHUB_OUTPUT
           else
-            echo "type=hourly" >> $GITHUB_OUTPUT
+            echo "type=daily" >> $GITHUB_OUTPUT
           fi
 
       - name: Configure OIDC and secure environment

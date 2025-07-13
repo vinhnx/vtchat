@@ -11,7 +11,7 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    Tooltip,
+    TooltipBase,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
@@ -91,7 +91,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                     </Avatar>
                     <div>
                         <div className="font-medium">{session.userName || "Unknown"}</div>
-                        <div className="text-sm text-muted-foreground">{session.userEmail}</div>
+                        <div className="text-muted-foreground text-sm">{session.userEmail}</div>
                     </div>
                 </div>
             );
@@ -153,11 +153,11 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
             const session = row.original;
             return (
                 <TooltipProvider>
-                    <Tooltip>
+                    <TooltipBase>
                         <TooltipTrigger asChild>
-                            <div className="flex items-center gap-2 cursor-help">
-                                <Globe className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm font-mono">
+                            <div className="flex cursor-help items-center gap-2">
+                                <Globe className="text-muted-foreground h-4 w-4" />
+                                <span className="font-mono text-sm">
                                     {session.ipAddress || "Unknown"}
                                 </span>
                             </div>
@@ -165,7 +165,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                         <TooltipContent>
                             <p>IP Address: {session.ipAddress}</p>
                         </TooltipContent>
-                    </Tooltip>
+                    </TooltipBase>
                 </TooltipProvider>
             );
         },
@@ -196,9 +196,9 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
 
             return (
                 <TooltipProvider>
-                    <Tooltip>
+                    <TooltipBase>
                         <TooltipTrigger asChild>
-                            <div className="flex items-center gap-2 cursor-help">
+                            <div className="flex cursor-help items-center gap-2">
                                 {getBrowserIcon(session.userAgent)}
                                 <span className="text-sm">{getBrowserName(session.userAgent)}</span>
                             </div>
@@ -206,7 +206,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                         <TooltipContent>
                             <p className="max-w-xs text-wrap">{session.userAgent || "Unknown"}</p>
                         </TooltipContent>
-                    </Tooltip>
+                    </TooltipBase>
                 </TooltipProvider>
             );
         },
@@ -234,7 +234,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                     <div className="text-muted-foreground">
                         {new Date(session.createdAt).toLocaleTimeString()}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-muted-foreground mt-1 text-xs">
                         Expires: {new Date(session.expiresAt).toLocaleDateString()}
                     </div>
                 </div>
@@ -249,8 +249,8 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
             return (
                 <div className="flex flex-col gap-1">
                     {session.impersonatedBy && (
-                        <Badge variant="outline" className="text-yellow-600 w-fit">
-                            <Eye className="h-3 w-3 mr-1" />
+                        <Badge variant="outline" className="w-fit text-yellow-600">
+                            <Eye className="mr-1 h-3 w-3" />
                             Impersonated
                         </Badge>
                     )}
