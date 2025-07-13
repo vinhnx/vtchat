@@ -21,7 +21,6 @@ https://github.com/vercel/mcp-adapter
 https://tailwindcss.com/docs/upgrade-guide
 
 --
-https://nextjs.org/docs/app/guides/upgrading/version-15
 --
 
 --
@@ -128,22 +127,6 @@ The value of VT+ becomes access to your proprietary, high-value, server-intensiv
 
 This approach aligns your business model with your budget, reduces financial risk, and builds a solid foundation for sustainable growth.
 
---
-
-https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage
-
-
---
-
-enhance playwright auth script
-https://playwright.dev/docs/auth#introduction
-
-allow then when seeing /login, click through google oauth and use the first account to sign in
-
---
-
-https://playwright.dev/docs/best-practices
---
 
 v5 improve openai response api support
 https://ai-sdk.dev/docs/guides/openai-responses
