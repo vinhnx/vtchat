@@ -8,6 +8,7 @@ import { log } from "@repo/shared/logger";
 import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from "../constants";
 import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from "../types/subscription";
 import { SubscriptionStatusEnum } from "../types/subscription-status";
+import { hasSubscriptionAccess } from "./subscription-grace-period";
 import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from "./access-control";
 
 // Type for subscription access context
@@ -244,11 +245,24 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
         ? new Date(subscriptionData.expiresAt)
         : undefined;
 
-    if (parsedExpiresAt && parsedExpiresAt < new Date()) {
+    // Get the actual subscription status from database if available
+    const dbStatus = subscriptionData.dbSubscription?.status;
+
+    if (dbStatus) {
+        // Use the actual database status from webhook updates
+        status = dbStatus as SubscriptionStatusEnum;
+
+        // Use centralized access logic
+        overallIsActive = hasSubscriptionAccess({
+            status: status,
+            currentPeriodEnd: parsedExpiresAt,
+        });
+    } else if (parsedExpiresAt && parsedExpiresAt < new Date()) {
         status = SubscriptionStatusEnum.EXPIRED;
         overallIsActive = false; // Overrides provider's status if expired
     } else if (subscriptionData.isActive) {
         status = SubscriptionStatusEnum.ACTIVE;
+        overallIsActive = true;
     } else if (subscriptionData.source === SUBSCRIPTION_SOURCES.NONE) {
         // No subscription record found
         status = SubscriptionStatusEnum.NONE;

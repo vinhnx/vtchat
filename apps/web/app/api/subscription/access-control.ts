@@ -12,6 +12,7 @@ import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { checkSubscriptionOptimized } from "../../../lib/auth/optimized-subscription-check";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 
 /**
  * Get comprehensive subscription status for a user
@@ -73,11 +74,11 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                 let plan = PlanSlug.VT_BASE;
 
                 if (subscription) {
-                    // Check if subscription is active and not expired
-                    isActive =
-                        subscription.status === SubscriptionStatusEnum.ACTIVE &&
-                        (!subscription.currentPeriodEnd ||
-                            new Date() <= subscription.currentPeriodEnd);
+                    // Use centralized grace period logic
+                    isActive = hasSubscriptionAccess({
+                        status: subscription.status as SubscriptionStatusEnum,
+                        currentPeriodEnd: subscription.currentPeriodEnd,
+                    });
                     plan =
                         isActive && subscription.plan === PlanSlug.VT_PLUS
                             ? PlanSlug.VT_PLUS

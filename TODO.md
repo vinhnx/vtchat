@@ -5,45 +5,6 @@
 ok go-> https://vtchat.io.vn/
 
 
-error page /404
-
-14:17:29.526 [ApiKeys] Hydration successful
-Object { keyCount: 0 }
-packages_shared_aee20c8a._.js:43:25
-14:17:29.586 Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `Button`.
-    createFiberFromTypeAndProps react-dom-client.development.js:4259
-    createFiberFromElement react-dom-client.development.js:4273
-    reconcileChildFibersImpl react-dom-client.development.js:5939
-    [project]/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js [app-client] (ecmascript)/createChildReconciler/< react-dom-client.development.js:6118
-    reconcileChildren react-dom-client.development.js:8654
-    updateForwardRef react-dom-client.development.js:8695
-    beginWork react-dom-client.development.js:10894
-    runWithFiberInDEV react-dom-client.development.js:847
-    performUnitOfWork react-dom-client.development.js:15257
-    workLoopSync react-dom-client.development.js:15077
-    renderRootSync react-dom-client.development.js:15057
-    performWorkOnRoot react-dom-client.development.js:14568
-    performWorkOnRootViaSchedulerTask react-dom-client.development.js:16350
-    performWorkUntilDeadline scheduler.development.js:46
-
-
-The above error occurred in the <_c> component. It was handled by the <AuthErrorBoundary> error boundary. node_modules_next_dist_client_8f19e6fb._.js:1864:55
-14:17:29.586 [Auth Error Boundary] Caught error
-Object { error: Error, errorInfo: {…} }
- Stack:
-    error logger.ts:38
-    componentDidCatch auth-error-boundary.tsx:28
-    BetterAuthProvider better-auth-provider.tsx:17
-    ParentLayout layout.tsx:128
-node_modules_next_dist_client_8f19e6fb._.js:1226:32
-14:17:29.629 Connected to SharedWorker
-Object { context: "ChatStore", workerId: "0.kjexv395ah" }
-packages_shared_aee20c8a._.js:21:21
-14:17:35.039 [Fast Refresh] rebuilding node_modules_next_dist_client_8f19e6fb._.js:15028:17
-14:17:35.122 [Fast Refresh] done in 183ms node_modules_next_dist_client_8f19e6fb._.js:14892:13
-
 
 --
 Next.js 15.3.5Turbopack

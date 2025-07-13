@@ -4,6 +4,10 @@ import { SUBSCRIPTION_SOURCES } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import {
+    hasSubscriptionAccess,
+    getEffectiveAccessStatus,
+} from "@repo/shared/utils/subscription-grace-period";
 import type { UserClientSubscriptionStatus } from "@repo/shared/utils/subscription";
 import { useCallback, useMemo } from "react";
 import { useGlobalSubscriptionStatus } from "../providers/subscription-provider"; // Use global provider
@@ -24,19 +28,34 @@ export function useSubscriptionAccess() {
     const convertedStatus: UserClientSubscriptionStatus = useMemo(() => {
         const currentPlanSlug = (subscriptionStatus?.plan as PlanSlug) || PlanSlug.ANONYMOUS;
         const planConfig = PLANS[currentPlanSlug]; // Get the actual plan configuration
-        const isStatusActive = subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
+
+        // Use centralized access logic instead of checking only ACTIVE
+        const hasActiveAccess = subscriptionStatus
+            ? hasSubscriptionAccess({
+                  status: subscriptionStatus.status,
+                  currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+              })
+            : false;
+
+        // Get effective status for UI display
+        const effectiveStatus = subscriptionStatus
+            ? getEffectiveAccessStatus({
+                  status: subscriptionStatus.status,
+                  currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+              })
+            : SubscriptionStatusEnum.NONE;
 
         return {
             currentPlanSlug,
-            isActive: isStatusActive,
-            isPremium: subscriptionStatus?.isPlusSubscriber,
-            isVtPlus: subscriptionStatus?.isPlusSubscriber,
-            isVtBase: !subscriptionStatus?.isPlusSubscriber && currentPlanSlug === PlanSlug.VT_BASE,
+            isActive: hasActiveAccess, // Use access logic instead of just ACTIVE status
+            isPremium: subscriptionStatus?.isPlusSubscriber && hasActiveAccess,
+            isVtPlus: subscriptionStatus?.isPlusSubscriber && hasActiveAccess,
+            isVtBase:
+                !subscriptionStatus?.isPlusSubscriber &&
+                currentPlanSlug === PlanSlug.VT_BASE &&
+                hasActiveAccess,
             canUpgrade: !subscriptionStatus?.isPlusSubscriber,
-            status:
-                subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE
-                    ? SubscriptionStatusEnum.ACTIVE
-                    : SubscriptionStatusEnum.NONE,
+            status: effectiveStatus, // Use effective status instead of binary ACTIVE/NONE
             planConfig, // Use the actual plan configuration with features
             source: subscriptionStatus?.hasSubscription
                 ? SUBSCRIPTION_SOURCES.CREEM

@@ -40,6 +40,7 @@
         "./utils/ssr-session": "./utils/ssr-session.ts",
         "./utils/plus-defaults": "./utils/plus-defaults.ts",
         "./utils/access-control": "./utils/access-control.ts",
+        "./utils/subscription-grace-period": "./utils/subscription-grace-period.ts",
         "./types/analytics": "./types/analytics.ts",
         "./hooks": "./hooks/index.ts",
         "./hooks/use-mobile": "./hooks/use-mobile.ts",

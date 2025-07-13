@@ -10,7 +10,8 @@
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status"; // Corrected import
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period"; // Corrected import
 import { requestDeduplicator } from "@repo/shared/utils/request-deduplication";
 import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
@@ -72,6 +73,21 @@ export function getGlobalSubscriptionStatus(): SubscriptionStatus | null {
     return globalSubscriptionStatus;
 }
 
+// Export function to reset global state (for sign-out cleanup)
+export function resetGlobalSubscriptionState(): void {
+    globalSubscriptionStatus = null;
+    globalFetchPromise = null;
+    globalIsLoading = true;
+    globalError = null;
+}
+
+// Clean up global state on hot module reload in development
+if (typeof module !== "undefined" && module.hot) {
+    module.hot.dispose(() => {
+        resetGlobalSubscriptionState();
+    });
+}
+
 interface SubscriptionProviderProps {
     children: React.ReactNode;
 }
@@ -85,6 +101,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const [error, setError] = useState<string | null>(globalError);
     const [isPortalReturn, setIsPortalReturn] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
+
+    // Track previous user ID to detect sign-out
+    const [previousUserId, setPreviousUserId] = useState<string | null>(session?.user?.id || null);
 
     const fetchSubscriptionStatus = useCallback(
         async (trigger: RefreshTrigger = "initial", forceRefresh = false) => {
@@ -144,7 +163,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 // Create the global fetch promise with deduplication
                 const requestKey = `subscription-${userId}-${trigger}`;
-                globalFetchPromise = requestDeduplicator.deduplicate(requestKey, async () => {
+                const currentPromise = requestDeduplicator.deduplicate(requestKey, async () => {
                     // Build API URL with trigger and force refresh parameters
                     const params = new URLSearchParams({
                         trigger,
@@ -199,8 +218,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     }
                 });
 
+                // Store the promise for cleanup, but use the local copy to avoid race conditions
+                globalFetchPromise = currentPromise;
+
                 // Wait for the result
-                const result = await globalFetchPromise;
+                const result = await currentPromise;
 
                 // Update global and local state
                 globalSubscriptionStatus = result;
@@ -278,6 +300,26 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             }
         }
     }, [session?.user, fetchSubscriptionStatus]);
+
+    // Clean up global state when user signs out to prevent memory leaks
+    useEffect(() => {
+        const currentUserId = session?.user?.id || null;
+
+        // If we had a user before but don't now (sign-out) or user changed, reset global state
+        if (previousUserId && !currentUserId) {
+            // User signed out - clean up global state
+            resetGlobalSubscriptionState();
+            setSubscriptionStatus(null);
+            setIsLoading(false);
+            setError(null);
+        } else if (previousUserId && currentUserId && previousUserId !== currentUserId) {
+            // User switched - clean up previous user's data
+            resetGlobalSubscriptionState();
+        }
+
+        // Update tracked user ID
+        setPreviousUserId(currentUserId);
+    }, [session?.user?.id, previousUserId]);
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
@@ -368,10 +410,15 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         // Convenience properties
         isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
         plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
-        hasActiveSubscription:
-            (subscriptionStatus?.hasSubscription &&
-                subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE) ??
-            false,
+        hasActiveSubscription: (() => {
+            if (!subscriptionStatus?.hasSubscription) return false;
+
+            // Use centralized grace period logic
+            return hasSubscriptionAccess({
+                status: subscriptionStatus.status as SubscriptionStatusEnum,
+                currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+            });
+        })(),
         isAnonymous: subscriptionStatus?.isAnonymous ?? !session?.user,
         fromCache: subscriptionStatus?.fromCache ?? false,
         fetchCount: subscriptionStatus?.fetchCount ?? 0,

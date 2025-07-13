@@ -5,6 +5,7 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 import { useToast } from "@repo/ui";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -263,9 +264,15 @@ export function useCreemSubscription() {
         isReady: isUserLoaded,
         // Convenience properties from subscription status
         plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
-        hasActiveSubscription:
-            subscriptionStatus?.hasSubscription &&
-            subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE,
+        hasActiveSubscription: (() => {
+            if (!subscriptionStatus?.hasSubscription) return false;
+
+            // Use centralized grace period logic to handle all statuses properly
+            return hasSubscriptionAccess({
+                status: subscriptionStatus.status as SubscriptionStatusEnum,
+                currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+            });
+        })(),
     };
 }
 
