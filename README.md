@@ -21,6 +21,15 @@ VT is a production-ready, privacy-focused AI chat application delivering cutting
 
 Live at [https://vtchat.io.vn](https://vtchat.io.vn)
 
+## Screenshots
+
+<div align="center">
+<img src="apps/web/public/screenshots/screenshot2.png" alt="VT Advanced Features" width="800">
+
+_Advanced AI capabilities including document processing, web search, and structured output_
+
+</div>
+
 ## Current Project Status
 
 ### Production Achievements
@@ -275,7 +284,7 @@ VT is production-ready and deployed on Fly.io:
 - **[Final Project Report](docs/FINAL-PROJECT-REPORT.md)**: Comprehensive technical and business analysis
 - **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: v1.0 production achievements and features
 
-### **🚀 Setup & Deployment**
+### **Setup & Deployment**
 
 - **[Local Development Setup](docs/local-development-setup.md)**: Complete environment setup guide
 - **[Database Setup](docs/DATABASE_SETUP.md)**: PostgreSQL configuration and schema setup
