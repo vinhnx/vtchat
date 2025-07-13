@@ -41,7 +41,7 @@ export async function migrateThreadIds(
                 }
 
                 // Generate new legid
-                const newId = generateThreadId();
+                const newId = await generateThreadId();
 
                 // Update the thread with new ID
                 await updateThreadId(thread.id, newId);

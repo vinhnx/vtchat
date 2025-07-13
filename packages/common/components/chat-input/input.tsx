@@ -16,8 +16,8 @@ import { cn, Flex } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { generateThreadIdSync } from '@repo/shared/lib/thread-id';
+
+import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
@@ -181,7 +181,7 @@ export const ChatInput = ({
         let threadId = currentThreadId?.toString();
 
         if (!threadId) {
-            const optimisticId = generateThreadIdSync();
+            const optimisticId = await generateThreadId();
             router.push(`/chat/${optimisticId}`); // use router.push
             createThread(optimisticId, {
                 title: editor?.getText(),
