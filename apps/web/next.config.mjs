@@ -158,10 +158,10 @@ const nextConfig = {
 
             // Optimize for development speed
             if (dev) {
-                // Use memory cache in development but with size limits
+                // Use filesystem cache in development for better performance
                 config.cache = {
-                    type: 'memory',
-                    maxGenerations: 1,
+                    type: 'filesystem',
+                    maxMemoryGenerations: 1,
                 };
 
                 // Reduce module resolution overhead
@@ -181,9 +181,9 @@ const nextConfig = {
                     },
                 };
             } else {
-                // Production optimizations with memory constraints
+                // Production optimizations with filesystem cache
                 config.cache = {
-                    type: 'memory',
+                    type: 'filesystem',
                     maxMemoryGenerations: 1,
                 };
 
