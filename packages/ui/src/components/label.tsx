@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@repo/ui';
+import { cn } from '../lib/utils';
 import * as React from 'react';
 
 const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(

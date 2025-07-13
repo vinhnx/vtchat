@@ -12,7 +12,7 @@ interface BetterAuthProviderProps {
 }
 
 export function BetterAuthProvider({ children }: BetterAuthProviderProps) {
-    // Simply wrap in error boundary for auth-related errors
-    // No hydration-sensitive logic here
+    // Better-Auth doesn't require a provider component - the auth client handles context automatically
+    // Just wrap in error boundary for auth-related errors
     return <AuthErrorBoundary>{children}</AuthErrorBoundary>;
 }
