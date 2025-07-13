@@ -29,7 +29,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
-    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
     if (!session?.user) {
         return null;
