@@ -236,7 +236,11 @@ function makeRequest(endpoint, type = "hourly") {
                         console.error(`Status: ${res.statusCode}`);
                         console.error(`Headers:`, res.headers);
                         console.error(`Response preview:`, data.substring(0, 200));
-                        reject(new Error(`Server returned HTML instead of JSON. Status: ${res.statusCode}`));
+                        reject(
+                            new Error(
+                                `Server returned HTML instead of JSON. Status: ${res.statusCode}`,
+                            ),
+                        );
                         return;
                     }
 

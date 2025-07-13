@@ -1,4 +1,4 @@
-import type { EventEmitter } from "node:events";
+import type { EventEmitter } from "events";
 import { log } from "@repo/shared/logger";
 import type { TaskTiming, WorkflowState } from "./types";
 

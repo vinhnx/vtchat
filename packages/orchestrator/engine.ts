@@ -1,4 +1,4 @@
-import { EventEmitter } from "node:events";
+import { EventEmitter } from "events";
 import { log } from "@repo/shared/logger";
 import type { Context, ContextSchemaDefinition } from "./context";
 import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
