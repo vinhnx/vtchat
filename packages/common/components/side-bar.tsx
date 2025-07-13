@@ -4,6 +4,7 @@ import { useRootContext } from '@repo/common/context';
 import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
 import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
 import { useAppStore, useChatStore } from '@repo/common/store';
+import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import type { Thread } from '@repo/shared/types';
@@ -15,7 +16,7 @@ import {
     getSubDays,
 } from '@repo/shared/utils';
 import {
-    Avatar,
+    AvatarLegacy as Avatar,
     Badge,
     Button,
     cn,
@@ -201,7 +202,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     <Avatar
                                         name={user?.name || user?.email || 'User'}
                                         size="sm"
-                                        src={user?.image || undefined}
+                                        src={
+                                            getSessionCacheBustedAvatarUrl(user?.image) || undefined
+                                        }
                                     />
 
                                     {isSidebarOpen && (

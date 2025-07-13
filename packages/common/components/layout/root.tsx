@@ -9,8 +9,9 @@ import {
     useVTPlusAnnouncement,
 } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
+import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import {
     AvatarLegacy as Avatar,
     Badge,
@@ -256,7 +257,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     className="h-8 w-8"
                                     name={session.user?.name || session.user?.email || 'User'}
                                     size="md"
-                                    src={session.user?.image || undefined}
+                                    src={
+                                        getSessionCacheBustedAvatarUrl(session.user?.image) ||
+                                        undefined
+                                    }
                                 />
                             </Button>
                         </DropdownMenuTrigger>
@@ -423,7 +427,7 @@ export const SideDrawer = () => {
                             <Button
                                 className="hover:bg-muted/40 h-7 w-7 rounded-md"
                                 onClick={() => dismissSideDrawer()}
-                                size="icon-xs"
+                                size="icon-sm"
                                 tooltip="Close"
                                 variant="ghost"
                             >

@@ -10,6 +10,8 @@ import {
     Alert,
     AlertDescription,
     Avatar,
+    AvatarFallback,
+    AvatarImage,
     Badge,
     Button,
     Card,
@@ -26,8 +28,8 @@ import { CheckCircle2, ExternalLink, Github, Loader2, Unlink, XCircle } from 'lu
 import { useCallback, useEffect, useState } from 'react';
 import { useOptimizedAuth } from '../providers/optimized-auth-provider';
 import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
-import { MultiSessionPanel } from './multi-session-panel';
 import { getSessionCacheBustedAvatarUrl } from '../utils/avatar-cache';
+import { MultiSessionPanel } from './multi-session-panel';
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
@@ -381,16 +383,31 @@ export const UserProfileSettings = () => {
                         <div className="space-y-4">
                             {/* Profile Avatar Section */}
                             <div className="border-border/50 flex items-center gap-4 border-b pb-4">
-                                <Avatar
-                                    className="border-border/20 border-2"
-                                    name={session.user.name || session.user.email || 'User'}
-                                    size="lg"
-                                    src={
-                                        getSessionCacheBustedAvatarUrl(session.user.image) ||
-                                        session.user.image ||
-                                        undefined
-                                    }
-                                />
+                                <Avatar className="border-border/20 h-12 w-12 border-2">
+                                    <AvatarImage
+                                        src={
+                                            getSessionCacheBustedAvatarUrl(session.user.image) ||
+                                            session.user.image ||
+                                            undefined
+                                        }
+                                        alt={session.user.name || session.user.email || 'User'}
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                        onError={() => {
+                                            log.warn(
+                                                {
+                                                    avatarUrl: session.user.image,
+                                                    userEmail: session.user.email,
+                                                },
+                                                'Avatar failed to load in profile settings, using fallback initials'
+                                            );
+                                        }}
+                                    />
+                                    <AvatarFallback className="text-sm font-medium">
+                                        {(session.user.name || session.user.email || 'U')
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
                                 <div>
                                     <div className="text-foreground font-semibold">
                                         {session.user.name || 'User'}
