@@ -25,33 +25,14 @@ const nextConfig = {
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true,
 
-    // Webpack memory optimizations
+    // Minimal experimental features for memory-constrained builds
     experimental: {
         externalDir: true,
-        webpackMemoryOptimizations: true,
-        webpackBuildWorker: true,
+        // Disable memory-intensive optimizations
+        webpackMemoryOptimizations: false,
+        webpackBuildWorker: false,
         preloadEntriesOnStart: false,
-        ...(process.env.EXPERIMENTAL_OPTI_IMPORTS === 'true' && {
-            optimizePackageImports: [
-                'lucide-react',
-                '@radix-ui/react-icons',
-                'lodash-es',
-                'recharts',
-                'framer-motion',
-                '@tanstack/react-query',
-                'react-hook-form',
-                'zod',
-                'react-markdown',
-                'remark-gfm',
-                'react-syntax-highlighter',
-                '@google/generative-ai',
-                'ai',
-                'immer',
-                'nanoid',
-                'sonner',
-                'zustand',
-            ],
-        }),
+        // Disable package import optimizations to reduce memory usage
     },
 
     // Moved from experimental to root level (Next.js 15+)
@@ -137,6 +118,20 @@ const nextConfig = {
     // Webpack optimizations (only when not using Turbopack)
     ...(process.env.TURBOPACK !== '1' && {
         webpack: (config, { dev, isServer }) => {
+            // Memory-optimized settings for constrained environments
+            config.stats = 'errors-only';
+            config.performance = {
+                hints: false,
+            };
+
+            // Disable cache completely in production to save memory
+            if (!dev) {
+                config.cache = false;
+            }
+
+            // Minimize parallel processing to reduce memory usage
+            config.parallelism = 1;
+
             // Ensure undici is bundled for standalone production builds
             if (isServer && !dev) {
                 config.externals = config.externals || [];
@@ -156,39 +151,6 @@ const nextConfig = {
                 });
             }
 
-            // Optimize for development speed
-            if (dev) {
-                // Use memory cache in development with limited generations
-                config.cache = {
-                    type: 'memory',
-                    maxGenerations: 1,
-                };
-
-                // Reduce module resolution overhead
-                config.resolve.symlinks = false;
-
-                // Optimize for faster rebuilds
-                config.optimization.splitChunks = {
-                    chunks: 'async',
-                    cacheGroups: {
-                        default: false,
-                        vendors: {
-                            test: /[\\/]node_modules[\\/]/,
-                            name: 'vendors',
-                            chunks: 'initial',
-                            priority: 10,
-                        },
-                    },
-                };
-            } else {
-                // Production: Disable cache to reduce memory usage in constrained environments
-                config.cache = false;
-
-                // Enable tree shaking optimizations
-                config.optimization.usedExports = true;
-                config.optimization.sideEffects = false;
-            }
-
             // Handle Node.js imports in client-side code
             if (!isServer) {
                 config.resolve.fallback = {
@@ -203,46 +165,34 @@ const nextConfig = {
                     'node:querystring': 'querystring-es3',
                     'node:buffer': 'buffer',
                 };
-            }
 
-            // Simplified bundle splitting for memory-constrained builds
-            if (!isServer && !dev) {
-                config.optimization.splitChunks = {
-                    chunks: 'all',
-                    maxInitialRequests: 15, // Reduced for memory efficiency
-                    maxAsyncRequests: 20,
-                    minSize: 30000, // Increased minimum size
-                    maxSize: 150000, // Reduced maximum size
-                    cacheGroups: {
-                        // Framework core
-                        framework: {
-                            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
-                            name: 'framework',
-                            priority: 40,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                            enforce: true,
+                // Minimal chunk splitting for low-memory environments
+                if (!dev) {
+                    config.optimization.splitChunks = {
+                        chunks: 'all',
+                        maxInitialRequests: 10,
+                        maxAsyncRequests: 15,
+                        minSize: 50000,
+                        maxSize: 200000,
+                        cacheGroups: {
+                            // Single vendor chunk
+                            vendor: {
+                                test: /[\\/]node_modules[\\/]/,
+                                name: 'vendor',
+                                priority: 20,
+                                chunks: 'all',
+                                reuseExistingChunk: true,
+                            },
+                            // Default chunk
+                            default: {
+                                name: 'main',
+                                minChunks: 2,
+                                priority: 10,
+                                reuseExistingChunk: true,
+                            },
                         },
-                        // Vendor packages
-                        vendor: {
-                            test: /[\\/]node_modules[\\/]/,
-                            name: 'vendors',
-                            priority: 20,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                            maxSize: 120000,
-                            minChunks: 1,
-                        },
-                        // Application code
-                        default: {
-                            name: 'main',
-                            minChunks: 2,
-                            priority: 10,
-                            reuseExistingChunk: true,
-                            maxSize: 100000,
-                        },
-                    },
-                };
+                    };
+                }
             }
 
             return config;
@@ -543,6 +493,9 @@ const nextConfig = {
         experimental: {
             serverMinification: false,
             serverSourceMaps: false,
+            // Disable memory-intensive optimizations
+            webpackMemoryOptimizations: false,
+            webpackBuildWorker: false,
         },
     }),
 
