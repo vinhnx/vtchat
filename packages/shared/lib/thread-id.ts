@@ -48,7 +48,7 @@ function generateFallbackId(): string {
         if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
             const array = new Uint8Array(16);
             crypto.getRandomValues(array);
-            const randomHex = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join(
+            const randomHex = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
                 ''
             );
             return `tmp_${Date.now().toString(36)}_${randomHex.substring(0, 12)}`;
