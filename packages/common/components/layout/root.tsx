@@ -245,7 +245,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Mobile Floating User Button */}
             {isClient && session && (
-                <div className="pt-safe fixed right-4 top-4 z-50 md:hidden">
+                <div className="pt-safe fixed left-4 top-20 z-50 md:hidden">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -264,7 +264,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="mb-2 w-48">
+                        <DropdownMenuContent align="start" className="mb-2 w-48">
                             <DropdownMenuItem onClick={() => router.push('/profile')}>
                                 <User className="mr-2" size={16} strokeWidth={2} />
                                 Profile

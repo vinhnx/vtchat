@@ -9,13 +9,13 @@ import { FeatureSlug } from '@repo/shared/types/subscription';
 import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
 import {
     Button,
+    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -26,8 +26,8 @@ import {
     useToast,
 } from '@repo/ui';
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
@@ -36,15 +36,15 @@ import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
     const { isCommandSearchOpen, setIsCommandSearchOpen } = useRootContext();
-    const threads = useChatStore((state) => state.threads);
-    const getThread = useChatStore((state) => state.getThread);
-    const removeThread = useChatStore((state) => state.deleteThread);
-    const switchThread = useChatStore((state) => state.switchThread);
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore((state) => state.setSettingTab);
+    const threads = useChatStore(state => state.threads);
+    const getThread = useChatStore(state => state.getThread);
+    const removeThread = useChatStore(state => state.deleteThread);
+    const switchThread = useChatStore(state => state.switchThread);
+    const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore(state => state.setSettingTab);
     const router = useRouter();
     const { theme, setTheme } = useTheme();
-    const clearThreads = useChatStore((state) => state.clearAllThreads);
+    const clearThreads = useChatStore(state => state.clearAllThreads);
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
@@ -69,7 +69,7 @@ export const CommandSearch = () => {
         previousMonths: 'Previous Months',
     };
 
-    threads.forEach((thread) => {
+    threads.forEach(thread => {
         const createdAt = new Date(thread.createdAt);
         if (getIsToday(createdAt)) {
             groupedThreads.today.push(thread);
@@ -216,11 +216,11 @@ export const CommandSearch = () => {
 
     return (
         <CommandDialog onOpenChange={setIsCommandSearchOpen} open={isCommandSearchOpen}>
-            <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
+            <div className="flex w-full flex-row items-center gap-2 p-0.5">
                 <div className="flex-1 [&_[cmdk-input-wrapper]]:border-b-0">
                     <CommandInput placeholder="Search..." />
                 </div>
-                <div className="flex shrink-0 items-center gap-1 px-2">
+                <div className="flex shrink-0 items-center gap-1 px-2 pr-12">
                     <Kbd className="h-5 w-5">
                         <Command className="shrink-0" size={12} strokeWidth={2} />
                     </Kbd>
@@ -230,7 +230,7 @@ export const CommandSearch = () => {
             <CommandList className="max-h-[420px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                    {actions.map((action) => {
+                    {actions.map(action => {
                         const actionItem = (
                             <CommandItem
                                 className="gap-"
@@ -271,7 +271,7 @@ export const CommandSearch = () => {
                                 heading={groupsNames[key as keyof typeof groupsNames]}
                                 key={key}
                             >
-                                {threads.map((thread) => (
+                                {threads.map(thread => (
                                     <CommandItem
                                         className={cn('w-full gap-3')}
                                         key={thread.id}

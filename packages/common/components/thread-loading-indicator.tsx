@@ -74,21 +74,21 @@ export const ThreadLoadingIndicator = memo(
         }, [isGenerating, generationStartTime, setShowTimeoutIndicator]);
 
         const sizeClasses = {
-            sm: 'h-8 w-8',
-            md: 'h-10 w-10',
-            lg: 'h-12 w-12',
+            sm: 'h-6 w-6 md:h-8 md:w-8',
+            md: 'h-8 w-8 md:h-10 md:w-10',
+            lg: 'h-10 w-10 md:h-12 md:w-12',
         };
 
         const iconSizes = {
-            sm: 16,
-            md: 20,
-            lg: 24,
+            sm: 14,
+            md: 16,
+            lg: 20,
         };
 
         const dotSizes = {
-            sm: 'w-2 h-2',
-            md: 'w-3 h-3',
-            lg: 'w-4 h-4',
+            sm: 'w-1.5 h-1.5 md:w-2 md:h-2',
+            md: 'w-2 h-2 md:w-3 md:h-3',
+            lg: 'w-2.5 h-2.5 md:w-4 md:h-4',
         };
 
         const formatElapsedTime = (ms: number) => {
@@ -145,7 +145,7 @@ export const ThreadLoadingIndicator = memo(
                 {isGenerating && (
                     <motion.div
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        className={cn('flex w-full items-start gap-3', className)}
+                        className={cn('flex w-full items-start gap-2 md:gap-3', className)}
                         exit={{ opacity: 0, scale: 0.8, y: 20 }}
                         initial={{ opacity: 0, scale: 0.8, y: 20 }}
                         transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -160,8 +160,8 @@ export const ThreadLoadingIndicator = memo(
                                 ],
                             }}
                             className={cn(
-                                'flex flex-shrink-0 items-center justify-center rounded-xl relative',
-                                'bg-muted border border-muted-foreground/20',
+                                'relative flex flex-shrink-0 items-center justify-center rounded-xl',
+                                'bg-muted border-muted-foreground/20 border',
                                 'shadow-sm',
                                 sizeClasses[size]
                             )}
@@ -176,13 +176,13 @@ export const ThreadLoadingIndicator = memo(
                                     opacity: [0.6, 0.8, 0.6],
                                 }}
                                 className={cn(
-                                    'absolute -top-1 -right-1 rounded-full',
+                                    'absolute -right-1 -top-1 rounded-full',
                                     'bg-muted-foreground/40',
                                     size === 'sm'
-                                        ? 'w-3 h-3'
+                                        ? 'h-3 w-3'
                                         : size === 'md'
-                                          ? 'w-4 h-4'
-                                          : 'w-5 h-5'
+                                          ? 'h-4 w-4'
+                                          : 'h-5 w-5'
                                 )}
                                 transition={{
                                     duration: 1.5,
@@ -190,7 +190,7 @@ export const ThreadLoadingIndicator = memo(
                                     ease: 'easeInOut',
                                 }}
                             >
-                                <div className="w-full h-full rounded-full bg-background/60" />
+                                <div className="bg-background/60 h-full w-full rounded-full" />
                             </motion.div>
                         </motion.div>
 
@@ -198,22 +198,22 @@ export const ThreadLoadingIndicator = memo(
                         <motion.div
                             animate={{ scale: 1 }}
                             className={cn(
-                                'rounded-2xl border shadow-sm flex-1',
+                                'flex-1 rounded-2xl border shadow-sm',
                                 config.bgColor,
                                 config.borderColor,
                                 size === 'sm'
-                                    ? 'gap-2 py-2 px-3'
+                                    ? 'gap-1.5 px-2 py-1.5 md:gap-2 md:px-3 md:py-2'
                                     : size === 'md'
-                                      ? 'gap-3 py-3 px-4'
-                                      : 'gap-4 py-4 px-5'
+                                      ? 'gap-2 px-3 py-2 md:gap-3 md:px-4 md:py-3'
+                                      : 'gap-3 px-4 py-3 md:gap-4 md:px-5 md:py-4'
                             )}
                             initial={{ scale: 0.9 }}
                             transition={{ duration: 0.2, delay: 0.1 }}
                         >
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2 md:gap-3">
                                     {/* Animated dots */}
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-0.5 md:gap-1">
                                         {[0, 1, 2].map((index) => (
                                             <motion.div
                                                 animate={{
@@ -237,7 +237,7 @@ export const ThreadLoadingIndicator = memo(
                                     </div>
 
                                     {/* Status icon and message */}
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-1.5 md:gap-2">
                                         <motion.div
                                             animate={{ rotate: 360 }}
                                             transition={{
@@ -246,9 +246,10 @@ export const ThreadLoadingIndicator = memo(
                                                 ease: 'linear',
                                             }}
                                         >
+                                            {' '}
                                             <Icon
                                                 className={config.color}
-                                                size={size === 'sm' ? 12 : size === 'md' ? 14 : 16}
+                                                size={size === 'sm' ? 10 : size === 'md' ? 12 : 14}
                                             />
                                         </motion.div>
                                         <span
@@ -258,8 +259,8 @@ export const ThreadLoadingIndicator = memo(
                                                 size === 'sm'
                                                     ? 'text-xs'
                                                     : size === 'md'
-                                                      ? 'text-sm'
-                                                      : 'text-base'
+                                                      ? 'text-xs md:text-sm'
+                                                      : 'text-sm md:text-base'
                                             )}
                                         >
                                             {config.message}
@@ -272,16 +273,16 @@ export const ThreadLoadingIndicator = memo(
                                     <motion.div
                                         animate={{ opacity: 1 }}
                                         className={cn(
-                                            'flex items-center gap-1 px-2 py-1 rounded-full',
-                                            'bg-muted/60 border border-muted-foreground/10',
-                                            size === 'sm' ? 'text-xs' : 'text-sm'
+                                            'flex items-center gap-1 rounded-full px-1.5 py-0.5 md:px-2 md:py-1',
+                                            'bg-muted/60 border-muted-foreground/10 border',
+                                            size === 'sm' ? 'text-xs' : 'text-xs md:text-sm'
                                         )}
                                         initial={{ opacity: 0 }}
                                         transition={{ delay: 1 }}
                                     >
                                         <Clock
                                             className="text-muted-foreground"
-                                            size={size === 'sm' ? 10 : 12}
+                                            size={size === 'sm' ? 8 : 10}
                                         />
                                         <span className="text-muted-foreground font-mono">
                                             {formatElapsedTime(elapsedTime)}
@@ -294,12 +295,12 @@ export const ThreadLoadingIndicator = memo(
                             {(showTimeoutIndicator || isSlowResponse) && (
                                 <motion.div
                                     animate={{ opacity: 1, height: 'auto' }}
-                                    className="mt-2"
+                                    className="mt-1.5 md:mt-2"
                                     initial={{ opacity: 0, height: 0 }}
                                     transition={{ delay: 0.5 }}
                                 >
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Loader2 className="animate-spin" size={12} />
+                                    <div className="text-muted-foreground flex items-center gap-1.5 text-xs md:gap-2">
+                                        <Loader2 className="animate-spin" size={10} />
                                         <span>
                                             {isSlowResponse
                                                 ? 'Large or complex request - please wait...'
