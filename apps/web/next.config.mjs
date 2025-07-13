@@ -501,8 +501,6 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    
-
 };
 
 export default withBundleAnalyzer(nextConfig);

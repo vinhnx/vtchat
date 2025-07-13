@@ -65,7 +65,7 @@ export function useServiceWorker(): ServiceWorkerHook {
     // Monitor online/offline status
     useEffect(() => {
         if (!swManager) return;
-        
+
         setIsOnline(!swManager.isOffline());
 
         const cleanup = swManager.onConnectionChange((online) => {
