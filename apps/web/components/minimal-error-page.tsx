@@ -1,7 +1,5 @@
 'use client';
 
-import { Footer } from '@repo/common/components';
-import { useSession } from '@repo/shared/lib/auth-client';
 import { Button } from '@repo/ui';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -25,8 +23,6 @@ export function MinimalErrorPage({
     actionButton,
     children,
 }: MinimalErrorPageProps) {
-    const { isPending } = useSession();
-
     return (
         <div className="flex min-h-dvh flex-col">
             <main className="flex flex-1 items-center justify-center px-4">
@@ -56,15 +52,6 @@ export function MinimalErrorPage({
                     )}
                 </div>
             </main>
-
-            {/* Footer */}
-            {!isPending && (
-                <footer className="border-border/50 bg-background/50 border-t">
-                    <div className="mx-auto max-w-7xl">
-                        <Footer />
-                    </div>
-                </footer>
-            )}
         </div>
     );
 }

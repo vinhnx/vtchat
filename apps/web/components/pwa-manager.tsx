@@ -24,7 +24,7 @@ export function PWAManager() {
 
     useEffect(() => {
         // Check if PWA is supported
-        setIsSupported('serviceWorker' in navigator);
+        setIsSupported(typeof window !== 'undefined' && 'serviceWorker' in navigator);
 
         // Check if already installed
         setIsInstalled(window.matchMedia('(display-mode: standalone)').matches);
@@ -35,7 +35,7 @@ export function PWAManager() {
         setIsIOS(isIOSDevice);
 
         // Register service worker using our manager (production only)
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production' && swManager) {
             swManager.register().catch((error) => {
                 log.error({ error }, 'Service Worker registration failed');
             });

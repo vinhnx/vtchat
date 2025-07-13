@@ -32,6 +32,9 @@ const nextConfig = {
         webpackMemoryOptimizations: false,
         webpackBuildWorker: false,
         preloadEntriesOnStart: false,
+        // Skip pre-rendering of problematic pages
+        staticPageGenerationTimeout: 30,
+        isrMemoryCacheSize: 0, // Disable ISR cache
         // Disable package import optimizations to reduce memory usage
     },
 
@@ -489,13 +492,6 @@ const nextConfig = {
     // Production-specific optimizations
     ...(process.env.NODE_ENV === 'production' && {
         productionBrowserSourceMaps: false,
-        experimental: {
-            serverMinification: false,
-            serverSourceMaps: false,
-            // Disable memory-intensive optimizations
-            webpackMemoryOptimizations: false,
-            webpackBuildWorker: false,
-        },
     }),
 
     // Disable problematic features for initial deployment
@@ -505,6 +501,8 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    
+
 };
 
 export default withBundleAnalyzer(nextConfig);

@@ -18,7 +18,7 @@ export class ServiceWorkerManager {
     private isSupported: boolean;
 
     private constructor() {
-        this.isSupported = 'serviceWorker' in navigator;
+        this.isSupported = typeof window !== 'undefined' && 'serviceWorker' in navigator;
     }
 
     static getInstance(): ServiceWorkerManager {
@@ -223,11 +223,11 @@ export class ServiceWorkerManager {
     }
 }
 
-// Create singleton instance
-export const swManager = ServiceWorkerManager.getInstance();
+// Create singleton instance (only in browser)
+export const swManager = typeof window !== 'undefined' ? ServiceWorkerManager.getInstance() : null;
 
 // Auto-register in browser environment (production only)
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production' && swManager) {
     // Wait for page load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {

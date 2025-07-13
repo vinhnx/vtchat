@@ -27,11 +27,11 @@ export function useServiceWorker(): ServiceWorkerHook {
     const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const isSupported = 'serviceWorker' in navigator;
+    const isSupported = typeof window !== 'undefined' && 'serviceWorker' in navigator;
 
     // Initialize service worker
     useEffect(() => {
-        if (!isSupported) {
+        if (!isSupported || !swManager) {
             setIsLoading(false);
             return;
         }
@@ -64,6 +64,8 @@ export function useServiceWorker(): ServiceWorkerHook {
 
     // Monitor online/offline status
     useEffect(() => {
+        if (!swManager) return;
+        
         setIsOnline(!swManager.isOffline());
 
         const cleanup = swManager.onConnectionChange((online) => {
@@ -75,6 +77,7 @@ export function useServiceWorker(): ServiceWorkerHook {
 
     // Update service worker
     const updateServiceWorker = useCallback(async () => {
+        if (!swManager) return;
         try {
             await swManager.update();
             setHasUpdate(false);
@@ -85,6 +88,7 @@ export function useServiceWorker(): ServiceWorkerHook {
 
     // Clear cache
     const clearCache = useCallback(async (cacheName?: string) => {
+        if (!swManager) return;
         try {
             await swManager.clearCache(cacheName);
             // Refresh stats after clearing
@@ -97,6 +101,7 @@ export function useServiceWorker(): ServiceWorkerHook {
 
     // Force sync
     const forceSync = useCallback(async () => {
+        if (!swManager) return;
         try {
             await swManager.forceSync();
         } catch (error) {
@@ -106,6 +111,7 @@ export function useServiceWorker(): ServiceWorkerHook {
 
     // Refresh cache stats
     const refreshCacheStats = useCallback(async () => {
+        if (!swManager) return;
         try {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
