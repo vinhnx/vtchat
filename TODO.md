@@ -25,7 +25,6 @@ https://xmcp.dev/docs
 --
 https://github.com/idosal/mcp-ui
 
---
 
 --
 
