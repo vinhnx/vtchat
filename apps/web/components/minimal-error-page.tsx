@@ -28,28 +28,26 @@ export function MinimalErrorPage({
             <main className="flex flex-1 items-center justify-center px-4">
                 <div className="w-full max-w-md text-center">
                     <div className="mb-8">
-                        {code && (
+                        {code ? (
                             <h1 className="text-foreground mb-2 text-4xl font-bold">{code}</h1>
-                        )}
+                        ) : null}
                         <h2 className="text-foreground mb-3 text-xl font-medium">{title}</h2>
                         <p className="text-muted-foreground text-sm">{description}</p>
                     </div>
                     {children}
-                    {actionButton && (
-                        <>
-                            {actionButton.href ? (
+                    {actionButton ? (
+                        actionButton.href ? (
+                            <Button size="sm" variant="default" asChild>
                                 <Link href={actionButton.href}>
-                                    <Button size="sm" variant="default">
-                                        {actionButton.text}
-                                    </Button>
-                                </Link>
-                            ) : (
-                                <Button size="sm" variant="default" onClick={actionButton.onClick}>
                                     {actionButton.text}
-                                </Button>
-                            )}
-                        </>
-                    )}
+                                </Link>
+                            </Button>
+                        ) : (
+                            <Button size="sm" variant="default" onClick={actionButton.onClick}>
+                                {actionButton.text}
+                            </Button>
+                        )
+                    ) : null}
                 </div>
             </main>
         </div>

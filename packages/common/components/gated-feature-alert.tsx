@@ -181,18 +181,35 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     }
 
     // Create gated version of children that shows alert on interaction
-    const gatedChildren = React.cloneElement(children as React.ReactElement, {
-        onClick: (e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleGatedInteraction();
-        },
-        style: {
-            ...(children as React.ReactElement).props?.style,
-            cursor: 'pointer',
-            opacity: 0.7,
-        },
-    });
+    // In React 19, we need to ensure we're only cloning valid elements that can receive DOM props
+    const gatedChildren = React.isValidElement(children) && typeof children.type !== 'symbol' ? 
+        React.cloneElement(children as React.ReactElement<any>, {
+            onClick: (e: React.MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleGatedInteraction();
+            },
+            style: {
+                ...(children as React.ReactElement<any>).props?.style,
+                cursor: 'pointer',
+                opacity: 0.7,
+            },
+        }) : (
+            // If children can't receive DOM props, wrap in a div
+            <div
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleGatedInteraction();
+                }}
+                style={{
+                    cursor: 'pointer',
+                    opacity: 0.7,
+                }}
+            >
+                {children}
+            </div>
+        );
 
     return (
         <>

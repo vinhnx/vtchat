@@ -3,7 +3,7 @@
 ## Tech Stack & Project Overview
 
 - **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
-- **Core Technologies**: Next.js (App Router, v14+), React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **Core Technologies**: Next.js 15 (App Router), React 19.0.0, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
 - **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
 - **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
 
@@ -90,7 +90,7 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 
 ## Tech Stack
 
-- Next.js 14 with App Router, TypeScript, Tailwind CSS
+- Next.js 15 with App Router, React 19.0.0, TypeScript, Tailwind CSS
 - Zustand for state, Drizzle ORM for DB, Better Auth for authentication
 - Custom bot detection with Better-Auth plugin using isbot library
 - Framer Motion for animations, Radix UI components

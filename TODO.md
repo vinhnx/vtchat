@@ -12,10 +12,6 @@ https://github.com/vercel/mcp-adapter
 
 --
 
-https://tailwindcss.com/docs/upgrade-guide
-
---
-
 I only set VT+ tier as 5.99 usd what should i do
 
 --

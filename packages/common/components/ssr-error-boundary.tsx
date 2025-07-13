@@ -1,7 +1,7 @@
 'use client';
 
 import { log } from '@repo/shared/logger';
-import type { ReactNode } from 'react';
+import type { ReactNode, JSX } from 'react';
 import { FullPageLoader } from './full-page-loader';
 
 interface SSRErrorBoundaryProps {

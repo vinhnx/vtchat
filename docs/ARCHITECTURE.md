@@ -2,7 +2,7 @@
 
 ## 🏗️ System Architecture
 
-VT is built as a production-ready, privacy-first AI chat application using a modern monorepo architecture with TypeScript, Next.js 14, and comprehensive security integrations.
+VT is built as a production-ready, privacy-first AI chat application using a modern monorepo architecture with TypeScript, Next.js 15, React 19.0.0, and comprehensive security integrations.
 
 ## 📂 Monorepo Structure
 
@@ -11,7 +11,7 @@ VT is built as a production-ready, privacy-first AI chat application using a mod
 ```
 vtchat/
 ├── apps/
-│   └── web/                    # Next.js 14 main application (App Router)
+│   └── web/                    # Next.js 15 main application (App Router, React 19)
 ├── packages/
 │   ├── actions/               # Server actions (feedback, forms)
 │   ├── ai/                    # AI models, providers, workflow logic
@@ -36,7 +36,7 @@ vtchat/
 
 ### Frontend & Core
 
-- **Framework**: Next.js 14 with App Router and TypeScript
+- **Framework**: Next.js 15 with App Router, React 19.0.0, and TypeScript
 - **Styling**: Tailwind CSS + Shadcn UI design system
 - **State Management**: Zustand for global state + React Query for server state
 - **UI Components**: Shadcn UI with Radix UI primitives

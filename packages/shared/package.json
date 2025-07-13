@@ -56,7 +56,9 @@
     "dependencies": {
         "@hotjar/browser": "^1.0.9",
         "@langchain/core": "^0.3.59",
-        "@tiptap/react": "^2.14.0",
+        "@tiptap/core": "^3.0.1",
+        "@tiptap/pm": "^3.0.1",
+        "@tiptap/react": "^3.0.1",
         "@types/pdfkit": "^0.14.0",
         "@types/pino": "^7.0.5",
         "date-fns": "3.6.0",

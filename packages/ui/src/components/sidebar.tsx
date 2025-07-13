@@ -352,6 +352,10 @@ const SidebarGroupLabel = React.forwardRef<
 >(({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? React.Fragment : 'div';
 
+    if (asChild) {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
+
     return (
         <Comp
             ref={ref}
@@ -374,6 +378,10 @@ const SidebarGroupAction = React.forwardRef<
     }
 >(({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? React.Fragment : 'button';
+
+    if (asChild) {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
 
     return (
         <Comp
@@ -481,6 +489,10 @@ const SidebarMenuButton = React.forwardRef<
     ) => {
         const Comp = asChild ? React.Fragment : 'button';
 
+        if (asChild) {
+            return <React.Fragment>{props.children}</React.Fragment>;
+        }
+
         return (
             <Comp
                 ref={ref}
@@ -503,6 +515,10 @@ const SidebarMenuAction = React.forwardRef<
     }
 >(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
     const Comp = asChild ? React.Fragment : 'button';
+
+    if (asChild) {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
 
     return (
         <Comp
@@ -613,6 +629,10 @@ const SidebarMenuSubButton = React.forwardRef<
     }
 >(({ asChild = false, size = 'md', isActive, className, ...props }, ref) => {
     const Comp = asChild ? React.Fragment : 'a';
+
+    if (asChild) {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
 
     return (
         <Comp

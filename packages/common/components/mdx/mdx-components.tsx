@@ -41,7 +41,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
         if (typeof children === 'string') {
             return <CodeBlock code={children.replace(/<FadeEffect \/>$/, '')} />;
         }
-        const codeElement = children as ReactElement;
+        const codeElement = children as ReactElement<any>;
         const className = codeElement?.props?.className || '';
         const lang = className.replace('language-', '');
         const code = codeElement?.props?.children;

@@ -64,7 +64,7 @@ VT utilizes a Turborepo-managed monorepo structure:
 ```
 vtchat/
 ├── apps/
-│   └── web/              # Next.js 14 web application (App Router)
+│   └── web/              # Next.js 15 web application (App Router, React 19)
 ├── packages/
 │   ├── actions/          # Server actions (e.g., feedback)
 │   ├── ai/               # AI models, providers, tools, semantic router, workflow logic
@@ -83,8 +83,9 @@ vtchat/
 
 ### **Frontend & Core**
 
-- **Framework**: Next.js 14 (App Router) with TypeScript
-- **Styling**: Tailwind CSS + Shadcn UI design system
+- **Framework**: Next.js 15 (App Router) with TypeScript
+- **React**: React 19.0.0 (latest stable)
+- **Styling**: Tailwind CSS + Shadcn UI design system  
 - **State Management**: Zustand + React Query
 - **Animations**: Framer Motion
 - **Icons**: Lucide React

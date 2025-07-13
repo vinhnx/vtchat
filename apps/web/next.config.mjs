@@ -32,9 +32,6 @@ const nextConfig = {
         webpackMemoryOptimizations: false,
         webpackBuildWorker: false,
         preloadEntriesOnStart: false,
-        // Skip pre-rendering of problematic pages
-        staticPageGenerationTimeout: 30,
-        isrMemoryCacheSize: 0, // Disable ISR cache
         // Disable package import optimizations to reduce memory usage
     },
 

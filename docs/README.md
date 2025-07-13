@@ -124,7 +124,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ### Modern Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Shadcn UI
+- **Frontend**: Next.js 15 (App Router), React 19.0.0, TypeScript, Tailwind CSS, Shadcn UI
 - **State**: Zustand + React Query for optimal state management
 - **Backend**: Bun runtime, Neon PostgreSQL, Drizzle ORM
 - **Auth**: Better Auth with 87% performance improvement
@@ -159,7 +159,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 - **[Bun Documentation](https://bun.sh/docs)** - JavaScript runtime and package manager
 - **[Turborepo Guide](https://turbo.build/repo/docs)** - Monorepo management
-- **[Next.js 14 Docs](https://nextjs.org/docs)** - App Router and React Server Components
+- **[Next.js 15 Docs](https://nextjs.org/docs)** - App Router and React Server Components
 
 ### Integrations
 

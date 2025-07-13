@@ -1,6 +1,9 @@
 import type { NextPage } from 'next';
 import { MinimalErrorPage } from '../../components/minimal-error-page';
 
+// Force dynamic rendering to prevent SSR issues during build
+export const dynamic = 'force-dynamic';
+
 const TestErrorPage: NextPage = () => {
     return (
         <div className="space-y-8 p-8">

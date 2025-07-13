@@ -58,18 +58,19 @@ export function FeatureToggleButton({
                     tooltip={tooltip(isEnabled)}
                     variant={isEnabled ? 'secondary' : 'ghost'}
                 >
-                    {React.cloneElement(icon as React.ReactElement, {
-                        className: cn(
-                            isEnabled ? colourClass.iconText : 'text-muted-foreground',
-                            (icon as React.ReactElement).props.className
-                        ),
-                        size: 16,
-                        strokeWidth: 2,
-                    })}
+                    {React.isValidElement(icon) && typeof icon.type !== 'symbol' ? 
+                        React.cloneElement(icon as React.ReactElement<any>, {
+                            className: cn(
+                                isEnabled ? colourClass.iconText : 'text-muted-foreground',
+                                (icon as React.ReactElement<any>).props.className
+                            ),
+                            size: 16,
+                            strokeWidth: 2,
+                        }) : icon
+                    }
                     {isEnabled && hasFeatureAccess && <p className="text-xs">{label}</p>}
                 </Button>
             </GatedFeatureAlert>
-
             <LoginRequiredDialog
                 description={loginDescription}
                 isOpen={showLoginPrompt}
