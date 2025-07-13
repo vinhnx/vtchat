@@ -1,3 +1,7 @@
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const revalidate = 0;
+
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { ModelEnum } from '@repo/ai/models';
 import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
@@ -7,6 +11,7 @@ import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
 import { tool } from 'ai';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { createResource } from '../../../../lib/actions/resources';
 import { findRelevantContent } from '../../../../lib/ai/embedding';
@@ -20,7 +25,7 @@ export async function POST(req: Request) {
     try {
         // Check authentication
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then((m) => m.headers()),
+            headers: await headers(),
         });
 
         if (!session?.user?.id) {
@@ -31,8 +36,8 @@ export async function POST(req: Request) {
         }
 
         // Check VT+ access for RAG feature
-        const headers = await import('next/headers').then((m) => m.headers());
-        const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
+        const headersList = await headers();
+        const ip = headersList.get('x-real-ip') ?? headersList.get('x-forwarded-for') ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
         const hasVTPlusAccess = vtPlusCheck.hasAccess;
 

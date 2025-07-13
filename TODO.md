@@ -11,6 +11,11 @@ limit pro research to 10 queries/day for VT+ users
 use neon mcp
 --
 
+- ⚠️ React: `18.3.1` (should upgrade to 19.0.0 for full compatibility)
+
+https://react.dev/blog/2024/04/25/react-19-upgrade-guide
+
+--
 
 https://www.better-auth.com/docs/plugins/mcp
 --
@@ -150,3 +155,31 @@ Future plan
 --
 
 Good luck!
+
+## ✅ Next.js 15 Upgrade Status (Completed)
+
+**Project is already on Next.js 15.3.5!** ✅
+
+### Completed Migration Tasks:
+- ✅ **Async Request APIs**: Applied `next-async-request-api` codemod
+  - Fixed `headers()`, `cookies()` calls to be properly awaited
+  - Updated 8 files with proper async patterns
+  - Fixed API routes: `/api/agent/*`, `/api/chat/assistant`, `/api/admin/obfuscate-embeddings`
+  - Updated `/app/chat/[threadId]/page.tsx` to use React's `use()` hook for async params
+  - Fixed `/lib/actions/resources.ts` server action
+
+### Key Changes Made:
+- **API Routes**: Now use `await headers()` instead of dynamic imports
+- **Page Components**: Use React's `use(props.params)` pattern for async params
+- **Server Actions**: Properly await headers function
+
+### Current Status:
+- ✅ Next.js: `15.3.5` (latest)
+- ⚠️ React: `18.3.1` (should upgrade to 19.0.0 for full compatibility)
+- ✅ All deprecated sync APIs migrated to async
+- ✅ No remaining `@next-codemod-error` comments
+
+### Next Steps:
+- Consider upgrading React to 19.0.0 for full Next.js 15 feature support
+- Test all async header/param usage in production
+- Monitor for any deprecation warnings

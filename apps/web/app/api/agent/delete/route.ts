@@ -2,18 +2,19 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import { log } from '@repo/shared/logger';
-import { and, eq } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-server';
 import { db } from '@/lib/database';
 import { embeddings, resources } from '@/lib/database/schema';
+import { log } from '@repo/shared/logger';
+import { and, eq } from 'drizzle-orm';
+import { headers } from 'next/headers';
+import { type NextRequest, NextResponse } from 'next/server';
 import { checkVTPlusAccess } from '../../subscription/access-control';
 
 export async function DELETE(request: NextRequest) {
     try {
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then((m) => m.headers()),
+            headers: await headers(),
         });
 
         if (!session?.user?.id) {
@@ -21,8 +22,8 @@ export async function DELETE(request: NextRequest) {
         }
 
         // Check VT+ access for RAG feature
-        const headers = await import('next/headers').then((m) => m.headers());
-        const ip = headers.get('x-real-ip') ?? headers.get('x-forwarded-for') ?? undefined;
+        const headersList = await headers();
+        const ip = headersList.get('x-real-ip') ?? headersList.get('x-forwarded-for') ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
         if (!vtPlusCheck.hasAccess) {
             return NextResponse.json(

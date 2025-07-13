@@ -4,7 +4,7 @@ import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useRef } from 'react';
 import { useStickToBottom } from 'use-stick-to-bottom';
 
 // Dynamically import ChatInput to avoid SSR issues
@@ -23,7 +23,9 @@ const ChatInput = dynamic(
     }
 );
 
-const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) => {
+const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
+    const params = use(props.params);
+    const threadId = params.threadId;
     const router = useRouter();
     const { data: session, isPending } = useSession();
     const isGenerating = useChatStore((state) => state.isGenerating);
@@ -35,15 +37,6 @@ const ChatSessionPage = ({ params }: { params: Promise<{ threadId: string }> }) 
     });
     const switchThread = useChatStore((state) => state.switchThread);
     const getThread = useChatStore((state) => state.getThread);
-
-    // Handle async params with React 18 pattern
-    const [threadId, setThreadId] = useState<string | null>(null);
-
-    useEffect(() => {
-        params.then((resolvedParams) => {
-            setThreadId(resolvedParams.threadId);
-        });
-    }, [params]);
 
     // Scroll to bottom when thread loads or content changes
     const scrollToBottom = useCallback(() => {

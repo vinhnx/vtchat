@@ -1,10 +1,11 @@
 'use server';
 
+import { secureContentForEmbedding } from '@/lib/utils/content-security';
 import type { ApiKeys } from '@repo/common/store';
 import type { EmbeddingModel } from '@repo/shared/config/embedding-models';
 import { log } from '@repo/shared/logger';
+import { headers } from 'next/headers';
 import { z } from 'zod';
-import { secureContentForEmbedding } from '@/lib/utils/content-security';
 import { generateEmbeddings } from '../ai/embedding';
 import { auth } from '../auth-server';
 import { db } from '../database';
@@ -25,7 +26,7 @@ export const createResource = async (
     try {
         // Get the current user
         const session = await auth.api.getSession({
-            headers: await import('next/headers').then((m) => m.headers()),
+            headers: await headers(),
         });
 
         if (!session?.user?.id) {
