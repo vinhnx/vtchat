@@ -9,7 +9,7 @@
 
 **A modern, privacy-first AI chat application with security**
 
-[Live](https://vtchat.io.vn) | [Documentation](docs/) | [Security Guide](docs/SECURITY.md)
+[Live App](https://vtchat.io.vn) | [Documentation](docs/) | [Project Status](docs/PROJECT-STATUS.md) | [Features](docs/FEATURES.md) | [Architecture](docs/ARCHITECTURE.md) | [Security](docs/SECURITY.md)
 
 </div>
 
@@ -17,15 +17,35 @@
 
 ## Overview
 
-VT is a privacy-focused AI chat application delivering cutting-edge AI capabilities through a sophisticated dual-tier subscription system. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through an extremely generous free tier and a focused premium subscription. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+
+Live at [https://vtchat.io.vn](https://vtchat.io.vn)
+
+## Current Project Status
+
+### Production Achievements
+
+- **Live Deployment**: Successfully running on Fly.io with 2-region setup
+- **Zero TypeScript Errors**: Complete type safety across 50+ files
+- **87% Performance Boost**: Compilation optimized from 24s to 3s
+- **Comprehensive Feature Set**: All planned features implemented and tested
+- **Security Hardened**: Bot detection, Better Auth, and privacy-first architecture
+- **Modern Stack**: Next.js 15, React 19, TypeScript, Bun ecosystem
+
+### Privacy & Security
+
+- **Local-First Storage**: All conversations stored in browser IndexedDB
+- **Zero Server Chat Storage**: Complete privacy with per-user data isolation
+- **Better Auth Integration**: 87% performance improvement with secure sessions
+- **Production Security**: Bot detection and comprehensive protection measures
 
 ## Key Features
 
 ### Advanced AI Capabilities
 
 - **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
-- **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
-- **🆓 Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs
+- **9 Free Server Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API keys required
+- **Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI, plus local providers (Ollama, LM Studio)
 - **Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
 - **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
@@ -45,9 +65,9 @@ VT is a privacy-focused AI chat application delivering cutting-edge AI capabilit
 
 ### Subscription Tiers
 
-- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
-- **Seamless Management**: Creem.io integration with customer portal
+- **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + all advanced features including intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, mathematical calculator, and unlimited BYOK usage
+- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search - 10/day), DEEP_RESEARCH (Deep Research capabilities - 5/day), and RAG (Personal AI Assistant with Memory - 2,000/month)
+- **Seamless Management**: Creem.io integration with customer portal and real-time subscription status
 
 ### 🚀 Local AI Setup Guides
 
@@ -59,12 +79,12 @@ Run AI models on your computer for **free** with complete privacy:
 
 ### Modern User Experience
 
-- **Shadcn UI Design System**: Consistent, accessible interface
+- **Shadcn UI Design System**: Consistent, accessible interface with dark mode support
 - **Smart Tool Discovery**: All tools always visible and clickable with intelligent gated access dialogs
 - **Seamless Feature Access**: Tools remain enabled for discoverability while proper access controls show contextual dialogs
-- **Dark Mode**: Premium theming experience for all logged-in users
-- **Responsive Design**: Optimized for desktop and mobile
-- **87% Performance Improvement**: Faster compilation and load times
+- **Responsive Design**: Optimized for desktop and mobile with modern Next.js 15 App Router
+- **87% Performance Improvement**: Faster compilation (24s → 3s) and optimized load times
+- **Production-Ready**: Deployed on Fly.io with 2-region setup and comprehensive monitoring
 
 ## Architecture
 
@@ -158,25 +178,21 @@ vtchat/
     Configure the following required variables in `apps/web/.env.local`:
 
     **Essential Services:**
-
     - `DATABASE_URL` - Neon PostgreSQL connection string
     - `BETTER_AUTH_SECRET` - Authentication secret key
     - `BETTER_AUTH_URL` - Authentication URL (process.env.NEXT_PUBLIC_BASE_URL for development)
 
     **AI Provider Keys (choose one or more):**
-
     - `OPENAI_API_KEY` - OpenAI API access
     - `ANTHROPIC_API_KEY` - Anthropic Claude API access
     - `GOOGLE_API_KEY` - Google Gemini API access
 
     **Payment & Subscription:**
-
     - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
     - `CREEM_API_KEY` - Creem.io API access
     - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
 
     **Security:**
-
     - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
 4. **Set up the database**:
@@ -231,13 +247,14 @@ The application requires several environment variables for full functionality. R
 
 VT is production-ready and deployed on Fly.io:
 
-### Production Deployment
+### **Production Deployment**
 
-- **URL**: [https://vtchat.io.vn](https://vtchat.io.vn)
+- **Live Application**: [https://vtchat.io.vn](https://vtchat.io.vn)
 - **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
-- **Performance**: 87% faster compilation, optimized bundle size
-- **Security**: Privacy-focused security with bot detection
-- **Monitoring**: Comprehensive error tracking and performance monitoring
+- **Performance**: 87% faster compilation (24s → 3s), optimized bundle size (456kB → 436kB)
+- **Security**: Privacy-focused security with bot detection and secure authentication
+- **Monitoring**: Comprehensive error tracking, performance monitoring, and health checks
+- **Auto-scaling**: Suspend/resume based on traffic with intelligent resource management
 
 ### Deployment Configuration
 
@@ -249,23 +266,84 @@ VT is production-ready and deployed on Fly.io:
 
 ## Documentation
 
-### **Production Readiness**
+### **📚 Core Documentation**
 
-- **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Comprehensive pre-deployment verification
-- **[Production Monitoring Setup](docs/production-monitoring-setup.md)**: Error tracking, performance monitoring, and alerting
-- **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: Complete feature summary and achievements
+- **[Project Status](docs/PROJECT-STATUS.md)**: Complete production readiness overview with live metrics
+- **[Features Guide](docs/FEATURES.md)**: Comprehensive feature documentation and capabilities
+- **[Architecture Overview](docs/ARCHITECTURE.md)**: System design, tech stack, and component architecture
+- **[Security Implementation](docs/SECURITY.md)**: Privacy-first architecture and security measures
 - **[Final Project Report](docs/FINAL-PROJECT-REPORT.md)**: Comprehensive technical and business analysis
 
-### **Development & Integration**
+### **🚀 Setup & Deployment**
 
-- **[AGENT.md](AGENT.md)**: Development guidelines and conventions
-- **[Security Guide](docs/SECURITY.md)**: Security implementation and privacy features
-- **Subscription System**: Plan management, caching, and Creem.io integration
-- **Customer Portal**: User subscription management interface
+- **[Local Development Setup](docs/local-development-setup.md)**: Complete environment setup guide
+- **[Database Setup](docs/DATABASE_SETUP.md)**: PostgreSQL configuration and schema setup
+- **[OAuth Setup](docs/OAUTH_SETUP.md)**: Authentication provider configuration
+- **[Deployment Guide](docs/DEPLOYMENT.md)**: Production deployment instructions
+- **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Pre-deployment verification
+- **[Fly.io Deployment Guide](docs/fly-deployment-guide.md)**: Specific Fly.io deployment instructions
 
-### **Project Context**
+### **🔧 Development & Integration**
 
-The `/memory-bank` directory contains contextual documents tracking project evolution, feature implementations, and development insights for continuous improvement.
+- **[Development Guidelines](AGENT.md)**: Code standards, conventions, and best practices
+- **[Subscription System](docs/subscription-system.md)**: Plan management and Creem.io integration
+- **[Creem Webhook Setup](docs/CREEM_WEBHOOK_SETUP.md)**: Payment webhook configuration
+- **[Account Linking](docs/ACCOUNT_LINKING.md)**: Multi-provider authentication setup
+- **[Database Maintenance](docs/DATABASE_MAINTENANCE.md)**: Ongoing database management
+
+### **🛠️ Local AI Setup Guides**
+
+- **[Complete Local AI Guide](docs/guides/local-ai-setup.md)**: Choose between Ollama and LM Studio
+- **[Ollama Setup Guide](docs/guides/ollama-setup.md)**: Command-line local AI (5-minute setup)
+- **[LM Studio Setup Guide](docs/guides/lm-studio-setup.md)**: GUI local AI (10-minute setup)
+- **[Premium Components Guide](docs/guides/premium-components.md)**: VT+ exclusive features
+- **[Logging Best Practices](docs/guides/logging-best-practices.md)**: Structured logging implementation
+
+### **📊 Monitoring & Performance**
+
+- **[Production Monitoring Setup](docs/production-monitoring-setup.md)**: Error tracking, performance monitoring, and alerting
+- **[Production Readiness Report](docs/production-readiness-report.md)**: Comprehensive readiness assessment
+- **[Performance Optimizations](docs/auth-performance-optimizations.md)**: Authentication and runtime optimizations
+- **[Caching Optimization Report](docs/caching-optimization-report.md)**: Performance improvements and metrics
+
+### **🎯 Feature Implementation**
+
+- **[Thinking Mode Implementation](docs/reasoning-mode-implementation.md)**: AI reasoning capabilities
+- **[Document Upload Feature](docs/document-upload-feature.md)**: File processing implementation
+- **[Structured Output Implementation](docs/structured-output-implementation-summary.md)**: JSON extraction features
+- **[Enhanced Tool System](docs/enhanced-tool-system-implementation.md)**: Advanced tool routing
+- **[Rate Limiting Improvements](docs/rate-limiting-improvements.md)**: Usage control and limits
+
+### **🧪 Testing & Quality**
+
+- **[Vitest Testing Setup](docs/vitest-testing-setup.md)**: Testing framework configuration
+- **[Structured Output Testing](docs/structured-output-testing.md)**: Feature-specific test suites
+- **[UI Audit Report](docs/ui-audit-report.md)**: Interface quality assessment
+
+### **📝 Release & Project Management**
+
+- **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: Complete feature summary and achievements
+- **[Customer Support Policy](docs/customer-support-policy.md)**: Support procedures and guidelines
+
+### **📞 User Support & Help**
+
+- **[Help Center](docs/help-center/README.md)**: Complete user guides, FAQ, and troubleshooting
+- **[Usage Settings Implementation](docs/USAGE_SETTINGS_IMPLEMENTATION.md)**: User configuration and preferences
+
+### **📋 Project Context & Evolution**
+
+The **[memory-bank/](memory-bank/)** directory contains contextual documents tracking project evolution, feature implementations, and development insights. These documents provide historical context and decision rationale for continuous improvement.
+
+Key memory bank documents:
+
+- Development session logs and feature implementation notes
+- Oracle consultation records and architectural decisions
+- Performance optimization discoveries and lessons learned
+- User feedback integration and feature prioritization insights
+
+---
+
+> **💡 Navigation Tip**: Start with [Project Status](docs/PROJECT-STATUS.md) for a complete overview, then explore specific areas using the categorized documentation links above.
 
 ## Security
 
@@ -321,17 +399,23 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Achievements
 
-- **Zero TypeScript Errors**: Complete type safety across the codebase
-- **87% Performance Improvement**: Optimized compilation and runtime
+- **Zero TypeScript Errors**: Complete type safety across the entire codebase
+- **87% Performance Improvement**: Optimized compilation (24s → 3s) and runtime efficiency
 - **Smart UX Design**: All tools discoverable through always-enabled buttons with intelligent gated dialogs
-- **Production-Ready**: Deployed and running in production environment
-- **Security Hardened**: Comprehensive protection against common threats
-- **Privacy-First**: Commited to user data protection
+- **Production-Ready**: Successfully deployed and running at [https://vtchat.io.vn](https://vtchat.io.vn)
+- **Security Hardened**: Comprehensive protection with bot detection and Better Auth integration
+- **Privacy-First**: Complete local storage architecture with zero server-side chat data storage
+- **Generous Free Tier**: All premium AI models available to logged-in users with BYOK
+- **Focused Premium Value**: VT+ exclusively offers 3 research-oriented features for professionals
+- **Modern Stack**: Next.js 15, React 19, TypeScript, Bun, and cutting-edge development tools
+- **Comprehensive Testing**: Vitest with Testing Library for reliable code quality assurance
 - ***
 
 <div align="center">
 
 **[Visit VT](https://vtchat.io.vn)** | **[View Documentation](docs/)** | **[Report Issues](https://github.com/vinhnx/vtchat/issues)**
+
+---
 
 I'm @vinhnx.
 

@@ -7,10 +7,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
     title: "About VT",
     description:
-        "Learn about VT - Your privacy-focused AI chat platform with security and advanced AI capabilities.",
+        "Learn about VT - Production-ready, privacy-focused AI chat platform with all premium AI models free (BYOK) and exclusive research features for professionals.",
     openGraph: {
         title: "About VT",
-        description: "Learn about VT - Your privacy-focused AI chat platform with security.",
+        description:
+            "Production-ready AI chat platform with all premium models free and privacy-first architecture.",
         type: "website",
     },
     robots: {
@@ -61,8 +62,9 @@ function AboutContent() {
                         About VT
                     </TypographyH2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                        VT is a modern, privacy-first AI chat application with advanced AI
-                        capabilities.
+                        VT is a production-ready, privacy-first AI chat application with advanced AI
+                        capabilities, offering all premium models for free with BYOK and exclusive
+                        research features for professionals.
                     </p>
                 </div>
 
@@ -71,11 +73,13 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                VT is a privacy-focused AI chat application delivering cutting-edge
-                                AI capabilities through a sophisticated dual-tier subscription
-                                system. Built with modern web technologies and a privacy-first
-                                architecture, VT offers advanced AI reasoning, document processing,
-                                web search integration, and comprehensive multi-AI provider support.
+                                VT democratizes access to cutting-edge AI capabilities by providing
+                                ALL premium AI models completely free to logged-in users with their
+                                own API keys, while offering exclusive research-focused features for
+                                professionals. Built with a privacy-first architecture, VT ensures
+                                your conversations never leave your device while delivering
+                                state-of-the-art AI reasoning, document processing, web search
+                                integration, and comprehensive multi-AI provider support.
                             </p>
                         </div>
 
@@ -112,48 +116,56 @@ function AboutContent() {
                             <h3 className="mb-4 text-xl font-semibold">Advanced AI Capabilities</h3>
                             <p className="text-muted-foreground mb-4">
                                 VT integrates with multiple leading AI providers to offer
-                                comprehensive AI capabilities:
+                                comprehensive AI capabilities with a generous free tier:
                             </p>
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">
                                 <li>
                                     <strong>Multi-Provider Support:</strong> OpenAI, Anthropic,
-                                    Google, Fireworks, Together AI, and xAI
-                                </li>
-                                <li>
-                                    <strong>Intelligent Tool Router:</strong> AI-powered semantic
-                                    routing automatically activates tools based on query intent
-                                    using OpenAI embeddings and pattern matching
+                                    Google, Fireworks, Together AI, xAI, plus local providers
+                                    (Ollama, LM Studio)
                                 </li>
                                 <li>
                                     <strong>Premium AI Models (Free with BYOK):</strong> ALL premium
-                                    models including Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro,
-                                    DeepSeek R1, Grok 3 - available to all logged-in users with
-                                    their own API keys
+                                    models including Claude 4, GPT-4.1, O3 series, O1 series, Gemini
+                                    2.5 Pro, DeepSeek R1, Grok 3 - available to all logged-in users
+                                    with their own API keys
                                 </li>
                                 <li>
-                                    <strong>Free AI Models:</strong> 9 models including Gemini
-                                    2.0/2.5 Flash and OpenRouter models - no API keys required
+                                    <strong>9 Free Server Models:</strong> Gemini 2.0/2.5 Flash
+                                    series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API
+                                    keys required
                                 </li>
                                 <li>
-                                    <strong>Chart Visualization:</strong> Create interactive bar
-                                    charts, line graphs, pie charts, and scatter plots - available
-                                    to all users
+                                    <strong>🆓 Free Local AI:</strong> Run AI models on your own
+                                    computer with Ollama and LM Studio - completely free, private,
+                                    and no API costs
                                 </li>
                                 <li>
-                                    <strong>Web Search Integration:</strong> Real-time web search
-                                    capabilities for current information and grounding
+                                    <strong>Chart Visualization (Free):</strong> Create interactive
+                                    bar charts, line graphs, pie charts, and scatter plots - always
+                                    available and discoverable through smart UI
                                 </li>
                                 <li>
-                                    <strong>Thinking Mode:</strong> AI SDK reasoning tokens with
-                                    transparent thinking process
+                                    <strong>Web Search Integration (Free):</strong> Real-time web
+                                    search capabilities for current information - always available
                                 </li>
                                 <li>
-                                    <strong>Document Processing:</strong> Upload and analyze PDFs,
-                                    documents, and images
+                                    <strong>Thinking Mode (Free):</strong> Complete AI SDK reasoning
+                                    tokens support with transparent thinking process - available to
+                                    all logged-in users
                                 </li>
                                 <li>
-                                    <strong>Structured Output:</strong> Extract structured data from
-                                    documents
+                                    <strong>Document Processing (Free):</strong> Upload and analyze
+                                    PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all
+                                    logged-in users
+                                </li>
+                                <li>
+                                    <strong>Structured Output (Free):</strong> AI-powered JSON data
+                                    extraction from documents - available to all logged-in users
+                                </li>
+                                <li>
+                                    <strong>Mathematical Calculator (Free):</strong> Advanced
+                                    functions including trigonometry, logarithms, and arithmetic
                                 </li>
                             </ul>
                         </div>
@@ -191,18 +203,73 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Subscription Tiers</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT offers a generous free tier with BYOK (Bring Your Own Key) access
-                                to all supported AI models. VT+, our premium subscription, enhances
-                                your experience with three exclusive research capabilities: Deep
-                                Research, Pro Search, and a personal AI Assistant with Memory (RAG).{" "}
-                                <strong>
-                                    VT+ subscribers also receive server-funded access to all Gemini
-                                    models
-                                </strong>
-                                , including the latest versions, with built-in rate limits and
-                                budget protection. Free users can access Gemini models by providing
-                                their own API key.
+                                VT offers an extremely generous free tier with access to all premium
+                                AI models through BYOK (Bring Your Own Key), plus 9 completely free
+                                server-funded models. VT+ subscription focuses exclusively on 3
+                                powerful research capabilities for professionals.
                             </p>
+
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold mb-2">Free Tier (VT_BASE)</h4>
+                                <ul className="text-muted-foreground list-inside list-disc space-y-1 ml-4">
+                                    <li>
+                                        <strong>ALL Premium AI Models (Free with BYOK):</strong>{" "}
+                                        Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, DeepSeek R1,
+                                        Grok 3
+                                    </li>
+                                    <li>
+                                        <strong>9 Free Server Models:</strong> 5 Gemini models + 4
+                                        OpenRouter models (no API keys needed)
+                                    </li>
+                                    <li>
+                                        <strong>🆓 Free Local AI:</strong> Ollama and LM Studio
+                                        support for complete privacy
+                                    </li>
+                                    <li>
+                                        <strong>All Advanced Features:</strong> Thinking Mode,
+                                        Document Processing, Structured Output, Charts, Web Search,
+                                        Mathematical Calculator
+                                    </li>
+                                    <li>
+                                        <strong>Dark Mode & Modern UI:</strong> Premium theming and
+                                        responsive design
+                                    </li>
+                                    <li>
+                                        <strong>Unlimited BYOK Usage:</strong> No limits when using
+                                        your own API keys
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold mb-2">
+                                    VT+ Premium ($5.99/month)
+                                </h4>
+                                <p className="text-muted-foreground mb-2">
+                                    All free features plus 3 exclusive research capabilities:
+                                </p>
+                                <ul className="text-muted-foreground list-inside list-disc space-y-1 ml-4">
+                                    <li>
+                                        <strong>PRO_SEARCH (Enhanced Web Search):</strong> 10
+                                        requests per day - Lightning-fast web search with AI
+                                        grounding
+                                    </li>
+                                    <li>
+                                        <strong>DEEP_RESEARCH:</strong> 5 requests per day -
+                                        Comprehensive multi-step research with detailed analysis
+                                    </li>
+                                    <li>
+                                        <strong>RAG (Personal AI Assistant with Memory):</strong>{" "}
+                                        2,000 completions per month - Build your personal AI
+                                        knowledge base
+                                    </li>
+                                    <li>
+                                        <strong>Priority Support:</strong> Enhanced customer support
+                                        and faster response times
+                                    </li>
+                                </ul>
+                            </div>
+
                             <div className="text-center">
                                 <Link href="/plus">
                                     <Button className="gap-2" size="lg">
@@ -215,34 +282,134 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Technology Stack</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT is built with modern web technologies for optimal performance and
-                                reliability:
+                                VT is built with cutting-edge web technologies for optimal
+                                performance, security, and developer experience:
                             </p>
-                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
-                                <li>
-                                    <strong>Frontend:</strong> Next.js 14 with App Router,
-                                    TypeScript, Tailwind CSS
-                                </li>
-                                <li>
-                                    <strong>UI Components:</strong> Shadcn UI with Radix UI
-                                    primitives
-                                </li>
-                                <li>
-                                    <strong>Database:</strong> Neon PostgreSQL with Drizzle ORM
-                                </li>
-                                <li>
-                                    <strong>Authentication:</strong> Better Auth with secure session
-                                    management
-                                </li>
-                                <li>
-                                    <strong>Deployment:</strong> Fly.io with Singapore region
-                                    optimization
-                                </li>
-                                <li>
-                                    <strong>Build System:</strong> Turborepo monorepo with 87%
-                                    faster compilation
-                                </li>
-                            </ul>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 className="text-lg font-semibold mb-2">Frontend & Core</h4>
+                                    <ul className="text-muted-foreground list-inside list-disc space-y-1">
+                                        <li>
+                                            <strong>Framework:</strong> Next.js 15 (App Router) with
+                                            TypeScript
+                                        </li>
+                                        <li>
+                                            <strong>React:</strong> React 19.0.0 (latest stable)
+                                        </li>
+                                        <li>
+                                            <strong>UI Components:</strong> Shadcn UI with Radix UI
+                                            primitives
+                                        </li>
+                                        <li>
+                                            <strong>Styling:</strong> Tailwind CSS with modern
+                                            design system
+                                        </li>
+                                        <li>
+                                            <strong>State Management:</strong> Zustand + React Query
+                                        </li>
+                                        <li>
+                                            <strong>Animations:</strong> Framer Motion
+                                        </li>
+                                        <li>
+                                            <strong>Icons:</strong> Lucide React
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Backend & Infrastructure
+                                    </h4>
+                                    <ul className="text-muted-foreground list-inside list-disc space-y-1">
+                                        <li>
+                                            <strong>Database:</strong> Neon PostgreSQL with Drizzle
+                                            ORM
+                                        </li>
+                                        <li>
+                                            <strong>Authentication:</strong> Better Auth with 87%
+                                            performance improvement
+                                        </li>
+                                        <li>
+                                            <strong>Payment:</strong> Creem.io with customer portal
+                                        </li>
+                                        <li>
+                                            <strong>Local Storage:</strong> IndexedDB via Dexie.js
+                                        </li>
+                                        <li>
+                                            <strong>Deployment:</strong> Fly.io (Singapore +
+                                            Virginia regions)
+                                        </li>
+                                        <li>
+                                            <strong>Security:</strong> Bot detection and secure
+                                            OAuth
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Development & Build
+                                    </h4>
+                                    <ul className="text-muted-foreground list-inside list-disc space-y-1">
+                                        <li>
+                                            <strong>Runtime:</strong> Bun (package manager +
+                                            JavaScript runtime)
+                                        </li>
+                                        <li>
+                                            <strong>Monorepo:</strong> Turborepo with 87% faster
+                                            compilation
+                                        </li>
+                                        <li>
+                                            <strong>Testing:</strong> Vitest with Testing Library
+                                        </li>
+                                        <li>
+                                            <strong>Code Quality:</strong> Biome + oxlint for
+                                            comprehensive linting
+                                        </li>
+                                        <li>
+                                            <strong>Type Checking:</strong> TypeScript with strict
+                                            configuration
+                                        </li>
+                                        <li>
+                                            <strong>Performance:</strong> React Scan for development
+                                            optimization
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        AI & Integrations
+                                    </h4>
+                                    <ul className="text-muted-foreground list-inside list-disc space-y-1">
+                                        <li>
+                                            <strong>AI Providers:</strong> OpenAI, Anthropic,
+                                            Google, Fireworks, Together AI, xAI
+                                        </li>
+                                        <li>
+                                            <strong>AI SDK:</strong> Vercel AI SDK with reasoning
+                                            tokens support
+                                        </li>
+                                        <li>
+                                            <strong>Local AI:</strong> Ollama and LM Studio
+                                            integration
+                                        </li>
+                                        <li>
+                                            <strong>Tool Router:</strong> OpenAI embeddings +
+                                            pattern matching
+                                        </li>
+                                        <li>
+                                            <strong>Document Processing:</strong> Multi-format file
+                                            analysis
+                                        </li>
+                                        <li>
+                                            <strong>Web Search:</strong> Real-time grounding
+                                            capabilities
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
@@ -264,7 +431,7 @@ function AboutContent() {
                             </div>
                             <div className="mt-6 flex flex-wrap items-center gap-4">
                                 <Link
-                                    href="https://x.com/intent/tweet?text=VT&url=https%3A%2F%2Fvtchat.io.vn%2F"
+                                    href="https://x.com/intent/tweet?text=Check%20out%20VT%20-%20Production-ready%20AI%20chat%20with%20all%20premium%20models%20free!&url=https%3A%2F%2Fvtchat.io.vn%2F"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
@@ -273,15 +440,18 @@ function AboutContent() {
                                 </Link>
                             </div>
 
-                            <div className="mt-6 flex flex-wrap items-center gap-4">
-                                <Link
-                                    href="https://twitter.com/intent/tweet?text=VT&url=https%3A%2F%2Fvtchat.io.vn%2F"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                                >
-                                    Share VT on X
-                                </Link>
+                            <div className="mt-8 border-t pt-6">
+                                <p className="text-muted-foreground text-sm text-center">
+                                    Last updated: July 13, 2025 | Production Status: ✅ Live at{" "}
+                                    <Link
+                                        href="https://vtchat.io.vn"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline"
+                                    >
+                                        vtchat.io.vn
+                                    </Link>
+                                </p>
                             </div>
                         </div>
                     </div>
