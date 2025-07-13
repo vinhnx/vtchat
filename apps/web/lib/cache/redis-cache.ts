@@ -2,12 +2,12 @@
  * Redis-based caching system for fast authentication and subscription data
  */
 
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
 
 // Dynamic import for ioredis to make it optional
 let Redis: any;
 try {
-    Redis = require('ioredis').Redis;
+    Redis = require("ioredis").Redis;
 } catch {
     // ioredis not available, cache will be disabled
 }
@@ -37,7 +37,7 @@ class RedisCache {
     constructor(config: CacheConfig = {}) {
         this.config = {
             defaultTTL: 30, // 30 seconds default
-            keyPrefix: 'vtchat:',
+            keyPrefix: "vtchat:",
             ...config,
         };
 
@@ -47,14 +47,14 @@ class RedisCache {
     private initRedis() {
         try {
             if (!Redis) {
-                log.warn('ioredis not available, caching disabled');
+                log.warn("ioredis not available, caching disabled");
                 return;
             }
 
             const redisUrl = process.env.REDIS_URL || process.env.KV_URL;
 
             if (!redisUrl) {
-                log.warn('No Redis URL configured, caching disabled');
+                log.warn("No Redis URL configured, caching disabled");
                 return;
             }
 
@@ -69,22 +69,22 @@ class RedisCache {
                 commandTimeout: 3000,
             });
 
-            this.redis.on('connect', () => {
+            this.redis.on("connect", () => {
                 this.isConnected = true;
-                log.info('Redis cache connected');
+                log.info("Redis cache connected");
             });
 
-            this.redis.on('error', (error) => {
+            this.redis.on("error", (error) => {
                 this.isConnected = false;
-                log.error('Redis cache error:', error);
+                log.error("Redis cache error:", error);
             });
 
-            this.redis.on('close', () => {
+            this.redis.on("close", () => {
                 this.isConnected = false;
-                log.warn('Redis cache disconnected');
+                log.warn("Redis cache disconnected");
             });
         } catch (error) {
-            log.error('Failed to initialize Redis cache:', error);
+            log.error("Failed to initialize Redis cache:", error);
         }
     }
 
@@ -101,7 +101,7 @@ class RedisCache {
             const value = await this.redis.get(this.getKey(key));
             return value ? JSON.parse(value) : null;
         } catch (error) {
-            log.warn('Redis get failed:', { key, error });
+            log.warn("Redis get failed:", { key, error });
             return null;
         }
     }
@@ -123,7 +123,7 @@ class RedisCache {
 
             return true;
         } catch (error) {
-            log.warn('Redis set failed:', { key, error });
+            log.warn("Redis set failed:", { key, error });
             return false;
         }
     }
@@ -137,7 +137,7 @@ class RedisCache {
             await this.redis.del(this.getKey(key));
             return true;
         } catch (error) {
-            log.warn('Redis delete failed:', { key, error });
+            log.warn("Redis delete failed:", { key, error });
             return false;
         }
     }
@@ -151,7 +151,7 @@ class RedisCache {
             const result = await this.redis.exists(this.getKey(key));
             return result === 1;
         } catch (error) {
-            log.warn('Redis exists check failed:', { key, error });
+            log.warn("Redis exists check failed:", { key, error });
             return false;
         }
     }
@@ -173,7 +173,7 @@ class RedisCache {
             const results = await pipeline.exec();
             return (results?.[0]?.[1] as number) || 0;
         } catch (error) {
-            log.warn('Redis increment failed:', { key, error });
+            log.warn("Redis increment failed:", { key, error });
             return 0;
         }
     }
@@ -201,8 +201,8 @@ class RedisCache {
 
     async setSubscription(
         userId: string,
-        data: Omit<SubscriptionCacheData, 'lastUpdated'>,
-        ttlSeconds = 30
+        data: Omit<SubscriptionCacheData, "lastUpdated">,
+        ttlSeconds = 30,
     ): Promise<boolean> {
         const key = `sub:${userId}`;
         const cacheData: SubscriptionCacheData = {
@@ -251,7 +251,7 @@ class RedisCache {
             .expire(fullKey, ttlSeconds)
             .exec()
             .catch((error) => {
-                log.warn('Async rate limit increment failed:', { userId, key, error });
+                log.warn("Async rate limit increment failed:", { userId, key, error });
             });
     }
 
@@ -273,7 +273,7 @@ class RedisCache {
                 }
             });
         } catch (error) {
-            log.warn('Redis mget failed:', { keys, error });
+            log.warn("Redis mget failed:", { keys, error });
             return keys.map(() => null);
         }
     }
@@ -300,7 +300,7 @@ class RedisCache {
             await pipeline.exec();
             return true;
         } catch (error) {
-            log.warn('Redis mset failed:', { count: keyValuePairs.length, error });
+            log.warn("Redis mset failed:", { count: keyValuePairs.length, error });
             return false;
         }
     }
@@ -313,7 +313,7 @@ class RedisCache {
 
         try {
             const result = await this.redis.ping();
-            return result === 'PONG';
+            return result === "PONG";
         } catch {
             return false;
         }
@@ -333,12 +333,12 @@ class RedisCache {
 export const redisCache = new RedisCache();
 
 // Graceful shutdown
-if (typeof process !== 'undefined') {
-    process.on('SIGTERM', async () => {
+if (typeof process !== "undefined") {
+    process.on("SIGTERM", async () => {
         await redisCache.disconnect();
     });
 
-    process.on('SIGINT', async () => {
+    process.on("SIGINT", async () => {
         await redisCache.disconnect();
     });
 }

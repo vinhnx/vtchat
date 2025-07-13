@@ -1,8 +1,8 @@
-import { TypographySmall } from '@repo/ui';
+import { TypographySmall } from "@repo/ui";
 
 export const AIDisclaimer = ({ className }: { className?: string }) => {
     return (
-        <div className={`text-center ${className || ''}`}>
+        <div className={`text-center ${className || ""}`}>
             <TypographySmall className="text-muted-foreground text-xs">
                 VT is an independent platform providing custom interfaces for AI models.
                 <br />
@@ -15,7 +15,7 @@ export const AIDisclaimer = ({ className }: { className?: string }) => {
 
 export const WrapperDisclosure = ({ className }: { className?: string }) => {
     return (
-        <div className={`text-center ${className || ''}`}>
+        <div className={`text-center ${className || ""}`}>
             <TypographySmall className="text-muted-foreground text-xs">
                 Our platform offers a user-friendly interface built on top of AI models to enhance
                 usability and provide additional features.

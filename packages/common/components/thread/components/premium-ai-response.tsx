@@ -1,8 +1,8 @@
-import { MarkdownContent, markdownStyles } from '@repo/common/components';
-import { useCopyText } from '@repo/common/hooks';
-import type { ThreadItem } from '@repo/shared/types';
-import { Button, cn } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+import { MarkdownContent, markdownStyles } from "@repo/common/components";
+import { useCopyText } from "@repo/common/hooks";
+import type { ThreadItem } from "@repo/shared/types";
+import { Button, cn } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Bot,
     Brain,
@@ -15,8 +15,8 @@ import {
     Volume2,
     VolumeX,
     Zap,
-} from 'lucide-react';
-import { memo, useRef, useState } from 'react';
+} from "lucide-react";
+import { memo, useRef, useState } from "react";
 
 interface PremiumAIResponseProps {
     content: string;
@@ -29,7 +29,7 @@ export const PremiumAIResponse = memo(
     ({ content, threadItem, isGenerating = false, isLast = false }: PremiumAIResponseProps) => {
         const [_isExpanded, _setIsExpanded] = useState(false);
         const [showActions, setShowActions] = useState(false);
-        const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+        const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
         const [isReading, setIsReading] = useState(false);
         const contentRef = useRef<HTMLDivElement>(null);
         const { copyToClipboard, status } = useCopyText();
@@ -40,7 +40,7 @@ export const PremiumAIResponse = memo(
             }
         };
 
-        const handleFeedback = (type: 'up' | 'down') => {
+        const handleFeedback = (type: "up" | "down") => {
             setFeedback(type === feedback ? null : type);
         };
 
@@ -65,23 +65,23 @@ export const PremiumAIResponse = memo(
                 initial={{ opacity: 0, y: 20 }}
                 onHoverEnd={() => setShowActions(false)}
                 onHoverStart={() => setShowActions(true)}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 {/* AI Avatar with sophisticated styling */}
                 <motion.div
                     animate={{ scale: 1 }}
                     className="relative flex-shrink-0"
                     initial={{ scale: 0 }}
-                    transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 >
                     <div className="relative">
                         <div
                             className={cn(
-                                'flex h-10 w-10 items-center justify-center rounded-xl',
-                                'bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500',
-                                'shadow-lg shadow-purple-500/25',
-                                'ring-2 ring-white/20',
-                                isGenerating && 'animate-pulse'
+                                "flex h-10 w-10 items-center justify-center rounded-xl",
+                                "bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500",
+                                "shadow-lg shadow-purple-500/25",
+                                "ring-2 ring-white/20",
+                                isGenerating && "animate-pulse",
                             )}
                         >
                             <Bot className="text-white" size={20} />
@@ -123,7 +123,7 @@ export const PremiumAIResponse = memo(
                                     transition={{
                                         duration: 2,
                                         repeat: Number.POSITIVE_INFINITY,
-                                        ease: 'linear',
+                                        ease: "linear",
                                     }}
                                 >
                                     <Zap
@@ -137,8 +137,8 @@ export const PremiumAIResponse = memo(
                         {!isGenerating && (
                             <span className="text-xs text-gray-500 dark:text-gray-400">
                                 {new Date(threadItem.createdAt).toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
+                                    hour: "2-digit",
+                                    minute: "2-digit",
                                 })}
                             </span>
                         )}
@@ -148,12 +148,12 @@ export const PremiumAIResponse = memo(
                     <motion.div
                         animate={{ scale: 1 }}
                         className={cn(
-                            'group relative',
-                            'bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900',
-                            'border border-gray-200 dark:border-gray-700',
-                            'rounded-2xl shadow-sm hover:shadow-md',
-                            'transition-all duration-300',
-                            showActions && 'ring-2 ring-blue-200 dark:ring-blue-800'
+                            "group relative",
+                            "bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900",
+                            "border border-gray-200 dark:border-gray-700",
+                            "rounded-2xl shadow-sm hover:shadow-md",
+                            "transition-all duration-300",
+                            showActions && "ring-2 ring-blue-200 dark:ring-blue-800",
                         )}
                         initial={{ scale: 0.98 }}
                         transition={{ delay: 0.4, duration: 0.3 }}
@@ -161,21 +161,21 @@ export const PremiumAIResponse = memo(
                         {/* Content */}
                         <div
                             className={cn(
-                                'prose prose-base max-w-none p-6',
-                                'prose-gray dark:prose-invert',
-                                'prose-headings:font-semibold prose-headings:text-gray-900 dark:prose-headings:text-gray-100',
-                                'prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300',
-                                'prose-code:rounded-md prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 dark:prose-code:bg-gray-800',
-                                'prose-pre:border prose-pre:border-gray-200 prose-pre:bg-gray-100 dark:prose-pre:border-gray-700 dark:prose-pre:bg-gray-800',
-                                markdownStyles
+                                "prose prose-base max-w-none p-6",
+                                "prose-gray dark:prose-invert",
+                                "prose-headings:font-semibold prose-headings:text-gray-900 dark:prose-headings:text-gray-100",
+                                "prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300",
+                                "prose-code:rounded-md prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 dark:prose-code:bg-gray-800",
+                                "prose-pre:border prose-pre:border-gray-200 prose-pre:bg-gray-100 dark:prose-pre:border-gray-700 dark:prose-pre:bg-gray-800",
+                                markdownStyles,
                             )}
                             ref={contentRef}
                         >
                             <MarkdownContent
                                 content={content}
-                                isCompleted={threadItem.status === 'COMPLETED'}
+                                isCompleted={threadItem.status === "COMPLETED"}
                                 isLast={isLast}
-                                shouldAnimate={threadItem.status !== 'COMPLETED'}
+                                shouldAnimate={threadItem.status !== "COMPLETED"}
                             />
                         </div>
 
@@ -183,7 +183,7 @@ export const PremiumAIResponse = memo(
                         <AnimatePresence>
                             {isGenerating && (
                                 <motion.div
-                                    animate={{ opacity: 1, height: 'auto' }}
+                                    animate={{ opacity: 1, height: "auto" }}
                                     className="px-6 pb-4"
                                     exit={{ opacity: 0, height: 0 }}
                                     initial={{ opacity: 0, height: 0 }}
@@ -226,12 +226,12 @@ export const PremiumAIResponse = memo(
                                             {/* Feedback buttons */}
                                             <Button
                                                 className={cn(
-                                                    'transition-all duration-200 hover:scale-110',
-                                                    feedback === 'up'
-                                                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                                                        : 'text-gray-500 hover:text-green-600'
+                                                    "transition-all duration-200 hover:scale-110",
+                                                    feedback === "up"
+                                                        ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                                                        : "text-gray-500 hover:text-green-600",
                                                 )}
-                                                onClick={() => handleFeedback('up')}
+                                                onClick={() => handleFeedback("up")}
                                                 size="icon-sm"
                                                 tooltip="Helpful response"
                                                 variant="ghost"
@@ -241,12 +241,12 @@ export const PremiumAIResponse = memo(
 
                                             <Button
                                                 className={cn(
-                                                    'transition-all duration-200 hover:scale-110',
-                                                    feedback === 'down'
-                                                        ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                                                        : 'text-gray-500 hover:text-red-600'
+                                                    "transition-all duration-200 hover:scale-110",
+                                                    feedback === "down"
+                                                        ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                                                        : "text-gray-500 hover:text-red-600",
                                                 )}
-                                                onClick={() => handleFeedback('down')}
+                                                onClick={() => handleFeedback("down")}
                                                 size="icon-sm"
                                                 tooltip="Not helpful"
                                                 variant="ghost"
@@ -262,9 +262,9 @@ export const PremiumAIResponse = memo(
                                                 onClick={handleCopy}
                                                 size="icon-sm"
                                                 tooltip={
-                                                    status === 'copied'
-                                                        ? 'Copied!'
-                                                        : 'Copy response'
+                                                    status === "copied"
+                                                        ? "Copied!"
+                                                        : "Copy response"
                                                 }
                                                 variant="ghost"
                                             >
@@ -273,13 +273,13 @@ export const PremiumAIResponse = memo(
 
                                             <Button
                                                 className={cn(
-                                                    'text-gray-500 transition-all duration-200 hover:scale-110 hover:text-purple-600',
+                                                    "text-gray-500 transition-all duration-200 hover:scale-110 hover:text-purple-600",
                                                     isReading &&
-                                                        'bg-purple-100 text-purple-600 dark:bg-purple-900/30'
+                                                        "bg-purple-100 text-purple-600 dark:bg-purple-900/30",
                                                 )}
                                                 onClick={handleTextToSpeech}
                                                 size="icon-sm"
-                                                tooltip={isReading ? 'Stop reading' : 'Read aloud'}
+                                                tooltip={isReading ? "Stop reading" : "Read aloud"}
                                                 variant="ghost"
                                             >
                                                 {isReading ? (
@@ -321,7 +321,7 @@ export const PremiumAIResponse = memo(
                             initial={{ opacity: 0 }}
                             transition={{ delay: 0.6 }}
                         >
-                            <span>Model: {threadItem.model || 'VT Assistant'}</span>
+                            <span>Model: {threadItem.model || "VT Assistant"}</span>
                             <span>•</span>
                             <span>Response time: ~2.3s</span>
                             <span>•</span>
@@ -333,7 +333,7 @@ export const PremiumAIResponse = memo(
                 </div>
             </motion.div>
         );
-    }
+    },
 );
 
-PremiumAIResponse.displayName = 'PremiumAIResponse';
+PremiumAIResponse.displayName = "PremiumAIResponse";

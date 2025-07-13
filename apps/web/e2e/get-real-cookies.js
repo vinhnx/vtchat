@@ -10,28 +10,28 @@
  */
 
 // Run this in browser console after logging in:
-function extractCookiesForPlaywright() {
-    const cookies = document.cookie.split(';').map((cookie) => {
-        const [name, value] = cookie.split('=').map((s) => s.trim());
+function _extractCookiesForPlaywright() {
+    const cookies = document.cookie.split(";").map((cookie) => {
+        const [name, value] = cookie.split("=").map((s) => s.trim());
         return {
             name,
-            value: value || '',
-            domain: 'localhost',
-            path: '/',
+            value: value || "",
+            domain: "localhost",
+            path: "/",
             httpOnly: false, // These are client-side accessible cookies
             secure: false,
-            sameSite: 'Lax',
+            sameSite: "Lax",
         };
     });
 
-    console.log('Playwright cookies format:');
+    console.log("Playwright cookies format:");
     console.log(JSON.stringify(cookies, null, 2));
 
     return cookies;
 }
 
 // Alternative: Get all cookies including httpOnly
-function getAllCookies() {
+function _getAllCookies() {
     // This needs to be run in browser console
     return navigator.cookieStore?.getAll() || [];
 }

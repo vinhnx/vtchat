@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { lazy, Suspense } from 'react';
-import { Card, CardContent, CardHeader } from './components/card';
-import { Skeleton } from './components/skeleton';
+import { lazy, Suspense } from "react";
+import { Card, CardContent, CardHeader } from "./components/card";
+import { Skeleton } from "./components/skeleton";
 
 // Dynamic import the chart renderer
 const ChartRendererComponent = lazy(() =>
-    import('./chart-renderer').then((module) => ({
+    import("./chart-renderer").then((module) => ({
         default: module.ChartRenderer,
-    }))
+    })),
 );
 
 // Chart loading skeleton
@@ -38,7 +38,7 @@ function ChartSkeleton() {
 }
 
 // Re-export chart types for convenience
-export type { ChartProps } from './chart-renderer';
+export type { ChartProps } from "./chart-renderer";
 
 export function DynamicChartRenderer(props: ChartProps) {
     return (

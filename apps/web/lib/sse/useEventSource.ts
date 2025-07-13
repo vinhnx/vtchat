@@ -1,11 +1,11 @@
-import { log } from '@repo/shared/logger';
-import { useCallback, useEffect, useRef } from 'react';
+import { log } from "@repo/shared/logger";
+import { useCallback, useEffect, useRef } from "react";
 import {
     CLIENT_HEARTBEAT_TIMEOUT_MS,
     INITIAL_RECONNECT_DELAY_MS,
     MAX_RECONNECT_ATTEMPTS,
     MAX_RECONNECT_DELAY_MS,
-} from '@/app/api/completion/constants';
+} from "@/app/api/completion/constants";
 
 interface UseEventSourceOptions {
     onEvent?: (ev: MessageEvent) => void;
@@ -76,7 +76,7 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
         stateRef.current.readyState = EventSource.CONNECTING;
 
         eventSource.onopen = (ev) => {
-            log.debug('SSE connection opened');
+            log.debug("SSE connection opened");
             retriesRef.current = 0;
             stateRef.current.retryCount = 0;
             stateRef.current.isReconnecting = false;
@@ -89,16 +89,16 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
             lastHeartbeatRef.current = Date.now();
 
             // Handle heartbeat and ping messages
-            if (ev.data === 'heartbeat' || ev.data === 'ping') {
-                log.debug('SSE heartbeat/ping received');
+            if (ev.data === "heartbeat" || ev.data === "ping") {
+                log.debug("SSE heartbeat/ping received");
                 return;
             }
 
             onEvent?.(ev);
         };
 
-        eventSource.addEventListener('done', () => {
-            log.debug('SSE stream completed');
+        eventSource.addEventListener("done", () => {
+            log.debug("SSE stream completed");
             // Server finished successfully - stop retry loop
             retriesRef.current = 0;
             stateRef.current.retryCount = 0;
@@ -106,7 +106,7 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
         });
 
         eventSource.onerror = (ev) => {
-            log.warn('SSE connection error');
+            log.warn("SSE connection error");
             stateRef.current.readyState = EventSource.CLOSED;
             onError?.(ev);
 
@@ -114,12 +114,12 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
                 scheduleReconnect();
             }
         };
-    }, [url, onEvent, onError, onOpen, autoReconnect]);
+    }, [url, onEvent, onError, onOpen, autoReconnect, clearTimers, scheduleReconnect]);
 
     // Schedule reconnect with exponential backoff
     const scheduleReconnect = useCallback(() => {
         if (retriesRef.current >= maxRetries) {
-            log.warn('Max reconnection attempts reached');
+            log.warn("Max reconnection attempts reached");
             onClose?.();
             return;
         }
@@ -130,7 +130,7 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
 
         const delay = Math.min(maxReconnectDelay, reconnectDelay * 2 ** retriesRef.current);
 
-        log.debug({ delay, attempt: retriesRef.current + 1 }, 'Scheduling SSE reconnection');
+        log.debug({ delay, attempt: retriesRef.current + 1 }, "Scheduling SSE reconnection");
         stateRef.current.isReconnecting = true;
 
         retryTimerRef.current = setTimeout(() => {
@@ -148,7 +148,7 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
                 esRef.current?.readyState === EventSource.OPEN &&
                 Date.now() - lastHeartbeatRef.current > heartbeatInterval
             ) {
-                log.warn('SSE heartbeat timeout, reconnecting');
+                log.warn("SSE heartbeat timeout, reconnecting");
                 scheduleReconnect();
             }
         }, heartbeatInterval / 2); // Check twice as often as expected heartbeat
@@ -162,7 +162,7 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
 
     // Close connection manually
     const close = useCallback(() => {
-        log.debug('Manually closing SSE connection');
+        log.debug("Manually closing SSE connection");
         isManuallyClosedRef.current = true;
         clearTimers();
         if (esRef.current) {
@@ -201,40 +201,40 @@ export function useEventSource(url: string, options: UseEventSourceOptions = {})
 
         // Handle page unload
         const handleBeforeUnload = () => {
-            log.debug('Page unloading, closing SSE connection');
+            log.debug("Page unloading, closing SSE connection");
             close();
             // Optional: Send beacon to notify server
-            if (esRef.current && url.includes('threadId=')) {
-                const urlParams = new URLSearchParams(url.split('?')[1] || '');
-                const threadId = urlParams.get('threadId');
+            if (esRef.current && url.includes("threadId=")) {
+                const urlParams = new URLSearchParams(url.split("?")[1] || "");
+                const threadId = urlParams.get("threadId");
                 if (threadId) {
-                    navigator.sendBeacon('/api/completion/abort', JSON.stringify({ threadId }));
+                    navigator.sendBeacon("/api/completion/abort", JSON.stringify({ threadId }));
                 }
             }
         };
 
         const handleVisibilityChange = () => {
-            if (document.visibilityState === 'hidden') {
+            if (document.visibilityState === "hidden") {
                 // Page is hidden, consider closing connection to save resources
-                log.debug('Page hidden, SSE connection remains open');
-            } else if (document.visibilityState === 'visible') {
+                log.debug("Page hidden, SSE connection remains open");
+            } else if (document.visibilityState === "visible") {
                 // Page is visible again, ensure connection is healthy
                 if (
                     esRef.current?.readyState !== EventSource.OPEN &&
                     !isManuallyClosedRef.current
                 ) {
-                    log.debug('Page visible, checking SSE connection');
+                    log.debug("Page visible, checking SSE connection");
                     retry();
                 }
             }
         };
 
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             close();
         };
     }, [url, open, close, retry]);

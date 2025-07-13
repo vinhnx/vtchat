@@ -1,16 +1,16 @@
-'use client';
-import { Footer, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
-import { useChatStore } from '@repo/common/store';
-import { useSession } from '@repo/shared/lib/auth-client';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { use, useCallback, useEffect, useRef } from 'react';
-import { useStickToBottom } from 'use-stick-to-bottom';
+"use client";
+import { Footer, InlineLoader, TableOfMessages, Thread } from "@repo/common/components";
+import { useChatStore } from "@repo/common/store";
+import { useSession } from "@repo/shared/lib/auth-client";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { use, useCallback, useEffect, useRef } from "react";
+import { useStickToBottom } from "use-stick-to-bottom";
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
     () =>
-        import('@repo/common/components').then((mod) => ({
+        import("@repo/common/components").then((mod) => ({
             default: mod.ChatInput,
         })),
     {
@@ -20,7 +20,7 @@ const ChatInput = dynamic(
                 <InlineLoader />
             </div>
         ),
-    }
+    },
 );
 
 const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
@@ -43,7 +43,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, []);
+    }, [scrollRef.current]);
 
     useEffect(() => {
         if (!threadId) return;
@@ -59,7 +59,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     hasScrolledToBottom.current = true;
                 }, 100);
             } else {
-                router.push('/'); // Redirect to root instead of /chat
+                router.push("/"); // Redirect to root instead of /chat
             }
         });
     }, [threadId, getThread, switchThread, router, scrollToBottom]);

@@ -3,9 +3,9 @@
  * Per-account caching with session tracking and non-logged-in user handling
  */
 
-import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { log } from "@repo/shared/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 
 export interface SessionSubscriptionStatus {
     plan: PlanSlug;
@@ -19,7 +19,7 @@ export interface SessionSubscriptionStatus {
     cachedAt: Date;
     expiresAt: Date;
     fetchCount: number;
-    lastRefreshTrigger: 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
+    lastRefreshTrigger: "initial" | "payment" | "expiration" | "page_refresh" | "manual";
 }
 
 // Session-based cache - tracks per user session
@@ -27,6 +27,9 @@ const sessionSubscriptionCache = new Map<string, SessionSubscriptionStatus>();
 
 // Track which users have been fetched in current session
 const sessionFetchTracker = new Map<string, boolean>();
+
+// Track page refresh fetches to prevent multiple calls on page load
+const pageRefreshTracker = new Map<string, boolean>();
 
 // Track in-flight requests to prevent duplicates
 const inFlightRequests = new Map<string, Promise<SessionSubscriptionStatus>>();
@@ -36,14 +39,14 @@ const CACHE_DURATIONS = {
     [PlanSlug.VT_PLUS]: {
         initial: 2 * 60 * 60 * 1000, // 2 hours for initial fetch (longer for logged-in users)
         payment: 5 * 60 * 1000, // 5 minutes after payment (fresher data)
-        expiration: 1 * 60 * 1000, // 1 minute around expiration
+        expiration: 15 * 60 * 1000, // 15 minutes around expiration
         page_refresh: 60 * 60 * 1000, // 1 hour for page refresh
         manual: 10 * 60 * 1000, // 10 minutes for manual refresh
     },
     [PlanSlug.VT_BASE]: {
         initial: 60 * 60 * 1000, // 1 hour for free users
         payment: 2 * 60 * 1000, // 2 minutes after payment
-        expiration: 1 * 60 * 1000, // 1 minute around expiration
+        expiration: 15 * 60 * 1000, // 15 minutes around expiration
         page_refresh: 30 * 60 * 1000, // 30 minutes for page refresh
         manual: 5 * 60 * 1000, // 5 minutes for manual refresh
     },
@@ -70,7 +73,7 @@ function getSessionCacheKey(userId: string | null, sessionId: string): string {
 
     log.info(
         { hasUserId: !!userId, hasSessionId: !!sessionId },
-        '[Session Cache] Generated cache key'
+        "[Session Cache] Generated cache key",
     );
     return cacheKey;
 }
@@ -79,36 +82,36 @@ function getSessionCacheKey(userId: string | null, sessionId: string): string {
  * Get current session ID (use headers for anonymous users)
  */
 function getSessionId(request?: Request): string {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
         // Client-side: use session storage for persistent session ID
-        let sessionId = sessionStorage.getItem('vtchat_session_id');
+        let sessionId = sessionStorage.getItem("vtchat_session_id");
         if (!sessionId) {
             sessionId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            sessionStorage.setItem('vtchat_session_id', sessionId);
+            sessionStorage.setItem("vtchat_session_id", sessionId);
         }
         return sessionId;
     }
 
     // Server-side: try to create session from IP + User-Agent for anonymous users
     if (request) {
-        const forwarded = request.headers.get('x-forwarded-for');
+        const forwarded = request.headers.get("x-forwarded-for");
         const ip = forwarded
-            ? forwarded.split(',')[0]
-            : request.headers.get('x-real-ip') || 'unknown';
-        const userAgent = request.headers.get('user-agent') || 'unknown';
+            ? forwarded.split(",")[0]
+            : request.headers.get("x-real-ip") || "unknown";
+        const userAgent = request.headers.get("user-agent") || "unknown";
 
         // Create deterministic session ID based on IP and User-Agent
         const sessionData = `${ip}_${userAgent}`;
         const hash = simpleHash(sessionData);
         const sessionId = `anon_${hash}`;
 
-        log.info('[Session Cache] Generated session ID from request headers');
+        log.info("[Session Cache] Generated session ID from request headers");
         return sessionId;
     }
 
     // Fallback: generate unique ID for this request
     const fallbackId = `server_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    log.info('[Session Cache] Using fallback session ID');
+    log.info("[Session Cache] Using fallback session ID");
     return fallbackId;
 }
 
@@ -130,10 +133,10 @@ function simpleHash(str: string): string {
  */
 function getCacheDuration(
     isPlusSubscriber: boolean,
-    trigger: SessionSubscriptionStatus['lastRefreshTrigger'],
-    userId: string | null
+    trigger: SessionSubscriptionStatus["lastRefreshTrigger"],
+    userId: string | null,
 ): number {
-    const type = userId ? (isPlusSubscriber ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE) : 'anonymous';
+    const type = userId ? (isPlusSubscriber ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE) : "anonymous";
     return CACHE_DURATIONS[type][trigger] || CACHE_DURATIONS[type].initial;
 }
 
@@ -166,39 +169,46 @@ function isSessionCacheValid(cached: SessionSubscriptionStatus, request?: Reques
  */
 export function getSessionSubscriptionStatus(
     userId: string | null,
-    trigger: SessionSubscriptionStatus['lastRefreshTrigger'] = 'initial',
-    request?: Request
+    trigger: SessionSubscriptionStatus["lastRefreshTrigger"] = "initial",
+    request?: Request,
 ): SessionSubscriptionStatus | null {
     const sessionId = getSessionId(request);
     const cacheKey = getSessionCacheKey(userId, sessionId);
     const cached = sessionSubscriptionCache.get(cacheKey);
 
-    log.info({ cacheFound: !!cached }, '[Session Cache] Looking for cache');
+    log.info({ cacheFound: !!cached }, "[Session Cache] Looking for cache");
 
     if (!cached) {
         return null;
     }
 
     if (!isSessionCacheValid(cached, request)) {
-        log.info('[Session Cache] Cache expired');
+        log.info("[Session Cache] Cache expired");
         sessionSubscriptionCache.delete(cacheKey);
         return null;
     }
 
-    // For page refresh, check if we should allow cached data
-    if (trigger === 'page_refresh') {
-        const userKey = userId || 'anonymous';
-        const hasBeenFetched = sessionFetchTracker.get(userKey);
+    // For page refresh, ensure we only fetch once per page load
+    if (trigger === "page_refresh") {
+        const pageRefreshKey = `${cacheKey}-page-refresh`;
+        const hasPageRefreshFetched = pageRefreshTracker.get(pageRefreshKey);
 
-        if (!hasBeenFetched) {
-            // First time in session, invalidate cache to get fresh data
-            log.info('[Session Cache] First page refresh, invalidating cache');
-            sessionSubscriptionCache.delete(cacheKey);
-            return null;
+        if (hasPageRefreshFetched) {
+            // Already fetched for this page refresh, use cache if valid
+            log.info("[Session Cache] Page refresh already handled, using cache");
+            return cached;
         }
+
+        // Mark that we'll handle this page refresh
+        pageRefreshTracker.set(pageRefreshKey, true);
+
+        // Invalidate cache to force fresh fetch on page refresh
+        log.info("[Session Cache] Handling page refresh, invalidating cache");
+        sessionSubscriptionCache.delete(cacheKey);
+        return null;
     }
 
-    log.info({ fetchCount: cached.fetchCount }, '[Session Cache] Cache hit');
+    log.info({ fetchCount: cached.fetchCount }, "[Session Cache] Cache hit");
     return cached;
 }
 
@@ -208,10 +218,10 @@ export function getSessionSubscriptionStatus(
 export function cacheSessionSubscriptionStatus(
     status: Omit<
         SessionSubscriptionStatus,
-        'cachedAt' | 'expiresAt' | 'sessionId' | 'fetchCount' | 'lastRefreshTrigger'
+        "cachedAt" | "expiresAt" | "sessionId" | "fetchCount" | "lastRefreshTrigger"
     >,
-    trigger: SessionSubscriptionStatus['lastRefreshTrigger'] = 'initial',
-    request?: Request
+    trigger: SessionSubscriptionStatus["lastRefreshTrigger"] = "initial",
+    request?: Request,
 ): SessionSubscriptionStatus {
     const now = new Date();
     const sessionId = getSessionId(request);
@@ -235,7 +245,7 @@ export function cacheSessionSubscriptionStatus(
     sessionSubscriptionCache.set(cacheKey, cached);
 
     // Mark user as fetched in this session
-    const userKey = status.userId || 'anonymous';
+    const userKey = status.userId || "anonymous";
     sessionFetchTracker.set(userKey, true);
 
     log.info(
@@ -243,9 +253,9 @@ export function cacheSessionSubscriptionStatus(
             trigger,
             expiresInMinutes: Math.round(cacheDuration / 1000 / 60),
             fetchCount,
-            isAnonymous: userKey === 'anonymous',
+            isAnonymous: userKey === "anonymous",
         },
-        '[Session Cache] Cached subscription'
+        "[Session Cache] Cached subscription",
     );
 
     return cached;
@@ -260,17 +270,21 @@ export function invalidateSessionSubscriptionCache(userId: string | null, reques
     sessionSubscriptionCache.delete(cacheKey);
 
     // Reset fetch tracker for this user
-    const userKey = userId || 'anonymous';
+    const userKey = userId || "anonymous";
     sessionFetchTracker.delete(userKey);
 
-    log.info({ isAnonymous: userKey === 'anonymous' }, '[Session Cache] Invalidated cache');
+    // Reset page refresh tracker for this cache key
+    const pageRefreshKey = `${cacheKey}-page-refresh`;
+    pageRefreshTracker.delete(pageRefreshKey);
+
+    log.info({ isAnonymous: userKey === "anonymous" }, "[Session Cache] Invalidated cache");
 }
 
 /**
  * Check if user subscription has been fetched in current session
  */
 export function hasBeenFetchedInSession(userId: string | null): boolean {
-    const userKey = userId || 'anonymous';
+    const userKey = userId || "anonymous";
     return sessionFetchTracker.get(userKey);
 }
 
@@ -279,7 +293,7 @@ export function hasBeenFetchedInSession(userId: string | null): boolean {
  */
 export function getAnonymousSubscriptionStatus(): Omit<
     SessionSubscriptionStatus,
-    'cachedAt' | 'expiresAt' | 'sessionId' | 'fetchCount' | 'lastRefreshTrigger'
+    "cachedAt" | "expiresAt" | "sessionId" | "fetchCount" | "lastRefreshTrigger"
 > {
     return {
         plan: PlanSlug.VT_BASE,
@@ -301,12 +315,15 @@ export function cleanupExpiredSessionCaches(): void {
     for (const [key, cached] of entries) {
         if (!isSessionCacheValid(cached, undefined)) {
             sessionSubscriptionCache.delete(key);
+            // Also cleanup corresponding page refresh tracker
+            const pageRefreshKey = `${key}-page-refresh`;
+            pageRefreshTracker.delete(pageRefreshKey);
             cleanedCount++;
         }
     }
 
     if (cleanedCount > 0) {
-        log.info({ cleanedCount }, '[Session Cache] Cleaned up expired cache entries');
+        log.info({ cleanedCount }, "[Session Cache] Cleaned up expired cache entries");
     }
 }
 
@@ -351,35 +368,35 @@ export function getSessionCacheStats() {
  */
 export async function getOrCreateSubscriptionRequest(
     userId: string | null,
-    trigger: SessionSubscriptionStatus['lastRefreshTrigger'],
+    trigger: SessionSubscriptionStatus["lastRefreshTrigger"],
     request: Request,
     fetchFunction: () => Promise<
         Omit<
             SessionSubscriptionStatus,
-            'cachedAt' | 'expiresAt' | 'sessionId' | 'fetchCount' | 'lastRefreshTrigger'
+            "cachedAt" | "expiresAt" | "sessionId" | "fetchCount" | "lastRefreshTrigger"
         >
-    >
+    >,
 ): Promise<SessionSubscriptionStatus> {
     const sessionId = getSessionId(request);
     const cacheKey = getSessionCacheKey(userId, sessionId);
     const requestKey = `${cacheKey}:${trigger}`;
 
-    log.info('[Session Cache] Checking for in-flight request');
+    log.info("[Session Cache] Checking for in-flight request");
 
     // Check if there's already an in-flight request for this user/trigger combination
     const existingRequest = inFlightRequests.get(requestKey);
     if (existingRequest) {
-        log.info('[Session Cache] Found in-flight request, waiting for completion');
+        log.info("[Session Cache] Found in-flight request, waiting for completion");
         return existingRequest;
     }
 
     // Create new request
     const requestPromise = (async () => {
         try {
-            log.info('[Session Cache] Starting new request');
+            log.info("[Session Cache] Starting new request");
             const data = await fetchFunction();
             const cached = cacheSessionSubscriptionStatus(data, trigger, request);
-            log.info('[Session Cache] Request completed and cached');
+            log.info("[Session Cache] Request completed and cached");
             return cached;
         } finally {
             // Clean up in-flight request tracking
@@ -394,7 +411,7 @@ export async function getOrCreateSubscriptionRequest(
 }
 
 // Periodic cleanup every 5 minutes
-if (typeof setInterval !== 'undefined') {
+if (typeof setInterval !== "undefined") {
     setInterval(cleanupExpiredSessionCaches, 5 * 60 * 1000);
 }
 

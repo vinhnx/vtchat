@@ -1,22 +1,22 @@
-import { type Model, models } from '@repo/ai/models';
-import type { ApiKeys } from '@repo/common/store/api-keys.store';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift } from 'lucide-react';
+import { type Model, models } from "@repo/ai/models";
+import type { ApiKeys } from "@repo/common/store/api-keys.store";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import type { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
+import { checkSubscriptionAccess, type SubscriptionContext } from "@repo/shared/utils/subscription";
+import { Brain, Gift } from "lucide-react";
 
 export const chatOptions = [
     {
-        label: 'Deep Research',
-        description: 'In depth research on complex topic • 5/day with VT+',
+        label: "Deep Research",
+        description: "In depth research on complex topic • 5/day with VT+",
         value: ChatMode.Deep,
-        iconName: 'Atom',
+        iconName: "Atom",
     },
     {
-        label: 'Pro Search',
-        description: 'Enhanced web search with advanced AI • 10/day with VT+',
+        label: "Pro Search",
+        description: "Enhanced web search with advanced AI • 10/day with VT+",
         value: ChatMode.Pro,
-        iconName: 'Star',
+        iconName: "Star",
     },
 ];
 
@@ -25,42 +25,55 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     // Map model names to ChatMode values - using exact names from models.ts
     const modelToChatModeMap: Record<string, ChatMode> = {
         // Google models
-        'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
-        'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
-        'Gemini 2.5 Flash Lite Preview': ChatMode.GEMINI_2_5_FLASH_LITE,
+        "Gemini 2.5 Pro": ChatMode.GEMINI_2_5_PRO,
+        "Gemini 2.5 Flash": ChatMode.GEMINI_2_5_FLASH,
+        "Gemini 2.5 Flash Lite Preview": ChatMode.GEMINI_2_5_FLASH_LITE,
         // Anthropic models
-        'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
-        'Claude 4 Opus': ChatMode.CLAUDE_4_OPUS,
+        "Claude 4 Sonnet": ChatMode.CLAUDE_4_SONNET,
+        "Claude 4 Opus": ChatMode.CLAUDE_4_OPUS,
         // OpenAI models
-        'GPT-4o': ChatMode.GPT_4o,
-        'GPT-4o Mini': ChatMode.GPT_4o_Mini,
-        'GPT-4.1': ChatMode.GPT_4_1,
-        'GPT-4.1 Mini': ChatMode.GPT_4_1_Mini,
-        'GPT-4.1 Nano': ChatMode.GPT_4_1_Nano,
+        "GPT-4o": ChatMode.GPT_4o,
+        "GPT-4o Mini": ChatMode.GPT_4o_Mini,
+        "GPT-4.1": ChatMode.GPT_4_1,
+        "GPT-4.1 Mini": ChatMode.GPT_4_1_Mini,
+        "GPT-4.1 Nano": ChatMode.GPT_4_1_Nano,
         o3: ChatMode.O3,
-        'o3 mini': ChatMode.O3_Mini,
-        'o4 mini': ChatMode.O4_Mini,
+        "o3 mini": ChatMode.O3_Mini,
+        "o4 mini": ChatMode.O4_Mini,
         // xAI models
-        'Grok 4': ChatMode.GROK_4,
-        'Grok 3': ChatMode.GROK_3,
-        'Grok 3 Mini': ChatMode.GROK_3_MINI,
+        "Grok 4": ChatMode.GROK_4,
+        "Grok 3": ChatMode.GROK_3,
+        "Grok 3 Mini": ChatMode.GROK_3_MINI,
         // Fireworks models
-        'DeepSeek R1': ChatMode.DEEPSEEK_R1,
+        "DeepSeek R1": ChatMode.DEEPSEEK_R1,
         // LM Studio local models
-        'Llama 3 8B (Local)': ChatMode.LMSTUDIO_LLAMA_3_8B,
-        'Qwen 2.5 7B (Local)': ChatMode.LMSTUDIO_QWEN_7B,
-        'Gemma 7B (Local)': ChatMode.LMSTUDIO_GEMMA_7B,
-        'Gemma 3 1B (Local)': ChatMode.LMSTUDIO_GEMMA_3_1B,
+        "Llama 3 8B (Local)": ChatMode.LMSTUDIO_LLAMA_3_8B,
+        "Qwen 2.5 7B (Local)": ChatMode.LMSTUDIO_QWEN_7B,
+        "Gemma 7B (Local)": ChatMode.LMSTUDIO_GEMMA_7B,
+        "Gemma 3 1B (Local)": ChatMode.LMSTUDIO_GEMMA_3_1B,
+        // Ollama local models
+        "Llama 3.3 70B (Ollama)": ChatMode.OLLAMA_LLAMA_3_3,
+        "Llama 3.2 (Ollama)": ChatMode.OLLAMA_LLAMA_3_2,
+        "Llama 3.1 (Ollama)": ChatMode.OLLAMA_LLAMA_3_1,
+        "Qwen 3 (Ollama)": ChatMode.OLLAMA_QWEN_3,
+        "Qwen 2.5 (Ollama)": ChatMode.OLLAMA_QWEN_2_5,
+        "Gemma 3 (Ollama)": ChatMode.OLLAMA_GEMMA_3,
+        "Gemma 3n (Ollama)": ChatMode.OLLAMA_GEMMA_3N,
+        "Gemma 2 (Ollama)": ChatMode.OLLAMA_GEMMA_2,
+        "DeepSeek R1 (Ollama)": ChatMode.OLLAMA_DEEPSEEK_R1,
+        "Mistral (Ollama)": ChatMode.OLLAMA_MISTRAL,
+        "CodeLlama (Ollama)": ChatMode.OLLAMA_CODELLAMA,
+        "LLaVA (Ollama)": ChatMode.OLLAMA_LLAVA,
     };
 
     // For OpenRouter models with duplicate names, use model ID mapping
     const modelIdToChatModeMap: Record<string, ChatMode> = {
-        'deepseek/deepseek-chat-v3-0324': ChatMode.DEEPSEEK_V3_0324,
-        'deepseek/deepseek-r1': ChatMode.DEEPSEEK_R1,
-        'qwen/qwen3-235b-a22b': ChatMode.QWEN3_235B_A22B,
-        'qwen/qwen3-32b': ChatMode.QWEN3_32B,
-        'mistralai/mistral-nemo': ChatMode.MISTRAL_NEMO,
-        'qwen/qwen3-14b': ChatMode.QWEN3_14B,
+        "deepseek/deepseek-chat-v3-0324": ChatMode.DEEPSEEK_V3_0324,
+        "deepseek/deepseek-r1": ChatMode.DEEPSEEK_R1,
+        "qwen/qwen3-235b-a22b": ChatMode.QWEN3_235B_A22B,
+        "qwen/qwen3-32b": ChatMode.QWEN3_32B,
+        "mistralai/mistral-nemo": ChatMode.MISTRAL_NEMO,
+        "qwen/qwen3-14b": ChatMode.QWEN3_14B,
     };
 
     // First try model name mapping
@@ -104,15 +117,15 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
 // Helper function to get API key required for each provider
 export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
     const providerApiKeyMap: Record<string, keyof ApiKeys> = {
-        google: 'GEMINI_API_KEY',
-        openai: 'OPENAI_API_KEY',
-        anthropic: 'ANTHROPIC_API_KEY',
-        fireworks: 'FIREWORKS_API_KEY',
-        xai: 'XAI_API_KEY',
-        openrouter: 'OPENROUTER_API_KEY',
+        google: "GEMINI_API_KEY",
+        openai: "OPENAI_API_KEY",
+        anthropic: "ANTHROPIC_API_KEY",
+        fireworks: "FIREWORKS_API_KEY",
+        xai: "XAI_API_KEY",
+        openrouter: "OPENROUTER_API_KEY",
     };
 
-    return providerApiKeyMap[provider] || 'BYOK_API_KEY';
+    return providerApiKeyMap[provider] || "BYOK_API_KEY";
 };
 
 // Helper function to generate model options from models array
@@ -121,7 +134,7 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
         .filter((model) => model.provider === provider)
         .filter(
             (model) =>
-                !(excludePreview && model.name && model.name.toLowerCase().includes('preview'))
+                !(excludePreview && model.name && model.name.toLowerCase().includes("preview")),
         )
         .map((model) => {
             const chatMode = getChatModeFromModel(model);
@@ -129,16 +142,16 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
 
             // Special label handling for OpenRouter models to match current dropdown
             let label = model.name;
-            if (provider === 'openrouter') {
+            if (provider === "openrouter") {
                 // Custom labels for OpenRouter models
                 const customLabels: Record<string, string> = {
-                    'deepseek/deepseek-chat-v3-0324': 'DeepSeek V3 0324',
-                    'deepseek/deepseek-r1': 'DeepSeek R1',
-                    'qwen/qwen3-235b-a22b': 'Qwen3 235B A22B',
-                    'qwen/qwen3-32b': 'Qwen3 32B',
-                    'mistralai/mistral-nemo': 'Mistral Nemo',
-                    'qwen/qwen3-14b': 'Qwen3 14B',
-                    'moonshot/kimi-k2': 'Kimi K2',
+                    "deepseek/deepseek-chat-v3-0324": "DeepSeek V3 0324",
+                    "deepseek/deepseek-r1": "DeepSeek R1",
+                    "qwen/qwen3-235b-a22b": "Qwen3 235B A22B",
+                    "qwen/qwen3-32b": "Qwen3 32B",
+                    "mistralai/mistral-nemo": "Mistral Nemo",
+                    "qwen/qwen3-14b": "Qwen3 14B",
+                    "moonshot/kimi-k2": "Kimi K2",
                 };
                 label = customLabels[model.id] || model.name;
             }
@@ -162,217 +175,315 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
 export const modelOptionsByProvider = {
     Anthropic: [
         {
-            label: 'Claude 4 Sonnet',
+            label: "Claude 4 Sonnet",
             value: ChatMode.CLAUDE_4_SONNET,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Claude 4 Opus',
+            label: "Claude 4 Opus",
             value: ChatMode.CLAUDE_4_OPUS,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
         },
     ],
 
     Google: [
         {
-            label: 'Gemini 2.5 Flash Lite Preview',
+            label: "Gemini 2.5 Flash Lite Preview",
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free model',
+            description: "Free model",
             isFreeModel: true,
         },
         {
-            label: 'Gemini 2.5 Flash',
+            label: "Gemini 2.5 Flash",
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "GEMINI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Pro',
+            label: "Gemini 2.5 Pro",
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "GEMINI_API_KEY" as keyof ApiKeys,
         },
     ],
     OpenAI: [
         {
-            label: 'GPT 4o Mini',
+            label: "GPT 4o Mini",
             value: ChatMode.GPT_4o_Mini,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'GPT 4.1 Nano',
+            label: "GPT 4.1 Nano",
             value: ChatMode.GPT_4_1_Nano,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'GPT 4.1 Mini',
+            label: "GPT 4.1 Mini",
             value: ChatMode.GPT_4_1_Mini,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'GPT 4.1',
+            label: "GPT 4.1",
             value: ChatMode.GPT_4_1,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'GPT 4o',
+            label: "GPT 4o",
             value: ChatMode.GPT_4o,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'o3',
+            label: "o3",
             value: ChatMode.O3,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'o3 mini',
+            label: "o3 mini",
             value: ChatMode.O3_Mini,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'o4 mini',
+            label: "o4 mini",
             value: ChatMode.O4_Mini,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'OPENAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
     ],
     Fireworks: [
         {
-            label: 'DeepSeek R1',
+            label: "DeepSeek R1",
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: 'FIREWORKS_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
         },
     ],
     xAI: [
         {
-            label: 'Grok 4',
+            label: "Grok 4",
             value: ChatMode.GROK_4,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Grok 3',
+            label: "Grok 3",
             value: ChatMode.GROK_3,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Grok 3 Mini',
+            label: "Grok 3 Mini",
             value: ChatMode.GROK_3_MINI,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'XAI_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
     ],
     OpenRouter: [
         {
-            label: 'Kimi K2',
+            label: "Kimi K2",
             value: ChatMode.KIMI_K2,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'DeepSeek V3 0324 Pro',
+            label: "DeepSeek V3 0324 Pro",
             value: ChatMode.DEEPSEEK_V3_0324,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'DeepSeek R1',
+            label: "DeepSeek R1",
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Qwen3 235B A22B',
+            label: "Qwen3 235B A22B",
             value: ChatMode.QWEN3_235B_A22B,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Qwen3 32B',
+            label: "Qwen3 32B",
             value: ChatMode.QWEN3_32B,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Mistral Nemo',
+            label: "Mistral Nemo",
             value: ChatMode.MISTRAL_NEMO,
             webSearch: true,
             icon: undefined,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: 'Qwen3 14B',
+            label: "Qwen3 14B",
             value: ChatMode.QWEN3_14B,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
-            requiredApiKey: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
     ],
-    'LM Studio (Beta)': [
+    "LM Studio (Beta)": [
         {
-            label: 'Llama 3 8B (Local)',
+            label: "Llama 3 8B (Local)",
             value: ChatMode.LMSTUDIO_LLAMA_3_8B,
             webSearch: false,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free local model • No API key required • Privacy-first',
+            description: "Free local model • No API key required • Privacy-first",
             isFreeModel: true,
         },
         {
-            label: 'Qwen 2.5 7B (Local)',
+            label: "Qwen 2.5 7B (Local)",
             value: ChatMode.LMSTUDIO_QWEN_7B,
             webSearch: false,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free local model • No API key required • Privacy-first',
+            description: "Free local model • No API key required • Privacy-first",
             isFreeModel: true,
         },
         {
-            label: 'Gemma 7B (Local)',
+            label: "Gemma 7B (Local)",
             value: ChatMode.LMSTUDIO_GEMMA_7B,
             webSearch: false,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free local model • No API key required • Privacy-first',
+            description: "Free local model • No API key required • Privacy-first",
             isFreeModel: true,
         },
         {
-            label: 'Gemma 3 1B (Local)',
+            label: "Gemma 3 1B (Local)",
             value: ChatMode.LMSTUDIO_GEMMA_3_1B,
             webSearch: false,
             icon: <Gift className="text-green-500" size={16} />,
-            description: 'Free local model • No API key required • Privacy-first',
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+    ],
+    "Ollama (Beta)": [
+        {
+            label: "Llama 3.3 70B (Ollama)",
+            value: ChatMode.OLLAMA_LLAMA_3_3,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Llama 3.2 (Ollama)",
+            value: ChatMode.OLLAMA_LLAMA_3_2,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Llama 3.1 (Ollama)",
+            value: ChatMode.OLLAMA_LLAMA_3_1,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Qwen 3 (Ollama)",
+            value: ChatMode.OLLAMA_QWEN_3,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Qwen 2.5 (Ollama)",
+            value: ChatMode.OLLAMA_QWEN_2_5,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Gemma 3 (Ollama)",
+            value: ChatMode.OLLAMA_GEMMA_3,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Gemma 3n (Ollama)",
+            value: ChatMode.OLLAMA_GEMMA_3N,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Gemma 2 (Ollama)",
+            value: ChatMode.OLLAMA_GEMMA_2,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "DeepSeek R1 (Ollama)",
+            value: ChatMode.OLLAMA_DEEPSEEK_R1,
+            webSearch: false,
+            icon: <Brain className="text-purple-500" size={16} />,
+            description: "Free local reasoning model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "Mistral (Ollama)",
+            value: ChatMode.OLLAMA_MISTRAL,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "CodeLlama (Ollama)",
+            value: ChatMode.OLLAMA_CODELLAMA,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local coding model • No API key required • Privacy-first",
+            isFreeModel: true,
+        },
+        {
+            label: "LLaVA (Ollama)",
+            value: ChatMode.OLLAMA_LLAVA,
+            webSearch: false,
+            icon: <Gift className="text-green-500" size={16} />,
+            description: "Free local vision model • No API key required • Privacy-first",
             isFreeModel: true,
         },
     ],
@@ -381,10 +492,10 @@ export const modelOptionsByProvider = {
 // Create modelOptions with Gemini 2.5 Flash Lite as the first option
 const allModelOptions = Object.values(modelOptionsByProvider).flat();
 const geminiFlashLiteOption = allModelOptions.find(
-    (option) => option.value === ChatMode.GEMINI_2_5_FLASH_LITE
+    (option) => option.value === ChatMode.GEMINI_2_5_FLASH_LITE,
 );
 const otherOptions = allModelOptions.filter(
-    (option) => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE
+    (option) => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE,
 );
 
 export const modelOptions = geminiFlashLiteOption
@@ -397,7 +508,7 @@ export const modelOptions = geminiFlashLiteOption
  */
 export function checkChatModeAccess(
     context: SubscriptionContext | null,
-    mode: ChatMode
+    mode: ChatMode,
 ): {
     isAuthRequired: boolean;
     hasAuth: boolean;

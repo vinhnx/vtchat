@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useDocumentAttachment } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import { isGeminiModel } from '@repo/common/utils';
-import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, cn } from '@repo/ui';
-import { FileText } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { LoginRequiredDialog } from '../login-required-dialog';
+import { useDocumentAttachment } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import { isGeminiModel } from "@repo/common/utils";
+import { DOCUMENT_UPLOAD_CONFIG } from "@repo/shared/constants/document-upload";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { Button, cn } from "@repo/ui";
+import { FileText } from "lucide-react";
+import { useRef, useState } from "react";
+import { LoginRequiredDialog } from "../login-required-dialog";
 
 export const DocumentUploadButton = () => {
     const chatMode = useChatStore((state) => state.chatMode);
@@ -36,27 +36,27 @@ export const DocumentUploadButton = () => {
         handleDocumentUpload(event);
         // Reset the input
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
-    const acceptString = DOCUMENT_UPLOAD_CONFIG.SUPPORTED_EXTENSIONS.join(',');
+    const acceptString = DOCUMENT_UPLOAD_CONFIG.SUPPORTED_EXTENSIONS.join(",");
 
     return (
         <>
             <Button
                 className={cn(
-                    'text-muted-foreground hover:text-foreground',
-                    hasDocument && 'bg-blue-500/10 text-blue-500 hover:text-blue-600'
+                    "text-muted-foreground hover:text-foreground",
+                    hasDocument && "bg-blue-500/10 text-blue-500 hover:text-blue-600",
                 )}
                 onClick={handleClick}
                 size="icon-sm"
                 tooltip={
                     hasDocument
                         ? `Document uploaded: ${documentAttachment?.fileName}`
-                        : 'Document Upload (PDF, DOC, TXT)'
+                        : "Document Upload (PDF, DOC, TXT)"
                 }
-                variant={hasDocument ? 'secondary' : 'ghost'}
+                variant={hasDocument ? "secondary" : "ghost"}
             >
                 <FileText size={16} strokeWidth={2} />
             </Button>

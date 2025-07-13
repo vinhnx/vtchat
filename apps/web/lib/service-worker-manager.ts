@@ -18,7 +18,7 @@ export class ServiceWorkerManager {
     private isSupported: boolean;
 
     private constructor() {
-        this.isSupported = typeof window !== 'undefined' && 'serviceWorker' in navigator;
+        this.isSupported = typeof window !== "undefined" && "serviceWorker" in navigator;
     }
 
     static getInstance(): ServiceWorkerManager {
@@ -33,24 +33,24 @@ export class ServiceWorkerManager {
      */
     async register(): Promise<ServiceWorkerRegistration | null> {
         if (!this.isSupported) {
-            console.warn('Service Worker not supported');
+            console.warn("Service Worker not supported");
             return null;
         }
 
         try {
-            this.registration = await navigator.serviceWorker.register('/sw.js', {
-                scope: '/',
-                updateViaCache: 'none', // Always check for updates
+            this.registration = await navigator.serviceWorker.register("/sw.js", {
+                scope: "/",
+                updateViaCache: "none", // Always check for updates
             });
 
-            console.log('Service Worker registered:', this.registration);
+            console.log("Service Worker registered:", this.registration);
 
             // Handle updates
-            this.registration.addEventListener('updatefound', () => {
+            this.registration.addEventListener("updatefound", () => {
                 const newWorker = this.registration?.installing;
                 if (newWorker) {
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    newWorker.addEventListener("statechange", () => {
+                        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
                             // New version available
                             this.onUpdateAvailable?.(this.registration!);
                         }
@@ -65,7 +65,7 @@ export class ServiceWorkerManager {
 
             return this.registration;
         } catch (error) {
-            console.error('Service Worker registration failed:', error);
+            console.error("Service Worker registration failed:", error);
             return null;
         }
     }
@@ -79,11 +79,11 @@ export class ServiceWorkerManager {
         const newWorker = this.registration.waiting || this.registration.installing;
         if (newWorker) {
             // Send skip waiting message
-            newWorker.postMessage({ type: 'SKIP_WAITING' });
+            newWorker.postMessage({ type: "SKIP_WAITING" });
 
             // Wait for the new worker to take control
             await new Promise<void>((resolve) => {
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                navigator.serviceWorker.addEventListener("controllerchange", () => {
                     resolve();
                 });
             });
@@ -106,7 +106,7 @@ export class ServiceWorkerManager {
                 resolve(event.data);
             };
 
-            navigator.serviceWorker.controller.postMessage({ type: 'GET_CACHE_STATS' }, [
+            navigator.serviceWorker.controller.postMessage({ type: "GET_CACHE_STATS" }, [
                 channel.port2,
             ]);
 
@@ -125,14 +125,14 @@ export class ServiceWorkerManager {
             const channel = new MessageChannel();
 
             channel.port1.onmessage = (event) => {
-                if (event.data.type === 'CACHE_SIZE') {
+                if (event.data.type === "CACHE_SIZE") {
                     resolve(event.data.size);
                 } else {
                     resolve(null);
                 }
             };
 
-            navigator.serviceWorker.controller.postMessage({ type: 'GET_CACHE_SIZE' }, [
+            navigator.serviceWorker.controller.postMessage({ type: "GET_CACHE_SIZE" }, [
                 channel.port2,
             ]);
 
@@ -148,7 +148,7 @@ export class ServiceWorkerManager {
         if (!this.isSupported || !navigator.serviceWorker.controller) return;
 
         navigator.serviceWorker.controller.postMessage({
-            type: 'CLEAR_CACHE',
+            type: "CLEAR_CACHE",
             data: { cacheName },
         });
     }
@@ -160,7 +160,7 @@ export class ServiceWorkerManager {
         if (!this.isSupported || !navigator.serviceWorker.controller) return;
 
         navigator.serviceWorker.controller.postMessage({
-            type: 'FORCE_SYNC',
+            type: "FORCE_SYNC",
         });
     }
 
@@ -178,12 +178,12 @@ export class ServiceWorkerManager {
         const onlineHandler = () => callback(true);
         const offlineHandler = () => callback(false);
 
-        window.addEventListener('online', onlineHandler);
-        window.addEventListener('offline', offlineHandler);
+        window.addEventListener("online", onlineHandler);
+        window.addEventListener("offline", offlineHandler);
 
         return () => {
-            window.removeEventListener('online', onlineHandler);
-            window.removeEventListener('offline', offlineHandler);
+            window.removeEventListener("online", onlineHandler);
+            window.removeEventListener("offline", offlineHandler);
         };
     }
 
@@ -217,20 +217,20 @@ export class ServiceWorkerManager {
             this.registration = null;
             return result;
         } catch (error) {
-            console.error('Failed to unregister service worker:', error);
+            console.error("Failed to unregister service worker:", error);
             return false;
         }
     }
 }
 
 // Create singleton instance (only in browser)
-export const swManager = typeof window !== 'undefined' ? ServiceWorkerManager.getInstance() : null;
+export const swManager = typeof window !== "undefined" ? ServiceWorkerManager.getInstance() : null;
 
 // Auto-register in browser environment (production only)
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production' && swManager) {
+if (typeof window !== "undefined" && process.env.NODE_ENV === "production" && swManager) {
     // Wait for page load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
             swManager.register();
         });
     } else {

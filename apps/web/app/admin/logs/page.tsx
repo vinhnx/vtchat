@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
-import { Activity, Eye, CheckCircle } from 'lucide-react';
-import { useEffect, useState, useCallback } from 'react';
-import { log } from '@repo/shared/lib/logger';
-import { ErrorBoundary } from '@repo/common/components';
-import { DataTable } from './data-table';
-import { createColumns, SessionLog } from './columns';
+import { ErrorBoundary } from "@repo/common/components";
+import { log } from "@repo/shared/lib/logger";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { Activity, CheckCircle, Eye } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { createColumns, type SessionLog } from "./columns";
+import { DataTable } from "./data-table";
 
 interface LogsStats {
     totalSessions: number;
@@ -35,16 +35,16 @@ export default function AdminLogsPage() {
         totalPages: 0,
     });
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
-    const [impersonationFilter, setImpersonationFilter] = useState('');
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
+    const [impersonationFilter, setImpersonationFilter] = useState("");
 
     const fetchLogs = useCallback(
         async (
             page = 1,
             search = searchTerm,
             status = statusFilter,
-            impersonation = impersonationFilter
+            impersonation = impersonationFilter,
         ) => {
             try {
                 setLoading(true);
@@ -53,24 +53,24 @@ export default function AdminLogsPage() {
                     limit: pagination.limit.toString(),
                 });
 
-                if (search) params.append('search', search);
-                if (status) params.append('status', status);
-                if (impersonation) params.append('impersonation', impersonation);
+                if (search) params.append("search", search);
+                if (status) params.append("status", status);
+                if (impersonation) params.append("impersonation", impersonation);
 
                 const response = await fetch(`/api/admin/logs?${params}`);
-                if (!response.ok) throw new Error('Failed to fetch logs');
+                if (!response.ok) throw new Error("Failed to fetch logs");
 
                 const data: LogsResponse = await response.json();
                 setLogs(data.logs);
                 setPagination(data.pagination);
                 setStats(data.stats);
             } catch (error) {
-                log.error({ error }, 'Failed to fetch logs');
+                log.error({ error }, "Failed to fetch logs");
             } finally {
                 setLoading(false);
             }
         },
-        [pagination.limit, searchTerm, statusFilter, impersonationFilter]
+        [pagination.limit, searchTerm, statusFilter, impersonationFilter],
     );
 
     useEffect(() => {
@@ -97,17 +97,17 @@ export default function AdminLogsPage() {
     };
 
     const handleSessionAction = async (sessionId: string, action: string) => {
-        if (action === 'revoke') {
+        if (action === "revoke") {
             try {
                 const response = await fetch(`/api/admin/sessions/${sessionId}/revoke`, {
-                    method: 'POST',
+                    method: "POST",
                 });
                 if (response.ok) {
                     // Refresh the logs after revoking
                     fetchLogs(pagination.page, searchTerm, statusFilter, impersonationFilter);
                 }
             } catch (error) {
-                log.error({ error }, 'Failed to revoke session');
+                log.error({ error }, "Failed to revoke session");
             }
         }
     };

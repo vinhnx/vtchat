@@ -4,11 +4,11 @@
  * Client-side utilities for checking subscription access.
  */
 
-import { log } from '@repo/shared/logger';
-import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
-import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from '../types/subscription';
-import { SubscriptionStatusEnum } from '../types/subscription-status';
-import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from './access-control';
+import { log } from "@repo/shared/logger";
+import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from "../constants";
+import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from "../types/subscription";
+import { SubscriptionStatusEnum } from "../types/subscription-status";
+import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from "./access-control";
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -28,7 +28,7 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
     // Try to get user from context or window
     const user =
         context.user ||
-        (typeof window !== 'undefined' && (window as any).__BETTER_AUTH_USER__) ||
+        (typeof window !== "undefined" && (window as any).__BETTER_AUTH_USER__) ||
         null;
 
     if (user) {
@@ -156,7 +156,7 @@ export function hasPlan(context: SubscriptionContext, plan: PlanSlug): boolean {
  */
 export function checkSubscriptionAccess(
     context: SubscriptionContext,
-    options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }
+    options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string },
 ): boolean {
     const { feature, plan, permission } = options;
 
@@ -172,7 +172,7 @@ export function checkSubscriptionAccess(
 
     // Permission checks are not supported in the new system
     if (permission) {
-        log.warn('Permission checks are not supported in the new subscription system');
+        log.warn("Permission checks are not supported in the new subscription system");
         return false;
     }
 

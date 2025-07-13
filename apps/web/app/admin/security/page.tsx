@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { SecurityOverviewChart } from '@repo/common/components/admin/security-overview-chart';
-import { log } from '@repo/shared/lib/logger';
+import { SecurityOverviewChart } from "@repo/common/components/admin/security-overview-chart";
+import { log } from "@repo/shared/lib/logger";
 import {
     Badge,
     Button,
@@ -18,10 +18,10 @@ import {
     TableRow,
     TypographyH1,
     TypographyH2,
-} from '@repo/ui';
-import { motion } from 'framer-motion';
-import { AlertTriangle, Globe, UserX } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "@repo/ui";
+import { motion } from "framer-motion";
+import { AlertTriangle, Globe, UserX } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface SecurityData {
     securityMetrics: {
@@ -74,13 +74,13 @@ export default function AdminSecurityPage() {
     useEffect(() => {
         const fetchSecurityData = async () => {
             try {
-                const response = await fetch('/api/admin/security');
+                const response = await fetch("/api/admin/security");
                 if (response.ok) {
                     const result = await response.json();
                     setData(result);
                 }
             } catch (error) {
-                log.error({ error }, 'Failed to fetch security data');
+                log.error({ error }, "Failed to fetch security data");
             } finally {
                 setLoading(false);
             }
@@ -341,7 +341,7 @@ export default function AdminSecurityPage() {
                                                     onClick={() =>
                                                         window.open(
                                                             `/admin/users?search=${activity.userEmail}`,
-                                                            '_blank'
+                                                            "_blank",
                                                         )
                                                     }
                                                 >
@@ -391,8 +391,8 @@ export default function AdminSecurityPage() {
                                                 <Badge
                                                     variant={
                                                         ip.uniqueUsers > 10
-                                                            ? 'destructive'
-                                                            : 'secondary'
+                                                            ? "destructive"
+                                                            : "secondary"
                                                     }
                                                 >
                                                     {ip.uniqueUsers}

@@ -1,8 +1,8 @@
-import { log } from '@repo/shared/logger';
-import { isEligibleForQuotaConsumption } from '@repo/shared/utils/access-control';
-import { generateText, streamText } from 'ai';
-import type { VtPlusFeature } from '../config/vtPlusLimits';
-import { consumeQuota } from './vtplusRateLimiter';
+import { log } from "@repo/shared/logger";
+import { isEligibleForQuotaConsumption } from "@repo/shared/utils/access-control";
+import { generateText, streamText } from "ai";
+import type { VtPlusFeature } from "../config/vtPlusLimits";
+import { consumeQuota } from "./vtplusRateLimiter";
 
 export interface QuotaOptions {
     user: { id: string; planSlug?: string };
@@ -20,7 +20,7 @@ export function isUsingByokKeys(byokKeys?: Record<string, string>): boolean {
  */
 export async function streamTextWithQuota(
     params: Parameters<typeof streamText>[0],
-    options: QuotaOptions
+    options: QuotaOptions,
 ) {
     const { user, feature, amount = 1, isByokKey } = options;
 
@@ -32,7 +32,7 @@ export async function streamTextWithQuota(
                 feature,
                 amount,
             },
-            'Consuming VT+ quota for streamText'
+            "Consuming VT+ quota for streamText",
         );
 
         await consumeQuota({
@@ -50,7 +50,7 @@ export async function streamTextWithQuota(
  */
 export async function generateTextWithQuota(
     params: Parameters<typeof generateText>[0],
-    options: QuotaOptions
+    options: QuotaOptions,
 ) {
     const { user, feature, amount = 1, isByokKey } = options;
 
@@ -62,7 +62,7 @@ export async function generateTextWithQuota(
                 feature,
                 amount,
             },
-            'Consuming VT+ quota for generateText'
+            "Consuming VT+ quota for generateText",
         );
 
         await consumeQuota({

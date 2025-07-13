@@ -1,16 +1,16 @@
-import { createResource } from '@/lib/actions/resources';
-import { findRelevantContent } from '@/lib/ai/embedding';
-import { auth } from '@/lib/auth-server';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { ModelEnum } from '@repo/ai/models';
-import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
-import { streamTextWithQuota } from '@repo/common/lib/geminiWithQuota';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { log } from '@repo/shared/logger';
-import { tool } from 'ai';
-import { headers } from 'next/headers';
-import { z } from 'zod';
-import { checkVTPlusAccess } from '../../subscription/access-control';
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { ModelEnum } from "@repo/ai/models";
+import { VtPlusFeature } from "@repo/common/config/vtPlusLimits";
+import { streamTextWithQuota } from "@repo/common/lib/geminiWithQuota";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { log } from "@repo/shared/logger";
+import { tool } from "ai";
+import { headers } from "next/headers";
+import { z } from "zod";
+import { createResource } from "@/lib/actions/resources";
+import { findRelevantContent } from "@/lib/ai/embedding";
+import { auth } from "@/lib/auth-server";
+import { checkVTPlusAccess } from "../../subscription/access-control";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -23,15 +23,15 @@ export async function POST(req: Request) {
         });
 
         if (!session?.user?.id) {
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
                 status: 401,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
         // Check VT+ access for RAG feature
         const headersList = await headers();
-        const ip = headersList.get('x-real-ip') ?? headersList.get('x-forwarded-for') ?? undefined;
+        const ip = headersList.get("x-real-ip") ?? headersList.get("x-forwarded-for") ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
         const hasVTPlusAccess = vtPlusCheck.hasAccess;
 
@@ -44,32 +44,32 @@ export async function POST(req: Request) {
         } = await req.json();
 
         // For free users, require API keys. For VT+ users, API keys are optional (they can use BYOK or not)
-        if (!hasVTPlusAccess && (!apiKeys || typeof apiKeys !== 'object' || apiKeys === null)) {
+        if (!hasVTPlusAccess && (!apiKeys || typeof apiKeys !== "object" || apiKeys === null)) {
             return new Response(
                 JSON.stringify({
-                    error: 'VT+ subscription or API keys required',
+                    error: "VT+ subscription or API keys required",
                     message:
-                        'Personal AI Assistant with Memory requires VT+ subscription or your own API keys.',
-                    code: 'VT_PLUS_OR_BYOK_REQUIRED',
+                        "Personal AI Assistant with Memory requires VT+ subscription or your own API keys.",
+                    code: "VT_PLUS_OR_BYOK_REQUIRED",
                 }),
                 {
                     status: 403,
-                    headers: { 'Content-Type': 'application/json' },
-                }
+                    headers: { "Content-Type": "application/json" },
+                },
             );
         }
 
         // Validate that only Gemini models are used
-        if (!ragChatModel.startsWith('gemini-')) {
+        if (!ragChatModel.startsWith("gemini-")) {
             return new Response(
                 JSON.stringify({
-                    error: 'Only Gemini models are supported',
-                    message: 'Personal AI Assistant with Memory only supports Gemini models.',
+                    error: "Only Gemini models are supported",
+                    message: "Personal AI Assistant with Memory only supports Gemini models.",
                 }),
                 {
                     status: 400,
-                    headers: { 'Content-Type': 'application/json' },
-                }
+                    headers: { "Content-Type": "application/json" },
+                },
             );
         }
 
@@ -78,15 +78,15 @@ export async function POST(req: Request) {
         if (!geminiApiKey) {
             return new Response(
                 JSON.stringify({
-                    error: 'Gemini API key is required',
+                    error: "Gemini API key is required",
                     message: hasVTPlusAccess
-                        ? 'Server configuration error: Gemini API key missing'
-                        : 'Gemini API key is required. Please provide your API key or upgrade to VT+.',
+                        ? "Server configuration error: Gemini API key missing"
+                        : "Gemini API key is required. Please provide your API key or upgrade to VT+.",
                 }),
                 {
                     status: 400,
-                    headers: { 'Content-Type': 'application/json' },
-                }
+                    headers: { "Content-Type": "application/json" },
+                },
             );
         }
 
@@ -96,15 +96,15 @@ export async function POST(req: Request) {
         // Build personalized system prompt based on profile
         const profileContext =
             profile?.name || profile?.workDescription
-                ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ''}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ''}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
-                : '';
+                ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ""}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ""}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
+                : "";
 
         // Build system configuration context
         const systemContext = `\n\n**System Configuration:**
 - Chat Model: ${ragChatModel} (for conversations and reasoning)
 - Embedding Model: ${embeddingModel} (for knowledge base search and storage)
-- VT+ Access: ${hasVTPlusAccess ? 'Enabled' : 'Disabled'}
-- API Key Source: ${apiKeys?.[API_KEY_NAMES.GOOGLE] ? 'User provided' : 'VT+ system key'}
+- VT+ Access: ${hasVTPlusAccess ? "Enabled" : "Disabled"}
+- API Key Source: ${apiKeys?.[API_KEY_NAMES.GOOGLE] ? "User provided" : "VT+ system key"}
 
 When users ask about your capabilities or technical details, you can reference these models. For example, you might say "I'm using ${ragChatModel} for our conversation and ${embeddingModel} for searching your knowledge vault."`;
 
@@ -172,27 +172,27 @@ When users ask about your capabilities or technical details, you can reference t
                 tools: {
                     addResource: tool({
                         description:
-                            'Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.',
+                            "Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.",
                         parameters: z.object({
                             content: z
                                 .string()
-                                .describe('the content or resource to add to the knowledge base'),
+                                .describe("the content or resource to add to the knowledge base"),
                         }),
                         execute: async ({ content }) =>
                             createResource({ content }, apiKeys || {}, embeddingModel),
                     }),
                     getInformation: tool({
                         description:
-                            'Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.',
+                            "Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.",
                         parameters: z.object({
-                            question: z.string().describe('the users question to search for'),
+                            question: z.string().describe("the users question to search for"),
                         }),
                         execute: async ({ question }) =>
                             findRelevantContent(
                                 question,
                                 apiKeys || {},
                                 embeddingModel,
-                                session.user.id // CRITICAL: Pass user ID for data isolation
+                                session.user.id, // CRITICAL: Pass user ID for data isolation
                             ),
                     }),
                 },
@@ -202,15 +202,15 @@ When users ask about your capabilities or technical details, you can reference t
                 feature: VtPlusFeature.RAG,
                 amount: 1,
                 isByokKey,
-            }
+            },
         );
 
         return result.toDataStreamResponse();
     } catch (error) {
-        log.error({ error }, 'RAG Chat API Error');
-        return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+        log.error({ error }, "RAG Chat API Error");
+        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
         });
     }
 }

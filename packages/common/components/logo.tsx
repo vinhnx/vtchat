@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import type * as React from "react";
 
 interface LogoProps extends React.SVGProps<SVGSVGElement> {
     round?: boolean;
@@ -12,7 +12,7 @@ export const Logo = ({ round = false, ...props }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         {...props}
     >
-        <title>{'v'}</title>
+        <title>{"v"}</title>
         {round ? (
             <circle cx={8.5} cy={16} fill="#BFB38F" r={16} />
         ) : (
@@ -35,7 +35,7 @@ export const DarkLogo = ({ round = false, ...props }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         {...props}
     >
-        <title>{'v'}</title>
+        <title>{"v"}</title>
         {round ? (
             <circle cx={8.5} cy={16} fill="#BFB38F" r={16} />
         ) : (

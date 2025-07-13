@@ -1,19 +1,5 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import {
-    ColumnDef,
-    ColumnFiltersState,
-    PaginationState,
-    SortingState,
-    VisibilityState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
 import {
     Button,
     DropdownMenu,
@@ -32,9 +18,23 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@repo/ui';
-import { ChevronDown, Search } from 'lucide-react';
-import { DataTablePagination } from './data-table-pagination';
+} from "@repo/ui";
+import {
+    type ColumnDef,
+    type ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    type PaginationState,
+    type SortingState,
+    useReactTable,
+    type VisibilityState,
+} from "@tanstack/react-table";
+import { ChevronDown, Search } from "lucide-react";
+import * as React from "react";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -173,7 +173,7 @@ export function DataTable<TData, TValue>({
                                                 ? null
                                                 : flexRender(
                                                       header.column.columnDef.header,
-                                                      header.getContext()
+                                                      header.getContext(),
                                                   )}
                                         </TableHead>
                                     );
@@ -192,13 +192,13 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && 'selected'}
+                                    data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                cell.getContext(),
                                             )}
                                         </TableCell>
                                     ))}
@@ -218,7 +218,7 @@ export function DataTable<TData, TValue>({
             {/* Selection and Pagination */}
             <div className="flex items-center justify-between">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <DataTablePagination table={table} />

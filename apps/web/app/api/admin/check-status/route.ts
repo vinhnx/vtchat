@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { isUserAdmin } from '@/lib/admin';
-import { auth } from '@/lib/auth-server';
+import { type NextRequest, NextResponse } from "next/server";
+import { isUserAdmin } from "@/lib/admin";
+import { auth } from "@/lib/auth-server";
 
 export async function GET(request: NextRequest) {
     try {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
         const adminStatus = await isUserAdmin(session.user.id);
 
-        console.log('Admin status check:', {
+        console.log("Admin status check:", {
             userId: session.user.id,
             email: session.user.email,
             adminStatus,
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({ isAdmin: adminStatus });
     } catch (error) {
-        console.error('Error checking admin status:', error);
+        console.error("Error checking admin status:", error);
         return NextResponse.json({ isAdmin: false });
     }
 }

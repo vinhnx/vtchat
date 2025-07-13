@@ -1,10 +1,10 @@
-import { adminClient, multiSessionClient } from 'better-auth/client/plugins';
-import { createAuthClient } from 'better-auth/react';
+import { adminClient, multiSessionClient } from "better-auth/client/plugins";
+import { createAuthClient } from "better-auth/react";
 
 // Import performance utilities
 const requestDeduplicator =
-    typeof window !== 'undefined'
-        ? import('@repo/shared/utils/request-deduplication').then((m) => m.requestDeduplicator)
+    typeof window !== "undefined"
+        ? import("@repo/shared/utils/request-deduplication").then((m) => m.requestDeduplicator)
         : null;
 
 // Ensure proper URL formatting for Better Auth
@@ -21,7 +21,7 @@ const getBaseURL = () => {
     }
 
     // In development, use localhost
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
         return window.location.origin;
     }
 
@@ -38,7 +38,7 @@ export const authClient = createAuthClient({
 
 // Create optimized session getter with deduplication
 const createOptimizedSessionGetter = () => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
         return authClient.getSession.bind(authClient);
     }
 

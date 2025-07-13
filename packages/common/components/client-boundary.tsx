@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { FullPageLoader } from '@repo/common/components';
-import { useRootContext } from '@repo/common/context';
-import type { ReactNode } from 'react';
+import { FullPageLoader } from "@repo/common/components";
+import { useRootContext } from "@repo/common/context";
+import type { ReactNode } from "react";
 
 interface ClientBoundaryProps {
     children: ReactNode;

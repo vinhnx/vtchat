@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Badge, LoadingSpinner } from '@repo/ui';
-import { Database, Activity, TrendingUp, Clock } from 'lucide-react';
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
+import { Badge, Card, CardContent, CardHeader, CardTitle, LoadingSpinner } from "@repo/ui";
+import { Activity, Clock, Database, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface DatabaseMetrics {
     health: string;
@@ -44,16 +44,16 @@ export function DatabaseHealthMetrics() {
     useEffect(() => {
         const fetchMetrics = async () => {
             try {
-                const response = await fetch('/api/admin/database-metrics');
+                const response = await fetch("/api/admin/database-metrics");
                 if (response.ok) {
                     const data = await response.json();
                     setMetrics(data.database);
                 } else {
-                    setError('Failed to fetch database metrics');
+                    setError("Failed to fetch database metrics");
                 }
             } catch (err) {
-                log.error({ error: err }, 'Failed to fetch database metrics');
-                setError('Error fetching database metrics');
+                log.error({ error: err }, "Failed to fetch database metrics");
+                setError("Error fetching database metrics");
             } finally {
                 setLoading(false);
             }
@@ -92,16 +92,16 @@ export function DatabaseHealthMetrics() {
 
     const getHealthColor = (health: string) => {
         switch (health) {
-            case 'excellent':
-                return 'bg-green-500';
-            case 'good':
-                return 'bg-blue-500';
-            case 'warning':
-                return 'bg-yellow-500';
-            case 'critical':
-                return 'bg-red-500';
+            case "excellent":
+                return "bg-green-500";
+            case "good":
+                return "bg-blue-500";
+            case "warning":
+                return "bg-yellow-500";
+            case "critical":
+                return "bg-red-500";
             default:
-                return 'bg-gray-500';
+                return "bg-gray-500";
         }
     };
 

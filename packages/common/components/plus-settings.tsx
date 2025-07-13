@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useAppStore } from '@repo/common/store';
-import { VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
-import { THINKING_MODE } from '@repo/shared/constants';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+import { useFeatureAccess } from "@repo/common/hooks/use-subscription-access";
+import { useAppStore } from "@repo/common/store";
+import { VT_PLUS_FEATURES } from "@repo/shared/config/vt-plus-features";
+import { THINKING_MODE } from "@repo/shared/constants";
+import { FeatureSlug } from "@repo/shared/types/subscription";
 import {
     Alert,
     AlertDescription,
@@ -20,8 +20,8 @@ import {
     Switch,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+} from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Activity,
     ArrowRight,
@@ -35,7 +35,7 @@ import {
     Search,
     Sparkles,
     Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
 export const PlusSettings = () => {
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
@@ -85,23 +85,23 @@ export const PlusSettings = () => {
     const getFeatureBenefit = (featureId: FeatureSlug) => {
         switch (featureId) {
             case FeatureSlug.DOCUMENT_PARSING:
-                return 'Upload and analyze PDFs, Word docs, and more';
+                return "Upload and analyze PDFs, Word docs, and more";
             case FeatureSlug.STRUCTURED_OUTPUT:
-                return 'Get organized responses in tables, lists, and structured formats';
+                return "Get organized responses in tables, lists, and structured formats";
             case FeatureSlug.THINKING_MODE_TOGGLE:
-                return 'See AI reasoning process for better understanding';
+                return "See AI reasoning process for better understanding";
             case FeatureSlug.REASONING_CHAIN:
-                return 'Follow step-by-step logical reasoning';
+                return "Follow step-by-step logical reasoning";
             case FeatureSlug.PRO_SEARCH:
-                return 'Advanced search capabilities with web integration';
+                return "Advanced search capabilities with web integration";
             case FeatureSlug.DEEP_RESEARCH:
-                return 'Comprehensive research with multiple sources';
+                return "Comprehensive research with multiple sources";
             case FeatureSlug.DARK_THEME:
-                return 'Elegant dark mode for comfortable viewing';
+                return "Elegant dark mode for comfortable viewing";
             case FeatureSlug.CHART_VISUALIZATION:
-                return 'Create interactive charts and graphs from AI conversations';
+                return "Create interactive charts and graphs from AI conversations";
             default:
-                return 'Enhanced AI capabilities and premium features';
+                return "Enhanced AI capabilities and premium features";
         }
     };
 
@@ -181,7 +181,7 @@ export const PlusSettings = () => {
                         <div className="mt-6 flex items-center justify-center">
                             <Button
                                 className="group gap-2"
-                                onClick={() => (window.location.href = '/plus')}
+                                onClick={() => (window.location.href = "/plus")}
                             >
                                 <Sparkles className="h-4 w-4" />
                                 Upgrade to VT+
@@ -256,7 +256,7 @@ export const PlusSettings = () => {
                     <AnimatePresence mode="wait">
                         {thinkingMode.enabled && (
                             <motion.div
-                                animate={{ opacity: 1, height: 'auto' }}
+                                animate={{ opacity: 1, height: "auto" }}
                                 className="space-y-4"
                                 exit={{ opacity: 0, height: 0 }}
                                 initial={{ opacity: 0, height: 0 }}

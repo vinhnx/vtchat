@@ -1,8 +1,8 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { sessions, users } from '@/lib/database/schema';
-import { count, desc, eq, gt, sql, isNotNull, and, or, like } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
+import { and, count, desc, eq, gt, isNotNull, like, or, sql } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { sessions, users } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -18,41 +18,41 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
         const { searchParams } = new URL(request.url);
-        const page = parseInt(searchParams.get('page') || '1');
-        const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100);
         const offset = (page - 1) * limit;
-        const search = searchParams.get('search') || '';
-        const status = searchParams.get('status') || '';
-        const impersonation = searchParams.get('impersonation') || '';
+        const search = searchParams.get("search") || "";
+        const status = searchParams.get("status") || "";
+        const impersonation = searchParams.get("impersonation") || "";
 
         // Build where conditions
-        let whereConditions = [];
+        const whereConditions = [];
 
         if (search) {
             whereConditions.push(
                 or(
                     like(users.name, `%${search}%`),
                     like(users.email, `%${search}%`),
-                    like(sessions.ipAddress, `%${search}%`)
-                )
+                    like(sessions.ipAddress, `%${search}%`),
+                ),
             );
         }
 
-        if (status === 'active') {
+        if (status === "active") {
             whereConditions.push(gt(sessions.expiresAt, sql`NOW()`));
-        } else if (status === 'expired') {
+        } else if (status === "expired") {
             whereConditions.push(sql`${sessions.expiresAt} <= NOW()`);
         }
 
-        if (impersonation === 'impersonated') {
+        if (impersonation === "impersonated") {
             whereConditions.push(isNotNull(sessions.impersonatedBy));
-        } else if (impersonation === 'normal') {
+        } else if (impersonation === "normal") {
             whereConditions.push(sql`${sessions.impersonatedBy} IS NULL`);
         }
 
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
                 impersonatedSessions: impersonationCount.count,
             },
         });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch logs' }, { status: 500 });
+    } catch (_error) {
+        return NextResponse.json({ error: "Failed to fetch logs" }, { status: 500 });
     }
 }

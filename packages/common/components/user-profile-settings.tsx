@@ -1,11 +1,11 @@
-'use client';
+"use client";
 import {
     getSessionFresh,
     linkSocial,
     unlinkAccount,
     useSession,
-} from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+} from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
 import {
     Alert,
     AlertDescription,
@@ -21,25 +21,25 @@ import {
     TypographyH3,
     TypographyMuted,
     UnifiedAvatar,
-} from '@repo/ui';
-import { CheckCircle2, ExternalLink, Github, Loader2, Unlink, XCircle } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useOptimizedAuth } from '../providers/optimized-auth-provider';
-import { getLinkedAccountsFromDB } from '../utils/account-linking-db';
-import { getSessionCacheBustedAvatarUrl } from '../utils/avatar-cache';
-import { MultiSessionPanel } from './multi-session-panel';
+} from "@repo/ui";
+import { CheckCircle2, ExternalLink, Github, Loader2, Unlink, XCircle } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useOptimizedAuth } from "../providers/optimized-auth-provider";
+import { getLinkedAccountsFromDB } from "../utils/account-linking-db";
+import { getSessionCacheBustedAvatarUrl } from "../utils/avatar-cache";
+import { MultiSessionPanel } from "./multi-session-panel";
 
 export const UserProfileSettings = () => {
     const { data: session } = useSession();
     const { refreshSession } = useOptimizedAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
-        name: session?.user?.name || '',
-        email: session?.user?.email || '',
+        name: session?.user?.name || "",
+        email: session?.user?.email || "",
     });
     const [isUpdating, setIsUpdating] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [isLinking, setIsLinking] = useState<string | null>(null);
     const [isUnlinking, setIsUnlinking] = useState<string | null>(null);
     const [linkedAccounts, setLinkedAccounts] = useState<
@@ -63,14 +63,14 @@ export const UserProfileSettings = () => {
             setLinkedAccounts(accounts);
             log.info(
                 { accountsCount: accounts.length },
-                '[Account Linking] Fetched linked accounts from database'
+                "[Account Linking] Fetched linked accounts from database",
             );
         } catch (err) {
-            log.error({ error: err }, 'Error fetching linked accounts from database');
+            log.error({ error: err }, "Error fetching linked accounts from database");
             // Fallback to session data if database query fails
             if (session.user.accounts && session.user.accounts.length >= 0) {
                 setLinkedAccounts(session.user.accounts);
-                log.info('[Account Linking] Using session data as fallback');
+                log.info("[Account Linking] Using session data as fallback");
             } else {
                 setLinkedAccounts([]);
             }
@@ -88,8 +88,8 @@ export const UserProfileSettings = () => {
     useEffect(() => {
         if (session?.user) {
             setFormData({
-                name: session.user.name || '',
-                email: session.user.email || '',
+                name: session.user.name || "",
+                email: session.user.email || "",
             });
         }
     }, [session]);
@@ -97,7 +97,7 @@ export const UserProfileSettings = () => {
     // Check for OAuth callback completion and show success feedback
     useEffect(() => {
         const checkOAuthCallback = async () => {
-            const linkingProvider = localStorage.getItem('linking_provider');
+            const linkingProvider = localStorage.getItem("linking_provider");
 
             if (linkingProvider && session?.user) {
                 // Small delay to ensure OAuth callback is processed
@@ -109,17 +109,17 @@ export const UserProfileSettings = () => {
 
                         // Check if the provider was successfully linked
                         const isNowLinked = accounts.some(
-                            (acc) => acc.providerId === linkingProvider
+                            (acc) => acc.providerId === linkingProvider,
                         );
 
                         if (isNowLinked) {
                             // Show success feedback
                             setJustLinked(linkingProvider);
                             setSuccess(
-                                `${linkingProvider.charAt(0).toUpperCase() + linkingProvider.slice(1)} account linked successfully`
+                                `${linkingProvider.charAt(0).toUpperCase() + linkingProvider.slice(1)} account linked successfully`,
                             );
                             setTimeout(() => {
-                                setSuccess('');
+                                setSuccess("");
                                 setJustLinked(null);
                             }, 3000);
 
@@ -127,22 +127,22 @@ export const UserProfileSettings = () => {
                             setLinkedAccounts(accounts);
                             log.info(
                                 { provider: linkingProvider },
-                                '[Account Linking] Successfully linked account'
+                                "[Account Linking] Successfully linked account",
                             );
                         } else {
                             log.info(
                                 { provider: linkingProvider },
-                                '[Account Linking] Account linking was not completed'
+                                "[Account Linking] Account linking was not completed",
                             );
                         }
 
                         // Clear the linking state and provider
                         setIsLinking(null);
-                        localStorage.removeItem('linking_provider');
+                        localStorage.removeItem("linking_provider");
                     } catch (err) {
-                        log.error({ error: err }, 'Error checking OAuth callback result');
+                        log.error({ error: err }, "Error checking OAuth callback result");
                         setIsLinking(null);
-                        localStorage.removeItem('linking_provider');
+                        localStorage.removeItem("linking_provider");
                     }
                 }, 1000); // 1 second delay to ensure OAuth processing is complete
             }
@@ -155,43 +155,43 @@ export const UserProfileSettings = () => {
         if (!session?.user) return;
 
         setIsUpdating(true);
-        setError('');
-        setSuccess('');
+        setError("");
+        setSuccess("");
 
         try {
-            const response = await fetch('/api/auth/update-user', {
-                method: 'POST',
+            const response = await fetch("/api/auth/update-user", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     ...formData,
-                    email: session.user.email || '',
+                    email: session.user.email || "",
                 }),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to update profile');
+                throw new Error(errorData.error || "Failed to update profile");
             }
 
             // Refresh session data
             await getSessionFresh();
             // Trigger global session refresh to update sidebar and other components
             await refreshSession();
-            setSuccess('Profile updated successfully');
+            setSuccess("Profile updated successfully");
             setIsEditing(false);
 
             // Update local form data with new values
             setFormData({
                 name: formData.name,
-                email: session.user.email || '',
+                email: session.user.email || "",
             });
 
-            setTimeout(() => setSuccess(''), 3000);
+            setTimeout(() => setSuccess(""), 3000);
         } catch (err) {
-            log.error({ error: err }, 'Error updating profile');
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            log.error({ error: err }, "Error updating profile");
+            setError(err instanceof Error ? err.message : "An error occurred");
         } finally {
             setIsUpdating(false);
         }
@@ -199,12 +199,12 @@ export const UserProfileSettings = () => {
 
     const handleCancel = () => {
         setFormData({
-            name: session?.user?.name || '',
-            email: session?.user?.email || '',
+            name: session?.user?.name || "",
+            email: session?.user?.email || "",
         });
         setIsEditing(false);
-        setError('');
-        setSuccess('');
+        setError("");
+        setSuccess("");
     };
 
     const handleInputChange = (field: string, value: string) => {
@@ -216,23 +216,23 @@ export const UserProfileSettings = () => {
 
     const handleLinkAccount = async (provider: string) => {
         setIsLinking(provider);
-        setError('');
+        setError("");
 
         try {
             // Store the provider we're trying to link in localStorage for callback detection
-            localStorage.setItem('linking_provider', provider);
+            localStorage.setItem("linking_provider", provider);
 
             await linkSocial({
-                provider: provider as 'google' | 'github' | 'twitter',
+                provider: provider as "google" | "github" | "twitter",
                 callbackURL: window.location.href, // Stay on the same page
             });
 
             // Note: Success feedback will be shown after OAuth callback completion
-            log.info({ provider }, '[Account Linking] Initiated linking process');
+            log.info({ provider }, "[Account Linking] Initiated linking process");
         } catch (err) {
-            log.error({ error: err, provider }, 'Error linking account');
+            log.error({ error: err, provider }, "Error linking account");
             setError(`Failed to link ${provider} account. Please try again.`);
-            localStorage.removeItem('linking_provider');
+            localStorage.removeItem("linking_provider");
             setIsLinking(null);
         }
         // Don't set isLinking to null here - it will be handled after OAuth callback
@@ -240,7 +240,7 @@ export const UserProfileSettings = () => {
 
     const handleUnlinkAccount = async (provider: string) => {
         setIsUnlinking(provider);
-        setError('');
+        setError("");
 
         try {
             await unlinkAccount({
@@ -250,10 +250,10 @@ export const UserProfileSettings = () => {
             // Show immediate success feedback
             setJustUnlinked(provider);
             setSuccess(
-                `${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`
+                `${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`,
             );
             setTimeout(() => {
-                setSuccess('');
+                setSuccess("");
                 setJustUnlinked(null);
             }, 3000);
 
@@ -261,7 +261,7 @@ export const UserProfileSettings = () => {
             await getSessionFresh();
             await fetchLinkedAccounts();
         } catch (err) {
-            log.error({ error: err, provider }, 'Error unlinking account');
+            log.error({ error: err, provider }, "Error unlinking account");
             setError(`Failed to unlink ${provider} account. Please try again.`);
         } finally {
             setIsUnlinking(null);
@@ -336,7 +336,7 @@ export const UserProfileSettings = () => {
                                         <Input
                                             className="mt-1 h-[42px]"
                                             onChange={(e) =>
-                                                handleInputChange('name', e.target.value)
+                                                handleInputChange("name", e.target.value)
                                             }
                                             placeholder="Enter your display name"
                                             value={formData.name}
@@ -372,7 +372,7 @@ export const UserProfileSettings = () => {
                                     onClick={handleSave}
                                     size="sm"
                                 >
-                                    {isUpdating ? 'Saving...' : 'Save Changes'}
+                                    {isUpdating ? "Saving..." : "Save Changes"}
                                 </Button>
                             </div>
                         </div>
@@ -382,7 +382,7 @@ export const UserProfileSettings = () => {
                             {/* Profile Avatar Section */}
                             <div className="border-border/50 flex items-center gap-4 border-b pb-4">
                                 <UnifiedAvatar
-                                    name={session.user.name || session.user.email || 'User'}
+                                    name={session.user.name || session.user.email || "User"}
                                     src={getSessionCacheBustedAvatarUrl(session.user.image)}
                                     size="lg"
                                     className="border-border/20 border-2"
@@ -392,13 +392,13 @@ export const UserProfileSettings = () => {
                                                 avatarUrl: session.user.image,
                                                 userEmail: session.user.email,
                                             },
-                                            'Avatar failed to load in profile settings, using fallback initials'
+                                            "Avatar failed to load in profile settings, using fallback initials",
                                         );
                                     }}
                                 />
                                 <div>
                                     <div className="text-foreground font-semibold">
-                                        {session.user.name || 'User'}
+                                        {session.user.name || "User"}
                                     </div>
                                     <div className="text-muted-foreground text-sm">
                                         Profile Avatar
@@ -410,7 +410,7 @@ export const UserProfileSettings = () => {
                                 <div className="space-y-2">
                                     <FormLabel label="Display Name">
                                         <div className="border-border bg-muted/30 text-foreground mt-1 flex min-h-[42px] items-center rounded-lg border px-3 py-2.5 text-sm">
-                                            {session.user.name || 'Not set'}
+                                            {session.user.name || "Not set"}
                                         </div>
                                     </FormLabel>
                                 </div>
@@ -434,9 +434,9 @@ export const UserProfileSettings = () => {
                                             Active
                                         </Badge>
                                         <span className="text-muted-foreground text-xs">
-                                            Member since{' '}
+                                            Member since{" "}
                                             {new Date(
-                                                session.user.createdAt || Date.now()
+                                                session.user.createdAt || Date.now(),
                                             ).toLocaleDateString()}
                                         </span>
                                     </div>
@@ -462,13 +462,13 @@ export const UserProfileSettings = () => {
                             <div className="space-y-1">
                                 <div className="text-foreground text-sm font-medium">
                                     {session.user.image
-                                        ? 'OAuth Authentication'
-                                        : 'Password Protection'}
+                                        ? "OAuth Authentication"
+                                        : "Password Protection"}
                                 </div>
                                 <div className="text-muted-foreground text-xs">
                                     {session.user.image
-                                        ? 'Your account is secured via OAuth provider'
-                                        : 'Your account is secured with a password'}
+                                        ? "Your account is secured via OAuth provider"
+                                        : "Your account is secured with a password"}
                                 </div>
                             </div>
                             {!session.user.image && (
@@ -518,18 +518,18 @@ export const UserProfileSettings = () => {
                     {/* Google Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'google')
-                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
-                                : 'border-border/50 bg-muted/20'
+                            linkedAccounts.some((acc) => acc.providerId === "google")
+                                ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20"
+                                : "border-border/50 bg-muted/20"
                         }`}
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'google')
-                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:shadow-green-900/50'
-                                            : 'border-border bg-white'
+                                        linkedAccounts.some((acc) => acc.providerId === "google")
+                                            ? "border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:shadow-green-900/50"
+                                            : "border-border bg-white"
                                     }`}
                                 >
                                     <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -551,13 +551,13 @@ export const UserProfileSettings = () => {
                                         />
                                     </svg>
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'google') && (
+                                    {linkedAccounts.some((acc) => acc.providerId === "google") && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                     {/* Loading overlay */}
-                                    {(isLinking === 'google' || isUnlinking === 'google') && (
+                                    {(isLinking === "google" || isUnlinking === "google") && (
                                         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
                                             <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                                         </div>
@@ -569,77 +569,77 @@ export const UserProfileSettings = () => {
                                             Google
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'google'
+                                            (acc) => acc.providerId === "google",
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
-                                        {justLinked === 'google' ? (
+                                        {justLinked === "google" ? (
                                             <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
                                                 Connection successful!
                                             </span>
-                                        ) : justUnlinked === 'google' ? (
+                                        ) : justUnlinked === "google" ? (
                                             <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'google'
+                                              (acc) => acc.providerId === "google",
                                           ) ? (
-                                            'Account successfully connected'
+                                            "Account successfully connected"
                                         ) : (
-                                            'Connect your Google account for easy sign-in'
+                                            "Connect your Google account for easy sign-in"
                                         )}
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'google') ? (
+                                {linkedAccounts.some((acc) => acc.providerId === "google") ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
-                                                justLinked === 'google'
-                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
-                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                                justLinked === "google"
+                                                    ? "animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100"
+                                                    : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
                                             }`}
                                             variant="secondary"
                                         >
                                             <CheckCircle2 className="mr-1 h-3 w-3" />
-                                            {justLinked === 'google'
-                                                ? 'Just Connected!'
-                                                : 'Connected'}
+                                            {justLinked === "google"
+                                                ? "Just Connected!"
+                                                : "Connected"}
                                         </Badge>
                                         <Button
                                             className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
-                                            disabled={isUnlinking === 'google' || isLoadingAccounts}
-                                            onClick={() => handleUnlinkAccount('google')}
+                                            disabled={isUnlinking === "google" || isLoadingAccounts}
+                                            onClick={() => handleUnlinkAccount("google")}
                                             size="sm"
                                             variant="outline"
                                         >
-                                            {isUnlinking === 'google' ? (
+                                            {isUnlinking === "google" ? (
                                                 <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                             ) : (
                                                 <Unlink className="mr-1 h-3 w-3" />
                                             )}
-                                            {isUnlinking === 'google'
-                                                ? 'Disconnecting...'
-                                                : 'Disconnect'}
+                                            {isUnlinking === "google"
+                                                ? "Disconnecting..."
+                                                : "Disconnect"}
                                         </Button>
                                     </>
                                 ) : (
                                     <Button
                                         className="border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-300 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-700 dark:hover:bg-blue-950/30"
-                                        disabled={isLinking === 'google' || isLoadingAccounts}
-                                        onClick={() => handleLinkAccount('google')}
+                                        disabled={isLinking === "google" || isLoadingAccounts}
+                                        onClick={() => handleLinkAccount("google")}
                                         size="sm"
                                         variant="outline"
                                     >
-                                        {isLinking === 'google' ? (
+                                        {isLinking === "google" ? (
                                             <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                         ) : (
                                             <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
-                                        {isLinking === 'google'
-                                            ? 'Connecting...'
-                                            : 'Connect Account'}
+                                        {isLinking === "google"
+                                            ? "Connecting..."
+                                            : "Connect Account"}
                                     </Button>
                                 )}
                             </div>
@@ -649,29 +649,29 @@ export const UserProfileSettings = () => {
                     {/* GitHub Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'github')
-                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
-                                : 'border-border/50 bg-muted/20'
+                            linkedAccounts.some((acc) => acc.providerId === "github")
+                                ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20"
+                                : "border-border/50 bg-muted/20"
                         }`}
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'github')
-                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
-                                            : 'border-border bg-white dark:bg-gray-900'
+                                        linkedAccounts.some((acc) => acc.providerId === "github")
+                                            ? "border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50"
+                                            : "border-border bg-white dark:bg-gray-900"
                                     }`}
                                 >
                                     <Github className="h-5 w-5 text-gray-900 dark:text-gray-100" />
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'github') && (
+                                    {linkedAccounts.some((acc) => acc.providerId === "github") && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                     {/* Loading overlay */}
-                                    {(isLinking === 'github' || isUnlinking === 'github') && (
+                                    {(isLinking === "github" || isUnlinking === "github") && (
                                         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
                                             <Loader2 className="h-4 w-4 animate-spin text-gray-600 dark:text-gray-400" />
                                         </div>
@@ -683,77 +683,77 @@ export const UserProfileSettings = () => {
                                             GitHub
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'github'
+                                            (acc) => acc.providerId === "github",
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
-                                        {justLinked === 'github' ? (
+                                        {justLinked === "github" ? (
                                             <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
                                                 Connection successful!
                                             </span>
-                                        ) : justUnlinked === 'github' ? (
+                                        ) : justUnlinked === "github" ? (
                                             <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'github'
+                                              (acc) => acc.providerId === "github",
                                           ) ? (
-                                            'Account successfully connected'
+                                            "Account successfully connected"
                                         ) : (
-                                            'Connect your GitHub account for easy sign-in'
+                                            "Connect your GitHub account for easy sign-in"
                                         )}
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'github') ? (
+                                {linkedAccounts.some((acc) => acc.providerId === "github") ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
-                                                justLinked === 'github'
-                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
-                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                                justLinked === "github"
+                                                    ? "animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100"
+                                                    : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
                                             }`}
                                             variant="secondary"
                                         >
                                             <CheckCircle2 className="mr-1 h-3 w-3" />
-                                            {justLinked === 'github'
-                                                ? 'Just Connected!'
-                                                : 'Connected'}
+                                            {justLinked === "github"
+                                                ? "Just Connected!"
+                                                : "Connected"}
                                         </Badge>
                                         <Button
                                             className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
-                                            disabled={isUnlinking === 'github' || isLoadingAccounts}
-                                            onClick={() => handleUnlinkAccount('github')}
+                                            disabled={isUnlinking === "github" || isLoadingAccounts}
+                                            onClick={() => handleUnlinkAccount("github")}
                                             size="sm"
                                             variant="outline"
                                         >
-                                            {isUnlinking === 'github' ? (
+                                            {isUnlinking === "github" ? (
                                                 <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                             ) : (
                                                 <Unlink className="mr-1 h-3 w-3" />
                                             )}
-                                            {isUnlinking === 'github'
-                                                ? 'Disconnecting...'
-                                                : 'Disconnect'}
+                                            {isUnlinking === "github"
+                                                ? "Disconnecting..."
+                                                : "Disconnect"}
                                         </Button>
                                     </>
                                 ) : (
                                     <Button
                                         className="border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:border-gray-800 dark:bg-gray-950/20 dark:text-gray-300 dark:hover:border-gray-700 dark:hover:bg-gray-950/30"
-                                        disabled={isLinking === 'github' || isLoadingAccounts}
-                                        onClick={() => handleLinkAccount('github')}
+                                        disabled={isLinking === "github" || isLoadingAccounts}
+                                        onClick={() => handleLinkAccount("github")}
                                         size="sm"
                                         variant="outline"
                                     >
-                                        {isLinking === 'github' ? (
+                                        {isLinking === "github" ? (
                                             <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                         ) : (
                                             <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
-                                        {isLinking === 'github'
-                                            ? 'Connecting...'
-                                            : 'Connect Account'}
+                                        {isLinking === "github"
+                                            ? "Connecting..."
+                                            : "Connect Account"}
                                     </Button>
                                 )}
                             </div>
@@ -763,18 +763,18 @@ export const UserProfileSettings = () => {
                     {/* Twitter/X Account */}
                     <div
                         className={`rounded-lg border p-4 transition-all duration-200 ${
-                            linkedAccounts.some((acc) => acc.providerId === 'twitter')
-                                ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
-                                : 'border-border/50 bg-muted/20'
+                            linkedAccounts.some((acc) => acc.providerId === "twitter")
+                                ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20"
+                                : "border-border/50 bg-muted/20"
                         }`}
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
-                                        linkedAccounts.some((acc) => acc.providerId === 'twitter')
-                                            ? 'border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50'
-                                            : 'border-border bg-white dark:bg-gray-900'
+                                        linkedAccounts.some((acc) => acc.providerId === "twitter")
+                                            ? "border-green-200 bg-white shadow-md shadow-green-100 dark:border-green-700 dark:bg-gray-900 dark:shadow-green-900/50"
+                                            : "border-border bg-white dark:bg-gray-900"
                                     }`}
                                 >
                                     <svg
@@ -790,13 +790,13 @@ export const UserProfileSettings = () => {
                                         />
                                     </svg>
                                     {/* Connected overlay checkmark */}
-                                    {linkedAccounts.some((acc) => acc.providerId === 'twitter') && (
+                                    {linkedAccounts.some((acc) => acc.providerId === "twitter") && (
                                         <div className="fade-in-50 zoom-in-75 animate-in absolute -right-1 -top-1 rounded-full bg-green-500 p-0.5 shadow-lg duration-300">
                                             <CheckCircle2 className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                     {/* Loading overlay */}
-                                    {(isLinking === 'twitter' || isUnlinking === 'twitter') && (
+                                    {(isLinking === "twitter" || isUnlinking === "twitter") && (
                                         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
                                             <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                                         </div>
@@ -808,79 +808,79 @@ export const UserProfileSettings = () => {
                                             X (Twitter)
                                         </div>
                                         {linkedAccounts.some(
-                                            (acc) => acc.providerId === 'twitter'
+                                            (acc) => acc.providerId === "twitter",
                                         ) && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                     </div>
                                     <div className="text-muted-foreground text-xs">
-                                        {justLinked === 'twitter' ? (
+                                        {justLinked === "twitter" ? (
                                             <span className="animate-pulse font-medium text-green-600 dark:text-green-400">
                                                 Connection successful!
                                             </span>
-                                        ) : justUnlinked === 'twitter' ? (
+                                        ) : justUnlinked === "twitter" ? (
                                             <span className="animate-pulse font-medium text-blue-600 dark:text-blue-400">
                                                 Account disconnected
                                             </span>
                                         ) : linkedAccounts.some(
-                                              (acc) => acc.providerId === 'twitter'
+                                              (acc) => acc.providerId === "twitter",
                                           ) ? (
-                                            'Account successfully connected'
+                                            "Account successfully connected"
                                         ) : (
-                                            'Connect your X account for easy sign-in'
+                                            "Connect your X account for easy sign-in"
                                         )}
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                {linkedAccounts.some((acc) => acc.providerId === 'twitter') ? (
+                                {linkedAccounts.some((acc) => acc.providerId === "twitter") ? (
                                     <>
                                         <Badge
                                             className={`border-green-200 text-xs transition-all duration-300 dark:border-green-800 ${
-                                                justLinked === 'twitter'
-                                                    ? 'animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100'
-                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                                                justLinked === "twitter"
+                                                    ? "animate-pulse bg-green-200 text-green-900 shadow-md dark:bg-green-800 dark:text-green-100"
+                                                    : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
                                             }`}
                                             variant="secondary"
                                         >
                                             <CheckCircle2 className="mr-1 h-3 w-3" />
-                                            {justLinked === 'twitter'
-                                                ? 'Just Connected!'
-                                                : 'Connected'}
+                                            {justLinked === "twitter"
+                                                ? "Just Connected!"
+                                                : "Connected"}
                                         </Badge>
                                         <Button
                                             className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
                                             disabled={
-                                                isUnlinking === 'twitter' || isLoadingAccounts
+                                                isUnlinking === "twitter" || isLoadingAccounts
                                             }
-                                            onClick={() => handleUnlinkAccount('twitter')}
+                                            onClick={() => handleUnlinkAccount("twitter")}
                                             size="sm"
                                             variant="outline"
                                         >
-                                            {isUnlinking === 'twitter' ? (
+                                            {isUnlinking === "twitter" ? (
                                                 <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                             ) : (
                                                 <Unlink className="mr-1 h-3 w-3" />
                                             )}
-                                            {isUnlinking === 'twitter'
-                                                ? 'Disconnecting...'
-                                                : 'Disconnect'}
+                                            {isUnlinking === "twitter"
+                                                ? "Disconnecting..."
+                                                : "Disconnect"}
                                         </Button>
                                     </>
                                 ) : (
                                     <Button
                                         className="border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-300 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-700 dark:hover:bg-blue-950/30"
-                                        disabled={isLinking === 'twitter' || isLoadingAccounts}
-                                        onClick={() => handleLinkAccount('twitter')}
+                                        disabled={isLinking === "twitter" || isLoadingAccounts}
+                                        onClick={() => handleLinkAccount("twitter")}
                                         size="sm"
                                         variant="outline"
                                     >
-                                        {isLinking === 'twitter' ? (
+                                        {isLinking === "twitter" ? (
                                             <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                                         ) : (
                                             <ExternalLink className="mr-1 h-3 w-3" />
                                         )}
-                                        {isLinking === 'twitter'
-                                            ? 'Connecting...'
-                                            : 'Connect Account'}
+                                        {isLinking === "twitter"
+                                            ? "Connecting..."
+                                            : "Connect Account"}
                                     </Button>
                                 )}
                             </div>

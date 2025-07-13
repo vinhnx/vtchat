@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/logger';
-import { Button } from '@repo/ui';
-import { BarChart3 } from 'lucide-react';
-import { useMemo } from 'react';
-import { type ChartData, useChartPopup } from './chart-popup';
+import { log } from "@repo/shared/logger";
+import { Button } from "@repo/ui";
+import { BarChart3 } from "lucide-react";
+import { useMemo } from "react";
+import { type ChartData, useChartPopup } from "./chart-popup";
 
 type ChartMessageProps = {
     content: string;
@@ -21,14 +21,14 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
         try {
             return JSON.parse(chartDataMatch[1]) as ChartData;
         } catch (error) {
-            log.error({ data: error }, 'Failed to parse chart data');
+            log.error({ data: error }, "Failed to parse chart data");
             return null;
         }
     }, [content]);
 
     // Remove chart data marker from content for display
     const cleanContent = useMemo(() => {
-        return content.replace(/\[CHART_DATA:.*?\]/g, '').trim();
+        return content.replace(/\[CHART_DATA:.*?\]/g, "").trim();
     }, [content]);
 
     const handleViewChart = () => {

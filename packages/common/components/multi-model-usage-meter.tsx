@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import { ModelEnum } from '@repo/ai/models';
-import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
-import { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
+import { ModelEnum } from "@repo/ai/models";
+import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
 import {
     Button,
     Card,
@@ -18,25 +17,26 @@ import {
     cn,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { useCallback, useEffect, useState } from 'react';
-import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+} from "@repo/ui";
+import { useCallback, useEffect, useState } from "react";
+import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { QUOTA_WINDOW } from "../src/config/vtPlusLimits";
 
 // Model configuration for display
 const MODEL_CONFIG = {
     [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
-        name: 'Gemini 2.5 Flash Lite',
-        description: 'Fast and efficient',
+        name: "Gemini 2.5 Flash Lite",
+        description: "Fast and efficient",
         limits: GEMINI_LIMITS.FLASH_LITE,
     },
     [ModelEnum.GEMINI_2_5_FLASH]: {
-        name: 'Gemini 2.5 Flash',
-        description: 'Balanced performance',
+        name: "Gemini 2.5 Flash",
+        description: "Balanced performance",
         limits: GEMINI_LIMITS.FLASH,
     },
     [ModelEnum.GEMINI_2_5_PRO]: {
-        name: 'Gemini 2.5 Pro',
-        description: 'Advanced capabilities',
+        name: "Gemini 2.5 Pro",
+        description: "Advanced capabilities",
         limits: GEMINI_LIMITS.PRO,
     },
 } as const;
@@ -80,7 +80,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
             setLoading(true);
 
             // Fetch rate limit status for all models in a single API call
-            const response = await fetch('/api/rate-limit/status');
+            const response = await fetch("/api/rate-limit/status");
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch usage data: ${response.status}`);
@@ -99,7 +99,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
             setModelStatuses(statuses);
             setError(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load usage data');
+            setError(err instanceof Error ? err.message : "Failed to load usage data");
         } finally {
             setLoading(false);
         }
@@ -162,11 +162,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
 
     const totalRequestsToday = Object.values(modelStatuses).reduce(
         (sum, status) => sum + status.dailyUsed,
-        0
+        0,
     );
 
     return (
-        <div className={cn('w-full space-y-6', className)}>
+        <div className={cn("w-full space-y-6", className)}>
             {/* Header */}
             <div>
                 <TypographyH3>Usage Overview</TypographyH3>
@@ -210,17 +210,17 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 <CardContent>
                     <ChartContainer
                         config={{
-                            'flash-lite-2-5': {
+                            "flash-lite-2-5": {
                                 label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_FLASH_LITE].name}`,
-                                color: 'hsl(var(--chart-1))',
+                                color: "hsl(var(--chart-1))",
                             },
-                            'flash-2-5': {
+                            "flash-2-5": {
                                 label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_FLASH].name}`,
-                                color: 'hsl(var(--chart-2))',
+                                color: "hsl(var(--chart-2))",
                             },
-                            'pro-2-5': {
+                            "pro-2-5": {
                                 label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_PRO].name}`,
-                                color: 'hsl(var(--chart-3))',
+                                color: "hsl(var(--chart-3))",
                             },
                         }}
                         className="min-h-[240px] w-full max-w-full overflow-hidden"
@@ -241,32 +241,32 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
 
                                 // Generate hourly data points from 00:00 to current hour + 2 offset
                                 for (let hour = 0; hour <= Math.min(currentHour + 2, 23); hour++) {
-                                    const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
+                                    const timeLabel = `${hour.toString().padStart(2, "0")}:00`;
 
                                     if (hour === 0) {
                                         // Start at 0
                                         hourlyData.push({
                                             time: timeLabel,
-                                            'flash-lite-2-5': 0,
-                                            'flash-2-5': 0,
-                                            'pro-2-5': 0,
+                                            "flash-lite-2-5": 0,
+                                            "flash-2-5": 0,
+                                            "pro-2-5": 0,
                                         });
                                     } else if (hour <= currentHour) {
                                         // Gradually increase to current usage at current hour
                                         const progress = hour / currentHour;
                                         hourlyData.push({
                                             time: timeLabel,
-                                            'flash-lite-2-5': Math.round(flashLiteUsage * progress),
-                                            'flash-2-5': Math.round(flashUsage * progress),
-                                            'pro-2-5': Math.round(proUsage * progress),
+                                            "flash-lite-2-5": Math.round(flashLiteUsage * progress),
+                                            "flash-2-5": Math.round(flashUsage * progress),
+                                            "pro-2-5": Math.round(proUsage * progress),
                                         });
                                     } else {
                                         // Future hours show current total (flat line)
                                         hourlyData.push({
                                             time: timeLabel,
-                                            'flash-lite-2-5': flashLiteUsage,
-                                            'flash-2-5': flashUsage,
-                                            'pro-2-5': proUsage,
+                                            "flash-lite-2-5": flashLiteUsage,
+                                            "flash-2-5": flashUsage,
+                                            "pro-2-5": proUsage,
                                         });
                                     }
                                 }
@@ -317,7 +317,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 activeDot={{
                                     r: 4,
                                     strokeWidth: 2,
-                                    fill: 'var(--color-flash-lite-2-5)',
+                                    fill: "var(--color-flash-lite-2-5)",
                                 }}
                             />
                             <Line
@@ -329,7 +329,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 activeDot={{
                                     r: 4,
                                     strokeWidth: 2,
-                                    fill: 'var(--color-flash-2-5)',
+                                    fill: "var(--color-flash-2-5)",
                                 }}
                             />
                             <Line
@@ -341,7 +341,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 activeDot={{
                                     r: 4,
                                     strokeWidth: 2,
-                                    fill: 'var(--color-pro-2-5)',
+                                    fill: "var(--color-pro-2-5)",
                                 }}
                             />
                         </LineChart>
@@ -361,7 +361,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             <div className="text-2xl font-bold text-foreground">
                                 {Object.values(modelStatuses).reduce(
                                     (sum, status) => sum + status.minuteUsed,
-                                    0
+                                    0,
                                 )}
                             </div>
                             <div className="text-sm text-muted-foreground">
@@ -372,7 +372,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             <div className="text-2xl font-bold text-foreground">
                                 {
                                     Object.keys(modelStatuses).filter(
-                                        (model) => modelStatuses[model]?.dailyUsed > 0
+                                        (model) => modelStatuses[model]?.dailyUsed > 0,
                                     ).length
                                 }
                             </div>
@@ -433,8 +433,8 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         Limited Server Access + BYOK
                                     </div>
                                     <div>
-                                        • Gemini 2.5 Flash Lite:{' '}
-                                        <strong>{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day</strong>,{' '}
+                                        • Gemini 2.5 Flash Lite:{" "}
+                                        <strong>{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day</strong>,{" "}
                                         {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min
                                     </div>
                                     <div>• Must provide own API key for other models</div>
@@ -461,15 +461,15 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
                                     <div>
-                                        VT+: <span className="font-medium">Unlimited</span>{' '}
+                                        VT+: <span className="font-medium">Unlimited</span>{" "}
                                         <span className="text-xs text-muted-foreground/70">
                                             (usage tracked)
                                         </span>
                                     </div>
                                     <div>
-                                        Free:{' '}
+                                        Free:{" "}
                                         <span className="font-medium">
-                                            {GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day,{" "}
                                             {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min
                                         </span>
                                     </div>
@@ -481,9 +481,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
                                     <div>
-                                        VT+:{' '}
+                                        VT+:{" "}
                                         <span className="font-medium">
-                                            {GEMINI_LIMITS.FLASH.PLUS_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.FLASH.PLUS_DAY}/day,{" "}
                                             {GEMINI_LIMITS.FLASH.PLUS_MINUTE}/min
                                         </span>
                                     </div>
@@ -498,9 +498,9 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
                                     <div>
-                                        VT+:{' '}
+                                        VT+:{" "}
                                         <span className="font-medium">
-                                            {GEMINI_LIMITS.PRO.PLUS_DAY}/day,{' '}
+                                            {GEMINI_LIMITS.PRO.PLUS_DAY}/day,{" "}
                                             {GEMINI_LIMITS.PRO.PLUS_MINUTE}/min
                                         </span>
                                     </div>
@@ -583,7 +583,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     className="text-muted-foreground"
                     disabled={loading}
                 >
-                    {loading ? 'Refreshing...' : 'Refresh Usage'}
+                    {loading ? "Refreshing..." : "Refresh Usage"}
                 </Button>
             </div>
         </div>
@@ -609,21 +609,21 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
         const fetchVtPlusUsage = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/vtplus/usage');
+                const response = await fetch("/api/vtplus/usage");
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Please sign in to view VT+ usage');
+                        setError("Please sign in to view VT+ usage");
                         return;
                     }
-                    throw new Error('Failed to fetch VT+ usage data');
+                    throw new Error("Failed to fetch VT+ usage data");
                 }
 
                 const data = await response.json();
                 setVtPlusUsage(data);
                 setError(null);
             } catch {
-                setError('Failed to load VT+ usage data');
+                setError("Failed to load VT+ usage data");
             } finally {
                 setLoading(false);
             }
@@ -639,8 +639,8 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                     <CardTitle className="text-foreground">VT+ Research Features Usage</CardTitle>
                     <CardDescription>
                         {!userId
-                            ? 'Sign in to track VT+ feature usage'
-                            : 'Loading VT+ usage data...'}
+                            ? "Sign in to track VT+ feature usage"
+                            : "Loading VT+ usage data..."}
                     </CardDescription>
                 </CardHeader>
                 {loading && (
@@ -667,7 +667,7 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                 <CardContent>
                     <div className="py-8 text-center">
                         <p className="text-sm text-muted-foreground">
-                            {error || 'VT+ usage data not available'}
+                            {error || "VT+ usage data not available"}
                         </p>
                     </div>
                 </CardContent>
@@ -678,37 +678,37 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
     // Individual feature data
     const features = [
         {
-            name: 'Deep Research',
+            name: "Deep Research",
             data: vtPlusUsage.deepResearch || {
                 used: 0,
                 limit: 0,
                 percentage: 0,
                 window: QUOTA_WINDOW.DAILY,
             },
-            color: 'hsl(var(--chart-1))',
-            resetPeriod: 'Daily Reset',
+            color: "hsl(var(--chart-1))",
+            resetPeriod: "Daily Reset",
         },
         {
-            name: 'Pro Search',
+            name: "Pro Search",
             data: vtPlusUsage.proSearch || {
                 used: 0,
                 limit: 0,
                 percentage: 0,
                 window: QUOTA_WINDOW.DAILY,
             },
-            color: 'hsl(var(--chart-2))',
-            resetPeriod: 'Daily Reset',
+            color: "hsl(var(--chart-2))",
+            resetPeriod: "Daily Reset",
         },
         {
-            name: 'Personal AI Assistant',
+            name: "Personal AI Assistant",
             data: vtPlusUsage.rag || {
                 used: 0,
                 limit: 0,
                 percentage: 0,
                 window: QUOTA_WINDOW.MONTHLY,
             },
-            color: 'hsl(var(--chart-3))',
-            resetPeriod: 'Monthly Reset',
+            color: "hsl(var(--chart-3))",
+            resetPeriod: "Monthly Reset",
         },
     ];
 
@@ -730,8 +730,8 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                         <CardHeader className="pb-3">
                             <CardTitle className="text-base">{feature.name}</CardTitle>
                             <CardDescription>
-                                {feature.data.used.toLocaleString()} /{' '}
-                                {feature.data.limit.toLocaleString()} requests ·{' '}
+                                {feature.data.used.toLocaleString()} /{" "}
+                                {feature.data.limit.toLocaleString()} requests ·{" "}
                                 {feature.resetPeriod}
                             </CardDescription>
                         </CardHeader>
@@ -739,12 +739,12 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                             <ChartContainer
                                 config={{
                                     used: {
-                                        label: 'Used',
+                                        label: "Used",
                                         color: feature.color,
                                     },
                                     quota: {
-                                        label: 'Quota Limit',
-                                        color: 'hsl(var(--muted))',
+                                        label: "Quota Limit",
+                                        color: "hsl(var(--muted))",
                                     },
                                 }}
                                 className="min-h-[150px] w-full"
@@ -752,7 +752,7 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                                 <AreaChart
                                     data={[
                                         {
-                                            name: 'Used',
+                                            name: "Used",
                                             used: feature.data.used,
                                             quota: feature.data.limit,
                                         },

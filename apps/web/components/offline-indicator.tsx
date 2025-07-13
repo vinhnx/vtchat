@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Badge } from '@repo/ui';
-import { WifiOff } from 'lucide-react';
-import { useServiceWorker } from '../lib/hooks/use-service-worker';
+import { Badge } from "@repo/ui";
+import { WifiOff } from "lucide-react";
+import { useServiceWorker } from "../lib/hooks/use-service-worker";
 
 export function OfflineIndicator() {
     const { isOnline, isSupported } = useServiceWorker();

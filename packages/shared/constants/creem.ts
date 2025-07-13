@@ -7,10 +7,10 @@
  * Check if environment is production (client-safe)
  */
 const isProduction = () => {
-    if (typeof window !== 'undefined') {
-        return window.location.hostname !== 'localhost';
+    if (typeof window !== "undefined") {
+        return window.location.hostname !== "localhost";
     }
-    return process.env.NODE_ENV === 'production';
+    return process.env.NODE_ENV === "production";
 };
 
 /**
@@ -18,7 +18,7 @@ const isProduction = () => {
  */
 export const CREEM_API_CONFIG = {
     get baseUrl() {
-        return isProduction() ? 'https://api.creem.io' : 'https://test-api.creem.io';
+        return isProduction() ? "https://api.creem.io" : "https://test-api.creem.io";
     },
 
     getBaseUrl() {
@@ -64,9 +64,9 @@ export interface CreemCustomerBillingResponse {
 export class CreemApiError extends Error {
     constructor(
         message: string,
-        public status?: number
+        public status?: number,
     ) {
         super(message);
-        this.name = 'CreemApiError';
+        this.name = "CreemApiError";
     }
 }

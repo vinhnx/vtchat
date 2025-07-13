@@ -1,19 +1,19 @@
-import { Footer, MarkdownContent } from '@repo/common/components';
-import { privacyPolicy } from '@repo/shared/config';
-import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Footer, MarkdownContent } from "@repo/common/components";
+import { privacyPolicy } from "@repo/shared/config";
+import { Button } from "@repo/ui";
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: 'Privacy Policy | VT',
+    title: "Privacy Policy | VT",
     description:
-        'Privacy Policy for VT - learn how we protect your data, handle privacy, and maintain transparency in our privacy-focused AI chat platform.',
+        "Privacy Policy for VT - learn how we protect your data, handle privacy, and maintain transparency in our privacy-focused AI chat platform.",
     openGraph: {
-        title: 'Privacy Policy | VT',
+        title: "Privacy Policy | VT",
         description:
-            'Privacy Policy for VT - learn how we protect your data and maintain transparency.',
-        type: 'website',
+            "Privacy Policy for VT - learn how we protect your data and maintain transparency.",
+        type: "website",
     },
     robots: {
         index: true,

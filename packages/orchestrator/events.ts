@@ -62,7 +62,7 @@ export class TypedEventEmitter<T extends EventSchemaDefinition> {
 }
 
 export function createTypedEventEmitter<T extends EventSchemaDefinition>(
-    initialState?: Partial<{ [K in keyof T]: T[K] }>
+    initialState?: Partial<{ [K in keyof T]: T[K] }>,
 ) {
     return new TypedEventEmitter<T>(initialState);
 }

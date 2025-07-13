@@ -1,6 +1,6 @@
-import type * as React from 'react';
+import type * as React from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface DotPatternProps extends React.SVGProps<SVGSVGElement> {
     width?: number;
@@ -21,7 +21,7 @@ export const DotPattern: React.FC<DotPatternProps> = ({
 }) => {
     return (
         <svg
-            className={cn('pointer-events-none absolute inset-0 h-full w-full', className)}
+            className={cn("pointer-events-none absolute inset-0 h-full w-full", className)}
             fill="none"
             height="100%"
             viewBox={`0 0 ${width} ${height}`}

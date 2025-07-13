@@ -2,7 +2,7 @@
 // SharedWorkers are accessible from multiple browser contexts (tabs, windows)
 
 const connections = new Set();
-const broadcastChannel = new BroadcastChannel('chat-sync-channel');
+const broadcastChannel = new BroadcastChannel("chat-sync-channel");
 
 // State management for the worker
 let isInitialized = false;
@@ -11,24 +11,24 @@ let dbInstance = null;
 // Simple logger for SharedWorker context (can't use pino directly in web workers)
 // Only logs in development mode
 // Check for production flag via URL query param since process.env is not available in browser workers
-const IS_PRODUCTION = self.location.search.includes('prod=true');
+const IS_PRODUCTION = self.location.search.includes("prod=true");
 
 const workerLog = {
     info: (message, data) => {
         if (IS_PRODUCTION) return;
-        console.log(`[SharedWorker] ${message}`, data || '');
+        console.log(`[SharedWorker] ${message}`, data || "");
     },
     error: (message, data) => {
         // Always log errors even in production
-        console.error(`[SharedWorker] ${message}`, data || '');
+        console.error(`[SharedWorker] ${message}`, data || "");
     },
     warn: (message, data) => {
         // Always log warnings even in production
-        console.warn(`[SharedWorker] ${message}`, data || '');
+        console.warn(`[SharedWorker] ${message}`, data || "");
     },
     debug: (message, data) => {
         if (IS_PRODUCTION) return;
-        console.debug(`[SharedWorker] ${message}`, data || '');
+        console.debug(`[SharedWorker] ${message}`, data || "");
     },
 };
 
@@ -38,17 +38,17 @@ async function initializeDatabase() {
 
     try {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open('ThreadDatabase', 1);
+            const request = indexedDB.open("ThreadDatabase", 1);
 
             request.onerror = () => {
-                workerLog.error('Database connection failed', request.error);
+                workerLog.error("Database connection failed", request.error);
                 reject(request.error);
             };
 
             request.onsuccess = () => {
                 dbInstance = request.result;
                 isInitialized = true;
-                workerLog.info('Database initialized successfully');
+                workerLog.info("Database initialized successfully");
                 resolve(dbInstance);
             };
 
@@ -56,27 +56,27 @@ async function initializeDatabase() {
                 const db = event.target.result;
 
                 // Create object stores if they don't exist
-                if (!db.objectStoreNames.contains('threads')) {
-                    const threadsStore = db.createObjectStore('threads', {
-                        keyPath: 'id',
+                if (!db.objectStoreNames.contains("threads")) {
+                    const threadsStore = db.createObjectStore("threads", {
+                        keyPath: "id",
                     });
-                    threadsStore.createIndex('createdAt', 'createdAt');
-                    threadsStore.createIndex('pinned', 'pinned');
-                    threadsStore.createIndex('pinnedAt', 'pinnedAt');
+                    threadsStore.createIndex("createdAt", "createdAt");
+                    threadsStore.createIndex("pinned", "pinned");
+                    threadsStore.createIndex("pinnedAt", "pinnedAt");
                 }
 
-                if (!db.objectStoreNames.contains('threadItems')) {
-                    const itemsStore = db.createObjectStore('threadItems', {
-                        keyPath: 'id',
+                if (!db.objectStoreNames.contains("threadItems")) {
+                    const itemsStore = db.createObjectStore("threadItems", {
+                        keyPath: "id",
                     });
-                    itemsStore.createIndex('threadId', 'threadId');
-                    itemsStore.createIndex('parentId', 'parentId');
-                    itemsStore.createIndex('createdAt', 'createdAt');
+                    itemsStore.createIndex("threadId", "threadId");
+                    itemsStore.createIndex("parentId", "parentId");
+                    itemsStore.createIndex("createdAt", "createdAt");
                 }
             };
         });
     } catch (error) {
-        workerLog.error('Failed to initialize database', error);
+        workerLog.error("Failed to initialize database", error);
         throw error;
     }
 }
@@ -87,25 +87,25 @@ async function performDatabaseOperation(operation, data) {
         const db = await initializeDatabase();
 
         return new Promise((resolve, reject) => {
-            const transaction = db.transaction([operation.store], operation.mode || 'readwrite');
+            const transaction = db.transaction([operation.store], operation.mode || "readwrite");
             const store = transaction.objectStore(operation.store);
 
             let request;
 
             switch (operation.type) {
-                case 'put':
+                case "put":
                     request = store.put(data);
                     break;
-                case 'add':
+                case "add":
                     request = store.add(data);
                     break;
-                case 'delete':
+                case "delete":
                     request = store.delete(data.id);
                     break;
-                case 'get':
+                case "get":
                     request = store.get(data.id);
                     break;
-                case 'getAll':
+                case "getAll":
                     if (data.index) {
                         const index = store.index(data.index);
                         request = index.getAll(data.value);
@@ -113,7 +113,7 @@ async function performDatabaseOperation(operation, data) {
                         request = store.getAll();
                     }
                     break;
-                case 'bulkPut': {
+                case "bulkPut": {
                     // Handle bulk operations
                     const promises = data.items.map((item) => {
                         return new Promise((res, rej) => {
@@ -136,7 +136,7 @@ async function performDatabaseOperation(operation, data) {
             transaction.onerror = () => reject(transaction.error);
         });
     } catch (error) {
-        workerLog.error('Database operation failed', error);
+        workerLog.error("Database operation failed", error);
         throw error;
     }
 }
@@ -153,12 +153,12 @@ self.onconnect = (event) => {
     port.start();
 
     // Remove connection when tab closes
-    port.addEventListener('close', () => {
+    port.addEventListener("close", () => {
         connections.delete(port);
     });
 
     // Send initial connection confirmation
-    port.postMessage({ type: 'connected', workerId: Math.random().toString(36) });
+    port.postMessage({ type: "connected", workerId: Math.random().toString(36) });
 };
 
 // Handle broadcast channel messages (alternative approach)
@@ -168,7 +168,7 @@ broadcastChannel.onmessage = (event) => {
         try {
             port.postMessage(event.data);
         } catch (error) {
-            workerLog.error('Failed to post message to port', error);
+            workerLog.error("Failed to post message to port", error);
             connections.delete(port); // Remove failed connections
         }
     }
@@ -189,7 +189,7 @@ async function handleMessage(message, sourcePort) {
 
                 // Send result back to the requesting tab
                 sourcePort.postMessage({
-                    type: 'db-operation-result',
+                    type: "db-operation-result",
                     requestId: message.requestId,
                     result,
                     success: true,
@@ -208,15 +208,15 @@ async function handleMessage(message, sourcePort) {
                         try {
                             port.postMessage(broadcastMessage);
                         } catch (error) {
-                            workerLog.error('Failed to broadcast to port', error);
+                            workerLog.error("Failed to broadcast to port", error);
                             connections.delete(port);
                         }
                     }
                 }
             } catch (error) {
-                workerLog.error('Database operation failed', error);
+                workerLog.error("Database operation failed", error);
                 sourcePort.postMessage({
-                    type: 'db-operation-result',
+                    type: "db-operation-result",
                     requestId: message.requestId,
                     error: error.message,
                     success: false,
@@ -238,7 +238,7 @@ async function handleMessage(message, sourcePort) {
                 try {
                     port.postMessage(broadcastMessage);
                 } catch (error) {
-                    workerLog.error('Failed to broadcast message', error);
+                    workerLog.error("Failed to broadcast message", error);
                     connections.delete(port); // Remove failed connections
                 }
             }
@@ -248,20 +248,20 @@ async function handleMessage(message, sourcePort) {
         try {
             broadcastChannel.postMessage(broadcastMessage);
         } catch (error) {
-            workerLog.error('Failed to broadcast via BroadcastChannel', error);
+            workerLog.error("Failed to broadcast via BroadcastChannel", error);
         }
     } catch (error) {
-        workerLog.error('Error handling message', error);
+        workerLog.error("Error handling message", error);
 
         // Send error back to source
         try {
             sourcePort.postMessage({
-                type: 'worker-error',
+                type: "worker-error",
                 error: error.message,
                 originalMessage: message,
             });
         } catch (postError) {
-            workerLog.error('Failed to send error message', postError);
+            workerLog.error("Failed to send error message", postError);
         }
     }
 }

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Card,
@@ -11,8 +11,8 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from '@repo/ui';
-import { Shield, UserCheck, Users, UserX } from 'lucide-react';
+} from "@repo/ui";
+import { Shield, UserCheck, Users } from "lucide-react";
 import {
     Area,
     AreaChart,
@@ -20,13 +20,10 @@ import {
     BarChart,
     CartesianGrid,
     Cell,
-    Line,
-    LineChart,
     Pie,
     PieChart,
-    ResponsiveContainer,
     XAxis,
-} from 'recharts';
+} from "recharts";
 
 interface UserAnalyticsProps {
     users: any[];
@@ -35,20 +32,20 @@ interface UserAnalyticsProps {
 
 const chartConfig = {
     active: {
-        label: 'Active Users',
-        color: '#D9487D',
+        label: "Active Users",
+        color: "#D9487D",
     },
     banned: {
-        label: 'Banned Users',
-        color: '#BF4545',
+        label: "Banned Users",
+        color: "#BF4545",
     },
     admin: {
-        label: 'Admin Users',
-        color: '#262626',
+        label: "Admin Users",
+        color: "#262626",
     },
     user: {
-        label: 'Regular Users',
-        color: '#BFB38F',
+        label: "Regular Users",
+        color: "#BFB38F",
     },
 } satisfies ChartConfig;
 
@@ -56,29 +53,29 @@ export function UserAnalyticsChart({ users, totalUsers }: UserAnalyticsProps) {
     // Process user data for charts
     const activeUsers = users.filter((u) => !u.banned).length;
     const bannedUsers = users.filter((u) => u.banned).length;
-    const adminUsers = users.filter((u) => u.role === 'admin').length;
-    const regularUsers = users.filter((u) => u.role === 'user').length;
+    const adminUsers = users.filter((u) => u.role === "admin").length;
+    const regularUsers = users.filter((u) => u.role === "user").length;
 
     // Status chart data
     const statusData = [
-        { name: 'Active', value: activeUsers, fill: '#D9487D' },
-        { name: 'Banned', value: bannedUsers, fill: '#BF4545' },
+        { name: "Active", value: activeUsers, fill: "#D9487D" },
+        { name: "Banned", value: bannedUsers, fill: "#BF4545" },
     ];
 
     // Role distribution data
     const roleData = [
-        { role: 'Admin', count: adminUsers, fill: '#262626' },
-        { role: 'User', count: regularUsers, fill: '#BFB38F' },
+        { role: "Admin", count: adminUsers, fill: "#262626" },
+        { role: "User", count: regularUsers, fill: "#BFB38F" },
     ];
 
     // Monthly registration trend (mock data - in real app this would come from actual dates)
     const monthlyData = [
-        { month: 'Jan', users: Math.floor(totalUsers * 0.1) },
-        { month: 'Feb', users: Math.floor(totalUsers * 0.15) },
-        { month: 'Mar', users: Math.floor(totalUsers * 0.12) },
-        { month: 'Apr', users: Math.floor(totalUsers * 0.18) },
-        { month: 'May', users: Math.floor(totalUsers * 0.2) },
-        { month: 'Jun', users: Math.floor(totalUsers * 0.25) },
+        { month: "Jan", users: Math.floor(totalUsers * 0.1) },
+        { month: "Feb", users: Math.floor(totalUsers * 0.15) },
+        { month: "Mar", users: Math.floor(totalUsers * 0.12) },
+        { month: "Apr", users: Math.floor(totalUsers * 0.18) },
+        { month: "May", users: Math.floor(totalUsers * 0.2) },
+        { month: "Jun", users: Math.floor(totalUsers * 0.25) },
     ];
 
     return (

@@ -1,26 +1,28 @@
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createFireworks } from '@ai-sdk/fireworks';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createOpenAI } from '@ai-sdk/openai';
-import type { LanguageModelV1 } from '@ai-sdk/provider';
-import { createTogetherAI } from '@ai-sdk/togetherai';
-import { createXai } from '@ai-sdk/xai';
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { ChatMode } from '@repo/shared/config';
-import { log } from '@repo/shared/logger';
-import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
-import { CLAUDE_4_CONFIG } from './constants/reasoning';
-import { type ModelEnum, models } from './models';
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createFireworks } from "@ai-sdk/fireworks";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import type { LanguageModelV1 } from "@ai-sdk/provider";
+import { createTogetherAI } from "@ai-sdk/togetherai";
+import { createXai } from "@ai-sdk/xai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { ChatMode } from "@repo/shared/config";
+import { log } from "@repo/shared/logger";
+import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
+import { CLAUDE_4_CONFIG } from "./constants/reasoning";
+import { type ModelEnum, models } from "./models";
 
 export const Providers = {
-    OPENAI: 'openai',
-    ANTHROPIC: 'anthropic',
-    TOGETHER: 'together',
-    GOOGLE: 'google',
-    FIREWORKS: 'fireworks',
-    XAI: 'xai',
-    OPENROUTER: 'openrouter',
-    LMSTUDIO: 'lmstudio',
+    OPENAI: "openai",
+    ANTHROPIC: "anthropic",
+    TOGETHER: "together",
+    GOOGLE: "google",
+    FIREWORKS: "fireworks",
+    XAI: "xai",
+    OPENROUTER: "openrouter",
+    LMSTUDIO: "lmstudio",
+    OLLAMA: "ollama",
 } as const;
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
@@ -42,14 +44,15 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
     // First check BYOK keys if provided
     if (byokKeys) {
         const keyMapping: Record<ProviderEnumType, string> = {
-            [Providers.OPENAI]: 'OPENAI_API_KEY',
-            [Providers.ANTHROPIC]: 'ANTHROPIC_API_KEY',
-            [Providers.TOGETHER]: 'TOGETHER_API_KEY',
-            [Providers.GOOGLE]: 'GEMINI_API_KEY',
-            [Providers.FIREWORKS]: 'FIREWORKS_API_KEY',
-            [Providers.XAI]: 'XAI_API_KEY',
-            [Providers.OPENROUTER]: 'OPENROUTER_API_KEY',
-            [Providers.LMSTUDIO]: 'LMSTUDIO_BASE_URL',
+            [Providers.OPENAI]: "OPENAI_API_KEY",
+            [Providers.ANTHROPIC]: "ANTHROPIC_API_KEY",
+            [Providers.TOGETHER]: "TOGETHER_API_KEY",
+            [Providers.GOOGLE]: "GEMINI_API_KEY",
+            [Providers.FIREWORKS]: "FIREWORKS_API_KEY",
+            [Providers.XAI]: "XAI_API_KEY",
+            [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
+            [Providers.LMSTUDIO]: "LMSTUDIO_BASE_URL",
+            [Providers.OLLAMA]: "OLLAMA_BASE_URL",
         };
 
         const byokKey = byokKeys[keyMapping[provider]];
@@ -57,16 +60,17 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
     }
 
     // Check server-side environment variables if available
-    if (typeof process !== 'undefined' && process.env) {
+    if (typeof process !== "undefined" && process.env) {
         const envKeyMapping: Record<ProviderEnumType, string> = {
-            [Providers.OPENAI]: process.env.OPENAI_API_KEY || '',
-            [Providers.ANTHROPIC]: process.env.ANTHROPIC_API_KEY || '',
-            [Providers.TOGETHER]: process.env.TOGETHER_API_KEY || '',
-            [Providers.GOOGLE]: process.env.GEMINI_API_KEY || '',
-            [Providers.FIREWORKS]: process.env.FIREWORKS_API_KEY || '',
-            [Providers.XAI]: process.env.XAI_API_KEY || '',
-            [Providers.OPENROUTER]: process.env.OPENROUTER_API_KEY || '',
-            [Providers.LMSTUDIO]: process.env.LMSTUDIO_BASE_URL || '',
+            [Providers.OPENAI]: process.env.OPENAI_API_KEY || "",
+            [Providers.ANTHROPIC]: process.env.ANTHROPIC_API_KEY || "",
+            [Providers.TOGETHER]: process.env.TOGETHER_API_KEY || "",
+            [Providers.GOOGLE]: process.env.GEMINI_API_KEY || "",
+            [Providers.FIREWORKS]: process.env.FIREWORKS_API_KEY || "",
+            [Providers.XAI]: process.env.XAI_API_KEY || "",
+            [Providers.OPENROUTER]: process.env.OPENROUTER_API_KEY || "",
+            [Providers.LMSTUDIO]: process.env.LMSTUDIO_BASE_URL || "",
+            [Providers.OLLAMA]: process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434",
         };
 
         const envKey = envKeyMapping[provider];
@@ -74,7 +78,7 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
     }
 
     // For worker environments (use self)
-    if (typeof self !== 'undefined') {
+    if (typeof self !== "undefined") {
         // Check if AI_API_KEYS exists on self
         if ((self as any).AI_API_KEYS?.[provider]) {
             return (self as any).AI_API_KEYS[provider];
@@ -82,26 +86,26 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
 
         // For browser environments (self is also defined in browser)
         try {
-            if (typeof window !== 'undefined' && (window as any).AI_API_KEYS) {
-                return (window as any).AI_API_KEYS[provider] || '';
+            if (typeof window !== "undefined" && (window as any).AI_API_KEYS) {
+                return (window as any).AI_API_KEYS[provider] || "";
             }
         } catch {
             // window is not available in this environment
         }
     }
 
-    return '';
+    return "";
 };
 
 export const getProviderInstance = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>,
     isFreeModel?: boolean,
-    claude4InterleavedThinking?: boolean
+    claude4InterleavedThinking?: boolean,
 ): any => {
     const apiKey = getApiKey(provider, byokKeys);
 
-    log.info('Provider instance debug:', {
+    log.info("Provider instance debug:", {
         provider,
         isFreeModel,
         hasApiKey: !!apiKey,
@@ -111,12 +115,12 @@ export const getProviderInstance = (
     });
 
     // For free models, provide more helpful error messages if no API key is found
-    if (isFreeModel && !apiKey && provider === 'google') {
-        log.error('No API key found for free Gemini model - checking environment...');
-        log.error('Process env check:', {
-            hasProcess: typeof process !== 'undefined',
-            hasEnv: typeof process !== 'undefined' ? !!process.env : false,
-            hasGeminiKey: typeof process !== 'undefined' ? !!process.env?.GEMINI_API_KEY : false,
+    if (isFreeModel && !apiKey && provider === "google") {
+        log.error("No API key found for free Gemini model - checking environment...");
+        log.error("Process env check:", {
+            hasProcess: typeof process !== "undefined",
+            hasEnv: typeof process !== "undefined" ? !!process.env : false,
+            hasGeminiKey: typeof process !== "undefined" ? !!process.env?.GEMINI_API_KEY : false,
         });
     }
 
@@ -124,20 +128,20 @@ export const getProviderInstance = (
         case Providers.OPENAI:
             if (!apiKey) {
                 throw new Error(
-                    'OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys'
+                    "OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys",
                 );
             }
             return createOpenAI({
                 apiKey,
             });
-        case 'anthropic': {
+        case "anthropic": {
             if (!apiKey) {
                 throw new Error(
-                    'Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/'
+                    "Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/",
                 );
             }
             const headers: Record<string, string> = {
-                'anthropic-dangerous-direct-browser-access': 'true',
+                "anthropic-dangerous-direct-browser-access": "true",
             };
 
             // Conditionally add Claude 4 interleaved thinking header
@@ -150,54 +154,54 @@ export const getProviderInstance = (
                 headers,
             });
         }
-        case 'together':
+        case "together":
             if (!apiKey) {
                 throw new Error(
-                    'Together AI API key required. Please add your API key in Settings → API Keys → Together AI. Get a key at https://api.together.xyz/'
+                    "Together AI API key required. Please add your API key in Settings → API Keys → Together AI. Get a key at https://api.together.xyz/",
                 );
             }
             return createTogetherAI({
                 apiKey,
             });
-        case 'google':
+        case "google":
             if (!apiKey) {
                 throw new Error(
-                    'Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api'
+                    "Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api",
                 );
             }
             return createGoogleGenerativeAI({
                 apiKey,
             });
-        case 'fireworks':
+        case "fireworks":
             if (!apiKey) {
                 throw new Error(
-                    'Fireworks AI API key required. Please add your API key in Settings → API Keys → Fireworks AI. Get a key at https://app.fireworks.ai/'
+                    "Fireworks AI API key required. Please add your API key in Settings → API Keys → Fireworks AI. Get a key at https://app.fireworks.ai/",
                 );
             }
             return createFireworks({
                 apiKey,
             });
-        case 'xai':
+        case "xai":
             if (!apiKey) {
                 throw new Error(
-                    'xAI Grok API key required. Please add your API key in Settings → API Keys → xAI. Get a key at https://x.ai/api'
+                    "xAI Grok API key required. Please add your API key in Settings → API Keys → xAI. Get a key at https://x.ai/api",
                 );
             }
             return createXai({
                 apiKey,
             });
-        case 'openrouter':
+        case "openrouter":
             if (!apiKey) {
                 throw new Error(
-                    'OpenRouter API key required. Please add your API key in Settings → API Keys → OpenRouter. Get a key at https://openrouter.ai/keys'
+                    "OpenRouter API key required. Please add your API key in Settings → API Keys → OpenRouter. Get a key at https://openrouter.ai/keys",
                 );
             }
             return createOpenRouter({
                 apiKey,
             });
-        case 'lmstudio': {
+        case "lmstudio": {
             // LM Studio uses baseURL instead of API key
-            let rawURL = apiKey || 'http://localhost:1234';
+            let rawURL = apiKey || "http://localhost:1234";
 
             // Add protocol if missing
             if (!/^https?:\/\//i.test(rawURL)) {
@@ -205,42 +209,80 @@ export const getProviderInstance = (
             }
 
             // For browser environments, use proxy to avoid CORS/mixed content issues
-            if (typeof window !== 'undefined' && window.location) {
+            if (typeof window !== "undefined" && window.location) {
                 // In production, use the proxy endpoint
-                const isProduction = window.location.protocol === 'https:';
+                const isProduction = window.location.protocol === "https:";
                 if (isProduction) {
                     return createOpenAI({
-                        baseURL: '/api/lmstudio-proxy',
-                        apiKey: 'not-required',
+                        baseURL: "/api/lmstudio-proxy",
+                        apiKey: "not-required",
                         defaultHeaders: {
-                            'x-lmstudio-url': rawURL,
+                            "x-lmstudio-url": rawURL,
                         },
                     });
                 }
             }
 
-            // Security: Validate that base URL is localhost only (prevent SSRF)
+            // Security: Validate that base URL is localhost only in development (prevent SSRF)
             const url = new URL(rawURL);
-            const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
+            const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "0.0.0.0"]);
+            const isProduction = process.env.NODE_ENV === "production";
+            const allowRemote = process.env.ALLOW_REMOTE_LMSTUDIO === "true";
 
-            if (!LOCAL_HOSTS.has(url.hostname) && !process.env.ALLOW_REMOTE_LMSTUDIO) {
+            if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
                 throw new Error(
-                    'LM Studio base URL must resolve to localhost. Set ALLOW_REMOTE_LMSTUDIO=true to override.'
+                    "LM Studio base URL must resolve to localhost in development. Set ALLOW_REMOTE_LMSTUDIO=true to override or deploy to production.",
                 );
             }
 
-            // Clean up URL and add /v1 endpoint
-            const baseURL = `${url.origin.replace(/\/+$/, '')}/v1`;
+            // Clean up URL and add /v1 endpoint if needed
+            const baseURL = rawURL.includes("/v1")
+                ? rawURL
+                : `${url.origin.replace(/\/+$/, "")}/v1`;
 
+            // Use the recommended @ai-sdk/openai-compatible for LM Studio
+            return createOpenAICompatible({
+                name: "lmstudio",
+                baseURL,
+                // No API key required for LM Studio
+            });
+        }
+        case "ollama": {
+            // Ollama uses baseURL instead of API key and has OpenAI compatibility
+            let rawURL = apiKey || "http://127.0.0.1:11434";
+
+            // Add protocol if missing
+            if (!/^https?:\/\//i.test(rawURL)) {
+                rawURL = `http://${rawURL}`;
+            }
+
+            // Security: Validate that base URL is localhost only in development (prevent SSRF)
+            const url = new URL(rawURL);
+            const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "0.0.0.0"]);
+            const isProduction = process.env.NODE_ENV === "production";
+            const allowRemote = process.env.ALLOW_REMOTE_OLLAMA === "true";
+
+            if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
+                throw new Error(
+                    "Ollama base URL must resolve to localhost in development. Set ALLOW_REMOTE_OLLAMA=true to override or deploy to production.",
+                );
+            }
+
+            // Ollama uses /v1 endpoint for OpenAI compatibility
+            const baseURL = rawURL.includes("/v1")
+                ? rawURL
+                : `${url.origin.replace(/\/+$/, "")}/v1`;
+
+            // Use OpenAI provider for Ollama since it's OpenAI compatible
             return createOpenAI({
                 baseURL,
-                apiKey: 'not-required', // LM Studio doesn't require API key
+                apiKey: "ollama", // Required by OpenAI SDK but unused by Ollama
             });
         }
         default:
             if (!apiKey) {
                 throw new Error(
-                    'API key required for this model. Please add your API key in Settings → API Keys. Check the model provider documentation for instructions.'
+                    "API key required for this model. Please add your API key in Settings → API Keys. Check the model provider documentation for instructions.",
                 );
             }
             // Default to OpenAI-compatible for unknown providers
@@ -256,10 +298,10 @@ export const getLanguageModel = (
     byokKeys?: Record<string, string>,
     useSearchGrounding?: boolean,
     cachedContent?: string,
-    claude4InterleavedThinking?: boolean
+    claude4InterleavedThinking?: boolean,
 ) => {
-    log.info('=== getLanguageModel START ===');
-    log.info('Parameters:', {
+    log.info("=== getLanguageModel START ===");
+    log.info("Parameters:", {
         modelEnum: m,
         hasMiddleware: !!middleware,
         hasByokKeys: !!byokKeys,
@@ -268,7 +310,7 @@ export const getLanguageModel = (
     });
 
     const model = models.find((model) => model.id === m);
-    log.info('Found model:', {
+    log.info("Found model:", {
         found: !!model,
         modelId: model?.id,
         modelName: model?.name,
@@ -276,28 +318,28 @@ export const getLanguageModel = (
     });
 
     if (!model) {
-        log.error('Model not found:', { data: m });
+        log.error("Model not found:", { data: m });
         throw new Error(`Model ${m} not found`);
     }
 
     try {
-        log.info('Getting provider instance for:', { data: model.provider });
+        log.info("Getting provider instance for:", { data: model.provider });
         const instance = getProviderInstance(
             model?.provider as ProviderEnumType,
             byokKeys,
             model?.isFree,
-            claude4InterleavedThinking
+            claude4InterleavedThinking,
         );
-        log.info('Provider instance created:', {
+        log.info("Provider instance created:", {
             hasInstance: !!instance,
             instanceType: typeof instance,
         });
 
         // Handle Gemini models with search grounding or caching
-        if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
-            log.info('Creating Gemini model with special options...');
+        if (model?.provider === "google" && (useSearchGrounding || cachedContent)) {
+            log.info("Creating Gemini model with special options...");
             const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-            log.info('Using model ID:', { data: modelId });
+            log.info("Using model ID:", { data: modelId });
 
             try {
                 const modelOptions: any = {};
@@ -311,7 +353,7 @@ export const getLanguageModel = (
                 }
 
                 const selectedModel = instance(modelId, modelOptions);
-                log.info('Gemini model created with options:', {
+                log.info("Gemini model created with options:", {
                     hasModel: !!selectedModel,
                     modelType: typeof selectedModel,
                     useSearchGrounding,
@@ -319,7 +361,7 @@ export const getLanguageModel = (
                 });
 
                 if (middleware) {
-                    log.info('Wrapping model with middleware...');
+                    log.info("Wrapping model with middleware...");
                     return wrapLanguageModel({
                         model: selectedModel,
                         middleware,
@@ -327,42 +369,42 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error: any) {
-                log.error('Error creating Gemini model with special options:', {
+                log.error("Error creating Gemini model with special options:", {
                     data: error,
                 });
-                log.error('Error stack:', { data: error.stack });
+                log.error("Error stack:", { data: error.stack });
                 throw error;
             }
         }
 
-        log.info('Creating standard model...');
+        log.info("Creating standard model...");
         const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-        log.info('Using model ID:', { data: modelId });
+        log.info("Using model ID:", { data: modelId });
 
         try {
             const selectedModel = instance(modelId);
-            log.info('Standard model created:', {
+            log.info("Standard model created:", {
                 hasModel: !!selectedModel,
                 modelType: typeof selectedModel,
             });
 
             if (middleware) {
-                log.info('Wrapping model with middleware...');
+                log.info("Wrapping model with middleware...");
                 return wrapLanguageModel({
                     model: selectedModel,
                     middleware,
                 }) as LanguageModelV1;
             }
-            log.info('=== getLanguageModel END ===');
+            log.info("=== getLanguageModel END ===");
             return selectedModel as LanguageModelV1;
         } catch (error: any) {
-            log.error('Error creating standard model:', { data: error });
-            log.error('Error stack:', { data: error.stack });
+            log.error("Error creating standard model:", { data: error });
+            log.error("Error stack:", { data: error.stack });
             throw error;
         }
     } catch (error: any) {
-        log.error('Error in getLanguageModel:', { data: error });
-        log.error('Error stack:', { data: error.stack });
+        log.error("Error in getLanguageModel:", { data: error });
+        log.error("Error stack:", { data: error.stack });
 
         // Re-throw the original error without modification to preserve
         // the clear, actionable error messages from getProviderInstance

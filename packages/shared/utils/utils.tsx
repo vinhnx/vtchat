@@ -1,5 +1,5 @@
-import { log } from '@repo/shared/logger';
-import { customAlphabet } from 'nanoid';
+import { log } from "@repo/shared/logger";
+import { customAlphabet } from "nanoid";
 
 export function formatNumber(number: number) {
     if (number >= 1_000_000) {
@@ -12,7 +12,7 @@ export function formatNumber(number: number) {
 }
 
 export function removeExtraSpaces(str?: string) {
-    return str?.trim().replace(/\n{3,}/g, '\n\n');
+    return str?.trim().replace(/\n{3,}/g, "\n\n");
 }
 
 export const isValidUrl = (url: string) => {
@@ -27,10 +27,10 @@ export const isValidUrl = (url: string) => {
 export const convertFileToBase64 = (
     file: File,
     onChange: (base64: string) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
 ): void => {
     if (!file) {
-        onError?.('Please select a file!');
+        onError?.("Please select a file!");
         return;
     }
 
@@ -41,8 +41,8 @@ export const convertFileToBase64 = (
     };
 
     reader.onerror = (error: ProgressEvent<FileReader>) => {
-        log.error('Error: ', { data: error });
-        onError?.('Error reading file!');
+        log.error("Error: ", { data: error });
+        onError?.("Error reading file!");
     };
 
     reader.readAsDataURL(file);
@@ -50,9 +50,9 @@ export const convertFileToBase64 = (
 
 export function generateAndDownloadJson(data: any, filename: string) {
     const json = JSON.stringify(data);
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -69,8 +69,8 @@ export async function imageUrlToBase64(imageUrl: string): Promise<string> {
         const reader = new FileReader();
         reader.onload = () => {
             const base64String = reader.result as string;
-            const base64Url = `data:${response.headers.get('Content-Type')};base64,${
-                base64String.split(',')[1]
+            const base64Url = `data:${response.headers.get("Content-Type")};base64,${
+                base64String.split(",")[1]
             }`;
             resolve(base64Url);
         };
@@ -80,12 +80,12 @@ export async function imageUrlToBase64(imageUrl: string): Promise<string> {
 }
 
 export function generateShortUUID() {
-    const nanoid = customAlphabet('1234567890abcdef', 12);
+    const nanoid = customAlphabet("1234567890abcdef", 12);
     return nanoid();
 }
 
 export const formatTickerTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 };

@@ -36,6 +36,7 @@
         "biome:check": "biome check --write .",
         "biome:lint": "biome lint --write .",
         "biome:format": "biome format --write .",
+        "biome:format-files": "biome format --write",
         "prepare": "husky",
         "knip": "knip",
         "bundle:analyze": "cd apps/web && ANALYZE=true bun run build",

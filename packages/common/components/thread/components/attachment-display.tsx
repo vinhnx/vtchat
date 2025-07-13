@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { cn } from '@repo/ui';
-import { FileText } from 'lucide-react';
-import Image from 'next/image';
-import { memo } from 'react';
+import { cn } from "@repo/ui";
+import { FileText } from "lucide-react";
+import Image from "next/image";
+import { memo } from "react";
 
 interface Attachment {
     url: string;
@@ -21,8 +21,8 @@ export const AttachmentDisplay = memo(({ attachments, className }: AttachmentDis
     if (!attachments || attachments.length === 0) return null;
 
     const renderAttachment = (attachment: Attachment, index: number) => {
-        const isImage = attachment.contentType.startsWith('image/');
-        const isPDF = attachment.contentType === 'application/pdf';
+        const isImage = attachment.contentType.startsWith("image/");
+        const isPDF = attachment.contentType === "application/pdf";
 
         if (isImage) {
             return (
@@ -32,7 +32,7 @@ export const AttachmentDisplay = memo(({ attachments, className }: AttachmentDis
                         className="rounded-lg border border-gray-200 object-cover shadow-sm dark:border-gray-700"
                         height={200}
                         src={attachment.url}
-                        style={{ maxHeight: '200px', width: 'auto' }}
+                        style={{ maxHeight: "200px", width: "auto" }}
                         width={300}
                     />
                     <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-black bg-opacity-60 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
@@ -74,10 +74,10 @@ export const AttachmentDisplay = memo(({ attachments, className }: AttachmentDis
     };
 
     return (
-        <div className={cn('space-y-3', className)}>
+        <div className={cn("space-y-3", className)}>
             {attachments.map((attachment, index) => renderAttachment(attachment, index))}
         </div>
     );
 });
 
-AttachmentDisplay.displayName = 'AttachmentDisplay';
+AttachmentDisplay.displayName = "AttachmentDisplay";

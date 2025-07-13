@@ -3,9 +3,9 @@
  * Based on AI SDK's tool call streaming patterns
  */
 
-import type { ToolCall, ToolResult } from '@repo/shared/types';
+import type { ToolCall, ToolResult } from "@repo/shared/types";
 
-export type ToolCallStreamingState = 'partial-call' | 'call' | 'executing' | 'result' | 'error';
+export type ToolCallStreamingState = "partial-call" | "call" | "executing" | "result" | "error";
 
 /**
  * Creates a partial tool call for streaming display
@@ -13,14 +13,14 @@ export type ToolCallStreamingState = 'partial-call' | 'call' | 'executing' | 're
 export function createPartialToolCall(
     toolCallId: string,
     toolName: string,
-    partialArgs: any = {}
+    partialArgs: any = {},
 ): ToolCall {
     return {
-        type: 'tool-call',
+        type: "tool-call",
         toolCallId,
         toolName,
         args: partialArgs,
-        state: 'partial-call',
+        state: "partial-call",
         timestamp: Date.now(),
     };
 }
@@ -30,11 +30,11 @@ export function createPartialToolCall(
  */
 export function createFullToolCall(toolCallId: string, toolName: string, args: any): ToolCall {
     return {
-        type: 'tool-call',
+        type: "tool-call",
         toolCallId,
         toolName,
         args,
-        state: 'call',
+        state: "call",
         timestamp: Date.now(),
     };
 }
@@ -45,7 +45,7 @@ export function createFullToolCall(toolCallId: string, toolName: string, args: a
 export function setToolCallExecuting(toolCall: ToolCall): ToolCall {
     return {
         ...toolCall,
-        state: 'executing',
+        state: "executing",
         timestamp: Date.now(),
     };
 }
@@ -56,15 +56,15 @@ export function setToolCallExecuting(toolCall: ToolCall): ToolCall {
 export function createToolResult(
     toolCall: ToolCall,
     result: any,
-    executionTime?: number
+    executionTime?: number,
 ): ToolResult {
     return {
-        type: 'tool-result',
+        type: "tool-result",
         toolCallId: toolCall.toolCallId,
         toolName: toolCall.toolName,
         args: toolCall.args,
         result,
-        state: 'result',
+        state: "result",
         executionTime,
         timestamp: Date.now(),
     };
@@ -76,15 +76,15 @@ export function createToolResult(
 export function createToolError(
     toolCall: ToolCall,
     error: any,
-    executionTime?: number
+    executionTime?: number,
 ): ToolResult {
     return {
-        type: 'tool-result',
+        type: "tool-result",
         toolCallId: toolCall.toolCallId,
         toolName: toolCall.toolName,
         args: toolCall.args,
         result: error,
-        state: 'error',
+        state: "error",
         executionTime,
         timestamp: Date.now(),
     };
@@ -95,9 +95,9 @@ export function createToolError(
  */
 export function isToolInState(
     toolCall: ToolCall | ToolResult,
-    state: ToolCallStreamingState
+    state: ToolCallStreamingState,
 ): boolean {
-    if (toolCall.type === 'tool-call') {
+    if (toolCall.type === "tool-call") {
         return toolCall.state === state;
     } else {
         return toolCall.state === state;
@@ -109,7 +109,7 @@ export function isToolInState(
  */
 export function getToolStatePriority(state: ToolCallStreamingState): number {
     const priorities = {
-        'partial-call': 1,
+        "partial-call": 1,
         call: 2,
         executing: 3,
         result: 4,
@@ -129,7 +129,7 @@ export class StreamingToolExecutor {
         callbacks: {
             onToolCallUpdate?: (toolCall: ToolCall) => void;
             onToolResult?: (toolResult: ToolResult) => void;
-        } = {}
+        } = {},
     ) {
         this.onToolCallUpdate = callbacks.onToolCallUpdate;
         this.onToolResult = callbacks.onToolResult;
@@ -140,7 +140,7 @@ export class StreamingToolExecutor {
      */
     async executeToolWithStreaming(
         toolCall: ToolCall,
-        executor: (args: any) => Promise<any>
+        executor: (args: any) => Promise<any>,
     ): Promise<ToolResult> {
         const startTime = Date.now();
 

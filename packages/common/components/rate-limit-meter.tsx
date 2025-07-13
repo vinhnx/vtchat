@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { ModelEnum } from '@repo/ai/models';
-import { useRateLimit } from '@repo/common/hooks';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { getFormatDistanceToNow } from '@repo/shared/utils';
+import { ModelEnum } from "@repo/ai/models";
+import { useRateLimit } from "@repo/common/hooks";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { getFormatDistanceToNow } from "@repo/shared/utils";
 import {
     Card,
     CardContent,
@@ -12,7 +12,7 @@ import {
     CardTitle,
     Progress,
     Skeleton,
-} from '@repo/ui';
+} from "@repo/ui";
 
 export function RateLimitMeter() {
     const { data: session } = useSession();
@@ -84,7 +84,7 @@ export function RateLimitMeter() {
                             value={dailyUsagePercent}
                         />
                         <div className="text-muted-foreground text-xs">
-                            {status.remainingDaily} requests remaining • Resets{' '}
+                            {status.remainingDaily} requests remaining • Resets{" "}
                             {getFormatDistanceToNow(status.resetTime.daily, { addSuffix: true })}
                         </div>
                     </div>
@@ -94,12 +94,12 @@ export function RateLimitMeter() {
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Per-minute rate limit</span>
                             <span className="text-foreground font-medium">
-                                {isAtMinuteLimit ? 'Rate limited' : 'Available'}
+                                {isAtMinuteLimit ? "Rate limited" : "Available"}
                             </span>
                         </div>
                         {isAtMinuteLimit && (
                             <div className="text-xs text-muted-foreground">
-                                Next request available{' '}
+                                Next request available{" "}
                                 {getFormatDistanceToNow(status.resetTime.minute, {
                                     addSuffix: true,
                                 })}

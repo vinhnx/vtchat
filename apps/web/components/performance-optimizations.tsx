@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
 // Critical resource preloading component
 export function PerformanceOptimizations() {

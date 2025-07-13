@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { lazy, Suspense } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { lazy, Suspense } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Dynamic import the chart renderer
 const ChartRenderer = lazy(() =>
-    import('./chart-wrapper').then((module) => ({
+    import("./chart-wrapper").then((module) => ({
         default: module.ChartRenderer,
-    }))
+    })),
 );
 
 // Chart loading skeleton

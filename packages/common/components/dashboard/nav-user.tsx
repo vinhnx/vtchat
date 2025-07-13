@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     DropdownMenu,
@@ -13,9 +13,9 @@ import {
     SidebarMenuItem,
     UnifiedAvatar,
     useSidebar,
-} from '@repo/ui';
-import { Bell, CreditCard, LogOut, MoreVertical, UserCircle } from 'lucide-react';
-import { getSessionCacheBustedAvatarUrl } from '../../utils/avatar-cache';
+} from "@repo/ui";
+import { Bell, CreditCard, LogOut, MoreVertical, UserCircle } from "lucide-react";
+import { getSessionCacheBustedAvatarUrl } from "../../utils/avatar-cache";
 
 export function NavUser({
     user,
@@ -54,7 +54,7 @@ export function NavUser({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                        side={isMobile ? 'bottom' : 'right'}
+                        side={isMobile ? "bottom" : "right"}
                         align="end"
                         sideOffset={4}
                     >

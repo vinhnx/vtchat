@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/lib/logger';
-import { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
+import { log } from "@repo/shared/lib/logger";
 import {
     Badge,
     Card,
@@ -10,9 +9,10 @@ import {
     CardHeader,
     CardTitle,
     Progress,
-} from '@repo/ui';
-import { AlertTriangle, CalendarClock, CheckCircle, TrendingUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "@repo/ui";
+import { AlertTriangle, CalendarClock, CheckCircle, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { QUOTA_WINDOW } from "../src/config/vtPlusLimits";
 
 interface VtPlusUsageData {
     deepResearch: {
@@ -61,22 +61,22 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
         const fetchUsage = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/vtplus/usage');
+                const response = await fetch("/api/vtplus/usage");
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Please sign in to view usage');
+                        setError("Please sign in to view usage");
                         return;
                     }
-                    throw new Error('Failed to fetch usage data');
+                    throw new Error("Failed to fetch usage data");
                 }
 
                 const data = await response.json();
                 setUsage(data);
                 setError(null);
             } catch (err) {
-                log.error({ error: err }, 'Failed to fetch VT+ usage');
-                setError('Failed to load usage data');
+                log.error({ error: err }, "Failed to fetch VT+ usage");
+                setError("Failed to load usage data");
             } finally {
                 setLoading(false);
             }
@@ -125,7 +125,7 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
 
     const getResetInfo = (
         resetAt: string,
-        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW]
+        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW],
     ) => {
         const resetDate = new Date(resetAt);
         const now = Date.now();
@@ -138,21 +138,21 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                     hoursUntilReset <= 24
                         ? `${hoursUntilReset}h`
                         : `${Math.ceil(hoursUntilReset / 24)}d`,
-                full: `Resets ${hoursUntilReset <= 1 ? 'in less than 1 hour' : `in ${hoursUntilReset} hours`} (daily at 00:00 UTC)`,
+                full: `Resets ${hoursUntilReset <= 1 ? "in less than 1 hour" : `in ${hoursUntilReset} hours`} (daily at 00:00 UTC)`,
             };
         } else {
             const daysUntilReset = Math.ceil(timeUntilReset / (1000 * 60 * 60 * 24));
             return {
                 text: `${daysUntilReset}d`,
-                full: `Resets in ${daysUntilReset} ${daysUntilReset === 1 ? 'day' : 'days'} (${resetDate.toLocaleDateString()})`,
+                full: `Resets in ${daysUntilReset} ${daysUntilReset === 1 ? "day" : "days"} (${resetDate.toLocaleDateString()})`,
             };
         }
     };
 
     const getStatusColor = (percentage: number) => {
-        if (percentage >= 90) return 'destructive';
-        if (percentage >= 75) return 'secondary';
-        return 'default';
+        if (percentage >= 90) return "destructive";
+        if (percentage >= 75) return "secondary";
+        return "default";
     };
 
     const getStatusIcon = (percentage: number) => {
@@ -190,8 +190,8 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                             </Badge>
                         </div>
                         <CardDescription>
-                            {usage.deepResearch.used.toLocaleString()} /{' '}
-                            {usage.deepResearch.limit.toLocaleString()} requests •{' '}
+                            {usage.deepResearch.used.toLocaleString()} /{" "}
+                            {usage.deepResearch.limit.toLocaleString()} requests •{" "}
                             {
                                 getResetInfo(usage.deepResearch.resetAt, usage.deepResearch.window)
                                     .text
@@ -222,8 +222,8 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                             </Badge>
                         </div>
                         <CardDescription>
-                            {usage.proSearch.used.toLocaleString()} /{' '}
-                            {usage.proSearch.limit.toLocaleString()} requests •{' '}
+                            {usage.proSearch.used.toLocaleString()} /{" "}
+                            {usage.proSearch.limit.toLocaleString()} requests •{" "}
                             {getResetInfo(usage.proSearch.resetAt, usage.proSearch.window).text}
                         </CardDescription>
                     </CardHeader>
@@ -253,7 +253,7 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                             </Badge>
                         </div>
                         <CardDescription>
-                            {usage.rag.used.toLocaleString()} / {usage.rag.limit.toLocaleString()}{' '}
+                            {usage.rag.used.toLocaleString()} / {usage.rag.limit.toLocaleString()}{" "}
                             requests • {getResetInfo(usage.rag.resetAt, usage.rag.window).text}
                         </CardDescription>
                     </CardHeader>

@@ -25,7 +25,8 @@ VT is a privacy-focused AI chat application delivering cutting-edge AI capabilit
 
 - **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free AI Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B)
-- **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, and xAI integration
+- **🆓 Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs
+- **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI, plus local providers (Ollama, LM Studio)
 - **Intelligent Tool Router (Free)**: AI-powered semantic routing automatically activates the right tools based on your queries using OpenAI embeddings and pattern matching
 - **Document Processing (Free)**: Upload and analyze PDF, DOC, DOCX, TXT, MD files (up to 10MB) - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents - available to all logged-in users
@@ -47,6 +48,14 @@ VT is a privacy-focused AI chat application delivering cutting-edge AI capabilit
 - **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
 - **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
 - **Seamless Management**: Creem.io integration with customer portal
+
+### 🚀 Local AI Setup Guides
+
+Run AI models on your computer for **free** with complete privacy:
+
+- **[Complete Local AI Guide](docs/guides/local-ai-setup.md)** - Choose between Ollama and LM Studio
+- **[Ollama Setup Guide](docs/guides/ollama-setup.md)** - Command-line local AI (5-minute setup)
+- **[LM Studio Setup Guide](docs/guides/lm-studio-setup.md)** - GUI local AI (10-minute setup)
 
 ### Modern User Experience
 
@@ -85,7 +94,7 @@ vtchat/
 
 - **Framework**: Next.js 15 (App Router) with TypeScript
 - **React**: React 19.0.0 (latest stable)
-- **Styling**: Tailwind CSS + Shadcn UI design system  
+- **Styling**: Tailwind CSS + Shadcn UI design system
 - **State Management**: Zustand + React Query
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
@@ -198,8 +207,7 @@ bun test:coverage      # Run tests with coverage
 
 # Code Quality
 bun lint               # Lint with oxlint
-bun run biome:format   # Format code with Biome
-bun run biome:check    # Check code formatting with Biome
+vnbun run biome:check    # Check code formatting with Biome
 
 # Database
 cd apps/web

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { ToolInvocationStep } from '@repo/common/components';
-import { useAppStore } from '@repo/common/store';
-import type { ThreadItem } from '@repo/shared/types';
-import { Badge, Card, Separator } from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Activity, CheckCircle, Clock, Settings, Zap } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { ToolInvocationStep } from "@repo/common/components";
+import { useAppStore } from "@repo/common/store";
+import type { ThreadItem } from "@repo/shared/types";
+import { Badge, Card, Separator } from "@repo/ui";
+import { motion } from "framer-motion";
+import { Activity, CheckCircle, Clock, Settings, Zap } from "lucide-react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 export type ToolsPanelProps = {
     threadItem: ThreadItem;
@@ -25,13 +25,13 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
                 id: key,
                 toolCall,
                 toolResult,
-                status: toolResult ? 'completed' : 'pending',
+                status: toolResult ? "completed" : "pending",
             };
         });
     }, [threadItem?.toolCalls, threadItem?.toolResults]);
 
-    const completedCount = toolsData.filter((t) => t.status === 'completed').length;
-    const pendingCount = toolsData.filter((t) => t.status === 'pending').length;
+    const completedCount = toolsData.filter((t) => t.status === "completed").length;
+    const pendingCount = toolsData.filter((t) => t.status === "pending").length;
     const totalCount = toolsData.length;
 
     const renderToolsContent = useCallback(
@@ -90,12 +90,12 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
                 </div>
             </div>
         ),
-        [toolsData, completedCount, totalCount, pendingCount]
+        [toolsData, completedCount, totalCount, pendingCount],
     );
 
     const updateDrawerContent = useCallback(() => {
         openSideDrawer({
-            title: `Tools Execution ${pendingCount > 0 ? '(Running...)' : '(Complete)'}`,
+            title: `Tools Execution ${pendingCount > 0 ? "(Running...)" : "(Complete)"}`,
             badge: totalCount,
             renderContent: renderToolsContent,
         });
@@ -103,7 +103,7 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
 
     const handleOpenDrawer = useCallback(() => {
         openSideDrawer({
-            title: 'Tools Execution',
+            title: "Tools Execution",
             badge: totalCount,
             renderContent: renderToolsContent,
         });
@@ -144,7 +144,7 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
                             transition={{
                                 duration: 2,
                                 repeat: Number.POSITIVE_INFINITY,
-                                ease: 'linear',
+                                ease: "linear",
                             }}
                         >
                             <Settings className="text-muted-foreground" size={16} />
@@ -157,7 +157,7 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
                 <div className="flex flex-col gap-1">
                     <div className="text-foreground text-sm font-medium">Tools Execution</div>
                     <div className="text-muted-foreground text-xs">
-                        {pendingCount > 0 ? 'Running tools...' : 'All tools completed'}
+                        {pendingCount > 0 ? "Running tools..." : "All tools completed"}
                     </div>
                 </div>
 
@@ -195,4 +195,4 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
     );
 });
 
-ToolsPanel.displayName = 'ToolsPanel';
+ToolsPanel.displayName = "ToolsPanel";

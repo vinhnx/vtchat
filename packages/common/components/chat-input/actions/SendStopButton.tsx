@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { Button } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, Clock, Square } from 'lucide-react';
-import { ICON_SIZES } from '../config/constants';
-import { useIsChatPage } from '../hooks/useIsChatPage';
+import { useChatStore } from "@repo/common/store";
+import { Button } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUp, Clock, Square } from "lucide-react";
+import { ICON_SIZES } from "../config/constants";
+import { useIsChatPage } from "../hooks/useIsChatPage";
 
 interface SendStopButtonProps {
     isGenerating: boolean;
@@ -26,10 +26,10 @@ export function SendStopButton({
 
     // Calculate dynamic tooltip based on generation state
     const getStopTooltip = () => {
-        if (!isGenerating) return 'Stop Generation';
+        if (!isGenerating) return "Stop Generation";
 
         if (showTimeoutIndicator) {
-            return 'Generation taking longer than usual - Click to stop';
+            return "Generation taking longer than usual - Click to stop";
         }
 
         const elapsedSeconds = generationStartTime
@@ -40,7 +40,7 @@ export function SendStopButton({
             return `Stop Generation (${elapsedSeconds}s)`;
         }
 
-        return 'Stop Generation';
+        return "Stop Generation";
     };
 
     return (
@@ -59,7 +59,7 @@ export function SendStopButton({
                             onClick={stopGeneration}
                             size="icon-sm"
                             tooltip={getStopTooltip()}
-                            variant={showTimeoutIndicator ? 'destructive' : 'default'}
+                            variant={showTimeoutIndicator ? "destructive" : "default"}
                         >
                             {showTimeoutIndicator ? (
                                 <Clock size={ICON_SIZES.small} strokeWidth={2} />

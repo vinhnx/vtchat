@@ -1,6 +1,6 @@
-import type { Context, ContextSchemaDefinition } from './context';
-import type { EventSchemaDefinition, TypedEventEmitter } from './events';
-import type { ExecutionContext } from './execution-context';
+import type { Context, ContextSchemaDefinition } from "./context";
+import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
+import type { ExecutionContext } from "./execution-context";
 
 export type WorkflowConfig = {
     maxIterations?: number;
@@ -43,9 +43,9 @@ export type TaskExecutionFunction<
     TContext extends ContextSchemaDefinition = any,
     TWorkflow extends WorkflowDefinition<TEvent, TContext> = WorkflowDefinition<TEvent, TContext>,
 > = (
-    params: Omit<TaskParams<TEvent, TContext>, 'signal'> & {
+    params: Omit<TaskParams<TEvent, TContext>, "signal"> & {
         signal?: AbortSignal;
-    }
+    },
 ) => Promise<
     | {
           result: any;
@@ -58,15 +58,15 @@ export type TaskExecutionFunction<
 >;
 
 type TaskRouteDestination<TWorkflow extends WorkflowDefinition = WorkflowDefinition> =
-    | keyof TWorkflow['tasks']
-    | 'end';
+    | keyof TWorkflow["tasks"]
+    | "end";
 
 type TaskRouterFunction<
     TEvent extends EventSchemaDefinition = any,
     TContext extends ContextSchemaDefinition = any,
     TWorkflow extends WorkflowDefinition<TEvent, TContext> = WorkflowDefinition<TEvent, TContext>,
 > = (
-    params: TaskRouterParams<TEvent, TContext>
+    params: TaskRouterParams<TEvent, TContext>,
 ) => TaskRouteDestination<TWorkflow> | Array<TaskRouteDestination<TWorkflow>> | undefined;
 
 export type WorkflowContextData = {
@@ -108,7 +108,7 @@ export type TaskTiming = {
     startTime: number;
     endTime?: number;
     duration?: number;
-    status: 'success' | 'failed';
+    status: "success" | "failed";
     error?: Error;
 };
 
@@ -118,7 +118,7 @@ export type TaskErrorHandler<
     TWorkflow extends WorkflowDefinition<TEvent, TContext> = WorkflowDefinition<TEvent, TContext>,
 > = (
     error: Error,
-    params: TaskParams<TEvent, TContext>
+    params: TaskParams<TEvent, TContext>,
 ) => Promise<{
     retry?: boolean;
     result?: any;
@@ -136,7 +136,7 @@ export type TaskDefinition<
     name: string;
     execute: (params: TaskParams<TEvent, TContext>) => Promise<any>;
     route?: (
-        params: TaskRouterParams<TEvent, TContext>
+        params: TaskRouterParams<TEvent, TContext>,
     ) => TaskRouteDestination<TWorkflow> | Array<TaskRouteDestination<TWorkflow>> | undefined;
     dependencies?: string[];
     retryCount?: number;
@@ -149,6 +149,6 @@ export type WorkflowDefinition<
     TContext extends ContextSchemaDefinition = any,
 > = {
     tasks: Record<string, TaskDefinition<TEvent, TContext>>;
-    initialTask: keyof WorkflowDefinition<TEvent, TContext>['tasks'];
+    initialTask: keyof WorkflowDefinition<TEvent, TContext>["tasks"];
     config?: WorkflowConfig;
 };

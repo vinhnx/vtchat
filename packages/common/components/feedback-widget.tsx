@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import { Button, Textarea } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle, HelpCircle, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
+import { Button, Textarea } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, HelpCircle, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export const FeedbackWidget = () => {
     const { data: session } = useSession();
     const userId = session?.user?.id;
     const [isOpen, setIsOpen] = useState(false);
-    const [feedback, setFeedback] = useState('');
+    const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -22,19 +22,19 @@ export const FeedbackWidget = () => {
         setIsSubmitting(true);
 
         try {
-            await fetch('/api/feedback', {
-                method: 'POST',
+            await fetch("/api/feedback", {
+                method: "POST",
                 body: JSON.stringify({ feedback }),
             });
             setIsSuccess(true);
-            setFeedback('');
+            setFeedback("");
 
             setTimeout(() => {
                 setIsSuccess(false);
                 setIsOpen(false);
             }, 2000);
         } catch (error) {
-            log.error('Failed to submit feedback:', { data: error });
+            log.error("Failed to submit feedback:", { data: error });
         } finally {
             setIsSubmitting(false);
         }
@@ -95,7 +95,7 @@ export const FeedbackWidget = () => {
                                         size="xs"
                                         variant="default"
                                     >
-                                        {isSubmitting ? 'Sending...' : 'Send Feedback'}
+                                        {isSubmitting ? "Sending..." : "Send Feedback"}
                                     </Button>
                                 </div>
                             </>

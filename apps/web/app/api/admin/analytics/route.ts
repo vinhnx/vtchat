@@ -1,5 +1,7 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
+import { count, eq, gte, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
 import {
     feedback,
     providerUsage,
@@ -7,9 +9,7 @@ import {
     sessions,
     users,
     vtplusUsage,
-} from '@/lib/database/schema';
-import { count, eq, gte, sql, sum } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
+} from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -25,8 +25,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
         const [vtPlusUsers] = await db
             .select({ count: count() })
             .from(users)
-            .where(eq(users.planSlug, 'vt_plus'));
+            .where(eq(users.planSlug, "vt_plus"));
 
         // Session activity metrics
         const [activeSessionsLast24h] = await db
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
                 conversionRate:
                     totalUsersCount.count > 0
                         ? ((vtPlusUsers.count / totalUsersCount.count) * 100).toFixed(2)
-                        : '0.00',
+                        : "0.00",
             },
             activityMetrics: {
                 activeSessionsLast24h: activeSessionsLast24h.count,
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
                 requests: stat.totalRequests,
                 costUsd: stat.totalCostCents
                     ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : '0.00',
+                    : "0.00",
             })),
             vtPlusUsage: vtPlusFeatureUsage.map((usage) => ({
                 feature: usage.feature,
@@ -161,7 +161,7 @@ export async function GET(request: NextRequest) {
                 })),
             },
         });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
+    } catch (_error) {
+        return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
     }
 }

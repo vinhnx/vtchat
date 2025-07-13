@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Button, cn } from '@repo/ui';
-import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
-import { ChevronDown, Maximize2, Mic, Minimize2, MoreHorizontal, Plus, Send } from 'lucide-react';
-import { memo, useEffect, useRef, useState } from 'react';
+import { Button, cn } from "@repo/ui";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { ChevronDown, Maximize2, Mic, Minimize2, MoreHorizontal, Plus, Send } from "lucide-react";
+import { memo, useEffect, useRef, useState } from "react";
 
 // Simple media query hook
 function useMediaQuery(query: string) {
@@ -15,8 +15,8 @@ function useMediaQuery(query: string) {
             setMatches(media.matches);
         }
         const listener = () => setMatches(media.matches);
-        media.addEventListener('change', listener);
-        return () => media.removeEventListener('change', listener);
+        media.addEventListener("change", listener);
+        return () => media.removeEventListener("change", listener);
     }, [matches, query]);
 
     return matches;
@@ -32,8 +32,8 @@ interface MobileChatHeaderProps {
 
 export const MobileChatHeader = memo(
     ({
-        title = 'VT Assistant',
-        subtitle = 'AI-powered chat',
+        title = "VT Assistant",
+        subtitle = "AI-powered chat",
         onMinimize,
         onMaximize,
         isMinimized = false,
@@ -85,7 +85,7 @@ export const MobileChatHeader = memo(
                 </div>
             </motion.div>
         );
-    }
+    },
 );
 
 interface MobileInputToolbarProps {
@@ -116,11 +116,11 @@ export const MobileInputToolbar = memo(
                 {/* Voice input button */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
-                        className={cn('relative overflow-hidden', isRecording && 'animate-pulse')}
+                        className={cn("relative overflow-hidden", isRecording && "animate-pulse")}
                         disabled={disabled}
                         onClick={onVoiceInput}
                         size="icon"
-                        variant={isRecording ? 'destructive' : 'outline'}
+                        variant={isRecording ? "destructive" : "outline"}
                     >
                         <Mic size={18} />
                         {isRecording && (
@@ -151,7 +151,7 @@ export const MobileInputToolbar = memo(
                             exit={{ scale: 0, rotate: 180 }}
                             initial={{ scale: 0, rotate: -180 }}
                             transition={{
-                                type: 'spring',
+                                type: "spring",
                                 stiffness: 300,
                                 damping: 20,
                             }}
@@ -172,7 +172,7 @@ export const MobileInputToolbar = memo(
                 </AnimatePresence>
             </motion.div>
         );
-    }
+    },
 );
 
 interface SwipeableMessageProps {
@@ -214,14 +214,14 @@ export const SwipeableMessage = memo(
         return (
             <motion.div
                 animate={{ x: isDragging ? dragOffset : 0 }}
-                className={cn('relative touch-pan-y', className)}
+                className={cn("relative touch-pan-y", className)}
                 drag="x"
                 dragElastic={0.3}
                 dragMomentum={false}
                 onDrag={handleDrag}
                 onDragEnd={handleDragEnd}
                 onDragStart={handleDragStart}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
                 {/* Swipe indicators */}
                 <AnimatePresence>
@@ -256,7 +256,7 @@ export const SwipeableMessage = memo(
                 {children}
             </motion.div>
         );
-    }
+    },
 );
 
 interface MobileOptimizedInputProps {
@@ -273,18 +273,18 @@ export const MobileOptimizedInput = memo(
         value,
         onChange,
         onSubmit,
-        placeholder = 'Type a message...',
+        placeholder = "Type a message...",
         disabled = false,
         maxRows = 4,
     }: MobileOptimizedInputProps) => {
         const textareaRef = useRef<HTMLTextAreaElement>(null);
         const [isFocused, setIsFocused] = useState(false);
-        const isMobile = useMediaQuery('(max-width: 768px)');
+        const isMobile = useMediaQuery("(max-width: 768px)");
 
         // Auto-resize textarea
         useEffect(() => {
             if (textareaRef.current) {
-                textareaRef.current.style.height = 'auto';
+                textareaRef.current.style.height = "auto";
                 const scrollHeight = textareaRef.current.scrollHeight;
                 const maxHeight = maxRows * 24; // Approximate line height
                 textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
@@ -292,7 +292,7 @@ export const MobileOptimizedInput = memo(
         }, [value, maxRows]);
 
         const handleKeyPress = (e: React.KeyboardEvent) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 onSubmit();
             }
@@ -302,9 +302,9 @@ export const MobileOptimizedInput = memo(
             return (
                 <textarea
                     className={cn(
-                        'w-full resize-none border-0 bg-transparent px-4 py-3 text-base',
-                        'placeholder:text-gray-500 focus:outline-none focus:ring-0',
-                        'max-h-[120px] min-h-[60px]'
+                        "w-full resize-none border-0 bg-transparent px-4 py-3 text-base",
+                        "placeholder:text-gray-500 focus:outline-none focus:ring-0",
+                        "max-h-[120px] min-h-[60px]",
                     )}
                     disabled={disabled}
                     onBlur={() => setIsFocused(false)}
@@ -322,20 +322,20 @@ export const MobileOptimizedInput = memo(
         return (
             <motion.div
                 className={cn(
-                    'relative flex min-h-[60px] w-full items-end',
-                    'rounded-2xl border bg-white dark:bg-gray-800',
+                    "relative flex min-h-[60px] w-full items-end",
+                    "rounded-2xl border bg-white dark:bg-gray-800",
                     isFocused
-                        ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20'
-                        : 'border-gray-300 dark:border-gray-600'
+                        ? "border-blue-500 shadow-lg ring-2 ring-blue-500/20"
+                        : "border-gray-300 dark:border-gray-600",
                 )}
                 layout
                 transition={{ duration: 0.2 }}
             >
                 <textarea
                     className={cn(
-                        'w-full resize-none border-0 bg-transparent px-4 py-4 text-base',
-                        'placeholder:text-gray-500 focus:outline-none focus:ring-0',
-                        'overflow-hidden rounded-2xl'
+                        "w-full resize-none border-0 bg-transparent px-4 py-4 text-base",
+                        "placeholder:text-gray-500 focus:outline-none focus:ring-0",
+                        "overflow-hidden rounded-2xl",
                     )}
                     disabled={disabled}
                     onBlur={() => setIsFocused(false)}
@@ -346,9 +346,9 @@ export const MobileOptimizedInput = memo(
                     ref={textareaRef}
                     rows={1}
                     style={{
-                        minHeight: '60px',
+                        minHeight: "60px",
                         maxHeight: `${maxRows * 24}px`,
-                        lineHeight: '24px',
+                        lineHeight: "24px",
                     }}
                     value={value}
                 />
@@ -369,7 +369,7 @@ export const MobileOptimizedInput = memo(
                 </AnimatePresence>
             </motion.div>
         );
-    }
+    },
 );
 
 interface MobilePullToRefreshProps {
@@ -441,17 +441,17 @@ export const MobilePullToRefresh = memo(
                                     scale: pullDistance > threshold ? 1.2 : 1,
                                 }}
                                 className={cn(
-                                    'flex h-8 w-8 items-center justify-center rounded-full',
+                                    "flex h-8 w-8 items-center justify-center rounded-full",
                                     pullDistance > threshold
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-gray-200 text-gray-500 dark:bg-gray-700'
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 text-gray-500 dark:bg-gray-700",
                                 )}
                                 transition={{
                                     rotate: isRefreshing
                                         ? {
                                               duration: 1,
                                               repeat: Number.POSITIVE_INFINITY,
-                                              ease: 'linear',
+                                              ease: "linear",
                                           }
                                         : {},
                                 }}
@@ -464,17 +464,17 @@ export const MobilePullToRefresh = memo(
 
                 <motion.div
                     animate={{ y: pullDistance }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 >
                     {children}
                 </motion.div>
             </motion.div>
         );
-    }
+    },
 );
 
-MobileChatHeader.displayName = 'MobileChatHeader';
-MobileInputToolbar.displayName = 'MobileInputToolbar';
-SwipeableMessage.displayName = 'SwipeableMessage';
-MobileOptimizedInput.displayName = 'MobileOptimizedInput';
-MobilePullToRefresh.displayName = 'MobilePullToRefresh';
+MobileChatHeader.displayName = "MobileChatHeader";
+MobileInputToolbar.displayName = "MobileInputToolbar";
+SwipeableMessage.displayName = "SwipeableMessage";
+MobileOptimizedInput.displayName = "MobileOptimizedInput";
+MobilePullToRefresh.displayName = "MobilePullToRefresh";

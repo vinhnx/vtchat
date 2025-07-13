@@ -1,8 +1,8 @@
-import type { NextPage } from 'next';
-import { MinimalErrorPage } from '../../components/minimal-error-page';
+import type { NextPage } from "next";
+import { MinimalErrorPage } from "../../components/minimal-error-page";
 
 // Force dynamic rendering to prevent SSR issues during build
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const TestErrorPage: NextPage = () => {
     return (
@@ -16,8 +16,8 @@ const TestErrorPage: NextPage = () => {
                     title="Page Not Found"
                     description="Sorry, we couldn't find the page you're looking for."
                     actionButton={{
-                        text: 'Go back home',
-                        href: '/',
+                        text: "Go back home",
+                        href: "/",
                     }}
                 />
             </div>
@@ -29,7 +29,7 @@ const TestErrorPage: NextPage = () => {
                     title="Authentication Error"
                     description="Please refresh the page or try again later."
                     actionButton={{
-                        text: 'Refresh Page',
+                        text: "Refresh Page",
                         onClick: () => window.location.reload(),
                     }}
                 />
@@ -42,8 +42,8 @@ const TestErrorPage: NextPage = () => {
                     title="Admin Access Required"
                     description="You need admin privileges to access this dashboard."
                     actionButton={{
-                        text: 'Go back home',
-                        href: '/',
+                        text: "Go back home",
+                        href: "/",
                     }}
                 />
             </div>
@@ -55,8 +55,8 @@ const TestErrorPage: NextPage = () => {
                     title="Something went wrong"
                     description="It seems we encountered an unexpected error. Please try refreshing the page or check back later."
                     actionButton={{
-                        text: 'Go back home',
-                        href: '/',
+                        text: "Go back home",
+                        href: "/",
                     }}
                 />
             </div>

@@ -1,17 +1,17 @@
-import { Footer } from '@repo/common/components';
-import { Button, TypographyH2 } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Footer } from "@repo/common/components";
+import { Button, TypographyH2 } from "@repo/ui";
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: 'About VT',
+    title: "About VT",
     description:
-        'Learn about VT - Your privacy-focused AI chat platform with security and advanced AI capabilities.',
+        "Learn about VT - Your privacy-focused AI chat platform with security and advanced AI capabilities.",
     openGraph: {
-        title: 'About VT',
-        description: 'Learn about VT - Your privacy-focused AI chat platform with security.',
-        type: 'website',
+        title: "About VT",
+        description: "Learn about VT - Your privacy-focused AI chat platform with security.",
+        type: "website",
     },
     robots: {
         index: true,
@@ -194,7 +194,7 @@ function AboutContent() {
                                 VT offers a generous free tier with BYOK (Bring Your Own Key) access
                                 to all supported AI models. VT+, our premium subscription, enhances
                                 your experience with three exclusive research capabilities: Deep
-                                Research, Pro Search, and a personal AI Assistant with Memory (RAG).{' '}
+                                Research, Pro Search, and a personal AI Assistant with Memory (RAG).{" "}
                                 <strong>
                                     VT+ subscribers also receive server-funded access to all Gemini
                                     models

@@ -2,25 +2,25 @@
  * Cache Management Component - For settings page
  */
 
-'use client';
+"use client";
 
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
-import { AlertCircle, Database, HardDrive, RefreshCw, Trash2, Wifi, WifiOff } from 'lucide-react';
-import { useState } from 'react';
-import { useServiceWorker } from '../lib/hooks/use-service-worker';
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui";
+import { AlertCircle, Database, HardDrive, RefreshCw, Trash2, Wifi, WifiOff } from "lucide-react";
+import { useState } from "react";
+import { useServiceWorker } from "../lib/hooks/use-service-worker";
 
 function formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
+    if (bytes === 0) return "0 B";
     const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
 }
 
 function formatCacheName(name: string): string {
     return name
-        .replace('vtchat-', '')
-        .replace('-v3.0', '')
+        .replace("vtchat-", "")
+        .replace("-v3.0", "")
         .replace(/^\w/, (c) => c.toUpperCase());
 }
 
@@ -59,7 +59,7 @@ export function CacheManagement() {
     }
 
     const handleClearCache = async (cacheName?: string) => {
-        setClearing(cacheName || 'all');
+        setClearing(cacheName || "all");
         try {
             await clearCache(cacheName);
         } finally {
@@ -98,7 +98,7 @@ export function CacheManagement() {
                     <div className="flex items-center justify-between">
                         <span>Connection Status</span>
                         <Badge
-                            variant={isOnline ? 'default' : 'destructive'}
+                            variant={isOnline ? "default" : "destructive"}
                             className="flex items-center gap-1"
                         >
                             {isOnline ? (
@@ -106,14 +106,14 @@ export function CacheManagement() {
                             ) : (
                                 <WifiOff className="h-3 w-3" />
                             )}
-                            {isOnline ? 'Online' : 'Offline'}
+                            {isOnline ? "Online" : "Offline"}
                         </Badge>
                     </div>
 
                     <div className="flex items-center justify-between">
                         <span>Registration</span>
-                        <Badge variant={isRegistered ? 'default' : 'secondary'}>
-                            {isRegistered ? 'Active' : 'Not Registered'}
+                        <Badge variant={isRegistered ? "default" : "secondary"}>
+                            {isRegistered ? "Active" : "Not Registered"}
                         </Badge>
                     </div>
 
@@ -149,7 +149,7 @@ export function CacheManagement() {
                             onClick={handleRefreshStats}
                             disabled={refreshing || isLoading}
                         >
-                            <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                            <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
                         </Button>
                     </CardTitle>
                     <CardDescription>
@@ -217,7 +217,7 @@ export function CacheManagement() {
                                                         {formatCacheName(name)}
                                                     </div>
                                                     <div className="text-sm text-muted-foreground">
-                                                        {formatBytes(cache.size)} • {cache.entries}{' '}
+                                                        {formatBytes(cache.size)} • {cache.entries}{" "}
                                                         entries
                                                     </div>
                                                 </div>
@@ -226,7 +226,7 @@ export function CacheManagement() {
                                                     variant="outline"
                                                     onClick={() =>
                                                         handleClearCache(
-                                                            `vtchat-${name.toLowerCase()}-v3.0`
+                                                            `vtchat-${name.toLowerCase()}-v3.0`,
                                                         )
                                                     }
                                                     disabled={
@@ -254,10 +254,10 @@ export function CacheManagement() {
                                                         <div
                                                             className={`h-2 rounded-full transition-all ${
                                                                 usagePercentSize > 80
-                                                                    ? 'bg-red-500'
+                                                                    ? "bg-red-500"
                                                                     : usagePercentSize > 60
-                                                                      ? 'bg-yellow-500'
-                                                                      : 'bg-green-500'
+                                                                      ? "bg-yellow-500"
+                                                                      : "bg-green-500"
                                                             }`}
                                                             style={{
                                                                 width: `${Math.min(usagePercentSize, 100)}%`,
@@ -279,10 +279,10 @@ export function CacheManagement() {
                                                         <div
                                                             className={`h-2 rounded-full transition-all ${
                                                                 usagePercentEntries > 80
-                                                                    ? 'bg-red-500'
+                                                                    ? "bg-red-500"
                                                                     : usagePercentEntries > 60
-                                                                      ? 'bg-yellow-500'
-                                                                      : 'bg-green-500'
+                                                                      ? "bg-yellow-500"
+                                                                      : "bg-green-500"
                                                             }`}
                                                             style={{
                                                                 width: `${Math.min(usagePercentEntries, 100)}%`,
@@ -301,10 +301,10 @@ export function CacheManagement() {
                                 <Button
                                     variant="destructive"
                                     onClick={() => handleClearCache()}
-                                    disabled={clearing === 'all'}
+                                    disabled={clearing === "all"}
                                     className="w-full"
                                 >
-                                    {clearing === 'all' ? (
+                                    {clearing === "all" ? (
                                         <>
                                             <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                                             Clearing All Caches...

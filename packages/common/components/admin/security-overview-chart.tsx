@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Card,
@@ -9,9 +9,9 @@ import {
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from '@repo/ui';
-import { AlertTriangle, Shield, Users, Activity } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+} from "@repo/ui";
+import { Activity, AlertTriangle, Shield, Users } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 interface SecurityMetrics {
     totalBannedUsers: number;
@@ -31,46 +31,46 @@ interface SecurityOverviewChartProps {
 
 const chartConfig = {
     banned: {
-        label: 'Banned Users',
-        color: '#BF4545',
+        label: "Banned Users",
+        color: "#BF4545",
     },
     suspicious: {
-        label: 'Suspicious Activity',
-        color: '#D99A4E',
+        label: "Suspicious Activity",
+        color: "#D99A4E",
     },
     sessions: {
-        label: 'Active Sessions',
-        color: '#D9487D',
+        label: "Active Sessions",
+        color: "#D9487D",
     },
     protected: {
-        label: 'Protected Users',
-        color: '#BFB38F',
+        label: "Protected Users",
+        color: "#BFB38F",
     },
     safe: {
-        label: 'Safe',
-        color: '#262626',
+        label: "Safe",
+        color: "#262626",
     },
 } satisfies ChartConfig;
 
 const COLORS = [
-    '#BF4545', // Red for threats
-    '#D99A4E', // Orange for warnings
-    '#D9487D', // Pink for normal
-    '#BFB38F', // Beige for protected
+    "#BF4545", // Red for threats
+    "#D99A4E", // Orange for warnings
+    "#D9487D", // Pink for normal
+    "#BFB38F", // Beige for protected
 ];
 
 export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChartProps) {
     // Security threat levels over time (mock data)
     const threatTimelineData = [
-        { date: '7d ago', threats: 2, warnings: 5, normal: 95 },
-        { date: '6d ago', threats: 1, warnings: 3, normal: 97 },
-        { date: '5d ago', threats: 3, warnings: 7, normal: 92 },
-        { date: '4d ago', threats: 1, warnings: 4, normal: 96 },
-        { date: '3d ago', threats: 2, warnings: 6, normal: 94 },
-        { date: '2d ago', threats: 0, warnings: 3, normal: 98 },
-        { date: '1d ago', threats: 1, warnings: 2, normal: 97 },
+        { date: "7d ago", threats: 2, warnings: 5, normal: 95 },
+        { date: "6d ago", threats: 1, warnings: 3, normal: 97 },
+        { date: "5d ago", threats: 3, warnings: 7, normal: 92 },
+        { date: "4d ago", threats: 1, warnings: 4, normal: 96 },
+        { date: "3d ago", threats: 2, warnings: 6, normal: 94 },
+        { date: "2d ago", threats: 0, warnings: 3, normal: 98 },
+        { date: "1d ago", threats: 1, warnings: 2, normal: 97 },
         {
-            date: 'Today',
+            date: "Today",
             threats: securityMetrics.recentBans,
             warnings: securityMetrics.suspiciousSessions,
             normal: 95,
@@ -80,22 +80,22 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
     // Current security status breakdown
     const securityStatusData = [
         {
-            name: 'Banned Users',
+            name: "Banned Users",
             value: securityMetrics.totalBannedUsers,
             color: COLORS[0],
         },
         {
-            name: 'Suspicious Sessions',
+            name: "Suspicious Sessions",
             value: securityMetrics.suspiciousSessions,
             color: COLORS[1],
         },
         {
-            name: 'Unverified Emails',
+            name: "Unverified Emails",
             value: securityMetrics.unverifiedEmails,
             color: COLORS[2],
         },
         {
-            name: 'Protected Users',
+            name: "Protected Users",
             value: securityMetrics.protectedUsers,
             color: COLORS[3],
         },
@@ -104,7 +104,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
     // Session security breakdown
     const sessionSecurityData = [
         {
-            category: 'Active Sessions',
+            category: "Active Sessions",
             count: securityMetrics.activeSessions,
             percentage: (
                 (securityMetrics.activeSessions / securityMetrics.totalSessions) *
@@ -112,7 +112,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
             ).toFixed(1),
         },
         {
-            category: 'Impersonated',
+            category: "Impersonated",
             count: securityMetrics.impersonatedSessions,
             percentage: (
                 (securityMetrics.impersonatedSessions / securityMetrics.totalSessions) *
@@ -120,7 +120,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
             ).toFixed(1),
         },
         {
-            category: 'Suspicious',
+            category: "Suspicious",
             count: securityMetrics.suspiciousSessions,
             percentage: (
                 (securityMetrics.suspiciousSessions / securityMetrics.totalSessions) *
@@ -131,11 +131,11 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
 
     // Security metrics bar chart data
     const securityMetricsData = [
-        { metric: 'Total Bans', value: securityMetrics.totalBannedUsers },
-        { metric: 'Active Bans', value: securityMetrics.activeBans },
-        { metric: 'Recent Bans', value: securityMetrics.recentBans },
-        { metric: 'Suspicious', value: securityMetrics.suspiciousSessions },
-        { metric: 'Unverified', value: securityMetrics.unverifiedEmails },
+        { metric: "Total Bans", value: securityMetrics.totalBannedUsers },
+        { metric: "Active Bans", value: securityMetrics.activeBans },
+        { metric: "Recent Bans", value: securityMetrics.recentBans },
+        { metric: "Suspicious", value: securityMetrics.suspiciousSessions },
+        { metric: "Unverified", value: securityMetrics.unverifiedEmails },
     ];
 
     return (
@@ -174,7 +174,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                                 stroke="#BF4545"
                                 strokeWidth={2}
                                 name="Threats"
-                                dot={{ fill: '#BF4545', strokeWidth: 2, r: 3 }}
+                                dot={{ fill: "#BF4545", strokeWidth: 2, r: 3 }}
                             />
                             <Line
                                 type="monotone"
@@ -182,7 +182,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                                 stroke="#D99A4E"
                                 strokeWidth={2}
                                 name="Warnings"
-                                dot={{ fill: '#D99A4E', strokeWidth: 2, r: 3 }}
+                                dot={{ fill: "#D99A4E", strokeWidth: 2, r: 3 }}
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
                         </LineChart>
@@ -245,10 +245,10 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                                             width: `${item.percentage}%`,
                                             backgroundColor:
                                                 index === 0
-                                                    ? '#D9487D'
+                                                    ? "#D9487D"
                                                     : index === 1
-                                                      ? '#D99A4E'
-                                                      : '#BF4545',
+                                                      ? "#D99A4E"
+                                                      : "#BF4545",
                                         }}
                                     />
                                 </div>

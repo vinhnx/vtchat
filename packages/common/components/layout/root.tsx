@@ -1,17 +1,17 @@
-'use client';
-import { CommandSearch, SettingsModal, Sidebar } from '@repo/common/components';
-import { useRootContext } from '@repo/common/context';
+"use client";
+import { CommandSearch, SettingsModal, Sidebar } from "@repo/common/components";
+import { useRootContext } from "@repo/common/context";
 import {
     AgentProvider,
     useAdmin,
     useLogout,
     useMobilePWANotification,
     useVTPlusAnnouncement,
-} from '@repo/common/hooks';
-import { useAppStore } from '@repo/common/store';
-import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/lib/logger';
+} from "@repo/common/hooks";
+import { useAppStore } from "@repo/common/store";
+import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/lib/logger";
 import {
     AvatarLegacy as Avatar,
     Badge,
@@ -23,8 +23,8 @@ import {
     DropdownMenuTrigger,
     Flex,
     SonnerToaster,
-} from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+} from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Database,
     FileText,
@@ -36,11 +36,11 @@ import {
     Shield,
     User,
     X,
-} from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import React, { type FC, useEffect } from 'react';
-import { useStickToBottom } from 'use-stick-to-bottom';
-import { Drawer } from 'vaul';
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { type FC, useEffect } from "react";
+import { useStickToBottom } from "use-stick-to-bottom";
+import { Drawer } from "vaul";
 
 export type TRootLayout = {
     children: React.ReactNode;
@@ -64,10 +64,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     useMobilePWANotification();
 
     const containerClass =
-        'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';
+        "relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm";
 
     // Hide drop shadow on plus page
-    const shouldShowDropShadow = pathname !== '/plus';
+    const shouldShowDropShadow = pathname !== "/plus";
 
     // Close mobile sidebar when route changes
     useEffect(() => {
@@ -88,7 +88,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     </div>
                 </div>
                 {/* Left sidebar placeholder during SSR */}
-                {sidebarPlacement === 'left' && (
+                {sidebarPlacement === "left" && (
                     <div className="hidden lg:flex">
                         {isSidebarOpen && (
                             <div className="w-64 flex-shrink-0">
@@ -101,7 +101,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
                 </div>
                 {/* Right sidebar placeholder during SSR */}
-                {sidebarPlacement === 'right' && (
+                {sidebarPlacement === "right" && (
                     <div className="hidden lg:flex">
                         {isSidebarOpen && (
                             <div className="w-64 flex-shrink-0">
@@ -117,16 +117,16 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     return (
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             {/* Left Sidebar */}
-            {sidebarPlacement === 'left' && (
+            {sidebarPlacement === "left" && (
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <motion.div
-                            animate={{ width: 'auto', opacity: 1 }}
+                            animate={{ width: "auto", opacity: 1 }}
                             className="hidden overflow-hidden md:flex"
                             exit={{ width: 0, opacity: 0 }}
                             initial={{ width: 0, opacity: 0 }}
                             key="left-sidebar"
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
                         >
                             <Sidebar />
                         </motion.div>
@@ -137,7 +137,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Main Content */}
             <Flex className="flex-1 overflow-hidden">
                 <motion.div
-                    className={`flex w-full md:py-1 ${sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'}`}
+                    className={`flex w-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
                 >
                     <AgentProvider>
                         <div className={containerClass}>
@@ -159,16 +159,16 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             </Flex>
 
             {/* Right Sidebar */}
-            {sidebarPlacement === 'right' && (
+            {sidebarPlacement === "right" && (
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <motion.div
-                            animate={{ width: 'auto', opacity: 1 }}
+                            animate={{ width: "auto", opacity: 1 }}
                             className="hidden overflow-hidden md:flex"
                             exit={{ width: 0, opacity: 0 }}
                             initial={{ width: 0, opacity: 0 }}
                             key="right-sidebar"
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
                         >
                             <Sidebar />
                         </motion.div>
@@ -190,12 +190,12 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         onClick={(e) => {
                             // Check if click target is inside the sidebar content or dropdown
                             const target = e.target as HTMLElement;
-                            const isInsideSidebar = target.closest('[data-sidebar-content]');
+                            const isInsideSidebar = target.closest("[data-sidebar-content]");
                             const isInsideDropdown =
-                                target.closest('[data-radix-popper-content-wrapper]') ||
+                                target.closest("[data-radix-popper-content-wrapper]") ||
                                 target.closest('[role="menu"]') ||
-                                target.closest('[data-radix-menu-content]') ||
-                                target.closest('[data-radix-dropdown-menu-content]');
+                                target.closest("[data-radix-menu-content]") ||
+                                target.closest("[data-radix-dropdown-menu-content]");
 
                             // Only close sidebar if clicking on overlay, not sidebar content or dropdown
                             if (!(isInsideSidebar || isInsideDropdown)) {
@@ -205,12 +205,12 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         onTouchEnd={(e) => {
                             // Handle iOS touch events specifically
                             const target = e.target as HTMLElement;
-                            const isInsideSidebar = target.closest('[data-sidebar-content]');
+                            const isInsideSidebar = target.closest("[data-sidebar-content]");
                             const isInsideDropdown =
-                                target.closest('[data-radix-popper-content-wrapper]') ||
+                                target.closest("[data-radix-popper-content-wrapper]") ||
                                 target.closest('[role="menu"]') ||
-                                target.closest('[data-radix-menu-content]') ||
-                                target.closest('[data-radix-dropdown-menu-content]');
+                                target.closest("[data-radix-menu-content]") ||
+                                target.closest("[data-radix-dropdown-menu-content]");
 
                             // Only close sidebar if touching overlay, not sidebar content or dropdown
                             if (!(isInsideSidebar || isInsideDropdown)) {
@@ -219,7 +219,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         }}
                     />
                     <Drawer.Content
-                        className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === 'left' ? 'left-0' : 'right-0'}`}
+                        className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[280px] transition-transform duration-300 ease-in-out ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
                     >
                         <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
                         <div className="h-full overflow-hidden" data-sidebar-content>
@@ -255,7 +255,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             >
                                 <Avatar
                                     className="h-8 w-8"
-                                    name={session.user?.name || session.user?.email || 'User'}
+                                    name={session.user?.name || session.user?.email || "User"}
                                     size="md"
                                     src={
                                         getSessionCacheBustedAvatarUrl(session.user?.image) ||
@@ -265,7 +265,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="mb-2 w-48">
-                            <DropdownMenuItem onClick={() => router.push('/profile')}>
+                            <DropdownMenuItem onClick={() => router.push("/profile")}>
                                 <User className="mr-2" size={16} strokeWidth={2} />
                                 Profile
                             </DropdownMenuItem>
@@ -277,7 +277,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             {/* Admin Menu Item */}
                             {isAdmin && (
                                 <DropdownMenuItem
-                                    onClick={() => router.push('/admin/database-maintenance')}
+                                    onClick={() => router.push("/admin/database-maintenance")}
                                 >
                                     <Database className="mr-2" size={16} strokeWidth={2} />
                                     Admin Dashboard
@@ -285,30 +285,30 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             )}
 
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => router.push('/about')}>
+                            <DropdownMenuItem onClick={() => router.push("/about")}>
                                 <Info className="mr-2" size={16} strokeWidth={2} />
                                 About
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/faq')}>
+                            <DropdownMenuItem onClick={() => router.push("/faq")}>
                                 <HelpCircle className="mr-2" size={16} strokeWidth={2} />
                                 Help Center
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/privacy')}>
+                            <DropdownMenuItem onClick={() => router.push("/privacy")}>
                                 <Shield className="mr-2" size={16} strokeWidth={2} />
                                 Privacy Policy
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/terms')}>
+                            <DropdownMenuItem onClick={() => router.push("/terms")}>
                                 <FileText className="mr-2" size={16} strokeWidth={2} />
                                 Terms of Service
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                                className={isLoggingOut ? "cursor-not-allowed opacity-50" : ""}
                                 disabled={isLoggingOut}
                                 onClick={() => logout()}
                             >
                                 <LogOut className="mr-2" size={16} strokeWidth={2} />
-                                {isLoggingOut ? 'Signing out...' : 'Sign out'}
+                                {isLoggingOut ? "Signing out..." : "Sign out"}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -328,15 +328,15 @@ export const SideDrawer = () => {
         damping: 0,
     });
     const isThreadPage =
-        pathname !== '/' &&
-        pathname !== '/recent' &&
-        pathname !== '/settings' &&
-        pathname !== '/plus' &&
-        pathname !== '/about' &&
-        pathname !== '/login' &&
-        pathname !== '/privacy' &&
-        pathname !== '/terms' &&
-        pathname !== '/faq';
+        pathname !== "/" &&
+        pathname !== "/recent" &&
+        pathname !== "/settings" &&
+        pathname !== "/plus" &&
+        pathname !== "/about" &&
+        pathname !== "/login" &&
+        pathname !== "/privacy" &&
+        pathname !== "/terms" &&
+        pathname !== "/faq";
 
     // Don't render during SSR to prevent hydration issues
     if (!isClient) {
@@ -346,7 +346,7 @@ export const SideDrawer = () => {
     // Safely render title to prevent object-as-child errors
     const renderTitle = () => {
         try {
-            if (typeof sideDrawer.title === 'function') {
+            if (typeof sideDrawer.title === "function") {
                 const titleElement = sideDrawer.title();
                 // Handle React elements properly
                 if (React.isValidElement(titleElement)) {
@@ -354,14 +354,14 @@ export const SideDrawer = () => {
                 }
                 // Handle other types safely
                 if (titleElement === null || titleElement === undefined) {
-                    return '';
+                    return "";
                 }
                 return String(titleElement);
             }
-            return String(sideDrawer.title || '');
+            return String(sideDrawer.title || "");
         } catch (error) {
-            log.warn({ data: error }, 'Error rendering sideDrawer title');
-            return 'Error loading title';
+            log.warn({ data: error }, "Error rendering sideDrawer title");
+            return "Error loading title";
         }
     };
 
@@ -381,14 +381,14 @@ export const SideDrawer = () => {
                 return null;
             }
             // For strings or numbers, convert safely
-            if (typeof content === 'string' || typeof content === 'number') {
+            if (typeof content === "string" || typeof content === "number") {
                 return content;
             }
             // For other object types, don't render them directly
-            log.warn({ data: typeof content, content }, 'Invalid content type for sideDrawer');
+            log.warn({ data: typeof content, content }, "Invalid content type for sideDrawer");
             return null;
         } catch (error) {
-            log.warn({ data: error }, 'Error rendering sideDrawer content');
+            log.warn({ data: error }, "Error rendering sideDrawer content");
             return <div>Error loading content</div>;
         }
     };
@@ -403,7 +403,7 @@ export const SideDrawer = () => {
                     initial={{ opacity: 0, x: 40 }}
                     key="side-drawer"
                     transition={{
-                        type: 'spring',
+                        type: "spring",
                         stiffness: 300,
                         damping: 30,
                         exit: { duration: 0.2 },

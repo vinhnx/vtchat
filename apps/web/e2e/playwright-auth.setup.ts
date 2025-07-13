@@ -1,17 +1,17 @@
-import { expect, test as setup } from '@playwright/test';
-import path from 'path';
+import path from "node:path";
+import { expect, test as setup } from "@playwright/test";
 
-const authFile = path.join(__dirname, 'playwright', '.auth', 'user.json');
+const authFile = path.join(__dirname, "playwright", ".auth", "user.json");
 
-setup('authenticate with Google OAuth', async ({ page }) => {
+setup("authenticate with Google OAuth", async ({ page }) => {
     // Start by going to the login page
-    await page.goto('/login');
+    await page.goto("/login");
 
     // Wait for the login form to be visible
-    await expect(page.getByRole('heading', { name: 'Welcome to VT!' })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Welcome to VT!" })).toBeVisible();
 
     // Click the Google OAuth button
-    await page.getByRole('button', { name: 'Google' }).click();
+    await page.getByRole("button", { name: "Google" }).click();
 
     // Wait for navigation to Google OAuth
     await page.waitForURL(/accounts\.google\.com/, { timeout: 10000 });
@@ -22,20 +22,20 @@ setup('authenticate with Google OAuth', async ({ page }) => {
         await page.waitForSelector('input[type="email"]', { timeout: 10000 });
 
         // Check if we need to enter email first
-        const emailInput = page.getByLabel('Email');
+        const emailInput = page.getByLabel("Email");
         if (await emailInput.isVisible()) {
             // Enter email
-            await emailInput.fill(process.env.GOOGLE_TEST_EMAIL || '');
-            await page.getByRole('button', { name: 'Next' }).click();
+            await emailInput.fill(process.env.GOOGLE_TEST_EMAIL || "");
+            await page.getByRole("button", { name: "Next" }).click();
 
             // Wait for password field
-            const passwordInput = page.getByLabel('Password');
+            const passwordInput = page.getByLabel("Password");
             await expect(passwordInput).toBeVisible({ timeout: 10000 });
-            await passwordInput.fill(process.env.GOOGLE_TEST_PASSWORD || '');
-            await page.getByRole('button', { name: 'Next' }).click();
+            await passwordInput.fill(process.env.GOOGLE_TEST_PASSWORD || "");
+            await page.getByRole("button", { name: "Next" }).click();
         } else {
             // If email input is not visible, try to find account selection
-            const accountSelector = page.locator('[data-identifier]').first();
+            const accountSelector = page.locator("[data-identifier]").first();
             if (await accountSelector.isVisible()) {
                 // Click on the first account
                 await accountSelector.click();
@@ -43,7 +43,7 @@ setup('authenticate with Google OAuth', async ({ page }) => {
                 // May need to enter password after selecting account
                 const passwordInput = page.locator('input[type="password"]');
                 if (await passwordInput.isVisible()) {
-                    await passwordInput.fill(process.env.GOOGLE_TEST_PASSWORD || '');
+                    await passwordInput.fill(process.env.GOOGLE_TEST_PASSWORD || "");
                     await page.click('button:has-text("Next"), #passwordNext');
                 }
             }
@@ -55,15 +55,15 @@ setup('authenticate with Google OAuth', async ({ page }) => {
 
         // Check for 2FA verification
         const twoFAPrompt = page.locator(
-            'input[type="tel"], input[aria-label*="code"], input[aria-label*="verification"]'
+            'input[type="tel"], input[aria-label*="code"], input[aria-label*="verification"]',
         );
         if (await twoFAPrompt.isVisible()) {
-            throw new Error('2FA required - please use a test account without 2FA enabled');
+            throw new Error("2FA required - please use a test account without 2FA enabled");
         }
 
         // Look for "Continue" or "Allow" buttons for app permissions
         const continueButton = page.locator(
-            'button:has-text("Continue"), button:has-text("Allow"), button:has-text("Confirm")'
+            'button:has-text("Continue"), button:has-text("Allow"), button:has-text("Confirm")',
         );
         if (await continueButton.isVisible()) {
             await continueButton.click();
@@ -72,20 +72,20 @@ setup('authenticate with Google OAuth', async ({ page }) => {
         // Try alternative approach: use account picker if available
         try {
             // Look for account picker/selection
-            const accountPicker = page.locator('[data-email], [data-identifier]').first();
+            const accountPicker = page.locator("[data-email], [data-identifier]").first();
             if (await accountPicker.isVisible()) {
                 await accountPicker.click();
 
                 // Check if password is needed
                 const passwordField = page.locator('input[type="password"]');
                 if (await passwordField.isVisible()) {
-                    await passwordField.fill(process.env.GOOGLE_TEST_PASSWORD || '');
+                    await passwordField.fill(process.env.GOOGLE_TEST_PASSWORD || "");
                     await page.click('button:has-text("Next"), #passwordNext');
                 }
             }
         } catch {
             throw new Error(
-                `Could not complete Google OAuth flow: ${error instanceof Error ? error.message : 'Unknown error'}`
+                `Could not complete Google OAuth flow: ${error instanceof Error ? error.message : "Unknown error"}`,
             );
         }
     }
@@ -95,7 +95,7 @@ setup('authenticate with Google OAuth', async ({ page }) => {
 
     // Verify successful authentication by checking for authenticated state
     // This could be a user menu, profile indicator, or redirect to dashboard
-    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator("body")).toBeVisible();
 
     // Wait for the app to fully load and set authentication state
     await page.waitForTimeout(2000);
@@ -106,11 +106,11 @@ setup('authenticate with Google OAuth', async ({ page }) => {
         // Look for common indicators of successful login
         await page.waitForSelector(
             '[data-testid="user-menu"], [data-testid="profile"], .user-avatar, button:has-text("Profile")',
-            { timeout: 5000 }
+            { timeout: 5000 },
         );
     } catch {
         // If no specific user indicators, just verify we're not on the login page
-        await expect(page.getByRole('heading', { name: 'Welcome to VT!' })).not.toBeVisible();
+        await expect(page.getByRole("heading", { name: "Welcome to VT!" })).not.toBeVisible();
     }
 
     // Save authentication state
@@ -118,14 +118,14 @@ setup('authenticate with Google OAuth', async ({ page }) => {
 });
 
 // Alternative setup for testing without actual OAuth (using API)
-setup('authenticate via API', async ({ request }) => {
+setup("authenticate via API", async ({ request }) => {
     // This is a fallback method if OAuth is not available
     // You would implement this based on your backend API
 
-    if (process.env.PLAYWRIGHT_USE_API_AUTH === 'true') {
+    if (process.env.PLAYWRIGHT_USE_API_AUTH === "true") {
         try {
             // Make API call to authenticate
-            const response = await request.post('/api/auth/signin', {
+            const response = await request.post("/api/auth/signin", {
                 data: {
                     // Use test credentials or API key
                     email: process.env.TEST_USER_EMAIL,
@@ -136,30 +136,30 @@ setup('authenticate via API', async ({ request }) => {
             expect(response.ok()).toBeTruthy();
 
             // Extract session cookies from response
-            const cookies = response.headers()['set-cookie'];
+            const cookies = response.headers()["set-cookie"];
 
             if (cookies) {
                 // Save cookies to auth state
                 const authState = {
-                    cookies: cookies.split(';').map((cookie) => {
-                        const [name, value] = cookie.split('=');
+                    cookies: cookies.split(";").map((cookie) => {
+                        const [name, value] = cookie.split("=");
                         return {
                             name: name.trim(),
-                            value: value?.trim() || '',
-                            domain: 'localhost',
-                            path: '/',
+                            value: value?.trim() || "",
+                            domain: "localhost",
+                            path: "/",
                             httpOnly: true,
                             secure: false,
-                            sameSite: 'Lax' as const,
+                            sameSite: "Lax" as const,
                         };
                     }),
                     origins: [],
                 };
 
                 // Write auth state to file
-                const fs = require('fs');
-                const path = require('path');
-                const authDir = path.join(__dirname, 'playwright', '.auth');
+                const fs = require("node:fs");
+                const path = require("node:path");
+                const authDir = path.join(__dirname, "playwright", ".auth");
 
                 if (!fs.existsSync(authDir)) {
                     fs.mkdirSync(authDir, { recursive: true });

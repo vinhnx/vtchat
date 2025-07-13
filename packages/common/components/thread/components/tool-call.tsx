@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { CodeBlock, ToolIcon } from '@repo/common/components';
-import { isMathTool } from '@repo/common/constants/math-tools';
-import type { ToolCall as ToolCallType } from '@repo/shared/types';
-import { Badge, Card, cn } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, FileText, Play, Settings, Sigma } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { CodeBlock, ToolIcon } from "@repo/common/components";
+import { isMathTool } from "@repo/common/constants/math-tools";
+import type { ToolCall as ToolCallType } from "@repo/shared/types";
+import { Badge, Card, cn } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, FileText, Play, Settings, Sigma } from "lucide-react";
+import { memo, useCallback, useState } from "react";
 
 export type ToolCallProps = {
     toolCall: ToolCallType;
@@ -22,10 +22,10 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     // Check if this is a document processing tool
     const isDocumentTool =
         toolCall.toolName &&
-        (toolCall.toolName.includes('document') ||
-            toolCall.toolName.includes('file') ||
-            toolCall.toolName.includes('pdf') ||
-            toolCall.toolName.includes('read'));
+        (toolCall.toolName.includes("document") ||
+            toolCall.toolName.includes("file") ||
+            toolCall.toolName.includes("pdf") ||
+            toolCall.toolName.includes("read"));
 
     const getToolIcon = () => {
         if (isToolMathTool) return <Sigma className="text-green-600" size={16} />;
@@ -34,7 +34,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     };
 
     const getToolBadge = () => {
-        return 'border-muted-foreground/10 bg-muted/20 text-muted-foreground';
+        return "border-muted-foreground/10 bg-muted/20 text-muted-foreground";
     };
 
     const getToolLabel = () => {
@@ -58,8 +58,8 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                     <div className="flex flex-col gap-1">
                         <Badge
                             className={cn(
-                                'border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium',
-                                getToolBadge()
+                                "border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium",
+                                getToolBadge(),
                             )}
                             variant="secondary"
                         >
@@ -80,7 +80,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        animate={{ height: 'auto', opacity: 1 }}
+                        animate={{ height: "auto", opacity: 1 }}
                         className="overflow-hidden"
                         exit={{ height: 0, opacity: 0 }}
                         initial={{ height: 0, opacity: 0 }}
@@ -108,4 +108,4 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     );
 });
 
-ToolCallStep.displayName = 'ToolCallStep';
+ToolCallStep.displayName = "ToolCallStep";

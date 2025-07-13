@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, Button } from '@repo/ui';
-import { AlertCircle, ArrowRight, Mail, Settings, Sparkles } from 'lucide-react';
-import { SETTING_TABS, useAppStore } from '../store';
+import { Alert, AlertDescription, Button } from "@repo/ui";
+import { AlertCircle, ArrowRight, Mail, Settings, Sparkles } from "lucide-react";
+import { SETTING_TABS, useAppStore } from "../store";
 
 interface RateLimitErrorAlertProps {
     error: string;
@@ -16,32 +16,32 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     };
 
     const handleUpgrade = () => {
-        window.open('/plus', '_blank');
+        window.open("/plus", "_blank");
     };
 
     const handleContactSupport = () => {
         window.open(
-            'mailto:hello@vtchat.io.vn?subject=Support Request - Unexpected Error',
-            '_blank'
+            "mailto:hello@vtchat.io.vn?subject=Support Request - Unexpected Error",
+            "_blank",
         );
     };
 
     // Check if this is a rate limit error
     const isRateLimitError =
-        error.toLowerCase().includes('rate limit') ||
-        error.toLowerCase().includes('daily limit') ||
-        error.toLowerCase().includes('per minute') ||
-        error.toLowerCase().includes('minute');
+        error.toLowerCase().includes("rate limit") ||
+        error.toLowerCase().includes("daily limit") ||
+        error.toLowerCase().includes("per minute") ||
+        error.toLowerCase().includes("minute");
 
     if (!isRateLimitError) {
         // Check if this is a diagnostic message with suggestions
-        const hasSuggestions = error.includes('🔧 Try these steps:');
+        const hasSuggestions = error.includes("🔧 Try these steps:");
 
         if (hasSuggestions) {
-            const [message, suggestionsSection] = error.split('🔧 Try these steps:');
+            const [message, suggestionsSection] = error.split("🔧 Try these steps:");
             const suggestions = suggestionsSection
                 .trim()
-                .split('\n')
+                .split("\n")
                 .filter((s) => s.trim());
 
             return (
@@ -55,7 +55,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                                     <ul className="list-disc space-y-1 pl-4 text-sm">
                                         {suggestions.map((suggestion, index) => (
                                             <li className="text-300" key={index}>
-                                                {suggestion.replace(/^\d+\.\s*/, '')}
+                                                {suggestion.replace(/^\d+\.\s*/, "")}
                                             </li>
                                         ))}
                                     </ul>

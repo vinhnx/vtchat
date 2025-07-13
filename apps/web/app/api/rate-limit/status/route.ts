@@ -1,9 +1,9 @@
-import type { ModelEnum } from '@repo/ai/models';
-import { log } from '@repo/shared/logger';
-import type { NextRequest } from 'next/server';
-import { checkVTPlusAccess } from '@/app/api/subscription/access-control';
-import { auth } from '@/lib/auth-server';
-import { getRateLimitStatus, recordRequest } from '@/lib/services/rate-limit';
+import type { ModelEnum } from "@repo/ai/models";
+import { log } from "@repo/shared/logger";
+import type { NextRequest } from "next/server";
+import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
+import { auth } from "@/lib/auth-server";
+import { getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,25 +12,25 @@ export async function GET(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            return new Response(JSON.stringify({ error: 'Authentication required' }), {
+            return new Response(JSON.stringify({ error: "Authentication required" }), {
                 status: 401,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
         const userId = session.user.id;
         const searchParams = request.nextUrl.searchParams;
-        const modelId = searchParams.get('model') as ModelEnum;
+        const modelId = searchParams.get("model") as ModelEnum;
 
         // Check VT+ status for proper limit calculation
         const ip =
-            request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+            request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
         const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
         const isVTPlusUser = vtPlusAccess.hasAccess;
 
         // If no model specified, return all Gemini models
         if (!modelId) {
-            const { GEMINI_MODEL_ENUMS_ARRAY } = await import('@repo/shared/utils');
+            const { GEMINI_MODEL_ENUMS_ARRAY } = await import("@repo/shared/utils");
             const geminiModels = GEMINI_MODEL_ENUMS_ARRAY;
 
             const allStatuses: Record<string, any> = {};
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
                     const status = await getRateLimitStatus(userId, model, isVTPlusUser);
                     allStatuses[model] = status;
                 } catch (error) {
-                    log.error({ error, model }, 'Error getting rate limit status for model');
+                    log.error({ error, model }, "Error getting rate limit status for model");
                     // Continue with other models even if one fails
                     allStatuses[model] = null;
                 }
@@ -49,8 +49,8 @@ export async function GET(request: NextRequest) {
             return new Response(JSON.stringify(allStatuses), {
                 status: 200,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache, no-store, max-age=0',
+                    "Content-Type": "application/json",
+                    "Cache-Control": "no-cache, no-store, max-age=0",
                 },
             });
         }
@@ -61,15 +61,15 @@ export async function GET(request: NextRequest) {
         return new Response(JSON.stringify(status), {
             status: 200,
             headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, max-age=0',
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache, no-store, max-age=0",
             },
         });
     } catch (error) {
-        log.error({ error }, 'Error getting rate limit status');
-        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+        log.error({ error }, "Error getting rate limit status");
+        return new Response(JSON.stringify({ error: "Internal server error" }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
         });
     }
 }
@@ -81,9 +81,9 @@ export async function POST(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            return new Response(JSON.stringify({ error: 'Authentication required' }), {
+            return new Response(JSON.stringify({ error: "Authentication required" }), {
                 status: 401,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
         // Model can be from query string or JSON body
         const searchParams = request.nextUrl.searchParams;
-        let modelId = searchParams.get('model') as ModelEnum;
+        let modelId = searchParams.get("model") as ModelEnum;
 
         if (!modelId) {
             try {
@@ -103,15 +103,15 @@ export async function POST(request: NextRequest) {
         }
 
         if (!modelId) {
-            return new Response(JSON.stringify({ error: 'Missing model parameter' }), {
+            return new Response(JSON.stringify({ error: "Missing model parameter" }), {
                 status: 400,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
         // Check VT+ access
         const ip =
-            request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+            request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
         const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
 
         // Record the successful request
@@ -123,15 +123,15 @@ export async function POST(request: NextRequest) {
         return new Response(JSON.stringify(status), {
             status: 200,
             headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, max-age=0',
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache, no-store, max-age=0",
             },
         });
     } catch (error) {
-        log.error({ error }, 'Error recording rate limit usage');
-        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+        log.error({ error }, "Error recording rate limit usage");
+        return new Response(JSON.stringify({ error: "Internal server error" }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
         });
     }
 }

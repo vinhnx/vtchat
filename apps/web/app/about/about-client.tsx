@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Footer, WrapperDisclosure } from '@repo/common/components';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { TypographyH1 } from '@repo/ui';
+import { Footer, WrapperDisclosure } from "@repo/common/components";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { TypographyH1 } from "@repo/ui";
 
 export function AboutPageClient() {
     const { data: session, isPending } = useSession();

@@ -5,12 +5,12 @@
  * Works with Better Auth's server-side authentication.
  */
 
-import { auth } from '@repo/shared/lib/auth';
-import { getUserWithSubscription } from '@repo/shared/lib/database-queries';
-import { log } from '@repo/shared/logger';
-import { type NextRequest, NextResponse } from 'next/server';
-import { type AccessCheckOptions, type FeatureSlug, PlanSlug } from '../types/subscription';
-import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscription';
+import { auth } from "@repo/shared/lib/auth";
+import { getUserWithSubscription } from "@repo/shared/lib/database-queries";
+import { log } from "@repo/shared/logger";
+import { type NextRequest, NextResponse } from "next/server";
+import { type AccessCheckOptions, type FeatureSlug, PlanSlug } from "../types/subscription";
+import { checkSubscriptionAccess, getUserSubscription } from "../utils/subscription";
 
 /**
  * Server-side subscription access check using Better Auth.
@@ -18,7 +18,7 @@ import { checkSubscriptionAccess, getUserSubscription } from '../utils/subscript
  */
 export async function serverHasAccess(
     options: AccessCheckOptions,
-    headers?: Headers
+    headers?: Headers,
 ): Promise<boolean> {
     const session = await auth.api.getSession({
         headers: headers || new Headers(),
@@ -76,7 +76,7 @@ export async function getServerUserSubscription(headers?: Headers) {
         const userWithSub = await getUserWithSubscription(session.user.id);
         return getUserSubscription(userWithSub?.users || null);
     } catch (error) {
-        log.error('Error getting server-side subscription:', { data: error });
+        log.error("Error getting server-side subscription:", { data: error });
         return getUserSubscription(null);
     }
 }
@@ -86,7 +86,7 @@ export async function getServerUserSubscription(headers?: Headers) {
  */
 export function withSubscriptionAuth(
     handler: (req: NextRequest, user: any, subscription: any) => Promise<NextResponse>,
-    options: AccessCheckOptions
+    options: AccessCheckOptions,
 ) {
     return async (req: NextRequest): Promise<NextResponse> => {
         try {
@@ -95,7 +95,7 @@ export function withSubscriptionAuth(
             });
 
             if (!session?.user?.id) {
-                return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+                return NextResponse.json({ error: "Authentication required" }, { status: 401 });
             }
 
             // Check permission using unified subscription access
@@ -109,12 +109,12 @@ export function withSubscriptionAuth(
                 const subscription = getUserSubscription(userWithSub?.users || null);
                 return NextResponse.json(
                     {
-                        error: 'Subscription required',
+                        error: "Subscription required",
                         currentPlan: subscription.planSlug,
                         requiredFeature: options.feature,
                         requiredPlan: options.plan,
                     },
-                    { status: 403 }
+                    { status: 403 },
                 );
             }
 
@@ -122,8 +122,8 @@ export function withSubscriptionAuth(
             const subscriptionForHandler = getUserSubscription(userWithSub?.users || null);
             return handler(req, session.user, subscriptionForHandler);
         } catch (error) {
-            log.error('Subscription auth middleware error:', { data: error });
-            return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+            log.error("Subscription auth middleware error:", { data: error });
+            return NextResponse.json({ error: "Internal server error" }, { status: 500 });
         }
     };
 }
@@ -133,7 +133,7 @@ export function withSubscriptionAuth(
  */
 export function withFeatureAuth(
     handler: (req: NextRequest, user: any, subscription: any) => Promise<NextResponse>,
-    feature: FeatureSlug
+    feature: FeatureSlug,
 ) {
     return withSubscriptionAuth(handler, { feature });
 }
@@ -143,7 +143,7 @@ export function withFeatureAuth(
  */
 export function withPlanAuth(
     handler: (req: NextRequest, user: any, subscription: any) => Promise<NextResponse>,
-    plan: PlanSlug
+    plan: PlanSlug,
 ) {
     return withSubscriptionAuth(handler, { plan });
 }
@@ -153,7 +153,7 @@ export function withPlanAuth(
  */
 export function protectServerAction<T extends any[], R>(
     action: (...args: T) => Promise<R>,
-    options: AccessCheckOptions
+    options: AccessCheckOptions,
 ): (...args: T) => Promise<R> {
     return async (...args: T): Promise<R> => {
         const hasPermission = await serverHasAccess(options);
@@ -171,7 +171,7 @@ export function protectServerAction<T extends any[], R>(
  */
 export function protectWithFeature<T extends any[], R>(
     action: (...args: T) => Promise<R>,
-    feature: FeatureSlug
+    feature: FeatureSlug,
 ): (...args: T) => Promise<R> {
     return protectServerAction(action, { feature });
 }
@@ -181,7 +181,7 @@ export function protectWithFeature<T extends any[], R>(
  */
 export function protectWithPlan<T extends any[], R>(
     action: (...args: T) => Promise<R>,
-    plan: PlanSlug
+    plan: PlanSlug,
 ): (...args: T) => Promise<R> {
     return protectServerAction(action, { plan });
 }
@@ -205,7 +205,7 @@ export async function getServerAuthInfo() {
             isSignedIn: !!user,
         };
     } catch (error) {
-        log.error('Error getting server auth info:', { data: error });
+        log.error("Error getting server auth info:", { data: error });
         return {
             userId: null,
             user: null,
@@ -236,35 +236,35 @@ export async function checkServerAccess(options: AccessCheckOptions) {
  * Response helpers for subscription-related errors
  */
 export const SubscriptionResponses = {
-    authRequired: () => NextResponse.json({ error: 'Authentication required' }, { status: 401 }),
+    authRequired: () => NextResponse.json({ error: "Authentication required" }, { status: 401 }),
 
     subscriptionRequired: (currentPlan: PlanSlug, required: AccessCheckOptions) =>
         NextResponse.json(
             {
-                error: 'Subscription upgrade required',
+                error: "Subscription upgrade required",
                 currentPlan,
                 required,
             },
-            { status: 403 }
+            { status: 403 },
         ),
 
     featureNotAvailable: (feature: FeatureSlug) =>
         NextResponse.json(
             {
-                error: 'Feature not available in current plan',
+                error: "Feature not available in current plan",
                 feature,
             },
-            { status: 403 }
+            { status: 403 },
         ),
 
     planUpgradeRequired: (currentPlan: PlanSlug, requiredPlan: PlanSlug) =>
         NextResponse.json(
             {
-                error: 'Plan upgrade required',
+                error: "Plan upgrade required",
                 currentPlan,
                 requiredPlan,
             },
-            { status: 403 }
+            { status: 403 },
         ),
 };
 

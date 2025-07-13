@@ -3,11 +3,11 @@
  * This should be run as a one-time migration to secure existing data
  */
 
-import { log } from '@repo/shared/logger';
-import { sql } from 'drizzle-orm';
-import { db } from '../lib/database';
-import { embeddings } from '../lib/database/schema';
-import { containsPII, secureContentForEmbedding } from '../lib/utils/content-security';
+import { log } from "@repo/shared/logger";
+import { sql } from "drizzle-orm";
+import { db } from "../lib/database";
+import { embeddings } from "../lib/database/schema";
+import { containsPII, secureContentForEmbedding } from "../lib/utils/content-security";
 
 interface EmbeddingRecord {
     id: string;
@@ -50,23 +50,23 @@ async function obfuscateExistingEmbeddings() {
                         originalLength: originalContent.length,
                         securedLength: securedContent.length,
                     },
-                    'Obfuscated embedding content'
+                    "Obfuscated embedding content",
                 );
             } else {
                 skippedCount++;
             }
         }
 
-        console.log('✅ Obfuscation complete!');
+        console.log("✅ Obfuscation complete!");
         console.log(`   Updated: ${updatedCount} embeddings`);
         console.log(`   Skipped: ${skippedCount} embeddings (no PII detected)`);
 
         // Verify the obfuscation
-        console.log('\n🔍 Verifying obfuscation...');
+        console.log("\n🔍 Verifying obfuscation...");
         await verifyObfuscation();
     } catch (error) {
-        console.error('❌ Error during obfuscation:', error);
-        log.error({ error }, 'Failed to obfuscate embeddings');
+        console.error("❌ Error during obfuscation:", error);
+        log.error({ error }, "Failed to obfuscate embeddings");
         throw error;
     }
 }
@@ -74,10 +74,10 @@ async function obfuscateExistingEmbeddings() {
 async function verifyObfuscation() {
     // Check for any remaining potentially sensitive content
     const sensitivePatterns = [
-        { pattern: /my name is [A-Z][a-z]+/i, type: 'NAME' },
-        { pattern: /I am \d+ years old/i, type: 'AGE' },
-        { pattern: /born in \d{4}/i, type: 'BIRTH_YEAR' },
-        { pattern: /meeting.*with.*(?!REDACTED)/i, type: 'MEETING' },
+        { pattern: /my name is [A-Z][a-z]+/i, type: "NAME" },
+        { pattern: /I am \d+ years old/i, type: "AGE" },
+        { pattern: /born in \d{4}/i, type: "BIRTH_YEAR" },
+        { pattern: /meeting.*with.*(?!REDACTED)/i, type: "MEETING" },
     ];
 
     let issuesFound = 0;
@@ -101,7 +101,7 @@ async function verifyObfuscation() {
     }
 
     if (issuesFound === 0) {
-        console.log('✅ No sensitive content patterns detected');
+        console.log("✅ No sensitive content patterns detected");
     } else {
         console.log(`⚠️  Found ${issuesFound} potential issues that may need manual review`);
     }
@@ -114,12 +114,11 @@ export { obfuscateExistingEmbeddings, verifyObfuscation };
 if (require.main === module) {
     obfuscateExistingEmbeddings()
         .then(() => {
-            console.log('✅ Embeddings obfuscation completed successfully');
+            console.log("✅ Embeddings obfuscation completed successfully");
             process.exit(0);
         })
         .catch((error) => {
-            console.error('❌ Embeddings obfuscation failed:', error);
+            console.error("❌ Embeddings obfuscation failed:", error);
             process.exit(1);
         });
-}
 }

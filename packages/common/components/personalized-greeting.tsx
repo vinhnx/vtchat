@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ShineText } from '@repo/common/components';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { Flex } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import React from 'react';
+import { ShineText } from "@repo/common/components";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { Flex } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
 
 type PersonalizedGreetingProps = {
     session?: any;
@@ -17,13 +17,13 @@ export const PersonalizedGreeting = ({ session: initialSession }: PersonalizedGr
             user: initialSession?.user,
         },
     });
-    const [greeting, setGreeting] = React.useState<string>('');
+    const [greeting, setGreeting] = React.useState<string>("");
 
     React.useEffect(() => {
         const getTimeBasedGreeting = () => {
             const hour = new Date().getHours();
-            const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
-            const userNamePart = userName ? `, ${userName}!` : '';
+            const userName = session?.user?.name || session?.user?.email?.split("@")[0] || "";
+            const userNamePart = userName ? `, ${userName}!` : "";
 
             if (hour >= 5 && hour < 12) {
                 return `Good morning${userNamePart}`;
@@ -59,7 +59,7 @@ export const PersonalizedGreeting = ({ session: initialSession }: PersonalizedGr
                     key={greeting}
                     transition={{
                         duration: 0.8,
-                        ease: 'easeInOut',
+                        ease: "easeInOut",
                     }}
                 >
                     <ShineText className="text-xl font-medium leading-relaxed tracking-tight sm:text-2xl md:text-3xl">

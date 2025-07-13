@@ -4,65 +4,65 @@ import {
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
-} from '@repo/common/components';
-import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
-import { RootProvider } from '@repo/common/context';
-import { OptimizedAuthProvider } from '@repo/common/providers';
-import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
-import { cn, TooltipProvider } from '@repo/ui';
-import { GeistMono } from 'geist/font/mono';
-import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, Inter } from 'next/font/google';
-import { BetterAuthProvider } from '../components/better-auth-provider';
-import { OfflineIndicator } from '../components/offline-indicator';
-import { PerformanceOptimizations } from '../components/performance-optimizations';
-import { PWAManager } from '../components/pwa-manager';
-import { ReactScan } from '../components/react-scan';
+} from "@repo/common/components";
+import { PlusDefaultsProvider } from "@repo/common/components/plus-defaults-provider";
+import { RootProvider } from "@repo/common/context";
+import { OptimizedAuthProvider } from "@repo/common/providers";
+import { SubscriptionProvider } from "@repo/common/providers/subscription-provider";
+import { cn, TooltipProvider } from "@repo/ui";
+import { GeistMono } from "geist/font/mono";
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
+import { BetterAuthProvider } from "../components/better-auth-provider";
+import { OfflineIndicator } from "../components/offline-indicator";
+import { PerformanceOptimizations } from "../components/performance-optimizations";
+import { PWAManager } from "../components/pwa-manager";
+import { ReactScan } from "../components/react-scan";
 
 // Force dynamic rendering to prevent SSR issues during build
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const bricolage = Bricolage_Grotesque({
-    subsets: ['latin'],
-    variable: '--font-bricolage',
-    display: 'swap',
+    subsets: ["latin"],
+    variable: "--font-bricolage",
+    display: "swap",
 });
 
-import '@repo/ui/src/styles.css';
-import './globals.css';
+import "@repo/ui/src/styles.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn'),
-    title: 'VT',
-    description: 'Minimal AI chat application.',
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://vtchat.io.vn"),
+    title: "VT",
+    description: "Minimal AI chat application.",
     keywords:
-        'agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling',
-    authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
-    creator: 'Vinh Nguyen',
-    publisher: 'Vinh Nguyen',
+        "agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling",
+    authors: [{ name: "Vinh Nguyen", url: "https://vinhnx.github.io/" }],
+    creator: "Vinh Nguyen",
+    publisher: "Vinh Nguyen",
     openGraph: {
-        title: 'VT',
-        siteName: 'VT',
-        description: 'Minimal AI chat application.',
-        url: 'https://vtchat.io.vn',
-        type: 'website',
-        locale: 'en_US',
+        title: "VT",
+        siteName: "VT",
+        description: "Minimal AI chat application.",
+        url: "https://vtchat.io.vn",
+        type: "website",
+        locale: "en_US",
         images: [
             {
-                url: 'https://vtchat.io.vn/og-image-v2.jpg',
+                url: "https://vtchat.io.vn/og-image-v2.jpg",
                 width: 1200,
                 height: 630,
-                alt: 'VT Preview',
+                alt: "VT Preview",
             },
         ],
     },
     twitter: {
-        card: 'summary_large_image',
-        title: 'VT',
-        site: 'VT',
-        creator: '@vinhnx',
-        description: 'Minimal AI chat application.',
-        images: ['https://vtchat.io.vn/twitter-image-v2.jpg'],
+        card: "summary_large_image",
+        title: "VT",
+        site: "VT",
+        creator: "@vinhnx",
+        description: "Minimal AI chat application.",
+        images: ["https://vtchat.io.vn/twitter-image-v2.jpg"],
     },
     robots: {
         index: true,
@@ -70,33 +70,33 @@ export const metadata: Metadata = {
         googleBot: {
             index: true,
             follow: true,
-            'max-video-preview': -1,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
         },
     },
     alternates: {
-        canonical: 'https://vtchat.io.vn',
+        canonical: "https://vtchat.io.vn",
     },
 };
 
 export const viewport: Viewport = {
-    width: 'device-width',
+    width: "device-width",
     initialScale: 1,
     userScalable: true,
-    interactiveWidget: 'resizes-content',
+    interactiveWidget: "resizes-content",
 };
 
 const inter = Inter({
-    subsets: ['latin'],
-    variable: '--font-inter',
-    display: 'swap',
+    subsets: ["latin"],
+    variable: "--font-inter",
+    display: "swap",
 });
 
 const clash = Bricolage_Grotesque({
-    subsets: ['latin'],
-    variable: '--font-clash',
-    display: 'swap',
+    subsets: ["latin"],
+    variable: "--font-clash",
+    display: "swap",
 });
 
 export default function ParentLayout({

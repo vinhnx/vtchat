@@ -1,43 +1,43 @@
-import type { Logger } from 'pino';
-import pino from 'pino';
+import type { Logger } from "pino";
+import pino from "pino";
 
 // Detect if we're running in Next.js
 const isNextJs =
-    typeof window === 'undefined' &&
-    typeof process !== 'undefined' &&
+    typeof window === "undefined" &&
+    typeof process !== "undefined" &&
     (!!process.env.__NEXT_PRIVATE_ORIGIN || !!process.env.NEXT_RUNTIME);
 
 // PII fields that should be automatically redacted
 const PII_FIELDS = [
-    'email',
-    'password',
-    'token',
-    'apiKey',
-    'api_key',
-    'accessToken',
-    'access_token',
-    'refreshToken',
-    'refresh_token',
-    'sessionId',
-    'session_id',
-    'userId',
-    'user_id',
-    'ip',
-    'ipAddress',
-    'ip_address',
-    'phoneNumber',
-    'phone_number',
-    'phone',
-    'ssn',
-    'socialSecurityNumber',
-    'creditCard',
-    'credit_card',
-    'ccNumber',
-    'cc_number',
-    'authorization',
-    'Authorization',
-    'cookie',
-    'Cookie',
+    "email",
+    "password",
+    "token",
+    "apiKey",
+    "api_key",
+    "accessToken",
+    "access_token",
+    "refreshToken",
+    "refresh_token",
+    "sessionId",
+    "session_id",
+    "userId",
+    "user_id",
+    "ip",
+    "ipAddress",
+    "ip_address",
+    "phoneNumber",
+    "phone_number",
+    "phone",
+    "ssn",
+    "socialSecurityNumber",
+    "creditCard",
+    "credit_card",
+    "ccNumber",
+    "cc_number",
+    "authorization",
+    "Authorization",
+    "cookie",
+    "Cookie",
 ];
 
 // Create redaction paths for nested objects
@@ -58,15 +58,15 @@ const redactPaths = [
 ];
 
 // Environment detection
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isTest = process.env.NODE_ENV === 'test';
+const isDevelopment = process.env.NODE_ENV === "development";
+const isTest = process.env.NODE_ENV === "test";
 
 // Simple logger configuration that works with Next.js and other bundlers
 const loggerConfig = {
-    level: isDevelopment ? 'debug' : 'info',
+    level: isDevelopment ? "debug" : "info",
     redact: {
         paths: redactPaths,
-        censor: '[REDACTED]',
+        censor: "[REDACTED]",
     },
     serializers: {
         err: pino.stdSerializers.err,
@@ -74,10 +74,10 @@ const loggerConfig = {
         req: (req: any) => {
             const serialized = pino.stdSerializers.req(req);
             if (serialized.headers) {
-                const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'x-auth-token'];
+                const sensitiveHeaders = ["authorization", "cookie", "x-api-key", "x-auth-token"];
                 sensitiveHeaders.forEach((header) => {
                     if (serialized.headers[header]) {
-                        serialized.headers[header] = '[REDACTED]';
+                        serialized.headers[header] = "[REDACTED]";
                     }
                 });
             }
@@ -97,7 +97,7 @@ const loggerConfig = {
 
 // Test configuration (minimal output)
 if (isTest) {
-    loggerConfig.level = 'silent';
+    loggerConfig.level = "silent";
 }
 
 // Create logger instance
@@ -132,7 +132,7 @@ export const withRequestId = (requestId: string) => {
 export const withLogging = (handler: any) => {
     return async (req: any, res: any) => {
         const requestId =
-            req.headers['x-request-id'] ||
+            req.headers["x-request-id"] ||
             `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         const logger = withRequestId(requestId);
 
@@ -151,9 +151,9 @@ export const withLogging = (handler: any) => {
                     url: req.url,
                     status: res.statusCode,
                     duration,
-                    userAgent: req.headers['user-agent'],
+                    userAgent: req.headers["user-agent"],
                 },
-                'API request completed'
+                "API request completed",
             );
 
             return result;
@@ -167,7 +167,7 @@ export const withLogging = (handler: any) => {
                     duration,
                     error: error instanceof Error ? error.message : String(error),
                 },
-                'API request failed'
+                "API request failed",
             );
 
             throw error;

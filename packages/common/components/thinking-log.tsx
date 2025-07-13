@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import type { Thread } from '@repo/shared/types/thread';
-import { formatDuration } from '@repo/shared/utils';
-import { Badge, Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import type { Thread } from "@repo/shared/types/thread";
+import { formatDuration } from "@repo/shared/utils";
+import { Badge, Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface ThinkingLogProps {
     thread: Thread;
@@ -35,7 +35,7 @@ function ThinkingStep({ step, index }: ThinkingStepProps) {
     );
 }
 
-export function ThinkingLog({ thread, className = '', autoExpand = false }: ThinkingLogProps) {
+export function ThinkingLog({ thread, className = "", autoExpand = false }: ThinkingLogProps) {
     const [isOpen, setIsOpen] = useState(autoExpand);
 
     const thinkingData = useMemo(() => {
@@ -46,7 +46,7 @@ export function ThinkingLog({ thread, className = '', autoExpand = false }: Thin
             return {
                 duration: parsed.totalDuration || 0,
                 steps: parsed.steps || [],
-                model: parsed.model || 'Unknown',
+                model: parsed.model || "Unknown",
             };
         } catch {
             return null;
@@ -93,7 +93,7 @@ export function ThinkingLog({ thread, className = '', autoExpand = false }: Thin
                     {isOpen && (
                         <CollapsibleContent forceMount>
                             <motion.div
-                                animate={{ opacity: 1, height: 'auto' }}
+                                animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
                                 initial={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}

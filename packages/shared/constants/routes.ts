@@ -8,13 +8,13 @@
  * These routes are accessible without login
  */
 export const PublicRoutes = {
-    HOME: '/',
-    LOGIN: '/login',
-    API_AUTH: '/api/auth',
-    PRIVACY: '/privacy',
-    TERMS: '/terms',
-    FAQ: '/faq',
-    ABOUT: '/about',
+    HOME: "/",
+    LOGIN: "/login",
+    API_AUTH: "/api/auth",
+    PRIVACY: "/privacy",
+    TERMS: "/terms",
+    FAQ: "/faq",
+    ABOUT: "/about",
 } as const;
 
 export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
@@ -24,10 +24,10 @@ export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
  * These routes will redirect to login if user is not authenticated
  */
 export const ProtectedRoutes = {
-    RECENT: '/recent',
-    SETTINGS: '/settings',
-    PLUS: '/plus', // VT+ subscription page - requires login
-    SUCCESS: '/success',
+    RECENT: "/recent",
+    SETTINGS: "/settings",
+    PLUS: "/plus", // VT+ subscription page - requires login
+    SUCCESS: "/success",
 } as const;
 
 export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRoutes];
@@ -36,11 +36,11 @@ export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRout
  * API routes that may have different authentication requirements
  */
 export const ApiRoutes = {
-    AUTH: '/api/auth',
-    USER_PROFILE: '/api/user/profile',
-    CHECKOUT: '/api/checkout',
-    WEBHOOK_CREEM: '/api/webhook/creem',
-    SUBSCRIPTION: '/api/subscription',
+    AUTH: "/api/auth",
+    USER_PROFILE: "/api/user/profile",
+    CHECKOUT: "/api/checkout",
+    WEBHOOK_CREEM: "/api/webhook/creem",
+    SUBSCRIPTION: "/api/subscription",
 } as const;
 
 export type ApiRoute = (typeof ApiRoutes)[keyof typeof ApiRoutes];

@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
-import { afterEach, beforeAll, vi } from 'vitest';
+import "@testing-library/jest-dom/vitest";
+import { cleanup } from "@testing-library/react";
+import { afterEach, beforeAll, vi } from "vitest";
 
 // Mock pdfjs-dist at the global level to prevent import issues
-vi.mock('pdfjs-dist', () => ({
+vi.mock("pdfjs-dist", () => ({
     getDocument: vi.fn().mockImplementation(() => ({
         promise: Promise.resolve({
             numPages: 1,
@@ -11,14 +11,14 @@ vi.mock('pdfjs-dist', () => ({
                 Promise.resolve({
                     getTextContent: vi.fn().mockImplementation(() =>
                         Promise.resolve({
-                            items: [{ str: 'mocked pdf text' }],
-                        })
+                            items: [{ str: "mocked pdf text" }],
+                        }),
                     ),
-                })
+                }),
             ),
         }),
     })),
-    GlobalWorkerOptions: { workerSrc: '' },
+    GlobalWorkerOptions: { workerSrc: "" },
 }));
 
 // Mock IntersectionObserver for components that use it
@@ -37,7 +37,7 @@ beforeAll(() => {
     }));
 
     // Mock matchMedia for responsive components
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(window, "matchMedia", {
         writable: true,
         value: vi.fn().mockImplementation((query) => ({
             matches: false,
@@ -61,12 +61,12 @@ beforeAll(() => {
         key: vi.fn(),
     };
 
-    Object.defineProperty(window, 'localStorage', {
+    Object.defineProperty(window, "localStorage", {
         writable: true,
         value: mockStorage,
     });
 
-    Object.defineProperty(window, 'sessionStorage', {
+    Object.defineProperty(window, "sessionStorage", {
         writable: true,
         value: mockStorage,
     });

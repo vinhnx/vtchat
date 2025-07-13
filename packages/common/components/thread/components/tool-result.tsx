@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { CodeBlock, ToolResultIcon } from '@repo/common/components';
-import { isChartTool } from '@repo/common/constants/chart-tools';
-import { isMathTool } from '@repo/common/constants/math-tools';
-import type { ToolResult as ToolResultType } from '@repo/shared/types';
-import { Badge, Card, DynamicChartRenderer } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Activity, CheckCheck, CheckCircle, ChevronDown } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { CodeBlock, ToolResultIcon } from "@repo/common/components";
+import { isChartTool } from "@repo/common/constants/chart-tools";
+import { isMathTool } from "@repo/common/constants/math-tools";
+import type { ToolResult as ToolResultType } from "@repo/shared/types";
+import { Badge, Card, DynamicChartRenderer } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { Activity, CheckCheck, CheckCircle, ChevronDown } from "lucide-react";
+import { memo, useCallback, useState } from "react";
 
 export type ToolResultProps = {
     toolResult: ToolResultType;
@@ -46,7 +46,7 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
                             variant="secondary"
                         >
                             <CheckCircle className="mr-1" size={10} />
-                            {isResultMathTool ? 'Result' : isResultChartTool ? 'Chart' : 'Result'}
+                            {isResultMathTool ? "Result" : isResultChartTool ? "Chart" : "Result"}
                         </Badge>
                         <Badge
                             className="border-muted-foreground/10 bg-muted/20 text-muted-foreground text-xs"
@@ -71,7 +71,7 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        animate={{ height: 'auto', opacity: 1 }}
+                        animate={{ height: "auto", opacity: 1 }}
                         className="overflow-hidden"
                         exit={{ height: 0, opacity: 0 }}
                         initial={{ height: 0, opacity: 0 }}
@@ -107,7 +107,7 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
     );
 });
 
-ToolInvocationStep.displayName = 'ToolInvocationStep';
+ToolInvocationStep.displayName = "ToolInvocationStep";
 
 // Keep the original component for backward compatibility
 export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {

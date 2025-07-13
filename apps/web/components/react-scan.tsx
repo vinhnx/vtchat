@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/logger';
-import { useEffect } from 'react';
-import { scan } from 'react-scan';
-import { REACT_SCAN_CONFIG } from '../lib/config/react-scan';
+import { log } from "@repo/shared/logger";
+import { useEffect } from "react";
+import { scan } from "react-scan";
+import { REACT_SCAN_CONFIG } from "../lib/config/react-scan";
 
 /**
  * React Scan Performance Monitoring Component
@@ -23,7 +23,7 @@ export function ReactScan() {
         }
 
         // Additional runtime safety check
-        if (process.env.NODE_ENV !== 'development') {
+        if (process.env.NODE_ENV !== "development") {
             return;
         }
 
@@ -50,19 +50,19 @@ export function ReactScan() {
                     // Log slow renders in development for debugging
                     if (REACT_SCAN_CONFIG.log && renders.length > 0) {
                         const slowRenders = renders.filter(
-                            (render) => (render.time ?? 0) > REACT_SCAN_CONFIG.slowRenderThreshold
+                            (render) => (render.time ?? 0) > REACT_SCAN_CONFIG.slowRenderThreshold,
                         );
 
-                        if (slowRenders.length > 0 && process.env.NODE_ENV === 'development') {
+                        if (slowRenders.length > 0 && process.env.NODE_ENV === "development") {
                             log.debug(
                                 {
-                                    component: fiber.type?.name || fiber.type || 'Unknown',
+                                    component: fiber.type?.name || fiber.type || "Unknown",
                                     slowRenders: slowRenders.map((r) => ({
                                         time: r.time,
                                         phase: r.phase,
                                     })),
                                 },
-                                '[React Scan] Slow renders detected'
+                                "[React Scan] Slow renders detected",
                             );
                         }
                     }
@@ -77,13 +77,13 @@ export function ReactScan() {
                     if (
                         REACT_SCAN_CONFIG.log &&
                         outlines.length > 5 &&
-                        process.env.NODE_ENV === 'development'
+                        process.env.NODE_ENV === "development"
                     ) {
                         log.debug(
                             {
                                 outlinesCount: outlines.length,
                             },
-                            '[React Scan] Heavy render cycle detected'
+                            "[React Scan] Heavy render cycle detected",
                         );
                     }
                 },
@@ -93,7 +93,7 @@ export function ReactScan() {
                 },
             });
 
-            if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === "development") {
                 log.info(
                     {
                         environment: process.env.NODE_ENV,
@@ -101,12 +101,12 @@ export function ReactScan() {
                         logging: REACT_SCAN_CONFIG.log,
                         deployment: REACT_SCAN_CONFIG.isDeployment,
                     },
-                    '[React Scan] Performance monitoring initialized'
+                    "[React Scan] Performance monitoring initialized",
                 );
             }
         } catch (error) {
             // Always log errors
-            log.error({ error }, '[React Scan] Failed to initialize');
+            log.error({ error }, "[React Scan] Failed to initialize");
         }
     }, []);
 

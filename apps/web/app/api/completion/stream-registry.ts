@@ -21,7 +21,7 @@ export function registerStream(
     metadata: {
         userId?: string;
         threadId?: string;
-    } = {}
+    } = {},
 ): void {
     streamRegistry.set(requestId, {
         abortController,

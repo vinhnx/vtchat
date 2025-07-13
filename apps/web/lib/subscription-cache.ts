@@ -3,9 +3,9 @@
  * Handles caching of subscription status to minimize database calls
  */
 
-import { log } from '@repo/shared/logger';
-import type { PlanSlug } from '@repo/shared/types/subscription';
-import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { log } from "@repo/shared/logger";
+import type { PlanSlug } from "@repo/shared/types/subscription";
+import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 
 export interface CachedSubscriptionStatus {
     plan: PlanSlug;
@@ -75,7 +75,7 @@ export function getCachedSubscriptionStatus(userId: string): CachedSubscriptionS
  */
 export function cacheSubscriptionStatus(
     userId: string,
-    status: Omit<CachedSubscriptionStatus, 'cachedAt' | 'expiresAt'>
+    status: Omit<CachedSubscriptionStatus, "cachedAt" | "expiresAt">,
 ): CachedSubscriptionStatus {
     const now = new Date();
     const cacheDuration = status.isPlusSubscriber ? CACHE_DURATION_ACTIVE : CACHE_DURATION_FREE;
@@ -98,5 +98,5 @@ export function cacheSubscriptionStatus(
 export function invalidateSubscriptionCache(userId: string): void {
     const cacheKey = getCacheKey(userId);
     subscriptionCache.delete(cacheKey);
-    log.info({}, '[Subscription Cache] Invalidated cache for user');
+    log.info({}, "[Subscription Cache] Invalidated cache for user");
 }

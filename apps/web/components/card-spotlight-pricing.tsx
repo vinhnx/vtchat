@@ -1,13 +1,13 @@
-'use client';
-import type React from 'react';
-import { useRef, useState } from 'react';
+"use client";
+import type React from "react";
+import { useRef, useState } from "react";
 
 interface CardSpotlightPricingProps {
     children: React.ReactNode;
     className?: string;
 }
 
-export const CardSpotlightPricing = ({ children, className = '' }: CardSpotlightPricingProps) => {
+export const CardSpotlightPricing = ({ children, className = "" }: CardSpotlightPricingProps) => {
     const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });

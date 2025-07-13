@@ -10,7 +10,10 @@
         "maxSize": 5242880
     },
     "formatter": {
-        "enabled": false
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100
     },
     "linter": {
         "enabled": true,

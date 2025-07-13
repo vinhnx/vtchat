@@ -1,6 +1,6 @@
-import { EnvironmentType } from '../types/environment';
+import { EnvironmentType } from "../types/environment";
 
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 /**
  * Checks if the current environment is production.
@@ -58,8 +58,8 @@ export function getCurrentEnvironmentType(): EnvironmentType {
 /**
  * Development environment detection utilities
  */
-export const isDevelopment = process.env.NODE_ENV === 'development';
-export const isProduction = process.env.NODE_ENV === 'production';
+export const isDevelopment = process.env.NODE_ENV === "development";
+export const isProduction = process.env.NODE_ENV === "production";
 
 /**
  * Development-only console logging utility

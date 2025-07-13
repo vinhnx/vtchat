@@ -1,5 +1,5 @@
-import { ModelEnum } from '@repo/ai/models';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ModelEnum } from "@repo/ai/models";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database BEFORE importing the service
 const mockDb = {
@@ -8,23 +8,23 @@ const mockDb = {
     update: vi.fn(),
 };
 
-vi.mock('@/lib/database', () => ({
+vi.mock("@/lib/database", () => ({
     db: mockDb,
 }));
 
-vi.mock('drizzle-orm', () => ({
-    eq: vi.fn(() => 'eq-mock'),
-    and: vi.fn(() => 'and-mock'),
+vi.mock("drizzle-orm", () => ({
+    eq: vi.fn(() => "eq-mock"),
+    and: vi.fn(() => "and-mock"),
 }));
 
 // Import service after mocks are set up
 const { checkRateLimit, recordRequest, getRateLimitStatus, RATE_LIMITS } = await import(
-    '@/lib/services/rate-limit'
+    "@/lib/services/rate-limit"
 );
 
-describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
-    const testUserId1 = 'user-account-1';
-    const testUserId2 = 'user-account-2';
+describe("Gemini 2.5 Flash Lite - Rate Limiting Per Account", () => {
+    const testUserId1 = "user-account-1";
+    const testUserId2 = "user-account-2";
     const freeModelId = ModelEnum.GEMINI_2_5_FLASH_LITE;
     const paidModelId = ModelEnum.GPT_4o;
 
@@ -37,8 +37,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         vi.useRealTimers();
     });
 
-    describe('Rate Limit Constants', () => {
-        it('should enforce correct per-account limits for Gemini 2.5 Flash Lite', () => {
+    describe("Rate Limit Constants", () => {
+        it("should enforce correct per-account limits for Gemini 2.5 Flash Lite", () => {
             expect(RATE_LIMITS.GEMINI_2_5_FLASH_LITE).toEqual({
                 DAILY_LIMIT: 20, // 20 requests per day PER USER
                 MINUTE_LIMIT: 5, // 5 requests per minute PER USER
@@ -47,8 +47,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
     });
 
-    describe('Per-Account Rate Limiting Logic', () => {
-        it('should allow unlimited requests for paid models', async () => {
+    describe("Per-Account Rate Limiting Logic", () => {
+        it("should allow unlimited requests for paid models", async () => {
             const result = await checkRateLimit(testUserId1, paidModelId);
 
             expect(result.allowed).toBe(true);
@@ -57,7 +57,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             expect(mockDb.select).not.toHaveBeenCalled();
         });
 
-        it('should create separate rate limit records for different user accounts', async () => {
+        it("should create separate rate limit records for different user accounts", async () => {
             // Mock empty results for both users (first time)
             mockDb.select.mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -87,17 +87,17 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             expect(mockDb.insert).toHaveBeenCalledTimes(2);
         });
 
-        it('should enforce daily limit per individual account', async () => {
-            const now = new Date('2024-01-01T12:00:00Z');
+        it("should enforce daily limit per individual account", async () => {
+            const now = new Date("2024-01-01T12:00:00Z");
             vi.setSystemTime(now);
 
             // Mock user1 at daily limit, user2 with remaining requests
             const mockRecordUser1 = {
-                id: 'record-user1',
+                id: "record-user1",
                 userId: testUserId1,
                 modelId: freeModelId,
-                dailyRequestCount: '10', // At limit
-                minuteRequestCount: '0',
+                dailyRequestCount: "10", // At limit
+                minuteRequestCount: "0",
                 lastDailyReset: now,
                 lastMinuteReset: now,
                 createdAt: now,
@@ -105,11 +105,11 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             };
 
             const mockRecordUser2 = {
-                id: 'record-user2',
+                id: "record-user2",
                 userId: testUserId2,
                 modelId: freeModelId,
-                dailyRequestCount: '5', // Under limit
-                minuteRequestCount: '0',
+                dailyRequestCount: "5", // Under limit
+                minuteRequestCount: "0",
                 lastDailyReset: now,
                 lastMinuteReset: now,
                 createdAt: now,
@@ -141,38 +141,38 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
 
             // User1 should be blocked, User2 should be allowed
             expect(result1.allowed).toBe(false);
-            expect(result1.reason).toBe('daily_limit_exceeded');
+            expect(result1.reason).toBe("daily_limit_exceeded");
             expect(result1.remainingDaily).toBe(0);
 
             expect(result2.allowed).toBe(true);
             expect(result2.remainingDaily).toBe(5);
         });
 
-        it('should enforce per-minute limit per individual account', async () => {
-            const now = new Date('2024-01-01T12:00:00Z');
+        it("should enforce per-minute limit per individual account", async () => {
+            const now = new Date("2024-01-01T12:00:00Z");
             vi.setSystemTime(now);
 
             // Mock both users at minute limit
             const mockRecordUser1 = {
-                id: 'record-user1',
+                id: "record-user1",
                 userId: testUserId1,
                 modelId: freeModelId,
-                dailyRequestCount: '5',
-                minuteRequestCount: '1', // At minute limit
-                lastDailyReset: new Date('2024-01-01T00:00:00Z'),
+                dailyRequestCount: "5",
+                minuteRequestCount: "1", // At minute limit
+                lastDailyReset: new Date("2024-01-01T00:00:00Z"),
                 lastMinuteReset: now, // Recent minute reset
                 createdAt: now,
                 updatedAt: now,
             };
 
             const mockRecordUser2 = {
-                id: 'record-user2',
+                id: "record-user2",
                 userId: testUserId2,
                 modelId: freeModelId,
-                dailyRequestCount: '3',
-                minuteRequestCount: '0', // Under minute limit
-                lastDailyReset: new Date('2024-01-01T00:00:00Z'),
-                lastMinuteReset: new Date('2024-01-01T11:59:00Z'), // Old minute reset
+                dailyRequestCount: "3",
+                minuteRequestCount: "0", // Under minute limit
+                lastDailyReset: new Date("2024-01-01T00:00:00Z"),
+                lastMinuteReset: new Date("2024-01-01T11:59:00Z"), // Old minute reset
                 createdAt: now,
                 updatedAt: now,
             };
@@ -202,7 +202,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
 
             // User1 should be minute-limited, User2 should be allowed
             expect(result1.allowed).toBe(false);
-            expect(result1.reason).toBe('minute_limit_exceeded');
+            expect(result1.reason).toBe("minute_limit_exceeded");
             expect(result1.remainingMinute).toBe(0);
 
             expect(result2.allowed).toBe(true);
@@ -210,21 +210,21 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
     });
 
-    describe('Daily Reset Logic (00:00 UTC)', () => {
-        it('should reset daily counts at 00:00 UTC per user account', async () => {
+    describe("Daily Reset Logic (00:00 UTC)", () => {
+        it("should reset daily counts at 00:00 UTC per user account", async () => {
             // Start at 23:59 UTC
-            const beforeMidnight = new Date('2024-01-01T23:59:00Z');
-            const afterMidnight = new Date('2024-01-02T00:01:00Z');
+            const beforeMidnight = new Date("2024-01-01T23:59:00Z");
+            const afterMidnight = new Date("2024-01-02T00:01:00Z");
 
             vi.setSystemTime(beforeMidnight);
 
             const mockRecord = {
-                id: 'record-123',
+                id: "record-123",
                 userId: testUserId1,
                 modelId: freeModelId,
-                dailyRequestCount: '10', // At limit
-                minuteRequestCount: '0',
-                lastDailyReset: new Date('2024-01-01T00:00:00Z'), // Previous day
+                dailyRequestCount: "10", // At limit
+                minuteRequestCount: "0",
+                lastDailyReset: new Date("2024-01-01T00:00:00Z"), // Previous day
                 lastMinuteReset: beforeMidnight,
                 createdAt: beforeMidnight,
                 updatedAt: beforeMidnight,
@@ -243,7 +243,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             // Before midnight - should be blocked
             const resultBefore = await checkRateLimit(testUserId1, freeModelId);
             expect(resultBefore.allowed).toBe(false);
-            expect(resultBefore.reason).toBe('daily_limit_exceeded');
+            expect(resultBefore.reason).toBe("daily_limit_exceeded");
 
             // Move to after midnight
             vi.setSystemTime(afterMidnight);
@@ -255,9 +255,9 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
     });
 
-    describe('Request Recording Per Account', () => {
-        it('should record requests separately for different user accounts', async () => {
-            const now = new Date('2024-01-01T12:00:00Z');
+    describe("Request Recording Per Account", () => {
+        it("should record requests separately for different user accounts", async () => {
+            const now = new Date("2024-01-01T12:00:00Z");
             vi.setSystemTime(now);
 
             // Mock both users as first-time users
@@ -287,22 +287,22 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
                 expect.objectContaining({
                     userId: testUserId1,
                     modelId: freeModelId,
-                    dailyRequestCount: '1',
-                    minuteRequestCount: '1',
-                })
+                    dailyRequestCount: "1",
+                    minuteRequestCount: "1",
+                }),
             );
 
             expect(mockInsert).toHaveBeenCalledWith(
                 expect.objectContaining({
                     userId: testUserId2,
                     modelId: freeModelId,
-                    dailyRequestCount: '1',
-                    minuteRequestCount: '1',
-                })
+                    dailyRequestCount: "1",
+                    minuteRequestCount: "1",
+                }),
             );
         });
 
-        it('should not record requests for paid models', async () => {
+        it("should not record requests for paid models", async () => {
             await recordRequest(testUserId1, paidModelId, false);
             await recordRequest(testUserId2, paidModelId, false);
 
@@ -312,8 +312,8 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
     });
 
-    describe('Rate Limit Status Per Account', () => {
-        it('should return null for paid models', async () => {
+    describe("Rate Limit Status Per Account", () => {
+        it("should return null for paid models", async () => {
             const status1 = await getRateLimitStatus(testUserId1, paidModelId);
             const status2 = await getRateLimitStatus(testUserId2, paidModelId);
 
@@ -321,30 +321,30 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             expect(status2).toBeNull();
         });
 
-        it('should return individual user status for free models', async () => {
-            const now = new Date('2024-01-01T12:00:00Z');
+        it("should return individual user status for free models", async () => {
+            const now = new Date("2024-01-01T12:00:00Z");
             vi.setSystemTime(now);
 
             // Mock different usage for different users
             const mockRecordUser1 = {
-                id: 'record-user1',
+                id: "record-user1",
                 userId: testUserId1,
                 modelId: freeModelId,
-                dailyRequestCount: '8', // User1 used 8
-                minuteRequestCount: '0',
-                lastDailyReset: new Date('2024-01-01T00:00:00Z'),
-                lastMinuteReset: new Date('2024-01-01T11:59:00Z'),
+                dailyRequestCount: "8", // User1 used 8
+                minuteRequestCount: "0",
+                lastDailyReset: new Date("2024-01-01T00:00:00Z"),
+                lastMinuteReset: new Date("2024-01-01T11:59:00Z"),
                 createdAt: now,
                 updatedAt: now,
             };
 
             const mockRecordUser2 = {
-                id: 'record-user2',
+                id: "record-user2",
                 userId: testUserId2,
                 modelId: freeModelId,
-                dailyRequestCount: '3', // User2 used 3
-                minuteRequestCount: '1',
-                lastDailyReset: new Date('2024-01-01T00:00:00Z'),
+                dailyRequestCount: "3", // User2 used 3
+                minuteRequestCount: "1",
+                lastDailyReset: new Date("2024-01-01T00:00:00Z"),
                 lastMinuteReset: now,
                 createdAt: now,
                 updatedAt: now,
@@ -402,7 +402,7 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             });
         });
 
-        it('should return default status for first-time users', async () => {
+        it("should return default status for first-time users", async () => {
             mockDb.select.mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
@@ -430,24 +430,24 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
         });
     });
 
-    describe('Edge Cases and Error Handling', () => {
-        it('should handle database errors gracefully', async () => {
+    describe("Edge Cases and Error Handling", () => {
+        it("should handle database errors gracefully", async () => {
             mockDb.select.mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockRejectedValue(new Error('Database error')),
+                            then: vi.fn().mockRejectedValue(new Error("Database error")),
                         }),
                     }),
                 }),
             });
 
             await expect(checkRateLimit(testUserId1, freeModelId)).rejects.toThrow(
-                'Database error'
+                "Database error",
             );
         });
 
-        it('should handle missing user records correctly', async () => {
+        it("should handle missing user records correctly", async () => {
             mockDb.select.mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
@@ -469,13 +469,13 @@ describe('Gemini 2.5 Flash Lite - Rate Limiting Per Account', () => {
             expect(result.remainingMinute).toBe(1);
         });
 
-        it('should handle corrupted rate limit data', async () => {
+        it("should handle corrupted rate limit data", async () => {
             const mockRecord = {
-                id: 'record-123',
+                id: "record-123",
                 userId: testUserId1,
                 modelId: freeModelId,
-                dailyRequestCount: 'invalid', // Invalid data
-                minuteRequestCount: 'also-invalid',
+                dailyRequestCount: "invalid", // Invalid data
+                minuteRequestCount: "also-invalid",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Footer, InlineLoader, Thread } from '@repo/common/components';
-import { useSession } from '@repo/shared/lib/auth-client';
-import dynamic from 'next/dynamic';
+import { Footer, InlineLoader, Thread } from "@repo/common/components";
+import { useSession } from "@repo/shared/lib/auth-client";
+import dynamic from "next/dynamic";
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
     () =>
-        import('@repo/common/components').then((mod) => ({
+        import("@repo/common/components").then((mod) => ({
             default: mod.ChatInput,
         })),
     {
@@ -17,7 +17,7 @@ const ChatInput = dynamic(
                 <InlineLoader />
             </div>
         ),
-    }
+    },
 );
 
 export default function HomePage() {

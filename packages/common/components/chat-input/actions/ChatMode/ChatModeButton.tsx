@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
+import { useChatStore } from "@repo/common/store";
 import {
     Button,
     Dialog,
@@ -10,14 +10,14 @@ import {
     DialogTitle,
     DropdownMenu,
     DropdownMenuTrigger,
-} from '@repo/ui';
-import { ChevronDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { chatOptions, modelOptions } from '../../chat-config';
-import { getIconByName } from '../../config/icons';
-import { useChatModeAccess } from '../../hooks/useChatModeAccess';
-import { ChatModeOptions } from './ChatModeOptions';
+} from "@repo/ui";
+import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { chatOptions, modelOptions } from "../../chat-config";
+import { getIconByName } from "../../config/icons";
+import { useChatModeAccess } from "../../hooks/useChatModeAccess";
+import { ChatModeOptions } from "./ChatModeOptions";
 
 export function ChatModeButton() {
     const chatMode = useChatStore((state) => state.chatMode);
@@ -39,7 +39,7 @@ export function ChatModeButton() {
 
     // Get the icon for the selected option
     const selectedIcon =
-        selectedOption && 'iconName' in selectedOption
+        selectedOption && "iconName" in selectedOption
             ? getIconByName(selectedOption.iconName as string)
             : selectedOption?.icon;
 
@@ -48,7 +48,7 @@ export function ChatModeButton() {
             setShowGateAlert(gateInfo);
             setIsChatModeOpen(false);
         },
-        []
+        [],
     );
 
     return (
@@ -59,7 +59,7 @@ export function ChatModeButton() {
                         <Button
                             className="opacity-70 border border-muted-foreground/30"
                             size="xs"
-                            variant={'secondary'}
+                            variant={"secondary"}
                         >
                             {selectedIcon}
                             {selectedOption?.label} (VT+)
@@ -69,7 +69,7 @@ export function ChatModeButton() {
                         <Button
                             className="border border-muted-foreground/30"
                             size="xs"
-                            variant={'secondary'}
+                            variant={"secondary"}
                         >
                             {selectedIcon}
                             {selectedOption?.label}
@@ -107,7 +107,7 @@ export function ChatModeButton() {
                                 </Button>
                                 <Button
                                     onClick={() => {
-                                        push('/plus');
+                                        push("/plus");
                                         setShowGateAlert(null);
                                     }}
                                     className="flex-1"

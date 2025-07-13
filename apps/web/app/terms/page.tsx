@@ -1,18 +1,18 @@
-import { Footer, MarkdownContent } from '@repo/common/components';
-import { termsMdx } from '@repo/shared/config';
-import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Footer, MarkdownContent } from "@repo/common/components";
+import { termsMdx } from "@repo/shared/config";
+import { Button } from "@repo/ui";
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: 'Terms of Service | VT',
+    title: "Terms of Service | VT",
     description:
-        'Terms of Service for VT - your privacy-focused AI chat platform. Learn about our service terms, user responsibilities, and platform policies.',
+        "Terms of Service for VT - your privacy-focused AI chat platform. Learn about our service terms, user responsibilities, and platform policies.",
     openGraph: {
-        title: 'Terms of Service | VT',
-        description: 'Terms of Service for VT - your privacy-focused AI chat platform.',
-        type: 'website',
+        title: "Terms of Service | VT",
+        description: "Terms of Service for VT - your privacy-focused AI chat platform.",
+        type: "website",
     },
     robots: {
         index: true,

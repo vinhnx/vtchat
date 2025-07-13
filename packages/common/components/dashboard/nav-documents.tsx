@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     DropdownMenu,
@@ -13,8 +13,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@repo/ui';
-import { type LucideIcon, MoreHorizontal, Folder, Share, Trash } from 'lucide-react';
+} from "@repo/ui";
+import { Folder, type LucideIcon, MoreHorizontal, Share, Trash } from "lucide-react";
 
 export function NavDocuments({
     items,
@@ -51,8 +51,8 @@ export function NavDocuments({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="w-24 rounded-lg"
-                                side={isMobile ? 'bottom' : 'right'}
-                                align={isMobile ? 'end' : 'start'}
+                                side={isMobile ? "bottom" : "right"}
+                                align={isMobile ? "end" : "start"}
                             >
                                 <DropdownMenuItem>
                                     <Folder />

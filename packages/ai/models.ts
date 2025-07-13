@@ -1,38 +1,53 @@
-import { ChatMode } from '@repo/shared/config';
-import type { CoreMessage } from 'ai';
-import { ReasoningTagName, ReasoningType } from './constants/reasoning';
-import type { ProviderEnumType } from './providers';
+import { ChatMode } from "@repo/shared/config";
+import type { CoreMessage } from "ai";
+import { ReasoningTagName, ReasoningType } from "./constants/reasoning";
+import type { ProviderEnumType } from "./providers";
 
 export const ModelEnum = {
-    CLAUDE_4_SONNET: 'claude-4-sonnet-20250514',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
-    GEMINI_2_5_FLASH: 'gemini-2.5-flash',
-    GEMINI_2_5_PRO: 'gemini-2.5-pro',
-    CLAUDE_4_OPUS: 'claude-4-opus-20250514',
-    GPT_4o_Mini: 'gpt-4o-mini',
-    GPT_4o: 'gpt-4o',
-    GPT_4_1_Mini: 'gpt-4.1-mini',
-    GPT_4_1_Nano: 'gpt-4.1-nano',
-    GPT_4_1: 'gpt-4.1',
-    O3: 'o3',
-    O3_Mini: 'o3-mini',
-    O4_Mini: 'o4-mini',
-    GROK_3: 'grok-3',
-    GROK_3_MINI: 'grok-3-mini',
-    GROK_4: 'grok-4',
+    CLAUDE_4_SONNET: "claude-4-sonnet-20250514",
+    GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
+    GEMINI_2_5_FLASH: "gemini-2.5-flash",
+    GEMINI_2_5_PRO: "gemini-2.5-pro",
+    CLAUDE_4_OPUS: "claude-4-opus-20250514",
+    GPT_4o_Mini: "gpt-4o-mini",
+    GPT_4o: "gpt-4o",
+    GPT_4_1_Mini: "gpt-4.1-mini",
+    GPT_4_1_Nano: "gpt-4.1-nano",
+    GPT_4_1: "gpt-4.1",
+    O3: "o3",
+    O3_Mini: "o3-mini",
+    O4_Mini: "o4-mini",
+    GROK_3: "grok-3",
+    GROK_3_MINI: "grok-3-mini",
+    GROK_4: "grok-4",
+    // Fireworks models
+    DEEPSEEK_R1_FIREWORKS: "deepseek-r1-fireworks",
     // OpenRouter models
-    DEEPSEEK_V3_0324: 'deepseek/deepseek-chat-v3-0324',
-    DEEPSEEK_R1: 'deepseek/deepseek-r1',
-    QWEN3_235B_A22B: 'qwen/qwen3-235b-a22b',
-    QWEN3_32B: 'qwen/qwen3-32b',
-    MISTRAL_NEMO: 'mistralai/mistral-nemo',
-    QWEN3_14B: 'qwen/qwen3-14b',
-    KIMI_K2: 'moonshot/kimi-k2',
+    DEEPSEEK_V3_0324: "deepseek/deepseek-chat-v3-0324",
+    DEEPSEEK_R1: "deepseek/deepseek-r1",
+    QWEN3_235B_A22B: "qwen/qwen3-235b-a22b",
+    QWEN3_32B: "qwen/qwen3-32b",
+    MISTRAL_NEMO: "mistralai/mistral-nemo",
+    QWEN3_14B: "qwen/qwen3-14b",
+    KIMI_K2: "moonshot/kimi-k2",
     // LM Studio models (using generic model names)
-    LMSTUDIO_LLAMA_3_8B: 'llama-3-8b-instruct',
-    LMSTUDIO_QWEN_7B: 'qwen2.5-7b-instruct',
-    LMSTUDIO_GEMMA_7B: 'gemma-7b-instruct',
-    LMSTUDIO_GEMMA_3_1B: 'google/gemma-3-1b',
+    LMSTUDIO_LLAMA_3_8B: "llama-3-8b-instruct",
+    LMSTUDIO_QWEN_7B: "qwen2.5-7b-instruct",
+    LMSTUDIO_GEMMA_7B: "gemma-7b-instruct",
+    LMSTUDIO_GEMMA_3_1B: "google/gemma-3-1b",
+    // Ollama models (using Ollama model names)
+    OLLAMA_LLAMA_3_3: "llama3.3",
+    OLLAMA_LLAMA_3_2: "llama3.2",
+    OLLAMA_LLAMA_3_1: "llama3.1",
+    OLLAMA_QWEN_3: "qwen3",
+    OLLAMA_QWEN_2_5: "qwen2.5",
+    OLLAMA_GEMMA_3: "gemma3",
+    OLLAMA_GEMMA_3N: "gemma3n",
+    OLLAMA_GEMMA_2: "gemma2",
+    OLLAMA_DEEPSEEK_R1: "deepseek-r1",
+    OLLAMA_MISTRAL: "mistral",
+    OLLAMA_CODELLAMA: "codellama",
+    OLLAMA_LLAVA: "llava",
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -49,183 +64,280 @@ export type Model = {
 export const models: Model[] = [
     {
         id: ModelEnum.GPT_4o,
-        name: 'GPT-4o',
-        provider: 'openai',
+        name: "GPT-4o",
+        provider: "openai",
         maxTokens: 16_384,
         contextWindow: 128_000,
     },
     {
         id: ModelEnum.GPT_4_1_Mini,
-        name: 'GPT-4.1 Mini',
-        provider: 'openai',
+        name: "GPT-4.1 Mini",
+        provider: "openai",
         maxTokens: 32_768,
         contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.GPT_4_1,
-        name: 'GPT-4.1',
-        provider: 'openai',
+        name: "GPT-4.1",
+        provider: "openai",
         maxTokens: 32_768,
         contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.O3,
-        name: 'o3',
-        provider: 'openai',
+        name: "o3",
+        provider: "openai",
         maxTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.O3_Mini,
-        name: 'o3-mini',
-        provider: 'openai',
+        name: "o3-mini",
+        provider: "openai",
         maxTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.O4_Mini,
-        name: 'o4 mini',
-        provider: 'openai',
+        name: "o4 mini",
+        provider: "openai",
         maxTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.GPT_4o_Mini,
-        name: 'GPT-4o Mini',
-        provider: 'openai',
+        name: "GPT-4o Mini",
+        provider: "openai",
         maxTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.CLAUDE_4_SONNET,
-        name: 'Claude 4 Sonnet',
-        provider: 'anthropic',
+        name: "Claude 4 Sonnet",
+        provider: "anthropic",
         maxTokens: 64_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.CLAUDE_4_OPUS,
-        name: 'Claude 4 Opus',
-        provider: 'anthropic',
+        name: "Claude 4 Opus",
+        provider: "anthropic",
         maxTokens: 32_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH,
-        name: 'Gemini 2.5 Flash',
-        provider: 'google',
+        name: "Gemini 2.5 Flash",
+        provider: "google",
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite Preview 06-17',
-        provider: 'google',
+        name: "Gemini 2.5 Flash Lite Preview 06-17",
+        provider: "google",
         maxTokens: 65_536,
         contextWindow: 65_536,
         isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO,
-        name: 'Gemini 2.5 Pro',
-        provider: 'google',
+        name: "Gemini 2.5 Pro",
+        provider: "google",
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
         id: ModelEnum.GROK_3,
-        name: 'Grok 3',
-        provider: 'xai',
+        name: "Grok 3",
+        provider: "xai",
         maxTokens: 131_072,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GROK_3_MINI,
-        name: 'Grok 3 Mini',
-        provider: 'xai',
+        name: "Grok 3 Mini",
+        provider: "xai",
         maxTokens: 131_072,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GROK_4,
-        name: 'Grok 4',
-        provider: 'xai',
+        name: "Grok 4",
+        provider: "xai",
         maxTokens: 256_000,
         contextWindow: 256_000,
     },
     // OpenRouter models
     {
         id: ModelEnum.DEEPSEEK_V3_0324,
-        name: 'DeepSeek V3 0324',
-        provider: 'openrouter',
+        name: "DeepSeek V3 0324",
+        provider: "openrouter",
         maxTokens: 32_768,
         contextWindow: 163_840,
     },
     {
         id: ModelEnum.QWEN3_235B_A22B,
-        name: 'Qwen3 235B A22B',
-        provider: 'openrouter',
+        name: "Qwen3 235B A22B",
+        provider: "openrouter",
         maxTokens: 8192,
         contextWindow: 40_960,
     },
     {
         id: ModelEnum.QWEN3_32B,
-        name: 'Qwen3 32B',
-        provider: 'openrouter',
+        name: "Qwen3 32B",
+        provider: "openrouter",
         maxTokens: 8192,
         contextWindow: 40_960,
     },
     {
         id: ModelEnum.MISTRAL_NEMO,
-        name: 'Mistral Nemo',
-        provider: 'openrouter',
+        name: "Mistral Nemo",
+        provider: "openrouter",
         maxTokens: 32_768,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.QWEN3_14B,
-        name: 'Qwen3 14B',
-        provider: 'openrouter',
+        name: "Qwen3 14B",
+        provider: "openrouter",
         maxTokens: 8192,
         contextWindow: 40_960,
         isFree: true,
     },
     {
         id: ModelEnum.KIMI_K2,
-        name: 'Kimi K2',
-        provider: 'openrouter',
+        name: "Kimi K2",
+        provider: "openrouter",
         maxTokens: 4096,
         contextWindow: 131_072,
     },
     // LM Studio models
     {
         id: ModelEnum.LMSTUDIO_LLAMA_3_8B,
-        name: 'Llama 3 8B (Local)',
-        provider: 'lmstudio',
+        name: "Llama 3 8B (Local)",
+        provider: "lmstudio",
         maxTokens: 8192,
         contextWindow: 8192,
         isFree: true,
     },
     {
         id: ModelEnum.LMSTUDIO_QWEN_7B,
-        name: 'Qwen 2.5 7B (Local)',
-        provider: 'lmstudio',
+        name: "Qwen 2.5 7B (Local)",
+        provider: "lmstudio",
         maxTokens: 8192,
         contextWindow: 32768,
         isFree: true,
     },
     {
         id: ModelEnum.LMSTUDIO_GEMMA_7B,
-        name: 'Gemma 7B (Local)',
-        provider: 'lmstudio',
+        name: "Gemma 7B (Local)",
+        provider: "lmstudio",
         maxTokens: 8192,
         contextWindow: 8192,
         isFree: true,
     },
     {
         id: ModelEnum.LMSTUDIO_GEMMA_3_1B,
-        name: 'Gemma 3 1B (Local)',
-        provider: 'lmstudio',
+        name: "Gemma 3 1B (Local)",
+        provider: "lmstudio",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    // Ollama models
+    {
+        id: ModelEnum.OLLAMA_LLAMA_3_3,
+        name: "Llama 3.3 70B (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 128000,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_LLAMA_3_2,
+        name: "Llama 3.2 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 128000,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_LLAMA_3_1,
+        name: "Llama 3.1 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 128000,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_QWEN_3,
+        name: "Qwen 3 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_QWEN_2_5,
+        name: "Qwen 2.5 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_GEMMA_3,
+        name: "Gemma 3 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_GEMMA_3N,
+        name: "Gemma 3n (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_GEMMA_2,
+        name: "Gemma 2 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_DEEPSEEK_R1,
+        name: "DeepSeek R1 (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_MISTRAL,
+        name: "Mistral (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_CODELLAMA,
+        name: "CodeLlama (Ollama)",
+        provider: "ollama",
+        maxTokens: 8192,
+        contextWindow: 16384,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.OLLAMA_LLAVA,
+        name: "LLaVA (Ollama)",
+        provider: "ollama",
         maxTokens: 8192,
         contextWindow: 8192,
         isFree: true,
@@ -242,8 +354,10 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
         case ChatMode.GEMINI_2_5_PRO:
             return ModelEnum.GEMINI_2_5_PRO;
+        case ChatMode.DEEPSEEK_R1_FIREWORKS:
+            return ModelEnum.DEEPSEEK_R1_FIREWORKS;
         case ChatMode.DEEPSEEK_R1:
-            return ModelEnum.Deepseek_R1;
+            return ModelEnum.DEEPSEEK_R1;
         case ChatMode.CLAUDE_4_SONNET:
             return ModelEnum.CLAUDE_4_SONNET;
         case ChatMode.CLAUDE_4_OPUS:
@@ -294,6 +408,31 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.LMSTUDIO_GEMMA_7B;
         case ChatMode.LMSTUDIO_GEMMA_3_1B:
             return ModelEnum.LMSTUDIO_GEMMA_3_1B;
+        // Ollama local models
+        case ChatMode.OLLAMA_LLAMA_3_3:
+            return ModelEnum.OLLAMA_LLAMA_3_3;
+        case ChatMode.OLLAMA_LLAMA_3_2:
+            return ModelEnum.OLLAMA_LLAMA_3_2;
+        case ChatMode.OLLAMA_LLAMA_3_1:
+            return ModelEnum.OLLAMA_LLAMA_3_1;
+        case ChatMode.OLLAMA_QWEN_3:
+            return ModelEnum.OLLAMA_QWEN_3;
+        case ChatMode.OLLAMA_QWEN_2_5:
+            return ModelEnum.OLLAMA_QWEN_2_5;
+        case ChatMode.OLLAMA_GEMMA_3:
+            return ModelEnum.OLLAMA_GEMMA_3;
+        case ChatMode.OLLAMA_GEMMA_3N:
+            return ModelEnum.OLLAMA_GEMMA_3N;
+        case ChatMode.OLLAMA_GEMMA_2:
+            return ModelEnum.OLLAMA_GEMMA_2;
+        case ChatMode.OLLAMA_DEEPSEEK_R1:
+            return ModelEnum.OLLAMA_DEEPSEEK_R1;
+        case ChatMode.OLLAMA_MISTRAL:
+            return ModelEnum.OLLAMA_MISTRAL;
+        case ChatMode.OLLAMA_CODELLAMA:
+            return ModelEnum.OLLAMA_CODELLAMA;
+        case ChatMode.OLLAMA_LLAVA:
+            return ModelEnum.OLLAMA_LLAVA;
         default:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
@@ -363,11 +502,11 @@ export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
     let totalTokens = 0;
 
     for (const message of messages) {
-        if (typeof message.content === 'string') {
+        if (typeof message.content === "string") {
             totalTokens += estimateTokensByWordCount(message.content);
         } else if (Array.isArray(message.content)) {
             for (const part of message.content) {
-                if (part.type === 'text') {
+                if (part.type === "text") {
                     totalTokens += estimateTokensByWordCount(part.text);
                 }
             }
@@ -412,13 +551,13 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 
     const messageSizes = trimmedMessages.map((msg) => {
         const tokens =
-            typeof msg.content === 'string'
+            typeof msg.content === "string"
                 ? estimateTokensByWordCount(msg.content)
                 : Array.isArray(msg.content)
                   ? msg.content.reduce(
                         (sum, part) =>
-                            part.type === 'text' ? sum + estimateTokensByWordCount(part.text) : sum,
-                        0
+                            part.type === "text" ? sum + estimateTokensByWordCount(part.text) : sum,
+                        0,
                     )
                   : 0;
         return { message: msg, tokens };
@@ -428,13 +567,13 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 
     // Count tokens for the latest message
     const latestMessageTokens =
-        typeof latestMessage.content === 'string'
+        typeof latestMessage.content === "string"
             ? estimateTokensByWordCount(latestMessage.content)
             : Array.isArray(latestMessage.content)
               ? latestMessage.content.reduce(
                     (sum, part) =>
-                        part.type === 'text' ? sum + estimateTokensByWordCount(part.text) : sum,
-                    0
+                        part.type === "text" ? sum + estimateTokensByWordCount(part.text) : sum,
+                    0,
                 )
               : 0;
 
@@ -459,7 +598,7 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 export const supportsReasoning = (model: ModelEnum): boolean => {
     // DeepSeek reasoning models (via Fireworks, OpenRouter)
     const deepseekReasoningModels = [
-        ModelEnum.Deepseek_R1, // Fireworks
+        ModelEnum.DEEPSEEK_R1_FIREWORKS, // Fireworks
         ModelEnum.DEEPSEEK_R1, // OpenRouter
     ];
 
@@ -564,7 +703,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     }
 
     // DeepSeek models use reasoning middleware with <think> tags
-    const deepseekReasoningModels = [ModelEnum.Deepseek_R1, ModelEnum.DEEPSEEK_R1];
+    const deepseekReasoningModels = [ModelEnum.DEEPSEEK_R1_FIREWORKS, ModelEnum.DEEPSEEK_R1];
 
     if (deepseekReasoningModels.includes(model)) {
         return ReasoningType.DEEPSEEK_REASONING;

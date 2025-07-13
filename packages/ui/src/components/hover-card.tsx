@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     FloatingPortal,
@@ -8,9 +8,9 @@ import {
     useFloating,
     useHover,
     useInteractions,
-} from '@floating-ui/react';
-import * as React from 'react';
-import { cn } from '../lib/utils';
+} from "@floating-ui/react";
+import * as React from "react";
+import { cn } from "../lib/utils";
 
 type HoverCardContextType = {
     open: boolean;
@@ -29,7 +29,7 @@ const HoverCardContext = React.createContext<HoverCardContextType | null>(null);
 const useHoverCard = () => {
     const context = React.useContext(HoverCardContext);
     if (!context) {
-        throw new Error('useHoverCard must be used within a HoverCard');
+        throw new Error("useHoverCard must be used within a HoverCard");
     }
     return context;
 };
@@ -64,7 +64,7 @@ const HoverCard = ({ openDelay = 200, closeDelay = 200, children }: HoverCardPro
             refs,
             floatingStyles,
         }),
-        [open, setOpen, getReferenceProps, getFloatingProps, refs, floatingStyles]
+        [open, getReferenceProps, getFloatingProps, refs, floatingStyles],
     );
 
     return <HoverCardContext.Provider value={contextValue}>{children}</HoverCardContext.Provider>;
@@ -80,7 +80,7 @@ const HoverCardTrigger = React.forwardRef<HTMLSpanElement, HoverCardTriggerProps
             <span
                 ref={(node) => {
                     refs.setReference(node);
-                    if (typeof ref === 'function') {
+                    if (typeof ref === "function") {
                         ref(node);
                     } else if (ref) {
                         ref.current = node;
@@ -88,12 +88,12 @@ const HoverCardTrigger = React.forwardRef<HTMLSpanElement, HoverCardTriggerProps
                 }}
                 {...getReferenceProps()}
                 {...props}
-                className={cn('inline-block cursor-pointer', className)}
+                className={cn("inline-block cursor-pointer", className)}
             />
         );
-    }
+    },
 );
-HoverCardTrigger.displayName = 'HoverCardTrigger';
+HoverCardTrigger.displayName = "HoverCardTrigger";
 
 type HoverCardContentProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -110,7 +110,7 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
                 <div
                     ref={(node) => {
                         refs.setFloating(node);
-                        if (typeof ref === 'function') {
+                        if (typeof ref === "function") {
                             ref(node);
                         } else if (ref) {
                             ref.current = node;
@@ -119,16 +119,16 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
                     style={{ ...floatingStyles, zIndex: 999 }}
                     {...getFloatingProps()}
                     className={cn(
-                        'bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-none',
-                        'fade-in-0 zoom-in-95 animate-in',
-                        className
+                        "bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-none",
+                        "fade-in-0 zoom-in-95 animate-in",
+                        className,
                     )}
                     {...props}
                 />
             </FloatingPortal>
         );
-    }
+    },
 );
-HoverCardContent.displayName = 'HoverCardContent';
+HoverCardContent.displayName = "HoverCardContent";
 
 export { HoverCard, HoverCardContent, HoverCardTrigger };

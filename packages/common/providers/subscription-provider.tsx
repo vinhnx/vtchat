@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Global Subscription Provider
@@ -7,15 +7,15 @@
  * Uses the optimized session-cached API endpoint and shares state across all components.
  */
 
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Corrected import
-import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
-import type React from 'react';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
-import { PortalReturnIndicator } from '../components/portal-return-indicator';
+import { useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status"; // Corrected import
+import { requestDeduplicator } from "@repo/shared/utils/request-deduplication";
+import type React from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { VT_BASE_PRODUCT_INFO } from "../../shared/config/payment";
+import { PortalReturnIndicator } from "../components/portal-return-indicator";
 
 export interface SubscriptionStatus {
     plan: string;
@@ -28,11 +28,11 @@ export interface SubscriptionStatus {
     fromCache?: boolean;
     cachedAt?: Date;
     fetchCount?: number;
-    lastRefreshTrigger?: 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
+    lastRefreshTrigger?: "initial" | "payment" | "expiration" | "page_refresh" | "manual";
     isAnonymous?: boolean;
 }
 
-type RefreshTrigger = 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
+type RefreshTrigger = "initial" | "payment" | "expiration" | "page_refresh" | "manual";
 
 interface SubscriptionContextType {
     subscriptionStatus: SubscriptionStatus | null;
@@ -79,7 +79,7 @@ interface SubscriptionProviderProps {
 export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const { data: session } = useSession();
     const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(
-        globalSubscriptionStatus
+        globalSubscriptionStatus,
     );
     const [isLoading, setIsLoading] = useState(globalIsLoading);
     const [error, setError] = useState<string | null>(globalError);
@@ -87,7 +87,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const [isPortalLoading, setIsPortalLoading] = useState(false);
 
     const fetchSubscriptionStatus = useCallback(
-        async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
+        async (trigger: RefreshTrigger = "initial", forceRefresh = false) => {
             const userId = session?.user?.id || null;
             // const userDescription = userId ? `user ${userId}` : 'anonymous user'; // Removed - no longer used in production logs
 
@@ -148,7 +148,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     // Build API URL with trigger and force refresh parameters
                     const params = new URLSearchParams({
                         trigger,
-                        ...(forceRefresh && { force: 'true' }),
+                        ...(forceRefresh && { force: "true" }),
                     });
 
                     // Create AbortController for timeout (increased to 10s for dev environments)
@@ -161,7 +161,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         const response = await fetch(`/api/subscription/status?${params}`, {
                             signal: controller.signal,
                             headers: {
-                                'Cache-Control': 'no-cache',
+                                "Cache-Control": "no-cache",
                             },
                         });
 
@@ -169,7 +169,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                         if (!response.ok) {
                             throw new Error(
-                                `Failed to fetch subscription status: ${response.statusText}`
+                                `Failed to fetch subscription status: ${response.statusText}`,
                             );
                         }
 
@@ -192,8 +192,8 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     } catch (error) {
                         clearTimeout(timeoutId);
 
-                        if (error instanceof Error && error.name === 'AbortError') {
-                            throw new Error('Subscription fetch timeout (10s)');
+                        if (error instanceof Error && error.name === "AbortError") {
+                            throw new Error("Subscription fetch timeout (10s)");
                         }
                         throw error;
                     }
@@ -229,10 +229,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 return result;
             } catch (err) {
                 log.error(
-                    { error: err instanceof Error ? err.message : 'Unknown error' },
-                    'Error fetching subscription status'
+                    { error: err instanceof Error ? err.message : "Unknown error" },
+                    "Error fetching subscription status",
                 );
-                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+                const errorMessage = err instanceof Error ? err.message : "Unknown error";
 
                 // Update global and local error state
                 globalError = errorMessage;
@@ -259,54 +259,50 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 throw err;
             }
         },
-        [session?.user]
+        [session?.user],
     );
 
-    // Initial fetch when provider mounts or session changes
+    // Initial fetch when provider mounts - this handles page refresh
     useEffect(() => {
-        // If we already have global data and no session change, don't refetch
-        if (globalSubscriptionStatus && !globalIsLoading) {
-            setSubscriptionStatus(globalSubscriptionStatus);
-            setIsLoading(false);
-            setError(globalError);
-            return;
-        }
-
-        fetchSubscriptionStatus('initial');
-    }, [fetchSubscriptionStatus]);
+        // Always fetch on mount to ensure fresh data after page refresh
+        const trigger = globalSubscriptionStatus ? "page_refresh" : "initial";
+        fetchSubscriptionStatus(trigger);
+    }, [fetchSubscriptionStatus]); // Include dependency but it's stable due to useCallback
 
     // Trigger subscription status check when session becomes available or changes
     useEffect(() => {
         if (session?.user) {
-            // log.info({}, 'Session detected, refreshing subscription status'); // Removed - too verbose for production
-            fetchSubscriptionStatus('initial', false);
+            // Only fetch if we don't have data yet or if the session actually changed
+            if (!globalSubscriptionStatus || globalIsLoading) {
+                fetchSubscriptionStatus("initial", false);
+            }
         }
     }, [session?.user, fetchSubscriptionStatus]);
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
-        async (forceRefresh = false, trigger: RefreshTrigger = 'manual') => {
+        async (forceRefresh = false, trigger: RefreshTrigger = "manual") => {
             await fetchSubscriptionStatus(trigger, forceRefresh);
         },
-        [fetchSubscriptionStatus]
+        [fetchSubscriptionStatus],
     );
 
     // Auto-refresh when returning from payment (detect URL changes)
     useEffect(() => {
         const handleVisibilityChange = () => {
-            if (document.visibilityState === 'visible') {
+            if (document.visibilityState === "visible") {
                 // Check if we're returning from a payment flow
                 const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
+                if (urlParams.has("checkout_success") || urlParams.has("payment_success")) {
                     // log.info({}, 'Detected return from payment, refreshing subscription'); // Removed - too verbose for production
                     setIsPortalReturn(true);
-                    refreshSubscriptionStatus(true, 'payment');
+                    refreshSubscriptionStatus(true, "payment");
 
                     // Clean up URL parameters after handling
                     if (window.history.replaceState) {
                         const url = new URL(window.location.href);
-                        url.searchParams.delete('checkout_success');
-                        url.searchParams.delete('payment_success');
+                        url.searchParams.delete("checkout_success");
+                        url.searchParams.delete("payment_success");
                         window.history.replaceState({}, document.title, url.toString());
                     }
                 }
@@ -315,17 +311,17 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
         const handlePopState = () => {
             // Handle browser back/forward navigation
-            refreshSubscriptionStatus(false, 'page_refresh');
+            refreshSubscriptionStatus(false, "page_refresh");
         };
 
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        window.addEventListener('popstate', handlePopState);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("popstate", handlePopState);
 
         return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            window.removeEventListener('popstate', handlePopState);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("popstate", handlePopState);
         };
-    }, []); // Remove refreshSubscriptionStatus dependency to prevent infinite loop
+    }, [refreshSubscriptionStatus]); // Include dependency but it's stable due to useCallback
 
     // Check subscription expiration periodically
     useEffect(() => {
@@ -337,10 +333,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             const timeDiff = expiryDate.getTime() - now.getTime();
             const daysDiff = timeDiff / (1000 * 3600 * 24);
 
-            // Refresh when close to expiration (within 1 day) or already expired
-            if (daysDiff <= 1) {
-                // log.info({}, 'Subscription near expiration, refreshing'); // Removed - too verbose for production
-                refreshSubscriptionStatus(true, 'expiration');
+            // Only refresh when actually expired and status is not already expired
+            // This prevents infinite loops from repeated "expiration" trigger calls
+            if (daysDiff <= 0 && subscriptionStatus.status !== SubscriptionStatusEnum.EXPIRED) {
+                refreshSubscriptionStatus(true, "expiration");
             }
         };
 
@@ -349,7 +345,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         const interval = setInterval(checkExpiration, 60 * 60 * 1000); // 1 hour
 
         return () => clearInterval(interval);
-    }, [subscriptionStatus?.currentPeriodEnd, refreshSubscriptionStatus]);
+    }, [
+        subscriptionStatus?.currentPeriodEnd,
+        subscriptionStatus?.status,
+        refreshSubscriptionStatus,
+    ]);
 
     const contextValue: SubscriptionContextType = {
         subscriptionStatus,
@@ -397,7 +397,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 export function useGlobalSubscriptionStatus(): SubscriptionContextType {
     const context = useContext(SubscriptionContext);
     if (context === undefined) {
-        throw new Error('useGlobalSubscriptionStatus must be used within a SubscriptionProvider');
+        throw new Error("useGlobalSubscriptionStatus must be used within a SubscriptionProvider");
     }
     return context;
 }
@@ -407,6 +407,6 @@ export function useGlobalSubscriptionStatus(): SubscriptionContextType {
  * Wraps the global subscription context
  */
 export function useSubscriptionStatus() {
-    log.warn({}, 'useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
+    log.warn({}, "useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.");
     return useGlobalSubscriptionStatus();
 }

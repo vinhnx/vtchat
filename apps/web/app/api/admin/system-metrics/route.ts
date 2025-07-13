@@ -1,17 +1,16 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
+import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
 import {
-    users,
-    sessions,
-    userSubscriptions,
-    providerUsage,
-    vtplusUsage,
-    feedback,
-    resources,
     embeddings,
-} from '@/lib/database/schema';
-import { count, eq, gte, desc, sql, sum, avg, and, or } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+    feedback,
+    providerUsage,
+    resources,
+    sessions,
+    users,
+    vtplusUsage,
+} from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -19,7 +18,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -27,8 +26,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -174,13 +173,13 @@ export async function GET(request: NextRequest) {
 
         // Performance Metrics
         const performanceMetrics = {
-            systemUptime: '99.9%', // This would come from monitoring systems
-            avgResponseTime: '245ms', // This would come from APM
+            systemUptime: "99.9%", // This would come from monitoring systems
+            avgResponseTime: "245ms", // This would come from APM
             requestsPerSecond:
                 dailyUsageTrends.length > 0
                     ? Math.round(
                           dailyUsageTrends[dailyUsageTrends.length - 1]?.totalRequests /
-                              (24 * 60 * 60)
+                              (24 * 60 * 60),
                       )
                     : 0,
             errorRate: (errorRate.recentFeedback / Math.max(errorRate.totalFeedback, 1)) * 100,
@@ -204,11 +203,11 @@ export async function GET(request: NextRequest) {
                 requests: stat.totalRequests,
                 costUsd: stat.totalCostCents
                     ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : '0.00',
+                    : "0.00",
                 uniqueUsers: Number(stat.uniqueUsers),
                 avgCostPerRequest: stat.avgCostPerRequest
                     ? (Number(stat.avgCostPerRequest) / 100).toFixed(4)
-                    : '0.00',
+                    : "0.00",
             })),
             vtPlusFeatureStats: vtPlusFeatureStats.map((stat) => ({
                 feature: stat.feature,
@@ -223,7 +222,7 @@ export async function GET(request: NextRequest) {
                     users: Number(day.uniqueUsers),
                     costUsd: day.totalCostCents
                         ? (Number(day.totalCostCents) / 100).toFixed(2)
-                        : '0.00',
+                        : "0.00",
                 })),
                 userGrowth: userGrowthTrends.map((day) => ({
                     date: day.date,
@@ -239,7 +238,7 @@ export async function GET(request: NextRequest) {
                     requests: user.totalRequests,
                     costUsd: user.totalCostCents
                         ? (Number(user.totalCostCents) / 100).toFixed(2)
-                        : '0.00',
+                        : "0.00",
                 })),
                 byResources: resourceStats.map((user) => ({
                     userId: user.userId,
@@ -251,18 +250,18 @@ export async function GET(request: NextRequest) {
             financialMetrics: {
                 totalCostUsd: totalCostStats.totalCostCents
                     ? (Number(totalCostStats.totalCostCents) / 100).toFixed(2)
-                    : '0.00',
+                    : "0.00",
                 avgCostPerUser: totalCostStats.avgCostPerUser
                     ? (Number(totalCostStats.avgCostPerUser) / 100).toFixed(2)
-                    : '0.00',
+                    : "0.00",
                 avgCostPerRequest: totalCostStats.avgCostPerRequest
                     ? (Number(totalCostStats.avgCostPerRequest) / 100).toFixed(4)
-                    : '0.00',
+                    : "0.00",
             },
             performanceMetrics,
         });
     } catch (error) {
-        console.error('Failed to fetch system metrics:', error);
-        return NextResponse.json({ error: 'Failed to fetch system metrics' }, { status: 500 });
+        console.error("Failed to fetch system metrics:", error);
+        return NextResponse.json({ error: "Failed to fetch system metrics" }, { status: 500 });
     }
 }

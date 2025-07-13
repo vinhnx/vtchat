@@ -1,33 +1,33 @@
-'use client';
+"use client";
 import {
     BYOKValidationDialog,
     ImageAttachment,
     ImageDropzoneRoot,
     InlineLoader,
-} from '@repo/common/components';
-import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
-import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { useApiKeysStore } from '@repo/common/store';
-import { isGeminiModel } from '@repo/common/utils';
-import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import { cn, Flex } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-import { generateThreadId } from '@repo/shared/lib/thread-id';
-import { useShallow } from 'zustand/react/shallow';
-import { useAgentStream } from '../../hooks/agent-provider';
-import { useChatEditor } from '../../hooks/use-editor';
-import { useChatStore } from '../../store';
-import { ExamplePrompts } from '../example-prompts';
-import { LMStudioSetupBanner } from '../lm-studio-setup-banner';
-import { LoginRequiredDialog } from '../login-required-dialog';
-import { PersonalizedGreeting } from '../personalized-greeting';
-import { StructuredDataDisplay } from '../structured-data-display';
-import { UserTierBadge } from '../user-tier-badge';
+} from "@repo/common/components";
+import { useDocumentAttachment, useImageAttachment } from "@repo/common/hooks";
+import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
+import { useApiKeysStore } from "@repo/common/store";
+import { isGeminiModel } from "@repo/common/utils";
+import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from "@repo/shared/config";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { generateThreadId } from "@repo/shared/lib/thread-id";
+import { log } from "@repo/shared/logger";
+import { cn, Flex } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { useAgentStream } from "../../hooks/agent-provider";
+import { useChatEditor } from "../../hooks/use-editor";
+import { useChatStore } from "../../store";
+import { ExamplePrompts } from "../example-prompts";
+import { LMStudioSetupBanner } from "../lm-studio-setup-banner";
+import { LoginRequiredDialog } from "../login-required-dialog";
+import { OllamaSetupBanner } from "../ollama-setup-banner";
+import { PersonalizedGreeting } from "../personalized-greeting";
+import { StructuredDataDisplay } from "../structured-data-display";
+import { UserTierBadge } from "../user-tier-badge";
 import {
     ChartsButton,
     ChatModeButton,
@@ -35,14 +35,14 @@ import {
     MathCalculatorButton,
     SendStopButton,
     WebSearchButton,
-} from './chat-actions';
-import { ChatEditor } from './chat-editor';
-import { DocumentAttachment } from './document-attachment';
-import { DocumentUploadButton } from './document-upload-button';
-import { ImageUpload } from './image-upload';
-import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
-import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
-import { StructuredOutputButton } from './structured-output-button';
+} from "./chat-actions";
+import { ChatEditor } from "./chat-editor";
+import { DocumentAttachment } from "./document-attachment";
+import { DocumentUploadButton } from "./document-upload-button";
+import { ImageUpload } from "./image-upload";
+import { MultiModalAttachmentButton } from "./multi-modal-attachment-button";
+import { MultiModalAttachmentsDisplay } from "./multi-modal-attachments-display";
+import { StructuredOutputButton } from "./structured-output-button";
 
 export const ChatInput = ({
     showGreeting = true,
@@ -63,9 +63,9 @@ export const ChatInput = ({
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
-        placeholder: isFollowUp ? 'Ask follow up' : 'Ask anything',
+        placeholder: isFollowUp ? "Ask follow up" : "Ask anything",
         onInit: ({ editor }) => {
-            if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
+            if (typeof window !== "undefined" && !isFollowUp && !isSignedIn) {
                 const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
                     editor.commands.setContent(draftMessage, true, {
@@ -77,12 +77,12 @@ export const ChatInput = ({
             // Login will be prompted only when they try to send a message
         },
         onUpdate: ({ editor }) => {
-            if (typeof window !== 'undefined' && !isFollowUp) {
+            if (typeof window !== "undefined" && !isFollowUp) {
                 window.localStorage.setItem(STORAGE_KEYS.DRAFT_MESSAGE, editor.getText());
             }
         },
     });
-    const size = currentThreadId ? 'base' : 'sm';
+    const size = currentThreadId ? "base" : "sm";
     const getThreadItems = useChatStore((state) => state.getThreadItems);
     const threadItemsLength = useChatStore(useShallow((state) => state.threadItems.length));
     const { handleSubmit } = useAgentStream();
@@ -93,15 +93,15 @@ export const ChatInput = ({
 
     const isGenerating = useChatStore((state) => state.isGenerating);
     const isChatPage =
-        usePathname() !== '/' &&
-        usePathname() !== '/recent' &&
-        usePathname() !== '/settings' &&
-        usePathname() !== '/plus' &&
-        usePathname() !== '/about' &&
-        usePathname() !== '/login' &&
-        usePathname() !== '/privacy' &&
-        usePathname() !== '/terms' &&
-        usePathname() !== '/faq';
+        usePathname() !== "/" &&
+        usePathname() !== "/recent" &&
+        usePathname() !== "/settings" &&
+        usePathname() !== "/plus" &&
+        usePathname() !== "/about" &&
+        usePathname() !== "/login" &&
+        usePathname() !== "/privacy" &&
+        usePathname() !== "/terms" &&
+        usePathname() !== "/faq";
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
@@ -192,23 +192,23 @@ export const ChatInput = ({
 
         // First submit the message
         const formData = new FormData();
-        formData.append('query', editor.getText());
-        imageAttachment?.base64 && formData.append('imageAttachment', imageAttachment?.base64);
+        formData.append("query", editor.getText());
+        imageAttachment?.base64 && formData.append("imageAttachment", imageAttachment?.base64);
         documentAttachment?.base64 &&
-            formData.append('documentAttachment', documentAttachment?.base64);
+            formData.append("documentAttachment", documentAttachment?.base64);
         documentAttachment?.mimeType &&
-            formData.append('documentMimeType', documentAttachment?.mimeType);
+            formData.append("documentMimeType", documentAttachment?.mimeType);
         documentAttachment?.fileName &&
-            formData.append('documentFileName', documentAttachment?.fileName);
+            formData.append("documentFileName", documentAttachment?.fileName);
 
         // Add multi-modal attachments
         if (multiModalAttachments.length > 0) {
-            formData.append('multiModalAttachments', JSON.stringify(multiModalAttachments));
+            formData.append("multiModalAttachments", JSON.stringify(multiModalAttachments));
         }
 
         const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
 
-        log.info({ data: threadItems }, 'threadItems');
+        log.info({ data: threadItems }, "threadItems");
 
         log.info(
             {
@@ -216,13 +216,13 @@ export const ChatInput = ({
                 useMathCalculator,
                 useCharts,
             },
-            '🚀 Sending to handleSubmit with flags'
+            "🚀 Sending to handleSubmit with flags",
         );
         handleSubmit({
             formData,
             newThreadId: threadId,
             messages: threadItems.sort(
-                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
             ),
             useWebSearch,
             useMathCalculator,
@@ -243,12 +243,12 @@ export const ChatInput = ({
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full px-1 md:px-3"
                 initial={{ opacity: 0, y: 10 }}
-                key={'chat-input'}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
+                key={"chat-input"}
+                transition={{ duration: 0.2, ease: "easeOut" }}
             >
                 <Flex
                     className={cn(
-                        'border-hard/50 bg-background shadow-subtle-sm relative z-10 w-full rounded-xl border'
+                        "border-hard/50 bg-background shadow-subtle-sm relative z-10 w-full rounded-xl border",
                     )}
                     direction="col"
                 >
@@ -264,7 +264,7 @@ export const ChatInput = ({
                                     animate={{ opacity: 1 }}
                                     className="w-full"
                                     initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                                    transition={{ duration: 0.15, ease: "easeOut" }}
                                 >
                                     <div className="flex flex-col gap-2">
                                         <ImageAttachment />
@@ -377,30 +377,30 @@ export const ChatInput = ({
     );
 
     useEffect(() => {
-        editor?.commands.focus('end');
+        editor?.commands.focus("end");
     }, [currentThreadId]);
 
     return (
         <div
             className={cn(
-                'bg-secondary w-full',
+                "bg-secondary w-full",
                 currentThreadId
-                    ? 'pb-safe absolute bottom-0'
-                    : 'pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center'
+                    ? "pb-safe absolute bottom-0"
+                    : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
             )}
         >
             <div
                 className={cn(
-                    'mx-auto flex w-full max-w-3xl flex-col items-start',
-                    !threadItemsLength && 'justify-start',
-                    size === 'sm' && 'px-8',
-                    'px-2 md:px-0' // Reduced mobile padding for better space usage
+                    "mx-auto flex w-full max-w-3xl flex-col items-start",
+                    !threadItemsLength && "justify-start",
+                    size === "sm" && "px-8",
+                    "px-2 md:px-0", // Reduced mobile padding for better space usage
                 )}
             >
                 <Flex
                     className={cn(
-                        'pb-safe w-full pb-4 md:pb-4',
-                        threadItemsLength > 0 ? 'mb-0' : 'h-full'
+                        "pb-safe w-full pb-4 md:pb-4",
+                        threadItemsLength > 0 ? "mb-0" : "h-full",
                     )}
                     direction="col"
                     items="start"
@@ -411,7 +411,7 @@ export const ChatInput = ({
                             animate={{ opacity: 1 }}
                             className="mb-2 flex w-full flex-col items-center gap-2"
                             initial={{ opacity: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                         >
                             {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />
@@ -421,9 +421,12 @@ export const ChatInput = ({
                     {renderChatBottom()}
 
                     {/* Show LM Studio setup banner for local models */}
-                    {!currentThreadId && chatMode.startsWith('lmstudio-') && (
+                    {!currentThreadId && chatMode.startsWith("lmstudio-") && (
                         <LMStudioSetupBanner />
                     )}
+
+                    {/* Show Ollama setup banner for local models */}
+                    {!currentThreadId && chatMode.startsWith("ollama-") && <OllamaSetupBanner />}
 
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
                 </Flex>

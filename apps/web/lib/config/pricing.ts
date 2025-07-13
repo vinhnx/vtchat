@@ -1,13 +1,13 @@
-import { CURRENCIES, VT_PLUS_PRICE } from '@repo/shared/constants';
+import { CURRENCIES, VT_PLUS_PRICE } from "@repo/shared/constants";
 
 // Pricing and product configuration
 export const PRICING_CONFIG = {
     // Product information
     product: {
-        name: 'VT+',
+        name: "VT+",
         description:
-            'Research-focused exclusives: Pro Search (10/day), Deep Research (5/day), and AI Memory (2,000/month)',
-        id: process.env.CREEM_PRODUCT_ID || '',
+            "Research-focused exclusives: Pro Search (10/day), Deep Research (5/day), and AI Memory (2,000/month)",
+        id: process.env.CREEM_PRODUCT_ID || "",
     },
 
     // Pricing details
@@ -15,74 +15,74 @@ export const PRICING_CONFIG = {
         free: {
             price: 0,
             currency: CURRENCIES.USD,
-            interval: 'month',
+            interval: "month",
             features: [
                 {
-                    name: 'All Advanced AI Features',
+                    name: "All Advanced AI Features",
                     description:
-                        'Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users',
+                        "Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users",
                 },
                 {
-                    name: 'Multi-Modal Chat',
+                    name: "Multi-Modal Chat",
                     description:
-                        'Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini',
+                        "Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini",
                 },
                 {
-                    name: 'All Chat Input Tools',
+                    name: "All Chat Input Tools",
                     description:
-                        'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included',
+                        "Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included",
                 },
                 {
-                    name: 'All Premium AI Models (Free with BYOK)',
+                    name: "All Premium AI Models (Free with BYOK)",
                     description:
-                        'Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users',
+                        "Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users",
                 },
                 {
-                    name: '9 Free Server Models',
+                    name: "9 Free Server Models",
                     description:
                         "Gemini and OpenRouter models with VT's server API keys - no setup required",
                 },
                 {
-                    name: 'Unlimited BYOK Access',
+                    name: "Unlimited BYOK Access",
                     description:
-                        'Use your own API keys for unlimited access to OpenAI, Anthropic, Google, and other AI providers',
+                        "Use your own API keys for unlimited access to OpenAI, Anthropic, Google, and other AI providers",
                 },
             ],
         },
         plus: {
             price: VT_PLUS_PRICE,
             currency: CURRENCIES.USD,
-            interval: 'month',
+            interval: "month",
             features: [
                 {
-                    name: 'Access to Gemini Models + Enhanced Tools',
+                    name: "Access to Gemini Models + Enhanced Tools",
                     description:
-                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
+                        "Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.",
                 },
                 {
-                    name: 'Everything in Free Plan (All Premium AI Models Included)',
+                    name: "Everything in Free Plan (All Premium AI Models Included)",
                     description:
-                        'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',
+                        "All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier",
                 },
                 {
-                    name: 'Pro Search (Exclusive)',
+                    name: "Pro Search (Exclusive)",
                     description:
-                        'Lightning-fast web search with AI grounding for instant, accurate information retrieval - 10 requests per day',
+                        "Lightning-fast web search with AI grounding for instant, accurate information retrieval - 10 requests per day",
                 },
                 {
-                    name: 'Deep Research (Exclusive)',
+                    name: "Deep Research (Exclusive)",
                     description:
-                        'Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 5 requests per day',
+                        "Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 5 requests per day",
                 },
                 {
-                    name: 'AI Memory (Exclusive)',
+                    name: "AI Memory (Exclusive)",
                     description:
-                        'Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations - 2,000 completions per month',
+                        "Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations - 2,000 completions per month",
                 },
                 {
-                    name: 'Priority Support & Daily Reset',
+                    name: "Priority Support & Daily Reset",
                     description:
-                        'Priority customer support with daily quota reset for Pro Search and Deep Research features',
+                        "Priority customer support with daily quota reset for Pro Search and Deep Research features",
                 },
             ],
         },

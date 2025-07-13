@@ -5,57 +5,57 @@
  * Verifies all critical production environment configurations for VT Chat
  */
 
-import { existsSync } from 'node:fs';
-import { log } from '@repo/shared/logger';
+import { existsSync } from "node:fs";
+import { log } from "@repo/shared/logger";
 
 const CONFIG_VERIFICATION = {
     environment: {
-        name: 'Environment Variables',
+        name: "Environment Variables",
         checks: [
-            { name: 'BETTER_AUTH_SECRET', required: true, type: 'secret' },
-            { name: 'BETTER_AUTH_URL', required: true, type: 'url' },
-            { name: 'BETTER_AUTH_ENV', required: true, expected: 'production' },
-            { name: 'DATABASE_URL', required: true, type: 'url' },
-            { name: 'NEXT_PUBLIC_APP_URL', required: true, type: 'url' },
-            { name: 'NEXT_PUBLIC_BASE_URL', required: true, type: 'url' },
-            { name: 'BASE_URL', required: true, type: 'url' },
-            { name: 'NODE_ENV', required: true, expected: 'production' },
+            { name: "BETTER_AUTH_SECRET", required: true, type: "secret" },
+            { name: "BETTER_AUTH_URL", required: true, type: "url" },
+            { name: "BETTER_AUTH_ENV", required: true, expected: "production" },
+            { name: "DATABASE_URL", required: true, type: "url" },
+            { name: "NEXT_PUBLIC_APP_URL", required: true, type: "url" },
+            { name: "NEXT_PUBLIC_BASE_URL", required: true, type: "url" },
+            { name: "BASE_URL", required: true, type: "url" },
+            { name: "NODE_ENV", required: true, expected: "production" },
         ],
     },
     ai: {
-        name: 'AI Service Configuration',
+        name: "AI Service Configuration",
         checks: [
-            { name: 'OPENAI_API_KEY', required: false, type: 'secret' },
-            { name: 'ANTHROPIC_API_KEY', required: false, type: 'secret' },
-            { name: 'GEMINI_API_KEY', required: false, type: 'secret' },
-            { name: 'FIREWORKS_API_KEY', required: false, type: 'secret' },
-            { name: 'JINA_API_KEY', required: false, type: 'secret' },
+            { name: "OPENAI_API_KEY", required: false, type: "secret" },
+            { name: "ANTHROPIC_API_KEY", required: false, type: "secret" },
+            { name: "GEMINI_API_KEY", required: false, type: "secret" },
+            { name: "FIREWORKS_API_KEY", required: false, type: "secret" },
+            { name: "JINA_API_KEY", required: false, type: "secret" },
         ],
     },
     payment: {
-        name: 'Payment Integration',
+        name: "Payment Integration",
         checks: [
-            { name: 'CREEM_API_KEY', required: false, type: 'secret' },
-            { name: 'CREEM_PRODUCT_ID', required: false, type: 'string' },
-            { name: 'CREEM_ENVIRONMENT', required: false, expected: 'production' },
-            { name: 'CREEM_WEBHOOK_SECRET', required: false, type: 'secret' },
+            { name: "CREEM_API_KEY", required: false, type: "secret" },
+            { name: "CREEM_PRODUCT_ID", required: false, type: "string" },
+            { name: "CREEM_ENVIRONMENT", required: false, expected: "production" },
+            { name: "CREEM_WEBHOOK_SECRET", required: false, type: "secret" },
         ],
     },
     oauth: {
-        name: 'OAuth Configuration',
+        name: "OAuth Configuration",
         checks: [
-            { name: 'GITHUB_CLIENT_ID', required: false, type: 'string' },
-            { name: 'GITHUB_CLIENT_SECRET', required: false, type: 'secret' },
-            { name: 'GOOGLE_CLIENT_ID', required: false, type: 'string' },
-            { name: 'GOOGLE_CLIENT_SECRET', required: false, type: 'secret' },
+            { name: "GITHUB_CLIENT_ID", required: false, type: "string" },
+            { name: "GITHUB_CLIENT_SECRET", required: false, type: "secret" },
+            { name: "GOOGLE_CLIENT_ID", required: false, type: "string" },
+            { name: "GOOGLE_CLIENT_SECRET", required: false, type: "secret" },
         ],
     },
     monitoring: {
-        name: 'Monitoring & Analytics',
+        name: "Monitoring & Analytics",
         checks: [
-            { name: 'NEXT_PUBLIC_HOTJAR_SITE_ID', required: false, type: 'string' },
-            { name: 'NEXT_PUBLIC_HOTJAR_VERSION', required: false, type: 'string' },
-            { name: 'LOG_LEVEL', required: false, type: 'string' },
+            { name: "NEXT_PUBLIC_HOTJAR_SITE_ID", required: false, type: "string" },
+            { name: "NEXT_PUBLIC_HOTJAR_VERSION", required: false, type: "string" },
+            { name: "LOG_LEVEL", required: false, type: "string" },
         ],
     },
 };
@@ -71,34 +71,34 @@ class ProductionVerifier {
         const value = process.env[name];
         const result = {
             name,
-            value: value ? (config.type === 'secret' ? '[HIDDEN]' : value) : null,
-            status: 'missing',
-            message: '',
+            value: value ? (config.type === "secret" ? "[HIDDEN]" : value) : null,
+            status: "missing",
+            message: "",
             required: config.required,
         };
 
         if (value) {
             if (config.expected && value !== config.expected) {
-                result.status = 'warning';
+                result.status = "warning";
                 result.message = `Expected '${config.expected}', got '${value}'`;
                 this.warnings.push(`${name} has unexpected value: ${value}`);
-            } else if (config.type === 'url' && !this.isValidUrl(value)) {
-                result.status = 'error';
-                result.message = 'Invalid URL format';
+            } else if (config.type === "url" && !this.isValidUrl(value)) {
+                result.status = "error";
+                result.message = "Invalid URL format";
                 this.errors.push(`${name} has invalid URL format: ${value}`);
-            } else if (config.type === 'secret' && value.length < 8) {
-                result.status = 'warning';
-                result.message = 'Secret appears too short';
+            } else if (config.type === "secret" && value.length < 8) {
+                result.status = "warning";
+                result.message = "Secret appears too short";
                 this.warnings.push(`${name} appears to be too short for a secure secret`);
             } else {
-                result.status = 'success';
-                result.message = 'Valid';
+                result.status = "success";
+                result.message = "Valid";
             }
         } else {
-            result.status = config.required ? 'error' : 'warning';
+            result.status = config.required ? "error" : "warning";
             result.message = config.required
-                ? 'Required variable missing'
-                : 'Optional variable not set';
+                ? "Required variable missing"
+                : "Optional variable not set";
             if (config.required) {
                 this.errors.push(`${name} is required but not set`);
             } else {
@@ -114,7 +114,7 @@ class ProductionVerifier {
             new URL(string);
             return true;
         } catch (error) {
-            log.debug({ error: error.message }, 'URL validation failed');
+            log.debug({ error: error.message }, "URL validation failed");
             return false;
         }
     }
@@ -123,23 +123,23 @@ class ProductionVerifier {
         const dbUrl = process.env.DATABASE_URL;
         if (!dbUrl) {
             return {
-                status: 'error',
-                message: 'DATABASE_URL not set',
+                status: "error",
+                message: "DATABASE_URL not set",
             };
         }
 
         try {
             // Try to connect to database
-            const { drizzle } = await import('@/lib/database');
+            const { drizzle } = await import("@/lib/database");
             // Simple query to test connection
-            await drizzle.execute('SELECT 1');
+            await drizzle.execute("SELECT 1");
             return {
-                status: 'success',
-                message: 'Database connection successful',
+                status: "success",
+                message: "Database connection successful",
             };
         } catch (error) {
             return {
-                status: 'error',
+                status: "error",
                 message: `Database connection failed: ${error.message}`,
             };
         }
@@ -149,33 +149,33 @@ class ProductionVerifier {
         const apiKey = process.env.CREEM_API_KEY;
         if (!apiKey) {
             return {
-                status: 'warning',
-                message: 'Creem API key not configured (payment disabled)',
+                status: "warning",
+                message: "Creem API key not configured (payment disabled)",
             };
         }
 
         try {
             // Test Creem API connection
-            const response = await fetch('https://api.creem.io/v1/health', {
+            const response = await fetch("https://api.creem.io/v1/health", {
                 headers: {
                     Authorization: `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
             });
 
             if (response.ok) {
                 return {
-                    status: 'success',
-                    message: 'Creem API connection successful',
+                    status: "success",
+                    message: "Creem API connection successful",
                 };
             }
             return {
-                status: 'error',
+                status: "error",
                 message: `Creem API returned: ${response.status}`,
             };
         } catch (error) {
             return {
-                status: 'error',
+                status: "error",
                 message: `Creem API connection failed: ${error.message}`,
             };
         }
@@ -183,50 +183,50 @@ class ProductionVerifier {
 
     checkFlyConfiguration() {
         const flyConfig = {
-            productionFile: existsSync('fly.production.toml'),
-            developmentFile: existsSync('fly.toml'),
-            healthEndpoint: existsSync('apps/web/app/api/health/route.ts'),
+            productionFile: existsSync("fly.production.toml"),
+            developmentFile: existsSync("fly.toml"),
+            healthEndpoint: existsSync("apps/web/app/api/health/route.ts"),
         };
 
         const issues = [];
         if (!flyConfig.productionFile) {
-            issues.push('fly.production.toml missing');
+            issues.push("fly.production.toml missing");
         }
         if (!flyConfig.healthEndpoint) {
-            issues.push('Health check endpoint missing');
+            issues.push("Health check endpoint missing");
         }
 
         return {
-            status: issues.length === 0 ? 'success' : 'error',
+            status: issues.length === 0 ? "success" : "error",
             message:
-                issues.length === 0 ? 'Fly.io configuration valid' : `Issues: ${issues.join(', ')}`,
+                issues.length === 0 ? "Fly.io configuration valid" : `Issues: ${issues.join(", ")}`,
             details: flyConfig,
         };
     }
 
     async verifyAll() {
-        console.log('🔍 Verifying Production Configuration...\n');
-        log.info('Starting production configuration verification');
+        console.log("🔍 Verifying Production Configuration...\n");
+        log.info("Starting production configuration verification");
 
         // Check environment variables
         for (const [category, config] of Object.entries(CONFIG_VERIFICATION)) {
             this.results[category] = {
                 name: config.name,
                 checks: config.checks.map((check) =>
-                    this.checkEnvironmentVariable(check.name, check)
+                    this.checkEnvironmentVariable(check.name, check),
                 ),
             };
         }
-        log.info('Environment variables checked');
+        log.info("Environment variables checked");
 
         // Check external connections
-        console.log('🔌 Testing External Connections...\n');
-        log.info('Testing external connections');
+        console.log("🔌 Testing External Connections...\n");
+        log.info("Testing external connections");
 
         this.results.database = await this.checkDatabaseConnection();
         this.results.creem = await this.checkCreemConnection();
         this.results.fly = this.checkFlyConfiguration();
-        log.info('External connections tested');
+        log.info("External connections tested");
 
         return this.generateReport();
     }
@@ -234,8 +234,8 @@ class ProductionVerifier {
     generateReport() {
         const report = {
             timestamp: new Date().toISOString(),
-            environment: process.env.NODE_ENV || 'unknown',
-            status: this.errors.length === 0 ? 'ready' : 'not-ready',
+            environment: process.env.NODE_ENV || "unknown",
+            status: this.errors.length === 0 ? "ready" : "not-ready",
             summary: {
                 errors: this.errors.length,
                 warnings: this.warnings.length,
@@ -256,18 +256,18 @@ class ProductionVerifier {
                 warnings: report.summary.warnings,
                 totalChecks: report.summary.total_checks,
             },
-            'Production configuration verification completed'
+            "Production configuration verification completed",
         );
         return report;
     }
 
     printReport(report) {
-        console.log('# 🚀 Production Configuration Verification Report\n');
+        console.log("# 🚀 Production Configuration Verification Report\n");
         console.log(`**Generated:** ${report.timestamp}`);
         console.log(`**Environment:** ${report.environment}`);
-        console.log(`**Status:** ${report.status === 'ready' ? '✅ READY' : '❌ NOT READY'}\n`);
+        console.log(`**Status:** ${report.status === "ready" ? "✅ READY" : "❌ NOT READY"}\n`);
 
-        console.log('## Summary\n');
+        console.log("## Summary\n");
         console.log(`- **Errors:** ${report.summary.errors}`);
         console.log(`- **Warnings:** ${report.summary.warnings}`);
         console.log(`- **Total Checks:** ${report.summary.total_checks}\n`);
@@ -278,42 +278,42 @@ class ProductionVerifier {
                 console.log(`## ${result.name}\n`);
                 for (const check of result.checks) {
                     const icon =
-                        check.status === 'success' ? '✅' : check.status === 'error' ? '❌' : '⚠️';
-                    const req = check.required ? '(Required)' : '(Optional)';
+                        check.status === "success" ? "✅" : check.status === "error" ? "❌" : "⚠️";
+                    const req = check.required ? "(Required)" : "(Optional)";
                     console.log(`${icon} **${check.name}** ${req}: ${check.message}`);
                 }
-                console.log('');
+                console.log("");
             } else {
                 // External connections
                 const icon =
-                    result.status === 'success' ? '✅' : result.status === 'error' ? '❌' : '⚠️';
+                    result.status === "success" ? "✅" : result.status === "error" ? "❌" : "⚠️";
                 console.log(
-                    `## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`
+                    `## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`,
                 );
                 console.log(`${icon} **Status**: ${result.message}\n`);
             }
         }
 
         if (report.errors.length > 0) {
-            console.log('## ❌ Critical Issues\n');
+            console.log("## ❌ Critical Issues\n");
             report.errors.forEach((error) => console.log(`- ${error}`));
-            console.log('');
+            console.log("");
         }
 
         if (report.warnings.length > 0) {
-            console.log('## ⚠️ Warnings\n');
+            console.log("## ⚠️ Warnings\n");
             report.warnings.forEach((warning) => console.log(`- ${warning}`));
-            console.log('');
+            console.log("");
         }
 
-        console.log('## Next Steps\n');
-        if (report.status === 'ready') {
-            console.log('✅ Configuration is ready for production deployment!');
+        console.log("## Next Steps\n");
+        if (report.status === "ready") {
+            console.log("✅ Configuration is ready for production deployment!");
         } else {
-            console.log('❌ Fix critical issues before deploying to production.');
-            console.log('- Set all required environment variables');
-            console.log('- Verify database connectivity');
-            console.log('- Test external API connections');
+            console.log("❌ Fix critical issues before deploying to production.");
+            console.log("- Set all required environment variables");
+            console.log("- Verify database connectivity");
+            console.log("- Test external API connections");
         }
     }
 }
@@ -324,7 +324,7 @@ if (import.meta.main) {
     const report = await verifier.verifyAll();
 
     // Exit with error code if not ready
-    if (report.status !== 'ready') {
+    if (report.status !== "ready") {
         process.exit(1);
     }
 }

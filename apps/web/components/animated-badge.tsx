@@ -1,4 +1,4 @@
-import type React from 'react';
+import type React from "react";
 export const AnimatedBadge = ({ children }: { children: React.ReactNode }) => {
     return (
         <span className="relative inline-block overflow-hidden rounded-full p-[1px]">

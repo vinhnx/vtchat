@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useAdmin } from '@repo/common/hooks';
-import { Button, LoadingSpinner } from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Activity, ArrowLeft, Database, Shield, Terminal, Users } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import type { ReactNode } from 'react';
-import { MinimalErrorPage } from '../../components/minimal-error-page';
+import { useAdmin } from "@repo/common/hooks";
+import { Button, LoadingSpinner } from "@repo/ui";
+import { motion } from "framer-motion";
+import { Activity, ArrowLeft, Database, Shield, Terminal, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
+import { MinimalErrorPage } from "../../components/minimal-error-page";
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -31,8 +31,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 title="Authentication Error"
                 description={error}
                 actionButton={{
-                    text: 'Retry',
-                    onClick: () => typeof window !== 'undefined' && window.location.reload(),
+                    text: "Retry",
+                    onClick: () => typeof window !== "undefined" && window.location.reload(),
                 }}
             />
         );
@@ -45,8 +45,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 title="Admin Access Required"
                 description="You need admin privileges to access this dashboard."
                 actionButton={{
-                    text: 'Go back home',
-                    href: '/',
+                    text: "Go back home",
+                    href: "/",
                 }}
             />
         );
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => router.push('/')}
+                                onClick={() => router.push("/")}
                                 className="mr-2"
                             >
                                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.push('/admin')}
+                                onClick={() => router.push("/admin")}
                             >
                                 <Terminal className="h-4 w-4 mr-2" />
                                 VT Terminal
@@ -87,7 +87,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.push('/admin/users')}
+                                onClick={() => router.push("/admin/users")}
                             >
                                 <Users className="h-4 w-4 mr-2" />
                                 Users
@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.push('/admin/database-maintenance')}
+                                onClick={() => router.push("/admin/database-maintenance")}
                             >
                                 <Database className="h-4 w-4 mr-2" />
                                 Database
@@ -104,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.push('/admin/logs')}
+                                onClick={() => router.push("/admin/logs")}
                             >
                                 <Activity className="h-4 w-4 mr-2" />
                                 Logs
@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.push('/admin/security')}
+                                onClick={() => router.push("/admin/security")}
                             >
                                 <Shield className="h-4 w-4 mr-2" />
                                 Security

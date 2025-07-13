@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useChatEditor } from '@repo/common/hooks';
-import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { useSession } from '@repo/shared/lib/auth-client';
+import { useChatEditor } from "@repo/common/hooks";
+import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
+import { useSession } from "@repo/shared/lib/auth-client";
 import {
     Alert,
     AlertDescription,
@@ -21,18 +21,18 @@ import {
     TypographyH1,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { AlertCircle, Info, Key, Settings, Trash, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { CacheManagement } from '../../../apps/web/components/cache-management';
-import { SETTING_TABS, useAppStore } from '../store';
-import { type ApiKeys, useApiKeysStore } from '../store/api-keys.store';
-import { ChatEditor } from './chat-input';
-import { CombinedSubscriptionSettings } from './combined-subscription-settings';
-import { LoginRequiredDialog } from './login-required-dialog';
-import { ModeToggle } from './mode-toggle';
-import MultiModelUsageMeter from './multi-model-usage-meter';
-import { UserProfileSettings } from './user-profile-settings';
+} from "@repo/ui";
+import { AlertCircle, Info, Key, Settings, Trash, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CacheManagement } from "../../../apps/web/components/cache-management";
+import { SETTING_TABS, useAppStore } from "../store";
+import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
+import { ChatEditor } from "./chat-input";
+import { CombinedSubscriptionSettings } from "./combined-subscription-settings";
+import { LoginRequiredDialog } from "./login-required-dialog";
+import { ModeToggle } from "./mode-toggle";
+import MultiModelUsageMeter from "./multi-model-usage-meter";
+import { UserProfileSettings } from "./user-profile-settings";
 
 export const SettingsModal = () => {
     const isSettingsOpen = useAppStore((state) => state.isSettingsOpen);
@@ -54,14 +54,14 @@ export const SettingsModal = () => {
     // Auto-scroll to top when settings modal opens
     useEffect(() => {
         if (isSettingsOpen && scrollRef.current) {
-            scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+            scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
         }
     }, [isSettingsOpen]);
 
     // Scroll to top of panel content when panel changes
     useEffect(() => {
         if (panelContentRef.current) {
-            panelContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+            panelContentRef.current.scrollTo({ top: 0, behavior: "smooth" });
         }
     }, [settingTab]);
 
@@ -79,38 +79,38 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
-            title: 'VT+',
-            description: 'Premium features and usage management',
+            title: "VT+",
+            description: "Premium features and usage management",
             key: SETTING_TABS.USAGE_CREDITS,
             component: <CombinedSubscriptionSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            title: 'Usage',
-            description: 'View your LLMs usage',
+            title: "Usage",
+            description: "View your LLMs usage",
             key: SETTING_TABS.USAGE,
             component: <MultiModelUsageMeter userId={session?.user?.id} />,
         },
         {
-            title: 'Profile',
-            description: 'Manage your account details',
+            title: "Profile",
+            description: "Manage your account details",
             key: SETTING_TABS.PROFILE,
             component: <UserProfileSettings />,
         },
         {
-            title: 'Preferences',
-            description: 'Customize your VT experience',
+            title: "Preferences",
+            description: "Customize your VT experience",
             key: SETTING_TABS.PERSONALIZATION,
             component: <PersonalizationSettings onClose={() => setIsSettingsOpen(false)} />,
         },
         {
-            title: 'API Keys',
-            description: 'Connect your own AI providers',
+            title: "API Keys",
+            description: "Connect your own AI providers",
             key: SETTING_TABS.API_KEYS,
             component: <ApiKeySettings />,
         },
         {
-            title: 'Cache & Offline',
-            description: 'Manage app cache and offline features',
+            title: "Cache & Offline",
+            description: "Manage app cache and offline features",
             key: SETTING_TABS.CACHE,
             component: <CacheManagement />,
         },
@@ -156,14 +156,14 @@ export const SettingsModal = () => {
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            'flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left',
+                                            "flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left",
                                             settingTab === setting.key
-                                                ? 'bg-background text-foreground shadow-sm'
-                                                : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+                                                ? "bg-background text-foreground shadow-sm"
+                                                : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
-                                        style={{ minWidth: 'max-content' }}
+                                        style={{ minWidth: "max-content" }}
                                     >
                                         <div className="flex-1 space-y-0.5">
                                             <div className="whitespace-nowrap text-xs font-medium xl:whitespace-normal xl:text-base">
@@ -183,8 +183,8 @@ export const SettingsModal = () => {
                             className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 xl:p-8"
                             ref={panelContentRef}
                             style={{
-                                minHeight: '500px',
-                                maxHeight: 'calc(85vh - 120px)',
+                                minHeight: "500px",
+                                maxHeight: "calc(85vh - 120px)",
                             }}
                         >
                             <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
@@ -210,70 +210,70 @@ export const ApiKeySettings = () => {
 
     const apiKeyList = [
         {
-            name: 'OpenAI',
-            key: 'OPENAI_API_KEY' as keyof ApiKeys,
+            name: "OpenAI",
+            key: "OPENAI_API_KEY" as keyof ApiKeys,
             value: apiKeys.OPENAI_API_KEY,
-            url: 'https://platform.openai.com/api-keys',
-            placeholder: 'sk-...',
+            url: "https://platform.openai.com/api-keys",
+            placeholder: "sk-...",
         },
         {
-            name: 'Anthropic',
-            key: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+            name: "Anthropic",
+            key: "ANTHROPIC_API_KEY" as keyof ApiKeys,
             value: apiKeys.ANTHROPIC_API_KEY,
-            url: 'https://console.anthropic.com/settings/keys',
-            placeholder: 'sk-ant-...',
+            url: "https://console.anthropic.com/settings/keys",
+            placeholder: "sk-ant-...",
         },
         {
-            name: 'Google Gemini',
-            key: 'GEMINI_API_KEY' as keyof ApiKeys,
+            name: "Google Gemini",
+            key: "GEMINI_API_KEY" as keyof ApiKeys,
             value: apiKeys.GEMINI_API_KEY,
-            url: 'https://ai.google.dev/api',
-            placeholder: 'AIza...',
+            url: "https://ai.google.dev/api",
+            placeholder: "AIza...",
         },
         {
-            name: 'OpenRouter',
-            key: 'OPENROUTER_API_KEY' as keyof ApiKeys,
+            name: "OpenRouter",
+            key: "OPENROUTER_API_KEY" as keyof ApiKeys,
             value: apiKeys.OPENROUTER_API_KEY,
-            url: 'https://openrouter.ai/settings/keys',
-            placeholder: 'sk-or-...',
+            url: "https://openrouter.ai/settings/keys",
+            placeholder: "sk-or-...",
         },
         {
-            name: 'Together AI',
-            key: 'TOGETHER_API_KEY' as keyof ApiKeys,
+            name: "Together AI",
+            key: "TOGETHER_API_KEY" as keyof ApiKeys,
             value: apiKeys.TOGETHER_API_KEY,
-            url: 'https://api.together.xyz/settings/api-keys',
-            placeholder: 'tok-...',
+            url: "https://api.together.xyz/settings/api-keys",
+            placeholder: "tok-...",
         },
         {
-            name: 'Fireworks AI',
-            key: 'FIREWORKS_API_KEY' as keyof ApiKeys,
+            name: "Fireworks AI",
+            key: "FIREWORKS_API_KEY" as keyof ApiKeys,
             value: apiKeys.FIREWORKS_API_KEY,
-            url: 'https://app.fireworks.ai/settings/users/api-keys',
-            placeholder: 'fw-...',
+            url: "https://app.fireworks.ai/settings/users/api-keys",
+            placeholder: "fw-...",
         },
         {
-            name: 'xAI Grok',
-            key: 'XAI_API_KEY' as keyof ApiKeys,
+            name: "xAI Grok",
+            key: "XAI_API_KEY" as keyof ApiKeys,
             value: apiKeys.XAI_API_KEY,
-            url: 'https://x.ai/api',
-            placeholder: 'xai-...',
+            url: "https://x.ai/api",
+            placeholder: "xai-...",
         },
     ];
 
     const handleSave = (keyName: keyof ApiKeys, value: string, _provider: string) => {
-        setValidationErrors((prev) => ({ ...prev, [keyName]: '' }));
+        setValidationErrors((prev) => ({ ...prev, [keyName]: "" }));
         setApiKey(keyName, value);
         setIsEditing(null);
     };
 
     const handleEdit = (keyName: string) => {
         setIsEditing(keyName);
-        setValidationErrors((prev) => ({ ...prev, [keyName]: '' }));
+        setValidationErrors((prev) => ({ ...prev, [keyName]: "" }));
     };
 
     const getMaskedKey = (key: string) => {
-        if (!key) return '';
-        return '•'.repeat(16) + key.slice(-4);
+        if (!key) return "";
+        return "•".repeat(16) + key.slice(-4);
     };
 
     return (
@@ -335,23 +335,23 @@ export const ApiKeySettings = () => {
                         <div className="border-border/50 rounded-lg border bg-blue-50 p-3 md:p-4 dark:bg-blue-950/20">
                             <div className="space-y-2 md:space-y-3">
                                 <div className="text-foreground text-xs md:text-sm">
-                                    <strong>Current limits:</strong>{' '}
+                                    <strong>Current limits:</strong>{" "}
                                     {isVtPlus
-                                        ? '100 requests per day, 10 requests per minute (VT+ enhanced)'
-                                        : '20 requests per day, 5 requests per minute'}
+                                        ? "100 requests per day, 10 requests per minute (VT+ enhanced)"
+                                        : "20 requests per day, 5 requests per minute"}
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
                                     {isVtPlus
-                                        ? 'You have enhanced VT+ limits for free Gemini 2.5 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models.'
-                                        : 'Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.'}
+                                        ? "You have enhanced VT+ limits for free Gemini 2.5 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models."
+                                        : "Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models."}
                                 </div>
                                 <div className="text-muted-foreground text-xs md:text-sm">
                                     <strong>Pro tip:</strong> With your own API key, you'll have
                                     access to Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash
                                     Lite Preview and other premium models without restrictions
                                     {isVtPlus
-                                        ? ', plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+'
-                                        : ''}
+                                        ? ", plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+"
+                                        : ""}
                                     .
                                 </div>
                             </div>
@@ -409,11 +409,11 @@ export const ApiKeySettings = () => {
                                     <div className="space-y-3">
                                         <Input
                                             className={
-                                                validationErrors[apiKey.key] ? 'border-red-500' : ''
+                                                validationErrors[apiKey.key] ? "border-red-500" : ""
                                             }
                                             onChange={(e) => setApiKey(apiKey.key, e.target.value)}
                                             placeholder={apiKey.placeholder}
-                                            value={apiKey.value || ''}
+                                            value={apiKey.value || ""}
                                         />
                                         {validationErrors[apiKey.key] && (
                                             <Alert variant="destructive">
@@ -428,8 +428,8 @@ export const ApiKeySettings = () => {
                                                 onClick={() =>
                                                     handleSave(
                                                         apiKey.key,
-                                                        apiKey.value || '',
-                                                        apiKey.name
+                                                        apiKey.value || "",
+                                                        apiKey.name,
                                                     )
                                                 }
                                                 size="sm"
@@ -469,13 +469,13 @@ export const ApiKeySettings = () => {
                                                 size="sm"
                                                 variant="outline"
                                             >
-                                                {apiKey.value ? 'Update' : 'Add Key'}
+                                                {apiKey.value ? "Update" : "Add Key"}
                                             </Button>
                                             {apiKey.value && (
                                                 <Button
                                                     className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
                                                     onClick={() => {
-                                                        setApiKey(apiKey.key, '');
+                                                        setApiKey(apiKey.key, "");
                                                     }}
                                                     size="sm"
                                                     variant="outline"
@@ -507,9 +507,9 @@ export const ApiKeySettings = () => {
                     <div className="space-y-3">
                         {[
                             "API keys are stored securely in your browser's local storage",
-                            'You only need to configure keys for the AI providers you want to use',
-                            'Keys are never shared with VT servers - they go directly to AI providers',
-                            'You can update or remove keys at any time',
+                            "You only need to configure keys for the AI providers you want to use",
+                            "Keys are never shared with VT servers - they go directly to AI providers",
+                            "You can update or remove keys at any time",
                         ].map((tip, index) => (
                             <div className="flex items-start gap-3" key={index}>
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
@@ -606,17 +606,17 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             <div className="flex gap-2">
                                 <Button
                                     className="min-w-[60px]"
-                                    onClick={() => setSidebarPlacement('left')}
+                                    onClick={() => setSidebarPlacement("left")}
                                     size="sm"
-                                    variant={sidebarPlacement === 'left' ? 'default' : 'outline'}
+                                    variant={sidebarPlacement === "left" ? "default" : "outline"}
                                 >
                                     Left
                                 </Button>
                                 <Button
                                     className="min-w-[60px]"
-                                    onClick={() => setSidebarPlacement('right')}
+                                    onClick={() => setSidebarPlacement("right")}
                                     size="sm"
-                                    variant={sidebarPlacement === 'right' ? 'default' : 'outline'}
+                                    variant={sidebarPlacement === "right" ? "default" : "outline"}
                                 >
                                     Right
                                 </Button>
@@ -639,9 +639,9 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                                 className="min-w-[60px]"
                                 onClick={() => setShowExamplePrompts(!showExamplePrompts)}
                                 size="sm"
-                                variant={showExamplePrompts ? 'default' : 'outline'}
+                                variant={showExamplePrompts ? "default" : "outline"}
                             >
-                                {showExamplePrompts ? 'On' : 'Off'}
+                                {showExamplePrompts ? "On" : "Off"}
                             </Button>
                         </div>
                     </div>

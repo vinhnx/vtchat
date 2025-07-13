@@ -1,21 +1,21 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from "@playwright/test";
 
-test.describe('Lighthouse Performance Optimizations', () => {
+test.describe("Lighthouse Performance Optimizations", () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('/');
+        await page.goto("/");
     });
 
-    test('Font display swap is working', async ({ page }) => {
+    test("Font display swap is working", async ({ page }) => {
         // Check that fonts load without FOUT (Flash of Unstyled Text)
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState("networkidle");
 
         // Verify CSS variables are set for fonts
         const fontVariables = await page.evaluate(() => {
             const styles = getComputedStyle(document.documentElement);
             return {
-                inter: styles.getPropertyValue('--font-inter'),
-                bricolage: styles.getPropertyValue('--font-bricolage'),
-                clash: styles.getPropertyValue('--font-clash'),
+                inter: styles.getPropertyValue("--font-inter"),
+                bricolage: styles.getPropertyValue("--font-bricolage"),
+                clash: styles.getPropertyValue("--font-clash"),
             };
         });
 
@@ -24,7 +24,7 @@ test.describe('Lighthouse Performance Optimizations', () => {
         expect(fontVariables.clash).toBeTruthy();
     });
 
-    test('Performance optimizations component loaded', async ({ page }) => {
+    test("Performance optimizations component loaded", async ({ page }) => {
         // Check that DNS prefetch and other performance hints are present
         const dnsPreconnect = await page
             .locator('link[rel="dns-prefetch"][href*="google.com"]')
@@ -40,12 +40,12 @@ test.describe('Lighthouse Performance Optimizations', () => {
         expect(colorScheme).toBeGreaterThan(0);
     });
 
-    test('Personalized greeting has stable layout', async ({ page }) => {
+    test("Personalized greeting has stable layout", async ({ page }) => {
         // Wait for personalized greeting to load
-        await page.waitForSelector('text=/Good (morning|afternoon|evening)/', { timeout: 5000 });
+        await page.waitForSelector("text=/Good (morning|afternoon|evening)/", { timeout: 5000 });
 
         // Check that greeting container has fixed height (prevents CLS)
-        const greetingContainer = page.locator('.relative.h-\\[100px\\].min-h-\\[100px\\]');
+        const greetingContainer = page.locator(".relative.h-\\[100px\\].min-h-\\[100px\\]");
         await expect(greetingContainer).toBeVisible();
 
         // Verify the container maintains stable dimensions
@@ -53,12 +53,12 @@ test.describe('Lighthouse Performance Optimizations', () => {
         expect(boundingBox?.height).toBeGreaterThanOrEqual(100);
     });
 
-    test('Chat input loads dynamically without blocking', async ({ page }) => {
+    test("Chat input loads dynamically without blocking", async ({ page }) => {
         // Check that page loads even if chat input is lazy loaded
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState("domcontentloaded");
 
         // Main content should be visible quickly
-        const mainContent = page.locator('main');
+        const mainContent = page.locator("main");
         await expect(mainContent).toBeVisible();
 
         // Chat input should eventually load
@@ -66,7 +66,7 @@ test.describe('Lighthouse Performance Optimizations', () => {
         await expect(chatInput).toBeVisible({ timeout: 10000 });
     });
 
-    test('No duplicate font preconnects', async ({ page }) => {
+    test("No duplicate font preconnects", async ({ page }) => {
         // Check that we don't have duplicate preconnect links for Google Fonts
         const googleFontsPreconnects = await page
             .locator('link[rel="preconnect"][href*="fonts.googleapis.com"]')
@@ -80,89 +80,89 @@ test.describe('Lighthouse Performance Optimizations', () => {
         expect(googleStaticPreconnects).toBeLessThanOrEqual(1);
     });
 
-    test('Image optimization works', async ({ page }) => {
+    test("Image optimization works", async ({ page }) => {
         // Navigate to login page which has a background image
-        await page.goto('/login');
+        await page.goto("/login");
 
         // Check that background image uses modern formats and proper loading
         const backgroundImage = page.locator(
-            'img[src*="/bg/bg_vt.avif"], img[src*=".avif"], img[src*=".webp"]'
+            'img[src*="/bg/bg_vt.avif"], img[src*=".avif"], img[src*=".webp"]',
         );
 
         if ((await backgroundImage.count()) > 0) {
             // Should have priority loading for above-the-fold image
             const imageElement = backgroundImage.first();
-            const loading = await imageElement.getAttribute('loading');
-            const _fetchPriority = await imageElement.getAttribute('fetchpriority');
+            const loading = await imageElement.getAttribute("loading");
+            const _fetchPriority = await imageElement.getAttribute("fetchpriority");
 
             // Login background should either have priority or no lazy loading
-            expect(loading === null || loading === 'eager').toBeTruthy();
+            expect(loading === null || loading === "eager").toBeTruthy();
         }
     });
 
-    test('JavaScript bundles are optimized', async ({ page }) => {
+    test("JavaScript bundles are optimized", async ({ page }) => {
         // Monitor network requests for JS bundles
         const jsRequests: string[] = [];
 
-        page.on('response', (response) => {
-            if (response.url().includes('.js') && response.url().includes('/_next/static/')) {
+        page.on("response", (response) => {
+            if (response.url().includes(".js") && response.url().includes("/_next/static/")) {
                 jsRequests.push(response.url());
             }
         });
 
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState("networkidle");
 
         // Should have chunked JS files (indicates code splitting is working)
         expect(jsRequests.length).toBeGreaterThan(1);
 
         // Should have vendor chunks separated from app code
         const hasVendorChunk = jsRequests.some(
-            (url) => url.includes('vendor') || url.includes('chunk')
+            (url) => url.includes("vendor") || url.includes("chunk"),
         );
         expect(hasVendorChunk).toBeTruthy();
     });
 
-    test('Critical CSS loads first', async ({ page }) => {
+    test("Critical CSS loads first", async ({ page }) => {
         // Check that CSS loads before JS for critical rendering path
         const resourceTimings = await page.evaluate(() => {
-            return performance.getEntriesByType('resource').map((entry: any) => ({
+            return performance.getEntriesByType("resource").map((entry: any) => ({
                 name: entry.name,
                 startTime: entry.startTime,
-                type: entry.name.includes('.css')
-                    ? 'css'
-                    : entry.name.includes('.js')
-                      ? 'js'
-                      : 'other',
+                type: entry.name.includes(".css")
+                    ? "css"
+                    : entry.name.includes(".js")
+                      ? "js"
+                      : "other",
             }));
         });
 
         const cssLoadTime = Math.min(
-            ...resourceTimings.filter((r) => r.type === 'css').map((r) => r.startTime)
+            ...resourceTimings.filter((r) => r.type === "css").map((r) => r.startTime),
         );
         const jsLoadTime = Math.min(
-            ...resourceTimings.filter((r) => r.type === 'js').map((r) => r.startTime)
+            ...resourceTimings.filter((r) => r.type === "js").map((r) => r.startTime),
         );
 
         // CSS should start loading before or at the same time as JS
         expect(cssLoadTime).toBeLessThanOrEqual(jsLoadTime + 10); // 10ms tolerance
     });
 
-    test('Performance metrics are within acceptable ranges', async ({ page }) => {
+    test("Performance metrics are within acceptable ranges", async ({ page }) => {
         // Use Performance API to check basic metrics
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState("networkidle");
 
         const performanceMetrics = await page.evaluate(() => {
             const navigation = performance.getEntriesByType(
-                'navigation'
+                "navigation",
             )[0] as PerformanceNavigationTiming;
-            const paint = performance.getEntriesByType('paint');
+            const paint = performance.getEntriesByType("paint");
 
             return {
                 domContentLoaded:
                     navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
                 loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
-                firstPaint: paint.find((p) => p.name === 'first-paint')?.startTime,
-                firstContentfulPaint: paint.find((p) => p.name === 'first-contentful-paint')
+                firstPaint: paint.find((p) => p.name === "first-paint")?.startTime,
+                firstContentfulPaint: paint.find((p) => p.name === "first-contentful-paint")
                     ?.startTime,
             };
         });

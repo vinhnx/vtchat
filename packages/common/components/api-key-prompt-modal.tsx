@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { ChatMode } from '@repo/shared/config';
-import { log } from '@repo/shared/logger';
+import { ChatMode } from "@repo/shared/config";
+import { log } from "@repo/shared/logger";
 import {
     Button,
     Dialog,
@@ -11,10 +11,10 @@ import {
     DialogTitle,
     Input,
     Label,
-} from '@repo/ui';
-import { ExternalLink, Key } from 'lucide-react';
-import { useState } from 'react';
-import { type ApiKeys, useApiKeysStore } from '../store/api-keys.store';
+} from "@repo/ui";
+import { ExternalLink, Key } from "lucide-react";
+import { useState } from "react";
+import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;
@@ -33,19 +33,19 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.GPT_4_1_Mini:
         case ChatMode.GPT_4_1_Nano:
         case ChatMode.GPT_4_1:
-            return 'OPENAI_API_KEY';
+            return "OPENAI_API_KEY";
         case ChatMode.Pro:
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_PRO:
-            return 'GEMINI_API_KEY';
+            return "GEMINI_API_KEY";
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
-            return 'ANTHROPIC_API_KEY';
+            return "ANTHROPIC_API_KEY";
         case ChatMode.DEEPSEEK_R1:
-            return 'FIREWORKS_API_KEY';
+            return "FIREWORKS_API_KEY";
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
-            return 'XAI_API_KEY';
+            return "XAI_API_KEY";
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
         case ChatMode.DEEPSEEK_R1:
@@ -53,7 +53,7 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.QWEN3_32B:
         case ChatMode.MISTRAL_NEMO:
         case ChatMode.QWEN3_14B:
-            return 'OPENROUTER_API_KEY';
+            return "OPENROUTER_API_KEY";
         default:
             return null;
     }
@@ -62,52 +62,52 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
 const getApiKeyInfo = (provider: keyof ApiKeys) => {
     const info = {
         OPENAI_API_KEY: {
-            name: 'OpenAI',
-            url: 'https://platform.openai.com/api-keys',
-            placeholder: 'sk-...',
-            description: 'Get your API key from OpenAI Platform',
+            name: "OpenAI",
+            url: "https://platform.openai.com/api-keys",
+            placeholder: "sk-...",
+            description: "Get your API key from OpenAI Platform",
         },
         ANTHROPIC_API_KEY: {
-            name: 'Anthropic',
-            url: 'https://console.anthropic.com/settings/keys',
-            placeholder: 'sk-ant-...',
-            description: 'Get your API key from Anthropic Console',
+            name: "Anthropic",
+            url: "https://console.anthropic.com/settings/keys",
+            placeholder: "sk-ant-...",
+            description: "Get your API key from Anthropic Console",
         },
         GEMINI_API_KEY: {
-            name: 'Google Gemini',
-            url: 'https://ai.google.dev/api',
-            placeholder: 'AIza...',
-            description: 'Get your API key from Google AI Studio',
+            name: "Google Gemini",
+            url: "https://ai.google.dev/api",
+            placeholder: "AIza...",
+            description: "Get your API key from Google AI Studio",
         },
         FIREWORKS_API_KEY: {
-            name: 'Fireworks',
-            url: 'https://fireworks.ai/api-keys',
-            placeholder: 'fw-...',
-            description: 'Get your API key from Fireworks AI',
+            name: "Fireworks",
+            url: "https://fireworks.ai/api-keys",
+            placeholder: "fw-...",
+            description: "Get your API key from Fireworks AI",
         },
         XAI_API_KEY: {
-            name: 'xAI Grok',
-            url: 'https://x.ai/api',
-            placeholder: 'xai-...',
-            description: 'Get your API key from xAI',
+            name: "xAI Grok",
+            url: "https://x.ai/api",
+            placeholder: "xai-...",
+            description: "Get your API key from xAI",
         },
         JINA_API_KEY: {
-            name: 'Jina',
-            url: 'https://jina.ai/api',
-            placeholder: 'jina-...',
-            description: 'Get your API key from Jina AI',
+            name: "Jina",
+            url: "https://jina.ai/api",
+            placeholder: "jina-...",
+            description: "Get your API key from Jina AI",
         },
         OPENROUTER_API_KEY: {
-            name: 'OpenRouter',
-            url: 'https://openrouter.ai/keys',
-            placeholder: 'sk-or-...',
-            description: 'Get your API key from OpenRouter',
+            name: "OpenRouter",
+            url: "https://openrouter.ai/keys",
+            placeholder: "sk-or-...",
+            description: "Get your API key from OpenRouter",
         },
         TOGETHER_API_KEY: {
-            name: 'Together',
-            url: 'https://api.together.xyz/settings/api-keys',
-            placeholder: 'together-...',
-            description: 'Get your API key from Together AI',
+            name: "Together",
+            url: "https://api.together.xyz/settings/api-keys",
+            placeholder: "together-...",
+            description: "Get your API key from Together AI",
         },
     };
 
@@ -123,7 +123,7 @@ export const ApiKeyPromptModal = ({
     const requiredProvider = getRequiredApiKeyForMode(chatMode);
     const setApiKey = useApiKeysStore((state) => state.setKey);
 
-    const [apiKeyValue, setApiKeyValue] = useState('');
+    const [apiKeyValue, setApiKeyValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     if (!requiredProvider) {
@@ -140,16 +140,16 @@ export const ApiKeyPromptModal = ({
             setApiKey(requiredProvider, apiKeyValue.trim());
             onComplete?.();
             onClose();
-            setApiKeyValue('');
+            setApiKeyValue("");
         } catch (error) {
-            log.error('Error saving API key:', { data: error });
+            log.error("Error saving API key:", { data: error });
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleClose = () => {
-        setApiKeyValue('');
+        setApiKeyValue("");
         onClose();
     };
 
@@ -175,7 +175,7 @@ export const ApiKeyPromptModal = ({
                             id="api-key"
                             onChange={(e) => setApiKeyValue(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
+                                if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
                                     handleSave();
                                 }
@@ -190,7 +190,7 @@ export const ApiKeyPromptModal = ({
                     <div className="flex items-center justify-between pt-2">
                         <Button
                             className="flex items-center gap-1"
-                            onClick={() => window.open(providerInfo.url, '_blank')}
+                            onClick={() => window.open(providerInfo.url, "_blank")}
                             size="sm"
                             variant="outlined"
                         >
@@ -206,7 +206,7 @@ export const ApiKeyPromptModal = ({
                                 disabled={!apiKeyValue.trim() || isLoading}
                                 onClick={handleSave}
                             >
-                                {isLoading ? 'Saving...' : 'Save & Continue'}
+                                {isLoading ? "Saving..." : "Save & Continue"}
                             </Button>
                         </div>
                     </div>

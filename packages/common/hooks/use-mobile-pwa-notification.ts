@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
-import { useIsMobile } from '../../../apps/web/hooks/use-mobile';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { useIsMobile } from "../../../apps/web/hooks/use-mobile";
 
-const STORAGE_KEY = 'vt-mobile-pwa-notification-seen';
+const STORAGE_KEY = "vt-mobile-pwa-notification-seen";
 
 export function useMobilePWANotification() {
     const isMobile = useIsMobile();
@@ -14,17 +14,17 @@ export function useMobilePWANotification() {
 
     // Check if user has seen the notification
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
 
         const seen = localStorage.getItem(STORAGE_KEY);
-        setHasSeenNotification(seen === 'true');
+        setHasSeenNotification(seen === "true");
     }, []);
 
     // Mark notification as seen
     const markAsSeen = useCallback(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
 
-        localStorage.setItem(STORAGE_KEY, 'true');
+        localStorage.setItem(STORAGE_KEY, "true");
         setHasSeenNotification(true);
     }, []);
 
@@ -34,12 +34,12 @@ export function useMobilePWANotification() {
 
         toastShown.current = true;
 
-        toast('Install VT as an App', {
+        toast("Install VT as an App", {
             description:
                 '1. Look for the Share button in your browser toolbar\n2. Tap "Add to Home Screen" for the best mobile experience\n\n↓ Share button is usually in the browser menu or toolbar',
             duration: 12000, // 12 seconds for more time to read the instructions
             action: {
-                label: 'Got it',
+                label: "Got it",
                 onClick: () => {
                     markAsSeen();
                 },

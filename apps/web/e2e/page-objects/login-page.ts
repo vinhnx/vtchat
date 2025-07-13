@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Page } from "@playwright/test";
 
 export class LoginPage {
     readonly page: Page;
@@ -9,24 +9,24 @@ export class LoginPage {
 
     // Locators
     get heading() {
-        return this.page.getByRole('heading', { name: 'Welcome to VT!' });
+        return this.page.getByRole("heading", { name: "Welcome to VT!" });
     }
 
     get googleButton() {
-        return this.page.getByRole('button', { name: 'Google' });
+        return this.page.getByRole("button", { name: "Google" });
     }
 
     get githubButton() {
-        return this.page.getByRole('button', { name: 'GitHub' });
+        return this.page.getByRole("button", { name: "GitHub" });
     }
 
     get twitterButton() {
-        return this.page.getByRole('button', { name: 'Twitter' });
+        return this.page.getByRole("button", { name: "Twitter" });
     }
 
     // Actions
     async goto() {
-        await this.page.goto('/login');
+        await this.page.goto("/login");
     }
 
     async clickGoogleLogin() {

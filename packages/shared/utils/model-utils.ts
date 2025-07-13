@@ -1,5 +1,5 @@
-import { ModelEnum } from '@repo/ai/models';
-import { ChatMode } from '../config';
+import { ModelEnum } from "@repo/ai/models";
+import { ChatMode } from "../config";
 
 /**
  * All Gemini ChatMode values
@@ -25,9 +25,9 @@ export const GEMINI_MODEL_ENUMS = [
  * All Gemini embedding models
  */
 export const GEMINI_EMBEDDING_MODELS = [
-    'text-embedding-004',
-    'text-embedding-preview-0409',
-    'text-embedding-001',
+    "text-embedding-004",
+    "text-embedding-preview-0409",
+    "text-embedding-001",
 ] as const;
 
 /**
@@ -59,7 +59,7 @@ export function isGeminiModel(model: ChatMode | ModelEnum | string): boolean {
     }
 
     // Check for string patterns (fallback for any model ID containing 'gemini')
-    if (typeof model === 'string' && model.toLowerCase().includes('gemini')) {
+    if (typeof model === "string" && model.toLowerCase().includes("gemini")) {
         return true;
     }
 

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Area,
@@ -19,14 +19,14 @@ import {
     RadarChart,
     XAxis,
     YAxis,
-} from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+} from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     type ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from '@/components/ui/chart';
+} from "@/components/ui/chart";
 
 interface BaseChartData {
     name: string;
@@ -47,7 +47,7 @@ interface RadarData {
 }
 
 interface BarChartProps {
-    type: 'barChart';
+    type: "barChart";
     title: string;
     data: BaseChartData[];
     xAxisLabel?: string;
@@ -56,7 +56,7 @@ interface BarChartProps {
 }
 
 interface LineChartProps {
-    type: 'lineChart';
+    type: "lineChart";
     title: string;
     data: MultiSeriesData[];
     xAxisLabel?: string;
@@ -67,7 +67,7 @@ interface LineChartProps {
 }
 
 interface AreaChartProps {
-    type: 'areaChart';
+    type: "areaChart";
     title: string;
     data: MultiSeriesData[];
     xAxisLabel?: string;
@@ -78,7 +78,7 @@ interface AreaChartProps {
 }
 
 interface PieChartProps {
-    type: 'pieChart';
+    type: "pieChart";
     title: string;
     data: BaseChartData[];
     showLabels?: boolean;
@@ -86,7 +86,7 @@ interface PieChartProps {
 }
 
 interface RadarChartProps {
-    type: 'radarChart';
+    type: "radarChart";
     title: string;
     data: RadarData[];
     maxValue?: number;
@@ -96,12 +96,12 @@ type ChartProps = BarChartProps | LineChartProps | AreaChartProps | PieChartProp
 
 // Color palettes using new color scheme
 const chartColors = {
-    blue: ['#D9487D', '#383B73', '#171C26'],
-    red: ['#A63333', '#D9487D', '#BFB38F'],
-    green: ['#BFB38F', '#383B73', '#D9487D'],
-    purple: ['#383B73', '#171C26', '#D9487D'],
-    orange: ['#BFB38F', '#A63333', '#D9487D'],
-    default: ['#D9487D', '#383B73', '#171C26'],
+    blue: ["#D9487D", "#383B73", "#171C26"],
+    red: ["#A63333", "#D9487D", "#BFB38F"],
+    green: ["#BFB38F", "#383B73", "#D9487D"],
+    purple: ["#383B73", "#171C26", "#D9487D"],
+    orange: ["#BFB38F", "#A63333", "#D9487D"],
+    default: ["#D9487D", "#383B73", "#171C26"],
 };
 
 const RADIAN = Math.PI / 180;
@@ -125,7 +125,7 @@ const renderCustomizedLabel = ({
             fill="white"
             fontSize={12}
             fontWeight="500"
-            textAnchor={x > cx ? 'start' : 'end'}
+            textAnchor={x > cx ? "start" : "end"}
             x={x}
             y={y}
         >
@@ -140,18 +140,18 @@ export function ChartRenderer(props: ChartProps) {
     const getChartConfig = (): ChartConfig => {
         const colors = chartColors[(props as any).color] || chartColors.default;
 
-        if (type === 'lineChart' || type === 'areaChart') {
+        if (type === "lineChart" || type === "areaChart") {
             return {
                 series1: {
-                    label: (props as LineChartProps).series1Name || 'Series 1',
+                    label: (props as LineChartProps).series1Name || "Series 1",
                     color: colors[0],
                 },
                 series2: {
-                    label: (props as LineChartProps).series2Name || 'Series 2',
+                    label: (props as LineChartProps).series2Name || "Series 2",
                     color: colors[1],
                 },
                 series3: {
-                    label: (props as LineChartProps).series3Name || 'Series 3',
+                    label: (props as LineChartProps).series3Name || "Series 3",
                     color: colors[2],
                 },
             };
@@ -159,7 +159,7 @@ export function ChartRenderer(props: ChartProps) {
 
         return {
             value: {
-                label: 'Value',
+                label: "Value",
                 color: colors[0],
             },
         };
@@ -167,7 +167,7 @@ export function ChartRenderer(props: ChartProps) {
 
     const renderChart = () => {
         switch (type) {
-            case 'barChart':
+            case "barChart":
                 return (
                     <ChartContainer config={getChartConfig()}>
                         <BarChart data={props.data}>
@@ -180,7 +180,7 @@ export function ChartRenderer(props: ChartProps) {
                     </ChartContainer>
                 );
 
-            case 'lineChart':
+            case "lineChart":
                 return (
                     <ChartContainer config={getChartConfig()}>
                         <LineChart data={props.data}>
@@ -190,7 +190,7 @@ export function ChartRenderer(props: ChartProps) {
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Line
                                 dataKey="series1"
-                                dot={{ fill: 'var(--color-series1)' }}
+                                dot={{ fill: "var(--color-series1)" }}
                                 stroke="var(--color-series1)"
                                 strokeWidth={2}
                                 type="monotone"
@@ -198,7 +198,7 @@ export function ChartRenderer(props: ChartProps) {
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
                                     dataKey="series2"
-                                    dot={{ fill: 'var(--color-series2)' }}
+                                    dot={{ fill: "var(--color-series2)" }}
                                     stroke="var(--color-series2)"
                                     strokeWidth={2}
                                     type="monotone"
@@ -207,7 +207,7 @@ export function ChartRenderer(props: ChartProps) {
                             {props.data.some((d) => d.series3 !== undefined) && (
                                 <Line
                                     dataKey="series3"
-                                    dot={{ fill: 'var(--color-series3)' }}
+                                    dot={{ fill: "var(--color-series3)" }}
                                     stroke="var(--color-series3)"
                                     strokeWidth={2}
                                     type="monotone"
@@ -217,7 +217,7 @@ export function ChartRenderer(props: ChartProps) {
                     </ChartContainer>
                 );
 
-            case 'areaChart':
+            case "areaChart":
                 return (
                     <ChartContainer config={getChartConfig()}>
                         <AreaChart data={props.data}>
@@ -229,7 +229,7 @@ export function ChartRenderer(props: ChartProps) {
                                 dataKey="series1"
                                 fill="var(--color-series1)"
                                 fillOpacity={0.6}
-                                stackId={props.stacked ? '1' : undefined}
+                                stackId={props.stacked ? "1" : undefined}
                                 stroke="var(--color-series1)"
                                 type="monotone"
                             />
@@ -238,7 +238,7 @@ export function ChartRenderer(props: ChartProps) {
                                     dataKey="series2"
                                     fill="var(--color-series2)"
                                     fillOpacity={0.6}
-                                    stackId={props.stacked ? '1' : undefined}
+                                    stackId={props.stacked ? "1" : undefined}
                                     stroke="var(--color-series2)"
                                     type="monotone"
                                 />
@@ -247,7 +247,7 @@ export function ChartRenderer(props: ChartProps) {
                     </ChartContainer>
                 );
 
-            case 'pieChart': {
+            case "pieChart": {
                 const colors = chartColors.default;
                 return (
                     <ChartContainer config={getChartConfig()}>
@@ -276,7 +276,7 @@ export function ChartRenderer(props: ChartProps) {
                 );
             }
 
-            case 'radarChart':
+            case "radarChart":
                 return (
                     <ChartContainer config={getChartConfig()}>
                         <RadarChart data={props.data}>

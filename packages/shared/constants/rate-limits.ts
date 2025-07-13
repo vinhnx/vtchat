@@ -44,10 +44,10 @@ export const GEMINI_FLASH_LIMITS = GEMINI_LIMITS.FLASH_LITE;
  * Keeps UI components DRY and ensures consistent messaging.
  */
 export const limitText = {
-    free: (model: keyof typeof GEMINI_LIMITS = 'FLASH_LITE') =>
+    free: (model: keyof typeof GEMINI_LIMITS = "FLASH_LITE") =>
         `${GEMINI_LIMITS[model].FREE_DAY} requests/day, ${GEMINI_LIMITS[model].FREE_MINUTE}/min`,
-    plus: (model: keyof typeof GEMINI_LIMITS = 'FLASH_LITE') =>
+    plus: (model: keyof typeof GEMINI_LIMITS = "FLASH_LITE") =>
         `${GEMINI_LIMITS[model].PLUS_DAY} requests/day, ${GEMINI_LIMITS[model].PLUS_MINUTE}/min`,
-    compare: (model: keyof typeof GEMINI_LIMITS = 'FLASH_LITE') =>
+    compare: (model: keyof typeof GEMINI_LIMITS = "FLASH_LITE") =>
         `${limitText.plus(model)} vs ${GEMINI_LIMITS[model].FREE_DAY}/day, ${GEMINI_LIMITS[model].FREE_MINUTE}/min`,
 } as const;

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Badge,
@@ -22,9 +22,8 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-} from '@repo/ui';
-import { ChevronDown, Columns, Plus } from 'lucide-react';
-import * as React from 'react';
+} from "@repo/ui";
+import { ChevronDown, Columns, Plus } from "lucide-react";
 
 export interface DataTableItem {
     id: number;

@@ -1,6 +1,6 @@
-import { useChatStore } from '@repo/common/store';
-import { Button } from '@repo/ui';
-import { CornerDownRight } from 'lucide-react';
+import { useChatStore } from "@repo/common/store";
+import { Button } from "@repo/ui";
+import { CornerDownRight } from "lucide-react";
 
 export const SelectedContext = () => {
     const contextValue = useChatStore((state: any) => state.context);
@@ -16,7 +16,7 @@ export const SelectedContext = () => {
                 className="text-muted-foreground hover:bg-muted ml-4 flex-shrink-0"
                 iconSize="sm"
                 onClick={() => {
-                    setContextValue('');
+                    setContextValue("");
                 }}
                 size="icon-xs"
                 variant="ghost"

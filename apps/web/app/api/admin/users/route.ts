@@ -1,9 +1,9 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { users, sessions, providerUsage } from '@/lib/database/schema';
-import { count, eq, gte, desc, sql, sum, and, or, like } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
+import { and, count, desc, eq, gte, like, or, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { providerUsage, sessions, users } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -19,25 +19,25 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
         const { searchParams } = new URL(request.url);
-        const page = parseInt(searchParams.get('page') || '1');
-        const limit = Math.min(parseInt(searchParams.get('limit') || '25'), 100);
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = Math.min(parseInt(searchParams.get("limit") || "25"), 100);
         const offset = (page - 1) * limit;
-        const search = searchParams.get('search') || '';
-        const planFilter = searchParams.get('plan') || '';
-        const statusFilter = searchParams.get('status') || '';
+        const search = searchParams.get("search") || "";
+        const planFilter = searchParams.get("plan") || "";
+        const statusFilter = searchParams.get("status") || "";
 
         // Build where conditions
-        let whereConditions = [];
+        const whereConditions = [];
 
         if (search) {
             whereConditions.push(
-                or(like(users.name, `%${search}%`), like(users.email, `%${search}%`))
+                or(like(users.name, `%${search}%`), like(users.email, `%${search}%`)),
             );
         }
 
@@ -45,9 +45,9 @@ export async function GET(request: NextRequest) {
             whereConditions.push(eq(users.planSlug, planFilter));
         }
 
-        if (statusFilter === 'banned') {
+        if (statusFilter === "banned") {
             whereConditions.push(eq(users.banned, true));
-        } else if (statusFilter === 'active') {
+        } else if (statusFilter === "active") {
             whereConditions.push(eq(users.banned, false));
         }
 
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
             .orderBy(
                 // Pin admin users to top, then sort by creation date
                 sql`CASE WHEN ${users.role} = 'admin' THEN 0 ELSE 1 END`,
-                desc(users.createdAt)
+                desc(users.createdAt),
             );
 
         if (whereConditions.length > 0) {
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
         const [vtPlusUsers] = await db
             .select({ count: count() })
             .from(users)
-            .where(eq(users.planSlug, 'vt_plus'));
+            .where(eq(users.planSlug, "vt_plus"));
 
         const [bannedUsers] = await db
             .select({ count: count() })
@@ -179,18 +179,18 @@ export async function GET(request: NextRequest) {
                 conversionRate:
                     totalUsers.count > 0
                         ? ((vtPlusUsers.count / totalUsers.count) * 100).toFixed(2)
-                        : '0.00',
+                        : "0.00",
                 verificationRate:
                     totalUsers.count > 0
                         ? ((verifiedUsers.count / totalUsers.count) * 100).toFixed(2)
-                        : '0.00',
+                        : "0.00",
             },
             planDistribution,
             topActiveUsers: userActivity,
             registrationTrend: recentRegistrations,
         });
     } catch {
-        return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+        return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
     }
 }
 
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -208,8 +208,8 @@ export async function POST(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -218,21 +218,21 @@ export async function POST(request: NextRequest) {
 
         // Validate required fields
         if (!action || !userId) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         // Log the request for debugging
-        log.info({ action, userId, data }, 'Admin user action requested');
+        log.info({ action, userId, data }, "Admin user action requested");
 
         // Basic user ID validation (just check it's not empty and reasonable length)
-        if (!userId || typeof userId !== 'string' || userId.length < 10 || userId.length > 50) {
-            log.warn({ userId }, 'Invalid user ID');
+        if (!userId || typeof userId !== "string" || userId.length < 10 || userId.length > 50) {
+            log.warn({ userId }, "Invalid user ID");
             return NextResponse.json(
                 {
-                    error: 'Invalid user ID',
+                    error: "Invalid user ID",
                     receivedId: userId,
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -242,34 +242,34 @@ export async function POST(request: NextRequest) {
         });
 
         if (!targetUser) {
-            log.warn({ userId }, 'User not found in database');
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+            log.warn({ userId }, "User not found in database");
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
         // Prevent admin from demoting themselves
-        if (action === 'updateRole' && userId === session.user.id && data.role !== 'admin') {
+        if (action === "updateRole" && userId === session.user.id && data.role !== "admin") {
             return NextResponse.json(
                 {
-                    error: 'Cannot demote yourself from admin role',
+                    error: "Cannot demote yourself from admin role",
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         switch (action) {
-            case 'ban':
+            case "ban":
                 await db
                     .update(users)
                     .set({
                         banned: true,
-                        banReason: data.reason || 'Banned by admin',
+                        banReason: data.reason || "Banned by admin",
                         banExpires: data.expires ? new Date(data.expires) : null,
                         updatedAt: new Date(),
                     })
                     .where(eq(users.id, userId));
                 break;
 
-            case 'unban':
+            case "unban":
                 await db
                     .update(users)
                     .set({
@@ -281,9 +281,9 @@ export async function POST(request: NextRequest) {
                     .where(eq(users.id, userId));
                 break;
 
-            case 'updateRole':
-                if (!data.role || !['user', 'admin'].includes(data.role)) {
-                    return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+            case "updateRole":
+                if (!data.role || !["user", "admin"].includes(data.role)) {
+                    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
                 }
 
                 await db
@@ -295,9 +295,9 @@ export async function POST(request: NextRequest) {
                     .where(eq(users.id, userId));
                 break;
 
-            case 'updatePlan':
+            case "updatePlan":
                 if (!data.planSlug) {
-                    return NextResponse.json({ error: 'Missing plan slug' }, { status: 400 });
+                    return NextResponse.json({ error: "Missing plan slug" }, { status: 400 });
                 }
 
                 await db
@@ -310,18 +310,18 @@ export async function POST(request: NextRequest) {
                 break;
 
             default:
-                return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+                return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        log.error({ error }, 'Admin users API error');
+        log.error({ error }, "Admin users API error");
         return NextResponse.json(
             {
-                error: 'Failed to update user',
-                details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+                error: "Failed to update user",
+                details: process.env.NODE_ENV === "development" ? String(error) : undefined,
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

@@ -1,50 +1,50 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { cn } from '../lib/utils';
+import * as React from "react";
+import { cn } from "../lib/utils";
 
 interface CustomScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
-    variant?: 'default' | 'thin' | 'hidden';
-    orientation?: 'vertical' | 'horizontal' | 'both';
+    variant?: "default" | "thin" | "hidden";
+    orientation?: "vertical" | "horizontal" | "both";
 }
 
 const CustomScrollArea = React.forwardRef<HTMLDivElement, CustomScrollAreaProps>(
-    ({ className, children, variant = 'default', orientation = 'vertical', ...props }, ref) => {
+    ({ className, children, variant = "default", orientation = "vertical", ...props }, ref) => {
         const getScrollClasses = () => {
             switch (variant) {
-                case 'thin':
-                    return 'thin-scrollbar';
-                case 'hidden':
-                    return 'no-scrollbar';
+                case "thin":
+                    return "thin-scrollbar";
+                case "hidden":
+                    return "no-scrollbar";
                 default:
-                    return 'custom-scrollbar';
+                    return "custom-scrollbar";
             }
         };
 
         const getOrientationClasses = () => {
             switch (orientation) {
-                case 'horizontal':
-                    return 'overflow-x-auto';
-                case 'both':
-                    return 'overflow-auto';
+                case "horizontal":
+                    return "overflow-x-auto";
+                case "both":
+                    return "overflow-auto";
                 default:
-                    return 'overflow-y-auto';
+                    return "overflow-y-auto";
             }
         };
 
         return (
             <div
-                className={cn('relative', getScrollClasses(), getOrientationClasses(), className)}
+                className={cn("relative", getScrollClasses(), getOrientationClasses(), className)}
                 ref={ref}
                 {...props}
             >
                 {children}
             </div>
         );
-    }
+    },
 );
 
-CustomScrollArea.displayName = 'CustomScrollArea';
+CustomScrollArea.displayName = "CustomScrollArea";
 
 export { CustomScrollArea, type CustomScrollAreaProps };

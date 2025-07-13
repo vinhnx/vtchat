@@ -1,4 +1,4 @@
-import { InlineLoader } from '@repo/common/components';
+import { InlineLoader } from "@repo/common/components";
 
 export default function Loading() {
     return (

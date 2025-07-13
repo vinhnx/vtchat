@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { SUBSCRIPTION_SOURCES } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
-import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import type { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
-import { useCallback, useMemo } from 'react';
-import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
+import { SUBSCRIPTION_SOURCES } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
+import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import type { UserClientSubscriptionStatus } from "@repo/shared/utils/subscription";
+import { useCallback, useMemo } from "react";
+import { useGlobalSubscriptionStatus } from "../providers/subscription-provider"; // Use global provider
 
 /**
  * Custom hook for optimized subscription access checking.
@@ -114,14 +114,14 @@ export function useSubscriptionAccess() {
             if (options.permission) {
                 log.warn(
                     { permission: options.permission },
-                    'Permission checks are not fully implemented in useSubscriptionAccess'
+                    "Permission checks are not fully implemented in useSubscriptionAccess",
                 );
                 return false;
             }
 
             return false; // Default to no access if no specific check matches
         },
-        [isLoaded, convertedStatus, subscriptionStatus, isSignedIn]
+        [isLoaded, convertedStatus, subscriptionStatus, isSignedIn],
     );
 
     const canAccess = useCallback((feature: FeatureSlug) => hasAccess({ feature }), [hasAccess]);
@@ -129,7 +129,7 @@ export function useSubscriptionAccess() {
     const hasPlanAccess = useCallback(
         // Renamed from hasPlan to avoid conflict with local var
         (plan: PlanSlug) => hasAccess({ plan }),
-        [hasAccess]
+        [hasAccess],
     );
 
     return {
@@ -159,7 +159,7 @@ export function useSubscriptionAccess() {
                 if (!(isLoaded && convertedStatus.isActive)) return false;
                 return features.some((feature) => hasAccess({ feature }));
             },
-            [isLoaded, convertedStatus.isActive, hasAccess]
+            [isLoaded, convertedStatus.isActive, hasAccess],
         ),
 
         hasAllFeatures: useCallback(
@@ -167,7 +167,7 @@ export function useSubscriptionAccess() {
                 if (!(isLoaded && convertedStatus.isActive)) return false;
                 return features.every((feature) => hasAccess({ feature }));
             },
-            [isLoaded, convertedStatus.isActive, hasAccess]
+            [isLoaded, convertedStatus.isActive, hasAccess],
         ),
     };
 }
@@ -192,7 +192,7 @@ export function useVtPlusAccess(): boolean {
 
 export function useCurrentPlan(): {
     planSlug: PlanSlug;
-    planConfig: UserClientSubscriptionStatus['planConfig'];
+    planConfig: UserClientSubscriptionStatus["planConfig"];
     canUpgrade: boolean;
     isVtPlus: boolean;
     isActive: boolean;

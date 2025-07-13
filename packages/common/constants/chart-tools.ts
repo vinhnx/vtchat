@@ -1,9 +1,9 @@
 export const CHART_TOOL_NAMES = [
-    'barChart',
-    'lineChart',
-    'areaChart',
-    'pieChart',
-    'radarChart',
+    "barChart",
+    "lineChart",
+    "areaChart",
+    "pieChart",
+    "radarChart",
 ] as const;
 
 export const isChartTool = (toolName: string | undefined): boolean => {

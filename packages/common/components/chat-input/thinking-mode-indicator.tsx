@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { SETTING_TABS, useAppStore, useChatStore } from '@repo/common/store';
-import { FeatureSlug } from '@repo/shared/types/subscription';
-import { Badge } from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Brain, Settings } from 'lucide-react';
-import { useMemo } from 'react';
+import { useFeatureAccess } from "@repo/common/hooks/use-subscription-access";
+import { SETTING_TABS, useAppStore, useChatStore } from "@repo/common/store";
+import { FeatureSlug } from "@repo/shared/types/subscription";
+import { Badge } from "@repo/ui";
+import { motion } from "framer-motion";
+import { Brain, Settings } from "lucide-react";
+import { useMemo } from "react";
 
 export const ThinkingModeIndicator = () => {
     const thinkingMode = useChatStore((state) => state.thinkingMode);

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import * as React from 'react';
-import { cn } from '../lib/utils';
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+import * as React from "react";
+import { cn } from "../lib/utils";
 
 const PremiumDialog = DialogPrimitive.Root;
 const PremiumDialogTrigger = DialogPrimitive.Trigger;
@@ -12,44 +12,44 @@ const PremiumDialogPortal = DialogPrimitive.Portal;
 const PremiumDialogClose = DialogPrimitive.Close;
 
 const premiumDialogOverlayVariants = cva(
-    'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 data-[state=closed]:animate-out data-[state=open]:animate-in',
+    "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 data-[state=closed]:animate-out data-[state=open]:animate-in",
     {
         variants: {
             variant: {
-                default: 'bg-black/80',
-                blur: 'bg-black/20 backdrop-blur-md',
-                glass: 'bg-white/10 backdrop-blur-xl',
+                default: "bg-black/80",
+                blur: "bg-black/20 backdrop-blur-md",
+                glass: "bg-white/10 backdrop-blur-xl",
             },
         },
         defaultVariants: {
-            variant: 'default',
+            variant: "default",
         },
-    }
+    },
 );
 
 const premiumDialogContentVariants = cva(
-    'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-300 data-[state=closed]:animate-out data-[state=open]:animate-in',
+    "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-300 data-[state=closed]:animate-out data-[state=open]:animate-in",
     {
         variants: {
             variant: {
-                default: 'rounded-lg shadow-xl',
-                premium: 'rounded-xl border-slate-200/50 shadow-2xl dark:border-slate-700/50',
-                glass: 'rounded-xl border-white/20 bg-white/90 shadow-2xl backdrop-blur-xl dark:bg-slate-900/90',
-                minimal: 'rounded-2xl border-none shadow-2xl',
+                default: "rounded-lg shadow-xl",
+                premium: "rounded-xl border-slate-200/50 shadow-2xl dark:border-slate-700/50",
+                glass: "rounded-xl border-white/20 bg-white/90 shadow-2xl backdrop-blur-xl dark:bg-slate-900/90",
+                minimal: "rounded-2xl border-none shadow-2xl",
             },
             size: {
-                sm: 'max-w-sm',
-                default: 'max-w-lg',
-                lg: 'max-w-2xl',
-                xl: 'max-w-4xl',
-                full: 'max-h-[95vh] max-w-[95vw]',
+                sm: "max-w-sm",
+                default: "max-w-lg",
+                lg: "max-w-2xl",
+                xl: "max-w-4xl",
+                full: "max-h-[95vh] max-w-[95vw]",
             },
         },
         defaultVariants: {
-            variant: 'default',
-            size: 'default',
+            variant: "default",
+            size: "default",
         },
-    }
+    },
 );
 
 interface PremiumDialogOverlayProps
@@ -71,7 +71,7 @@ PremiumDialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 interface PremiumDialogContentProps
     extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
         VariantProps<typeof premiumDialogContentVariants> {
-    overlayVariant?: VariantProps<typeof premiumDialogOverlayVariants>['variant'];
+    overlayVariant?: VariantProps<typeof premiumDialogOverlayVariants>["variant"];
     showCloseButton?: boolean;
 }
 
@@ -84,12 +84,12 @@ const PremiumDialogContent = React.forwardRef<
             className,
             variant,
             size,
-            overlayVariant = 'blur',
+            overlayVariant = "blur",
             showCloseButton = true,
             children,
             ...props
         },
-        ref
+        ref,
     ) => (
         <PremiumDialogPortal>
             <PremiumDialogOverlay variant={overlayVariant} />
@@ -107,32 +107,32 @@ const PremiumDialogContent = React.forwardRef<
                 )}
             </DialogPrimitive.Content>
         </PremiumDialogPortal>
-    )
+    ),
 );
 PremiumDialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const PremiumDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn('flex flex-col space-y-3 text-center sm:text-left', className)} {...props} />
+    <div className={cn("flex flex-col space-y-3 text-center sm:text-left", className)} {...props} />
 );
-PremiumDialogHeader.displayName = 'PremiumDialogHeader';
+PremiumDialogHeader.displayName = "PremiumDialogHeader";
 
 const PremiumDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div
         className={cn(
-            'border-border/50 flex flex-col-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-x-2',
-            className
+            "border-border/50 flex flex-col-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-x-2",
+            className,
         )}
         {...props}
     />
 );
-PremiumDialogFooter.displayName = 'PremiumDialogFooter';
+PremiumDialogFooter.displayName = "PremiumDialogFooter";
 
 const PremiumDialogTitle = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Title>,
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
-        className={cn('text-xl font-semibold leading-tight tracking-tight', className)}
+        className={cn("text-xl font-semibold leading-tight tracking-tight", className)}
         ref={ref}
         {...props}
     />
@@ -144,7 +144,7 @@ const PremiumDialogDescription = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
-        className={cn('text-muted-foreground text-sm leading-relaxed', className)}
+        className={cn("text-muted-foreground text-sm leading-relaxed", className)}
         ref={ref}
         {...props}
     />

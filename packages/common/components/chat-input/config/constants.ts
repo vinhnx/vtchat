@@ -1,18 +1,18 @@
 export const COLOUR_CLASSES = {
     blue: {
-        bg: 'bg-blue-500/10',
-        text: 'text-blue-500',
-        iconText: '!text-blue-500',
+        bg: "bg-blue-500/10",
+        text: "text-blue-500",
+        iconText: "!text-blue-500",
     },
     orange: {
-        bg: 'bg-orange-500/10',
-        text: 'text-orange-500',
-        iconText: '!text-orange-500',
+        bg: "bg-orange-500/10",
+        text: "text-orange-500",
+        iconText: "!text-orange-500",
     },
     purple: {
-        bg: 'bg-purple-500/10',
-        text: 'text-purple-500',
-        iconText: '!text-purple-500',
+        bg: "bg-purple-500/10",
+        text: "text-purple-500",
+        iconText: "!text-purple-500",
     },
 } as const;
 
@@ -23,13 +23,13 @@ export const ICON_SIZES = {
 } as const;
 
 export const EXCLUDED_PATHS = [
-    '/',
-    '/recent',
-    '/settings',
-    '/plus',
-    '/about',
-    '/login',
-    '/privacy',
-    '/terms',
-    '/faq',
+    "/",
+    "/recent",
+    "/settings",
+    "/plus",
+    "/about",
+    "/login",
+    "/privacy",
+    "/terms",
+    "/faq",
 ] as const;

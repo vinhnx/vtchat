@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     MotionSkeleton,
@@ -6,26 +6,26 @@ import {
     StepStatus,
     ToolCallStep,
     ToolResultStep,
-} from '@repo/common/components';
-import { useAppStore } from '@repo/common/store';
-import { ChatMode } from '@repo/shared/config';
-import type { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
-import { Badge, Card } from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
-import { memo, useEffect, useMemo } from 'react';
+} from "@repo/common/components";
+import { useAppStore } from "@repo/common/store";
+import { ChatMode } from "@repo/shared/config";
+import type { Step, ThreadItem, ToolCall, ToolResult } from "@repo/shared/types";
+import { Badge, Card } from "@repo/ui";
+import { motion } from "framer-motion";
+import { Atom, ChevronRight, ListChecks, Star } from "lucide-react";
+import { memo, useEffect, useMemo } from "react";
 
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
-        return 'Research';
+        return "Research";
     }
     if ([ChatMode.DEEPSEEK_R1].includes(threadItem.mode)) {
-        return 'Thinking';
+        return "Thinking";
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return 'Grounding Web Search';
+        return "Grounding Web Search";
     }
-    return 'Steps';
+    return "Steps";
 };
 
 const getIcon = (threadItem: ThreadItem) => {
@@ -40,12 +40,12 @@ const getIcon = (threadItem: ThreadItem) => {
 
 const getNote = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
-        return 'This process takes approximately 15 minutes. Please keep the tab open during this time.';
+        return "This process takes approximately 15 minutes. Please keep the tab open during this time.";
     }
     if (threadItem.mode === ChatMode.Pro) {
-        return 'This process takes approximately 5 minutes. Please keep the tab open during this time.';
+        return "This process takes approximately 5 minutes. Please keep the tab open during this time.";
     }
-    return '';
+    return "";
 };
 
 type ReasoningStepProps = {
@@ -79,14 +79,14 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     const dismissSideDrawer = useAppStore((state) => state.dismissSideDrawer);
     const updateSideDrawer = useAppStore((state) => state.updateSideDrawer);
 
-    const isStopped = threadItem.status === 'ABORTED' || threadItem.status === 'ERROR';
+    const isStopped = threadItem.status === "ABORTED" || threadItem.status === "ERROR";
 
-    const isLoading = steps.some((step) => step.status === 'PENDING') && !isStopped;
+    const isLoading = steps.some((step) => step.status === "PENDING") && !isStopped;
     const hasAnswer =
         !!threadItem?.answer?.text &&
-        (threadItem.status === 'COMPLETED' ||
-            threadItem.status === 'ABORTED' ||
-            threadItem.status === 'ERROR');
+        (threadItem.status === "COMPLETED" ||
+            threadItem.status === "ABORTED" ||
+            threadItem.status === "ERROR");
 
     useEffect(() => {
         if (hasAnswer) {
@@ -95,7 +95,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     }, [hasAnswer]);
 
     useEffect(() => {
-        if (steps[0]?.status === 'PENDING') {
+        if (steps[0]?.status === "PENDING") {
             handleClick();
         }
     }, [steps[0]]);
@@ -220,7 +220,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                     className="border-muted-foreground/20 bg-muted/30 text-muted-foreground text-xs"
                     variant="secondary"
                 >
-                    {stepCounts} {stepCounts === 1 ? 'Step' : 'Steps'}
+                    {stepCounts} {stepCounts === 1 ? "Step" : "Steps"}
                 </Badge>
                 <motion.div className="hover:bg-muted/60 rounded-md p-1" whileHover={{ x: 2 }}>
                     <ChevronRight className="text-muted-foreground" size={14} strokeWidth={2} />

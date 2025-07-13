@@ -1,14 +1,8 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import {
-    users,
-    sessions,
-    userSubscriptions,
-    providerUsage,
-    vtplusUsage,
-} from '@/lib/database/schema';
-import { count, eq, gte, desc, sql, sum, and, or, isNotNull, ne } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { and, count, desc, eq, gte, isNotNull, ne, or, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { providerUsage, sessions, users } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -16,7 +10,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -24,8 +18,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -46,8 +40,8 @@ export async function GET(request: NextRequest) {
             .where(
                 and(
                     eq(users.banned, true),
-                    or(isNotNull(users.banExpires), sql`${users.banExpires} > NOW()`)
-                )
+                    or(isNotNull(users.banExpires), sql`${users.banExpires} > NOW()`),
+                ),
             );
 
         const [recentBansCount] = await db
@@ -101,7 +95,7 @@ export async function GET(request: NextRequest) {
             })
             .from(providerUsage)
             .leftJoin(users, eq(providerUsage.userId, users.id))
-            .where(and(gte(providerUsage.requestTimestamp, oneDayAgo), ne(users.role, 'admin')))
+            .where(and(gte(providerUsage.requestTimestamp, oneDayAgo), ne(users.role, "admin")))
             .groupBy(providerUsage.userId, users.name, users.email)
             .having(sql`COUNT(*) > 100`)
             .orderBy(desc(count()))
@@ -180,8 +174,8 @@ export async function GET(request: NextRequest) {
             securityTimeline,
         });
     } catch (error) {
-        console.error('Failed to fetch security data:', error);
-        return NextResponse.json({ error: 'Failed to fetch security data' }, { status: 500 });
+        console.error("Failed to fetch security data:", error);
+        return NextResponse.json({ error: "Failed to fetch security data" }, { status: 500 });
     }
 }
 
@@ -191,7 +185,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -199,8 +193,8 @@ export async function POST(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -208,37 +202,39 @@ export async function POST(request: NextRequest) {
         const { action, data } = body;
 
         switch (action) {
-            case 'bulkBan':
+            case "bulkBan": {
                 const { userIds, reason, expires } = data;
                 await db
                     .update(users)
                     .set({
                         banned: true,
-                        banReason: reason || 'Bulk ban by admin',
+                        banReason: reason || "Bulk ban by admin",
                         banExpires: expires ? new Date(expires) : null,
                         updatedAt: new Date(),
                     })
                     .where(sql`${users.id} = ANY(${userIds})`);
                 break;
+            }
 
-            case 'revokeAllSessions':
+            case "revokeAllSessions": {
                 const { userId } = data;
                 await db.delete(sessions).where(eq(sessions.userId, userId));
                 break;
+            }
 
-            case 'blockIP':
+            case "blockIP":
                 // This would require implementing IP blocking functionality
                 // For now, just log the action
-                console.log('IP block requested for:', data.ipAddress);
+                console.log("IP block requested for:", data.ipAddress);
                 break;
 
             default:
-                return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+                return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Failed to perform security action:', error);
-        return NextResponse.json({ error: 'Failed to perform security action' }, { status: 500 });
+        console.error("Failed to perform security action:", error);
+        return NextResponse.json({ error: "Failed to perform security action" }, { status: 500 });
     }
 }

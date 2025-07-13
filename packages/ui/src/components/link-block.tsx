@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import type { Source } from '@repo/shared/types';
-import { getHost } from '@repo/shared/utils';
-import type React from 'react';
-import { memo } from 'react';
-import { LinkFavicon } from './link-favicon';
+import type { Source } from "@repo/shared/types";
+import { getHost } from "@repo/shared/utils";
+import type React from "react";
+import { memo } from "react";
+import { LinkFavicon } from "./link-favicon";
 
 export type LinkPreviewType = {
     url: string;

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 // import { log } from '@repo/shared/logger'; // Removed - no longer needed
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import type * as React from 'react';
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import type * as React from "react";
 
 function ThemeEnforcer({ children }: { children: React.ReactNode }) {
     // TEMPORARILY DISABLED: Theme enforcement disabled to prevent SubscriptionProvider errors

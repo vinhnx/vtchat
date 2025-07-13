@@ -1,27 +1,27 @@
-import { getModelFromChatMode, type ModelEnum } from '@repo/ai/models';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
+import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
 
-import { isGeminiModel } from '@repo/shared/utils';
-import { type Geo, geolocation } from '@vercel/functions';
-import type { NextRequest } from 'next/server';
-import { auth } from '@/lib/auth-server';
-import { shouldDisableGemini } from '@/lib/services/budget-monitor';
-import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
-import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/access-control';
+import { isGeminiModel } from "@repo/shared/utils";
+import { type Geo, geolocation } from "@vercel/functions";
+import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { shouldDisableGemini } from "@/lib/services/budget-monitor";
+import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
-import { executeStream } from './stream-handlers';
-import { registerStream, unregisterStream } from './stream-registry';
-import { completionRequestSchema, SSE_HEADERS } from './types';
-import { getIp } from './utils';
+import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from "./constants";
+import { executeStream } from "./stream-handlers";
+import { registerStream, unregisterStream } from "./stream-registry";
+import { completionRequestSchema, SSE_HEADERS } from "./types";
+import { getIp } from "./utils";
 
 export async function POST(request: NextRequest) {
-    if (request.method === 'OPTIONS') {
+    if (request.method === "OPTIONS") {
         return new Response(null, { headers: SSE_HEADERS });
     }
 
@@ -38,14 +38,14 @@ export async function POST(request: NextRequest) {
         if (!validatedBody.success) {
             log.warn(
                 { validationError: validatedBody.error.format() },
-                'Request validation failed'
+                "Request validation failed",
             );
             return new Response(
                 JSON.stringify({
-                    error: 'Invalid request body',
+                    error: "Invalid request body",
                     details: validatedBody.error.format(),
                 }),
-                { status: 400, headers: { 'Content-Type': 'application/json' } }
+                { status: 400, headers: { "Content-Type": "application/json" } },
             );
         }
 
@@ -53,16 +53,16 @@ export async function POST(request: NextRequest) {
         const ip = getIp(request);
 
         if (!ip) {
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
                 status: 401,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
         if (!!ChatModeConfig[data.mode]?.isAuthRequired && !userId) {
-            return new Response(JSON.stringify({ error: 'Authentication required' }), {
+            return new Response(JSON.stringify({ error: "Authentication required" }), {
                 status: 401,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             });
         }
 
@@ -86,32 +86,32 @@ export async function POST(request: NextRequest) {
                 if (budgetCheck.shouldDisable) {
                     return new Response(
                         JSON.stringify({
-                            error: 'Service temporarily unavailable',
+                            error: "Service temporarily unavailable",
                             message:
-                                'Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.',
-                            reason: 'budget_exceeded',
-                            upgradeUrl: '/plus',
-                            usageSettingsAction: 'open_usage_settings',
+                                "Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.",
+                            reason: "budget_exceeded",
+                            upgradeUrl: "/plus",
+                            usageSettingsAction: "open_usage_settings",
                         }),
                         {
                             status: 503,
-                            headers: { 'Content-Type': 'application/json' },
-                        }
+                            headers: { "Content-Type": "application/json" },
+                        },
                     );
                 }
                 // Require authentication for server-funded model access
                 if (!userId) {
                     return new Response(
                         JSON.stringify({
-                            error: 'Authentication required',
+                            error: "Authentication required",
                             message:
-                                'Please register to use Gemini models or provide your own API key.',
-                            redirect: '/auth/login',
+                                "Please register to use Gemini models or provide your own API key.",
+                            redirect: "/auth/login",
                         }),
                         {
                             status: 401,
-                            headers: { 'Content-Type': 'application/json' },
-                        }
+                            headers: { "Content-Type": "application/json" },
+                        },
                     );
                 }
 
@@ -120,16 +120,16 @@ export async function POST(request: NextRequest) {
                 if (!vtPlusAccess.hasAccess) {
                     return new Response(
                         JSON.stringify({
-                            error: 'VT+ subscription required',
+                            error: "VT+ subscription required",
                             message:
-                                'Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.',
-                            upgradeUrl: '/plus',
-                            usageSettingsAction: 'open_usage_settings',
+                                "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
+                            upgradeUrl: "/plus",
+                            usageSettingsAction: "open_usage_settings",
                         }),
                         {
                             status: 403,
-                            headers: { 'Content-Type': 'application/json' },
-                        }
+                            headers: { "Content-Type": "application/json" },
+                        },
                     );
                 }
 
@@ -138,14 +138,14 @@ export async function POST(request: NextRequest) {
                 try {
                     rateLimitResult = await checkRateLimit(userId, selectedModel, true);
                 } catch (error) {
-                    log.error({ error }, 'Rate limit check failed');
+                    log.error({ error }, "Rate limit check failed");
                     // Continue without rate limiting if check fails (graceful degradation)
                     rateLimitResult = { allowed: true };
                 }
 
                 if (!rateLimitResult.allowed) {
                     const resetTime =
-                        rateLimitResult.reason === 'daily_limit_exceeded'
+                        rateLimitResult.reason === "daily_limit_exceeded"
                             ? rateLimitResult.resetTime.daily
                             : rateLimitResult.resetTime.minute;
 
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
                     const isVTPlusUser = true;
 
                     const message =
-                        rateLimitResult.reason === 'daily_limit_exceeded'
+                        rateLimitResult.reason === "daily_limit_exceeded"
                             ? isVTPlusUser
                                 ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_VT_PLUS
                                 : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
@@ -163,24 +163,24 @@ export async function POST(request: NextRequest) {
 
                     return new Response(
                         JSON.stringify({
-                            error: 'Rate limit exceeded',
+                            error: "Rate limit exceeded",
                             message,
                             limitType: rateLimitResult.reason,
                             remainingDaily: rateLimitResult.remainingDaily,
                             remainingMinute: rateLimitResult.remainingMinute,
                             resetTime: resetTime.toISOString(),
-                            upgradeUrl: '/plus',
-                            usageSettingsAction: 'open_usage_settings',
+                            upgradeUrl: "/plus",
+                            usageSettingsAction: "open_usage_settings",
                         }),
                         {
                             status: 429,
                             headers: {
-                                'Content-Type': 'application/json',
-                                'Retry-After': Math.ceil(
-                                    (resetTime.getTime() - Date.now()) / 1000
+                                "Content-Type": "application/json",
+                                "Retry-After": Math.ceil(
+                                    (resetTime.getTime() - Date.now()) / 1000,
                                 ).toString(),
                             },
-                        }
+                        },
                     );
                 }
 
@@ -190,10 +190,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate userTier against actual subscription status and check chart access
-        let actualUserTier: 'FREE' | 'PLUS' = 'FREE';
+        let actualUserTier: "FREE" | "PLUS" = "FREE";
         const accessResult = await checkVTPlusAccess({ userId, ip });
         if (accessResult.hasAccess) {
-            actualUserTier = 'PLUS';
+            actualUserTier = "PLUS";
         }
 
         // Charts are now available to all users - no restriction needed
@@ -216,16 +216,16 @@ export async function POST(request: NextRequest) {
                     if (!hasByokGeminiKey) {
                         return new Response(
                             JSON.stringify({
-                                error: 'VT+ subscription or API key required',
+                                error: "VT+ subscription or API key required",
                                 message:
-                                    'This feature requires VT+ subscription or your own Gemini API key.',
+                                    "This feature requires VT+ subscription or your own Gemini API key.",
                                 requiredPlan: modeConfig.requiredPlan,
                                 requiredFeature: modeConfig.requiredFeature,
                             }),
                             {
                                 status: 403,
-                                headers: { 'Content-Type': 'application/json' },
-                            }
+                                headers: { "Content-Type": "application/json" },
+                            },
                         );
                     }
                 }
@@ -234,15 +234,15 @@ export async function POST(request: NextRequest) {
                 if (!accessResult.hasAccess) {
                     return new Response(
                         JSON.stringify({
-                            error: 'VT+ subscription required',
+                            error: "VT+ subscription required",
                             reason: accessResult.reason,
                             requiredPlan: modeConfig.requiredPlan,
                             requiredFeature: modeConfig.requiredFeature,
                         }),
                         {
                             status: 403,
-                            headers: { 'Content-Type': 'application/json' },
-                        }
+                            headers: { "Content-Type": "application/json" },
+                        },
                     );
                 }
             }
@@ -254,14 +254,14 @@ export async function POST(request: NextRequest) {
             if (!accessResult.hasAccess) {
                 return new Response(
                     JSON.stringify({
-                        error: 'Sign in required for thinking mode',
-                        reason: 'Thinking mode requires you to be signed in',
-                        requiredFeature: 'THINKING_MODE',
+                        error: "Sign in required for thinking mode",
+                        reason: "Thinking mode requires you to be signed in",
+                        requiredFeature: "THINKING_MODE",
                     }),
                     {
                         status: 403,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
+                        headers: { "Content-Type": "application/json" },
+                    },
                 );
             }
         }
@@ -282,7 +282,7 @@ export async function POST(request: NextRequest) {
             threadId: data.threadId,
         });
 
-        request.signal.addEventListener('abort', () => {
+        request.signal.addEventListener("abort", () => {
             abortController.abort();
             unregisterStream(requestId);
         });
@@ -312,29 +312,29 @@ export async function POST(request: NextRequest) {
 
         return new Response(stream, { headers: enhancedHeaders });
     } catch (error) {
-        log.error({ error }, 'Error in POST handler');
+        log.error({ error }, "Error in POST handler");
 
         // Provide specific error messages based on error type
-        let errorMessage = 'Internal server error';
+        let errorMessage = "Internal server error";
         let statusCode = 500;
 
         if (error instanceof Error) {
             const errorString = error.message.toLowerCase();
 
-            if (errorString.includes('unauthorized') || errorString.includes('forbidden')) {
-                errorMessage = 'Authentication required. Please sign in and try again.';
+            if (errorString.includes("unauthorized") || errorString.includes("forbidden")) {
+                errorMessage = "Authentication required. Please sign in and try again.";
                 statusCode = 401;
-            } else if (errorString.includes('rate limit') || errorString.includes('429')) {
-                errorMessage = 'Rate limit exceeded. Please wait a moment before trying again.';
+            } else if (errorString.includes("rate limit") || errorString.includes("429")) {
+                errorMessage = "Rate limit exceeded. Please wait a moment before trying again.";
                 statusCode = 429;
-            } else if (errorString.includes('network') || errorString.includes('fetch')) {
-                errorMessage = 'Network connection error. Please check your internet connection.';
+            } else if (errorString.includes("network") || errorString.includes("fetch")) {
+                errorMessage = "Network connection error. Please check your internet connection.";
                 statusCode = 503;
-            } else if (errorString.includes('timeout')) {
-                errorMessage = 'Request timed out. Please try again.';
+            } else if (errorString.includes("timeout")) {
+                errorMessage = "Request timed out. Please try again.";
                 statusCode = 408;
-            } else if (errorString.includes('parse') || errorString.includes('invalid')) {
-                errorMessage = 'Invalid request format. Please refresh the page and try again.';
+            } else if (errorString.includes("parse") || errorString.includes("invalid")) {
+                errorMessage = "Invalid request format. Please refresh the page and try again.";
                 statusCode = 400;
             }
         }
@@ -342,9 +342,9 @@ export async function POST(request: NextRequest) {
         return new Response(
             JSON.stringify({
                 error: errorMessage,
-                details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+                details: process.env.NODE_ENV === "development" ? String(error) : undefined,
             }),
-            { status: statusCode, headers: { 'Content-Type': 'application/json' } }
+            { status: statusCode, headers: { "Content-Type": "application/json" } },
         );
     }
 }
@@ -392,7 +392,7 @@ function createCompletionStream({
                         controller.enqueue(_encoder.encode(HEARTBEAT_COMMENT));
                     } catch (error) {
                         // Controller is closed, clear interval
-                        if ((error as any)?.code === 'ERR_INVALID_STATE' && heartbeatInterval) {
+                        if ((error as any)?.code === "ERR_INVALID_STATE" && heartbeatInterval) {
                             isControllerClosed = true;
                             clearInterval(heartbeatInterval);
                             heartbeatInterval = null;
@@ -402,7 +402,7 @@ function createCompletionStream({
                         }
                     }
                 },
-                HEARTBEAT_INTERVAL_MS + Math.random() * HEARTBEAT_JITTER_MS
+                HEARTBEAT_INTERVAL_MS + Math.random() * HEARTBEAT_JITTER_MS,
             );
 
             try {
@@ -420,23 +420,23 @@ function createCompletionStream({
                                 await recordRequest(
                                     userId,
                                     _selectedModel,
-                                    vtPlusAccess?.hasAccess ?? false
+                                    vtPlusAccess?.hasAccess ?? false,
                                 );
                                 log.info(
                                     { userId, model: _selectedModel },
-                                    'Rate limit recorded via server-side safety net'
+                                    "Rate limit recorded via server-side safety net",
                                 );
                             } catch (error) {
                                 log.error(
                                     { error, userId, model: _selectedModel },
-                                    'Failed to record request in onFinish'
+                                    "Failed to record request in onFinish",
                                 );
                             }
                         }
                     },
                 });
             } catch (error) {
-                const { handleStreamError } = await import('./stream-error-handler');
+                const { handleStreamError } = await import("./stream-error-handler");
                 await handleStreamError({
                     error,
                     controller,
@@ -460,7 +460,7 @@ function createCompletionStream({
             }
         },
         cancel() {
-            log.info('cancelling stream');
+            log.info("cancelling stream");
             isControllerClosed = true;
             if (heartbeatInterval) {
                 clearInterval(heartbeatInterval);

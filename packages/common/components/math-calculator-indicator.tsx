@@ -1,6 +1,6 @@
-import { Badge } from '@repo/ui';
-import { Loader2, Sigma } from 'lucide-react';
-import { memo } from 'react';
+import { Badge } from "@repo/ui";
+import { Loader2, Sigma } from "lucide-react";
+import { memo } from "react";
 
 export type MathCalculatorIndicatorProps = {
     isCalculating: boolean;
@@ -22,4 +22,4 @@ export const MathCalculatorIndicator = memo(({ isCalculating }: MathCalculatorIn
     );
 });
 
-MathCalculatorIndicator.displayName = 'MathCalculatorIndicator';
+MathCalculatorIndicator.displayName = "MathCalculatorIndicator";

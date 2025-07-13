@@ -8,9 +8,9 @@
 
 // Mock ChatMode enum
 const ChatMode = {
-    Pro: 'pro',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
-    Deep: 'deep',
+    Pro: "pro",
+    GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite",
+    Deep: "deep",
 };
 
 // Mock the chat mode router function to test the logic
@@ -88,78 +88,78 @@ function mockProSearchRouting(mode, question) {
 
     if (mode === ChatMode.Pro) {
         if (shouldSkip) {
-            return 'completion'; // For queries that don't need web search
+            return "completion"; // For queries that don't need web search
         } else {
-            return 'gemini-web-search'; // For queries that need web search
+            return "gemini-web-search"; // For queries that need web search
         }
     }
 
-    return 'completion'; // Default for other modes
+    return "completion"; // Default for other modes
 }
 
 // Test cases
 const testCases = [
     // Should trigger web search (auto-trigger examples)
     {
-        query: 'what is the current weather in Tri Ton, An Giang',
+        query: "what is the current weather in Tri Ton, An Giang",
         mode: ChatMode.Pro,
-        expectedRoute: 'gemini-web-search',
-        description: 'Weather query should trigger web search',
+        expectedRoute: "gemini-web-search",
+        description: "Weather query should trigger web search",
     },
     {
-        query: 'what are the latest news in Vietnam',
+        query: "what are the latest news in Vietnam",
         mode: ChatMode.Pro,
-        expectedRoute: 'gemini-web-search',
-        description: 'News query should trigger web search',
+        expectedRoute: "gemini-web-search",
+        description: "News query should trigger web search",
     },
     {
         query: "what's happening in Ho Chi Minh City today",
         mode: ChatMode.Pro,
-        expectedRoute: 'gemini-web-search',
-        description: 'Current events query should trigger web search',
+        expectedRoute: "gemini-web-search",
+        description: "Current events query should trigger web search",
     },
     {
-        query: 'current stock price of VCB',
+        query: "current stock price of VCB",
         mode: ChatMode.Pro,
-        expectedRoute: 'gemini-web-search',
-        description: 'Stock price query should trigger web search',
+        expectedRoute: "gemini-web-search",
+        description: "Stock price query should trigger web search",
     },
     {
         query: "what's the latest update on GPT-5",
         mode: ChatMode.Pro,
-        expectedRoute: 'gemini-web-search',
-        description: 'Tech update query should trigger web search',
+        expectedRoute: "gemini-web-search",
+        description: "Tech update query should trigger web search",
     },
 
     // Should NOT trigger web search (skip examples)
     {
-        query: 'hello, how are you?',
+        query: "hello, how are you?",
         mode: ChatMode.Pro,
-        expectedRoute: 'completion',
-        description: 'Greeting should not trigger web search',
+        expectedRoute: "completion",
+        description: "Greeting should not trigger web search",
     },
     {
-        query: 'what is 2 + 2?',
+        query: "what is 2 + 2?",
         mode: ChatMode.Pro,
-        expectedRoute: 'completion',
-        description: 'Math query should not trigger web search',
+        expectedRoute: "completion",
+        description: "Math query should not trigger web search",
     },
     {
-        query: 'explain how React hooks work',
+        query: "explain how React hooks work",
         mode: ChatMode.Pro,
-        expectedRoute: 'completion',
-        description: 'Programming concept should not trigger web search',
+        expectedRoute: "completion",
+        description: "Programming concept should not trigger web search",
     },
     {
-        query: 'who are you?',
+        query: "who are you?",
         mode: ChatMode.Pro,
-        expectedRoute: 'completion',
-        description: 'Identity query should not trigger web search',
+        expectedRoute: "completion",
+        description: "Identity query should not trigger web search",
     },
 ];
 
 // Run tests
-console.log('🧪 Testing Pro Search Auto-Trigger Web Search Functionality\n');
+console.log("🧪 Testing Pro Search Auto-Trigger Web Search Functionality\n");
 
 let passedTests = 0;
 const totalTests = testCases.length;
@@ -172,8 +172,8 @@ testCases.forEach((testCase, index) => {
     console.log(`Query: "${testCase.query}"`);
     console.log(`Expected: ${testCase.expectedRoute}`);
     console.log(`Got: ${result}`);
-    console.log(`Status: ${passed ? '✅ PASSED' : '❌ FAILED'}`);
-    console.log('---');
+    console.log(`Status: ${passed ? "✅ PASSED" : "❌ FAILED"}`);
+    console.log("---");
 
     if (passed) {
         passedTests++;
@@ -183,7 +183,7 @@ testCases.forEach((testCase, index) => {
 console.log(`\n📊 Test Results: ${passedTests}/${totalTests} tests passed`);
 
 if (passedTests === totalTests) {
-    console.log('🎉 All tests passed! Pro Search auto-trigger functionality is working correctly.');
+    console.log("🎉 All tests passed! Pro Search auto-trigger functionality is working correctly.");
 } else {
-    console.log('❌ Some tests failed. Please review the logic.');
+    console.log("❌ Some tests failed. Please review the logic.");
 }

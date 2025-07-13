@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock localStorage
 const localStorageMock = {
@@ -18,7 +18,7 @@ const localStorageMock = {
 // @ts-expect-error
 global.localStorage = localStorageMock;
 
-describe('RAG Onboarding', () => {
+describe("RAG Onboarding", () => {
     beforeEach(() => {
         // Clear localStorage before each test
         localStorageMock.clear();
@@ -30,46 +30,46 @@ describe('RAG Onboarding', () => {
         localStorageMock.clear();
     });
 
-    it('should show onboarding for users without API keys', () => {
+    it("should show onboarding for users without API keys", () => {
         // Mock API keys store returning empty keys
         const mockApiKeys = {};
 
         // Check onboarding logic
         const hasApiKeys = Object.keys(mockApiKeys).some(
-            (key) => key === 'GEMINI_API_KEY' || key === 'OPENAI_API_KEY'
+            (key) => key === "GEMINI_API_KEY" || key === "OPENAI_API_KEY",
         );
 
         expect(hasApiKeys).toBe(false);
         expect(!hasApiKeys).toBe(true); // Should show onboarding
     });
 
-    it('should not show onboarding when API keys are present', () => {
+    it("should not show onboarding when API keys are present", () => {
         // Mock API keys store with keys
-        const mockApiKeys = { GEMINI_API_KEY: 'test-key' };
+        const mockApiKeys = { GEMINI_API_KEY: "test-key" };
 
         const hasApiKeys = Object.keys(mockApiKeys).some(
-            (key) => key === 'GEMINI_API_KEY' || key === 'OPENAI_API_KEY'
+            (key) => key === "GEMINI_API_KEY" || key === "OPENAI_API_KEY",
         );
 
         expect(hasApiKeys).toBe(true);
         expect(!hasApiKeys).toBe(false); // Should not show onboarding
     });
 
-    it('should detect Gemini API keys', () => {
-        const mockApiKeys = { GEMINI_API_KEY: 'test-gemini-key' };
+    it("should detect Gemini API keys", () => {
+        const mockApiKeys = { GEMINI_API_KEY: "test-gemini-key" };
 
         const hasApiKeys = Object.keys(mockApiKeys).some(
-            (key) => key === 'GEMINI_API_KEY' || key === 'OPENAI_API_KEY'
+            (key) => key === "GEMINI_API_KEY" || key === "OPENAI_API_KEY",
         );
 
         expect(hasApiKeys).toBe(true);
     });
 
-    it('should detect OpenAI API keys', () => {
-        const mockApiKeys = { OPENAI_API_KEY: 'test-openai-key' };
+    it("should detect OpenAI API keys", () => {
+        const mockApiKeys = { OPENAI_API_KEY: "test-openai-key" };
 
         const hasApiKeys = Object.keys(mockApiKeys).some(
-            (key) => key === 'GEMINI_API_KEY' || key === 'OPENAI_API_KEY'
+            (key) => key === "GEMINI_API_KEY" || key === "OPENAI_API_KEY",
         );
 
         expect(hasApiKeys).toBe(true);

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { cn, Flex } from '@repo/ui';
-import { type Editor, EditorContent } from '@tiptap/react';
-import type { FC } from 'react';
+import { useChatStore } from "@repo/common/store";
+import { cn, Flex } from "@repo/ui";
+import { type Editor, EditorContent } from "@tiptap/react";
+import type { FC } from "react";
 
 export type TChatEditor = {
     sendMessage?: (message: string) => void;
@@ -17,7 +17,7 @@ export const ChatEditor: FC<TChatEditor> = ({
     sendMessage,
     editor,
     placeholder,
-    maxHeight = '200px',
+    maxHeight = "200px",
     className,
 }) => {
     const isGenerating = useChatStore((state) => state.isGenerating);
@@ -25,14 +25,14 @@ export const ChatEditor: FC<TChatEditor> = ({
     if (!editor) return null;
 
     const editorContainerClass =
-        'no-scrollbar [&>*]:no-scrollbar wysiwyg min-h-[60px] w-full cursor-text overflow-y-auto p-1 text-base outline-none focus:outline-none [&>*]:leading-6 [&>*]:outline-none [&>*]:break-all [&>*]:word-break-break-word [&>*]:whitespace-pre-wrap';
+        "no-scrollbar [&>*]:no-scrollbar wysiwyg min-h-[60px] w-full cursor-text overflow-y-auto p-1 text-base outline-none focus:outline-none [&>*]:leading-6 [&>*]:outline-none [&>*]:break-all [&>*]:word-break-break-word [&>*]:whitespace-pre-wrap";
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (isGenerating) return;
-        if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.key === "Enter" && !e.shiftKey) {
             sendMessage?.(editor.getText());
         }
-        if (e.key === 'Enter' && e.shiftKey) {
+        if (e.key === "Enter" && e.shiftKey) {
             e.preventDefault();
             e.currentTarget.scrollTop = e.currentTarget.scrollHeight;
         }

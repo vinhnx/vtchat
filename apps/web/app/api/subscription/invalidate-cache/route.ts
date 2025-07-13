@@ -1,7 +1,7 @@
-import { log } from '@repo/shared/logger';
-import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-server';
-import { invalidateSubscriptionCache } from '@/lib/subscription-cache';
+import { log } from "@repo/shared/logger";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { invalidateSubscriptionCache } from "@/lib/subscription-cache";
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const userId = session.user.id;
@@ -32,8 +32,8 @@ export async function POST(request: NextRequest) {
         // TODO: Add admin check for invalidating other users' caches
         if (targetUserId && targetUserId !== userId) {
             return NextResponse.json(
-                { error: 'Forbidden: Cannot invalidate other users cache' },
-                { status: 403 }
+                { error: "Forbidden: Cannot invalidate other users cache" },
+                { status: 403 },
             );
         }
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
         log.info(
             { invalidatedUserId: userIdToInvalidate, requestingUserId: userId },
-            'Cache invalidated for user'
+            "Cache invalidated for user",
         );
 
         return NextResponse.json({
@@ -50,14 +50,14 @@ export async function POST(request: NextRequest) {
             invalidatedUserId: userIdToInvalidate,
         });
     } catch (error) {
-        log.error({ error }, '[Subscription Cache API] Error');
+        log.error({ error }, "[Subscription Cache API] Error");
         return NextResponse.json(
             {
                 success: false,
-                error: 'Internal server error',
-                message: error instanceof Error ? error.message : 'Unknown error',
+                error: "Internal server error",
+                message: error instanceof Error ? error.message : "Unknown error",
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

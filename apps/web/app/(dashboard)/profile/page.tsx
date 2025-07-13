@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { SETTING_TABS, useAppStore } from '@repo/common/store';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { SETTING_TABS, useAppStore } from "@repo/common/store";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -15,7 +15,7 @@ export default function ProfilePage() {
         setIsSettingsOpen(true);
 
         // Redirect to main chat page
-        router.replace('/');
+        router.replace("/");
     }, [setIsSettingsOpen, setSettingTab, router]);
 
     // Show minimal loading state while redirecting

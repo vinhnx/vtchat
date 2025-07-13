@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
 import {
     Avatar,
     AvatarFallback,
@@ -16,7 +15,8 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from '@repo/ui';
+} from "@repo/ui";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
     ArrowUpDown,
     CheckCircle,
@@ -27,7 +27,7 @@ import {
     MoreHorizontal,
     Shield,
     XCircle,
-} from 'lucide-react';
+} from "lucide-react";
 
 export interface SessionLog {
     id: string;
@@ -47,12 +47,12 @@ interface ColumnsProps {
 
 export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<SessionLog>[] => [
     {
-        id: 'select',
+        id: "select",
         header: ({ table }) => (
             <Checkbox
                 checked={
                     table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
@@ -69,11 +69,11 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
         enableHiding: false,
     },
     {
-        accessorKey: 'userName',
+        accessorKey: "userName",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 User
@@ -86,11 +86,11 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                 <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
                         <AvatarFallback>
-                            {session.userName?.charAt(0)?.toUpperCase() || 'U'}
+                            {session.userName?.charAt(0)?.toUpperCase() || "U"}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <div className="font-medium">{session.userName || 'Unknown'}</div>
+                        <div className="font-medium">{session.userName || "Unknown"}</div>
                         <div className="text-sm text-muted-foreground">{session.userEmail}</div>
                     </div>
                 </div>
@@ -98,11 +98,11 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
         },
     },
     {
-        accessorKey: 'expiresAt',
+        accessorKey: "expiresAt",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Status
@@ -129,20 +129,20 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                 </div>
             );
         },
-        filterFn: (row, id, value) => {
+        filterFn: (row, _id, value) => {
             const session = row.original;
             const isActive = new Date(session.expiresAt) > new Date();
-            if (value === 'active') return isActive;
-            if (value === 'expired') return !isActive;
+            if (value === "active") return isActive;
+            if (value === "expired") return !isActive;
             return true;
         },
     },
     {
-        accessorKey: 'ipAddress',
+        accessorKey: "ipAddress",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Location
@@ -158,7 +158,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                             <div className="flex items-center gap-2 cursor-help">
                                 <Globe className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm font-mono">
-                                    {session.ipAddress || 'Unknown'}
+                                    {session.ipAddress || "Unknown"}
                                 </span>
                             </div>
                         </TooltipTrigger>
@@ -171,27 +171,27 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
         },
     },
     {
-        accessorKey: 'userAgent',
-        header: 'Browser',
+        accessorKey: "userAgent",
+        header: "Browser",
         cell: ({ row }) => {
             const session = row.original;
 
             const getBrowserIcon = (userAgent: string) => {
-                if (userAgent?.toLowerCase().includes('firefox'))
+                if (userAgent?.toLowerCase().includes("firefox"))
                     return <Shield className="h-4 w-4" />;
-                if (userAgent?.toLowerCase().includes('chrome'))
+                if (userAgent?.toLowerCase().includes("chrome"))
                     return <Globe className="h-4 w-4" />;
-                if (userAgent?.toLowerCase().includes('safari'))
+                if (userAgent?.toLowerCase().includes("safari"))
                     return <Monitor className="h-4 w-4" />;
                 return <Monitor className="h-4 w-4" />;
             };
 
             const getBrowserName = (userAgent: string) => {
-                if (userAgent?.toLowerCase().includes('firefox')) return 'Firefox';
-                if (userAgent?.toLowerCase().includes('chrome')) return 'Chrome';
-                if (userAgent?.toLowerCase().includes('safari')) return 'Safari';
-                if (userAgent?.toLowerCase().includes('edge')) return 'Edge';
-                return 'Unknown';
+                if (userAgent?.toLowerCase().includes("firefox")) return "Firefox";
+                if (userAgent?.toLowerCase().includes("chrome")) return "Chrome";
+                if (userAgent?.toLowerCase().includes("safari")) return "Safari";
+                if (userAgent?.toLowerCase().includes("edge")) return "Edge";
+                return "Unknown";
             };
 
             return (
@@ -204,7 +204,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                             </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p className="max-w-xs text-wrap">{session.userAgent || 'Unknown'}</p>
+                            <p className="max-w-xs text-wrap">{session.userAgent || "Unknown"}</p>
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
@@ -213,11 +213,11 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
         enableSorting: false,
     },
     {
-        accessorKey: 'createdAt',
+        accessorKey: "createdAt",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Session Time
@@ -242,8 +242,8 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
         },
     },
     {
-        accessorKey: 'impersonatedBy',
-        header: 'Special',
+        accessorKey: "impersonatedBy",
+        header: "Special",
         cell: ({ row }) => {
             const session = row.original;
             return (
@@ -257,17 +257,17 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                 </div>
             );
         },
-        filterFn: (row, id, value) => {
+        filterFn: (row, _id, value) => {
             const session = row.original;
-            if (value === 'impersonated') return !!session.impersonatedBy;
-            if (value === 'normal') return !session.impersonatedBy;
+            if (value === "impersonated") return !!session.impersonatedBy;
+            if (value === "normal") return !session.impersonatedBy;
             return true;
         },
         enableSorting: false,
     },
     {
-        id: 'actions',
-        header: 'Actions',
+        id: "actions",
+        header: "Actions",
         cell: ({ row }) => {
             const session = row.original;
 
@@ -293,7 +293,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={() =>
-                                window.open(`/admin/users?search=${session.userEmail}`, '_blank')
+                                window.open(`/admin/users?search=${session.userEmail}`, "_blank")
                             }
                         >
                             <Eye className="mr-2 h-4 w-4" />
@@ -303,7 +303,7 @@ export const createColumns = ({ onSessionAction }: ColumnsProps): ColumnDef<Sess
                             <>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    onClick={() => onSessionAction(session.id, 'revoke')}
+                                    onClick={() => onSessionAction(session.id, "revoke")}
                                     className="text-red-600"
                                 >
                                     <XCircle className="mr-2 h-4 w-4" />

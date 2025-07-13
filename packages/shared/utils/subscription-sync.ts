@@ -3,12 +3,12 @@
  * Functions for syncing and managing subscription data between different sources
  */
 
-import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { and, eq, isNull } from 'drizzle-orm';
-import { db } from '@/lib/database';
-import { userSubscriptions, users } from '@/lib/database/schema';
+import { log } from "@repo/shared/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { and, eq, isNull } from "drizzle-orm";
+import { db } from "@/lib/database";
+import { userSubscriptions, users } from "@/lib/database/schema";
 
 export interface SubscriptionSyncResult {
     success: boolean;
@@ -37,7 +37,7 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
         if (usersWithoutSubscriptions.length === 0) {
             return {
                 success: true,
-                message: 'All users with vt_plus plan_slug already have subscription records',
+                message: "All users with vt_plus plan_slug already have subscription records",
                 usersUpdated: 0,
             };
         }
@@ -65,26 +65,26 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
                 await db.insert(userSubscriptions).values(subscriptionData);
                 successCount++;
             } catch (error) {
-                const errorMsg = `Failed to create subscription for ${user.email}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+                const errorMsg = `Failed to create subscription for ${user.email}: ${error instanceof Error ? error.message : "Unknown error"}`;
                 errors.push(errorMsg);
                 log.error(
-                    { error: error instanceof Error ? error.message : 'Unknown error' },
-                    'Failed to create subscription for user'
+                    { error: error instanceof Error ? error.message : "Unknown error" },
+                    "Failed to create subscription for user",
                 );
             }
         }
 
         return {
             success: errors.length === 0,
-            message: `Successfully synced ${successCount} subscription records${errors.length > 0 ? ` with ${errors.length} errors` : ''}`,
+            message: `Successfully synced ${successCount} subscription records${errors.length > 0 ? ` with ${errors.length} errors` : ""}`,
             usersUpdated: successCount,
             errors: errors.length > 0 ? errors : undefined,
         };
     } catch (error) {
-        const errorMsg = `Error syncing subscription data: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        const errorMsg = `Error syncing subscription data: ${error instanceof Error ? error.message : "Unknown error"}`;
         log.error(
-            { error: error instanceof Error ? error.message : 'Unknown error' },
-            'Error syncing subscription data'
+            { error: error instanceof Error ? error.message : "Unknown error" },
+            "Error syncing subscription data",
         );
         return {
             success: false,
@@ -100,7 +100,7 @@ export async function syncUserSubscriptionData(): Promise<SubscriptionSyncResult
  * This syncs the opposite direction: from user_subscriptions to users.plan_slug
  */
 export async function syncUserPlanSlugFromSubscription(
-    userId: string
+    userId: string,
 ): Promise<SubscriptionSyncResult> {
     try {
         // Get user's current subscription
@@ -122,7 +122,7 @@ export async function syncUserPlanSlugFromSubscription(
 
             return {
                 success: true,
-                message: 'Updated user plan_slug to free (no active subscription)',
+                message: "Updated user plan_slug to free (no active subscription)",
                 usersUpdated: 1,
             };
         }
@@ -149,10 +149,10 @@ export async function syncUserPlanSlugFromSubscription(
             usersUpdated: 1,
         };
     } catch (error) {
-        const errorMsg = `Error syncing plan_slug for user ${userId}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        const errorMsg = `Error syncing plan_slug for user ${userId}: ${error instanceof Error ? error.message : "Unknown error"}`;
         log.error(
-            { error: error instanceof Error ? error.message : 'Unknown error' },
-            'Error syncing plan_slug for user'
+            { error: error instanceof Error ? error.message : "Unknown error" },
+            "Error syncing plan_slug for user",
         );
         return {
             success: false,
@@ -189,7 +189,7 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
 
         // Determine the authoritative plan
         let finalPlan: PlanSlug;
-        let source: 'subscription' | 'user_plan' | 'default';
+        let source: "subscription" | "user_plan" | "default";
         let isActive = false;
         let expiresAt: Date | null = null;
 
@@ -201,18 +201,18 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
                 subscription.status === SubscriptionStatusEnum.ACTIVE &&
                 (!subscription.currentPeriodEnd || new Date() <= subscription.currentPeriodEnd);
             expiresAt = subscription.currentPeriodEnd;
-            source = 'subscription';
+            source = "subscription";
         } else if (userPlanSlug === PlanSlug.VT_PLUS) {
             // SECURITY: Do NOT trust plan_slug alone - require active subscription row
             // If user has plan_slug=vt_plus but no subscription, they are cancelled
             finalPlan = PlanSlug.VT_PLUS;
             isActive = false; // Require active subscription row for VT+ access
-            source = 'user_plan';
+            source = "user_plan";
         } else {
             // Default to free
             finalPlan = PlanSlug.VT_BASE;
             isActive = true; // Free tier is always active
-            source = 'default';
+            source = "default";
         }
 
         return {
@@ -226,8 +226,8 @@ export async function getComprehensiveSubscriptionStatus(userId: string) {
         };
     } catch (error) {
         log.error(
-            { error: error instanceof Error ? error.message : 'Unknown error' },
-            'Error getting comprehensive subscription status'
+            { error: error instanceof Error ? error.message : "Unknown error" },
+            "Error getting comprehensive subscription status",
         );
         throw error;
     }

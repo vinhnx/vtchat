@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { SystemMetricsChart } from '@repo/common/components/admin/system-metrics-chart';
-import { log } from '@repo/shared/lib/logger';
+import { SystemMetricsChart } from "@repo/common/components/admin/system-metrics-chart";
+import { log } from "@repo/shared/lib/logger";
 import {
     Badge,
     Card,
@@ -10,15 +10,15 @@ import {
     CardTitle,
     LoadingSpinner,
     TypographyH2,
-} from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Activity, AlertTriangle, CheckCircle, Clock, Shield, TrendingUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "@repo/ui";
+import { motion } from "framer-motion";
+import { Activity, AlertTriangle, CheckCircle, Clock, Shield, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // Add this utility function before the component
-function normalizeSystemHealth(value: unknown): 'good' | 'warning' | 'critical' {
-    if (value === 'good' || value === 'warning' || value === 'critical') return value;
-    return 'warning';
+function normalizeSystemHealth(value: unknown): "good" | "warning" | "critical" {
+    if (value === "good" || value === "warning" || value === "critical") return value;
+    return "warning";
 }
 
 interface AdminStats {
@@ -26,7 +26,7 @@ interface AdminStats {
     activeUsers: number;
     newUsersToday: number;
     bannedUsers: number;
-    systemHealth: 'good' | 'warning' | 'critical';
+    systemHealth: "good" | "warning" | "critical";
     lastMaintenanceRun: string;
     vtPlusUsers: number;
     conversionRate: string;
@@ -49,14 +49,14 @@ export default function AdminDashboard() {
             try {
                 const [analyticsResponse, infrastructureResponse, securityResponse] =
                     await Promise.all([
-                        fetch('/api/admin/analytics'),
-                        fetch('/api/admin/infrastructure'),
-                        fetch('/api/admin/security'),
+                        fetch("/api/admin/analytics"),
+                        fetch("/api/admin/infrastructure"),
+                        fetch("/api/admin/security"),
                     ]);
 
                 if (analyticsResponse.ok) {
                     const analytics = await analyticsResponse.json();
-                    let systemHealth: 'good' | 'warning' | 'critical' = 'good';
+                    let systemHealth: "good" | "warning" | "critical" = "good";
                     let lastMaintenanceRun = new Date().toISOString();
                     let bannedUsers = 0;
 
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
                     if (infrastructureResponse.ok) {
                         const infrastructure = await infrastructureResponse.json();
                         systemHealth = normalizeSystemHealth(
-                            infrastructure.infrastructure.systemHealth
+                            infrastructure.infrastructure.systemHealth,
                         );
                         lastMaintenanceRun = infrastructure.infrastructure.lastMaintenanceRun;
                     }
@@ -90,20 +90,20 @@ export default function AdminDashboard() {
                     });
                 } else {
                     // If analytics fails, try to get at least infrastructure data
-                    let systemHealth: 'good' | 'warning' | 'critical' = 'warning';
+                    let systemHealth: "good" | "warning" | "critical" = "warning";
                     let lastMaintenanceRun = new Date().toISOString();
 
                     if (infrastructureResponse.ok) {
                         const infrastructure = await infrastructureResponse.json();
                         systemHealth = normalizeSystemHealth(
-                            infrastructure.infrastructure.systemHealth
+                            infrastructure.infrastructure.systemHealth,
                         );
                         lastMaintenanceRun = infrastructure.infrastructure.lastMaintenanceRun;
                     }
 
                     log.error(
                         { status: analyticsResponse.status },
-                        'Analytics API failed, using minimal data'
+                        "Analytics API failed, using minimal data",
                     );
 
                     setStats({
@@ -114,24 +114,24 @@ export default function AdminDashboard() {
                         systemHealth,
                         lastMaintenanceRun,
                         vtPlusUsers: 0,
-                        conversionRate: '0.00',
+                        conversionRate: "0.00",
                         totalFeedback: 0,
                         totalResources: 0,
                         providerUsage: [],
                     });
                 }
             } catch (error) {
-                log.error({ error }, 'Failed to fetch admin dashboard data');
+                log.error({ error }, "Failed to fetch admin dashboard data");
                 // Even in error case, try to provide some real system status
                 setStats({
                     totalUsers: 0,
                     activeUsers: 0,
                     newUsersToday: 0,
                     bannedUsers: 0,
-                    systemHealth: 'critical',
+                    systemHealth: "critical",
                     lastMaintenanceRun: new Date().toISOString(),
                     vtPlusUsers: 0,
-                    conversionRate: '0.00',
+                    conversionRate: "0.00",
                     totalFeedback: 0,
                     totalResources: 0,
                     providerUsage: [],
@@ -146,24 +146,24 @@ export default function AdminDashboard() {
 
     const getHealthColor = (health: string) => {
         switch (health) {
-            case 'good':
-                return 'bg-muted text-foreground';
-            case 'warning':
-                return 'bg-muted text-muted-foreground';
-            case 'critical':
-                return 'bg-muted text-foreground';
+            case "good":
+                return "bg-muted text-foreground";
+            case "warning":
+                return "bg-muted text-muted-foreground";
+            case "critical":
+                return "bg-muted text-foreground";
             default:
-                return 'bg-muted text-muted-foreground';
+                return "bg-muted text-muted-foreground";
         }
     };
 
     const getHealthIcon = (health: string) => {
         switch (health) {
-            case 'good':
+            case "good":
                 return CheckCircle;
-            case 'warning':
+            case "warning":
                 return AlertTriangle;
-            case 'critical':
+            case "critical":
                 return AlertTriangle;
             default:
                 return Clock;
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                                         const HealthIcon = getHealthIcon(stats.systemHealth);
                                         return <HealthIcon className="h-5 w-5 text-green-600" />;
                                     })()}
-                                <Badge className={stats ? getHealthColor(stats.systemHealth) : ''}>
+                                <Badge className={stats ? getHealthColor(stats.systemHealth) : ""}>
                                     {stats?.systemHealth.toUpperCase()}
                                 </Badge>
                             </div>

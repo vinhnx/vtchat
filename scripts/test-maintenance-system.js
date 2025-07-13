@@ -5,43 +5,43 @@
  * Tests service worker, database optimizations, and maintenance endpoints
  */
 
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+const https = require("node:https");
+const fs = require("node:fs");
+const path = require("node:path");
 
-const BASE_URL = process.env.BASE_URL || 'https://vtchat.io.vn';
+const BASE_URL = process.env.BASE_URL || "https://vtchat.io.vn";
 const TEST_TIMEOUT = 30000; // 30 seconds per test
 
 // ANSI color codes for output
 const colors = {
-    reset: '\x1b[0m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    cyan: '\x1b[36m',
+    reset: "\x1b[0m",
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    yellow: "\x1b[33m",
+    blue: "\x1b[34m",
+    cyan: "\x1b[36m",
 };
 
-function log(message, color = 'reset') {
+function log(message, color = "reset") {
     console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
 function makeRequest(url, options = {}) {
     return new Promise((resolve, reject) => {
         const requestOptions = {
-            method: 'GET',
+            method: "GET",
             timeout: TEST_TIMEOUT,
             headers: {
-                'User-Agent': 'Maintenance-System-Test',
+                "User-Agent": "Maintenance-System-Test",
                 ...options.headers,
             },
             ...options,
         };
 
         const req = https.request(url, requestOptions, (res) => {
-            let data = '';
-            res.on('data', (chunk) => (data += chunk));
-            res.on('end', () => {
+            let data = "";
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => {
                 try {
                     const response = {
                         statusCode: res.statusCode,
@@ -51,7 +51,7 @@ function makeRequest(url, options = {}) {
                     };
 
                     // Try to parse JSON if content-type suggests it
-                    if (res.headers['content-type']?.includes('application/json')) {
+                    if (res.headers["content-type"]?.includes("application/json")) {
                         response.json = JSON.parse(data);
                     }
 
@@ -68,10 +68,10 @@ function makeRequest(url, options = {}) {
             });
         });
 
-        req.on('error', reject);
-        req.on('timeout', () => {
+        req.on("error", reject);
+        req.on("timeout", () => {
             req.destroy();
-            reject(new Error('Request timeout'));
+            reject(new Error("Request timeout"));
         });
 
         if (options.body) {
@@ -84,8 +84,8 @@ function makeRequest(url, options = {}) {
 // Test suite definitions
 const tests = [
     {
-        name: 'Health Check',
-        description: 'Verify application health endpoint',
+        name: "Health Check",
+        description: "Verify application health endpoint",
         async run() {
             const response = await makeRequest(`${BASE_URL}/api/health`);
 
@@ -95,7 +95,7 @@ const tests = [
 
             const health = response.json;
             if (!health || !health.healthy) {
-                throw new Error('Application reports unhealthy status');
+                throw new Error("Application reports unhealthy status");
             }
 
             return { status: health, timestamp: health.timestamp };
@@ -103,8 +103,8 @@ const tests = [
     },
 
     {
-        name: 'Service Worker Registration',
-        description: 'Check if service worker is properly served',
+        name: "Service Worker Registration",
+        description: "Check if service worker is properly served",
         async run() {
             const response = await makeRequest(`${BASE_URL}/sw.js`);
 
@@ -112,33 +112,33 @@ const tests = [
                 throw new Error(`Service worker not accessible: ${response.statusCode}`);
             }
 
-            if (!response.data.includes('self.addEventListener')) {
-                throw new Error('Service worker does not contain expected event listeners');
+            if (!response.data.includes("self.addEventListener")) {
+                throw new Error("Service worker does not contain expected event listeners");
             }
 
             return {
                 size: response.data.length,
-                hasInstallListener: response.data.includes('install'),
-                hasFetchListener: response.data.includes('fetch'),
-                hasActivateListener: response.data.includes('activate'),
+                hasInstallListener: response.data.includes("install"),
+                hasFetchListener: response.data.includes("fetch"),
+                hasActivateListener: response.data.includes("activate"),
             };
         },
     },
 
     {
-        name: 'Database Maintenance Endpoint',
-        description: 'Test database maintenance API endpoint',
+        name: "Database Maintenance Endpoint",
+        description: "Test database maintenance API endpoint",
         async run() {
             const cronSecret = process.env.CRON_SECRET_TOKEN;
             if (!cronSecret) {
-                throw new Error('CRON_SECRET_TOKEN not available for testing');
+                throw new Error("CRON_SECRET_TOKEN not available for testing");
             }
 
             const response = await makeRequest(`${BASE_URL}/api/cron/database-maintenance`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
                     Authorization: `Bearer ${cronSecret}`,
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
             });
 
@@ -148,7 +148,7 @@ const tests = [
 
             const result = response.json;
             if (!result || !result.success) {
-                throw new Error('Maintenance endpoint did not report success');
+                throw new Error("Maintenance endpoint did not report success");
             }
 
             return {
@@ -160,23 +160,23 @@ const tests = [
     },
 
     {
-        name: 'Metrics Collection',
-        description: 'Test metrics collection endpoint',
+        name: "Metrics Collection",
+        description: "Test metrics collection endpoint",
         async run() {
             const testMetrics = {
                 timestamp: new Date().toISOString(),
-                maintenance_type: 'hourly',
-                status: 'success',
+                maintenance_type: "hourly",
+                status: "success",
                 duration_ms: 5000,
                 attempt: 1,
                 error: null,
-                environment: 'test',
+                environment: "test",
             };
 
             const response = await makeRequest(`${BASE_URL}/api/metrics/database-maintenance`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(testMetrics),
             });
@@ -187,7 +187,7 @@ const tests = [
 
             const result = response.json;
             if (!result || !result.success) {
-                throw new Error('Metrics endpoint did not accept test data');
+                throw new Error("Metrics endpoint did not accept test data");
             }
 
             return { stored: result.stored, count: result.metrics_count };
@@ -195,11 +195,11 @@ const tests = [
     },
 
     {
-        name: 'Metrics Retrieval',
-        description: 'Test metrics retrieval and dashboard data',
+        name: "Metrics Retrieval",
+        description: "Test metrics retrieval and dashboard data",
         async run() {
             const response = await makeRequest(
-                `${BASE_URL}/api/admin/database-maintenance-dashboard?hours=1`
+                `${BASE_URL}/api/admin/database-maintenance-dashboard?hours=1`,
             );
 
             if (response.statusCode !== 200) {
@@ -208,7 +208,7 @@ const tests = [
 
             const result = response.json;
             if (!result || !result.success) {
-                throw new Error('Dashboard endpoint did not return success');
+                throw new Error("Dashboard endpoint did not return success");
             }
 
             const dashboard = result.dashboard;
@@ -222,8 +222,8 @@ const tests = [
     },
 
     {
-        name: 'Authentication Check',
-        description: 'Verify authentication system is working',
+        name: "Authentication Check",
+        description: "Verify authentication system is working",
         async run() {
             const response = await makeRequest(`${BASE_URL}/api/auth/session`);
 
@@ -241,10 +241,10 @@ const tests = [
     },
 
     {
-        name: 'Static Assets',
-        description: 'Check if critical static assets are served properly',
+        name: "Static Assets",
+        description: "Check if critical static assets are served properly",
         async run() {
-            const assets = ['/_next/static/chunks/pages/_app.js', '/favicon.ico'];
+            const assets = ["/_next/static/chunks/pages/_app.js", "/favicon.ico"];
 
             const results = {};
 
@@ -254,7 +254,7 @@ const tests = [
                     results[asset] = {
                         status: response.statusCode,
                         size: response.data.length,
-                        cacheable: response.headers['cache-control'] ? true : false,
+                        cacheable: !!response.headers["cache-control"],
                     };
                 } catch (error) {
                     results[asset] = { error: error.message };
@@ -268,9 +268,9 @@ const tests = [
 
 // Test runner
 async function runTests() {
-    log('🚀 Starting Database Maintenance System Test Suite', 'cyan');
-    log(`📍 Testing against: ${BASE_URL}`, 'blue');
-    log('');
+    log("🚀 Starting Database Maintenance System Test Suite", "cyan");
+    log(`📍 Testing against: ${BASE_URL}`, "blue");
+    log("");
 
     const results = {
         total: tests.length,
@@ -281,50 +281,50 @@ async function runTests() {
 
     for (const test of tests) {
         const startTime = Date.now();
-        log(`⏳ Running: ${test.name}`, 'yellow');
+        log(`⏳ Running: ${test.name}`, "yellow");
 
         try {
             const result = await test.run();
             const duration = Date.now() - startTime;
 
-            log(`✅ ${test.name} - Passed (${duration}ms)`, 'green');
+            log(`✅ ${test.name} - Passed (${duration}ms)`, "green");
             if (result && Object.keys(result).length > 0) {
-                log(`   📊 ${JSON.stringify(result)}`, 'blue');
+                log(`   📊 ${JSON.stringify(result)}`, "blue");
             }
 
             results.passed++;
             results.details.push({
                 name: test.name,
-                status: 'passed',
+                status: "passed",
                 duration,
                 result,
             });
         } catch (error) {
             const duration = Date.now() - startTime;
 
-            log(`❌ ${test.name} - Failed (${duration}ms)`, 'red');
-            log(`   💥 ${error.message}`, 'red');
+            log(`❌ ${test.name} - Failed (${duration}ms)`, "red");
+            log(`   💥 ${error.message}`, "red");
 
             results.failed++;
             results.details.push({
                 name: test.name,
-                status: 'failed',
+                status: "failed",
                 duration,
                 error: error.message,
             });
         }
 
-        log('');
+        log("");
     }
 
     // Summary
-    log('📋 Test Summary', 'cyan');
-    log(`✅ Passed: ${results.passed}/${results.total}`, 'green');
-    log(`❌ Failed: ${results.failed}/${results.total}`, results.failed > 0 ? 'red' : 'green');
-    log(`⏱️  Total Duration: ${results.details.reduce((sum, t) => sum + t.duration, 0)}ms`, 'blue');
+    log("📋 Test Summary", "cyan");
+    log(`✅ Passed: ${results.passed}/${results.total}`, "green");
+    log(`❌ Failed: ${results.failed}/${results.total}`, results.failed > 0 ? "red" : "green");
+    log(`⏱️  Total Duration: ${results.details.reduce((sum, t) => sum + t.duration, 0)}ms`, "blue");
 
     // Write detailed results to file
-    const reportPath = path.join(__dirname, '..', 'maintenance-test-results.json');
+    const reportPath = path.join(__dirname, "..", "maintenance-test-results.json");
     fs.writeFileSync(
         reportPath,
         JSON.stringify(
@@ -334,24 +334,24 @@ async function runTests() {
                 ...results,
             },
             null,
-            2
-        )
+            2,
+        ),
     );
 
-    log(`📄 Detailed results saved to: ${reportPath}`, 'blue');
+    log(`📄 Detailed results saved to: ${reportPath}`, "blue");
 
     // Exit with appropriate code
     process.exit(results.failed > 0 ? 1 : 0);
 }
 
 // Error handling
-process.on('unhandledRejection', (reason, promise) => {
-    log(`💥 Unhandled Promise Rejection: ${reason}`, 'red');
+process.on("unhandledRejection", (reason, _promise) => {
+    log(`💥 Unhandled Promise Rejection: ${reason}`, "red");
     process.exit(1);
 });
 
-process.on('uncaughtException', (error) => {
-    log(`💥 Uncaught Exception: ${error.message}`, 'red');
+process.on("uncaughtException", (error) => {
+    log(`💥 Uncaught Exception: ${error.message}`, "red");
     process.exit(1);
 });
 

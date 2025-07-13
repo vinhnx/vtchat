@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
-import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
-import { useAppStore, useChatStore } from '@repo/common/store';
-import { ChatMode } from '@repo/shared/config';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+import { REASONING_BUDGETS } from "@repo/ai/constants/reasoning";
+import { useFeatureAccess } from "@repo/common/hooks/use-subscription-access";
+import { useAppStore, useChatStore } from "@repo/common/store";
+import { ChatMode } from "@repo/shared/config";
+import { FeatureSlug } from "@repo/shared/types/subscription";
 import {
     Button,
     Card,
@@ -14,9 +14,9 @@ import {
     Slider,
     Switch,
     TypographyH3,
-} from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo } from 'react';
+} from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { useMemo } from "react";
 
 export const ReasoningModeSettings = () => {
     const thinkingMode = useAppStore((state) => state.thinkingMode);
@@ -43,7 +43,7 @@ export const ReasoningModeSettings = () => {
             ChatMode.O1_MINI,
             ChatMode.O1,
         ];
-        return reasoningModels.some((model) => chatMode.includes(model.replace(/-/g, '_')));
+        return reasoningModels.some((model) => chatMode.includes(model.replace(/-/g, "_")));
     }, [chatMode]);
 
     const handleToggleEnabled = (enabled: boolean) => {
@@ -85,7 +85,7 @@ export const ReasoningModeSettings = () => {
                             className="mt-4"
                             size="sm"
                             onClick={() => {
-                                window.location.href = '/plus';
+                                window.location.href = "/plus";
                             }}
                         >
                             Upgrade to VT+
@@ -163,7 +163,7 @@ export const ReasoningModeSettings = () => {
                                             </Label>
                                             <span className="text-sm text-muted-foreground">
                                                 {REASONING_BUDGETS[thinkingMode.budget]?.label ||
-                                                    'Custom'}
+                                                    "Custom"}
                                             </span>
                                         </div>
                                         <p className="text-sm text-muted-foreground">

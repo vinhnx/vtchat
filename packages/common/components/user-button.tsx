@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useLogout } from '@repo/common/hooks';
-import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
-import { useSession } from '@repo/shared/lib/auth-client';
+import { useLogout } from "@repo/common/hooks";
+import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
+import { useSession } from "@repo/shared/lib/auth-client";
 // import { log } from '@repo/shared/lib/logger';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+import { FeatureSlug } from "@repo/shared/types/subscription";
 import {
     Button,
     DropdownMenu,
@@ -14,12 +14,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
     UnifiedAvatar,
-} from '@repo/ui';
-import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
-import Link from 'next/link';
-import { useAppStore } from '../store/app.store';
-import { GatedFeatureAlert } from './gated-feature-alert';
-import { ThemeSwitcher } from './theme-switcher';
+} from "@repo/ui";
+import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from "lucide-react";
+import Link from "next/link";
+import { useAppStore } from "../store/app.store";
+import { GatedFeatureAlert } from "./gated-feature-alert";
+import { ThemeSwitcher } from "./theme-switcher";
 
 interface UserButtonProps {
     showName?: boolean;
@@ -45,7 +45,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     variant="secondary"
                 >
                     <UnifiedAvatar
-                        name={user.name || user.email || 'User'}
+                        name={user.name || user.email || "User"}
                         src={getSessionCacheBustedAvatarUrl(user.image)}
                         size="xs"
                         className="h-6 w-6"
@@ -58,7 +58,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
             <DropdownMenuContent align="end" className="w-56 pl-2">
                 {/* User Info Section */}
                 <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user.name || 'User'}</p>
+                    <p className="text-sm font-medium">{user.name || "User"}</p>
                 </div>
                 <DropdownMenuSeparator />
 
@@ -115,12 +115,12 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Sign Out */}
                 <DropdownMenuItem
-                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                    className={isLoggingOut ? "cursor-not-allowed opacity-50" : ""}
                     disabled={isLoggingOut}
                     onClick={() => logout()}
                 >
                     <LogOut className="mr-2 h-4 w-4" />
-                    {isLoggingOut ? 'Signing out...' : 'Sign out'}
+                    {isLoggingOut ? "Signing out..." : "Sign out"}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

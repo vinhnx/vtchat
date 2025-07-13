@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { InlineLoader } from '@repo/common/components';
-import { signIn } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import { Alert, AlertDescription, cn, PremiumButton, TypographyH1 } from '@repo/ui';
-import { AlertCircle } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { InlineLoader } from "@repo/common/components";
+import { signIn } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
+import { Alert, AlertDescription, cn, PremiumButton, TypographyH1 } from "@repo/ui";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-interface LoginFormContentProps extends React.ComponentProps<'div'> {
+interface LoginFormContentProps extends React.ComponentProps<"div"> {
     redirectUrl?: string;
     onClose?: () => void;
 }
@@ -21,13 +21,13 @@ function LoginFormContent({
     ...props
 }: LoginFormContentProps) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const searchParams = useSearchParams();
-    const redirectUrl = propRedirectUrl || searchParams.get('redirect_url') || '/';
+    const redirectUrl = propRedirectUrl || searchParams.get("redirect_url") || "/";
 
-    const handleSocialSignIn = async (provider: 'google' | 'github' | 'twitter') => {
+    const handleSocialSignIn = async (provider: "google" | "github" | "twitter") => {
         setLoading(true);
-        setError('');
+        setError("");
 
         try {
             await signIn.social(
@@ -47,17 +47,17 @@ function LoginFormContent({
                         setLoading(false);
                         setError(ctx.error.message || `Failed to sign in with ${provider}`);
                     },
-                }
+                },
             );
         } catch (err) {
             setLoading(false);
-            setError('An unexpected error occurred');
-            log.error({ error: err }, 'Login error');
+            setError("An unexpected error occurred");
+            log.error({ error: err }, "Login error");
         }
     };
 
     return (
-        <div className={cn('flex flex-col gap-6', className)} {...props}>
+        <div className={cn("flex flex-col gap-6", className)} {...props}>
             <div className="flex flex-col items-center gap-2 text-center">
                 <TypographyH1 className="scroll-m-20 text-2xl font-bold tracking-tight">
                     Welcome to VT!
@@ -81,7 +81,7 @@ function LoginFormContent({
                     data-vmtrc-context="login_form"
                     data-vmtrc-provider="google"
                     loading={loading}
-                    onClick={() => handleSocialSignIn('google')}
+                    onClick={() => handleSocialSignIn("google")}
                     variant="outline"
                 >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ function LoginFormContent({
                     data-vmtrc-context="login_form"
                     data-vmtrc-provider="github"
                     loading={loading}
-                    onClick={() => handleSocialSignIn('github')}
+                    onClick={() => handleSocialSignIn("github")}
                     variant="outline"
                 >
                     <svg
@@ -129,7 +129,7 @@ function LoginFormContent({
                     data-vmtrc-context="login_form"
                     data-vmtrc-provider="twitter"
                     loading={loading}
-                    onClick={() => handleSocialSignIn('twitter')}
+                    onClick={() => handleSocialSignIn("twitter")}
                     variant="outline"
                 >
                     <svg
@@ -144,11 +144,11 @@ function LoginFormContent({
                 </PremiumButton>
             </div>
             <div className="text-muted-foreground text-center text-xs">
-                By continuing, you agree to our{' '}
+                By continuing, you agree to our{" "}
                 <Link className="hover:text-foreground underline underline-offset-4" href="/terms">
                     Terms of Service
-                </Link>{' '}
-                and{' '}
+                </Link>{" "}
+                and{" "}
                 <Link
                     className="hover:text-foreground underline underline-offset-4"
                     href="/privacy"

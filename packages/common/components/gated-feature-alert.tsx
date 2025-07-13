@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useSession } from '@repo/shared/lib/auth-client';
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { useSession } from "@repo/shared/lib/auth-client";
+import { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
 import {
     Button,
     Dialog,
@@ -10,11 +10,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@repo/ui';
-import { Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { useVtPlusAccess } from '../hooks/use-subscription-access';
+} from "@repo/ui";
+import { Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useVtPlusAccess } from "../hooks/use-subscription-access";
 
 export interface GatedFeatureAlertProps {
     /** The feature that requires a higher plan */
@@ -69,9 +69,9 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     requiredFeature,
     requiredPlan,
     message,
-    title = 'Unlock Premium Features',
+    title = "Unlock Premium Features",
     onGatedClick,
-    upgradeUrl = '/plus',
+    upgradeUrl = "/plus",
     children,
     fallback,
     showAlert = true,
@@ -134,16 +134,16 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
         if (requiredFeature) {
             const featureName = requiredFeature
-                .replace(/_/g, ' ')
+                .replace(/_/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
             return `Unlock ${featureName} with VT+! Upgrade now to enjoy enhanced AI capabilities and unlock your potential.`;
         }
 
         if (requiredPlan === PlanSlug.VT_PLUS) {
-            return 'Ready for more? This amazing feature is available with VT+. Join our community of power users today!';
+            return "Ready for more? This amazing feature is available with VT+. Join our community of power users today!";
         }
 
-        return 'Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.';
+        return "Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.";
     }, [message, requiredFeature, requiredPlan]);
 
     // Don't render anything while auth is loading
@@ -183,7 +183,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     // Create gated version of children that shows alert on interaction
     // In React 19, we need to ensure we're only cloning valid elements that can receive DOM props
     const gatedChildren =
-        React.isValidElement(children) && typeof children.type !== 'symbol' ? (
+        React.isValidElement(children) && typeof children.type !== "symbol" ? (
             React.cloneElement(children as React.ReactElement<any>, {
                 onClick: (e: React.MouseEvent) => {
                     e.preventDefault();
@@ -192,7 +192,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                 },
                 style: {
                     ...(children as React.ReactElement<any>).props?.style,
-                    cursor: 'pointer',
+                    cursor: "pointer",
                     opacity: 0.7,
                 },
             })
@@ -205,7 +205,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                     handleGatedInteraction();
                 }}
                 style={{
-                    cursor: 'pointer',
+                    cursor: "pointer",
                     opacity: 0.7,
                 }}
             >

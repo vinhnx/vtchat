@@ -1,8 +1,8 @@
-import { test } from '@playwright/test';
-import { LoginPage } from './page-objects/login-page';
+import { test } from "@playwright/test";
+import { LoginPage } from "./page-objects/login-page";
 
-test.describe('Authentication Tests', () => {
-    test('should be able to access the login page', async ({ page }) => {
+test.describe("Authentication Tests", () => {
+    test("should be able to access the login page", async ({ page }) => {
         const loginPage = new LoginPage(page);
 
         await loginPage.goto();
@@ -10,7 +10,7 @@ test.describe('Authentication Tests', () => {
         await loginPage.expectGoogleButtonToBeVisible();
     });
 
-    test('should redirect to Google OAuth when clicking Google button', async ({ page }) => {
+    test("should redirect to Google OAuth when clicking Google button", async ({ page }) => {
         const loginPage = new LoginPage(page);
 
         await loginPage.goto();

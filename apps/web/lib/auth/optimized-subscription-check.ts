@@ -2,10 +2,9 @@
  * Optimized subscription checking using Neon database optimizations
  */
 
-import { log } from '@repo/shared/logger';
-import { eq } from 'drizzle-orm';
-import { redisCache } from '../cache/redis-cache';
-import { db } from '../database';
+import { log } from "@repo/shared/logger";
+import { redisCache } from "../cache/redis-cache";
+import { db } from "../database";
 
 interface OptimizedSubscriptionData {
     userId: string;
@@ -20,7 +19,7 @@ interface OptimizedSubscriptionData {
  * This is 10x faster than the standard subscription lookup
  */
 export async function checkSubscriptionOptimized(
-    userId: string
+    userId: string,
 ): Promise<OptimizedSubscriptionData | null> {
     if (!userId) return null;
 
@@ -45,7 +44,7 @@ export async function checkSubscriptionOptimized(
             WHERE user_id = $1
             LIMIT 1
         `,
-            [userId]
+            [userId],
         );
 
         if (result.rows.length === 0) {
@@ -68,7 +67,7 @@ export async function checkSubscriptionOptimized(
 
         return subscriptionData;
     } catch (error) {
-        log.error('Optimized subscription check failed:', { userId, error });
+        log.error("Optimized subscription check failed:", { userId, error });
         return null;
     }
 }
@@ -78,7 +77,7 @@ export async function checkSubscriptionOptimized(
  * Uses materialized view for maximum performance
  */
 export async function checkSubscriptionsBatch(
-    userIds: string[]
+    userIds: string[],
 ): Promise<Map<string, OptimizedSubscriptionData>> {
     const results = new Map<string, OptimizedSubscriptionData>();
 
@@ -86,7 +85,7 @@ export async function checkSubscriptionsBatch(
 
     try {
         // Build parameterized query for safety
-        const placeholders = userIds.map((_, i) => `$${i + 1}`).join(',');
+        const placeholders = userIds.map((_, i) => `$${i + 1}`).join(",");
 
         const result = await db.execute(
             `
@@ -99,7 +98,7 @@ export async function checkSubscriptionsBatch(
             FROM user_subscription_summary 
             WHERE user_id = ANY(ARRAY[${placeholders}])
         `,
-            userIds
+            userIds,
         );
 
         for (const row of result.rows) {
@@ -122,7 +121,7 @@ export async function checkSubscriptionsBatch(
             await redisCache.set(cacheKey, data, 30);
         }
     } catch (error) {
-        log.error('Batch subscription check failed:', { userIds, error });
+        log.error("Batch subscription check failed:", { userIds, error });
     }
 
     return results;
@@ -145,10 +144,10 @@ export async function invalidateSubscriptionCache(userId: string): Promise<void>
 
     // Also refresh the materialized view if needed
     try {
-        await db.execute('SELECT refresh_subscription_summary()');
-        log.debug('Subscription summary refreshed', { userId });
+        await db.execute("SELECT refresh_subscription_summary()");
+        log.debug("Subscription summary refreshed", { userId });
     } catch (error) {
-        log.warn('Failed to refresh subscription summary:', { userId, error });
+        log.warn("Failed to refresh subscription summary:", { userId, error });
     }
 }
 
@@ -179,7 +178,7 @@ export async function getVtPlusUsers(): Promise<OptimizedSubscriptionData[]> {
             planSlug: row.plan_slug as string | null,
         }));
     } catch (error) {
-        log.error('Failed to get VT+ users:', { error });
+        log.error("Failed to get VT+ users:", { error });
         return [];
     }
 }
@@ -200,7 +199,7 @@ export async function getSubscriptionStats() {
 
         return result.rows[0];
     } catch (error) {
-        log.error('Failed to get subscription stats:', { error });
+        log.error("Failed to get subscription stats:", { error });
         return null;
     }
 }

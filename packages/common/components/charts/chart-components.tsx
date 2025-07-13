@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Card,
@@ -12,8 +12,8 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from '@repo/ui';
-import { BarChart3, TrendingUp } from 'lucide-react';
+} from "@repo/ui";
+import { BarChart3, TrendingUp } from "lucide-react";
 import {
     Area,
     AreaChart,
@@ -31,11 +31,11 @@ import {
     RadarChart,
     XAxis,
     YAxis,
-} from 'recharts';
+} from "recharts";
 
 // Type definitions for chart data
 export type ChartComponentData = {
-    type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
+    type: "barChart" | "lineChart" | "areaChart" | "pieChart" | "radarChart";
     title: string;
     data: any[];
     // Area chart specific properties
@@ -53,18 +53,18 @@ export type ChartComponentData = {
 
 // Color scheme for charts
 const CHART_COLORS = {
-    primary: 'hsl(var(--chart-1))',
-    secondary: 'hsl(var(--chart-2))',
-    tertiary: 'hsl(var(--chart-3))',
-    quaternary: 'hsl(var(--chart-4))',
-    quinary: 'hsl(var(--chart-5))',
+    primary: "hsl(var(--chart-1))",
+    secondary: "hsl(var(--chart-2))",
+    tertiary: "hsl(var(--chart-3))",
+    quaternary: "hsl(var(--chart-4))",
+    quinary: "hsl(var(--chart-5))",
 };
 
 // Bar Chart Component
 const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any) => {
     const chartConfig = {
         value: {
-            label: yAxisLabel || 'Value',
+            label: yAxisLabel || "Value",
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
@@ -80,7 +80,7 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any
                     <CardDescription>
                         {xAxisLabel && yAxisLabel
                             ? `${xAxisLabel} vs ${yAxisLabel}`
-                            : 'Data visualization'}
+                            : "Data visualization"}
                     </CardDescription>
                 </div>
             </CardHeader>
@@ -131,7 +131,7 @@ const InteractiveLineChart = ({
 }: any) => {
     const chartConfig = {
         series1: {
-            label: series1Name || 'Series 1',
+            label: series1Name || "Series 1",
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
@@ -158,7 +158,7 @@ const InteractiveLineChart = ({
                 <CardDescription>
                     {xAxisLabel && yAxisLabel
                         ? `${xAxisLabel} vs ${yAxisLabel}`
-                        : 'Trending data over time'}
+                        : "Trending data over time"}
                 </CardDescription>
             </CardHeader>
             <CardContent className="px-8 py-8">
@@ -184,7 +184,7 @@ const InteractiveLineChart = ({
                             className="drop-shadow-sm"
                             dataKey="series1"
                             dot={{
-                                fill: 'var(--color-series1)',
+                                fill: "var(--color-series1)",
                                 strokeWidth: 2,
                                 r: 4,
                             }}
@@ -201,7 +201,7 @@ const InteractiveLineChart = ({
                                 className="drop-shadow-sm"
                                 dataKey="series2"
                                 dot={{
-                                    fill: 'var(--color-series2)',
+                                    fill: "var(--color-series2)",
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
@@ -219,7 +219,7 @@ const InteractiveLineChart = ({
                                 className="drop-shadow-sm"
                                 dataKey="series3"
                                 dot={{
-                                    fill: 'var(--color-series3)',
+                                    fill: "var(--color-series3)",
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
@@ -250,18 +250,18 @@ const InteractiveAreaChart = ({
     dataKey3,
 }: any) => {
     const chartConfig = {
-        [dataKey1 || 'uv']: {
-            label: series1Name || 'Series 1',
+        [dataKey1 || "uv"]: {
+            label: series1Name || "Series 1",
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
-            [dataKey2 || 'pv']: {
+            [dataKey2 || "pv"]: {
                 label: series2Name,
                 color: CHART_COLORS.secondary,
             },
         }),
         ...(series3Name && {
-            [dataKey3 || 'amt']: {
+            [dataKey3 || "amt"]: {
                 label: series3Name,
                 color: CHART_COLORS.tertiary,
             },
@@ -275,12 +275,12 @@ const InteractiveAreaChart = ({
                 <CardDescription>
                     {xAxisLabel && yAxisLabel
                         ? `${xAxisLabel} vs ${yAxisLabel}`
-                        : 'Area visualization'}
-                    {stacked && ' (Stacked)'}
+                        : "Area visualization"}
+                    {stacked && " (Stacked)"}
                 </CardDescription>
             </CardHeader>
             <CardContent className="px-8 py-8">
-                <div style={{ width: '100%', height: 300 }}>
+                <div style={{ width: "100%", height: 300 }}>
                     <ChartContainer className="h-full w-full" config={chartConfig}>
                         <AreaChart
                             accessibilityLayer
@@ -306,35 +306,35 @@ const InteractiveAreaChart = ({
                             )}
                             <Area
                                 type="monotone"
-                                dataKey={dataKey1 || 'uv'}
+                                dataKey={dataKey1 || "uv"}
                                 stroke="var(--color-uv)"
                                 fill="var(--color-uv)"
                                 fillOpacity={0.6}
                                 strokeWidth={2}
-                                stackId={stacked ? 'stack' : undefined}
+                                stackId={stacked ? "stack" : undefined}
                                 className="drop-shadow-sm"
                             />
                             {series2Name && (
                                 <Area
                                     type="monotone"
-                                    dataKey={dataKey2 || 'pv'}
+                                    dataKey={dataKey2 || "pv"}
                                     stroke="var(--color-pv)"
                                     fill="var(--color-pv)"
                                     fillOpacity={0.6}
                                     strokeWidth={2}
-                                    stackId={stacked ? 'stack' : undefined}
+                                    stackId={stacked ? "stack" : undefined}
                                     className="drop-shadow-sm"
                                 />
                             )}
                             {series3Name && (
                                 <Area
                                     type="monotone"
-                                    dataKey={dataKey3 || 'amt'}
+                                    dataKey={dataKey3 || "amt"}
                                     stroke="var(--color-amt)"
                                     fill="var(--color-amt)"
                                     fillOpacity={0.6}
                                     strokeWidth={2}
-                                    stackId={stacked ? 'stack' : undefined}
+                                    stackId={stacked ? "stack" : undefined}
                                     className="drop-shadow-sm"
                                 />
                             )}
@@ -351,7 +351,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
     const chartConfig = data.reduce((config: any, item: any, index: number) => {
         const colorKeys = Object.keys(CHART_COLORS);
         const colorKey = colorKeys[index % colorKeys.length];
-        config[item.name.toLowerCase().replace(/\s+/g, '')] = {
+        config[item.name.toLowerCase().replace(/\s+/g, "")] = {
             label: item.name,
             color: CHART_COLORS[colorKey as keyof typeof CHART_COLORS],
         };
@@ -412,7 +412,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
 const InteractiveRadarChart = ({ title, data, maxValue }: any) => {
     const chartConfig = {
         value: {
-            label: 'Value',
+            label: "Value",
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
@@ -452,15 +452,15 @@ const InteractiveRadarChart = ({ title, data, maxValue }: any) => {
 // Main Chart Component with improved interactivity
 export const ChartComponent = ({ chartData }: { chartData: ChartComponentData }) => {
     switch (chartData.type) {
-        case 'barChart':
+        case "barChart":
             return <InteractiveBarChart {...chartData} />;
-        case 'lineChart':
+        case "lineChart":
             return <InteractiveLineChart {...chartData} />;
-        case 'areaChart':
+        case "areaChart":
             return <InteractiveAreaChart {...chartData} />;
-        case 'pieChart':
+        case "pieChart":
             return <InteractivePieChart {...chartData} />;
-        case 'radarChart':
+        case "radarChart":
             return <InteractiveRadarChart {...chartData} />;
         default:
             return (

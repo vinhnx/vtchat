@@ -1,21 +1,21 @@
-'use client';
-import { HistoryItem, Logo } from '@repo/common/components';
-import { useRootContext } from '@repo/common/context';
-import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
-import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import { useAppStore, useChatStore } from '@repo/common/store';
-import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
-import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import type { Thread } from '@repo/shared/types';
+"use client";
+import { HistoryItem, Logo } from "@repo/common/components";
+import { useRootContext } from "@repo/common/context";
+import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
+import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
+import { useAppStore, useChatStore } from "@repo/common/store";
+import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
+import { BUTTON_TEXT, TOOLTIP_TEXT } from "@repo/shared/constants";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
+import type { Thread } from "@repo/shared/types";
 import {
     getCompareDesc,
     getIsAfter,
     getIsToday,
     getIsYesterday,
     getSubDays,
-} from '@repo/shared/utils';
+} from "@repo/shared/utils";
 import {
     Badge,
     Button,
@@ -29,8 +29,8 @@ import {
     Flex,
     UnifiedAvatar,
     useToast,
-} from '@repo/ui';
-import { motion } from 'framer-motion';
+} from "@repo/ui";
+import { motion } from "framer-motion";
 import {
     ChevronsUpDown,
     ChevronUp,
@@ -52,11 +52,11 @@ import {
     Terminal,
     User,
     Zap,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
-import { UserTierBadge } from './user-tier-badge';
+} from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { LoginRequiredDialog, useLoginRequired } from "./login-required-dialog";
+import { UserTierBadge } from "./user-tier-badge";
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
@@ -64,9 +64,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const threads = useChatStore((state) => state.threads);
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
-    const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
+    const sortThreads = (threads: Thread[], sortBy: "createdAt") => {
         return [...threads].sort((a, b) =>
-            getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy]))
+            getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])),
         );
     };
 
@@ -91,7 +91,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         previousMonths: [],
     };
 
-    sortThreads(threads, 'createdAt')?.forEach((thread) => {
+    sortThreads(threads, "createdAt")?.forEach((thread) => {
         const createdAt = new Date(thread.createdAt);
         const now = new Date();
 
@@ -159,22 +159,22 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                'border-sidebar-border bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l',
-                'dark:border-gray-800 dark:bg-black/95',
+                "border-sidebar-border bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l",
+                "dark:border-gray-800 dark:bg-black/95",
                 forceMobile
-                    ? 'w-[280px]'
+                    ? "w-[280px]"
                     : cn(
-                          'transition-all duration-300 ease-in-out',
-                          isSidebarOpen ? 'top-0 h-full w-[260px]' : 'w-[52px]'
-                      )
+                          "transition-all duration-300 ease-in-out",
+                          isSidebarOpen ? "top-0 h-full w-[260px]" : "w-[52px]",
+                      ),
             )}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
                 <div
                     className={cn(
-                        'w-full transition-all duration-200',
-                        isSidebarOpen ? 'px-4 py-3' : 'flex justify-center px-2 py-2'
+                        "w-full transition-all duration-200",
+                        isSidebarOpen ? "px-4 py-3" : "flex justify-center px-2 py-2",
                     )}
                     data-testid="sidebar-user-section"
                 >
@@ -183,10 +183,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <DropdownMenuTrigger asChild>
                                 <div
                                     className={cn(
-                                        'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
+                                        "border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200",
                                         isSidebarOpen
-                                            ? 'w-full flex-row gap-3 px-3 py-2'
-                                            : 'h-7 w-7 p-0'
+                                            ? "w-full flex-row gap-3 px-3 py-2"
+                                            : "h-7 w-7 p-0",
                                     )}
                                     data-testid="sidebar-user-trigger"
                                     onClick={(e) => {
@@ -201,14 +201,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     }}
                                 >
                                     <UnifiedAvatar
-                                        name={user?.name || user?.email || 'User'}
+                                        name={user?.name || user?.email || "User"}
                                         size="sm"
                                         src={
                                             getSessionCacheBustedAvatarUrl(user?.image) || undefined
                                         }
                                         onImageError={() => {
                                             log.warn(
-                                                'Avatar failed to load in sidebar, using fallback initials'
+                                                "Avatar failed to load in sidebar, using fallback initials",
                                             );
                                         }}
                                     />
@@ -255,7 +255,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push('/profile');
+                                        push("/profile");
                                     }}
                                 >
                                     <User size={16} strokeWidth={2} />
@@ -277,7 +277,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push('/about');
+                                        push("/about");
                                     }}
                                 >
                                     <Info size={16} strokeWidth={2} />
@@ -286,7 +286,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push('/faq');
+                                        push("/faq");
                                     }}
                                 >
                                     <HelpCircle size={16} strokeWidth={2} />
@@ -295,7 +295,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push('/privacy');
+                                        push("/privacy");
                                     }}
                                 >
                                     <Shield size={16} strokeWidth={2} />
@@ -304,7 +304,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push('/terms');
+                                        push("/terms");
                                     }}
                                 >
                                     <FileText size={16} strokeWidth={2} />
@@ -314,7 +314,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                                 {/* Authentication */}
                                 <DropdownMenuItem
-                                    className={isLoggingOut ? 'cursor-not-allowed opacity-50' : ''}
+                                    className={isLoggingOut ? "cursor-not-allowed opacity-50" : ""}
                                     disabled={isLoggingOut}
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -322,48 +322,48 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     }}
                                 >
                                     <LogOut size={16} strokeWidth={2} />
-                                    {isLoggingOut ? 'Signing out...' : 'Sign out'}
+                                    {isLoggingOut ? "Signing out..." : "Sign out"}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
                         <Button
                             className="w-full justify-start"
-                            onClick={() => push('/login')}
+                            onClick={() => push("/login")}
                             rounded="lg"
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            tooltip={isSidebarOpen ? undefined : 'Login'}
+                            size={isSidebarOpen ? "sm" : "icon-sm"}
+                            tooltip={isSidebarOpen ? undefined : "Login"}
                             tooltipSide="right"
                             variant="ghost"
                         >
                             <User
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
                                 size={16}
                                 strokeWidth={2}
                             />
-                            {isSidebarOpen && 'Log in / Sign up'}
+                            {isSidebarOpen && "Log in / Sign up"}
                         </Button>
                     )}
                 </div>
 
                 {/* Divider */}
-                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
                     <div className="border-sidebar-border w-full border-t" />
                 </div>
 
                 {/* Header Section with Logo */}
                 <div
                     className={cn(
-                        'flex w-full flex-row items-center justify-between transition-all duration-200',
-                        isSidebarOpen ? 'mb-4 px-4 py-3' : 'mb-2 px-2 py-2'
+                        "flex w-full flex-row items-center justify-between transition-all duration-200",
+                        isSidebarOpen ? "mb-4 px-4 py-3" : "mb-2 px-2 py-2",
                     )}
                 >
                     <Link className="w-full" href="/">
                         <motion.div
                             animate={{ opacity: 1 }}
                             className={cn(
-                                'hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200',
-                                !isSidebarOpen && 'justify-center px-0'
+                                "hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200",
+                                !isSidebarOpen && "justify-center px-0",
                             )}
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.3, delay: 0.2 }}
@@ -401,47 +401,47 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Primary Actions Section */}
                 <Flex
                     className={cn(
-                        'w-full transition-all duration-200',
-                        isSidebarOpen ? 'gap-2 px-4' : 'items-center gap-3 px-2'
+                        "w-full transition-all duration-200",
+                        isSidebarOpen ? "gap-2 px-4" : "items-center gap-3 px-2",
                     )}
                     direction="col"
                 >
                     {/* New Chat Button */}
                     <Button
                         className={cn(
-                            'relative shadow-sm transition-all duration-200',
+                            "relative shadow-sm transition-all duration-200",
                             isSidebarOpen
-                                ? 'bg-primary hover:bg-primary/90 w-full justify-between'
-                                : 'bg-primary hover:bg-primary/90'
+                                ? "bg-primary hover:bg-primary/90 w-full justify-between"
+                                : "bg-primary hover:bg-primary/90",
                         )}
                         onClick={() => {
                             // Show toast notification
                             toast({
-                                title: 'New Chat',
-                                description: 'Starting a new conversation...',
+                                title: "New Chat",
+                                description: "Starting a new conversation...",
                                 duration: 2000,
                             });
 
                             // Navigate to / to start a new conversation
-                            push('/');
+                            push("/");
                             // Close mobile drawer if open
                             if (forceMobile) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
                         rounded="lg"
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        tooltip={isSidebarOpen ? undefined : 'New Chat (⌘⌃⌥N)'}
+                        size={isSidebarOpen ? "sm" : "icon-sm"}
+                        tooltip={isSidebarOpen ? undefined : "New Chat (⌘⌃⌥N)"}
                         tooltipSide="right"
                         variant="default"
                     >
                         <div className="flex items-center">
                             <Plus
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
                                 size={16}
                                 strokeWidth={2}
                             />
-                            {isSidebarOpen && 'New Chat'}
+                            {isSidebarOpen && "New Chat"}
                         </div>
                         {isSidebarOpen && (
                             // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
@@ -477,10 +477,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {/* Search Button */}
                     <Button
                         className={cn(
-                            'transition-all duration-200',
+                            "transition-all duration-200",
                             isSidebarOpen
-                                ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between'
-                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                                ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between"
+                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                         )}
                         onClick={() => {
                             if (!isSignedIn) {
@@ -490,18 +490,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             setIsCommandSearchOpen(true);
                         }}
                         rounded="lg"
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        tooltip={isSidebarOpen ? undefined : 'Search Conversations'}
+                        size={isSidebarOpen ? "sm" : "icon-sm"}
+                        tooltip={isSidebarOpen ? undefined : "Search Conversations"}
                         tooltipSide="right"
                         variant="ghost"
                     >
                         <div className="flex items-center">
                             <Search
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
                                 size={16}
                                 strokeWidth={2}
                             />
-                            {isSidebarOpen && 'Search'}
+                            {isSidebarOpen && "Search"}
                         </div>
                         {isSidebarOpen && (
                             <div className="ml-auto flex flex-row items-center gap-1">
@@ -524,26 +524,26 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {/* RAG Knowledge Chat Button */}
                     <Button
                         className={cn(
-                            'relative transition-all duration-200',
+                            "relative transition-all duration-200",
                             isSidebarOpen
-                                ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
-                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                                ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
+                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                         )}
                         onClick={() => {
-                            push('/agent');
+                            push("/agent");
                             // Close mobile drawer if open
                             if (forceMobile) {
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
                         rounded="lg"
-                        size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                        tooltip={isSidebarOpen ? undefined : 'Agent'}
+                        size={isSidebarOpen ? "sm" : "icon-sm"}
+                        tooltip={isSidebarOpen ? undefined : "Agent"}
                         tooltipSide="right"
                         variant="ghost"
                     >
                         <Zap
-                            className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                            className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
                             size={16}
                             strokeWidth={2}
                         />
@@ -566,79 +566,79 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {isAdmin && (
                         <Button
                             className={cn(
-                                'relative transition-all duration-200',
+                                "relative transition-all duration-200",
                                 isSidebarOpen
-                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
-                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                             )}
                             onClick={() => {
-                                push('/admin');
+                                push("/admin");
                                 // Close mobile drawer if open
                                 if (forceMobile) {
                                     setIsMobileSidebarOpen(false);
                                 }
                             }}
                             rounded="lg"
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            tooltip={isSidebarOpen ? undefined : 'Admin'}
+                            size={isSidebarOpen ? "sm" : "icon-sm"}
+                            tooltip={isSidebarOpen ? undefined : "Admin"}
                             tooltipSide="right"
                             variant="ghost"
                         >
                             <Terminal
-                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
                                 size={16}
                                 strokeWidth={2}
                             />
-                            {isSidebarOpen && 'Admin'}
+                            {isSidebarOpen && "Admin"}
                         </Button>
                     )}
                 </Flex>
 
                 {/* Divider */}
-                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
                     <div className="border-sidebar-border w-full border-t" />
                 </div>
 
                 {/* Subscription Section */}
                 <div
                     className={cn(
-                        'w-full transition-all duration-200',
-                        isSidebarOpen ? 'px-4 py-3' : 'px-2 py-2'
+                        "w-full transition-all duration-200",
+                        isSidebarOpen ? "px-4 py-3" : "px-2 py-2",
                     )}
                 >
                     {isSidebarOpen ? (
                         <Button
                             className={cn(
-                                'group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300',
-                                'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10',
-                                forceMobile ? 'h-auto min-h-[44px] py-2' : ''
+                                "group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300",
+                                "border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10",
+                                forceMobile ? "h-auto min-h-[44px] py-2" : "",
                             )}
                             disabled={isPortalLoading}
                             onClick={() => {
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
                                 } else {
-                                    push('/plus');
+                                    push("/plus");
                                 }
                             }}
                             rounded="lg"
-                            size={forceMobile ? 'default' : 'lg'}
+                            size={forceMobile ? "default" : "lg"}
                             variant="ghost"
                         >
                             <Sparkles
                                 className={cn(
-                                    'flex-shrink-0 transition-all duration-300 group-hover:scale-110',
-                                    'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300',
-                                    forceMobile ? 'mr-2' : 'mr-3'
+                                    "flex-shrink-0 transition-all duration-300 group-hover:scale-110",
+                                    "text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300",
+                                    forceMobile ? "mr-2" : "mr-3",
                                 )}
                                 size={forceMobile ? 16 : 20}
                                 strokeWidth={2}
                             />
                             <span
                                 className={cn(
-                                    'flex-1 truncate text-left font-medium',
-                                    'text-[#262626] dark:text-[#BFB38F]',
-                                    forceMobile ? 'text-sm leading-tight' : ''
+                                    "flex-1 truncate text-left font-medium",
+                                    "text-[#262626] dark:text-[#BFB38F]",
+                                    forceMobile ? "text-sm leading-tight" : "",
                                 )}
                             >
                                 {isPortalLoading
@@ -650,8 +650,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             {isPlusSubscriber && (
                                 <ExternalLink
                                     className={cn(
-                                        'ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80',
-                                        forceMobile ? 'mt-0.5' : ''
+                                        "ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80",
+                                        forceMobile ? "mt-0.5" : "",
                                     )}
                                     size={forceMobile ? 10 : 12}
                                 />
@@ -660,19 +660,19 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     ) : (
                         <Button
                             className={cn(
-                                'group !m-0 flex items-center justify-center !p-0 transition-all duration-300',
+                                "group !m-0 flex items-center justify-center !p-0 transition-all duration-300",
                                 isPlusSubscriber
                                     ? // VT+ Subscriber - Muted amber style
-                                      'border-amber-200/50 bg-amber-50/50 hover:bg-amber-100/70 hover:shadow-lg hover:shadow-amber-200/30 dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50'
+                                      "border-amber-200/50 bg-amber-50/50 hover:bg-amber-100/70 hover:shadow-lg hover:shadow-amber-200/30 dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50"
                                     : // Upgrade Button - Black style
-                                      'border-black/20 bg-black/5 hover:bg-black/10 hover:shadow-lg hover:shadow-black/20 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10'
+                                      "border-black/20 bg-black/5 hover:bg-black/10 hover:shadow-lg hover:shadow-black/20 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10",
                             )}
                             disabled={isPortalLoading}
                             onClick={() => {
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
                                 } else {
-                                    push('/plus');
+                                    push("/plus");
                                 }
                             }}
                             rounded="lg"
@@ -687,10 +687,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         >
                             <Sparkles
                                 className={cn(
-                                    'm-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110',
+                                    "m-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110",
                                     isPlusSubscriber
-                                        ? 'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300'
-                                        : 'text-black/70 group-hover:text-black dark:text-white/70 dark:group-hover:text-white'
+                                        ? "text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300"
+                                        : "text-black/70 group-hover:text-black dark:text-white/70 dark:group-hover:text-white",
                                 )}
                                 size={16}
                                 strokeWidth={2}
@@ -700,15 +700,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 </div>
 
                 {/* Divider */}
-                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
                     <div className="border-sidebar-border w-full border-t" />
                 </div>
 
                 {/* Thread History Section */}
                 <div
                     className={cn(
-                        'scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200',
-                        isSidebarOpen ? 'flex flex-col gap-4 px-4 pb-6 pt-4' : 'hidden'
+                        "scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200",
+                        isSidebarOpen ? "flex flex-col gap-4 px-4 pb-6 pt-4" : "hidden",
                     )}
                 >
                     {threads.length === 0 ? (
@@ -729,7 +729,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         <>
                             {/* Pinned Conversations */}
                             {renderGroup({
-                                title: 'Pinned',
+                                title: "Pinned",
                                 threads: threads
                                     .filter((thread) => thread.pinned)
                                     .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
@@ -749,21 +749,21 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             })}
 
                             {/* Recent Conversations */}
-                            {renderGroup({ title: 'Today', threads: groupedThreads.today })}
+                            {renderGroup({ title: "Today", threads: groupedThreads.today })}
                             {renderGroup({
-                                title: 'Yesterday',
+                                title: "Yesterday",
                                 threads: groupedThreads.yesterday,
                             })}
                             {renderGroup({
-                                title: 'Last 7 Days',
+                                title: "Last 7 Days",
                                 threads: groupedThreads.last7Days,
                             })}
                             {renderGroup({
-                                title: 'Last 30 Days',
+                                title: "Last 30 Days",
                                 threads: groupedThreads.last30Days,
                             })}
                             {renderGroup({
-                                title: 'Older',
+                                title: "Older",
                                 threads: groupedThreads.previousMonths,
                             })}
                         </>

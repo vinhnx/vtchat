@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { ChatMode } from '@repo/shared/config';
-import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
-import type { CoreAssistantMessage, CoreUserMessage } from 'ai';
-import { useEffect, useRef, useState } from 'react';
+import type { ChatMode } from "@repo/shared/config";
+import { UserTier, type UserTierType } from "@repo/shared/constants/user-tiers";
+import type { CoreAssistantMessage, CoreUserMessage } from "ai";
+import { useEffect, useRef, useState } from "react";
 
 export type WorkflowConfig = {
     maxIterations?: number;
@@ -20,14 +20,14 @@ export type WorkflowEventSchema = {
         query: string;
         threadId: string;
         threadItemId: string;
-        status: 'PENDING' | 'COMPLETED' | 'FAILED';
+        status: "PENDING" | "COMPLETED" | "FAILED";
         goals?: Record<
             string,
             {
                 id: number;
                 text: string;
                 final: boolean;
-                status?: 'PENDING' | 'COMPLETED' | 'FAILED';
+                status?: "PENDING" | "COMPLETED" | "FAILED";
             }
         >;
         steps?: Record<
@@ -48,9 +48,9 @@ export type WorkflowEventSchema = {
         reasoning?: {
             text: string;
             final: boolean;
-            status?: 'PENDING' | 'COMPLETED' | 'FAILED';
+            status?: "PENDING" | "COMPLETED" | "FAILED";
             details?: Array<{
-                type: 'text' | 'redacted';
+                type: "text" | "redacted";
                 text?: string;
                 data?: string;
                 signature?: string;
@@ -61,18 +61,18 @@ export type WorkflowEventSchema = {
             object?: any;
             objectType?: string;
             final: boolean;
-            status?: 'PENDING' | 'COMPLETED' | 'FAILED';
+            status?: "PENDING" | "COMPLETED" | "FAILED";
         };
         final: boolean;
     };
 };
 
-export type WorkflowWorkerStatus = 'idle' | 'running' | 'completed' | 'error' | 'aborted';
+export type WorkflowWorkerStatus = "idle" | "running" | "completed" | "error" | "aborted";
 
 export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: () => void) {
-    const [status, setStatus] = useState<WorkflowWorkerStatus>('idle');
+    const [status, setStatus] = useState<WorkflowWorkerStatus>("idle");
     const [error, setError] = useState<Error | null>(null);
-    const [flowState, setFlowState] = useState<WorkflowEventSchema['flow'] | null>(null);
+    const [flowState, setFlowState] = useState<WorkflowEventSchema["flow"] | null>(null);
     const workerRef = useRef<Worker | null>(null);
     const onMessageRef = useRef(onMessage);
 
@@ -83,11 +83,11 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
 
     // Initialize worker once on mount
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
 
         if (!workerRef.current) {
-            workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
-                type: 'module',
+            workerRef.current = new Worker(new URL("./worker.ts", import.meta.url), {
+                type: "module",
             });
 
             // Set up message handler
@@ -152,14 +152,14 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
         setFlowState(null);
 
         try {
-            if (typeof window === 'undefined') {
-                throw new Error('Workers can only be used in the browser environment');
+            if (typeof window === "undefined") {
+                throw new Error("Workers can only be used in the browser environment");
             }
 
             // Ensure worker exists
             if (!workerRef.current) {
-                workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
-                    type: 'module',
+                workerRef.current = new Worker(new URL("./worker.ts", import.meta.url), {
+                    type: "module",
                 });
 
                 // Set up message handler
@@ -173,7 +173,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
 
             // Start workflow with existing worker
             workerRef.current.postMessage({
-                type: 'START_WORKFLOW',
+                type: "START_WORKFLOW",
                 payload: {
                     mode,
                     question,
@@ -194,10 +194,10 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
                 },
             });
 
-            setStatus('running');
+            setStatus("running");
         } catch (err) {
-            setStatus('error');
-            setError(err instanceof Error ? err : new Error('Failed to start workflow'));
+            setStatus("error");
+            setError(err instanceof Error ? err : new Error("Failed to start workflow"));
         }
     };
 
@@ -208,11 +208,11 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
 
         // Signal the worker to abort
         workerRef.current.postMessage({
-            type: 'ABORT_WORKFLOW',
+            type: "ABORT_WORKFLOW",
             payload: { graceful },
         });
 
-        setStatus('aborted');
+        setStatus("aborted");
     };
 
     return {

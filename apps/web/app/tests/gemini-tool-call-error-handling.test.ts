@@ -1,9 +1,9 @@
-import { ModelEnum } from '@repo/ai/models';
-import { describe, expect, it } from 'vitest';
+import { ModelEnum } from "@repo/ai/models";
+import { describe, expect, it } from "vitest";
 
-describe('Gemini Tool Call Error Handling', () => {
-    describe('GEMINI_2_5_FLASH_LITE Model Rules', () => {
-        it('should allow system API key usage for free model without user key', () => {
+describe("Gemini Tool Call Error Handling", () => {
+    describe("GEMINI_2_5_FLASH_LITE Model Rules", () => {
+        it("should allow system API key usage for free model without user key", () => {
             const testModel = ModelEnum.GEMINI_2_5_FLASH_LITE;
             const userHasApiKey = false;
 
@@ -11,7 +11,7 @@ describe('Gemini Tool Call Error Handling', () => {
             // 1. if user is using free model (GEMINI_2_5_FLASH_LITE) AND doesn't have GEMINI API KEY
             //    -> use free gemini model API key for them and count as 1 daily free gemini model usage
 
-            expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(testModel).toBe("gemini-2.5-flash-lite-preview-06-17");
 
             // This should be allowed (use system key, count usage)
             const shouldUseSystemKey =
@@ -19,7 +19,7 @@ describe('Gemini Tool Call Error Handling', () => {
             expect(shouldUseSystemKey).toBe(true);
         });
 
-        it('should use user API key when available (BYOK unlimited)', () => {
+        it("should use user API key when available (BYOK unlimited)", () => {
             const testModel = ModelEnum.GEMINI_2_5_FLASH_LITE;
             const userHasApiKey = true;
 
@@ -27,7 +27,7 @@ describe('Gemini Tool Call Error Handling', () => {
             // 2. if user is using free model (GEMINI_2_5_FLASH_LITE) AND has GEMINI API KEY
             //    -> use their gemini api key and DON't count -> remember has BYOK -> unlimited usage
 
-            expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(testModel).toBe("gemini-2.5-flash-lite-preview-06-17");
 
             // This should use user's key (unlimited usage)
             const shouldUseSystemKey =
@@ -35,55 +35,55 @@ describe('Gemini Tool Call Error Handling', () => {
             expect(shouldUseSystemKey).toBe(false);
         });
 
-        it('should provide proper error messages for different scenarios', () => {
+        it("should provide proper error messages for different scenarios", () => {
             const testScenarios = [
                 {
-                    error: 'Free Gemini model requires system configuration',
+                    error: "Free Gemini model requires system configuration",
                     expected:
-                        'Web search is temporarily unavailable for the free Gemini model. Please try again later or upgrade to use your own API key for unlimited access.',
+                        "Web search is temporarily unavailable for the free Gemini model. Please try again later or upgrade to use your own API key for unlimited access.",
                 },
                 {
-                    error: 'API key',
+                    error: "API key",
                     isFreeModel: true,
                     hasUserApiKey: false,
                     expected:
                         "Web search requires an API key. You can either:\n1. Add your own Gemini API key in settings for unlimited usage\n2. Try again later if you've reached the daily limit for free usage",
                 },
                 {
-                    error: 'unauthorized',
+                    error: "unauthorized",
                     isFreeModel: true,
                     hasUserApiKey: false,
                     expected:
-                        'Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
+                        "Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.",
                 },
                 {
-                    error: 'rate limit',
+                    error: "rate limit",
                     isFreeModel: true,
                     hasUserApiKey: false,
                     expected:
-                        'Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
+                        "Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.",
                 },
             ];
 
             testScenarios.forEach((scenario) => {
                 // Test that our error handling logic would work correctly
-                expect(typeof scenario.expected).toBe('string');
+                expect(typeof scenario.expected).toBe("string");
                 expect(scenario.expected.length).toBeGreaterThan(0);
             });
         });
 
-        it('should validate model enum consistency', () => {
+        it("should validate model enum consistency", () => {
             // Ensure the model enum value matches what we expect
-            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe("gemini-2.5-flash-lite-preview-06-17");
         });
     });
 
-    describe('API Key Detection Logic', () => {
-        it('should properly detect user API key presence', () => {
+    describe("API Key Detection Logic", () => {
+        it("should properly detect user API key presence", () => {
             const testCases = [
-                { apiKey: 'AIzaSyC...', expected: true },
-                { apiKey: '', expected: false },
-                { apiKey: '   ', expected: false },
+                { apiKey: "AIzaSyC...", expected: true },
+                { apiKey: "", expected: false },
+                { apiKey: "   ", expected: false },
                 { apiKey: undefined, expected: false },
                 { apiKey: null, expected: false },
             ];
@@ -91,24 +91,24 @@ describe('Gemini Tool Call Error Handling', () => {
             testCases.forEach(({ apiKey, expected }) => {
                 const hasUserKey = !!(
                     apiKey &&
-                    typeof apiKey === 'string' &&
+                    typeof apiKey === "string" &&
                     apiKey.trim().length > 0
                 );
                 expect(hasUserKey).toBe(expected);
             });
         });
 
-        it('should handle BYOK logic correctly', () => {
+        it("should handle BYOK logic correctly", () => {
             const scenarios = [
                 {
-                    name: 'User with BYOK should get unlimited usage',
-                    userApiKey: 'AIzaSyC_user_key',
+                    name: "User with BYOK should get unlimited usage",
+                    userApiKey: "AIzaSyC_user_key",
                     model: ModelEnum.GEMINI_2_5_FLASH_LITE,
                     expectUnlimited: true,
                 },
                 {
-                    name: 'User without BYOK should use system key with counting',
-                    userApiKey: '',
+                    name: "User without BYOK should use system key with counting",
+                    userApiKey: "",
                     model: ModelEnum.GEMINI_2_5_FLASH_LITE,
                     expectUnlimited: false,
                 },

@@ -1,7 +1,7 @@
-import { log } from '@repo/shared/logger';
-import { Button } from '@repo/ui';
-import { Download, Eye, FileText, X } from 'lucide-react';
-import { memo } from 'react';
+import { log } from "@repo/shared/logger";
+import { Button } from "@repo/ui";
+import { Download, Eye, FileText, X } from "lucide-react";
+import { memo } from "react";
 
 type DocumentDisplayProps = {
     documentAttachment: {
@@ -16,13 +16,13 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
     const { fileName, mimeType, base64 } = documentAttachment;
 
     const getFileIcon = () => {
-        if (mimeType === 'application/pdf') {
+        if (mimeType === "application/pdf") {
             return <FileText className="text-red-500" size={16} />;
         }
-        if (mimeType.includes('word') || mimeType.includes('document')) {
+        if (mimeType.includes("word") || mimeType.includes("document")) {
             return <FileText className="text-blue-500" size={16} />;
         }
-        if (mimeType === 'text/plain' || mimeType === 'text/markdown') {
+        if (mimeType === "text/plain" || mimeType === "text/markdown") {
             return <FileText className="text-gray-500" size={16} />;
         }
         return <FileText className="text-gray-500" size={16} />;
@@ -38,7 +38,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
 
     const handleDownload = () => {
         try {
-            const byteCharacters = atob(base64.split(',')[1] || base64);
+            const byteCharacters = atob(base64.split(",")[1] || base64);
             const byteNumbers: number[] = [];
             for (let i = 0; i < byteCharacters.length; i++) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -47,7 +47,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             const blob = new Blob([byteArray], { type: mimeType });
 
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = url;
             link.download = fileName;
             document.body.appendChild(link);
@@ -55,25 +55,25 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         } catch (error) {
-            log.error('Error downloading file:', { data: error });
+            log.error("Error downloading file:", { data: error });
         }
     };
 
     const handlePreview = () => {
-        if (mimeType === 'application/pdf') {
+        if (mimeType === "application/pdf") {
             try {
-                const byteCharacters = atob(base64.split(',')[1] || base64);
+                const byteCharacters = atob(base64.split(",")[1] || base64);
                 const byteNumbers: number[] = [];
                 for (let i = 0; i < byteCharacters.length; i++) {
                     byteNumbers[i] = byteCharacters.charCodeAt(i);
                 }
                 const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                const blob = new Blob([byteArray], { type: "application/pdf" });
                 const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
+                window.open(url, "_blank");
                 URL.revokeObjectURL(url);
             } catch (error) {
-                log.error('Error previewing PDF:', { data: error });
+                log.error("Error previewing PDF:", { data: error });
             }
         }
     };
@@ -85,12 +85,12 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{fileName}</p>
                 <p className="text-muted-foreground text-xs">
-                    {mimeType.split('/')[1]?.toUpperCase()} • {getFileSize()}
+                    {mimeType.split("/")[1]?.toUpperCase()} • {getFileSize()}
                 </p>
             </div>
 
             <div className="flex items-center gap-1">
-                {mimeType === 'application/pdf' && (
+                {mimeType === "application/pdf" && (
                     <Button
                         onClick={handlePreview}
                         size="icon-sm"
@@ -115,4 +115,4 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
     );
 });
 
-DocumentDisplay.displayName = 'DocumentDisplay';
+DocumentDisplay.displayName = "DocumentDisplay";

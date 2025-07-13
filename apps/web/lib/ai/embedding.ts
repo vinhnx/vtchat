@@ -1,19 +1,19 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { ApiKeys } from '@repo/common/store';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import type { ApiKeys } from "@repo/common/store";
 import {
     DEFAULT_EMBEDDING_MODEL,
     EMBEDDING_MODEL_CONFIG,
     EMBEDDING_MODELS,
     type EmbeddingModel,
-} from '@repo/shared/config/embedding-models';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { log } from '@repo/shared/logger';
+} from "@repo/shared/config/embedding-models";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { log } from "@repo/shared/logger";
 // Import the unified function for better consistency
-import { isGeminiModel as isGeminiModelUnified } from '@repo/shared/utils';
-import { and, cosineDistance, desc, eq, gt, sql } from 'drizzle-orm';
-import { db } from '../database';
-import { embeddings, resources } from '../database/schema';
-import { maskPII } from '../utils/content-security';
+import { isGeminiModel as isGeminiModelUnified } from "@repo/shared/utils";
+import { and, cosineDistance, desc, eq, gt, sql } from "drizzle-orm";
+import { db } from "../database";
+import { embeddings, resources } from "../database/schema";
+import { maskPII } from "../utils/content-security";
 
 // Helper function to check if a model is a Gemini model
 function isGeminiModel(model: EmbeddingModel): boolean {
@@ -35,23 +35,23 @@ export function getEmbeddingModel(userPreference?: EmbeddingModel): EmbeddingMod
 const generateChunks = (input: string): string[] => {
     return input
         .trim()
-        .split('.')
-        .filter((i) => i !== '');
+        .split(".")
+        .filter((i) => i !== "");
 };
 
 async function generateEmbeddingWithProvider(
     text: string,
     model: EmbeddingModel,
-    apiKeys: ApiKeys
+    apiKeys: ApiKeys,
 ): Promise<number[]> {
-    const input = text.replaceAll('\\n', ' ');
+    const input = text.replaceAll("\\n", " ");
 
     // Only support Gemini models for now
     // VT+ users can use server API key, free users need their own
     const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
         throw new Error(
-            'Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys or upgrade to VT+.'
+            "Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys or upgrade to VT+.",
         );
     }
 
@@ -70,7 +70,7 @@ async function generateEmbeddingWithProvider(
             actualDimensions: embedding.length,
             inputLength: input.length,
         },
-        '🔍 Embedding Debug'
+        "🔍 Embedding Debug",
     );
 
     return embedding;
@@ -79,7 +79,7 @@ async function generateEmbeddingWithProvider(
 export const generateEmbeddings = async (
     value: string,
     apiKeys: ApiKeys,
-    userModel?: EmbeddingModel
+    userModel?: EmbeddingModel,
 ): Promise<Array<{ embedding: number[]; content: string }>> => {
     const chunks = generateChunks(value);
     const embeddingModel = getEmbeddingModel(userModel);
@@ -92,14 +92,14 @@ export const generateEmbeddings = async (
             hasGeminiKey: !!apiKeys?.[API_KEY_NAMES.GOOGLE],
             availableKeys: Object.keys(apiKeys || {}),
         },
-        '🔍 RAG Debug'
+        "🔍 RAG Debug",
     );
 
     // For now, only support Gemini models - simplify logic
     // VT+ users can use server API key, free users need their own
     const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
-        const availableKeys = Object.keys(apiKeys || {}).filter((key) => key.endsWith('_API_KEY'));
+        const availableKeys = Object.keys(apiKeys || {}).filter((key) => key.endsWith("_API_KEY"));
         throw new Error(`RAG Knowledge Chat requires a Google Gemini API key.
 
 🔧 To fix this:
@@ -107,7 +107,7 @@ export const generateEmbeddings = async (
 2. Add your Google Gemini API key 
    - Get free key: https://ai.google.dev/api
 
-You currently have: ${availableKeys.length > 0 ? availableKeys.join(', ') : 'no API keys configured'}
+You currently have: ${availableKeys.length > 0 ? availableKeys.join(", ") : "no API keys configured"}
 
 Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
     }
@@ -123,7 +123,7 @@ Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
                 await new Promise((resolve) => setTimeout(resolve, 100));
             }
         } catch (error) {
-            log.error({ error }, 'Error generating embedding for chunk');
+            log.error({ error }, "Error generating embedding for chunk");
             throw error;
         }
     }
@@ -133,7 +133,7 @@ Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
 export const generateEmbedding = async (
     value: string,
     apiKeys: ApiKeys,
-    userModel?: EmbeddingModel
+    userModel?: EmbeddingModel,
 ): Promise<number[]> => {
     const embeddingModel = getEmbeddingModel(userModel);
     return generateEmbeddingWithProvider(value, embeddingModel, apiKeys);
@@ -143,17 +143,17 @@ export const findRelevantContent = async (
     userQuery: string,
     apiKeys: ApiKeys,
     userModel?: EmbeddingModel,
-    userId?: string
+    userId?: string,
 ) => {
     // CRITICAL: Must have userId to ensure user isolation
     if (!userId) {
-        throw new Error('User ID is required for knowledge base search to ensure data isolation');
+        throw new Error("User ID is required for knowledge base search to ensure data isolation");
     }
 
     const userQueryEmbedded = await generateEmbedding(userQuery, apiKeys, userModel);
     const similarity = sql<number>`1 - (${cosineDistance(
         embeddings.embedding,
-        userQueryEmbedded
+        userQueryEmbedded,
     )})`;
 
     // Query for similar embeddings (filtering by user through resources table)

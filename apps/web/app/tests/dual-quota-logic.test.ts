@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Set up environment variables before any imports
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
 
 // Mock the database and drizzle-orm
-vi.mock('@/lib/database', () => ({
+vi.mock("@/lib/database", () => ({
     db: {
         select: vi.fn(),
         insert: vi.fn(),
@@ -12,41 +12,35 @@ vi.mock('@/lib/database', () => ({
     },
 }));
 
-vi.mock('drizzle-orm', () => ({
+vi.mock("drizzle-orm", () => ({
     eq: vi.fn(),
     and: vi.fn(),
 }));
 
 // Import after mocking
-import { ModelEnum } from '@repo/ai/models';
+import { ModelEnum } from "@repo/ai/models";
 
 // Import the functions we want to test
-import {
-    checkDualQuotaLimits,
-    checkRateLimit,
-    getRateLimitStatus,
-    recordDualQuotaUsage,
-    recordRequest,
-} from '@/lib/services/rate-limit';
+import { checkRateLimit, getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 
-describe('Dual Quota Logic for VT+ Users', () => {
-    const vtPlusUserId = 'vt-plus-user-123';
-    const freeUserId = 'free-user-456';
+describe("Dual Quota Logic for VT+ Users", () => {
+    const vtPlusUserId = "vt-plus-user-123";
+    const freeUserId = "free-user-456";
 
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    describe('Flash Lite Unlimited Access for VT+ Users', () => {
-        it('should allow unlimited Flash Lite requests for VT+ users', async () => {
+    describe("Flash Lite Unlimited Access for VT+ Users", () => {
+        it("should allow unlimited Flash Lite requests for VT+ users", async () => {
             // Mock database to return high usage for Flash Lite
-            const mockDb = await import('@/lib/database');
+            const mockDb = await import("@/lib/database");
             const mockRecord = {
-                id: 'record-123',
+                id: "record-123",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_FLASH_LITE,
-                dailyRequestCount: '9999', // Very high count
-                minuteRequestCount: '999',
+                dailyRequestCount: "9999", // Very high count
+                minuteRequestCount: "999",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -66,7 +60,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
             const result = await checkRateLimit(
                 vtPlusUserId,
                 ModelEnum.GEMINI_2_5_FLASH_LITE,
-                true
+                true,
             );
 
             expect(result.allowed).toBe(true);
@@ -74,14 +68,14 @@ describe('Dual Quota Logic for VT+ Users', () => {
             expect(result.remainingMinute).toBe(Number.POSITIVE_INFINITY);
         });
 
-        it('should NOT allow unlimited Flash Lite requests for free users', async () => {
-            const mockDb = await import('@/lib/database');
+        it("should NOT allow unlimited Flash Lite requests for free users", async () => {
+            const mockDb = await import("@/lib/database");
             const mockRecord = {
-                id: 'record-456',
+                id: "record-456",
                 userId: freeUserId,
                 modelId: ModelEnum.GEMINI_2_5_FLASH_LITE,
-                dailyRequestCount: '20', // At free user limit
-                minuteRequestCount: '0',
+                dailyRequestCount: "20", // At free user limit
+                minuteRequestCount: "0",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -101,21 +95,21 @@ describe('Dual Quota Logic for VT+ Users', () => {
             const result = await checkRateLimit(freeUserId, ModelEnum.GEMINI_2_5_FLASH_LITE, false);
 
             expect(result.allowed).toBe(false);
-            expect(result.reason).toBe('daily_limit_exceeded');
+            expect(result.reason).toBe("daily_limit_exceeded");
         });
     });
 
-    describe('Dual Quota Logic for VT+ Users on Pro/Flash Models', () => {
-        it('should check both model-specific and Flash Lite quotas for VT+ users on Pro models', async () => {
-            const mockDb = await import('@/lib/database');
+    describe("Dual Quota Logic for VT+ Users on Pro/Flash Models", () => {
+        it("should check both model-specific and Flash Lite quotas for VT+ users on Pro models", async () => {
+            const mockDb = await import("@/lib/database");
 
             // Mock records for both Pro and Flash Lite quotas
             const mockProRecord = {
-                id: 'record-pro',
+                id: "record-pro",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_PRO,
-                dailyRequestCount: '50', // Under Pro limit (1000)
-                minuteRequestCount: '10', // Under Pro limit (100)
+                dailyRequestCount: "50", // Under Pro limit (1000)
+                minuteRequestCount: "10", // Under Pro limit (100)
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -123,11 +117,11 @@ describe('Dual Quota Logic for VT+ Users', () => {
             };
 
             const mockFlashLiteRecord = {
-                id: 'record-flash-lite',
+                id: "record-flash-lite",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_FLASH_LITE,
-                dailyRequestCount: '900', // Near Flash Lite VT+ limit (1000)
-                minuteRequestCount: '90', // Near Flash Lite VT+ limit (100)
+                dailyRequestCount: "900", // Near Flash Lite VT+ limit (1000)
+                minuteRequestCount: "90", // Near Flash Lite VT+ limit (100)
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -137,7 +131,7 @@ describe('Dual Quota Logic for VT+ Users', () => {
             // Mock database to return different records based on model
             (mockDb.db.select as any).mockImplementation(() => ({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockImplementation((condition) => ({
+                    where: vi.fn().mockImplementation((_condition) => ({
                         limit: vi.fn().mockReturnValue({
                             then: vi.fn().mockImplementation(async (callback) => {
                                 // Simulate returning different records based on the query
@@ -159,15 +153,15 @@ describe('Dual Quota Logic for VT+ Users', () => {
             expect(result.remainingMinute).toBeLessThanOrEqual(90); // Flash Lite limit - Flash Lite usage
         });
 
-        it('should reject when Flash Lite quota is exceeded even if Pro quota is available', async () => {
-            const mockDb = await import('@/lib/database');
+        it("should reject when Flash Lite quota is exceeded even if Pro quota is available", async () => {
+            const mockDb = await import("@/lib/database");
 
             const mockProRecord = {
-                id: 'record-pro',
+                id: "record-pro",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_PRO,
-                dailyRequestCount: '50', // Under Pro limit
-                minuteRequestCount: '10',
+                dailyRequestCount: "50", // Under Pro limit
+                minuteRequestCount: "10",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -175,11 +169,11 @@ describe('Dual Quota Logic for VT+ Users', () => {
             };
 
             const mockFlashLiteRecord = {
-                id: 'record-flash-lite',
+                id: "record-flash-lite",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_FLASH_LITE,
-                dailyRequestCount: '1000', // At Flash Lite VT+ limit
-                minuteRequestCount: '50',
+                dailyRequestCount: "1000", // At Flash Lite VT+ limit
+                minuteRequestCount: "50",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -199,13 +193,13 @@ describe('Dual Quota Logic for VT+ Users', () => {
             const result = await checkRateLimit(vtPlusUserId, ModelEnum.GEMINI_2_5_PRO, true);
 
             expect(result.allowed).toBe(false);
-            expect(result.reason).toBe('daily_limit_exceeded');
+            expect(result.reason).toBe("daily_limit_exceeded");
         });
     });
 
-    describe('Dual Quota Recording for VT+ Users', () => {
-        it('should record usage in both model-specific and Flash Lite quotas for VT+ users', async () => {
-            const mockDb = await import('@/lib/database');
+    describe("Dual Quota Recording for VT+ Users", () => {
+        it("should record usage in both model-specific and Flash Lite quotas for VT+ users", async () => {
+            const mockDb = await import("@/lib/database");
 
             // Mock the database operations
             const mockSelect = vi.fn().mockReturnValue({
@@ -242,8 +236,8 @@ describe('Dual Quota Logic for VT+ Users', () => {
             expect(mockSelect).toHaveBeenCalledTimes(2);
         });
 
-        it('should NOT record dual quota for free users', async () => {
-            const mockDb = await import('@/lib/database');
+        it("should NOT record dual quota for free users", async () => {
+            const mockDb = await import("@/lib/database");
 
             const mockSelect = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -263,8 +257,8 @@ describe('Dual Quota Logic for VT+ Users', () => {
             expect(mockSelect).toHaveBeenCalledTimes(1);
         });
 
-        it('should NOT record dual quota for Flash Lite requests by VT+ users', async () => {
-            const mockDb = await import('@/lib/database');
+        it("should NOT record dual quota for Flash Lite requests by VT+ users", async () => {
+            const mockDb = await import("@/lib/database");
 
             const mockSelect = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
@@ -285,16 +279,16 @@ describe('Dual Quota Logic for VT+ Users', () => {
         });
     });
 
-    describe('getRateLimitStatus with Dual Quota Display', () => {
-        it('should show dual quota status for VT+ users on Pro models', async () => {
-            const mockDb = await import('@/lib/database');
+    describe("getRateLimitStatus with Dual Quota Display", () => {
+        it("should show dual quota status for VT+ users on Pro models", async () => {
+            const mockDb = await import("@/lib/database");
 
             const mockProRecord = {
-                id: 'record-pro',
+                id: "record-pro",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_PRO,
-                dailyRequestCount: '100',
-                minuteRequestCount: '20',
+                dailyRequestCount: "100",
+                minuteRequestCount: "20",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),
@@ -302,11 +296,11 @@ describe('Dual Quota Logic for VT+ Users', () => {
             };
 
             const mockFlashLiteRecord = {
-                id: 'record-flash-lite',
+                id: "record-flash-lite",
                 userId: vtPlusUserId,
                 modelId: ModelEnum.GEMINI_2_5_FLASH_LITE,
-                dailyRequestCount: '800',
-                minuteRequestCount: '60',
+                dailyRequestCount: "800",
+                minuteRequestCount: "60",
                 lastDailyReset: new Date(),
                 lastMinuteReset: new Date(),
                 createdAt: new Date(),

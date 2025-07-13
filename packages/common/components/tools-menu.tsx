@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useAppStore } from '@repo/common/store';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@repo/ui';
-import { Wrench } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useVtPlusAccess } from '../hooks';
-import { useApiKeysStore } from '../store/api-keys.store';
-import { useChatStore } from '../store/chat.store';
+import { useAppStore } from "@repo/common/store";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui";
+import { Wrench } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useVtPlusAccess } from "../hooks";
+import { useApiKeysStore } from "../store/api-keys.store";
+import { useChatStore } from "../store/chat.store";
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ export const ToolsMenu = () => {
     const _setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const _isToolsAvailable = useMemo(
         () => hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier),
-        [chatMode, hasApiKeyForChatMode, isSignedIn, isPlusTier]
+        [chatMode, hasApiKeyForChatMode, isSignedIn, isPlusTier],
     );
 
     return (
@@ -32,7 +32,7 @@ export const ToolsMenu = () => {
                     rounded="full"
                     size="icon"
                     tooltip="Tools (Coming Soon)"
-                    variant={isOpen ? 'secondary' : 'ghost'} // Disabled since MCP is temporarily removed
+                    variant={isOpen ? "secondary" : "ghost"} // Disabled since MCP is temporarily removed
                 >
                     <Wrench className="text-muted-foreground" size={18} strokeWidth={2} />
                 </Button>

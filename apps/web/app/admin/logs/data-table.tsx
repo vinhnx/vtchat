@@ -1,17 +1,5 @@
-'use client';
+"use client";
 
-import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
 import {
     Button,
     DropdownMenu,
@@ -30,9 +18,21 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@repo/ui';
-import { ChevronDown, Search } from 'lucide-react';
-import { useState } from 'react';
+} from "@repo/ui";
+import {
+    type ColumnDef,
+    type ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    type SortingState,
+    useReactTable,
+    type VisibilityState,
+} from "@tanstack/react-table";
+import { ChevronDown, Search } from "lucide-react";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState("");
 
     const table = useReactTable({
         data,
@@ -93,13 +93,13 @@ export function DataTable<TData, TValue>({
     };
 
     const handleStatusFilter = (value: string) => {
-        onStatusFilter?.(value === 'all' ? '' : value);
-        table.getColumn('expiresAt')?.setFilterValue(value === 'all' ? undefined : value);
+        onStatusFilter?.(value === "all" ? "" : value);
+        table.getColumn("expiresAt")?.setFilterValue(value === "all" ? undefined : value);
     };
 
     const handleImpersonationFilter = (value: string) => {
-        onImpersonationFilter?.(value === 'all' ? '' : value);
-        table.getColumn('impersonatedBy')?.setFilterValue(value === 'all' ? undefined : value);
+        onImpersonationFilter?.(value === "all" ? "" : value);
+        table.getColumn("impersonatedBy")?.setFilterValue(value === "all" ? undefined : value);
     };
 
     return (
@@ -182,7 +182,7 @@ export function DataTable<TData, TValue>({
                                                 ? null
                                                 : flexRender(
                                                       header.column.columnDef.header,
-                                                      header.getContext()
+                                                      header.getContext(),
                                                   )}
                                         </TableHead>
                                     );
@@ -201,13 +201,13 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && 'selected'}
+                                    data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                cell.getContext(),
                                             )}
                                         </TableCell>
                                     ))}
@@ -228,11 +228,11 @@ export function DataTable<TData, TValue>({
             {pagination && pagination.totalPages > 1 && (
                 <div className="flex items-center justify-between space-x-2 py-4">
                     <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s) selected.
                         <span className="ml-4">
-                            Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
-                            {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
+                            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+                            {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
                             {pagination.total} sessions
                         </span>
                     </div>

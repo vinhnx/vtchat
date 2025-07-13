@@ -2,20 +2,20 @@
 export type {
     ToolCall,
     ToolResult,
-} from '@repo/shared/types';
+} from "@repo/shared/types";
 export {
     openaiWebSearchTool,
     openaiWebSearchWithModel,
     supportsOpenAIWebSearch,
-} from './openai-web-search';
+} from "./openai-web-search";
 
 // Tool registry and management
-export * from './registry';
+export * from "./registry";
 // Enhanced streaming utilities
-export * from './streaming-utils';
+export * from "./streaming-utils";
 
-import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
-import { openaiWebSearchTool } from './openai-web-search';
+import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from "../models";
+import { openaiWebSearchTool } from "./openai-web-search";
 
 /**
  * Get the appropriate web search tool based on the model

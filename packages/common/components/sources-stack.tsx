@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 const isValidUrl = (url: string) => {
     try {
@@ -23,8 +23,8 @@ const getFavIcon = (host?: string) => {
     }
     // Skip favicon for grounding API redirects
     if (
-        host.includes('vertexaisearch.cloud.google.com') ||
-        host.includes('grounding-api-redirect')
+        host.includes("vertexaisearch.cloud.google.com") ||
+        host.includes("grounding-api-redirect")
     ) {
         return null;
     }
@@ -44,7 +44,7 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
             <div className="-gap-2 flex flex-row">
                 {urls.slice(0, 3).map((url, index) => {
                     const host = getHost(url);
-                    const favIcon = getFavIcon(host ?? '');
+                    const favIcon = getFavIcon(host ?? "");
                     if (isValidUrl(url) && favIcon) {
                         return (
                             <div
@@ -52,7 +52,7 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
                                 key={index}
                             >
                                 <Image
-                                    alt={host ?? ''}
+                                    alt={host ?? ""}
                                     className="not-prose absolute inset-0 h-full w-full object-cover"
                                     fill
                                     src={favIcon}
@@ -62,7 +62,7 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
                     }
                     return null;
                 })}
-            </div>{' '}
+            </div>{" "}
             <div className="text-brand px-1 text-xs">{urls.length} sources</div>
         </div>
     );

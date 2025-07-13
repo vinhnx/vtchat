@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { authClient, useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { authClient, useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/logger";
 import {
     Alert,
     AlertDescription,
@@ -13,9 +13,9 @@ import {
     CardHeader,
     CardTitle,
     Separator,
-} from '@repo/ui';
-import { AlertCircle, CheckCircle, Monitor, Smartphone, Tablet, Trash2, Wifi } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "@repo/ui";
+import { AlertCircle, CheckCircle, Monitor, Smartphone, Tablet, Trash2, Wifi } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface DeviceSession {
     sessionToken: string;
@@ -32,30 +32,30 @@ interface MultiSessionPanelProps {
     className?: string;
 }
 
-const getDeviceIcon = (userAgent = '') => {
+const getDeviceIcon = (userAgent = "") => {
     const ua = userAgent.toLowerCase();
-    if (ua.includes('mobile') || ua.includes('android') || ua.includes('iphone')) {
+    if (ua.includes("mobile") || ua.includes("android") || ua.includes("iphone")) {
         return Smartphone;
     }
-    if (ua.includes('tablet') || ua.includes('ipad')) {
+    if (ua.includes("tablet") || ua.includes("ipad")) {
         return Tablet;
     }
     return Monitor;
 };
 
-const formatUserAgent = (userAgent = '') => {
-    if (!userAgent) return 'Unknown Device';
+const formatUserAgent = (userAgent = "") => {
+    if (!userAgent) return "Unknown Device";
 
     // Extract browser and OS info
     const match = userAgent.match(/(Chrome|Firefox|Safari|Edge)\/[\d.]+/);
-    const browser = match ? match[1] : 'Unknown Browser';
+    const browser = match ? match[1] : "Unknown Browser";
 
-    let os = 'Unknown OS';
-    if (userAgent.includes('Windows')) os = 'Windows';
-    else if (userAgent.includes('Mac')) os = 'macOS';
-    else if (userAgent.includes('Linux')) os = 'Linux';
-    else if (userAgent.includes('Android')) os = 'Android';
-    else if (userAgent.includes('iOS')) os = 'iOS';
+    let os = "Unknown OS";
+    if (userAgent.includes("Windows")) os = "Windows";
+    else if (userAgent.includes("Mac")) os = "macOS";
+    else if (userAgent.includes("Linux")) os = "Linux";
+    else if (userAgent.includes("Android")) os = "Android";
+    else if (userAgent.includes("iOS")) os = "iOS";
 
     return `${browser} on ${os}`;
 };
@@ -64,37 +64,37 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
     const { data: session } = useSession();
     const [sessions, setSessions] = useState<DeviceSession[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const [actionLoading, setActionLoading] = useState<string | null>(null);
 
     const fetchSessions = async () => {
         try {
             setLoading(true);
-            setError('');
+            setError("");
 
             // Check if multiSession is available
             if (
                 !authClient.multiSession ||
-                typeof authClient.multiSession.listDeviceSessions !== 'function'
+                typeof authClient.multiSession.listDeviceSessions !== "function"
             ) {
-                log.warn('MultiSession plugin not available or not properly configured');
+                log.warn("MultiSession plugin not available or not properly configured");
 
                 // Fallback: create a current session entry based on the current session data
                 if (session) {
                     const currentSession: DeviceSession = {
-                        sessionToken: 'current',
-                        userId: session.user?.id || '',
+                        sessionToken: "current",
+                        userId: session.user?.id || "",
                         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
                         userAgent: navigator.userAgent,
-                        ipAddress: 'Current Device',
+                        ipAddress: "Current Device",
                         isActive: true,
                     };
                     setSessions([currentSession]);
                 } else {
                     setSessions([]);
-                    setError('No active session found');
+                    setError("No active session found");
                 }
                 return;
             }
@@ -105,17 +105,17 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             if (Array.isArray(response)) {
                 setSessions(response);
             } else {
-                log.warn('listDeviceSessions returned non-array:', { data: response });
+                log.warn("listDeviceSessions returned non-array:", { data: response });
                 // Fallback for current session if multi-session API doesn't work
                 if (session) {
                     const currentSession: DeviceSession = {
-                        sessionToken: 'current',
-                        userId: session.user?.id || '',
+                        sessionToken: "current",
+                        userId: session.user?.id || "",
                         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
                         userAgent: navigator.userAgent,
-                        ipAddress: 'Current Device',
+                        ipAddress: "Current Device",
                         isActive: true,
                     };
                     setSessions([currentSession]);
@@ -124,25 +124,25 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                 }
             }
         } catch (err) {
-            log.error('Fetch sessions error:', { data: err });
+            log.error("Fetch sessions error:", { data: err });
 
             // Fallback: show current session even on error
             if (session) {
                 const currentSession: DeviceSession = {
-                    sessionToken: 'current',
-                    userId: session.user?.id || '',
+                    sessionToken: "current",
+                    userId: session.user?.id || "",
                     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     userAgent: navigator.userAgent,
-                    ipAddress: 'Current Device',
+                    ipAddress: "Current Device",
                     isActive: true,
                 };
                 setSessions([currentSession]);
-                setError('Unable to fetch all sessions, showing current session only');
+                setError("Unable to fetch all sessions, showing current session only");
             } else {
                 setSessions([]);
-                setError('Failed to fetch device sessions');
+                setError("Failed to fetch device sessions");
             }
         } finally {
             setLoading(false);
@@ -152,13 +152,13 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
     const handleSetActive = async (sessionToken: string) => {
         try {
             setActionLoading(sessionToken);
-            setError('');
+            setError("");
 
             if (
                 !authClient.multiSession ||
-                typeof authClient.multiSession.setActive !== 'function'
+                typeof authClient.multiSession.setActive !== "function"
             ) {
-                setError('Multi-session feature is not available');
+                setError("Multi-session feature is not available");
                 return;
             }
 
@@ -167,8 +167,8 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             // Refresh sessions to update active status
             await fetchSessions();
         } catch (err) {
-            setError('Failed to set active session');
-            log.error('Set active session error:', { data: err });
+            setError("Failed to set active session");
+            log.error("Set active session error:", { data: err });
         } finally {
             setActionLoading(null);
         }
@@ -177,10 +177,10 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
     const handleRevokeSession = async (sessionToken: string) => {
         try {
             setActionLoading(sessionToken);
-            setError('');
+            setError("");
 
-            if (!authClient.multiSession || typeof authClient.multiSession.revoke !== 'function') {
-                setError('Multi-session feature is not available');
+            if (!authClient.multiSession || typeof authClient.multiSession.revoke !== "function") {
+                setError("Multi-session feature is not available");
                 return;
             }
 
@@ -189,8 +189,8 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
             // Refresh sessions after revoking
             await fetchSessions();
         } catch (err) {
-            setError('Failed to revoke session');
-            log.error('Revoke session error:', { data: err });
+            setError("Failed to revoke session");
+            log.error("Revoke session error:", { data: err });
         } finally {
             setActionLoading(null);
         }
@@ -264,8 +264,8 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                     <div
                                         className={`flex items-center justify-between rounded-lg border p-3 ${
                                             isCurrentSession
-                                                ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
-                                                : ''
+                                                ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+                                                : ""
                                         }`}
                                         key={session.sessionToken}
                                     >
@@ -297,9 +297,9 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-muted-foreground text-xs">
-                                                        Created:{' '}
+                                                        Created:{" "}
                                                         {new Date(
-                                                            session.createdAt
+                                                            session.createdAt,
                                                         ).toLocaleDateString()}
                                                     </p>
                                                     {isCurrentSession && (
@@ -307,7 +307,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                                     )}
                                                 </div>
                                                 <p className="text-muted-foreground text-xs">
-                                                    Expires:{' '}
+                                                    Expires:{" "}
                                                     {new Date(session.expiresAt).toLocaleString()}
                                                 </p>
                                                 {session.ipAddress && (
@@ -332,7 +332,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
                                                     {actionLoading === session.sessionToken ? (
                                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                                                     ) : (
-                                                        'Set Active'
+                                                        "Set Active"
                                                     )}
                                                 </Button>
                                             )}

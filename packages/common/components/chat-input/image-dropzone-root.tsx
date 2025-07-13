@@ -1,6 +1,6 @@
-import type { FC } from 'react';
-import type { DropzoneState } from 'react-dropzone';
-import { ImageDropzone } from './image-dropzone';
+import type { FC } from "react";
+import type { DropzoneState } from "react-dropzone";
+import { ImageDropzone } from "./image-dropzone";
 
 export type IImageDropzoneRootProps = {
     children: React.ReactNode;

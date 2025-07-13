@@ -5,15 +5,15 @@
  * This script masks PII in existing embeddings
  */
 
-import { log } from '@repo/shared/logger';
-import { eq } from 'drizzle-orm';
-import { db } from '../apps/web/lib/database';
-import { embeddings } from '../apps/web/lib/database/schema';
-import { secureContentForEmbedding } from '../apps/web/lib/utils/content-security';
+import { log } from "@repo/shared/logger";
+import { eq } from "drizzle-orm";
+import { db } from "../apps/web/lib/database";
+import { embeddings } from "../apps/web/lib/database/schema";
+import { secureContentForEmbedding } from "../apps/web/lib/utils/content-security";
 
 async function migrateEmbeddingsContent() {
     try {
-        log.info('Starting embeddings content security migration...');
+        log.info("Starting embeddings content security migration...");
 
         // Get all embeddings that need to be secured
         const allEmbeddings = await db
@@ -58,10 +58,10 @@ async function migrateEmbeddingsContent() {
         }
 
         log.info(
-            `Migration completed: ${securedCount} embeddings secured out of ${processedCount} total`
+            `Migration completed: ${securedCount} embeddings secured out of ${processedCount} total`,
         );
     } catch (error) {
-        log.error('Error during embeddings migration:', error);
+        log.error("Error during embeddings migration:", error);
         throw error;
     }
 }
@@ -70,11 +70,11 @@ async function migrateEmbeddingsContent() {
 if (require.main === module) {
     migrateEmbeddingsContent()
         .then(() => {
-            log.info('Embeddings security migration completed successfully');
+            log.info("Embeddings security migration completed successfully");
             process.exit(0);
         })
         .catch((error) => {
-            log.error('Migration failed:', error);
+            log.error("Migration failed:", error);
             process.exit(1);
         });
 }

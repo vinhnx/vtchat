@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/lib/logger';
-import { Button } from '@repo/ui';
-import { Download, Smartphone, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { swManager } from '../lib/service-worker-manager';
+import { log } from "@repo/shared/lib/logger";
+import { Button } from "@repo/ui";
+import { Download, Smartphone, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { swManager } from "../lib/service-worker-manager";
 
 interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
     readonly userChoice: Promise<{
-        outcome: 'accepted' | 'dismissed';
+        outcome: "accepted" | "dismissed";
         platform: string;
     }>;
     prompt(): Promise<void>;
@@ -24,10 +24,10 @@ export function PWAManager() {
 
     useEffect(() => {
         // Check if PWA is supported
-        setIsSupported(typeof window !== 'undefined' && 'serviceWorker' in navigator);
+        setIsSupported(typeof window !== "undefined" && "serviceWorker" in navigator);
 
         // Check if already installed
-        setIsInstalled(window.matchMedia('(display-mode: standalone)').matches);
+        setIsInstalled(window.matchMedia("(display-mode: standalone)").matches);
 
         // Check if iOS
         const isIOSDevice =
@@ -35,9 +35,9 @@ export function PWAManager() {
         setIsIOS(isIOSDevice);
 
         // Register service worker using our manager (production only)
-        if (process.env.NODE_ENV === 'production' && swManager) {
+        if (process.env.NODE_ENV === "production" && swManager) {
             swManager.register().catch((error) => {
-                log.error({ error }, 'Service Worker registration failed');
+                log.error({ error }, "Service Worker registration failed");
             });
         }
 
@@ -47,7 +47,7 @@ export function PWAManager() {
             setDeferredPrompt(e as BeforeInstallPromptEvent);
         };
 
-        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
         // Listen for app installed event
         const handleAppInstalled = () => {
@@ -56,11 +56,11 @@ export function PWAManager() {
             setShowIOSInstructions(false);
         };
 
-        window.addEventListener('appinstalled', handleAppInstalled);
+        window.addEventListener("appinstalled", handleAppInstalled);
 
         return () => {
-            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-            window.removeEventListener('appinstalled', handleAppInstalled);
+            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+            window.removeEventListener("appinstalled", handleAppInstalled);
         };
     }, []);
 
@@ -69,7 +69,7 @@ export function PWAManager() {
             // Chrome/Edge install prompt
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
+            if (outcome === "accepted") {
                 setDeferredPrompt(null);
             }
         } else if (isIOS && !isInstalled) {
@@ -119,7 +119,7 @@ export function PWAManager() {
                                     1
                                 </div>
                                 <p className="text-sm">
-                                    Tap the <strong>Share</strong> button{' '}
+                                    Tap the <strong>Share</strong> button{" "}
                                     <span className="inline-block text-blue-600">⎋</span> at the
                                     bottom
                                 </p>
@@ -130,7 +130,7 @@ export function PWAManager() {
                                     2
                                 </div>
                                 <p className="text-sm">
-                                    Select <strong>"Add to Home Screen"</strong>{' '}
+                                    Select <strong>"Add to Home Screen"</strong>{" "}
                                     <span className="inline-block text-blue-600">➕</span>
                                 </p>
                             </div>

@@ -1,9 +1,9 @@
-'use client';
-import { log } from '@repo/shared/logger';
-import { initHotjar } from '@repo/shared/utils';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useThreadAuth } from '../hooks';
-import { initializeStorageCleanup } from '../utils/storage-cleanup';
+"use client";
+import { log } from "@repo/shared/logger";
+import { initHotjar } from "@repo/shared/utils";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useThreadAuth } from "../hooks";
+import { initializeStorageCleanup } from "../utils/storage-cleanup";
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -29,24 +29,24 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         setIsClient(true);
         // Only initialize Hotjar on client side and after component has mounted
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
             try {
                 initHotjar();
             } catch (error) {
-                log.warn({ data: error }, 'Failed to initialize Hotjar');
+                log.warn({ data: error }, "Failed to initialize Hotjar");
             }
 
             try {
                 // Initialize storage cleanup to handle corrupted localStorage data
                 initializeStorageCleanup();
             } catch (error) {
-                log.warn({ data: error }, 'Failed to initialize storage cleanup');
+                log.warn({ data: error }, "Failed to initialize storage cleanup");
             }
         }
     }, []);
 
     // During SSR, provide a consistent initial state
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
         const ssrContextValue: RootContextType = {
             isSidebarOpen: true,
             setIsSidebarOpen: () => {},
@@ -80,7 +80,7 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
 export const useRootContext = () => {
     const context = useContext(RootContext);
     if (!context) {
-        throw new Error('useRootContext must be used within a RootProvider');
+        throw new Error("useRootContext must be used within a RootProvider");
     }
     return context;
 };

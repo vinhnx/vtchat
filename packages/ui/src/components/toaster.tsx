@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { AlertCircle, Check } from 'lucide-react';
-import { Button } from './button';
+import { AlertCircle, Check } from "lucide-react";
+import { Button } from "./button";
 import {
     Toast,
     ToastClose,
@@ -9,8 +9,8 @@ import {
     ToastProvider,
     ToastTitle,
     ToastViewport,
-} from './toast';
-import { useToast } from './use-toast';
+} from "./toast";
+import { useToast } from "./use-toast";
 
 export function Toaster() {
     const { toasts, dismiss } = useToast();
@@ -20,7 +20,7 @@ export function Toaster() {
             {toasts.map(({ id, title, description, action, ...props }) => (
                 <Toast key={id} {...props}>
                     <div className="flex flex-row gap-3">
-                        {props.variant === 'destructive' ? (
+                        {props.variant === "destructive" ? (
                             <AlertCircle
                                 className="mt-1 flex-shrink-0 text-white"
                                 size={18}

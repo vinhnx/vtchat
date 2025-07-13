@@ -1,14 +1,14 @@
-import { isUserAdmin } from '@/lib/admin';
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { embeddings } from '@/lib/database/schema';
-import { containsPII, secureContentForEmbedding } from '@/lib/utils/content-security';
-import { log } from '@repo/shared/logger';
-import { sql } from 'drizzle-orm';
-import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { log } from "@repo/shared/logger";
+import { sql } from "drizzle-orm";
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
+import { isUserAdmin } from "@/lib/admin";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { embeddings } from "@/lib/database/schema";
+import { containsPII, secureContentForEmbedding } from "@/lib/utils/content-security";
 
-export async function POST(req: Request) {
+export async function POST(_req: Request) {
     try {
         // Verify admin access
         const session = await auth.api.getSession({
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         });
 
         if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const adminStatus = await isUserAdmin(session.user.id);
@@ -24,9 +24,9 @@ export async function POST(req: Request) {
         if (!adminStatus) {
             return NextResponse.json(
                 {
-                    error: 'Insufficient permissions - admin role required',
+                    error: "Insufficient permissions - admin role required",
                 },
-                { status: 403 }
+                { status: 403 },
             );
         }
 
@@ -80,22 +80,22 @@ export async function POST(req: Request) {
                 adminId: session.user.id,
                 ...result,
             },
-            'Admin applied embeddings obfuscation'
+            "Admin applied embeddings obfuscation",
         );
 
         return NextResponse.json({
-            message: 'Embeddings obfuscation completed successfully',
+            message: "Embeddings obfuscation completed successfully",
             result,
         });
     } catch (error) {
-        log.error({ error }, 'Failed to obfuscate embeddings');
+        log.error({ error }, "Failed to obfuscate embeddings");
 
         return NextResponse.json(
             {
-                error: 'Obfuscation failed',
-                details: error instanceof Error ? error.message : 'Unknown error',
+                error: "Obfuscation failed",
+                details: error instanceof Error ? error.message : "Unknown error",
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -108,7 +108,7 @@ export async function GET() {
         });
 
         if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const adminStatus = await isUserAdmin(session.user.id);
@@ -116,9 +116,9 @@ export async function GET() {
         if (!adminStatus) {
             return NextResponse.json(
                 {
-                    error: 'Insufficient permissions - admin role required',
+                    error: "Insufficient permissions - admin role required",
                 },
-                { status: 403 }
+                { status: 403 },
             );
         }
 
@@ -144,17 +144,17 @@ export async function GET() {
         };
 
         return NextResponse.json({
-            message: 'Obfuscation status retrieved',
+            message: "Obfuscation status retrieved",
             status,
         });
     } catch (error) {
-        log.error({ error }, 'Status check error');
+        log.error({ error }, "Status check error");
         return NextResponse.json(
             {
-                error: 'Status check failed',
-                details: error instanceof Error ? error.message : 'Unknown error',
+                error: "Status check failed",
+                details: error instanceof Error ? error.message : "Unknown error",
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

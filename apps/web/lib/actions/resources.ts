@@ -1,19 +1,19 @@
-'use server';
+"use server";
 
-import { secureContentForEmbedding } from '@/lib/utils/content-security';
-import type { ApiKeys } from '@repo/common/store';
-import type { EmbeddingModel } from '@repo/shared/config/embedding-models';
-import { log } from '@repo/shared/logger';
-import { headers } from 'next/headers';
-import { z } from 'zod';
-import { generateEmbeddings } from '../ai/embedding';
-import { auth } from '../auth-server';
-import { db } from '../database';
-import { embeddings, resources } from '../database/schema';
+import type { ApiKeys } from "@repo/common/store";
+import type { EmbeddingModel } from "@repo/shared/config/embedding-models";
+import { log } from "@repo/shared/logger";
+import { headers } from "next/headers";
+import { z } from "zod";
+import { secureContentForEmbedding } from "@/lib/utils/content-security";
+import { generateEmbeddings } from "../ai/embedding";
+import { auth } from "../auth-server";
+import { db } from "../database";
+import { embeddings, resources } from "../database/schema";
 
 // Schema for validating resource input
 const createResourceSchema = z.object({
-    content: z.string().min(1, 'Content is required'),
+    content: z.string().min(1, "Content is required"),
 });
 
 export type NewResourceParams = z.infer<typeof createResourceSchema>;
@@ -21,7 +21,7 @@ export type NewResourceParams = z.infer<typeof createResourceSchema>;
 export const createResource = async (
     input: NewResourceParams,
     apiKeys: ApiKeys,
-    embeddingModel?: EmbeddingModel
+    embeddingModel?: EmbeddingModel,
 ) => {
     try {
         // Get the current user
@@ -30,7 +30,7 @@ export const createResource = async (
         });
 
         if (!session?.user?.id) {
-            throw new Error('Unauthorized');
+            throw new Error("Unauthorized");
         }
 
         const { content } = createResourceSchema.parse(input);
@@ -53,14 +53,14 @@ export const createResource = async (
                 resourceId: resource.id,
                 content: secureContentForEmbedding(embedding.content),
                 embedding: embedding.embedding,
-            }))
+            })),
         );
 
-        return 'Resource successfully created and embedded.';
+        return "Resource successfully created and embedded.";
     } catch (error) {
-        log.error({ error }, 'Error creating resource');
+        log.error({ error }, "Error creating resource");
         return error instanceof Error && error.message.length > 0
             ? error.message
-            : 'Error, please try again.';
+            : "Error, please try again.";
     }
 };

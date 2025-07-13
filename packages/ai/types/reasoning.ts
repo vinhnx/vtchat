@@ -6,13 +6,13 @@
 /**
  * Reasoning detail content types
  */
-export type ReasoningDetailType = 'text' | 'redacted';
+export type ReasoningDetailType = "text" | "redacted";
 
 /**
  * Text reasoning detail
  */
 export interface TextReasoningDetail {
-    type: 'text';
+    type: "text";
     text: string;
     signature?: string;
 }
@@ -21,7 +21,7 @@ export interface TextReasoningDetail {
  * Redacted reasoning detail
  */
 export interface RedactedReasoningDetail {
-    type: 'redacted';
+    type: "redacted";
     data: string;
 }
 

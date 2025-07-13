@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Card,
@@ -9,8 +9,8 @@ import {
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from '@repo/ui';
-import { Clock, Database, HardDrive, Zap } from 'lucide-react';
+} from "@repo/ui";
+import { Clock, Database, HardDrive, Zap } from "lucide-react";
 import {
     Bar,
     BarChart,
@@ -21,57 +21,57 @@ import {
     Pie,
     PieChart,
     XAxis,
-} from 'recharts';
+} from "recharts";
 
 const chartConfig = {
     queries: {
-        label: 'Queries/sec',
-        color: '#D9487D',
+        label: "Queries/sec",
+        color: "#D9487D",
     },
     connections: {
-        label: 'Active Connections',
-        color: '#262626',
+        label: "Active Connections",
+        color: "#262626",
     },
     size: {
-        label: 'Database Size',
-        color: '#BFB38F',
+        label: "Database Size",
+        color: "#BFB38F",
     },
     performance: {
-        label: 'Performance',
-        color: '#D99A4E',
+        label: "Performance",
+        color: "#D99A4E",
     },
 } satisfies ChartConfig;
 
 export function DatabaseMetricsChart() {
     // Mock database metrics (in real app, these would come from database monitoring)
     const queryPerformanceData = [
-        { time: '00:00', queries: 45, connections: 12 },
-        { time: '04:00', queries: 23, connections: 8 },
-        { time: '08:00', queries: 89, connections: 25 },
-        { time: '12:00', queries: 156, connections: 42 },
-        { time: '16:00', queries: 134, connections: 38 },
-        { time: '20:00', queries: 98, connections: 28 },
+        { time: "00:00", queries: 45, connections: 12 },
+        { time: "04:00", queries: 23, connections: 8 },
+        { time: "08:00", queries: 89, connections: 25 },
+        { time: "12:00", queries: 156, connections: 42 },
+        { time: "16:00", queries: 134, connections: 38 },
+        { time: "20:00", queries: 98, connections: 28 },
     ];
 
     const storageData = [
-        { name: 'Users Data', value: 45, fill: '#D9487D' },
-        { name: 'Chat History', value: 30, fill: '#262626' },
-        { name: 'Files', value: 15, fill: '#BFB38F' },
-        { name: 'System', value: 10, fill: '#D99A4E' },
+        { name: "Users Data", value: 45, fill: "#D9487D" },
+        { name: "Chat History", value: 30, fill: "#262626" },
+        { name: "Files", value: 15, fill: "#BFB38F" },
+        { name: "System", value: 10, fill: "#D99A4E" },
     ];
 
     const slowQueriesData = [
-        { query: 'User Search', avgTime: 1200, count: 45 },
-        { query: 'Chat Fetch', avgTime: 800, count: 123 },
-        { query: 'File Upload', avgTime: 2100, count: 23 },
-        { query: 'Analytics', avgTime: 3400, count: 12 },
+        { query: "User Search", avgTime: 1200, count: 45 },
+        { query: "Chat Fetch", avgTime: 800, count: 123 },
+        { query: "File Upload", avgTime: 2100, count: 23 },
+        { query: "Analytics", avgTime: 3400, count: 12 },
     ];
 
     const maintenanceData = [
-        { task: 'Vacuum', status: 'Completed', lastRun: '2 hours ago' },
-        { task: 'Reindex', status: 'Completed', lastRun: '1 day ago' },
-        { task: 'Backup', status: 'Running', lastRun: '30 min ago' },
-        { task: 'Analytics', status: 'Scheduled', lastRun: '6 hours ago' },
+        { task: "Vacuum", status: "Completed", lastRun: "2 hours ago" },
+        { task: "Reindex", status: "Completed", lastRun: "1 day ago" },
+        { task: "Backup", status: "Running", lastRun: "30 min ago" },
+        { task: "Analytics", status: "Scheduled", lastRun: "6 hours ago" },
     ];
 
     return (
@@ -186,11 +186,11 @@ export function DatabaseMetricsChart() {
                             </div>
                             <div
                                 className={`px-2 py-1 rounded-full text-xs ${
-                                    task.status === 'Completed'
-                                        ? 'bg-muted text-foreground'
-                                        : task.status === 'Running'
-                                          ? 'bg-muted text-muted-foreground'
-                                          : 'bg-muted text-muted-foreground'
+                                    task.status === "Completed"
+                                        ? "bg-muted text-foreground"
+                                        : task.status === "Running"
+                                          ? "bg-muted text-muted-foreground"
+                                          : "bg-muted text-muted-foreground"
                                 }`}
                             >
                                 {task.status}

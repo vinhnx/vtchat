@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/lib/logger';
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
-import { PaginationState } from '@tanstack/react-table';
-import { motion } from 'framer-motion';
-import { Activity, CheckCircle, CreditCard, Users } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { ErrorBoundary } from '@repo/common/components';
-import { createColumns, User } from './columns';
-import { DataTable } from './data-table';
+import { ErrorBoundary } from "@repo/common/components";
+import { log } from "@repo/shared/lib/logger";
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui";
+import type { PaginationState } from "@tanstack/react-table";
+import { motion } from "framer-motion";
+import { Activity, CheckCircle, CreditCard, Users } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { createColumns, type User } from "./columns";
+import { DataTable } from "./data-table";
 
 interface UserStats {
     totalUsers: number;
@@ -39,9 +39,9 @@ export default function AdminUsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [stats, setStats] = useState<UserStats | null>(null);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [planFilter, setPlanFilter] = useState('all');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [searchTerm, setSearchTerm] = useState("");
+    const [planFilter, setPlanFilter] = useState("all");
+    const [statusFilter, setStatusFilter] = useState("all");
 
     // TanStack table pagination state
     const [pagination, setPagination] = useState<PaginationState>({
@@ -59,30 +59,30 @@ export default function AdminUsersPage() {
                     limit: pageSize.toString(),
                 });
 
-                if (searchTerm) params.append('search', searchTerm);
-                if (planFilter && planFilter !== 'all') params.append('plan', planFilter);
-                if (statusFilter && statusFilter !== 'all') params.append('status', statusFilter);
+                if (searchTerm) params.append("search", searchTerm);
+                if (planFilter && planFilter !== "all") params.append("plan", planFilter);
+                if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
 
                 const response = await fetch(`/api/admin/users?${params}`);
-                if (!response.ok) throw new Error('Failed to fetch users');
+                if (!response.ok) throw new Error("Failed to fetch users");
 
                 const data: ApiResponse = await response.json();
                 setUsers(data.users || []);
                 setStats(data.statistics || null);
                 setPageCount(data.pagination?.totalPages || 0);
             } catch (error) {
-                log.error({ error }, 'Failed to fetch users');
+                log.error({ error }, "Failed to fetch users");
             } finally {
                 setLoading(false);
             }
         },
-        [searchTerm, planFilter, statusFilter, pagination.pageIndex, pagination.pageSize]
+        [searchTerm, planFilter, statusFilter, pagination.pageIndex, pagination.pageSize],
     );
 
     useEffect(() => {
         // Reset to first page when filters change
         setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    }, [searchTerm, planFilter, statusFilter]);
+    }, []);
 
     useEffect(() => {
         fetchUsers();
@@ -90,18 +90,18 @@ export default function AdminUsersPage() {
 
     const handleUserAction = async (userId: string, action: string, data?: any) => {
         try {
-            const response = await fetch('/api/admin/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch("/api/admin/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ action, userId, data }),
             });
 
-            if (!response.ok) throw new Error('Failed to update user');
+            if (!response.ok) throw new Error("Failed to update user");
 
             // Refresh the users list
             fetchUsers();
         } catch (error) {
-            log.error({ error }, 'Failed to update user');
+            log.error({ error }, "Failed to update user");
         }
     };
 
@@ -166,9 +166,9 @@ export default function AdminUsersPage() {
                                 </div>
                                 <div className="text-muted-foreground text-xs">
                                     <Badge variant="default" className="mr-1">
-                                        {typeof stats.conversionRate === 'string'
+                                        {typeof stats.conversionRate === "string"
                                             ? stats.conversionRate
-                                            : '0.00'}
+                                            : "0.00"}
                                         %
                                     </Badge>
                                     conversion rate
@@ -202,9 +202,9 @@ export default function AdminUsersPage() {
                                 </div>
                                 <div className="text-muted-foreground text-xs">
                                     <Badge variant="secondary" className="mr-1">
-                                        {typeof stats.verificationRate === 'string'
+                                        {typeof stats.verificationRate === "string"
                                             ? stats.verificationRate
-                                            : '0.00'}
+                                            : "0.00"}
                                         %
                                     </Badge>
                                     verified

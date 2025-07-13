@@ -33,7 +33,7 @@ export function isAnalyticsConfigured(): boolean {
  * Get analytics provider name for logging
  */
 export function getAnalyticsProvider(): string {
-    return 'none';
+    return "none";
 }
 
 /**

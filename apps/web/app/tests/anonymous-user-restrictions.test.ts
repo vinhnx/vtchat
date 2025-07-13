@@ -3,16 +3,16 @@
  * These features should require authentication (logged-in users)
  */
 
-import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
-import { describe, expect, it } from 'vitest';
+import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
+import { describe, expect, it } from "vitest";
 
-describe('Anonymous User Restrictions', () => {
-    it('should have restricted ANONYMOUS plan with only basic features', () => {
+describe("Anonymous User Restrictions", () => {
+    it("should have restricted ANONYMOUS plan with only basic features", () => {
         const anonymousPlan = PLANS[PlanSlug.ANONYMOUS];
 
         expect(anonymousPlan).toBeDefined();
         expect(anonymousPlan.slug).toBe(PlanSlug.ANONYMOUS);
-        expect(anonymousPlan.name).toBe('Anonymous');
+        expect(anonymousPlan.name).toBe("Anonymous");
 
         // Should only have basic features
         const allowedFeatures = [
@@ -41,7 +41,7 @@ describe('Anonymous User Restrictions', () => {
         });
     });
 
-    it('should have VT_BASE plan with advanced features for logged-in users', () => {
+    it("should have VT_BASE plan with advanced features for logged-in users", () => {
         const basePlan = PLANS[PlanSlug.VT_BASE];
 
         expect(basePlan).toBeDefined();
@@ -65,7 +65,7 @@ describe('Anonymous User Restrictions', () => {
         });
     });
 
-    it('should ensure VT+ plan still has exclusive features', () => {
+    it("should ensure VT+ plan still has exclusive features", () => {
         const plusPlan = PLANS[PlanSlug.VT_PLUS];
 
         expect(plusPlan).toBeDefined();
@@ -83,7 +83,7 @@ describe('Anonymous User Restrictions', () => {
         });
     });
 
-    it('should verify plan hierarchy is correct', () => {
+    it("should verify plan hierarchy is correct", () => {
         const anonymousPlan = PLANS[PlanSlug.ANONYMOUS];
         const basePlan = PLANS[PlanSlug.VT_BASE];
         const plusPlan = PLANS[PlanSlug.VT_PLUS];

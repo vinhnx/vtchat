@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -8,10 +8,10 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@repo/ui';
-import { LogIn } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+} from "@repo/ui";
+import { LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 export interface LoginRequiredDialogProps {
     /** Whether the dialog is open */
@@ -60,11 +60,11 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
     ({
         isOpen,
         onClose,
-        title = 'Sign in to Continue',
-        description = 'Join VTChat to unlock all features and save your conversations. It only takes a moment!',
+        title = "Sign in to Continue",
+        description = "Join VTChat to unlock all features and save your conversations. It only takes a moment!",
         redirectUrl,
-        cancelText = 'Not Now',
-        loginText = 'Sign In',
+        cancelText = "Not Now",
+        loginText = "Sign In",
         showCancel = true,
     }) => {
         const router = useRouter();
@@ -73,7 +73,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
             onClose();
             const loginUrl = redirectUrl
                 ? `/login?redirect_url=${encodeURIComponent(redirectUrl)}`
-                : '/login';
+                : "/login";
             router.push(loginUrl);
         };
 
@@ -102,7 +102,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
                 </DialogContent>
             </Dialog>
         );
-    }
+    },
 );
 
 /**
@@ -136,7 +136,7 @@ export const withLoginRequired = <T extends Record<string, any>>(
     options?: {
         title?: string;
         description?: string;
-    }
+    },
 ) => {
     const WithLoginRequired = (props: T & { isSignedIn: boolean }) => {
         const { isSignedIn, ...componentProps } = props;
@@ -154,7 +154,7 @@ export const withLoginRequired = <T extends Record<string, any>>(
                         }}
                         style={{
                             opacity: 0.7,
-                            cursor: 'pointer',
+                            cursor: "pointer",
                         }}
                     />
                     <LoginRequiredDialog

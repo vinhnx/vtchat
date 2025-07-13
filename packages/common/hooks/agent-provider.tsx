@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { getModelFromChatMode } from '@repo/ai/models';
-import { useWorkflowWorker } from '@repo/ai/worker';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { getRateLimitMessage } from '@repo/shared/constants';
-import { UserTier } from '@repo/shared/constants/user-tiers';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
-import type { ThreadItem } from '@repo/shared/types';
-import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
-import { generateThreadId } from '@repo/shared/lib/thread-id';
-import { useParams, useRouter } from 'next/navigation';
+import { getModelFromChatMode } from "@repo/ai/models";
+import { useWorkflowWorker } from "@repo/ai/worker";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { getRateLimitMessage } from "@repo/shared/constants";
+import { UserTier } from "@repo/shared/constants/user-tiers";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { generateThreadId } from "@repo/shared/lib/thread-id";
+import { log } from "@repo/shared/logger";
+import type { ThreadItem } from "@repo/shared/types";
+import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from "@repo/shared/utils";
+import { useParams, useRouter } from "next/navigation";
 import {
     createContext,
     type ReactNode,
@@ -20,26 +20,26 @@ import {
     useMemo,
     useRef,
     useState,
-} from 'react';
-import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
-import { useApiKeysStore, useChatStore } from '../store';
-import { isGeminiModel } from '../utils/document-processing';
+} from "react";
+import { ApiKeyPromptModal } from "../components/api-key-prompt-modal";
+import { useApiKeysStore, useChatStore } from "../store";
+import { isGeminiModel } from "../utils/document-processing";
 
-import { useGenerationTimeout } from './use-generation-timeout';
-import { useVtPlusAccess } from './use-subscription-access';
+import { useGenerationTimeout } from "./use-generation-timeout";
+import { useVtPlusAccess } from "./use-subscription-access";
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
-    'steps',
-    'sources',
-    'answer',
-    'error',
-    'status',
-    'suggestions',
-    'toolCalls',
-    'toolResults',
-    'object',
-    'toolRouter',
+    "steps",
+    "sources",
+    "answer",
+    "error",
+    "status",
+    "suggestions",
+    "toolCalls",
+    "toolResults",
+    "object",
+    "toolRouter",
 ] as const;
 
 export type AgentContextType = {
@@ -114,7 +114,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             eventType: string,
             eventData: any,
             parentThreadItemId?: string,
-            _shouldPersistToDB = true
+            _shouldPersistToDB = true,
         ) => {
             const prevItem = threadItemMap.get(threadItemId) || ({} as ThreadItem);
 
@@ -122,7 +122,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             let reasoning = prevItem.reasoning;
             let reasoningDetails = prevItem.reasoningDetails;
 
-            if (eventType === 'steps' && eventData?.steps) {
+            if (eventType === "steps" && eventData?.steps) {
                 // Look for reasoning in the steps structure
                 const stepsData = eventData.steps;
                 if (stepsData[0]?.steps?.reasoning?.data) {
@@ -135,13 +135,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             }
 
             // Handle reasoning details from answer events if present
-            if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
+            if (eventType === "answer" && eventData?.answer?.reasoningDetails) {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
 
             const updatedItem: ThreadItem = {
                 ...prevItem,
-                query: eventData?.query || prevItem.query || '',
+                query: eventData?.query || prevItem.query || "",
                 mode: eventData?.mode || prevItem.mode,
                 threadId,
                 parentId: parentThreadItemId || prevItem.parentId,
@@ -151,11 +151,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 reasoningDetails,
                 createdAt: prevItem.createdAt || new Date(),
                 updatedAt: new Date(),
-                ...(eventType === 'answer'
+                ...(eventType === "answer"
                     ? {
                           answer: {
                               ...eventData.answer,
-                              text: (prevItem.answer?.text || '') + eventData.answer.text,
+                              text: (prevItem.answer?.text || "") + eventData.answer.text,
                           },
                       }
                     : { [eventType]: eventData[eventType] }),
@@ -164,7 +164,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             threadItemMap.set(threadItemId, updatedItem);
             updateThreadItem(threadId, { ...updatedItem, persistToDB: true });
         },
-        [threadItemMap, updateThreadItem]
+        [threadItemMap, updateThreadItem],
     );
 
     const { startWorkflow, abortWorkflow } = useWorkflowWorker(
@@ -181,18 +181,18 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         data.threadItemId,
                         data.event,
                         data,
-                        data.parentThreadItemId
+                        data.parentThreadItemId,
                     );
                 }
 
-                if (data.type === 'done') {
+                if (data.type === "done") {
                     setIsGenerating(false);
                     // Don't delete the thread item from memory as it's needed for future reference
                     // The threadItemMap serves as a cache and should retain completed items
                 }
             },
-            [handleThreadItemUpdate, setIsGenerating]
-        )
+            [handleThreadItemUpdate, setIsGenerating],
+        ),
     );
 
     // Setup page cleanup listeners
@@ -200,7 +200,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         const activeControllers = activeControllersRef.current;
 
         const handleBeforeUnload = () => {
-            log.info('Page unloading, aborting active connections');
+            log.info("Page unloading, aborting active connections");
             activeControllers.forEach((controller) => {
                 if (!controller.signal.aborted) {
                     controller.abort();
@@ -211,16 +211,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                log.debug('Tab hidden, connections will timeout naturally');
+                log.debug("Tab hidden, connections will timeout naturally");
             }
         };
 
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             // Cleanup any remaining connections
             activeControllers.forEach((controller) => {
                 if (!controller.signal.aborted) {
@@ -241,12 +241,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsGenerating(true);
             const startTime = performance.now();
 
-            abortController.signal.addEventListener('abort', () => {
-                log.info({ threadId: body.threadId }, 'Abort controller triggered');
+            abortController.signal.addEventListener("abort", () => {
+                log.info({ threadId: body.threadId }, "Abort controller triggered");
                 setIsGenerating(false);
                 updateThreadItem(body.threadId, {
                     id: body.threadItemId,
-                    status: 'ABORTED',
+                    status: "ABORTED",
                     persistToDB: true,
                 });
                 // Remove from tracking
@@ -254,12 +254,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             });
 
             try {
-                const response = await fetch('/api/completion', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("/api/completion", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body),
-                    credentials: 'include',
-                    cache: 'no-store',
+                    credentials: "include",
+                    cache: "no-store",
                     signal: abortController.signal,
                 });
 
@@ -271,15 +271,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             const errorData = JSON.parse(errorText);
                             if (errorData.message) {
                                 errorText = errorData.message;
-                            } else if (errorData.limitType === 'daily_limit_exceeded') {
+                            } else if (errorData.limitType === "daily_limit_exceeded") {
                                 errorText = getRateLimitMessage.dailyLimit(
                                     isSignedIn,
-                                    hasVtPlusAccess
+                                    hasVtPlusAccess,
                                 );
                             } else {
                                 errorText = getRateLimitMessage.minuteLimit(
                                     isSignedIn,
-                                    hasVtPlusAccess
+                                    hasVtPlusAccess,
                                 );
                             }
                         } catch {
@@ -291,16 +291,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     setIsGenerating(false);
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: 'ERROR',
+                        status: "ERROR",
                         error: errorText,
                         persistToDB: true,
                     });
-                    log.error({ errorText, status: response.status }, 'Error response received');
+                    log.error({ errorText, status: response.status }, "Error response received");
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 if (!response.body) {
-                    throw new Error('No response body received');
+                    throw new Error("No response body received");
                 }
 
                 const reader = response.body.getReader();
@@ -310,7 +310,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 let eventCount = 0;
                 const streamStartTime = performance.now();
 
-                let buffer = '';
+                let buffer = "";
 
                 while (true) {
                     try {
@@ -318,8 +318,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         if (done) break;
 
                         buffer += decoder.decode(value, { stream: true });
-                        const messages = buffer.split('\n\n');
-                        buffer = messages.pop() || '';
+                        const messages = buffer.split("\n\n");
+                        buffer = messages.pop() || "";
 
                         for (const message of messages) {
                             if (!message.trim()) continue;
@@ -346,12 +346,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             currentEvent,
                                             data,
                                             data.parentThreadItemId,
-                                            shouldPersistToDB
+                                            shouldPersistToDB,
                                         );
                                         if (shouldPersistToDB) {
                                             lastDbUpdate = Date.now();
                                         }
-                                    } else if (currentEvent === 'done' && data.type === 'done') {
+                                    } else if (currentEvent === "done" && data.type === "done") {
                                         setIsGenerating(false);
                                         const streamDuration = performance.now() - streamStartTime;
                                         log.info(
@@ -359,20 +359,20 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                                 eventCount,
                                                 streamDurationMs: streamDuration.toFixed(2),
                                             },
-                                            'done event received'
+                                            "done event received",
                                         );
 
                                         // Handle quota exceeded specifically
-                                        if (data.status === 'quota_exceeded') {
-                                            log.warn({ error: data.error }, 'VT+ quota exceeded');
+                                        if (data.status === "quota_exceeded") {
+                                            log.warn({ error: data.error }, "VT+ quota exceeded");
                                             // Error will be handled by the thread item component
                                         }
 
                                         // Record rate limit usage for successful Gemini completions
                                         if (
-                                            data.status !== 'error' &&
-                                            data.status !== 'aborted' &&
-                                            data.status !== 'quota_exceeded'
+                                            data.status !== "error" &&
+                                            data.status !== "aborted" &&
+                                            data.status !== "quota_exceeded"
                                         ) {
                                             const modelId = getModelFromChatMode(body.mode);
                                             const isGemini =
@@ -382,9 +382,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                                 fetch(
                                                     `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`,
                                                     {
-                                                        method: 'POST',
-                                                        credentials: 'include',
-                                                    }
+                                                        method: "POST",
+                                                        credentials: "include",
+                                                    },
                                                 ).catch(() => {
                                                     // Fail silently - server-side safety net will handle recording
                                                 });
@@ -394,8 +394,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                         if (data.threadItemId) {
                                             threadItemMap.delete(data.threadItemId);
                                         }
-                                        if (data.status === 'error') {
-                                            log.error({ error: data.error }, 'Stream error');
+                                        if (data.status === "error") {
+                                            log.error({ error: data.error }, "Stream error");
                                         }
                                     }
                                 } catch (jsonError) {
@@ -404,13 +404,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             rawData: dataMatch[1],
                                             error: jsonError,
                                         },
-                                        'JSON parse error for data'
+                                        "JSON parse error for data",
                                     );
                                 }
                             }
                         }
                     } catch (readError) {
-                        log.error({ error: readError }, 'Error reading from stream');
+                        log.error({ error: readError }, "Error reading from stream");
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
                 }
@@ -421,26 +421,26 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         error: streamError,
                         totalTimeMs: totalTime.toFixed(2),
                     },
-                    'Fatal stream error'
+                    "Fatal stream error",
                 );
                 setIsGenerating(false);
-                if (streamError.name === 'AbortError') {
+                if (streamError.name === "AbortError") {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: 'ABORTED',
-                        error: 'Generation aborted',
+                        status: "ABORTED",
+                        error: "Generation aborted",
                     });
-                } else if (streamError.message.includes('429')) {
+                } else if (streamError.message.includes("429")) {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: 'ERROR',
+                        status: "ERROR",
                         error: getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess),
                     });
                 } else {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: 'ERROR',
-                        error: 'Something went wrong. Please try again.',
+                        status: "ERROR",
+                        error: "Something went wrong. Please try again.",
                     });
                 }
             } finally {
@@ -450,7 +450,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 activeControllersRef.current.delete(abortController);
 
                 const totalTime = performance.now() - startTime;
-                log.info({ totalTimeMs: totalTime.toFixed(2) }, 'Stream completed');
+                log.info({ totalTimeMs: totalTime.toFixed(2) }, "Stream completed");
             }
         },
         [
@@ -461,7 +461,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             isSignedIn,
             hasVtPlusAccess,
             threadItemMap,
-        ]
+        ],
     );
 
     const handleSubmit = useCallback(
@@ -489,14 +489,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             // Debounce rapid submissions
             const now = Date.now();
             if (now - lastSubmissionRef.current < SUBMISSION_DEBOUNCE_MS) {
-                log.debug('Submission debounced - too frequent');
+                log.debug("Submission debounced - too frequent");
                 return;
             }
             lastSubmissionRef.current = now;
 
             log.info(
                 { useWebSearch, useMathCalculator, useCharts },
-                'Agent provider received flags'
+                "Agent provider received flags",
             );
 
             const mode = (newChatMode || chatMode) as ChatMode;
@@ -504,7 +504,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 !isSignedIn &&
                 !!ChatModeConfig[mode as keyof typeof ChatModeConfig]?.isAuthRequired
             ) {
-                push('/login');
+                push("/login");
 
                 return;
             }
@@ -513,15 +513,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             if (!threadId) return;
 
             // Update thread title
-            updateThread({ id: threadId, title: formData.get('query') as string });
+            updateThread({ id: threadId, title: formData.get("query") as string });
 
             const optimisticAiThreadItemId = existingThreadItemId || (await generateThreadId());
-            const query = formData.get('query') as string;
-            const imageAttachment = formData.get('imageAttachment') as string;
-            const documentAttachment = formData.get('documentAttachment') as string;
-            const documentMimeType = formData.get('documentMimeType') as string;
-            const documentFileName = formData.get('documentFileName') as string;
-            const multiModalAttachmentsStr = formData.get('multiModalAttachments') as string;
+            const query = formData.get("query") as string;
+            const imageAttachment = formData.get("imageAttachment") as string;
+            const documentAttachment = formData.get("documentAttachment") as string;
+            const documentMimeType = formData.get("documentMimeType") as string;
+            const documentFileName = formData.get("documentFileName") as string;
+            const multiModalAttachmentsStr = formData.get("multiModalAttachments") as string;
             const multiModalAttachments = multiModalAttachmentsStr
                 ? JSON.parse(multiModalAttachmentsStr)
                 : undefined;
@@ -530,7 +530,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 id: optimisticAiThreadItemId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                status: 'QUEUED',
+                status: "QUEUED",
                 threadId,
                 query,
                 imageAttachment,
@@ -579,19 +579,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 setAbortController(abortController);
                 setIsGenerating(true);
 
-                abortController.signal.addEventListener('abort', () => {
-                    log.info({ threadId }, 'Abort signal received');
+                abortController.signal.addEventListener("abort", () => {
+                    log.info({ threadId }, "Abort signal received");
                     setIsGenerating(false);
                     abortWorkflow();
                     updateThreadItem(threadId, {
                         id: optimisticAiThreadItemId,
-                        status: 'ABORTED',
+                        status: "ABORTED",
                     });
                 });
 
                 log.info(
                     { useWebSearch, useMathCalculator, useCharts },
-                    'About to call startWorkflow'
+                    "About to call startWorkflow",
                 );
                 startWorkflow({
                     mode,
@@ -599,7 +599,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     threadId,
                     messages: coreMessages,
                     threadItemId: optimisticAiThreadItemId,
-                    parentThreadItemId: '',
+                    parentThreadItemId: "",
                     customInstructions,
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
@@ -626,7 +626,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     messages: coreMessages,
                     threadItemId: optimisticAiThreadItemId,
                     customInstructions,
-                    parentThreadItemId: '',
+                    parentThreadItemId: "",
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
@@ -656,12 +656,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setAbortController,
             thinkingMode,
             hasVtPlusAccess,
-        ]
+        ],
     );
 
     const updateContext = useCallback(
         (threadId: string, data: any) => {
-            log.info({ contextData: data }, 'Updating context');
+            log.info({ contextData: data }, "Updating context");
             updateThreadItem(threadId, {
                 id: data.threadItemId,
                 parentId: data.parentThreadItemId,
@@ -669,7 +669,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 metadata: data.context,
             });
         },
-        [updateThreadItem]
+        [updateThreadItem],
     );
 
     const contextValue = useMemo(
@@ -678,7 +678,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             handleSubmit,
             updateContext,
         }),
-        [runAgent, handleSubmit, updateContext]
+        [runAgent, handleSubmit, updateContext],
     );
 
     const handleApiKeyComplete = useCallback(() => {
@@ -704,7 +704,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 export const useAgentStream = (): AgentContextType => {
     const context = useContext(AgentContext);
     if (!context) {
-        throw new Error('useAgentStream must be used within an AgentProvider');
+        throw new Error("useAgentStream must be used within an AgentProvider");
     }
     return context;
 };

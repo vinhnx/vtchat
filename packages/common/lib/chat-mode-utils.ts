@@ -1,6 +1,6 @@
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { cn } from '@repo/ui';
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
+import { cn } from "@repo/ui";
 
 /**
  * Determines if a chat mode is premium based on its configuration
@@ -57,14 +57,14 @@ export function isPremiumMode(mode: ChatMode): boolean {
 export function getPremiumButtonClasses(isPremium: boolean): string {
     if (isPremium) {
         return cn(
-            'transition-all duration-300',
+            "transition-all duration-300",
             // Premium mode - Custom hover background with #BFB38F
-            'border-amber-200/50 bg-amber-50/50 hover:shadow-lg hover:shadow-amber-200/30',
-            'hover:bg-[#BFB38F]',
-            'dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50'
+            "border-amber-200/50 bg-amber-50/50 hover:shadow-lg hover:shadow-amber-200/30",
+            "hover:bg-[#BFB38F]",
+            "dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50",
         );
     }
-    return cn('transition-all duration-300', 'hover:border-muted-foreground/50');
+    return cn("transition-all duration-300", "hover:border-muted-foreground/50");
 }
 
 /**
@@ -73,12 +73,12 @@ export function getPremiumButtonClasses(isPremium: boolean): string {
 export function getPremiumDropdownClasses(isPremium: boolean): string {
     if (isPremium) {
         return cn(
-            'transition-all duration-300',
+            "transition-all duration-300",
             // Premium mode - Custom hover background with #BFB38F, no border selection
-            'bg-amber-50/50 hover:bg-[#BFB38F] data-[highlighted]:bg-[#BFB38F]',
-            'dark:bg-amber-950/30 dark:hover:bg-amber-900/50',
-            'dark:data-[highlighted]:bg-amber-900/50'
+            "bg-amber-50/50 hover:bg-[#BFB38F] data-[highlighted]:bg-[#BFB38F]",
+            "dark:bg-amber-950/30 dark:hover:bg-amber-900/50",
+            "dark:data-[highlighted]:bg-amber-900/50",
         );
     }
-    return cn('transition-all duration-300', 'hover:bg-muted/50 data-[highlighted]:bg-muted/50');
+    return cn("transition-all duration-300", "hover:bg-muted/50 data-[highlighted]:bg-muted/50");
 }

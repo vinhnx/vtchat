@@ -1,17 +1,16 @@
-import { createTask } from '@repo/orchestrator';
-import { ChatMode } from '@repo/shared/config';
-import { log } from '@repo/shared/logger';
-import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
-import { z } from 'zod';
-import { ModelEnum } from '../../models';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { createTask } from "@repo/orchestrator";
+import { log } from "@repo/shared/logger";
+import { getVTPlusFeatureFromChatMode } from "@repo/shared/utils/access-control";
+import { z } from "zod";
+import { ModelEnum } from "../../models";
+import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
     generateObject,
     getHumanizedDate,
     handleError,
     selectAvailableModel,
     sendEvents,
-} from '../utils';
+} from "../utils";
 
 const ClarificationResponseSchema = z.object({
     needsClarification: z.boolean(),
@@ -19,7 +18,7 @@ const ClarificationResponseSchema = z.object({
     clarifyingQuestion: z
         .object({
             question: z.string(),
-            choiceType: z.enum(['multiple', 'single']),
+            choiceType: z.enum(["multiple", "single"]),
             options: z.array(z.string()).min(1).max(3),
         })
         .optional(),
@@ -27,10 +26,10 @@ const ClarificationResponseSchema = z.object({
 });
 
 export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: 'refine-query',
+    name: "refine-query",
     execute: async ({ events, context, signal }) => {
-        const messages = context?.get('messages') || [];
-        const question = context?.get('question') || '';
+        const messages = context?.get("messages") || [];
+        const question = context?.get("question") || "";
         const { updateStatus, updateAnswer, updateObject } = sendEvents(events);
 
         const prompt = `You are a professional research assistant for DEEP RESEARCH - a comprehensive, multi-step analysis workflow.
@@ -106,13 +105,13 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
                 `;
 
-        const byokKeys = context?.get('apiKeys');
+        const byokKeys = context?.get("apiKeys");
 
         // Select an appropriate model based on available API keys
         const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_PRO, byokKeys);
 
         // Determine VT+ feature based on mode
-        const chatMode = context?.get('mode');
+        const chatMode = context?.get("mode");
         const vtplusFeature = getVTPlusFeatureFromChatMode(chatMode);
 
         const object = await generateObject({
@@ -122,9 +121,9 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             messages: messages as any,
             signal,
             byokKeys,
-            thinkingMode: context?.get('thinkingMode'),
-            userTier: context?.get('userTier'),
-            userId: context?.get('userId'),
+            thinkingMode: context?.get("thinkingMode"),
+            userTier: context?.get("userTier"),
+            userId: context?.get("userId"),
             feature: vtplusFeature || undefined,
         });
 
@@ -132,16 +131,16 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             updateAnswer({
                 text: object.reasoning,
                 finalText: object.reasoning,
-                status: 'COMPLETED',
+                status: "COMPLETED",
             });
             object?.clarifyingQuestion &&
                 updateObject({
                     clarifyingQuestion: object?.clarifyingQuestion,
                 });
 
-            updateStatus('COMPLETED');
+            updateStatus("COMPLETED");
         } else {
-            context?.update('question', (_current) => object?.refinedQuery || question);
+            context?.update("question", (_current) => object?.refinedQuery || question);
         }
 
         return {
@@ -151,11 +150,11 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
     },
     onError: handleError,
     route: ({ result }) => {
-        log.info('🔍 refine-query route result:', { data: result });
+        log.info("🔍 refine-query route result:", { data: result });
         if (result?.needsClarification === true) {
-            return 'end';
+            return "end";
         }
 
-        return 'planner';
+        return "planner";
     },
 });

@@ -4,26 +4,26 @@
  * Test script to check database connection and verify VT+ users
  */
 
-import { config } from 'dotenv';
-import { resolve } from 'path';
+import { resolve } from "node:path";
+import { config } from "dotenv";
 
 // Load environment variables from apps/web/.env.local
-config({ path: resolve(process.cwd(), 'apps/web/.env.local') });
+config({ path: resolve(process.cwd(), "apps/web/.env.local") });
 
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('DATABASE_URL preview:', process.env.DATABASE_URL?.substring(0, 20) + '...');
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+console.log("DATABASE_URL preview:", `${process.env.DATABASE_URL?.substring(0, 20)}...`);
 
 try {
-    const { db } = await import('../apps/web/lib/database/index.js');
-    const { users, userSubscriptions } = await import('../apps/web/lib/database/schema.js');
-    const { PlanSlug } = await import('../packages/shared/types/subscription.js');
-    const { eq, and, isNull, or } = await import('drizzle-orm');
+    const { db } = await import("../apps/web/lib/database/index.js");
+    const { users, userSubscriptions } = await import("../apps/web/lib/database/schema.js");
+    const { PlanSlug } = await import("../packages/shared/types/subscription.js");
+    const { eq, and, isNull, or } = await import("drizzle-orm");
 
-    console.log('Successfully loaded database modules');
+    console.log("Successfully loaded database modules");
 
     // Test query - just count users
-    const userCount = await db.select().from(users).limit(1);
-    console.log('Database connection test successful');
+    const _userCount = await db.select().from(users).limit(1);
+    console.log("Database connection test successful");
 } catch (error) {
-    console.error('Database connection failed:', error.message);
+    console.error("Database connection failed:", error.message);
 }

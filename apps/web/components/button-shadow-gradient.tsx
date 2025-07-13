@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui';
-import type React from 'react';
+import { Button } from "@repo/ui";
+import type React from "react";
 
 interface ButtonShadowGradientProps {
     children: React.ReactNode;
@@ -12,7 +12,7 @@ interface ButtonShadowGradientProps {
 export const ButtonShadowGradient = ({
     children,
     onClick,
-    className = '',
+    className = "",
 }: ButtonShadowGradientProps) => {
     return (
         <Button variant="outline" className={className} onClick={onClick}>

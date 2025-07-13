@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { LOADING_MESSAGES } from '@repo/shared/constants';
-import { Card } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { LOADING_MESSAGES } from "@repo/shared/constants";
+import { Card } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface PortalReturnIndicatorProps {
     isVisible: boolean;
@@ -16,15 +16,15 @@ interface PortalReturnIndicatorProps {
  * and subscription status is being refreshed
  */
 export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnIndicatorProps) {
-    const [stage, setStage] = useState<'loading' | 'success'>('loading');
+    const [stage, setStage] = useState<"loading" | "success">("loading");
 
     useEffect(() => {
         if (isVisible) {
-            setStage('loading');
+            setStage("loading");
 
             // After 2 seconds, show success and auto-hide
             const timer = setTimeout(() => {
-                setStage('success');
+                setStage("success");
 
                 // Hide after showing success for 1 second
                 const hideTimer = setTimeout(() => {
@@ -48,7 +48,7 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
                     initial={{ opacity: 0, y: 50 }}
                 >
                     <Card className="flex items-center gap-3 p-4 shadow-lg">
-                        {stage === 'loading' ? (
+                        {stage === "loading" ? (
                             <>
                                 <Loader2 className="animate-spin text-blue-500" size={20} />
                                 <div className="flex flex-col">

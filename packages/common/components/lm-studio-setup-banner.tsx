@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { AlertCircle, ExternalLink, Terminal, X } from 'lucide-react';
-import { useState } from 'react';
+import { AlertCircle, ExternalLink, Terminal, X } from "lucide-react";
+import { useState } from "react";
 
 export function LMStudioSetupBanner() {
     const [isVisible, setIsVisible] = useState(true);
@@ -11,22 +11,22 @@ export function LMStudioSetupBanner() {
 
     const steps = [
         {
-            title: 'Install LM Studio',
-            description: 'Download and install LM Studio from the official website',
-            action: 'Download LM Studio',
-            link: 'https://lmstudio.ai/',
+            title: "Install LM Studio",
+            description: "Download and install LM Studio from the official website",
+            action: "Download LM Studio",
+            link: "https://lmstudio.ai/",
             icon: <ExternalLink size={16} />,
         },
         {
-            title: 'Start the Server',
-            description: 'Open terminal and start LM Studio server with CORS enabled',
-            action: 'lms server start --cors',
+            title: "Start the Server",
+            description: "Open terminal and start LM Studio server with CORS enabled",
+            action: "lms server start --cors",
             icon: <Terminal size={16} />,
         },
         {
-            title: 'Load a Model',
-            description: 'In LM Studio app, download and load any compatible model',
-            action: 'Browse & Load Model',
+            title: "Load a Model",
+            description: "In LM Studio app, download and load any compatible model",
+            action: "Browse & Load Model",
             icon: <ExternalLink size={16} />,
         },
     ];
@@ -47,20 +47,20 @@ export function LMStudioSetupBanner() {
                                     key={index}
                                     className={`flex items-center space-x-3 p-2 rounded ${
                                         currentStep === index
-                                            ? 'bg-blue-100 border border-blue-300'
-                                            : 'bg-white'
+                                            ? "bg-blue-100 border border-blue-300"
+                                            : "bg-white"
                                     }`}
                                 >
                                     <div
                                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                                             currentStep > index
-                                                ? 'bg-green-500 text-white'
+                                                ? "bg-green-500 text-white"
                                                 : currentStep === index
-                                                  ? 'bg-blue-500 text-white'
-                                                  : 'bg-gray-300 text-gray-600'
+                                                  ? "bg-blue-500 text-white"
+                                                  : "bg-gray-300 text-gray-600"
                                         }`}
                                     >
-                                        {currentStep > index ? '✓' : index + 1}
+                                        {currentStep > index ? "✓" : index + 1}
                                     </div>
 
                                     <div className="flex-1">

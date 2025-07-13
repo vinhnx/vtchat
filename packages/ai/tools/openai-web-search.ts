@@ -1,7 +1,7 @@
-import { openai } from '@ai-sdk/openai';
-import { log } from '@repo/shared/logger';
-import { generateText, tool } from 'ai';
-import { z } from 'zod';
+import { openai } from "@ai-sdk/openai";
+import { log } from "@repo/shared/logger";
+import { generateText, tool } from "ai";
+import { z } from "zod";
 
 /**
  * OpenAI Web Search Tool using the Responses API
@@ -21,14 +21,14 @@ import { z } from 'zod';
 export const openaiWebSearchTool = () =>
     tool({
         description:
-            'Search the web for current information and return relevant results with sources',
+            "Search the web for current information and return relevant results with sources",
         parameters: z.object({
-            query: z.string().describe('The search query to find information about'),
+            query: z.string().describe("The search query to find information about"),
         }),
         execute: async ({ query }) => {
             try {
                 const { text, sources } = await generateText({
-                    model: openai.responses('gpt-4o-mini'),
+                    model: openai.responses("gpt-4o-mini"),
                     prompt: query,
                     tools: {
                         web_search_preview: openai.tools.webSearchPreview(),
@@ -42,10 +42,10 @@ export const openaiWebSearchTool = () =>
                     query,
                 };
             } catch (error: any) {
-                log.error({ error }, 'Error in OpenAI web search');
+                log.error({ error }, "Error in OpenAI web search");
                 return {
                     success: false,
-                    error: error.message || 'Failed to perform web search',
+                    error: error.message || "Failed to perform web search",
                     query,
                 };
             }
@@ -58,8 +58,8 @@ export const openaiWebSearchTool = () =>
  */
 export const supportsOpenAIWebSearch = (modelId: string): boolean => {
     const supportedModels = [
-        'gpt-4o-mini',
-        'gpt-4o',
+        "gpt-4o-mini",
+        "gpt-4o",
         // Add other models as they become available for Responses API
     ];
 
@@ -69,21 +69,21 @@ export const supportsOpenAIWebSearch = (modelId: string): boolean => {
 /**
  * Advanced web search with custom model selection for Responses API
  */
-export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
+export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
     tool({
         description: `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
         parameters: z.object({
-            query: z.string().describe('The search query to find information about'),
+            query: z.string().describe("The search query to find information about"),
             maxResults: z
                 .number()
                 .optional()
-                .describe('Maximum number of results to return (if supported)'),
+                .describe("Maximum number of results to return (if supported)"),
         }),
         execute: async ({ query, maxResults }) => {
             try {
                 if (!supportsOpenAIWebSearch(modelId)) {
                     throw new Error(
-                        `Model ${modelId} does not support OpenAI Responses API web search`
+                        `Model ${modelId} does not support OpenAI Responses API web search`,
                     );
                 }
 
@@ -108,7 +108,7 @@ export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
                 log.error({ modelId, error }, `Error in OpenAI web search with model ${modelId}`);
                 return {
                     success: false,
-                    error: error.message || 'Failed to perform web search',
+                    error: error.message || "Failed to perform web search",
                     query,
                     modelUsed: modelId,
                 };

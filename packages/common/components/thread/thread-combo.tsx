@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { ThreadItem } from '@repo/common/components';
-import { useChatStore } from '@repo/common/store';
-import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { ThreadItem } from "@repo/common/components";
+import { useChatStore } from "@repo/common/store";
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function Thread() {
     const { threadId } = useParams();
-    const currentThreadId = threadId?.toString() ?? '';
+    const currentThreadId = threadId?.toString() ?? "";
     const previousThreadItems = useChatStore(
-        useShallow((state) => state.getPreviousThreadItems(currentThreadId))
+        useShallow((state) => state.getPreviousThreadItems(currentThreadId)),
     );
     const currentThreadItem = useChatStore(
-        useShallow((state) => state.getCurrentThreadItem(currentThreadId))
+        useShallow((state) => state.getCurrentThreadItem(currentThreadId)),
     );
     const isGenerating = useChatStore(useShallow((state) => state.isGenerating));
     const memoizedPreviousThreadItems = useMemo(() => {

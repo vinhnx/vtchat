@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -7,8 +7,8 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@repo/ui';
-import { type LucideIcon, PlusCircle, Mail } from 'lucide-react';
+} from "@repo/ui";
+import { type LucideIcon, Mail, PlusCircle } from "lucide-react";
 
 export function NavMain({
     items,

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { GENERATION_TIMEOUTS } from '@repo/shared/constants';
-import { useEffect, useRef } from 'react';
+import { useChatStore } from "@repo/common/store";
+import { GENERATION_TIMEOUTS } from "@repo/shared/constants";
+import { useEffect, useRef } from "react";
 
 interface UseGenerationTimeoutOptions {
     timeoutThreshold?: number;

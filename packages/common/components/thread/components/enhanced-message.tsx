@@ -1,14 +1,14 @@
-import { ChatEditor, markdownStyles } from '@repo/common/components';
-import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import type { ThreadItem } from '@repo/shared/types';
-import { Button, cn, useToast } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Check, CheckCheck, Clock, Copy, MessageCircle, Pencil } from 'lucide-react';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { AttachmentDisplay } from './attachment-display';
-import { DocumentDisplay } from './document-display';
-import { ImageMessage } from './image-message';
+import { ChatEditor, markdownStyles } from "@repo/common/components";
+import { useAgentStream, useChatEditor, useCopyText } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import type { ThreadItem } from "@repo/shared/types";
+import { Button, cn, useToast } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, CheckCheck, Clock, Copy, MessageCircle, Pencil } from "lucide-react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { AttachmentDisplay } from "./attachment-display";
+import { DocumentDisplay } from "./document-display";
+import { ImageMessage } from "./image-message";
 
 type MessageProps = {
     message: string;
@@ -41,23 +41,23 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
 
     // Enhanced message status indicator
     const getMessageStatus = () => {
-        if (threadItem.status === 'PENDING') return 'sending';
-        if (threadItem.status === 'COMPLETED') return 'delivered';
-        if (threadItem.status === 'ERROR') return 'error';
-        return 'sent';
+        if (threadItem.status === "PENDING") return "sending";
+        if (threadItem.status === "COMPLETED") return "delivered";
+        if (threadItem.status === "ERROR") return "error";
+        return "sent";
     };
 
     const MessageStatusIcon = ({ status }: { status: string }) => {
-        const iconProps = { size: 12, className: 'opacity-70' };
+        const iconProps = { size: 12, className: "opacity-70" };
 
         switch (status) {
-            case 'sending':
+            case "sending":
                 return <Clock {...iconProps} className="animate-pulse opacity-50" />;
-            case 'sent':
+            case "sent":
                 return <Check {...iconProps} />;
-            case 'delivered':
+            case "delivered":
                 return <CheckCheck {...iconProps} className="text-blue-500" />;
-            case 'error':
+            case "error":
                 return <MessageCircle {...iconProps} className="text-red-500" />;
             default:
                 return null;
@@ -69,7 +69,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
             animate={{ opacity: 1, y: 0 }}
             className="flex w-full flex-col items-end gap-3 pt-4"
             initial={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
         >
             {imageAttachment && <ImageMessage imageAttachment={imageAttachment} />}
             {threadItem.documentAttachment && (
@@ -83,11 +83,11 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                 {/* Enhanced message bubble with premium styling */}
                 <motion.div
                     className={cn(
-                        'group relative overflow-hidden rounded-2xl transition-all duration-200',
-                        'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg',
-                        'hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]',
-                        'border border-blue-400/30',
-                        isEditing && 'ring-2 ring-blue-300 ring-offset-2'
+                        "group relative overflow-hidden rounded-2xl transition-all duration-200",
+                        "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg",
+                        "hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]",
+                        "border border-blue-400/30",
+                        isEditing && "ring-2 ring-blue-300 ring-offset-2",
                     )}
                     whileHover={{ y: -1 }}
                 >
@@ -103,17 +103,17 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                         <>
                             <div
                                 className={cn(
-                                    'relative px-4 py-3 text-[15px] font-medium leading-relaxed',
-                                    'selection:bg-blue-200/30',
+                                    "relative px-4 py-3 text-[15px] font-medium leading-relaxed",
+                                    "selection:bg-blue-200/30",
                                     {
-                                        'pb-14': isExpanded,
+                                        "pb-14": isExpanded,
                                         markdownStyles,
-                                    }
+                                    },
                                 )}
                                 ref={messageRef}
                                 style={{
-                                    maxHeight: isExpanded ? 'none' : maxHeight,
-                                    transition: 'max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    maxHeight: isExpanded ? "none" : maxHeight,
+                                    transition: "max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                 }}
                             >
                                 {message}
@@ -137,7 +137,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                                     size="xs"
                                                     variant="ghost"
                                                 >
-                                                    {isExpanded ? 'Show less' : 'Show more'}
+                                                    {isExpanded ? "Show less" : "Show more"}
                                                 </Button>
                                             )}
 
@@ -147,21 +147,21 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                                     onClick={handleCopy}
                                                     size="icon-sm"
                                                     tooltip={
-                                                        status === 'copied'
-                                                            ? 'Copied!'
-                                                            : 'Copy message'
+                                                        status === "copied"
+                                                            ? "Copied!"
+                                                            : "Copy message"
                                                     }
                                                     variant="ghost"
                                                 >
                                                     <motion.div
                                                         animate={
-                                                            status === 'copied'
+                                                            status === "copied"
                                                                 ? { scale: [1, 1.2, 1] }
                                                                 : {}
                                                         }
                                                         transition={{ duration: 0.2 }}
                                                     >
-                                                        {status === 'copied' ? (
+                                                        {status === "copied" ? (
                                                             <Check size={14} strokeWidth={2.5} />
                                                         ) : (
                                                             <Copy size={14} strokeWidth={2} />
@@ -173,8 +173,8 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                                     className="border border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20 disabled:opacity-50"
                                                     disabled={
                                                         isGenerating ||
-                                                        threadItem.status === 'QUEUED' ||
-                                                        threadItem.status === 'PENDING'
+                                                        threadItem.status === "QUEUED" ||
+                                                        threadItem.status === "PENDING"
                                                     }
                                                     onClick={() => setIsEditing(true)}
                                                     size="icon-sm"
@@ -196,8 +196,8 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                 <div className="mt-1 flex items-center justify-end gap-2 px-1">
                     <span className="text-muted-foreground/70 text-xs">
                         {new Date(threadItem.createdAt).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
+                            hour: "2-digit",
+                            minute: "2-digit",
                         })}
                     </span>
                     <MessageStatusIcon status={getMessageStatus()} />
@@ -225,16 +225,16 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     const handleSave = async (query: string) => {
         if (!query.trim()) {
             toast({
-                title: 'Please enter a message',
-                variant: 'destructive',
+                title: "Please enter a message",
+                variant: "destructive",
             });
             return;
         }
         removeFollowupThreadItems(threadItem.id);
 
         const formData = new FormData();
-        formData.append('query', query);
-        formData.append('imageAttachment', threadItem.imageAttachment || '');
+        formData.append("query", query);
+        formData.append("imageAttachment", threadItem.imageAttachment || "");
         const threadItems = await getThreadItems(threadItem.threadId);
 
         handleSubmit({
@@ -257,24 +257,24 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
                 className="relative rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base font-medium backdrop-blur-sm"
                 style={{
                     minWidth: width,
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
             >
                 <ChatEditor
                     className={cn(
-                        'max-w-full overflow-y-auto border-none !p-0 text-white placeholder:text-white/70 focus:ring-0',
-                        markdownStyles
+                        "max-w-full overflow-y-auto border-none !p-0 text-white placeholder:text-white/70 focus:ring-0",
+                        markdownStyles,
                     )}
                     editor={editor}
                     maxHeight="120px"
-                    sendMessage={() => handleSave(editor?.getText() || '')}
+                    sendMessage={() => handleSave(editor?.getText() || "")}
                 />
             </div>
 
             <div className="flex items-center gap-2">
                 <Button
                     className="bg-green-500 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-green-600 hover:shadow-lg"
-                    onClick={() => handleSave(editor?.getText() || '')}
+                    onClick={() => handleSave(editor?.getText() || "")}
                     size="sm"
                 >
                     Save Changes
@@ -292,4 +292,4 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     );
 });
 
-EnhancedMessage.displayName = 'EnhancedMessage';
+EnhancedMessage.displayName = "EnhancedMessage";

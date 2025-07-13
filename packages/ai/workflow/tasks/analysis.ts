@@ -1,7 +1,7 @@
-import { createTask } from '@repo/orchestrator';
-import { ChatMode } from '@repo/shared/config';
-import { getModelFromChatMode, ModelEnum } from '../../models';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { createTask } from "@repo/orchestrator";
+import { ChatMode } from "@repo/shared/config";
+import { getModelFromChatMode, ModelEnum } from "../../models";
+import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
     ChunkBuffer,
     generateText,
@@ -9,14 +9,14 @@ import {
     handleError,
     selectAvailableModel,
     sendEvents,
-} from '../utils';
+} from "../utils";
 
 export const analysisTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: 'analysis',
+    name: "analysis",
     execute: async ({ events, context, signal }) => {
-        const messages = context?.get('messages') || [];
-        const question = context?.get('question') || '';
-        const prevSummaries = context?.get('summaries') || [];
+        const messages = context?.get("messages") || [];
+        const question = context?.get("question") || "";
+        const prevSummaries = context?.get("summaries") || [];
         const { updateStep, nextStepId, addSources } = sendEvents(events);
 
         const stepId = nextStepId();
@@ -44,9 +44,9 @@ ${prevSummaries
 
 ${s}
 
-`
+`,
     )
-    .join('\n\n\n')}
+    .join("\n\n\n")}
 </research_findings>
 
 
@@ -58,45 +58,45 @@ ${s}
 
         const chunkBuffer = new ChunkBuffer({
             threshold: 200,
-            breakOn: ['\n\n'],
+            breakOn: ["\n\n"],
             onFlush: (chunk: string, fullText: string) => {
                 updateStep({
                     stepId,
-                    stepStatus: 'PENDING',
+                    stepStatus: "PENDING",
                     text: chunk,
                     subSteps: {
-                        reasoning: { status: 'PENDING', data: fullText },
+                        reasoning: { status: "PENDING", data: fullText },
                     },
                 });
             },
         });
 
-        const mode = context?.get('mode') || '';
+        const mode = context?.get("mode") || "";
         // For Deep Research workflow, select available model with fallback mechanism
         const baseModel =
             mode === ChatMode.Deep ? ModelEnum.GEMINI_2_5_PRO : getModelFromChatMode(mode);
-        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
+        const model = selectAvailableModel(baseModel, context?.get("apiKeys"));
 
         const text = await generateText({
             prompt,
             model,
             messages: messages as any,
             signal,
-            byokKeys: context?.get('apiKeys'),
-            thinkingMode: context?.get('thinkingMode'),
-            userTier: context?.get('userTier'),
-            userId: context?.get('userId'),
-            mode: context?.get('mode'),
+            byokKeys: context?.get("apiKeys"),
+            thinkingMode: context?.get("thinkingMode"),
+            userTier: context?.get("userTier"),
+            userId: context?.get("userId"),
+            mode: context?.get("mode"),
             onReasoning: (reasoning) => {
                 chunkBuffer.add(reasoning);
             },
             onReasoningDetails: (details) => {
                 updateStep({
                     stepId,
-                    stepStatus: 'COMPLETED',
+                    stepStatus: "COMPLETED",
                     subSteps: {
                         reasoningDetails: {
-                            status: 'COMPLETED',
+                            status: "COMPLETED",
                             data: details,
                         },
                     },
@@ -108,13 +108,13 @@ ${s}
 
         updateStep({
             stepId,
-            stepStatus: 'COMPLETED',
+            stepStatus: "COMPLETED",
             subSteps: {
-                reasoning: { status: 'COMPLETED' },
+                reasoning: { status: "COMPLETED" },
             },
         });
 
-        addSources(context?.get('sources') || []);
+        addSources(context?.get("sources") || []);
 
         return {
             queries: [],
@@ -123,5 +123,5 @@ ${s}
         };
     },
     onError: handleError,
-    route: ({ result }) => 'writer',
+    route: ({ result }) => "writer",
 });

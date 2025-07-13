@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { models } from '@repo/ai/models';
+import { models } from "@repo/ai/models";
 // Import mobile enhancements
 import {
     MobileChatHeader,
     MobileOptimizedInput,
     MobilePullToRefresh,
     SwipeableMessage,
-} from '@repo/common/components';
-import { useSubscriptionAccess } from '@repo/common/hooks';
-import { useApiKeysStore, useAppStore } from '@repo/common/store';
-import { EMBEDDING_MODEL_CONFIG } from '@repo/shared/config/embedding-models';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/lib/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
+} from "@repo/common/components";
+import { useSubscriptionAccess } from "@repo/common/hooks";
+import { useApiKeysStore, useAppStore } from "@repo/common/store";
+import { EMBEDDING_MODEL_CONFIG } from "@repo/shared/config/embedding-models";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { log } from "@repo/shared/lib/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
 import {
     Avatar,
     Badge,
@@ -33,13 +33,13 @@ import {
     ScrollArea,
     Sheet,
     SheetContent,
-} from '@repo/ui';
-import { useChat } from 'ai/react';
-import { Database, Eye, Menu, Send, Settings, Trash2 } from 'lucide-react';
-import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
-import { useIsMobile } from '../hooks/use-mobile';
+} from "@repo/ui";
+import { useChat } from "ai/react";
+import { Database, Eye, Menu, Send, Settings, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { useIsMobile } from "../hooks/use-mobile";
 
 interface KnowledgeItem {
     id: string;
@@ -75,21 +75,21 @@ export function RAGChatbot() {
         // Debug logging to understand error structure
         log.error(
             { error, errorMessage: error?.message, errorType: typeof error },
-            'showErrorToast called'
+            "showErrorToast called",
         );
 
         // Check for specific quota_exceeded status from completion API
-        if (error?.status === 'quota_exceeded' || error?.data?.status === 'quota_exceeded') {
-            const quotaMessage = error?.error || error?.data?.error || 'VT+ quota exceeded.';
-            toast.error('Daily Limit Reached', {
+        if (error?.status === "quota_exceeded" || error?.data?.status === "quota_exceeded") {
+            const quotaMessage = error?.error || error?.data?.error || "VT+ quota exceeded.";
+            toast.error("Daily Limit Reached", {
                 description: quotaMessage,
             });
             return;
         }
 
         // Extract error message from various possible structures
-        let errorMessage = '';
-        if (typeof error === 'string') {
+        let errorMessage = "";
+        if (typeof error === "string") {
             errorMessage = error;
         } else if (error?.message) {
             errorMessage = error.message;
@@ -98,60 +98,60 @@ export function RAGChatbot() {
         } else if (error?.toString) {
             errorMessage = error.toString();
         } else {
-            errorMessage = 'Unknown error occurred';
+            errorMessage = "Unknown error occurred";
         }
 
         const message = errorMessage.toLowerCase();
-        log.info({ message, originalError: error }, 'Processing error message for toast');
+        log.info({ message, originalError: error }, "Processing error message for toast");
 
         try {
-            if (message.includes('api key is required') || message.includes('unauthorized')) {
-                toast.error('API Key Required', {
+            if (message.includes("api key is required") || message.includes("unauthorized")) {
+                toast.error("API Key Required", {
                     description:
-                        'Please configure your API keys in Settings to use the Knowledge Assistant.',
+                        "Please configure your API keys in Settings to use the Knowledge Assistant.",
                     action: {
-                        label: 'Add Keys',
-                        onClick: () => window.open('/settings', '_blank'),
+                        label: "Add Keys",
+                        onClick: () => window.open("/settings", "_blank"),
                     },
                 });
-            } else if (message.includes('rate limit') || message.includes('too many requests')) {
-                toast.error('Rate Limit Exceeded', {
-                    description: 'Too many requests. Please try again in a few minutes.',
+            } else if (message.includes("rate limit") || message.includes("too many requests")) {
+                toast.error("Rate Limit Exceeded", {
+                    description: "Too many requests. Please try again in a few minutes.",
                 });
             } else if (
-                message.includes('insufficient credits') ||
-                message.includes('quota exceeded')
+                message.includes("insufficient credits") ||
+                message.includes("quota exceeded")
             ) {
-                toast.error('Credits Exhausted', {
+                toast.error("Credits Exhausted", {
                     description:
-                        'Your API credits have been exhausted. Please check your provider account.',
+                        "Your API credits have been exhausted. Please check your provider account.",
                 });
-            } else if (message.includes('network') || message.includes('fetch')) {
-                toast.error('Network Error', {
-                    description: 'Please check your internet connection and try again.',
+            } else if (message.includes("network") || message.includes("fetch")) {
+                toast.error("Network Error", {
+                    description: "Please check your internet connection and try again.",
                 });
-            } else if (message.includes('timeout')) {
-                toast.error('Request Timeout', {
-                    description: 'The request took too long. Please try again.',
+            } else if (message.includes("timeout")) {
+                toast.error("Request Timeout", {
+                    description: "The request took too long. Please try again.",
                 });
-            } else if (message.includes('server error') || message.includes('internal server')) {
-                toast.error('Server Error', {
-                    description: 'Our servers are experiencing issues. Please try again later.',
+            } else if (message.includes("server error") || message.includes("internal server")) {
+                toast.error("Server Error", {
+                    description: "Our servers are experiencing issues. Please try again later.",
                 });
-            } else if (message.includes('invalid') || message.includes('bad request')) {
-                toast.error('Invalid Request', {
-                    description: 'There was an issue with your request. Please try again.',
+            } else if (message.includes("invalid") || message.includes("bad request")) {
+                toast.error("Invalid Request", {
+                    description: "There was an issue with your request. Please try again.",
                 });
             } else {
-                toast.error('Chat Error', {
-                    description: errorMessage || 'Something went wrong. Please try again.',
+                toast.error("Chat Error", {
+                    description: errorMessage || "Something went wrong. Please try again.",
                 });
             }
-            log.info({}, 'Toast error shown successfully');
+            log.info({}, "Toast error shown successfully");
         } catch (toastError) {
             log.error(
                 { toastError, originalError: error },
-                'Failed to show error toast - this indicates a problem with the toast system'
+                "Failed to show error toast - this indicates a problem with the toast system",
             );
         }
     };
@@ -167,7 +167,7 @@ export function RAGChatbot() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, reload } = useChat({
-        api: '/api/agent/chat',
+        api: "/api/agent/chat",
         maxSteps: 3,
         body: {
             apiKeys: allApiKeys,
@@ -178,7 +178,7 @@ export function RAGChatbot() {
         onError: (error) => {
             log.error(
                 { error, errorKeys: Object.keys(error), errorProto: Object.getPrototypeOf(error) },
-                'RAG Chat Error in onError handler'
+                "RAG Chat Error in onError handler",
             );
 
             // Show error toast immediately and also with slight delay as fallback
@@ -186,7 +186,7 @@ export function RAGChatbot() {
 
             // Fallback with delay in case immediate call doesn't work
             setTimeout(() => {
-                log.info({}, 'Showing error toast with delay fallback');
+                log.info({}, "Showing error toast with delay fallback");
                 showErrorToast(error);
             }, 100);
         },
@@ -195,9 +195,9 @@ export function RAGChatbot() {
             if (message.content) {
                 const content = message.content.toLowerCase();
                 if (
-                    content.includes('error:') ||
-                    content.includes('failed to') ||
-                    content.includes('unable to')
+                    content.includes("error:") ||
+                    content.includes("failed to") ||
+                    content.includes("unable to")
                 ) {
                     // Extract error from message content if it looks like an error
                     const errorMatch =
@@ -207,7 +207,7 @@ export function RAGChatbot() {
 
                     if (errorMatch) {
                         const errorMsg = errorMatch[1].trim();
-                        log.info({ errorMsg }, 'Extracted error from assistant message');
+                        log.info({ errorMsg }, "Extracted error from assistant message");
                         setTimeout(() => {
                             showErrorToast(new Error(errorMsg));
                         }, 100);
@@ -219,56 +219,56 @@ export function RAGChatbot() {
 
     // Track if we're currently processing to avoid duplicate indicators
     const isProcessing =
-        isLoading || messages.some((msg) => msg.role === 'assistant' && !msg.content.trim());
+        isLoading || messages.some((msg) => msg.role === "assistant" && !msg.content.trim());
 
     const fetchKnowledgeBase = useCallback(async () => {
         try {
-            const response = await fetch('/api/agent/knowledge');
+            const response = await fetch("/api/agent/knowledge");
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
-                log.info({ total: resources.length, data }, '📚 Agent fetched');
+                log.info({ total: resources.length, data }, "📚 Agent fetched");
                 setKnowledgeBase(resources);
             } else {
                 const errorText = await response.text();
                 const error = new Error(
-                    errorText || `HTTP ${response.status}: ${response.statusText}`
+                    errorText || `HTTP ${response.status}: ${response.statusText}`,
                 );
                 log.error(
                     { status: response.status, statusText: response.statusText, errorText },
-                    'Failed to fetch knowledge base'
+                    "Failed to fetch knowledge base",
                 );
                 showErrorToast(error);
             }
         } catch (error) {
-            log.error({ error }, 'Error fetching knowledge base');
+            log.error({ error }, "Error fetching knowledge base");
             showErrorToast(error as Error);
         }
-    }, []);
+    }, [showErrorToast]);
 
     const clearKnowledgeBase = async () => {
         if (!session?.user?.id) return;
 
         setIsClearing(true);
         try {
-            const response = await fetch('/api/agent/clear', {
-                method: 'DELETE',
+            const response = await fetch("/api/agent/clear", {
+                method: "DELETE",
             });
             if (response.ok) {
                 setKnowledgeBase([]);
                 setIsClearDialogOpen(false);
                 reload();
-                toast.success('Knowledge base cleared successfully');
+                toast.success("Knowledge base cleared successfully");
             } else {
                 const errorText = await response.text();
                 const error = new Error(
-                    errorText || `HTTP ${response.status}: Failed to clear knowledge base`
+                    errorText || `HTTP ${response.status}: Failed to clear knowledge base`,
                 );
-                log.error({ status: response.status, errorText }, 'Error clearing knowledge base');
+                log.error({ status: response.status, errorText }, "Error clearing knowledge base");
                 showErrorToast(error);
             }
         } catch (error) {
-            log.error({ error }, 'Error clearing knowledge base');
+            log.error({ error }, "Error clearing knowledge base");
             showErrorToast(error as Error);
         } finally {
             setIsClearing(false);
@@ -279,23 +279,23 @@ export function RAGChatbot() {
         setIsDeleting(true);
         try {
             const response = await fetch(`/api/agent/delete?id=${id}`, {
-                method: 'DELETE',
+                method: "DELETE",
             });
             if (response.ok) {
                 setKnowledgeBase((prev) => prev.filter((item) => item.id !== id));
                 setDeleteItemId(null);
                 reload();
-                toast.success('Knowledge item deleted successfully');
+                toast.success("Knowledge item deleted successfully");
             } else {
                 const errorText = await response.text();
                 const error = new Error(
-                    errorText || `HTTP ${response.status}: Failed to delete knowledge item`
+                    errorText || `HTTP ${response.status}: Failed to delete knowledge item`,
                 );
-                log.error({ status: response.status, errorText }, 'Error deleting knowledge item');
+                log.error({ status: response.status, errorText }, "Error deleting knowledge item");
                 showErrorToast(error);
             }
         } catch (error) {
-            log.error({ error }, 'Error deleting knowledge item');
+            log.error({ error }, "Error deleting knowledge item");
             showErrorToast(error as Error);
         } finally {
             setIsDeleting(false);
@@ -304,7 +304,7 @@ export function RAGChatbot() {
 
     // Auto-scroll to bottom when new messages arrive
     const scrollToBottom = useCallback(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, []);
 
     useEffect(() => {
@@ -317,7 +317,7 @@ export function RAGChatbot() {
     }, [scrollToBottom]);
 
     // Filter to only show Gemini models for RAG
-    const geminiModels = models.filter((m) => m.id.startsWith('gemini-'));
+    const geminiModels = models.filter((m) => m.id.startsWith("gemini-"));
 
     // Get model info for display
     const currentEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel];
@@ -356,8 +356,8 @@ export function RAGChatbot() {
                         <div
                             className="flex-1 overflow-hidden"
                             style={{
-                                height: 'calc(100vh - 180px)', // Account for header + input + safe areas
-                                minHeight: '300px',
+                                height: "calc(100vh - 180px)", // Account for header + input + safe areas
+                                minHeight: "300px",
                             }}
                         >
                             <ScrollArea className="h-full w-full">
@@ -396,12 +396,12 @@ export function RAGChatbot() {
                                                 }}
                                             >
                                                 <div
-                                                    className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                                    className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
                                                 >
-                                                    {message.role === 'user' ? (
+                                                    {message.role === "user" ? (
                                                         <Avatar
                                                             className="h-8 w-8 shrink-0"
-                                                            name={session?.user?.name || 'User'}
+                                                            name={session?.user?.name || "User"}
                                                             size="md"
                                                             src={session?.user?.image ?? undefined}
                                                         />
@@ -417,29 +417,29 @@ export function RAGChatbot() {
                                                         </div>
                                                     )}
                                                     <div
-                                                        className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
+                                                        className={`flex-1 space-y-2 ${message.role === "user" ? "flex flex-col items-end" : ""}`}
                                                     >
                                                         <div
                                                             className={`max-w-[85%] rounded-2xl p-3 ${
-                                                                message.role === 'user'
-                                                                    ? 'bg-primary text-primary-foreground ml-auto'
-                                                                    : 'bg-muted'
+                                                                message.role === "user"
+                                                                    ? "bg-primary text-primary-foreground ml-auto"
+                                                                    : "bg-muted"
                                                             }`}
                                                         >
                                                             <div className="text-sm leading-relaxed">
                                                                 {message.content}
                                                             </div>
-                                                            {message.role === 'assistant' && (
+                                                            {message.role === "assistant" && (
                                                                 <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
                                                                     <div className="flex items-center gap-2">
                                                                         <span>
                                                                             {currentRagChatModel?.name ||
-                                                                                'Unknown'}
+                                                                                "Unknown"}
                                                                         </span>
                                                                         <span>•</span>
                                                                         <span>
                                                                             {currentEmbeddingModel?.name ||
-                                                                                'Unknown'}
+                                                                                "Unknown"}
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -524,8 +524,8 @@ export function RAGChatbot() {
                                     onSubmit={handleMobileSubmit}
                                     placeholder={
                                         canChat
-                                            ? 'Message VT...'
-                                            : 'VT+ subscription or API key required...'
+                                            ? "Message VT..."
+                                            : "VT+ subscription or API key required..."
                                     }
                                     disabled={isLoading || !canChat}
                                     maxRows={4}
@@ -606,13 +606,13 @@ export function RAGChatbot() {
                             .filter((message) => message.content?.trim())
                             .map((message, index) => (
                                 <div
-                                    className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                    className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
                                     key={index}
                                 >
-                                    {message.role === 'user' ? (
+                                    {message.role === "user" ? (
                                         <Avatar
                                             className="h-8 w-8 shrink-0"
-                                            name={session?.user?.name || 'User'}
+                                            name={session?.user?.name || "User"}
                                             size="md"
                                             src={session?.user?.image ?? undefined}
                                         />
@@ -628,26 +628,26 @@ export function RAGChatbot() {
                                         </div>
                                     )}
                                     <div
-                                        className={`flex-1 space-y-2 ${message.role === 'user' ? 'flex flex-col items-end' : ''}`}
+                                        className={`flex-1 space-y-2 ${message.role === "user" ? "flex flex-col items-end" : ""}`}
                                     >
                                         <div
                                             className={`max-w-[80%] rounded-lg p-3 ${
-                                                message.role === 'user'
-                                                    ? 'bg-primary text-primary-foreground ml-auto'
-                                                    : 'bg-muted'
+                                                message.role === "user"
+                                                    ? "bg-primary text-primary-foreground ml-auto"
+                                                    : "bg-muted"
                                             }`}
                                         >
                                             <div className="text-sm">{message.content}</div>
-                                            {message.role === 'assistant' && (
+                                            {message.role === "assistant" && (
                                                 <div className="border-border text-muted-foreground mt-2 border-t pt-2 text-xs">
                                                     <div className="flex items-center gap-2">
                                                         <span>
-                                                            {currentRagChatModel?.name || 'Unknown'}
+                                                            {currentRagChatModel?.name || "Unknown"}
                                                         </span>
                                                         <span>•</span>
                                                         <span>
                                                             {currentEmbeddingModel?.name ||
-                                                                'Unknown'}
+                                                                "Unknown"}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -724,8 +724,8 @@ export function RAGChatbot() {
                                 onChange={handleInputChange}
                                 placeholder={
                                     canChat
-                                        ? 'Message VT...'
-                                        : 'VT+ subscription or API key required...'
+                                        ? "Message VT..."
+                                        : "VT+ subscription or API key required..."
                                 }
                                 value={input}
                             />
@@ -891,7 +891,7 @@ function RagSidebar({
                                                             </p>
                                                             <p className="text-muted-foreground mt-1 text-xs">
                                                                 {new Date(
-                                                                    item.createdAt
+                                                                    item.createdAt,
                                                                 ).toLocaleDateString()}
                                                             </p>
                                                         </div>
@@ -922,7 +922,7 @@ function RagSidebar({
                                     <DialogHeader>
                                         <DialogTitle>Clear Agent</DialogTitle>
                                         <DialogDescription>
-                                            This will permanently delete all {knowledgeBase.length}{' '}
+                                            This will permanently delete all {knowledgeBase.length}{" "}
                                             items from your knowledge base. This action cannot be
                                             undone.
                                         </DialogDescription>
@@ -939,7 +939,7 @@ function RagSidebar({
                                             onClick={clearKnowledgeBase}
                                             variant="destructive"
                                         >
-                                            {isClearing ? 'Clearing...' : 'Clear All'}
+                                            {isClearing ? "Clearing..." : "Clear All"}
                                         </Button>
                                     </div>
                                 </DialogContent>
@@ -967,7 +967,7 @@ function RagSidebar({
                                         }
                                         variant="destructive"
                                     >
-                                        {isDeleting ? 'Deleting...' : 'Delete'}
+                                        {isDeleting ? "Deleting..." : "Delete"}
                                     </Button>
                                 </div>
                             </DialogContent>
@@ -988,17 +988,17 @@ function RagSidebar({
                             <div className="text-muted-foreground text-xs font-medium">
                                 CHAT MODEL
                             </div>
-                            <div className="text-sm">{currentRagChatModel?.name || 'Unknown'}</div>
+                            <div className="text-sm">{currentRagChatModel?.name || "Unknown"}</div>
                         </div>
                         <div className="space-y-2">
                             <div className="text-muted-foreground text-xs font-medium">
                                 EMBEDDING MODEL
                             </div>
                             <div className="text-sm">
-                                {currentEmbeddingModel?.name || 'Unknown'}
+                                {currentEmbeddingModel?.name || "Unknown"}
                             </div>
                             <div className="text-muted-foreground text-xs">
-                                {currentEmbeddingModel?.provider} •{' '}
+                                {currentEmbeddingModel?.provider} •{" "}
                                 {currentEmbeddingModel?.dimensions}D
                             </div>
                         </div>

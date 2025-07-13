@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { AuthErrorBoundary } from './auth-error-boundary';
+import type { ReactNode } from "react";
+import { AuthErrorBoundary } from "./auth-error-boundary";
 
 interface BetterAuthProviderProps {
     children: ReactNode;

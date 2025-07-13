@@ -1,5 +1,5 @@
-import { beforeEach, vi } from 'vitest';
-import '@testing-library/jest-dom/vitest';
+import { beforeEach, vi } from "vitest";
+import "@testing-library/jest-dom/vitest";
 
 // Global test setup for Gemini 2.5 Flash Lite tests
 beforeEach(() => {
@@ -10,14 +10,14 @@ beforeEach(() => {
     vi.useRealTimers();
 
     // Mock environment variables
-    process.env.NODE_ENV = 'test';
-    process.env.GEMINI_API_KEY = 'test-gemini-key';
-    process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+    process.env.NODE_ENV = "test";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
+    process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
 
     // Mock crypto.randomUUID for consistent test IDs
     if (!global.crypto) {
         global.crypto = {
-            randomUUID: vi.fn(() => 'test-uuid-123'),
+            randomUUID: vi.fn(() => "test-uuid-123"),
         } as any;
     }
 });
@@ -37,9 +37,9 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }));
 
 // Mock window.location for redirect tests
-Object.defineProperty(window, 'location', {
+Object.defineProperty(window, "location", {
     value: {
-        href: 'http://localhost:3000',
+        href: "http://localhost:3000",
         assign: vi.fn(),
         reload: vi.fn(),
     },

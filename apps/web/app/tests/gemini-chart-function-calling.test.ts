@@ -1,20 +1,20 @@
-import { ModelEnum, supportsTools } from '@repo/ai/models';
-import { describe, expect, it } from 'vitest';
-import { chartTools } from '@/lib/tools/charts';
+import { ModelEnum, supportsTools } from "@repo/ai/models";
+import { describe, expect, it } from "vitest";
+import { chartTools } from "@/lib/tools/charts";
 
-describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
-    describe('Model Capabilities', () => {
-        it('should support tools according to model configuration', () => {
+describe("GEMINI_2_5_FLASH_LITE Chart Function Calling", () => {
+    describe("Model Capabilities", () => {
+        it("should support tools according to model configuration", () => {
             const model = ModelEnum.GEMINI_2_5_FLASH_LITE;
 
             // Model should support tools
             expect(supportsTools(model)).toBe(true);
 
             // Model enum should be correct
-            expect(model).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(model).toBe("gemini-2.5-flash-lite-preview-06-17");
         });
 
-        it('should have chart tools available and properly configured', () => {
+        it("should have chart tools available and properly configured", () => {
             const tools = chartTools();
 
             // All chart tools should be available
@@ -29,22 +29,22 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
                 expect(tool?.description).toBeDefined();
                 expect(tool?.parameters).toBeDefined();
                 expect(tool?.execute).toBeDefined();
-                expect(typeof tool?.execute).toBe('function');
+                expect(typeof tool?.execute).toBe("function");
             });
         });
     });
 
-    describe('API Parameter Flow', () => {
-        it('should have charts parameter in completion request schema', () => {
+    describe("API Parameter Flow", () => {
+        it("should have charts parameter in completion request schema", () => {
             // Test that charts parameter would be accepted by the API
             // This tests the schema we just added
             const testRequestData = {
-                threadId: 'test-thread',
-                threadItemId: 'test-item',
-                parentThreadItemId: 'test-parent',
-                prompt: 'Create a chart',
+                threadId: "test-thread",
+                threadItemId: "test-item",
+                parentThreadItemId: "test-parent",
+                prompt: "Create a chart",
                 messages: [],
-                mode: 'gemini-2.5-flash-lite-preview-06-17',
+                mode: "gemini-2.5-flash-lite-preview-06-17",
                 webSearch: false,
                 mathCalculator: false,
                 charts: true, // This should now be accepted
@@ -56,8 +56,8 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
         });
     });
 
-    describe('Feature Flag Integration', () => {
-        it('should properly handle chart feature flags', () => {
+    describe("Feature Flag Integration", () => {
+        it("should properly handle chart feature flags", () => {
             // Simulate the app store behavior
             const mockAppState = {
                 useCharts: false,
@@ -75,8 +75,8 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
         });
     });
 
-    describe('Tool Calling Workflow', () => {
-        it('should include chart tools in workflow when charts are enabled', () => {
+    describe("Tool Calling Workflow", () => {
+        it("should include chart tools in workflow when charts are enabled", () => {
             const chartsEnabled = true;
 
             if (chartsEnabled) {
@@ -84,54 +84,54 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
                 const toolKeys = Object.keys(chartToolsObj);
 
                 // Should have all expected chart tools
-                expect(toolKeys).toContain('barChart');
-                expect(toolKeys).toContain('lineChart');
-                expect(toolKeys).toContain('areaChart');
-                expect(toolKeys).toContain('pieChart');
-                expect(toolKeys).toContain('radarChart');
+                expect(toolKeys).toContain("barChart");
+                expect(toolKeys).toContain("lineChart");
+                expect(toolKeys).toContain("areaChart");
+                expect(toolKeys).toContain("pieChart");
+                expect(toolKeys).toContain("radarChart");
 
                 // Tools should be properly formatted for AI SDK
                 toolKeys.forEach((toolName) => {
                     const tool = chartToolsObj[toolName as keyof typeof chartToolsObj];
                     expect(tool).toBeDefined();
-                    expect(typeof tool?.execute).toBe('function');
+                    expect(typeof tool?.execute).toBe("function");
                 });
             }
         });
 
-        it('should execute chart tools successfully', async () => {
+        it("should execute chart tools successfully", async () => {
             const tools = chartTools();
 
             // Test bar chart execution
             const barChartResult = await tools.barChart?.execute?.({
-                title: 'Test Chart for GEMINI_2_5_FLASH_LITE',
+                title: "Test Chart for GEMINI_2_5_FLASH_LITE",
                 data: [
-                    { name: 'A', value: 10 },
-                    { name: 'B', value: 20 },
-                    { name: 'C', value: 15 },
+                    { name: "A", value: 10 },
+                    { name: "B", value: 20 },
+                    { name: "C", value: 15 },
                 ],
-                xAxisLabel: 'Categories',
-                yAxisLabel: 'Values',
-                color: 'blue',
+                xAxisLabel: "Categories",
+                yAxisLabel: "Values",
+                color: "blue",
             });
 
             expect(barChartResult).toEqual({
-                type: 'barChart',
-                title: 'Test Chart for GEMINI_2_5_FLASH_LITE',
+                type: "barChart",
+                title: "Test Chart for GEMINI_2_5_FLASH_LITE",
                 data: [
-                    { name: 'A', value: 10 },
-                    { name: 'B', value: 20 },
-                    { name: 'C', value: 15 },
+                    { name: "A", value: 10 },
+                    { name: "B", value: 20 },
+                    { name: "C", value: 15 },
                 ],
-                xAxisLabel: 'Categories',
-                yAxisLabel: 'Values',
-                color: 'blue',
+                xAxisLabel: "Categories",
+                yAxisLabel: "Values",
+                color: "blue",
             });
         });
     });
 
-    describe('Model-Specific Checks', () => {
-        it('should verify GEMINI_2_5_FLASH_LITE is configured correctly for charts', () => {
+    describe("Model-Specific Checks", () => {
+        it("should verify GEMINI_2_5_FLASH_LITE is configured correctly for charts", () => {
             const model = ModelEnum.GEMINI_2_5_FLASH_LITE;
 
             // Check model supports tools (function calling)
@@ -144,19 +144,19 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
             expect(model).toMatch(/^gemini-2\.5-flash-lite/);
         });
 
-        it('should confirm chart tools work with proper tool choice configuration', () => {
+        it("should confirm chart tools work with proper tool choice configuration", () => {
             const tools = chartTools();
 
             // Simulate the tool configuration that would be passed to generateText
             const toolConfig = {
                 tools,
-                toolChoice: 'auto' as const,
+                toolChoice: "auto" as const,
                 maxSteps: 2,
             };
 
             // Tools should be properly structured
             expect(toolConfig.tools).toBeDefined();
-            expect(toolConfig.toolChoice).toBe('auto');
+            expect(toolConfig.toolChoice).toBe("auto");
             expect(toolConfig.maxSteps).toBe(2);
 
             // Chart tools should be available
@@ -164,10 +164,10 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
         });
     });
 
-    describe('Integration Scenarios', () => {
-        it('should simulate a complete chart creation request', () => {
+    describe("Integration Scenarios", () => {
+        it("should simulate a complete chart creation request", () => {
             // Simulate user request
-            const _userPrompt = 'Create a bar chart showing sales data for Q1 2024';
+            const _userPrompt = "Create a bar chart showing sales data for Q1 2024";
 
             // Simulate chart tools being available
             const tools = chartTools();
@@ -175,26 +175,26 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
 
             // Simulate the tool call parameters that AI would generate
             const expectedToolCall = {
-                toolName: 'barChart',
+                toolName: "barChart",
                 args: {
-                    title: 'Q1 2024 Sales Data',
+                    title: "Q1 2024 Sales Data",
                     data: [
-                        { name: 'Jan', value: 100 },
-                        { name: 'Feb', value: 150 },
-                        { name: 'Mar', value: 200 },
+                        { name: "Jan", value: 100 },
+                        { name: "Feb", value: 150 },
+                        { name: "Mar", value: 200 },
                     ],
-                    xAxisLabel: 'Month',
-                    yAxisLabel: 'Sales ($)',
-                    color: 'blue',
+                    xAxisLabel: "Month",
+                    yAxisLabel: "Sales ($)",
+                    color: "blue",
                 },
             };
 
             // Verify the tool call would be valid
-            expect(expectedToolCall.toolName).toBe('barChart');
+            expect(expectedToolCall.toolName).toBe("barChart");
             expect(expectedToolCall.args.title).toBeDefined();
             expect(expectedToolCall.args.data).toHaveLength(3);
-            expect(expectedToolCall.args.data[0]).toHaveProperty('name');
-            expect(expectedToolCall.args.data[0]).toHaveProperty('value');
+            expect(expectedToolCall.args.data[0]).toHaveProperty("name");
+            expect(expectedToolCall.args.data[0]).toHaveProperty("value");
         });
     });
 });

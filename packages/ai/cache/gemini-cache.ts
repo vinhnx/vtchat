@@ -5,18 +5,18 @@
  * This feature is exclusive to VT+ subscribers.
  */
 
-import { GoogleAICacheManager } from '@google/generative-ai/server';
-import { log } from '@repo/shared/logger';
-import type { ModelEnum } from '../models';
+import { GoogleAICacheManager } from "@google/generative-ai/server";
+import { log } from "@repo/shared/logger";
+import type { ModelEnum } from "../models";
 
 /**
  * Supported Gemini models for explicit caching
  */
 export type GoogleModelCacheableId =
-    | 'models/gemini-2.5-pro'
-    | 'models/gemini-2.5-flash'
-    | 'models/gemini-1.5-flash-001'
-    | 'models/gemini-1.5-pro-001';
+    | "models/gemini-2.5-pro"
+    | "models/gemini-2.5-flash"
+    | "models/gemini-1.5-flash-001"
+    | "models/gemini-1.5-pro-001";
 
 /**
  * Cache configuration interface
@@ -24,7 +24,7 @@ export type GoogleModelCacheableId =
 export interface GeminiCacheConfig {
     /** Cache content (conversation context) */
     contents: Array<{
-        role: 'user' | 'model';
+        role: "user" | "model";
         parts: Array<{ text: string }>;
     }>;
     /** Time-to-live in seconds */
@@ -66,8 +66,8 @@ export class GeminiCacheManager {
             });
             return cachedContent;
         } catch (error) {
-            log.error('Failed to create Gemini cache:', { data: error });
-            throw new Error('Gemini cache creation failed');
+            log.error("Failed to create Gemini cache:", { data: error });
+            throw new Error("Gemini cache creation failed");
         }
     }
 
@@ -78,8 +78,8 @@ export class GeminiCacheManager {
         try {
             return await this.cacheManager.list();
         } catch (error) {
-            log.error('Failed to list Gemini caches:', { data: error });
-            throw new Error('Failed to retrieve cache list');
+            log.error("Failed to list Gemini caches:", { data: error });
+            throw new Error("Failed to retrieve cache list");
         }
     }
 
@@ -90,8 +90,8 @@ export class GeminiCacheManager {
         try {
             await this.cacheManager.delete(cacheName);
         } catch (error) {
-            log.error('Failed to delete Gemini cache:', { data: error });
-            throw new Error('Failed to delete cache');
+            log.error("Failed to delete Gemini cache:", { data: error });
+            throw new Error("Failed to delete cache");
         }
     }
 
@@ -102,8 +102,8 @@ export class GeminiCacheManager {
         try {
             return await this.cacheManager.get(cacheName);
         } catch (error) {
-            log.error('Failed to get Gemini cache:', { data: error });
-            throw new Error('Failed to retrieve cache');
+            log.error("Failed to get Gemini cache:", { data: error });
+            throw new Error("Failed to retrieve cache");
         }
     }
 }
@@ -113,10 +113,10 @@ export class GeminiCacheManager {
  */
 export function isModelCacheable(modelId: string): modelId is GoogleModelCacheableId {
     const cacheableModels: GoogleModelCacheableId[] = [
-        'models/gemini-2.5-pro',
-        'models/gemini-2.5-flash',
-        'models/gemini-1.5-flash-001',
-        'models/gemini-1.5-pro-001',
+        "models/gemini-2.5-pro",
+        "models/gemini-2.5-flash",
+        "models/gemini-1.5-flash-001",
+        "models/gemini-1.5-pro-001",
     ];
     return cacheableModels.includes(modelId as GoogleModelCacheableId);
 }
@@ -126,12 +126,12 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
  */
 export function getGeminiCacheableModelId(modelEnum: ModelEnum): GoogleModelCacheableId | null {
     switch (modelEnum) {
-        case 'gemini-2.5-pro':
-            return 'models/gemini-2.5-pro';
-        case 'gemini-2.5-flash':
-            return 'models/gemini-2.5-flash';
-        case 'gemini-2.5-flash-lite':
-            return 'models/gemini-2.5-flash-lite';
+        case "gemini-2.5-pro":
+            return "models/gemini-2.5-pro";
+        case "gemini-2.5-flash":
+            return "models/gemini-2.5-flash";
+        case "gemini-2.5-flash-lite":
+            return "models/gemini-2.5-flash-lite";
         default:
             return null;
     }

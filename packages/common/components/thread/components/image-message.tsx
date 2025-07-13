@@ -1,5 +1,5 @@
-import { CornerDownRight } from 'lucide-react';
-import Image from 'next/image';
+import { CornerDownRight } from "lucide-react";
+import Image from "next/image";
 
 export const ImageMessage = ({ imageAttachment }: { imageAttachment: string }) => {
     return (

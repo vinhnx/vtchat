@@ -6,8 +6,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@repo/ui';
-import { TrendingDown, TrendingUp } from 'lucide-react';
+} from "@repo/ui";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 export function SectionCards() {
     return (

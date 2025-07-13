@@ -1,14 +1,14 @@
-import { ChatMode } from '@repo/shared/config';
-import { UserTier } from '@repo/shared/constants/user-tiers';
-import { log } from '@repo/shared/logger';
-import { REASONING_BUDGETS } from '../constants/reasoning';
-import { runWorkflow } from '../workflow/flow';
+import { ChatMode } from "@repo/shared/config";
+import { UserTier } from "@repo/shared/constants/user-tiers";
+import { log } from "@repo/shared/logger";
+import { REASONING_BUDGETS } from "../constants/reasoning";
+import { runWorkflow } from "../workflow/flow";
 
 // Create context for the worker
 const ctx: Worker = self as any;
 
 // Create a mock process.env object for the worker context
-if (typeof process === 'undefined') {
+if (typeof process === "undefined") {
     (self as any).process = { env: {} };
 }
 
@@ -26,7 +26,7 @@ function getThinkingModeForChatMode(
         enabled: boolean;
         budget: number;
         includeThoughts: boolean;
-    }
+    },
 ) {
     // Auto-enable reasoning for research modes with high budgets
     if (mode === ChatMode.Deep) {
@@ -56,18 +56,18 @@ function getThinkingModeForChatMode(
 }
 
 // Handle messages from the main thread
-ctx.addEventListener('message', async (event: MessageEvent) => {
+ctx.addEventListener("message", async (event: MessageEvent) => {
     const { type, payload } = event.data;
 
     try {
-        if (type === 'START_WORKFLOW') {
+        if (type === "START_WORKFLOW") {
             // If there's an active workflow, abort it before starting a new one
             if (activeWorkflow) {
                 try {
                     activeWorkflow.abort?.(false);
                     activeWorkflow = null;
                 } catch (e) {
-                    log.error('[Worker] Error aborting previous workflow:', { data: e });
+                    log.error("[Worker] Error aborting previous workflow:", { data: e });
                 }
             }
 
@@ -138,15 +138,15 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
             });
 
             // Start the workflow with the appropriate task
-            const startTask = mode === ChatMode.Deep ? 'router' : 'router';
+            const startTask = mode === ChatMode.Deep ? "router" : "router";
             const result = await activeWorkflow.start(startTask, {
                 question,
             });
 
             // Send completion message
             ctx.postMessage({
-                type: 'done',
-                status: 'complete',
+                type: "done",
+                status: "complete",
                 threadId,
                 threadItemId,
                 parentThreadItemId,
@@ -155,31 +155,31 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
 
             // Clear the active workflow reference
             activeWorkflow = null;
-        } else if (type === 'ABORT_WORKFLOW') {
+        } else if (type === "ABORT_WORKFLOW") {
             // Abort handling
             if (activeWorkflow) {
                 try {
                     activeWorkflow.abort?.(payload.graceful);
                     activeWorkflow = null;
                 } catch (e) {
-                    log.error('[Worker] Error aborting workflow:', { data: e });
+                    log.error("[Worker] Error aborting workflow:", { data: e });
                 }
             }
 
             ctx.postMessage({
-                type: 'done',
-                status: 'aborted',
+                type: "done",
+                status: "aborted",
                 threadId: payload.threadId,
                 threadItemId: payload.threadItemId,
                 parentThreadItemId: payload.parentThreadItemId,
             });
         }
     } catch (error) {
-        log.error('[Worker] Error in worker:', { data: error });
+        log.error("[Worker] Error in worker:", { data: error });
 
         ctx.postMessage({
-            type: 'done',
-            status: 'error',
+            type: "done",
+            status: "error",
             error: error instanceof Error ? error.message : String(error),
             threadId: payload?.threadId,
             threadItemId: payload?.threadItemId,

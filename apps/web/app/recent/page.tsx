@@ -1,8 +1,8 @@
-'use client';
-import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
-import { useChatStore } from '@repo/common/store';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { getFormatDistanceToNow } from '@repo/shared/utils';
+"use client";
+import { LoginRequiredDialog, useLoginRequired } from "@repo/common/components";
+import { useChatStore } from "@repo/common/store";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { getFormatDistanceToNow } from "@repo/shared/utils";
 import {
     Button,
     Command,
@@ -15,11 +15,11 @@ import {
     TypographyH3,
     TypographyMuted,
     TypographyP,
-} from '@repo/ui';
-import { CommandItem } from 'cmdk';
-import { Clock, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+} from "@repo/ui";
+import { CommandItem } from "cmdk";
+import { Clock, MoreHorizontal, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Create a wrapper component for Trash2 to match expected icon prop type
 const TrashIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -34,7 +34,7 @@ export default function ThreadsPage() {
     const switchThread = useChatStore((state) => state.switchThread);
     const { push } = useRouter();
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -60,17 +60,17 @@ export default function ThreadsPage() {
         if (editingId) {
             updateThread({
                 id: editingId,
-                title: title?.trim() || 'Untitled',
+                title: title?.trim() || "Untitled",
             });
             setEditingId(null);
         }
     };
 
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && editingId) {
+        if (e.key === "Enter" && editingId) {
             updateThread({
                 id: editingId,
-                title: title?.trim() || 'Untitled',
+                title: title?.trim() || "Untitled",
             });
             setEditingId(null);
         }
@@ -135,7 +135,7 @@ export default function ThreadsPage() {
                                                         new Date(thread.createdAt),
                                                         {
                                                             addSuffix: true,
-                                                        }
+                                                        },
                                                     )}
                                                 </TypographyMuted>
                                             </div>
@@ -161,7 +161,7 @@ export default function ThreadsPage() {
                                                             handleEditClick(
                                                                 thread.id,
                                                                 thread.title,
-                                                                e
+                                                                e,
                                                             )
                                                         }
                                                     >
@@ -190,7 +190,7 @@ export default function ThreadsPage() {
                                         Start a new conversation to create a thread
                                     </TypographyMuted>
                                 </div>
-                                <Button onClick={() => push('/')} size="sm" variant="default">
+                                <Button onClick={() => push("/")} size="sm" variant="default">
                                     <Plus size={14} strokeWidth={2} />
                                     New Thread
                                 </Button>

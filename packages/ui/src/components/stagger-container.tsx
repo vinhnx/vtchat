@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const containerVariants = {
     hidden: { opacity: 0 },

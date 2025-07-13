@@ -3,11 +3,11 @@ import {
     supportsNativeWebSearch,
     supportsOpenAIWebSearch,
     trimMessageHistoryEstimated,
-} from '@repo/ai/models';
-import { createTask } from '@repo/orchestrator';
-import { ChatMode } from '@repo/shared/config';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { handleError, sendEvents } from '../utils';
+} from "@repo/ai/models";
+import { createTask } from "@repo/orchestrator";
+import { ChatMode } from "@repo/shared/config";
+import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
+import { handleError, sendEvents } from "../utils";
 
 /**
  * Check if a query should skip web search regardless of user toggle
@@ -82,53 +82,53 @@ function shouldSkipWebSearch(question: string): boolean {
 }
 
 export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: 'router',
+    name: "router",
     execute: async ({ events, context, redirectTo }) => {
-        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH_LITE;
+        const mode = context?.get("mode") || ChatMode.GEMINI_2_5_FLASH_LITE;
         const { updateStatus } = sendEvents(events);
 
-        const messageHistory = context?.get('messages') || [];
+        const messageHistory = context?.get("messages") || [];
         const trimmedMessageHistory = trimMessageHistoryEstimated(messageHistory, mode);
-        context?.set('messages', trimmedMessageHistory.trimmedMessages ?? []);
+        context?.set("messages", trimmedMessageHistory.trimmedMessages ?? []);
 
         if (!trimmedMessageHistory?.trimmedMessages) {
-            throw new Error('Maximum message history reached');
+            throw new Error("Maximum message history reached");
         }
 
-        updateStatus('PENDING');
+        updateStatus("PENDING");
 
-        const webSearch = context?.get('webSearch');
-        const question = context?.get('question') || '';
+        const webSearch = context?.get("webSearch");
+        const question = context?.get("question") || "";
         const model = getModelFromChatMode(mode);
 
         // Intelligent query classification - skip web search for certain queries
         const shouldSkip = shouldSkipWebSearch(question);
 
         if (mode === ChatMode.Deep) {
-            redirectTo('refine-query');
+            redirectTo("refine-query");
         } else if (mode === ChatMode.Pro) {
             // Pro Search mode - ALWAYS trigger web search unless it's a query that definitely doesn't need it
             if (shouldSkip) {
                 // For queries that don't need web search, use completion
-                redirectTo('completion');
+                redirectTo("completion");
             } else {
                 // For all other queries, use web search (default behavior for Pro Search)
-                redirectTo('gemini-web-search');
+                redirectTo("gemini-web-search");
             }
         } else if (webSearch === true && !shouldSkip) {
             // Only trigger web search when explicitly enabled AND query needs external info
             // Support web search for both Gemini and OpenAI models
             if (supportsNativeWebSearch(model)) {
-                redirectTo('planner');
+                redirectTo("planner");
             } else if (supportsOpenAIWebSearch(model)) {
                 // For OpenAI models with web search, use completion with OpenAI web search tools
-                redirectTo('completion');
+                redirectTo("completion");
             } else {
                 // For non-supported models with web search, redirect to completion with a note
-                redirectTo('completion');
+                redirectTo("completion");
             }
         } else {
-            redirectTo('completion');
+            redirectTo("completion");
         }
     },
     onError: handleError,

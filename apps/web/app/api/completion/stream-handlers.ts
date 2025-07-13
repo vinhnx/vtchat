@@ -1,11 +1,11 @@
-import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
-import { runWorkflow } from '@repo/ai/workflow';
-import { ChatMode } from '@repo/shared/config';
-import { log } from '@repo/shared/logger';
-import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/environment';
-import type { Geo } from '@vercel/functions';
-import type { CompletionRequestType, StreamController } from './types';
-import { sanitizePayloadForJSON } from './utils';
+import { REASONING_BUDGETS } from "@repo/ai/constants/reasoning";
+import { runWorkflow } from "@repo/ai/workflow";
+import { ChatMode } from "@repo/shared/config";
+import { log } from "@repo/shared/logger";
+import { EnvironmentType, getCurrentEnvironment } from "@repo/shared/types/environment";
+import type { Geo } from "@vercel/functions";
+import type { CompletionRequestType, StreamController } from "./types";
+import { sanitizePayloadForJSON } from "./utils";
 
 /**
  * Get thinking mode configuration for specific chat modes
@@ -17,7 +17,7 @@ function getThinkingModeForChatMode(
         enabled: boolean;
         budget: number;
         includeThoughts: boolean;
-    }
+    },
 ) {
     // Auto-enable reasoning for research modes with high budgets
     if (mode === ChatMode.Deep) {
@@ -49,10 +49,10 @@ function getThinkingModeForChatMode(
 export function sendMessage(
     controller: StreamController,
     encoder: TextEncoder,
-    payload: Record<string, any>
+    payload: Record<string, any>,
 ) {
     try {
-        if (payload.content && typeof payload.content === 'string') {
+        if (payload.content && typeof payload.content === "string") {
             payload.content = normalizeMarkdownContent(payload.content);
         }
 
@@ -65,13 +65,13 @@ export function sendMessage(
             controller.enqueue(new Uint8Array(0));
         } catch (controllerError) {
             // Controller is closed, client likely disconnected
-            if ((controllerError as any)?.code === 'ERR_INVALID_STATE') {
+            if ((controllerError as any)?.code === "ERR_INVALID_STATE") {
                 log.warn(
                     {
                         payloadType: payload.type,
                         threadId: payload.threadId,
                     },
-                    'Controller closed, client likely disconnected'
+                    "Controller closed, client likely disconnected",
                 );
                 return; // Exit silently when controller is closed
             }
@@ -85,13 +85,13 @@ export function sendMessage(
                 payloadType: payload.type,
                 threadId: payload.threadId,
             },
-            'Error serializing message payload'
+            "Error serializing message payload",
         );
 
         const errorMessage = `event: done\ndata: ${JSON.stringify({
-            type: 'done',
-            status: 'error',
-            error: 'Stream data serialization failed. Please refresh the page and try again.',
+            type: "done",
+            status: "error",
+            error: "Stream data serialization failed. Please refresh the page and try again.",
             threadId: payload.threadId,
             threadItemId: payload.threadItemId,
             parentThreadItemId: payload.parentThreadItemId,
@@ -101,7 +101,7 @@ export function sendMessage(
 }
 
 export function normalizeMarkdownContent(content: string): string {
-    const normalizedContent = content.replace(/\\n/g, '\n');
+    const normalizedContent = content.replace(/\\n/g, "\n");
     return normalizedContent;
 }
 
@@ -144,7 +144,7 @@ export async function executeStream({
             onFinish,
             apiKeys: data.apiKeys,
             thinkingMode: getThinkingModeForChatMode(data.mode, data.thinkingMode),
-            userTier: data.userTier ?? 'FREE',
+            userTier: data.userTier ?? "FREE",
             userId,
         });
 
@@ -163,20 +163,20 @@ export async function executeStream({
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-            log.debug('Starting workflow', { threadId: data.threadId });
+            log.debug("Starting workflow", { threadId: data.threadId });
         }
 
-        await workflow.start('router', {
+        await workflow.start("router", {
             question: data.prompt,
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-            log.debug('Workflow completed', { threadId: data.threadId });
+            log.debug("Workflow completed", { threadId: data.threadId });
         }
 
         sendMessage(controller, encoder, {
-            type: 'done',
-            status: 'complete',
+            type: "done",
+            status: "complete",
             threadId: data.threadId,
             threadItemId: data.threadItemId,
             parentThreadItemId: data.parentThreadItemId,
@@ -187,19 +187,19 @@ export async function executeStream({
         if (abortController.signal.aborted) {
             // Aborts are normal user actions, not errors
             if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-                log.debug('Workflow aborted', { threadId: data.threadId });
+                log.debug("Workflow aborted", { threadId: data.threadId });
             }
 
             sendMessage(controller, encoder, {
-                type: 'done',
-                status: 'aborted',
+                type: "done",
+                status: "aborted",
                 threadId: data.threadId,
                 threadItemId: data.threadItemId,
                 parentThreadItemId: data.parentThreadItemId,
             });
         } else {
             // Use comprehensive error handling for workflow execution errors
-            const { handleStreamError } = await import('./stream-error-handler');
+            const { handleStreamError } = await import("./stream-error-handler");
             await handleStreamError({
                 error,
                 controller,

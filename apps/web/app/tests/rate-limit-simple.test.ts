@@ -1,9 +1,9 @@
-import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
-import { describe, expect, it } from 'vitest';
+import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
+import { describe, expect, it } from "vitest";
 
-describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
-    describe('Rate Limit Constants', () => {
-        it('should have correct rate limit specifications', () => {
+describe("Gemini 2.5 Flash Lite - Basic Validation", () => {
+    describe("Rate Limit Constants", () => {
+        it("should have correct rate limit specifications", () => {
             // These are the exact specifications from the requirements
             const EXPECTED_DAILY_LIMIT = 20; // 20 requests per day per account
             const EXPECTED_MINUTE_LIMIT = 5; // 5 requests per minute per account
@@ -13,16 +13,16 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('Model Configuration', () => {
-        it('should have Gemini 2.5 Flash Lite configured correctly', async () => {
-            const { ModelEnum } = await import('@repo/ai/models');
+    describe("Model Configuration", () => {
+        it("should have Gemini 2.5 Flash Lite configured correctly", async () => {
+            const { ModelEnum } = await import("@repo/ai/models");
 
             // Verify the model enum exists
-            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe("gemini-2.5-flash-lite-preview-06-17");
         });
 
-        it('should identify free models correctly', async () => {
-            const { models, ModelEnum } = await import('@repo/ai/models');
+        it("should identify free models correctly", async () => {
+            const { models, ModelEnum } = await import("@repo/ai/models");
 
             const geminiLiteModel = models.find((m) => m.id === ModelEnum.GEMINI_2_5_FLASH_LITE);
             expect(geminiLiteModel).toBeDefined();
@@ -30,17 +30,17 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('Chat Mode Configuration', () => {
-        it('should require authentication for Gemini 2.5 Flash Lite', async () => {
-            const { ChatMode, ChatModeConfig } = await import('@repo/shared/config');
+    describe("Chat Mode Configuration", () => {
+        it("should require authentication for Gemini 2.5 Flash Lite", async () => {
+            const { ChatMode, ChatModeConfig } = await import("@repo/shared/config");
 
             const config = ChatModeConfig[ChatMode.GEMINI_2_5_FLASH_LITE];
             expect(config).toBeDefined();
             expect(config.isAuthRequired).toBe(true);
         });
 
-        it('should not require subscription for free model', async () => {
-            const { ChatMode, ChatModeConfig } = await import('@repo/shared/config');
+        it("should not require subscription for free model", async () => {
+            const { ChatMode, ChatModeConfig } = await import("@repo/shared/config");
 
             const config = ChatModeConfig[ChatMode.GEMINI_2_5_FLASH_LITE];
             expect(config.requiredFeature).toBeUndefined();
@@ -48,10 +48,10 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('Time Calculations', () => {
-        it('should correctly identify new day for daily reset (00:00 UTC)', () => {
-            const day1 = new Date('2024-01-01T23:59:00Z');
-            const day2 = new Date('2024-01-02T00:01:00Z');
+    describe("Time Calculations", () => {
+        it("should correctly identify new day for daily reset (00:00 UTC)", () => {
+            const day1 = new Date("2024-01-01T23:59:00Z");
+            const day2 = new Date("2024-01-02T00:01:00Z");
 
             // Different UTC dates should trigger reset
             const isDifferentDay =
@@ -62,9 +62,9 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
             expect(isDifferentDay).toBe(true);
         });
 
-        it('should correctly identify new minute for minute reset', () => {
-            const minute1 = new Date('2024-01-01T12:00:30Z');
-            const minute2 = new Date('2024-01-01T12:01:10Z');
+        it("should correctly identify new minute for minute reset", () => {
+            const minute1 = new Date("2024-01-01T12:00:30Z");
+            const minute2 = new Date("2024-01-01T12:01:10Z");
 
             // Different minutes should trigger reset
             const isDifferentMinute =
@@ -73,9 +73,9 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
             expect(isDifferentMinute).toBe(true);
         });
 
-        it('should calculate next daily reset correctly', () => {
-            const now = new Date('2024-01-01T15:30:45Z');
-            const expectedReset = new Date('2024-01-02T00:00:00Z');
+        it("should calculate next daily reset correctly", () => {
+            const now = new Date("2024-01-01T15:30:45Z");
+            const expectedReset = new Date("2024-01-02T00:00:00Z");
 
             const nextReset = new Date(now);
             nextReset.setUTCDate(nextReset.getUTCDate() + 1);
@@ -85,8 +85,8 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('User Account Isolation Logic', () => {
-        it('should maintain separate counters per user', () => {
+    describe("User Account Isolation Logic", () => {
+        it("should maintain separate counters per user", () => {
             // Simulate separate user accounts
             const user1State = { dailyCount: 5, minuteCount: 0 };
             const user2State = { dailyCount: 8, minuteCount: 1 };
@@ -101,7 +101,7 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
             expect(10 - user2State.dailyCount).toBe(2);
         });
 
-        it('should enforce per-account limits independently', () => {
+        it("should enforce per-account limits independently", () => {
             const DAILY_LIMIT = 20;
 
             // User1 at limit, User2 has remaining
@@ -116,56 +116,56 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('Error Response Structure', () => {
-        it('should provide correct error structure for daily limit', () => {
+    describe("Error Response Structure", () => {
+        it("should provide correct error structure for daily limit", () => {
             const dailyLimitError = {
-                error: 'Rate limit exceeded',
+                error: "Rate limit exceeded",
                 message: RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN,
-                limitType: 'daily_limit_exceeded',
+                limitType: "daily_limit_exceeded",
                 remainingDaily: 0,
                 remainingMinute: 1,
-                resetTime: '2024-01-02T00:00:00.000Z',
-                upgradeUrl: '/plus',
-                usageSettingsAction: 'open_usage_settings',
+                resetTime: "2024-01-02T00:00:00.000Z",
+                upgradeUrl: "/plus",
+                usageSettingsAction: "open_usage_settings",
             };
 
-            expect(dailyLimitError.limitType).toBe('daily_limit_exceeded');
-            expect(dailyLimitError.upgradeUrl).toBe('/plus');
+            expect(dailyLimitError.limitType).toBe("daily_limit_exceeded");
+            expect(dailyLimitError.upgradeUrl).toBe("/plus");
             expect(dailyLimitError.remainingDaily).toBe(0);
         });
 
-        it('should provide correct error structure for minute limit', () => {
+        it("should provide correct error structure for minute limit", () => {
             const minuteLimitError = {
-                error: 'Rate limit exceeded',
+                error: "Rate limit exceeded",
                 message: RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN,
-                limitType: 'minute_limit_exceeded',
+                limitType: "minute_limit_exceeded",
                 remainingDaily: 5,
                 remainingMinute: 0,
-                upgradeUrl: '/plus',
-                usageSettingsAction: 'open_usage_settings',
+                upgradeUrl: "/plus",
+                usageSettingsAction: "open_usage_settings",
             };
 
-            expect(minuteLimitError.limitType).toBe('minute_limit_exceeded');
-            expect(minuteLimitError.upgradeUrl).toBe('/plus');
+            expect(minuteLimitError.limitType).toBe("minute_limit_exceeded");
+            expect(minuteLimitError.upgradeUrl).toBe("/plus");
             expect(minuteLimitError.remainingMinute).toBe(0);
         });
     });
 
-    describe('Authentication Requirements', () => {
-        it('should define proper unauthenticated response', () => {
+    describe("Authentication Requirements", () => {
+        it("should define proper unauthenticated response", () => {
             const authError = {
-                error: 'Authentication required',
-                message: 'Please register to use the free Gemini 2.5 Flash Lite model.',
-                redirect: '/auth/login',
+                error: "Authentication required",
+                message: "Please register to use the free Gemini 2.5 Flash Lite model.",
+                redirect: "/auth/login",
             };
 
-            expect(authError.error).toBe('Authentication required');
-            expect(authError.redirect).toBe('/auth/login');
+            expect(authError.error).toBe("Authentication required");
+            expect(authError.redirect).toBe("/auth/login");
         });
     });
 
-    describe('HTTP Status Codes', () => {
-        it('should use correct status codes for different scenarios', () => {
+    describe("HTTP Status Codes", () => {
+        it("should use correct status codes for different scenarios", () => {
             const HTTP_UNAUTHORIZED = 401; // No authentication
             const HTTP_RATE_LIMITED = 429; // Rate limit exceeded
             const HTTP_OK = 200; // Success
@@ -176,15 +176,15 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
         });
     });
 
-    describe('UI Display Text', () => {
-        it('should have correct description text for free model', () => {
+    describe("UI Display Text", () => {
+        it("should have correct description text for free model", () => {
             const expectedDescription =
-                'Free model • 20 requests/day per account • 5 requests/minute';
+                "Free model • 20 requests/day per account • 5 requests/minute";
 
             // This text should be shown in the UI
-            expect(expectedDescription).toContain('per account');
-            expect(expectedDescription).toContain('20 requests/day');
-            expect(expectedDescription).toContain('5 requests/minute');
+            expect(expectedDescription).toContain("per account");
+            expect(expectedDescription).toContain("20 requests/day");
+            expect(expectedDescription).toContain("5 requests/minute");
         });
     });
 });

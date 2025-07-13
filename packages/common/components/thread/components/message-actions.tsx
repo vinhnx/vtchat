@@ -1,9 +1,9 @@
-'use client';
-import { ChatModeOptions } from '@repo/common/components';
-import { useAgentStream, useCopyText } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import { type ChatMode, getChatModeName } from '@repo/shared/config';
-import type { ThreadItem } from '@repo/shared/types';
+"use client";
+import { ChatModeOptions } from "@repo/common/components";
+import { useAgentStream, useCopyText } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import { type ChatMode, getChatModeName } from "@repo/shared/config";
+import type { ThreadItem } from "@repo/shared/types";
 import {
     Alert,
     AlertDescription,
@@ -11,9 +11,9 @@ import {
     Button,
     DropdownMenu,
     DropdownMenuTrigger,
-} from '@repo/ui';
-import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from 'lucide-react';
-import React, { forwardRef, useState } from 'react';
+} from "@repo/ui";
+import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from "lucide-react";
+import React, { forwardRef, useState } from "react";
 
 type MessageActionsProps = {
     threadItem: ThreadItem;
@@ -39,7 +39,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
             (gateInfo: { feature?: string; plan?: string; title: string; message: string }) => {
                 setGatedFeatureAlert(gateInfo);
             },
-            []
+            [],
         );
         return (
             <div className="flex flex-col gap-2">
@@ -47,7 +47,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                     {threadItem?.answer?.text && (
                         <Button
                             onClick={() => {
-                                if (ref && 'current' in ref && ref.current) {
+                                if (ref && "current" in ref && ref.current) {
                                     copyToClipboard(ref.current);
                                 }
                             }}
@@ -55,7 +55,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             tooltip="Copy"
                             variant="ghost-bordered"
                         >
-                            {status === 'copied' ? (
+                            {status === "copied" ? (
                                 <Check size={16} strokeWidth={2} />
                             ) : (
                                 <Copy size={16} strokeWidth={2} />
@@ -67,18 +67,18 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                         <Button
                             onClick={() => {
                                 // Get text content from the DOM element (same as regular copy)
-                                let textContent = '';
-                                if (ref && 'current' in ref && ref.current) {
+                                let textContent = "";
+                                if (ref && "current" in ref && ref.current) {
                                     textContent =
-                                        ref.current.innerText || ref.current.textContent || '';
+                                        ref.current.innerText || ref.current.textContent || "";
                                 }
 
                                 // Build references section
                                 const referencesSection = threadItem?.sources?.length
                                     ? `\n\n## References\n${threadItem.sources
                                           .map((source) => `[${source.index}] ${source.link}`)
-                                          .join('\n')}`
-                                    : '';
+                                          .join("\n")}`
+                                    : "";
 
                                 copyMarkdown(`${textContent}${referencesSection}`);
                             }}
@@ -86,15 +86,15 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             tooltip="Copy Markdown"
                             variant="ghost-bordered"
                         >
-                            {markdownCopyStatus === 'copied' ? (
+                            {markdownCopyStatus === "copied" ? (
                                 <Check size={16} strokeWidth={2} />
                             ) : (
                                 <FileText size={16} strokeWidth={2} />
                             )}
                         </Button>
                     )}
-                    {threadItem.status !== 'ERROR' &&
-                        threadItem.answer?.status !== 'HUMAN_REVIEW' && (
+                    {threadItem.status !== "ERROR" &&
+                        threadItem.answer?.status !== "HUMAN_REVIEW" && (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
@@ -111,9 +111,9 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                     setChatMode={async (mode) => {
                                         setChatMode(mode);
                                         const formData = new FormData();
-                                        formData.append('query', threadItem.query || '');
+                                        formData.append("query", threadItem.query || "");
                                         const threadItems = await getThreadItems(
-                                            threadItem.threadId
+                                            threadItem.threadId,
                                         );
                                         handleSubmit({
                                             formData,
@@ -156,7 +156,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                 )}
             </div>
         );
-    }
+    },
 );
 
-MessageActions.displayName = 'MessageActions';
+MessageActions.displayName = "MessageActions";

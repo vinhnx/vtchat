@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     SidebarGroup,
@@ -6,9 +6,9 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@repo/ui';
-import type { LucideIcon } from 'lucide-react';
-import type * as React from 'react';
+} from "@repo/ui";
+import type { LucideIcon } from "lucide-react";
+import type * as React from "react";
 
 export function NavSecondary({
     items,

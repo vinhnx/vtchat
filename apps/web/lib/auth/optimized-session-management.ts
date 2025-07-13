@@ -2,11 +2,11 @@
  * Optimized session management using Neon database optimizations
  */
 
-import { log } from '@repo/shared/logger';
-import { and, desc, eq, lt } from 'drizzle-orm';
-import { redisCache } from '../cache/redis-cache';
-import { db } from '../database';
-import { sessions } from '../database/schema';
+import { log } from "@repo/shared/logger";
+import { and, desc, eq, lt } from "drizzle-orm";
+import { redisCache } from "../cache/redis-cache";
+import { db } from "../database";
+import { sessions } from "../database/schema";
 
 interface SessionData {
     id: string;
@@ -51,8 +51,8 @@ export async function validateSessionOptimized(sessionId: string): Promise<Sessi
             .where(
                 and(
                     eq(sessions.id, sessionId),
-                    lt(new Date(), sessions.expiresAt) // Only get non-expired sessions
-                )
+                    lt(new Date(), sessions.expiresAt), // Only get non-expired sessions
+                ),
             )
             .limit(1);
 
@@ -67,7 +67,7 @@ export async function validateSessionOptimized(sessionId: string): Promise<Sessi
 
         return sessionData;
     } catch (error) {
-        log.error('Session validation failed:', { sessionId, error });
+        log.error("Session validation failed:", { sessionId, error });
         return null;
     }
 }
@@ -93,15 +93,15 @@ export async function getUserSessions(userId: string, limit: number = 10): Promi
             .where(
                 and(
                     eq(sessions.userId, userId),
-                    lt(new Date(), sessions.expiresAt) // Only active sessions
-                )
+                    lt(new Date(), sessions.expiresAt), // Only active sessions
+                ),
             )
             .orderBy(desc(sessions.expiresAt))
             .limit(limit);
 
         return result;
     } catch (error) {
-        log.error('Failed to get user sessions:', { userId, error });
+        log.error("Failed to get user sessions:", { userId, error });
         return [];
     }
 }
@@ -112,13 +112,13 @@ export async function getUserSessions(userId: string, limit: number = 10): Promi
 export async function cleanupExpiredSessions(): Promise<number> {
     try {
         // Use our optimized database function
-        const result = await db.execute('SELECT cleanup_expired_sessions() as deleted_count');
+        const result = await db.execute("SELECT cleanup_expired_sessions() as deleted_count");
         const deletedCount = (result.rows[0]?.deleted_count as number) || 0;
 
-        log.info('Session cleanup completed', { deletedCount });
+        log.info("Session cleanup completed", { deletedCount });
         return deletedCount;
     } catch (error) {
-        log.error('Session cleanup failed:', { error });
+        log.error("Session cleanup failed:", { error });
         return 0;
     }
 }
@@ -141,13 +141,13 @@ export async function revokeSession(sessionId: string): Promise<boolean> {
             const cacheKey = `session:${sessionId}`;
             await redisCache.del(cacheKey);
 
-            log.debug('Session revoked', { sessionId });
+            log.debug("Session revoked", { sessionId });
             return true;
         }
 
         return false;
     } catch (error) {
-        log.error('Failed to revoke session:', { sessionId, error });
+        log.error("Failed to revoke session:", { sessionId, error });
         return false;
     }
 }
@@ -177,10 +177,10 @@ export async function revokeUserSessions(userId: string): Promise<number> {
             await redisCache.del(cacheKey);
         }
 
-        log.info('User sessions revoked', { userId, count: result.length });
+        log.info("User sessions revoked", { userId, count: result.length });
         return result.length;
     } catch (error) {
-        log.error('Failed to revoke user sessions:', { userId, error });
+        log.error("Failed to revoke user sessions:", { userId, error });
         return 0;
     }
 }
@@ -203,7 +203,7 @@ export async function getSessionStats() {
 
         return result.rows[0];
     } catch (error) {
-        log.error('Failed to get session stats:', { error });
+        log.error("Failed to get session stats:", { error });
         return null;
     }
 }
@@ -247,7 +247,7 @@ export async function validateSessionToken(token: string): Promise<SessionData |
 
         return sessionData;
     } catch (error) {
-        log.error('Token validation failed:', { error });
+        log.error("Token validation failed:", { error });
         return null;
     }
 }
@@ -256,7 +256,7 @@ export async function validateSessionToken(token: string): Promise<SessionData |
  * Create optimized session with caching
  */
 export async function createSessionOptimized(
-    sessionData: Omit<SessionData, 'id'>
+    sessionData: Omit<SessionData, "id">,
 ): Promise<string | null> {
     try {
         const result = await db
@@ -288,7 +288,7 @@ export async function createSessionOptimized(
 
         return null;
     } catch (error) {
-        log.error('Failed to create session:', { error });
+        log.error("Failed to create session:", { error });
         return null;
     }
 }

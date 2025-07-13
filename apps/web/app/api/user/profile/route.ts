@@ -1,14 +1,14 @@
-import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { eq } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { users } from '@/lib/database/schema';
+import { log } from "@repo/shared/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { users } from "@/lib/database/schema";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
     try {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
         const userId = session?.user?.id;
         if (!userId) {
-            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+            return NextResponse.json({ error: "Authentication required" }, { status: 401 });
         }
 
         // Fetch user data from database
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
             .limit(1);
 
         if (userResults.length === 0) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
         const user = userResults[0];
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
             success: true,
         });
     } catch (error) {
-        log.error('Profile error:', { error });
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        log.error("Profile error:", { error });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

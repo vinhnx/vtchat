@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://vtchat.io.vn";
 
 interface MetadataConfig {
     title?: string;
@@ -12,11 +12,11 @@ interface MetadataConfig {
 }
 
 export function generateMetadata({
-    title = 'VT',
-    description = 'Minimal AI chat application.',
-    pathname = '',
+    title = "VT",
+    description = "Minimal AI chat application.",
+    pathname = "",
     keywords,
-    image = '/og-image-v2.jpg',
+    image = "/og-image-v2.jpg",
     noIndex = false,
 }: MetadataConfig = {}): Metadata {
     const canonicalUrl = `${BASE_URL}${pathname}`;
@@ -32,7 +32,7 @@ export function generateMetadata({
         description,
         keywords:
             keywords ||
-            'agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling',
+            "agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling",
         alternates: {
             canonical: canonicalUrl,
         },
@@ -40,9 +40,9 @@ export function generateMetadata({
             title: fullTitle,
             description,
             url: canonicalUrl,
-            siteName: 'VT',
-            type: 'website',
-            locale: 'en_US',
+            siteName: "VT",
+            type: "website",
+            locale: "en_US",
             images: [
                 {
                     url: `${BASE_URL}${image}?v=${imageVersion}`,
@@ -53,11 +53,11 @@ export function generateMetadata({
             ],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title: fullTitle,
             description,
             images: [`${BASE_URL}/twitter-image-v2.jpg`],
         },
-        robots: noIndex ? 'noindex,nofollow' : 'index,follow',
+        robots: noIndex ? "noindex,nofollow" : "index,follow",
     };
 }

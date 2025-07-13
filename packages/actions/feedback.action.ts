@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { auth } from '@repo/shared/lib/auth';
+import { auth } from "@repo/shared/lib/auth";
 
 export const submitFeedback = async (feedback: string) => {
     const session = await auth.api.getSession({
@@ -9,7 +9,7 @@ export const submitFeedback = async (feedback: string) => {
     const userId = session?.user?.id;
 
     if (!userId) {
-        return { error: 'Unauthorized' };
+        return { error: "Unauthorized" };
     }
 
     return feedback;

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useSubscriptionAccess } from '@repo/common/hooks';
-import { useApiKeysStore } from '@repo/common/store';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
+import { useSubscriptionAccess } from "@repo/common/hooks";
+import { useApiKeysStore } from "@repo/common/store";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
 
 interface AccessResult {
     isGated: boolean;
@@ -65,7 +65,7 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
 
     // For other modes, use regular logic
     let hasRequiredAccess = true;
-    const reason: AccessResult['reason'] = {};
+    const reason: AccessResult["reason"] = {};
 
     if (config.requiredFeature) {
         hasRequiredAccess = hasAccess({

@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { ModelEnum, models } from '@repo/ai/models';
+import { ModelEnum, models } from "@repo/ai/models";
 import {
     useCreemSubscription,
     useCurrentPlan,
     useFeatureAccess,
     useVtPlusAccess,
-} from '@repo/common/hooks';
-import { useAppStore } from '@repo/common/store';
+} from "@repo/common/hooks";
+import { useAppStore } from "@repo/common/store";
 import {
     DEFAULT_EMBEDDING_MODEL,
     EMBEDDING_MODEL_CONFIG,
-} from '@repo/shared/config/embedding-models';
-import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from '@repo/shared/config/vt-plus-features';
-import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
-import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
+} from "@repo/shared/config/embedding-models";
+import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from "@repo/shared/config/vt-plus-features";
+import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
+import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import {
     Alert,
     AlertDescription,
@@ -34,8 +34,8 @@ import {
     Textarea,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+} from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Activity,
     ArrowRight,
@@ -55,12 +55,12 @@ import {
     Trash2,
     User,
     Zap,
-} from 'lucide-react';
-import React, { useState } from 'react';
-import { Combobox } from './combobox';
-import { PaymentRedirectLoader } from './payment-redirect-loader';
-import { UserTierBadge } from './user-tier-badge';
-import { VtPlusUsageMeter } from './vtplus-usage-meter';
+} from "lucide-react";
+import React, { useState } from "react";
+import { Combobox } from "./combobox";
+import { PaymentRedirectLoader } from "./payment-redirect-loader";
+import { UserTierBadge } from "./user-tier-badge";
+import { VtPlusUsageMeter } from "./vtplus-usage-meter";
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -107,14 +107,14 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const analyzeKnowledgeBase = async () => {
         setIsAnalyzing(true);
         try {
-            const response = await fetch('/api/agent/knowledge');
+            const response = await fetch("/api/agent/knowledge");
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
 
                 if (resources.length > 0) {
                     // Simple analysis to extract potential name and work info
-                    const allContent = resources.map((r: any) => r.content).join(' ');
+                    const allContent = resources.map((r: any) => r.content).join(" ");
 
                     // Look for patterns like "I'm [name]", "My name is [name]", "call me [name]"
                     const namePatterns = [
@@ -122,10 +122,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         /(?:this is|here's|i'm)\s+([A-Z][a-z]+)/gi,
                     ];
 
-                    let suggestedName = '';
+                    let suggestedName = "";
                     for (const pattern of namePatterns) {
                         const match = pattern.exec(allContent);
-                        if (match?.[1] && !['The', 'A', 'An', 'This', 'That'].includes(match[1])) {
+                        if (match?.[1] && !["The", "A", "An", "This", "That"].includes(match[1])) {
                             suggestedName = match[1];
                             break;
                         }
@@ -138,7 +138,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         /(?:at [A-Z][a-z]+ [A-Z][a-z]+|at [A-Z][a-z]+)/gi,
                     ];
 
-                    let suggestedWork = '';
+                    let suggestedWork = "";
                     for (const pattern of workPatterns) {
                         const match = pattern.exec(allContent);
                         if (match) {
@@ -159,7 +159,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 }
             }
         } catch (error) {
-            log.error({ error }, 'Error analyzing knowledge base');
+            log.error({ error }, "Error analyzing knowledge base");
         } finally {
             setIsAnalyzing(false);
         }
@@ -189,72 +189,72 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
             case FeatureSlug.DOCUMENT_PARSING:
                 return {
                     icon: <FileText className="h-4 w-4" />,
-                    benefit: 'Upload and analyze documents',
+                    benefit: "Upload and analyze documents",
                     description:
-                        'Process PDFs, Word docs, spreadsheets, and other files directly in chat. Extract insights, summarize content, and ask questions about your documents.',
+                        "Process PDFs, Word docs, spreadsheets, and other files directly in chat. Extract insights, summarize content, and ask questions about your documents.",
                 };
             case FeatureSlug.STRUCTURED_OUTPUT:
                 return {
                     icon: <MessageSquare className="h-4 w-4" />,
-                    benefit: 'Organized, structured responses',
+                    benefit: "Organized, structured responses",
                     description:
-                        'Get AI responses in clean tables, bullet points, numbered lists, and other organized formats for better readability and usability.',
+                        "Get AI responses in clean tables, bullet points, numbered lists, and other organized formats for better readability and usability.",
                 };
             case FeatureSlug.THINKING_MODE_TOGGLE:
                 return {
                     icon: <Brain className="h-4 w-4" />,
-                    benefit: 'AI reasoning transparency',
+                    benefit: "AI reasoning transparency",
                     description:
-                        'See exactly how the AI thinks through problems step-by-step. Understand the reasoning process for better learning and trust.',
+                        "See exactly how the AI thinks through problems step-by-step. Understand the reasoning process for better learning and trust.",
                 };
             case FeatureSlug.REASONING_CHAIN:
                 return {
                     icon: <Activity className="h-4 w-4" />,
-                    benefit: 'Step-by-step problem solving',
+                    benefit: "Step-by-step problem solving",
                     description:
-                        'Watch AI break down complex problems into logical steps, showing the chain of reasoning for transparent decision making.',
+                        "Watch AI break down complex problems into logical steps, showing the chain of reasoning for transparent decision making.",
                 };
             case FeatureSlug.PRO_SEARCH:
                 return {
                     icon: <Search className="h-4 w-4" />,
-                    benefit: 'Advanced web search integration',
+                    benefit: "Advanced web search integration",
                     description:
-                        'Get real-time information from the web with intelligent search capabilities that understand context and provide accurate results.',
+                        "Get real-time information from the web with intelligent search capabilities that understand context and provide accurate results.",
                 };
             case FeatureSlug.DEEP_RESEARCH:
                 return {
                     icon: <Shield className="h-4 w-4" />,
-                    benefit: 'Comprehensive research tools',
+                    benefit: "Comprehensive research tools",
                     description:
-                        'Conduct thorough research across multiple sources with AI-powered analysis, fact-checking, and synthesis of information.',
+                        "Conduct thorough research across multiple sources with AI-powered analysis, fact-checking, and synthesis of information.",
                 };
             case FeatureSlug.DARK_THEME:
                 return {
                     icon: <Palette className="h-4 w-4" />,
-                    benefit: 'Comfortable dark mode',
+                    benefit: "Comfortable dark mode",
                     description:
-                        'Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.',
+                        "Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.",
                 };
             case FeatureSlug.GEMINI_EXPLICIT_CACHING:
                 return {
                     icon: <Zap className="h-4 w-4" />,
-                    benefit: 'Cost-effective Gemini caching',
+                    benefit: "Cost-effective Gemini caching",
                     description:
-                        'Reduce API costs for Gemini 2.5 and 2.0 models by reusing conversation context across multiple queries.',
+                        "Reduce API costs for Gemini 2.5 and 2.0 models by reusing conversation context across multiple queries.",
                 };
             case FeatureSlug.CHART_VISUALIZATION:
                 return {
                     icon: <BarChart3 className="h-4 w-4" />,
-                    benefit: 'Interactive chart generation',
+                    benefit: "Interactive chart generation",
                     description:
-                        'Create beautiful interactive charts and graphs directly from AI conversations. Visualize data with bar charts, line charts, pie charts, and more.',
+                        "Create beautiful interactive charts and graphs directly from AI conversations. Visualize data with bar charts, line charts, pie charts, and more.",
                 };
             default:
                 return {
                     icon: <Sparkles className="h-4 w-4" />,
-                    benefit: 'Enhanced AI capabilities',
+                    benefit: "Enhanced AI capabilities",
                     description:
-                        'Premium features that unlock the full potential of AI assistance.',
+                        "Premium features that unlock the full potential of AI assistance.",
                 };
         }
     };
@@ -263,13 +263,13 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         try {
             await openCustomerPortal();
         } catch (error) {
-            log.error({ error }, 'Failed to open subscription portal');
+            log.error({ error }, "Failed to open subscription portal");
         }
     };
 
     const handleUpgradeToPlus = () => {
         onClose?.();
-        window.location.href = '/plus';
+        window.location.href = "/plus";
     };
 
     return (
@@ -383,7 +383,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <AnimatePresence mode="wait">
                                 {thinkingMode.enabled && (
                                     <motion.div
-                                        animate={{ opacity: 1, height: 'auto' }}
+                                        animate={{ opacity: 1, height: "auto" }}
                                         className="space-y-4"
                                         exit={{ opacity: 0, height: 0 }}
                                         initial={{ opacity: 0, height: 0 }}
@@ -501,7 +501,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <AnimatePresence mode="wait">
                                 {geminiCaching.enabled && (
                                     <motion.div
-                                        animate={{ opacity: 1, height: 'auto' }}
+                                        animate={{ opacity: 1, height: "auto" }}
                                         className="space-y-4"
                                         exit={{ opacity: 0, height: 0 }}
                                         initial={{ opacity: 0, height: 0 }}
@@ -516,10 +516,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Cache Duration:{' '}
+                                                            Cache Duration:{" "}
                                                             {Math.round(
-                                                                geminiCaching.ttlSeconds / 60
-                                                            )}{' '}
+                                                                geminiCaching.ttlSeconds / 60,
+                                                            )}{" "}
                                                             minutes
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
@@ -555,7 +555,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Max Cached Conversations:{' '}
+                                                            Max Cached Conversations:{" "}
                                                             {geminiCaching.maxCaches}
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
@@ -680,7 +680,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 {knowledgeBaseSuggestions.work.length > 30
                                                     ? `${knowledgeBaseSuggestions.work.substring(
                                                           0,
-                                                          30
+                                                          30,
                                                       )}...`
                                                     : knowledgeBaseSuggestions.work}
                                                 "
@@ -717,7 +717,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     size="sm"
                                     variant="outline"
                                 >
-                                    {isAnalyzing ? 'Analyzing...' : 'Re-analyze Agent'}
+                                    {isAnalyzing ? "Analyzing..." : "Re-analyze Agent"}
                                 </Button>
                             </div>
                         </CardContent>
@@ -743,7 +743,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     className="flex-1"
                                     onClick={() => {
                                         // Open the AI Assistant page to view knowledge base
-                                        window.open('/agent', '_blank');
+                                        window.open("/agent", "_blank");
                                     }}
                                     variant="outline"
                                 >
@@ -755,24 +755,24 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     onClick={async () => {
                                         if (
                                             confirm(
-                                                'Are you sure you want to clear all knowledge base data? This action cannot be undone.'
+                                                "Are you sure you want to clear all knowledge base data? This action cannot be undone.",
                                             )
                                         ) {
                                             try {
-                                                const response = await fetch('/api/agent/clear', {
-                                                    method: 'DELETE',
+                                                const response = await fetch("/api/agent/clear", {
+                                                    method: "DELETE",
                                                 });
                                                 if (response.ok) {
-                                                    alert('Knowledge base cleared successfully');
+                                                    alert("Knowledge base cleared successfully");
                                                 } else {
-                                                    alert('Failed to clear knowledge base');
+                                                    alert("Failed to clear knowledge base");
                                                 }
                                             } catch (error) {
                                                 log.error(
                                                     { error },
-                                                    'Error clearing knowledge base'
+                                                    "Error clearing knowledge base",
                                                 );
-                                                alert('Error clearing knowledge base');
+                                                alert("Error clearing knowledge base");
                                             }
                                         }
                                     }}
@@ -827,7 +827,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 value: key,
                                                 label: config.name,
                                                 description: `${config.provider} • ${config.dimensions}D`,
-                                            })
+                                            }),
                                         )}
                                         placeholder="Select embedding model..."
                                         searchPlaceholder="Search models..."
@@ -862,7 +862,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                         <div className="text-muted-foreground text-xs">
                                             {models.find((m) => m.id === ragChatModel)?.name ||
-                                                'Unknown Model'}
+                                                "Unknown Model"}
                                         </div>
                                     </div>
                                     <Combobox
@@ -881,7 +881,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     ModelEnum.GEMINI_2_5_PRO,
                                                     ModelEnum.GEMINI_2_5_FLASH,
                                                     ModelEnum.GEMINI_2_5_FLASH_LITE,
-                                                ].includes(model.id)
+                                                ].includes(model.id),
                                             )
                                             .map((model) => ({
                                                 value: model.id,
@@ -916,8 +916,8 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         </CardTitle>
                         <CardDescription>
                             {isVtPlus
-                                ? 'Premium capabilities included in your subscription'
-                                : 'Powerful features to enhance your AI experience'}
+                                ? "Premium capabilities included in your subscription"
+                                : "Powerful features to enhance your AI experience"}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -932,7 +932,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     FeatureSlug.PRO_SEARCH,
                                                     FeatureSlug.DEEP_RESEARCH,
                                                     FeatureSlug.RAG,
-                                                ].includes(feature)
+                                                ].includes(feature),
                                         )
                                         .filter(
                                             (f) =>
@@ -940,7 +940,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 f !== FeatureSlug.BASE_MODELS &&
                                                 f !== FeatureSlug.FREE_MODELS &&
                                                 f !== FeatureSlug.MATH_CALCULATOR &&
-                                                f !== FeatureSlug.BASE_FEATURES
+                                                f !== FeatureSlug.BASE_FEATURES,
                                         )
                                         .map((feature) => {
                                             const details = getFeatureDetails(feature);
@@ -1095,7 +1095,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                         <Sparkles className="h-4 w-4" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
-                            <strong>Ready to upgrade?</strong> Get VT+ for{' '}
+                            <strong>Ready to upgrade?</strong> Get VT+ for{" "}
                             {VT_PLUS_PRICE_WITH_INTERVAL} with free trial included and cancel
                             anytime. Unlock premium AI models, research capabilities, and AI memory.
                         </AlertDescription>

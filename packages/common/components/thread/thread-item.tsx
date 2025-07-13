@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     ChartComponent,
@@ -15,18 +15,18 @@ import {
     ThinkingLog,
     ThreadLoadingIndicator,
     ToolsPanel,
-} from '@repo/common/components';
-import { isChartTool } from '@repo/common/constants/chart-tools';
-import { isMathTool } from '@repo/common/constants/math-tools';
-import { useAnimatedText, useMathCalculator } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
-import { Alert, AlertDescription, cn } from '@repo/ui';
-import { AlertCircle } from 'lucide-react';
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
-import { RateLimitErrorAlert } from '../rate-limit-error-alert';
+} from "@repo/common/components";
+import { isChartTool } from "@repo/common/constants/chart-tools";
+import { isMathTool } from "@repo/common/constants/math-tools";
+import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
+import { Alert, AlertDescription, cn } from "@repo/ui";
+import { AlertCircle } from "lucide-react";
+import { memo, useEffect, useMemo, useRef } from "react";
+import { useInView } from "react-intersection-observer";
+import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
+import { RateLimitErrorAlert } from "../rate-limit-error-alert";
 
 export const ThreadItem = memo(
     ({
@@ -40,8 +40,8 @@ export const ThreadItem = memo(
         isLast: boolean;
     }) => {
         const { isAnimationComplete, text: animatedText } = useAnimatedText(
-            threadItem.answer?.text || '',
-            isLast && isGenerating
+            threadItem.answer?.text || "",
+            isLast && isGenerating,
         );
         const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
@@ -49,12 +49,12 @@ export const ThreadItem = memo(
 
         // Check if there are active math tool calls
         const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some((toolCall) =>
-            isMathTool(toolCall.toolName)
+            isMathTool(toolCall.toolName),
         );
 
         // Only show calculating indicator if generating AND there are no completed math results yet
         const hasCompletedMathResults = Object.values(threadItem?.toolResults || {}).some(
-            (result) => isMathTool(result.toolName)
+            (result) => isMathTool(result.toolName),
         );
 
         const isCalculatingMath =
@@ -66,7 +66,7 @@ export const ThreadItem = memo(
 
         // Check for chart tool results
         const chartToolResults = Object.values(threadItem?.toolResults || {}).filter((result) =>
-            isChartTool(result.toolName)
+            isChartTool(result.toolName),
         );
 
         const { ref: inViewRef, inView } = useInView({});
@@ -82,7 +82,7 @@ export const ThreadItem = memo(
                 Object.values(threadItem.steps || {})
                     ?.filter(
                         (step) =>
-                            step.steps && 'read' in step.steps && !!step.steps?.read?.data?.length
+                            step.steps && "read" in step.steps && !!step.steps?.read?.data?.length,
                     )
                     .flatMap((step) => step.steps?.read?.data?.map((result: any) => result.link))
                     .filter((link): link is string => link !== undefined) || [];
@@ -99,9 +99,9 @@ export const ThreadItem = memo(
                 !!threadItem?.answer?.text ||
                 !!threadItem?.object ||
                 !!threadItem?.error ||
-                threadItem?.status === 'COMPLETED' ||
-                threadItem?.status === 'ABORTED' ||
-                threadItem?.status === 'ERROR'
+                threadItem?.status === "COMPLETED" ||
+                threadItem?.status === "ABORTED" ||
+                threadItem?.status === "ERROR"
             );
         }, [threadItem]);
 
@@ -114,16 +114,16 @@ export const ThreadItem = memo(
             return sources.filter(
                 (source) =>
                     source &&
-                    typeof source.title === 'string' &&
-                    typeof source.link === 'string' &&
-                    source.link.trim() !== '' &&
-                    typeof source.index === 'number'
+                    typeof source.title === "string" &&
+                    typeof source.link === "string" &&
+                    source.link.trim() !== "" &&
+                    typeof source.index === "number",
             );
         }, [threadItem.sources]);
         return (
             <CitationProvider sources={validSources}>
                 <div className="w-full" id={`thread-item-${threadItem.id}`} ref={inViewRef}>
-                    <div className={cn('flex w-full flex-col items-start gap-3 pt-4')}>
+                    <div className={cn("flex w-full flex-col items-start gap-3 pt-4")}>
                         {threadItem.query && (
                             <Message
                                 imageAttachment={threadItem?.imageAttachment}
@@ -164,19 +164,19 @@ export const ThreadItem = memo(
                                     {(threadItem.reasoning ||
                                         threadItem.reasoningDetails?.length ||
                                         threadItem.parts?.some(
-                                            (part) => part.type === 'reasoning'
+                                            (part) => part.type === "reasoning",
                                         )) && <ThinkingLog threadItem={threadItem} />}
 
                                     <MarkdownContent
-                                        content={animatedText || ''}
-                                        isCompleted={['COMPLETED', 'ERROR', 'ABORTED'].includes(
-                                            threadItem.status || ''
+                                        content={animatedText || ""}
+                                        isCompleted={["COMPLETED", "ERROR", "ABORTED"].includes(
+                                            threadItem.status || "",
                                         )}
                                         isLast={isLast}
                                         key={`answer-${threadItem.id}`}
                                         shouldAnimate={
-                                            !['COMPLETED', 'ERROR', 'ABORTED'].includes(
-                                                threadItem.status || ''
+                                            !["COMPLETED", "ERROR", "ABORTED"].includes(
+                                                threadItem.status || "",
                                             )
                                         }
                                     />
@@ -187,26 +187,26 @@ export const ThreadItem = memo(
                         {threadItem.error && (
                             <RateLimitErrorAlert
                                 error={
-                                    typeof threadItem.error === 'string'
+                                    typeof threadItem.error === "string"
                                         ? threadItem.error
                                         : getErrorDiagnosticMessage(threadItem.error)
                                 }
                             />
                         )}
 
-                        {threadItem.status === 'ABORTED' && (
+                        {threadItem.status === "ABORTED" && (
                             <Alert variant="warning">
                                 <AlertDescription>
                                     <AlertCircle className="mt-0.5 size-3.5" />
-                                    {threadItem.error ?? 'Generation stopped'}
+                                    {threadItem.error ?? "Generation stopped"}
                                 </AlertDescription>
                             </Alert>
                         )}
 
                         {isAnimationComplete &&
-                            (threadItem.status === 'COMPLETED' ||
-                                threadItem.status === 'ABORTED' ||
-                                threadItem.status === 'ERROR' ||
+                            (threadItem.status === "COMPLETED" ||
+                                threadItem.status === "ABORTED" ||
+                                threadItem.status === "ERROR" ||
                                 !isGenerating) && (
                                 <div className="flex flex-col gap-3">
                                     <MessageActions
@@ -244,7 +244,7 @@ export const ThreadItem = memo(
     },
     (prevProps, nextProps) => {
         return JSON.stringify(prevProps.threadItem) === JSON.stringify(nextProps.threadItem);
-    }
+    },
 );
 
-ThreadItem.displayName = 'ThreadItem';
+ThreadItem.displayName = "ThreadItem";

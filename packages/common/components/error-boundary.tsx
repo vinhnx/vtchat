@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
+import React from "react";
 
 interface ErrorBoundaryState {
     hasError: boolean;
@@ -27,19 +27,19 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
         // Filter out development-mode Turbopack errors
         if (
-            process.env.NODE_ENV === 'development' &&
-            (error.message.includes('__turbopack_context__') ||
-                error.message.includes('register is not a function'))
+            process.env.NODE_ENV === "development" &&
+            (error.message.includes("__turbopack_context__") ||
+                error.message.includes("register is not a function"))
         ) {
             // Log but don't crash the app for known development issues
-            log.debug({ error: error.message }, 'Development mode error (ignored)');
+            log.debug({ error: error.message }, "Development mode error (ignored)");
             return;
         }
 
         // Log actual errors
         log.error(
             { error: error.message, stack: error.stack },
-            'React Error Boundary caught error'
+            "React Error Boundary caught error",
         );
 
         // Call optional error handler
@@ -54,10 +54,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         if (this.state.hasError) {
             // Don't show error UI for development Turbopack issues
             if (
-                process.env.NODE_ENV === 'development' &&
+                process.env.NODE_ENV === "development" &&
                 this.state.error &&
-                (this.state.error.message.includes('__turbopack_context__') ||
-                    this.state.error.message.includes('register is not a function'))
+                (this.state.error.message.includes("__turbopack_context__") ||
+                    this.state.error.message.includes("register is not a function"))
             ) {
                 return this.props.children;
             }
@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                     <p className="mb-4 text-sm text-red-700">
                         An error occurred while rendering this component.
                     </p>
-                    {process.env.NODE_ENV === 'development' && this.state.error && (
+                    {process.env.NODE_ENV === "development" && this.state.error && (
                         <details className="mb-4 max-w-lg">
                             <summary className="cursor-pointer text-sm font-medium text-red-800">
                                 Error Details (Development)

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
+import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
 import {
     Avatar,
     AvatarFallback,
@@ -13,7 +13,8 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@repo/ui';
+} from "@repo/ui";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
     ArrowUpDown,
     Ban,
@@ -24,8 +25,7 @@ import {
     Shield,
     UserCheck,
     XCircle,
-} from 'lucide-react';
-import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
+} from "lucide-react";
 
 export interface User {
     id: string;
@@ -50,12 +50,12 @@ interface ColumnsProps {
 
 export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[] => [
     {
-        id: 'select',
+        id: "select",
         header: ({ table }) => (
             <Checkbox
                 checked={
                     table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
@@ -72,11 +72,11 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
         enableHiding: false,
     },
     {
-        accessorKey: 'name',
+        accessorKey: "name",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 User
@@ -92,7 +92,7 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
                             src={getSessionCacheBustedAvatarUrl(user.image) || user.image}
                         />
                         <AvatarFallback>
-                            {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                            {user.name?.charAt(0)?.toUpperCase() || "U"}
                         </AvatarFallback>
                     </Avatar>
                     <div>
@@ -104,11 +104,11 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
         },
     },
     {
-        accessorKey: 'emailVerified',
+        accessorKey: "emailVerified",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Status
@@ -125,9 +125,9 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
             };
 
             const getStatusText = () => {
-                if (user.banned) return 'Banned';
-                if (user.emailVerified) return 'Verified';
-                return 'Pending';
+                if (user.banned) return "Banned";
+                if (user.emailVerified) return "Verified";
+                return "Pending";
             };
 
             return (
@@ -137,21 +137,21 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
                 </div>
             );
         },
-        filterFn: (row, id, value) => {
+        filterFn: (row, _id, value) => {
             const user = row.original;
-            if (value === 'active') return !user.banned;
-            if (value === 'banned') return user.banned;
-            if (value === 'verified') return user.emailVerified;
-            if (value === 'pending') return !user.emailVerified && !user.banned;
+            if (value === "active") return !user.banned;
+            if (value === "banned") return user.banned;
+            if (value === "verified") return user.emailVerified;
+            if (value === "pending") return !user.emailVerified && !user.banned;
             return true;
         },
     },
     {
-        accessorKey: 'planSlug',
+        accessorKey: "planSlug",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Plan
@@ -162,32 +162,32 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
             const user = row.original;
             const getPlanBadgeVariant = (plan: string) => {
                 switch (plan) {
-                    case 'vt_plus':
-                        return 'default';
-                    case 'vt_base':
-                        return 'secondary';
+                    case "vt_plus":
+                        return "default";
+                    case "vt_base":
+                        return "secondary";
                     default:
-                        return 'outline';
+                        return "outline";
                 }
             };
 
             return (
                 <Badge variant={getPlanBadgeVariant(user.planSlug)}>
-                    {user.planSlug === 'vt_plus' ? 'VT+' : 'VT Base'}
+                    {user.planSlug === "vt_plus" ? "VT+" : "VT Base"}
                 </Badge>
             );
         },
         filterFn: (row, id, value) => {
-            if (value === 'all') return true;
+            if (value === "all") return true;
             return row.getValue(id) === value;
         },
     },
     {
-        accessorKey: 'role',
+        accessorKey: "role",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Role
@@ -197,16 +197,16 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
         cell: ({ row }) => {
             const user = row.original;
             return (
-                <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>{user.role}</Badge>
+                <Badge variant={user.role === "admin" ? "default" : "secondary"}>{user.role}</Badge>
             );
         },
     },
     {
-        accessorKey: 'createdAt',
+        accessorKey: "createdAt",
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="h-auto p-0 hover:bg-transparent"
             >
                 Joined
@@ -215,16 +215,16 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
         ),
         cell: ({ row }) => {
             const user = row.original;
-            return new Date(user.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
+            return new Date(user.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
             });
         },
     },
     {
-        id: 'actions',
-        header: 'Actions',
+        id: "actions",
+        header: "Actions",
         cell: ({ row }) => {
             const user = row.original;
 
@@ -238,15 +238,15 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         {user.banned ? (
-                            <DropdownMenuItem onClick={() => onUserAction(user.id, 'unban')}>
+                            <DropdownMenuItem onClick={() => onUserAction(user.id, "unban")}>
                                 <UserCheck className="mr-2 h-4 w-4" />
                                 Unban User
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem
                                 onClick={() =>
-                                    onUserAction(user.id, 'ban', {
-                                        reason: 'Banned by admin',
+                                    onUserAction(user.id, "ban", {
+                                        reason: "Banned by admin",
                                     })
                                 }
                             >
@@ -257,23 +257,23 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={() =>
-                                onUserAction(user.id, 'updateRole', {
-                                    role: user.role === 'admin' ? 'user' : 'admin',
+                                onUserAction(user.id, "updateRole", {
+                                    role: user.role === "admin" ? "user" : "admin",
                                 })
                             }
                         >
                             <Shield className="mr-2 h-4 w-4" />
-                            {user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+                            {user.role === "admin" ? "Remove Admin" : "Make Admin"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() =>
-                                onUserAction(user.id, 'updatePlan', {
-                                    planSlug: user.planSlug === 'vt_plus' ? 'vt_base' : 'vt_plus',
+                                onUserAction(user.id, "updatePlan", {
+                                    planSlug: user.planSlug === "vt_plus" ? "vt_base" : "vt_plus",
                                 })
                             }
                         >
                             <CreditCard className="mr-2 h-4 w-4" />
-                            {user.planSlug === 'vt_plus' ? 'Downgrade to Base' : 'Upgrade to Plus'}
+                            {user.planSlug === "vt_plus" ? "Downgrade to Base" : "Upgrade to Plus"}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

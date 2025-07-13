@@ -5,9 +5,9 @@
  * Based on Context7 patterns for feature-based defaults
  */
 
-import { THINKING_MODE } from '../constants/thinking-mode';
-import { FeatureSlug, PlanSlug } from '../types/subscription';
-import { hasVTPlusAccessByPlan } from './access-control';
+import { THINKING_MODE } from "../constants/thinking-mode";
+import { FeatureSlug, PlanSlug } from "../types/subscription";
+import { hasVTPlusAccessByPlan } from "./access-control";
 
 /**
  * Default thinking mode settings for plus users
@@ -95,7 +95,7 @@ export function getDefaultSettingsForFeatures(hasFeatures: FeatureSlug[]): PlusD
 export function shouldApplyPlusDefaults(
     currentSettings: PlusDefaultSettings,
     newPlan: PlanSlug,
-    previousPlan?: PlanSlug
+    previousPlan?: PlanSlug,
 ): boolean {
     // Apply plus defaults when upgrading from base to plus
     const upgradingToPlus = previousPlan === PlanSlug.VT_BASE && newPlan === PlanSlug.VT_PLUS;
@@ -114,7 +114,7 @@ export function shouldApplyPlusDefaults(
 export function mergeWithPlusDefaults(
     currentSettings: PlusDefaultSettings,
     plan: PlanSlug,
-    preserveUserChanges = true
+    preserveUserChanges = true,
 ): PlusDefaultSettings {
     const defaultSettings = getDefaultSettingsForPlan(plan);
 

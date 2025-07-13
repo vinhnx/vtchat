@@ -1,5 +1,5 @@
-import { Footer } from '@repo/common/components';
-import { VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
+import { Footer } from "@repo/common/components";
+import { VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
 import {
     Accordion,
     AccordionContent,
@@ -7,20 +7,20 @@ import {
     AccordionTrigger,
     Button,
     TypographyH2,
-} from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
+} from "@repo/ui";
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: 'Help Center - VT',
+    title: "Help Center - VT",
     description:
-        'Help center with questions about VT features, thread isolation, account management, and privacy-focused AI chat capabilities.',
+        "Help center with questions about VT features, thread isolation, account management, and privacy-focused AI chat capabilities.",
     openGraph: {
-        title: 'Help Center - VT',
+        title: "Help Center - VT",
         description:
-            'Help center with questions about VT features and privacy-focused AI chat capabilities.',
-        type: 'website',
+            "Help center with questions about VT features and privacy-focused AI chat capabilities.",
+        type: "website",
     },
     robots: {
         index: true,
@@ -607,7 +607,7 @@ function HelpCenterContent() {
                                         provide your own API key.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
+                                        <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{" "}
                                         Includes everything in the free tier, plus three exclusive
                                         research features: PRO_SEARCH for enhanced web searches,
                                         DEEP_RESEARCH for in-depth analysis, and RAG for a personal

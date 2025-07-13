@@ -1,35 +1,35 @@
-import { createTask } from '@repo/orchestrator';
-import { log } from '@repo/shared/logger';
-import { chartTools } from '../../../../apps/web/lib/tools/charts';
-import { calculatorTools } from '../../../../apps/web/lib/tools/math';
-import { getModelFromChatMode, supportsOpenAIWebSearch, supportsTools } from '../../models';
-import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
-import { getWebSearchTool } from '../../tools';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
-import { ChunkBuffer, generateText, getHumanizedDate, handleError } from '../utils';
+import { createTask } from "@repo/orchestrator";
+import { log } from "@repo/shared/logger";
+import { chartTools } from "../../../../apps/web/lib/tools/charts";
+import { calculatorTools } from "../../../../apps/web/lib/tools/math";
+import { getModelFromChatMode, supportsOpenAIWebSearch, supportsTools } from "../../models";
+import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
+import { getWebSearchTool } from "../../tools";
+import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
+import { ChunkBuffer, generateText, getHumanizedDate, handleError } from "../utils";
 
 const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
 export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: 'completion',
+    name: "completion",
     execute: async ({ events, context, signal, redirectTo }) => {
         if (!context) {
-            throw new Error('Context is required but was not provided');
+            throw new Error("Context is required but was not provided");
         }
 
-        const customInstructions = context?.get('customInstructions');
-        const mode = context.get('mode');
-        const webSearch = context.get('webSearch');
-        const mathCalculator = context.get('mathCalculator');
-        const charts = context.get('charts');
+        const customInstructions = context?.get("customInstructions");
+        const mode = context.get("mode");
+        const webSearch = context.get("webSearch");
+        const mathCalculator = context.get("mathCalculator");
+        const charts = context.get("charts");
 
         let messages =
             context
-                .get('messages')
+                .get("messages")
                 ?.filter(
                     (message) =>
-                        (message.role === 'user' || message.role === 'assistant') &&
-                        !!message.content
+                        (message.role === "user" || message.role === "assistant") &&
+                        !!message.content,
                 ) || [];
 
         if (
@@ -38,8 +38,8 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         ) {
             messages = [
                 {
-                    role: 'system',
-                    content: `Today is ${getHumanizedDate()}. and current location is ${context.get('gl')?.city}, ${context.get('gl')?.country}. \n\n ${customInstructions}`,
+                    role: "system",
+                    content: `Today is ${getHumanizedDate()}. and current location is ${context.get("gl")?.city}, ${context.get("gl")?.country}. \n\n ${customInstructions}`,
                 },
                 ...messages,
             ];
@@ -51,14 +51,14 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         const supportsOpenAISearch = supportsOpenAIWebSearch(model);
         if (webSearch && !supportsOpenAISearch) {
             // For non-OpenAI models with web search, redirect to planner (or handle appropriately)
-            redirectTo('planner');
+            redirectTo("planner");
             return;
         }
 
         const prompt = `You are a helpful assistant that can answer questions and help with tasks.
         Today is ${getHumanizedDate()}.
-        ${mathCalculator ? MATH_CALCULATOR_PROMPT : ''}
-        ${charts ? 'You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart.' : ''}
+        ${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
+        ${charts ? "You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart." : ""}
         ${
             webSearch && supportsOpenAISearch
                 ? `
@@ -82,25 +82,25 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         Do NOT answer these types of questions without using web search first, even if you think you know the answer.
         `
-                : ''
+                : ""
         }
         `;
 
         const reasoningBuffer = new ChunkBuffer({
             threshold: 200,
-            breakOn: ['\n\n'],
+            breakOn: ["\n\n"],
             onFlush: (_chunk: string, fullText: string) => {
-                events?.update('steps', (prev) => ({
+                events?.update("steps", (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
                         id: 0,
-                        status: 'COMPLETED',
+                        status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
                             reasoning: {
                                 data: fullText,
-                                status: 'COMPLETED',
+                                status: "COMPLETED",
                             },
                         },
                     },
@@ -110,12 +110,12 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         const chunkBuffer = new ChunkBuffer({
             threshold: 200,
-            breakOn: ['\n'],
+            breakOn: ["\n"],
             onFlush: (text: string) => {
-                events?.update('answer', (current) => ({
+                events?.update("answer", (current) => ({
                     ...current,
                     text,
-                    status: 'PENDING' as const,
+                    status: "PENDING" as const,
                 }));
             },
         });
@@ -124,22 +124,22 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         let tools: any = {};
 
         if (mathCalculator) {
-            log.info({}, '🧮 Math calculator enabled, adding calculator tools...');
+            log.info({}, "🧮 Math calculator enabled, adding calculator tools...");
             const mathToolsObj = calculatorTools();
-            log.info({ data: Object.keys(mathToolsObj) }, '🔢 Available math tools');
+            log.info({ data: Object.keys(mathToolsObj) }, "🔢 Available math tools");
             tools = { ...tools, ...mathToolsObj };
         }
 
         if (charts) {
-            log.info({ model }, '🎨 Charts enabled for model, adding chart tools...');
+            log.info({ model }, "🎨 Charts enabled for model, adding chart tools...");
             const chartToolsObj = chartTools();
             log.info(
                 {
                     chartTools: Object.keys(chartToolsObj),
                     model,
-                    supportsTools: supportsTools ? supportsTools(model) : 'unknown',
+                    supportsTools: supportsTools ? supportsTools(model) : "unknown",
                 },
-                '📊 Available chart tools for model'
+                "📊 Available chart tools for model",
             );
             tools = { ...tools, ...chartToolsObj };
         }
@@ -153,36 +153,36 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
 
         // Convert to undefined if no tools are enabled
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
-        log.info({ data: finalTools ? Object.keys(finalTools) : 'none' }, '🔧 Final tools for AI');
+        log.info({ data: finalTools ? Object.keys(finalTools) : "none" }, "🔧 Final tools for AI");
 
         const response = await generateText({
             model,
             messages,
             prompt,
             signal,
-            toolChoice: 'auto',
+            toolChoice: "auto",
             maxSteps: 2,
             tools: finalTools,
-            byokKeys: context?.get('apiKeys'),
-            thinkingMode: context?.get('thinkingMode'),
-            userTier: context?.get('userTier'),
-            userId: context?.get('userId'),
-            mode: context?.get('mode'),
+            byokKeys: context?.get("apiKeys"),
+            thinkingMode: context?.get("thinkingMode"),
+            userTier: context?.get("userTier"),
+            userId: context?.get("userId"),
+            mode: context?.get("mode"),
             onReasoning: (chunk, _fullText) => {
                 reasoningBuffer.add(chunk);
             },
             onReasoningDetails: (details) => {
-                events?.update('steps', (prev) => ({
+                events?.update("steps", (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
                         id: 0,
-                        status: 'COMPLETED',
+                        status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
                             reasoningDetails: {
                                 data: details,
-                                status: 'COMPLETED',
+                                status: "COMPLETED",
                             },
                         },
                     },
@@ -192,14 +192,14 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 chunkBuffer.add(chunk);
             },
             onToolCall: (toolCall) => {
-                log.info({ toolName: toolCall.toolName, args: toolCall.args }, '🔧 Tool call');
+                log.info({ toolName: toolCall.toolName, args: toolCall.args }, "🔧 Tool call");
                 // Send tool call event to UI
-                events?.update('steps', (prev) => ({
+                events?.update("steps", (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
                         id: 0,
-                        status: 'COMPLETED',
+                        status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
                             toolCall: {
@@ -209,19 +209,19 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                                     type:
                                         charts &&
                                         Object.keys(chartTools()).includes(toolCall.toolName)
-                                            ? 'charts'
+                                            ? "charts"
                                             : mathCalculator
-                                              ? 'math_calculator'
-                                              : 'unknown',
+                                              ? "math_calculator"
+                                              : "unknown",
                                 },
-                                status: 'COMPLETED',
+                                status: "COMPLETED",
                             },
                         },
                     },
                 }));
 
                 // Also update toolCalls for threadItem
-                events?.update('toolCalls', (prev) => [
+                events?.update("toolCalls", (prev) => [
                     ...(prev || []),
                     {
                         toolCallId: toolCall.toolCallId,
@@ -233,15 +233,15 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             onToolResult: (toolResult) => {
                 log.info(
                     { toolName: toolResult.toolName, result: toolResult.result },
-                    '🔧 Tool result for'
+                    "🔧 Tool result for",
                 );
                 // Send tool result event to UI
-                events?.update('steps', (prev) => ({
+                events?.update("steps", (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
                         id: 0,
-                        status: 'COMPLETED',
+                        status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
                             toolResult: {
@@ -250,25 +250,25 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                                     type:
                                         charts &&
                                         Object.keys(chartTools()).includes(
-                                            toolResult.toolName || ''
+                                            toolResult.toolName || "",
                                         )
-                                            ? 'charts'
+                                            ? "charts"
                                             : mathCalculator
-                                              ? 'math_calculator'
-                                              : 'unknown',
+                                              ? "math_calculator"
+                                              : "unknown",
                                 },
-                                status: 'COMPLETED',
+                                status: "COMPLETED",
                             },
                         },
                     },
                 }));
 
                 // Also update toolResults for threadItem
-                events?.update('toolResults', (prev) => [
+                events?.update("toolResults", (prev) => [
                     ...(prev || []),
                     {
                         toolCallId: toolResult.toolCallId,
-                        toolName: toolResult.toolName || 'unknown',
+                        toolName: toolResult.toolName || "unknown",
                         result: toolResult.result,
                     },
                 ]);
@@ -278,32 +278,32 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         reasoningBuffer.end();
         chunkBuffer.end();
 
-        events?.update('answer', (prev) => ({
+        events?.update("answer", (prev) => ({
             ...prev,
-            text: '',
+            text: "",
             fullText: response,
-            status: 'COMPLETED',
+            status: "COMPLETED",
         }));
 
-        context.update('answer', (_) => response);
+        context.update("answer", (_) => response);
 
-        events?.update('status', (_prev) => 'COMPLETED');
+        events?.update("status", (_prev) => "COMPLETED");
 
-        const onFinish = context.get('onFinish');
+        const onFinish = context.get("onFinish");
         if (onFinish) {
             onFinish({
                 answer: response,
-                threadId: context.get('threadId'),
-                threadItemId: context.get('threadItemId'),
+                threadId: context.get("threadId"),
+                threadItemId: context.get("threadItemId"),
             });
         }
         return;
     },
     onError: handleError,
     route: ({ context }) => {
-        if (context?.get('showSuggestions') && context.get('answer')) {
-            return 'suggestions';
+        if (context?.get("showSuggestions") && context.get("answer")) {
+            return "suggestions";
         }
-        return 'end';
+        return "end";
     },
 });

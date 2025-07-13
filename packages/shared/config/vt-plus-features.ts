@@ -4,8 +4,8 @@
  * Defines all features and capabilities available with VT+ subscription
  */
 
-import { CURRENCIES, VT_PLUS_PRICE } from '../constants';
-import { FeatureSlug } from '../types/subscription';
+import { CURRENCIES, VT_PLUS_PRICE } from "../constants";
+import { FeatureSlug } from "../types/subscription";
 
 export interface VTPlusFeature {
     id: FeatureSlug;
@@ -21,30 +21,30 @@ export interface VTPlusFeature {
 export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
     [FeatureSlug.PRO_SEARCH]: {
         id: FeatureSlug.PRO_SEARCH,
-        name: 'Enhanced Web Search',
+        name: "Enhanced Web Search",
         description:
-            'AI-powered web search with real-time information and comprehensive topic analysis.',
+            "AI-powered web search with real-time information and comprehensive topic analysis.",
         enabled: true,
     },
     [FeatureSlug.DEEP_RESEARCH]: {
         id: FeatureSlug.DEEP_RESEARCH,
-        name: 'Deep Research',
+        name: "Deep Research",
         description:
-            'Advanced research capabilities with comprehensive analysis and detailed insights.',
+            "Advanced research capabilities with comprehensive analysis and detailed insights.",
         enabled: true,
     },
     [FeatureSlug.RAG]: {
         id: FeatureSlug.RAG,
-        name: 'Personal AI Assistant with Memory',
+        name: "Personal AI Assistant with Memory",
         description:
-            'Personal agent with intelligent information storage and retrieval capabilities for enhanced AI conversations.',
+            "Personal agent with intelligent information storage and retrieval capabilities for enhanced AI conversations.",
         enabled: true,
     },
     [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
         id: FeatureSlug.GEMINI_MODELS_NO_BYOK,
-        name: 'All Gemini Models Without BYOK',
+        name: "All Gemini Models Without BYOK",
         description:
-            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
+            "Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.",
         enabled: true,
     },
 } as const;
@@ -53,14 +53,14 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
  * VT+ Product Information
  */
 export const VT_PLUS_PRODUCT_INFO = {
-    name: 'VT+',
+    name: "VT+",
     productId: process.env.CREEM_PRODUCT_ID, // Use environment variable
-    description: 'Premium AI models, research capabilities, and personal AI assistant',
+    description: "Premium AI models, research capabilities, and personal AI assistant",
     pricing: {
         amount: VT_PLUS_PRICE,
         currency: CURRENCIES.USD,
-        type: 'subscription' as const,
-        interval: 'monthly' as const,
+        type: "subscription" as const,
+        interval: "monthly" as const,
         taxIncluded: true,
     },
     features: Object.values(VT_PLUS_FEATURES),

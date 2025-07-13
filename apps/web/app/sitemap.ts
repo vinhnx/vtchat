@@ -1,51 +1,51 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     // Use environment variable with fallback to production URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://vtchat.io.vn";
 
     // Define static routes with appropriate metadata
     const staticRoutes = [
         {
             url: baseUrl,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'daily' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "daily" as const,
             priority: 1,
         },
         {
             url: `${baseUrl}/about`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'monthly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "monthly" as const,
             priority: 0.8,
         },
         {
             url: `${baseUrl}/help`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'monthly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "monthly" as const,
             priority: 0.7,
         },
         {
             url: `${baseUrl}/pricing`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'weekly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "weekly" as const,
             priority: 0.9,
         },
         {
             url: `${baseUrl}/faq`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'monthly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "monthly" as const,
             priority: 0.7,
         },
         {
             url: `${baseUrl}/privacy`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'yearly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "yearly" as const,
             priority: 0.5,
         },
         {
             url: `${baseUrl}/terms`,
-            lastModified: new Date('2025-07-07'),
-            changeFrequency: 'yearly' as const,
+            lastModified: new Date("2025-07-07"),
+            changeFrequency: "yearly" as const,
             priority: 0.5,
         },
     ];

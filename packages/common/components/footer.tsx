@@ -1,33 +1,33 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const links = [
     {
-        title: 'Home',
-        href: '/',
+        title: "Home",
+        href: "/",
     },
     {
-        title: 'Terms',
-        href: '/terms',
+        title: "Terms",
+        href: "/terms",
     },
     {
-        title: 'Privacy',
-        href: '/privacy',
+        title: "Privacy",
+        href: "/privacy",
     },
     {
-        title: 'VT+',
-        href: '/plus',
+        title: "VT+",
+        href: "/plus",
     },
     {
-        title: 'Contact',
-        href: 'mailto:hello@vtdotai.io.vn',
+        title: "Contact",
+        href: "mailto:hello@vtdotai.io.vn",
     },
     {
-        title: 'X/Twitter',
-        href: 'https://x.com/vtdotai',
+        title: "X/Twitter",
+        href: "https://x.com/vtdotai",
     },
     {
-        title: 'About',
-        href: '/about',
+        title: "About",
+        href: "/about",
     },
 ];
 
@@ -47,7 +47,7 @@ export const Footer = () => {
                     ))}
                 </div>
                 <span className="text-muted-foreground block text-center text-xs md:text-sm">
-                    {' '}
+                    {" "}
                     © {new Date().getFullYear()} VT, All rights reserved
                 </span>
             </div>

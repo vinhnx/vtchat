@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -12,9 +12,9 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@repo/ui';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
+} from "@repo/ui";
+import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
 interface ComboboxOption {
     value: string;
@@ -36,8 +36,8 @@ export function Combobox({
     options,
     value,
     onValueChange,
-    placeholder = 'Select option...',
-    searchPlaceholder = 'Search...',
+    placeholder = "Select option...",
+    searchPlaceholder = "Search...",
     className,
     disabled = false,
 }: ComboboxProps) {
@@ -50,7 +50,7 @@ export function Combobox({
             <PopoverTrigger asChild>
                 <Button
                     aria-expanded={open}
-                    className={cn('justify-between', className)}
+                    className={cn("justify-between", className)}
                     disabled={disabled}
                     role="combobox"
                     variant="outline"
@@ -84,8 +84,8 @@ export function Combobox({
                                     </div>
                                     <Check
                                         className={cn(
-                                            'ml-auto h-4 w-4',
-                                            value === option.value ? 'opacity-100' : 'opacity-0'
+                                            "ml-auto h-4 w-4",
+                                            value === option.value ? "opacity-100" : "opacity-0",
                                         )}
                                     />
                                 </CommandItem>

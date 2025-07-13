@@ -1,9 +1,9 @@
-import { log } from '@repo/shared/logger';
-import { EventEmitter } from 'events';
-import type { Context, ContextSchemaDefinition } from './context';
-import type { EventSchemaDefinition, TypedEventEmitter } from './events';
-import { ExecutionContext } from './execution-context';
-import type { PersistenceLayer } from './persistence';
+import { EventEmitter } from "node:events";
+import { log } from "@repo/shared/logger";
+import type { Context, ContextSchemaDefinition } from "./context";
+import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
+import { ExecutionContext } from "./execution-context";
+import type { PersistenceLayer } from "./persistence";
 import type {
     EventPayload,
     ParallelTaskRoute,
@@ -11,7 +11,7 @@ import type {
     TaskOptions,
     TaskParams,
     WorkflowConfig,
-} from './types';
+} from "./types";
 
 export class WorkflowEngine<
     TEvent extends EventSchemaDefinition = any,
@@ -87,7 +87,7 @@ export class WorkflowEngine<
     async executeTaskWithTimeout(
         task: (params: TaskParams<TEvent, TContext>) => Promise<any>,
         data: any,
-        timeoutMs: number
+        timeoutMs: number,
     ) {
         return Promise.race([
             task({
@@ -101,7 +101,7 @@ export class WorkflowEngine<
                 redirectTo: () => {}, // This will be overridden by the actual function
             }),
             new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('⏳ Task timeout exceeded')), timeoutMs)
+                setTimeout(() => reject(new Error("⏳ Task timeout exceeded")), timeoutMs),
             ),
         ]);
     }
@@ -117,7 +117,7 @@ export class WorkflowEngine<
             log.error(`❌ Task "${taskName}" not found.`);
             this.executionContext.endTaskTiming(
                 taskName,
-                new Error(`Task "${taskName}" not found.`)
+                new Error(`Task "${taskName}" not found.`),
             );
             throw new Error(`Task "${taskName}" not found.`);
 
@@ -129,7 +129,7 @@ export class WorkflowEngine<
             !config.dependencies.every((dep) => this.executionContext.isTaskComplete(dep))
         ) {
             log.info(
-                `⏳ Task "${taskName}" is waiting for dependencies: ${config.dependencies.join(', ')}`
+                `⏳ Task "${taskName}" is waiting for dependencies: ${config.dependencies.join(", ")}`,
             );
             return;
         }
@@ -166,7 +166,7 @@ export class WorkflowEngine<
                     ? await this.executeTaskWithTimeout(
                           (params) => config.execute({ ...params, redirectTo }),
                           data,
-                          config.timeoutMs
+                          config.timeoutMs,
                       )
                     : await config.execute({
                           data,
@@ -188,9 +188,9 @@ export class WorkflowEngine<
 
                 if (
                     taskResult &&
-                    typeof taskResult === 'object' &&
-                    'result' in taskResult &&
-                    'next' in taskResult
+                    typeof taskResult === "object" &&
+                    "result" in taskResult &&
+                    "next" in taskResult
                 ) {
                     result = taskResult.result;
                     directNextTasks = taskResult.next;
@@ -235,7 +235,7 @@ export class WorkflowEngine<
                 }
 
                 // Check for special "end" route value
-                if (nextTasks === 'end') {
+                if (nextTasks === "end") {
                     log.info(`🏁 Workflow ended after task "${taskName}".`);
                     if (this.persistence) {
                         await this.persistence.saveWorkflow(this.id, this);
@@ -247,24 +247,24 @@ export class WorkflowEngine<
                     if (Array.isArray(nextTasks)) {
                         if (
                             nextTasks.length > 0 &&
-                            typeof nextTasks[0] === 'object' &&
-                            'task' in nextTasks[0]
+                            typeof nextTasks[0] === "object" &&
+                            "task" in nextTasks[0]
                         ) {
                             // Handle ParallelTaskRoute[] format
                             await Promise.all(
                                 (nextTasks as ParallelTaskRoute[]).map((route) =>
                                     this.executeTask(
                                         route.task,
-                                        route.data !== undefined ? route.data : result
-                                    )
-                                )
+                                        route.data !== undefined ? route.data : result,
+                                    ),
+                                ),
                             );
                         } else {
                             // Handle string[] format (all tasks get the same data)
                             await Promise.all(
                                 (nextTasks as string[]).map((nextTask) =>
-                                    this.executeTask(nextTask, result)
-                                )
+                                    this.executeTask(nextTask, result),
+                                ),
                             );
                         }
                     } else {
@@ -307,28 +307,28 @@ export class WorkflowEngine<
 
                             if (errorResult.next) {
                                 if (Array.isArray(errorResult.next)) {
-                                    if (typeof errorResult.next[0] === 'object') {
+                                    if (typeof errorResult.next[0] === "object") {
                                         await Promise.all(
                                             (errorResult.next as ParallelTaskRoute[]).map((route) =>
                                                 this.executeTask(
                                                     route.task,
                                                     route.data !== undefined
                                                         ? route.data
-                                                        : errorResult.result
-                                                )
-                                            )
+                                                        : errorResult.result,
+                                                ),
+                                            ),
                                         );
                                     } else {
                                         await Promise.all(
                                             (errorResult.next as string[]).map((nextTask) =>
-                                                this.executeTask(nextTask, errorResult.result)
-                                            )
+                                                this.executeTask(nextTask, errorResult.result),
+                                            ),
                                         );
                                     }
                                 } else {
                                     await this.executeTask(
                                         errorResult.next as string,
-                                        errorResult.result
+                                        errorResult.result,
                                     );
                                 }
                             }

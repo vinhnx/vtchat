@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import { useAgentStream } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import type { ThreadItem } from '@repo/shared/types';
-import { Button, RadioGroup, RadioGroupItem, Textarea } from '@repo/ui';
-import { Check, HelpCircle, Square } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useAgentStream } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import type { ThreadItem } from "@repo/shared/types";
+import { Button, RadioGroup, RadioGroupItem, Textarea } from "@repo/ui";
+import { Check, HelpCircle, Square } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const [customOption, setCustomOption] = useState<string>('');
+    const [customOption, setCustomOption] = useState<string>("");
     const [_isCustomSelected, setIsCustomSelected] = useState<boolean>(false);
     const { handleSubmit } = useAgentStream();
     const getThreadItems = useChatStore((state) => state.getThreadItems);
     const updateThreadItem = useChatStore((state) => state.updateThreadItem);
 
     const options: string[] = threadItem.object?.clarifyingQuestion?.options || [];
-    const question = threadItem.object?.clarifyingQuestion?.question || '';
-    const choiceType = threadItem.object?.clarifyingQuestion?.choiceType || 'multiple';
+    const question = threadItem.object?.clarifyingQuestion?.question || "";
+    const choiceType = threadItem.object?.clarifyingQuestion?.choiceType || "multiple";
     const isSubmitted = !!threadItem.object?.clarifyingQuestion?.submittedQuery;
 
     const handleOptionChange = (value: string) => {
         setSelectedOption(value);
-        setIsCustomSelected(value === 'custom');
+        setIsCustomSelected(value === "custom");
     };
 
     const hasClarifyingQuestions = useMemo(() => {
@@ -35,7 +35,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
             <RadioGroup
                 className="flex flex-col gap-2"
                 onValueChange={handleOptionChange}
-                value={selectedOption || ''}
+                value={selectedOption || ""}
             >
                 {options.map((option, index) => (
                     <div className="flex items-center space-x-2" key={index}>
@@ -111,7 +111,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
 
             <p className="text-base">{question}</p>
 
-            {choiceType === 'single' ? renderRadioGroup() : renderCheckboxGroup()}
+            {choiceType === "single" ? renderRadioGroup() : renderCheckboxGroup()}
 
             <div className="mt-2 w-full">
                 <Textarea
@@ -125,13 +125,13 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
             <Button
                 disabled={!(selectedOption || selectedOptions.length || customOption)}
                 onClick={async () => {
-                    const originalQuery = threadItem.query || '';
-                    let clarifyingResponse = '';
+                    const originalQuery = threadItem.query || "";
+                    let clarifyingResponse = "";
 
-                    if (choiceType === 'single') {
-                        clarifyingResponse = `${selectedOption ? `${selectedOption} \n\n` : ''}${customOption}`;
+                    if (choiceType === "single") {
+                        clarifyingResponse = `${selectedOption ? `${selectedOption} \n\n` : ""}${customOption}`;
                     } else {
-                        clarifyingResponse = `${selectedOptions?.length ? `${selectedOptions.join(', ')} \n\n` : ''}${customOption}`;
+                        clarifyingResponse = `${selectedOptions?.length ? `${selectedOptions.join(", ")} \n\n` : ""}${customOption}`;
                     }
 
                     const query = originalQuery
@@ -139,7 +139,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                         : clarifyingResponse;
 
                     const formData = new FormData();
-                    formData.append('query', query);
+                    formData.append("query", query);
                     const threadItems = await getThreadItems(threadItem.threadId);
                     updateThreadItem(threadItem.threadId, {
                         ...threadItem,
@@ -150,7 +150,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                                 submittedQuery: query,
                             },
                         },
-                        status: 'COMPLETED',
+                        status: "COMPLETED",
                     });
                     setTimeout(() => {
                         handleSubmit({

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
-import { useToast } from '@repo/ui';
-import { type ChangeEvent, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useChatStore } from "@repo/common/store";
+import { DOCUMENT_UPLOAD_CONFIG } from "@repo/shared/constants/document-upload";
+import { useToast } from "@repo/ui";
+import { type ChangeEvent, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 
 export const useDocumentAttachment = () => {
     const documentAttachment = useChatStore((state) => state.documentAttachment);
@@ -16,9 +16,9 @@ export const useDocumentAttachment = () => {
         (file: File) => {
             if (file.size > DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE) {
                 toast({
-                    title: 'File too large',
-                    description: 'File size must be less than 10MB',
-                    variant: 'destructive',
+                    title: "File too large",
+                    description: "File size must be less than 10MB",
+                    variant: "destructive",
                 });
                 return;
             }
@@ -26,7 +26,7 @@ export const useDocumentAttachment = () => {
             const reader = new FileReader();
             reader.onload = (event: ProgressEvent<FileReader>) => {
                 const result = event.target?.result;
-                if (typeof result === 'string') {
+                if (typeof result === "string") {
                     setDocumentAttachment({
                         base64: result,
                         file,
@@ -38,15 +38,15 @@ export const useDocumentAttachment = () => {
 
             reader.onerror = () => {
                 toast({
-                    title: 'Error',
-                    description: 'Failed to read file',
-                    variant: 'destructive',
+                    title: "Error",
+                    description: "Failed to read file",
+                    variant: "destructive",
                 });
             };
 
             reader.readAsDataURL(file);
         },
-        [setDocumentAttachment, toast]
+        [setDocumentAttachment, toast],
     );
 
     const onDrop = useCallback(
@@ -56,7 +56,7 @@ export const useDocumentAttachment = () => {
                 handleFileRead(file);
             }
         },
-        [handleFileRead]
+        [handleFileRead],
     );
 
     const dropzoneProps = useDropzone({
@@ -74,7 +74,7 @@ export const useDocumentAttachment = () => {
                 handleFileRead(file);
             }
         },
-        [handleFileRead]
+        [handleFileRead],
     );
 
     const clearAttachment = () => {

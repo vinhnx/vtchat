@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useRootContext } from '@repo/common/context';
-import { useChatStore } from '@repo/common/store';
-import { getFormatDistanceToNow } from '@repo/shared/utils';
-import { Button } from '@repo/ui';
-import { ArrowRight, MessageCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRootContext } from "@repo/common/context";
+import { useChatStore } from "@repo/common/store";
+import { getFormatDistanceToNow } from "@repo/shared/utils";
+import { Button } from "@repo/ui";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const RecentThreads = () => {
     const { setIsCommandSearchOpen } = useRootContext();

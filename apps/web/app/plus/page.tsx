@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Footer, ShineText, UserTierBadge } from '@repo/common/components';
-import { useCreemSubscription } from '@repo/common/hooks';
-import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
-import { BUTTON_TEXT } from '@repo/shared/constants';
+import { Footer, ShineText, UserTierBadge } from "@repo/common/components";
+import { useCreemSubscription } from "@repo/common/hooks";
+import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
+import { BUTTON_TEXT } from "@repo/shared/constants";
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status'; // Added import
+import { useSession } from "@repo/shared/lib/auth-client";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status"; // Added import
 import {
     Announcement,
     AnnouncementTag,
@@ -14,16 +14,16 @@ import {
     TypographyH2,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { ArrowUpRight, Check, CheckCircle, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { AnimatedBadge } from '../../components/animated-badge';
-import { ButtonAnimatedGradient } from '../../components/button-animated-gradient';
-import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
-import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
-import { FeaturesAccordion } from '../../components/features-accordion';
-import { PRICING_CONFIG } from '../../lib/config/pricing';
+} from "@repo/ui";
+import { ArrowUpRight, Check, CheckCircle, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { AnimatedBadge } from "../../components/animated-badge";
+import { ButtonAnimatedGradient } from "../../components/button-animated-gradient";
+import { ButtonShadowGradient } from "../../components/button-shadow-gradient";
+import { CardSpotlightPricing } from "../../components/card-spotlight-pricing";
+import { FeaturesAccordion } from "../../components/features-accordion";
+import { PRICING_CONFIG } from "../../lib/config/pricing";
 
 export default function PlusPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
@@ -53,7 +53,7 @@ export default function PlusPage() {
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
             // Redirect to login page instead of showing dialog
-            router.push('/login?redirect_url=/plus');
+            router.push("/login?redirect_url=/plus");
         }
     }, [isLoaded, isSignedIn, router]);
 
@@ -66,7 +66,7 @@ export default function PlusPage() {
 
     const handleSubscribe = async () => {
         if (!isSignedIn) {
-            router.push('/login?redirect_url=/plus');
+            router.push("/login?redirect_url=/plus");
             return;
         }
 
@@ -81,9 +81,9 @@ export default function PlusPage() {
 
     const handleTryFree = () => {
         if (isSignedIn) {
-            router.push('/');
+            router.push("/");
         } else {
-            router.push('/login?redirect_url=/');
+            router.push("/login?redirect_url=/");
         }
     };
 
@@ -104,10 +104,10 @@ export default function PlusPage() {
 
     const getFreeButtonText = () => {
         if (isLoading) return BUTTON_TEXT.LOADING;
-        if (!isSignedIn) return 'Sign Up Free';
+        if (!isSignedIn) return "Sign Up Free";
         // If signed in:
-        if (isCurrentlySubscribed) return 'Continue to Chat'; // User is VT+
-        return 'Continue'; // User is signed in and on Free tier
+        if (isCurrentlySubscribed) return "Continue to Chat"; // User is VT+
+        return "Continue"; // User is signed in and on Free tier
     };
 
     const getCTAButtonText = () => {
@@ -164,7 +164,7 @@ export default function PlusPage() {
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
                             className={`rounded-3xl rounded-t-3xl bg-white p-4 ring-1 sm:mx-8 sm:rounded-b-none sm:p-8 md:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
-                                isFreeTier ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
+                                isFreeTier ? "ring-2 ring-[#BFB38F]" : "ring-gray-900/10"
                             }`}
                         >
                             <div>
@@ -197,14 +197,11 @@ export default function PlusPage() {
                                     research capabilities: Deep Research, Pro Search, and RAG
                                     (Personal AI Assistant with Memory).
                                 </p>
-                                <ul
-                                    className="mt-8 space-y-3 text-sm/6 text-gray-600 sm:mt-10"
-                                    role="list"
-                                >
+                                <ul className="mt-8 space-y-3 text-sm/6 text-gray-600 sm:mt-10">
                                     {PRICING_CONFIG.pricing.free.features.map((feature, index) => (
                                         <li className="flex gap-x-3" key={index}>
                                             <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                            {typeof feature === 'string' ? feature : feature.name}
+                                            {typeof feature === "string" ? feature : feature.name}
                                         </li>
                                     ))}
                                 </ul>
@@ -228,8 +225,8 @@ export default function PlusPage() {
                             <CardSpotlightPricing
                                 className={`relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
                                     isCurrentlySubscribed
-                                        ? 'ring-2 ring-[#BFB38F]'
-                                        : 'ring-gray-900/10'
+                                        ? "ring-2 ring-[#BFB38F]"
+                                        : "ring-gray-900/10"
                                 }`}
                             >
                                 <div>
@@ -261,23 +258,20 @@ export default function PlusPage() {
                                         {PRICING_CONFIG.product.description}
                                     </p>
 
-                                    <ul
-                                        className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10"
-                                        role="list"
-                                    >
+                                    <ul className="mt-8 space-y-3 text-sm/6 text-gray-300 sm:mt-10">
                                         {PRICING_CONFIG.pricing.plus.features.map(
                                             (feature, index) => (
                                                 <li className="flex gap-x-3" key={index}>
                                                     <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
                                                     <div className="flex items-center gap-2">
                                                         <span>
-                                                            {typeof feature === 'string'
+                                                            {typeof feature === "string"
                                                                 ? feature
                                                                 : feature.name}
                                                         </span>
                                                     </div>
                                                 </li>
-                                            )
+                                            ),
                                         )}
                                     </ul>
                                     <div className="mt-8 sm:mt-10">
@@ -304,20 +298,20 @@ export default function PlusPage() {
                                     </div>
                                     {/* Terms and Privacy Links */}
                                     <div className="mt-4 text-center text-sm text-gray-400">
-                                        <span className="text-gray-500">Please review our</span>{' '}
+                                        <span className="text-gray-500">Please review our</span>{" "}
                                         <a
                                             className="underline transition-colors hover:text-[#BFB38F]"
                                             href="/terms"
                                         >
                                             Terms of Service
-                                        </a>{' '}
-                                        <span>and</span>{' '}
+                                        </a>{" "}
+                                        <span>and</span>{" "}
                                         <a
                                             className="underline transition-colors hover:text-[#BFB38F]"
                                             href="/privacy"
                                         >
                                             Privacy Policy
-                                        </a>{' '}
+                                        </a>{" "}
                                         <span className="text-gray-500">before subscribing</span>
                                     </div>
                                 </div>
@@ -362,7 +356,7 @@ export default function PlusPage() {
                 {/* Contact Section */}
                 <div className="mb-8 mt-8 text-center">
                     <p className="text-base text-gray-600">
-                        Have questions? Get in touch:{' '}
+                        Have questions? Get in touch:{" "}
                         <a
                             className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
                             href="mailto:hello@vtchat.io.vn"

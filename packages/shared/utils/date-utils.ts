@@ -9,7 +9,7 @@ import {
     isYesterday,
     startOfDay,
     subDays,
-} from 'date-fns';
+} from "date-fns";
 
 // Re-export date-fns functions with stable references
 export const getStartOfDay = (date: Date) => startOfDay(date);
@@ -34,12 +34,12 @@ export const getRelativeDate = (date: string | Date) => {
     const diffDays = getDifferenceInDays(today, inputDate);
 
     if (diffDays === 0) {
-        return 'Today';
+        return "Today";
     }
     if (diffDays === 1) {
-        return 'Yesterday';
+        return "Yesterday";
     }
-    return formatDate(inputDate, 'dd/MM/yyyy');
+    return formatDate(inputDate, "dd/MM/yyyy");
 };
 
 // Format duration in milliseconds to human-readable string

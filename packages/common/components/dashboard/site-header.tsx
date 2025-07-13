@@ -1,4 +1,4 @@
-import { Button, Separator, SidebarTrigger } from '@repo/ui';
+import { Button, Separator, SidebarTrigger } from "@repo/ui";
 
 export function SiteHeader() {
     return (

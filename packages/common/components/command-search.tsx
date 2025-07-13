@@ -1,21 +1,21 @@
-'use client';
-import { useRootContext } from '@repo/common/context';
+"use client";
+import { useRootContext } from "@repo/common/context";
 
-import { useAppStore, useChatStore } from '@repo/common/store';
-import { useSession } from '@repo/shared/lib/auth-client';
+import { useAppStore, useChatStore } from "@repo/common/store";
+import { useSession } from "@repo/shared/lib/auth-client";
 
-import { log } from '@repo/shared/logger';
-import { FeatureSlug } from '@repo/shared/types/subscription';
-import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
+import { log } from "@repo/shared/logger";
+import { FeatureSlug } from "@repo/shared/types/subscription";
+import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from "@repo/shared/utils";
 import {
     Button,
-    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
+    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -24,14 +24,14 @@ import {
     DialogTitle,
     Kbd,
     useToast,
-} from '@repo/ui';
-import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFeatureAccess } from '../hooks/use-subscription-access';
-import { GatedFeatureAlert } from './gated-feature-alert';
-import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
+} from "@repo/ui";
+import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { useFeatureAccess } from "../hooks/use-subscription-access";
+import { GatedFeatureAlert } from "./gated-feature-alert";
+import { LoginRequiredDialog, useLoginRequired } from "./login-required-dialog";
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -62,11 +62,11 @@ export const CommandSearch = () => {
     };
 
     const groupsNames = {
-        today: 'Today',
-        yesterday: 'Yesterday',
-        last7Days: 'Last 7 Days',
-        last30Days: 'Last 30 Days',
-        previousMonths: 'Previous Months',
+        today: "Today",
+        yesterday: "Yesterday",
+        last7Days: "Last 7 Days",
+        last30Days: "Last 30 Days",
+        previousMonths: "Previous Months",
     };
 
     threads.forEach((thread) => {
@@ -85,7 +85,7 @@ export const CommandSearch = () => {
     });
 
     useEffect(() => {
-        router.prefetch('/');
+        router.prefetch("/");
     }, [isCommandSearchOpen, threads, router]);
 
     useEffect(() => {
@@ -98,31 +98,31 @@ export const CommandSearch = () => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Command+K for command search
-            if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+            if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
                 setIsCommandSearchOpen(true);
                 return;
             }
 
             // Command+Ctrl+Option+N for new chat
-            if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
+            if (e.key === "n" && e.metaKey && e.ctrlKey && e.altKey) {
                 e.preventDefault();
-                log.info({}, '🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+                log.info({}, "🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)");
 
                 // Show toast notification
                 toast({
-                    title: 'New Chat',
-                    description: 'Starting a new conversation...',
+                    title: "New Chat",
+                    description: "Starting a new conversation...",
                     duration: 2000,
                 });
 
-                router.push('/');
+                router.push("/");
                 return;
             }
         };
 
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
     }, [setIsCommandSearchOpen, router, toast]);
 
     type ActionItem = {
@@ -134,15 +134,15 @@ export const CommandSearch = () => {
 
     const actions: ActionItem[] = [
         {
-            name: 'New Thread',
+            name: "New Thread",
             icon: Plus,
             action: () => {
-                router.push('/');
+                router.push("/");
                 onClose();
             },
         },
         {
-            name: 'Delete Thread',
+            name: "Delete Thread",
             icon: Trash,
             action: async () => {
                 if (!isSignedIn) {
@@ -153,20 +153,20 @@ export const CommandSearch = () => {
                 const thread = await getThread(currentThreadId as string);
                 if (thread) {
                     removeThread(thread.id);
-                    router.push('/');
+                    router.push("/");
                     onClose();
                 }
             },
             requiresAuth: true,
         },
         {
-            name: 'Change Theme',
+            name: "Change Theme",
             icon: Palette,
             action: () => {
                 // Check if user is trying to switch to dark mode without VT+ access
-                const nextTheme = theme === 'light' ? 'dark' : 'light';
+                const nextTheme = theme === "light" ? "dark" : "light";
 
-                if (nextTheme === 'dark' && !hasThemeAccess) {
+                if (nextTheme === "dark" && !hasThemeAccess) {
                     setShowSubscriptionDialog(true);
                     return;
                 }
@@ -177,7 +177,7 @@ export const CommandSearch = () => {
             requiresAuth: false,
         },
         {
-            name: 'Settings',
+            name: "Settings",
             icon: Settings,
             action: () => {
                 if (!isSignedIn) {
@@ -190,7 +190,7 @@ export const CommandSearch = () => {
             requiresAuth: true,
         },
         {
-            name: 'Use your own API key',
+            name: "Use your own API key",
             icon: Key,
             action: () => {
                 if (!isSignedIn) {
@@ -198,17 +198,17 @@ export const CommandSearch = () => {
                     return;
                 }
                 setIsSettingsOpen(true);
-                setSettingTab('api-keys');
+                setSettingTab("api-keys");
                 onClose();
             },
             requiresAuth: true,
         },
         {
-            name: 'Remove All Threads',
+            name: "Remove All Threads",
             icon: Trash,
             action: () => {
                 clearThreads();
-                router.push('/');
+                router.push("/");
                 onClose();
             },
         },
@@ -273,7 +273,7 @@ export const CommandSearch = () => {
                             >
                                 {threads.map((thread) => (
                                     <CommandItem
-                                        className={cn('w-full gap-3')}
+                                        className={cn("w-full gap-3")}
                                         key={thread.id}
                                         onSelect={() => {
                                             switchThread(thread.id);
@@ -296,7 +296,7 @@ export const CommandSearch = () => {
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
-                        )
+                        ),
                 )}
             </CommandList>
 
@@ -323,7 +323,7 @@ export const CommandSearch = () => {
                         <Button
                             className="gap-2"
                             onClick={() => {
-                                router.push('/login');
+                                router.push("/login");
                                 setShowSubscriptionDialog(false);
                                 onClose();
                             }}

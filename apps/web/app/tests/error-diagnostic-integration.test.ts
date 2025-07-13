@@ -1,28 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 import {
     generateErrorDiagnostic,
     getErrorDiagnosticMessage,
-} from '../../../../packages/common/utils/error-diagnostics';
+} from "../../../../packages/common/utils/error-diagnostics";
 
-describe('Error Diagnostic Integration', () => {
-    describe('Thread Item Error Handling', () => {
-        it('should replace generic errors with diagnostic messages', () => {
+describe("Error Diagnostic Integration", () => {
+    describe("Thread Item Error Handling", () => {
+        it("should replace generic errors with diagnostic messages", () => {
             // Simulate various error objects that might come from the API
             const testErrors = [
                 // API key error
-                new Error('Invalid API key provided'),
+                new Error("Invalid API key provided"),
 
                 // Network error
-                { message: 'Network timeout occurred', code: 'NETWORK_ERROR' },
+                { message: "Network timeout occurred", code: "NETWORK_ERROR" },
 
                 // Model error
-                'Model gemini-2.5-flash-lite-preview-06-17 is not available',
+                "Model gemini-2.5-flash-lite-preview-06-17 is not available",
 
                 // Generic object error
-                { status: 500, error: 'Internal server error' },
+                { status: 500, error: "Internal server error" },
 
                 // String error
-                'Something unexpected happened',
+                "Something unexpected happened",
             ];
 
             testErrors.forEach((error) => {
@@ -30,11 +30,11 @@ describe('Error Diagnostic Integration', () => {
 
                 // Should not be the old generic message
                 expect(diagnosticMessage).not.toBe(
-                    'Something went wrong while processing your request. Please try again.'
+                    "Something went wrong while processing your request. Please try again.",
                 );
 
                 // Should contain diagnostic elements
-                expect(diagnosticMessage).toContain('🔧 Try these steps:');
+                expect(diagnosticMessage).toContain("🔧 Try these steps:");
 
                 // Should have numbered suggestions
                 expect(diagnosticMessage).toMatch(/\d+\./);
@@ -44,14 +44,14 @@ describe('Error Diagnostic Integration', () => {
             });
         });
 
-        it('should categorize errors correctly', () => {
+        it("should categorize errors correctly", () => {
             const testCases = [
-                { error: 'API key is invalid', expectedCategory: 'auth' },
-                { error: 'Network connection failed', expectedCategory: 'connection' },
-                { error: 'Model not supported', expectedCategory: 'model' },
-                { error: 'Rate limit exceeded', expectedCategory: 'rate_limit' },
-                { error: 'Configuration missing', expectedCategory: 'config' },
-                { error: 'Random error message', expectedCategory: 'unknown' },
+                { error: "API key is invalid", expectedCategory: "auth" },
+                { error: "Network connection failed", expectedCategory: "connection" },
+                { error: "Model not supported", expectedCategory: "model" },
+                { error: "Rate limit exceeded", expectedCategory: "rate_limit" },
+                { error: "Configuration missing", expectedCategory: "config" },
+                { error: "Random error message", expectedCategory: "unknown" },
             ];
 
             testCases.forEach(({ error, expectedCategory }) => {
@@ -60,27 +60,27 @@ describe('Error Diagnostic Integration', () => {
             });
         });
 
-        it('should provide actionable suggestions for each category', () => {
+        it("should provide actionable suggestions for each category", () => {
             const categoryTests = [
                 {
-                    error: 'Invalid API key',
+                    error: "Invalid API key",
                     expectedSuggestions: [
-                        'Check your API keys in Settings',
-                        'Verify your API key is valid',
+                        "Check your API keys in Settings",
+                        "Verify your API key is valid",
                     ],
                 },
                 {
-                    error: 'Connection timeout',
+                    error: "Connection timeout",
                     expectedSuggestions: [
-                        'Check your internet connection',
-                        'Try refreshing the page',
+                        "Check your internet connection",
+                        "Try refreshing the page",
                     ],
                 },
                 {
-                    error: 'Model not available',
+                    error: "Model not available",
                     expectedSuggestions: [
-                        'Try switching to a different AI model',
-                        'Check if the selected model supports',
+                        "Try switching to a different AI model",
+                        "Check if the selected model supports",
                     ],
                 },
             ];
@@ -90,33 +90,33 @@ describe('Error Diagnostic Integration', () => {
 
                 expectedSuggestions.forEach((expectedSuggestion) => {
                     const hasSuggestion = diagnostic.suggestions.some((suggestion) =>
-                        suggestion.toLowerCase().includes(expectedSuggestion.toLowerCase())
+                        suggestion.toLowerCase().includes(expectedSuggestion.toLowerCase()),
                     );
                     expect(hasSuggestion).toBe(true);
                 });
             });
         });
 
-        it('should handle edge cases gracefully', () => {
-            const edgeCases = [null, undefined, '', {}, [], 0, false];
+        it("should handle edge cases gracefully", () => {
+            const edgeCases = [null, undefined, "", {}, [], 0, false];
 
             edgeCases.forEach((edgeCase) => {
                 const diagnosticMessage = getErrorDiagnosticMessage(edgeCase);
 
                 // Should still provide a helpful message
-                expect(diagnosticMessage).toContain('🔧 Try these steps:');
+                expect(diagnosticMessage).toContain("🔧 Try these steps:");
                 expect(diagnosticMessage.length).toBeGreaterThan(0);
 
                 // Should not crash or return empty
-                expect(typeof diagnosticMessage).toBe('string');
+                expect(typeof diagnosticMessage).toBe("string");
             });
         });
 
-        it('should preserve rate limit errors for special handling', () => {
+        it("should preserve rate limit errors for special handling", () => {
             const rateLimitErrors = [
-                'You have reached the daily limit of requests',
-                'Rate limit exceeded for this minute',
-                'Daily quota exhausted',
+                "You have reached the daily limit of requests",
+                "Rate limit exceeded for this minute",
+                "Daily quota exhausted",
             ];
 
             rateLimitErrors.forEach((error) => {
@@ -124,25 +124,25 @@ describe('Error Diagnostic Integration', () => {
 
                 // Rate limit errors should keep their original message
                 expect(diagnostic.message).toBe(error);
-                expect(diagnostic.category).toBe('rate_limit');
+                expect(diagnostic.category).toBe("rate_limit");
 
                 // Should still provide upgrade suggestions
                 expect(
                     diagnostic.suggestions.some(
-                        (s) => s.includes('upgrading to VT+') || s.includes('own API key')
-                    )
+                        (s) => s.includes("upgrading to VT+") || s.includes("own API key"),
+                    ),
                 ).toBe(true);
             });
         });
     });
 
-    describe('Message Formatting', () => {
-        it('should format messages consistently', () => {
-            const error = 'API key error';
+    describe("Message Formatting", () => {
+        it("should format messages consistently", () => {
+            const error = "API key error";
             const message = getErrorDiagnosticMessage(error);
 
             // Should have proper structure
-            const parts = message.split('\n\n🔧 Try these steps:\n');
+            const parts = message.split("\n\n🔧 Try these steps:\n");
             expect(parts).toHaveLength(2);
 
             const [errorMessage, suggestionsList] = parts;
@@ -150,7 +150,7 @@ describe('Error Diagnostic Integration', () => {
             expect(suggestionsList.trim().length).toBeGreaterThan(0);
 
             // Suggestions should be numbered
-            const suggestions = suggestionsList.split('\n');
+            const suggestions = suggestionsList.split("\n");
             suggestions.forEach((suggestion, index) => {
                 if (suggestion.trim()) {
                     expect(suggestion).toMatch(new RegExp(`^${index + 1}\\.`));

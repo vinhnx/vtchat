@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/logger';
-import { Alert, AlertDescription, AlertTitle, Button, cn } from '@repo/ui';
-import { AlertCircle, DollarSign, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { log } from "@repo/shared/logger";
+import { Alert, AlertDescription, AlertTitle, Button, cn } from "@repo/ui";
+import { AlertCircle, DollarSign, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface BudgetStatus {
     global: {
-        status: 'ok' | 'warning' | 'exceeded';
+        status: "ok" | "warning" | "exceeded";
         totalCostUSD: number;
         budgetLimitUSD: number;
         percentageUsed: number;
@@ -34,14 +34,14 @@ export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
     useEffect(() => {
         const fetchBudgetStatus = async () => {
             try {
-                const response = await fetch('/api/budget/status');
+                const response = await fetch("/api/budget/status");
                 if (response.ok) {
                     const data = await response.json();
                     setBudgetStatus(data);
                 }
             } catch (error) {
                 // Silently fail - budget warning is not critical
-                log.warn({ error }, 'Failed to fetch budget status');
+                log.warn({ error }, "Failed to fetch budget status");
             } finally {
                 setLoading(false);
             }
@@ -55,15 +55,15 @@ export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
     }, []);
 
     // Don't show anything if loading, dismissed, or no issues
-    if (loading || dismissed || !budgetStatus || budgetStatus.global.status === 'ok') {
+    if (loading || dismissed || !budgetStatus || budgetStatus.global.status === "ok") {
         return null;
     }
 
     const { global } = budgetStatus;
-    const isExceeded = global.status === 'exceeded';
+    const isExceeded = global.status === "exceeded";
 
     return (
-        <div className={cn('sticky top-0 z-50', className)}>
+        <div className={cn("sticky top-0 z-50", className)}>
             <Alert className="rounded-none border-x-0 border-t-0 border-border bg-muted/50">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
                         )}
                         <div>
                             <AlertTitle className="text-sm font-semibold text-foreground">
-                                {isExceeded ? 'Budget Limit Reached' : 'Budget Warning'}
+                                {isExceeded ? "Budget Limit Reached" : "Budget Warning"}
                             </AlertTitle>
                             <AlertDescription className="text-xs text-muted-foreground">
                                 {isExceeded

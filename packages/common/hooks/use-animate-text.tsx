@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { animate, useMotionValue } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { animate, useMotionValue } from "framer-motion";
+import { useEffect, useState } from "react";
 
-const delimiter = ' ';
+const delimiter = " ";
 export function useAnimatedText(text: string, shouldAnimate = true) {
     const animatedCursor = useMotionValue(0);
     const [cursor, setCursor] = useState(0);
@@ -36,7 +36,7 @@ export function useAnimatedText(text: string, shouldAnimate = true) {
 
         const controls = animate(animatedCursor, wordCount, {
             duration: 3,
-            ease: 'easeOut',
+            ease: "easeOut",
             onUpdate(latest) {
                 setCursor(Math.floor(latest));
             },

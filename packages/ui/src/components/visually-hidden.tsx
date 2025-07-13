@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export const VisuallyHidden = React.forwardRef<
     HTMLSpanElement,
@@ -8,19 +8,19 @@ export const VisuallyHidden = React.forwardRef<
         ref={ref}
         className="absolute h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 clip-[rect(0,0,0,0)]"
         style={{
-            position: 'absolute',
+            position: "absolute",
             border: 0,
-            width: '1px',
-            height: '1px',
+            width: "1px",
+            height: "1px",
             padding: 0,
-            margin: '-1px',
-            overflow: 'hidden',
-            clip: 'rect(0, 0, 0, 0)',
-            whiteSpace: 'nowrap',
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
         }}
         {...props}
     >
         {children}
     </span>
 ));
-VisuallyHidden.displayName = 'VisuallyHidden';
+VisuallyHidden.displayName = "VisuallyHidden";

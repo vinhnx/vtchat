@@ -1,5 +1,5 @@
-import { Button, Card, CardContent, cn } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Button, Card, CardContent, cn } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertCircle,
     AlertTriangle,
@@ -12,94 +12,94 @@ import {
     WifiOff,
     X,
     Zap,
-} from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+} from "lucide-react";
+import { memo, useEffect, useState } from "react";
 
 interface PremiumErrorBoundaryProps {
     error: Error | string;
     onRetry?: () => void;
     onReport?: () => void;
-    variant?: 'inline' | 'card' | 'toast';
+    variant?: "inline" | "card" | "toast";
     className?: string;
 }
 
 export const PremiumErrorBoundary = memo(
-    ({ error, onRetry, onReport, variant = 'card', className }: PremiumErrorBoundaryProps) => {
-        const errorMessage = typeof error === 'string' ? error : error.message;
+    ({ error, onRetry, onReport, variant = "card", className }: PremiumErrorBoundaryProps) => {
+        const errorMessage = typeof error === "string" ? error : error.message;
         const [isExpanded, setIsExpanded] = useState(false);
 
         const getErrorType = () => {
             if (
-                errorMessage.toLowerCase().includes('network') ||
-                errorMessage.toLowerCase().includes('fetch')
+                errorMessage.toLowerCase().includes("network") ||
+                errorMessage.toLowerCase().includes("fetch")
             ) {
                 return {
-                    type: 'network',
-                    title: 'Connection Issue',
+                    type: "network",
+                    title: "Connection Issue",
                     description:
-                        'Unable to connect to our servers. Please check your internet connection.',
+                        "Unable to connect to our servers. Please check your internet connection.",
                     icon: WifiOff,
-                    color: 'text-orange-500',
-                    bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-                    borderColor: 'border-orange-200 dark:border-orange-800',
+                    color: "text-orange-500",
+                    bgColor: "bg-orange-50 dark:bg-orange-900/20",
+                    borderColor: "border-orange-200 dark:border-orange-800",
                 };
             }
 
             if (
-                errorMessage.toLowerCase().includes('rate limit') ||
-                errorMessage.toLowerCase().includes('quota')
+                errorMessage.toLowerCase().includes("rate limit") ||
+                errorMessage.toLowerCase().includes("quota")
             ) {
                 return {
-                    type: 'rate_limit',
-                    title: 'Rate Limit Exceeded',
+                    type: "rate_limit",
+                    title: "Rate Limit Exceeded",
                     description:
                         "You've reached the limit for this feature. Please try again later or upgrade your plan.",
                     icon: Zap,
-                    color: 'text-purple-500',
-                    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-                    borderColor: 'border-purple-200 dark:border-purple-800',
+                    color: "text-purple-500",
+                    bgColor: "bg-purple-50 dark:bg-purple-900/20",
+                    borderColor: "border-purple-200 dark:border-purple-800",
                 };
             }
 
             if (
-                errorMessage.toLowerCase().includes('auth') ||
-                errorMessage.toLowerCase().includes('unauthorized')
+                errorMessage.toLowerCase().includes("auth") ||
+                errorMessage.toLowerCase().includes("unauthorized")
             ) {
                 return {
-                    type: 'auth',
-                    title: 'Authentication Required',
-                    description: 'Please sign in to continue using this feature.',
+                    type: "auth",
+                    title: "Authentication Required",
+                    description: "Please sign in to continue using this feature.",
                     icon: AlertCircle,
-                    color: 'text-blue-500',
-                    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-                    borderColor: 'border-blue-200 dark:border-blue-800',
+                    color: "text-blue-500",
+                    bgColor: "bg-blue-50 dark:bg-blue-900/20",
+                    borderColor: "border-blue-200 dark:border-blue-800",
                 };
             }
 
             return {
-                type: 'general',
-                title: 'Something went wrong',
-                description: 'An unexpected error occurred. Our team has been notified.',
+                type: "general",
+                title: "Something went wrong",
+                description: "An unexpected error occurred. Our team has been notified.",
                 icon: AlertTriangle,
-                color: 'text-red-500',
-                bgColor: 'bg-red-50 dark:bg-red-900/20',
-                borderColor: 'border-red-200 dark:border-red-800',
+                color: "text-red-500",
+                bgColor: "bg-red-50 dark:bg-red-900/20",
+                borderColor: "border-red-200 dark:border-red-800",
             };
         };
 
         const errorConfig = getErrorType();
         const Icon = errorConfig.icon;
 
-        if (variant === 'toast') {
+        if (variant === "toast") {
             return (
                 <motion.div
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={cn(
-                        'fixed bottom-4 right-4 z-50 max-w-sm',
-                        'rounded-xl border shadow-lg backdrop-blur-sm',
+                        "fixed bottom-4 right-4 z-50 max-w-sm",
+                        "rounded-xl border shadow-lg backdrop-blur-sm",
                         errorConfig.bgColor,
                         errorConfig.borderColor,
-                        className
+                        className,
                     )}
                     exit={{ opacity: 0, y: 50, scale: 0.95 }}
                     initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -108,8 +108,8 @@ export const PremiumErrorBoundary = memo(
                         <div className="flex items-start gap-3">
                             <div
                                 className={cn(
-                                    'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg',
-                                    'bg-white/80 dark:bg-gray-800/80'
+                                    "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg",
+                                    "bg-white/80 dark:bg-gray-800/80",
                                 )}
                             >
                                 <Icon className={errorConfig.color} size={16} />
@@ -146,15 +146,15 @@ export const PremiumErrorBoundary = memo(
             );
         }
 
-        if (variant === 'inline') {
+        if (variant === "inline") {
             return (
                 <motion.div
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     className={cn(
-                        'flex items-center gap-3 rounded-lg border p-3',
+                        "flex items-center gap-3 rounded-lg border p-3",
                         errorConfig.bgColor,
                         errorConfig.borderColor,
-                        className
+                        className,
                     )}
                     exit={{ opacity: 0, height: 0 }}
                     initial={{ opacity: 0, height: 0 }}
@@ -189,13 +189,13 @@ export const PremiumErrorBoundary = memo(
                 className={className}
                 initial={{ opacity: 0, scale: 0.95 }}
             >
-                <Card className={cn('border-2', errorConfig.borderColor, errorConfig.bgColor)}>
+                <Card className={cn("border-2", errorConfig.borderColor, errorConfig.bgColor)}>
                     <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                             <div
                                 className={cn(
-                                    'flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl',
-                                    'bg-white/80 shadow-sm dark:bg-gray-800/80'
+                                    "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl",
+                                    "bg-white/80 shadow-sm dark:bg-gray-800/80",
                                 )}
                             >
                                 <Icon className={errorConfig.color} size={24} />
@@ -215,13 +215,13 @@ export const PremiumErrorBoundary = memo(
                                         className="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
                                         onClick={() => setIsExpanded(!isExpanded)}
                                     >
-                                        {isExpanded ? 'Hide' : 'Show'} technical details
+                                        {isExpanded ? "Hide" : "Show"} technical details
                                     </button>
 
                                     <AnimatePresence>
                                         {isExpanded && (
                                             <motion.div
-                                                animate={{ opacity: 1, height: 'auto' }}
+                                                animate={{ opacity: 1, height: "auto" }}
                                                 className="mt-2 rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
                                                 exit={{ opacity: 0, height: 0 }}
                                                 initial={{ opacity: 0, height: 0 }}
@@ -259,7 +259,7 @@ export const PremiumErrorBoundary = memo(
 
                                     <Button
                                         className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
-                                        onClick={() => window.open('/help', '_blank')}
+                                        onClick={() => window.open("/help", "_blank")}
                                         variant="ghost"
                                     >
                                         <ExternalLink size={16} />
@@ -272,7 +272,7 @@ export const PremiumErrorBoundary = memo(
                 </Card>
             </motion.div>
         );
-    }
+    },
 );
 
 interface ConnectionStatusProps {
@@ -297,12 +297,12 @@ export const ConnectionStatus = memo(({ isOnline, className }: ConnectionStatusP
                 <motion.div
                     animate={{ opacity: 1, y: 0 }}
                     className={cn(
-                        'fixed left-1/2 top-4 z-50 -translate-x-1/2 transform',
-                        'rounded-full border px-4 py-2 shadow-lg backdrop-blur-sm',
+                        "fixed left-1/2 top-4 z-50 -translate-x-1/2 transform",
+                        "rounded-full border px-4 py-2 shadow-lg backdrop-blur-sm",
                         isOnline
-                            ? 'border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300'
-                            : 'border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300',
-                        className
+                            ? "border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300"
+                            : "border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300",
+                        className,
                     )}
                     exit={{ opacity: 0, y: -20 }}
                     initial={{ opacity: 0, y: -20 }}
@@ -327,7 +327,7 @@ export const ConnectionStatus = memo(({ isOnline, className }: ConnectionStatusP
 });
 
 interface NotificationToastProps {
-    type: 'success' | 'error' | 'warning' | 'info';
+    type: "success" | "error" | "warning" | "info";
     title: string;
     message: string;
     isVisible: boolean;
@@ -346,37 +346,37 @@ export const NotificationToast = memo(
 
         const getConfig = () => {
             switch (type) {
-                case 'success':
+                case "success":
                     return {
                         icon: CheckCircle2,
-                        color: 'text-green-600',
-                        bgColor: 'bg-green-50 dark:bg-green-900/20',
-                        borderColor: 'border-green-200 dark:border-green-800',
-                        progressColor: 'bg-green-500',
+                        color: "text-green-600",
+                        bgColor: "bg-green-50 dark:bg-green-900/20",
+                        borderColor: "border-green-200 dark:border-green-800",
+                        progressColor: "bg-green-500",
                     };
-                case 'error':
+                case "error":
                     return {
                         icon: AlertCircle,
-                        color: 'text-red-600',
-                        bgColor: 'bg-red-50 dark:bg-red-900/20',
-                        borderColor: 'border-red-200 dark:border-red-800',
-                        progressColor: 'bg-red-500',
+                        color: "text-red-600",
+                        bgColor: "bg-red-50 dark:bg-red-900/20",
+                        borderColor: "border-red-200 dark:border-red-800",
+                        progressColor: "bg-red-500",
                     };
-                case 'warning':
+                case "warning":
                     return {
                         icon: AlertTriangle,
-                        color: 'text-orange-600',
-                        bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-                        borderColor: 'border-orange-200 dark:border-orange-800',
-                        progressColor: 'bg-orange-500',
+                        color: "text-orange-600",
+                        bgColor: "bg-orange-50 dark:bg-orange-900/20",
+                        borderColor: "border-orange-200 dark:border-orange-800",
+                        progressColor: "bg-orange-500",
                     };
                 default:
                     return {
                         icon: Info,
-                        color: 'text-blue-600',
-                        bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-                        borderColor: 'border-blue-200 dark:border-blue-800',
-                        progressColor: 'bg-blue-500',
+                        color: "text-blue-600",
+                        bgColor: "bg-blue-50 dark:bg-blue-900/20",
+                        borderColor: "border-blue-200 dark:border-blue-800",
+                        progressColor: "bg-blue-500",
                     };
             }
         };
@@ -390,10 +390,10 @@ export const NotificationToast = memo(
                     <motion.div
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         className={cn(
-                            'fixed bottom-4 right-4 z-50 max-w-sm',
-                            'overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm',
+                            "fixed bottom-4 right-4 z-50 max-w-sm",
+                            "overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm",
                             config.bgColor,
-                            config.borderColor
+                            config.borderColor,
                         )}
                         exit={{ opacity: 0, y: 50, scale: 0.95 }}
                         initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -401,10 +401,10 @@ export const NotificationToast = memo(
                         {/* Progress bar */}
                         {duration > 0 && (
                             <motion.div
-                                animate={{ width: '0%' }}
-                                className={cn('h-1', config.progressColor)}
-                                initial={{ width: '100%' }}
-                                transition={{ duration: duration / 1000, ease: 'linear' }}
+                                animate={{ width: "0%" }}
+                                className={cn("h-1", config.progressColor)}
+                                initial={{ width: "100%" }}
+                                transition={{ duration: duration / 1000, ease: "linear" }}
                             />
                         )}
 
@@ -412,8 +412,8 @@ export const NotificationToast = memo(
                             <div className="flex items-start gap-3">
                                 <div
                                     className={cn(
-                                        'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg',
-                                        'bg-white/80 dark:bg-gray-800/80'
+                                        "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg",
+                                        "bg-white/80 dark:bg-gray-800/80",
                                     )}
                                 >
                                     <Icon className={config.color} size={16} />
@@ -442,9 +442,9 @@ export const NotificationToast = memo(
                 )}
             </AnimatePresence>
         );
-    }
+    },
 );
 
-PremiumErrorBoundary.displayName = 'PremiumErrorBoundary';
-ConnectionStatus.displayName = 'ConnectionStatus';
-NotificationToast.displayName = 'NotificationToast';
+PremiumErrorBoundary.displayName = "PremiumErrorBoundary";
+ConnectionStatus.displayName = "ConnectionStatus";
+NotificationToast.displayName = "NotificationToast";

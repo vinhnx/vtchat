@@ -3,22 +3,22 @@
  * Integrates AI SDK tool streaming patterns with existing VT Chat tools
  */
 
-import type { ToolCall, ToolResult } from '@repo/shared/types';
-import { ModelEnum } from '../models';
-import { openaiWebSearchTool, supportsOpenAIWebSearch } from './openai-web-search';
-import { StreamingToolExecutor } from './streaming-utils';
+import type { ToolCall, ToolResult } from "@repo/shared/types";
+import { ModelEnum } from "../models";
+import { openaiWebSearchTool, supportsOpenAIWebSearch } from "./openai-web-search";
+import { StreamingToolExecutor } from "./streaming-utils";
 
 // Type aliases for plan-based tool access
-export type UserTier = 'VT_BASE' | 'VT_PLUS';
+export type UserTier = "VT_BASE" | "VT_PLUS";
 export const USER_TIER: Record<string, UserTier> = {
-    VT_BASE: 'VT_BASE' as UserTier,
-    VT_PLUS: 'VT_PLUS' as UserTier,
+    VT_BASE: "VT_BASE" as UserTier,
+    VT_PLUS: "VT_PLUS" as UserTier,
 } as const;
 
 export interface ToolDefinition {
     name: string;
     description: string;
-    category: 'web-search' | 'math' | 'chart' | 'document' | 'reasoning' | 'other';
+    category: "web-search" | "math" | "chart" | "document" | "reasoning" | "other";
     supportedModels?: ModelEnum[];
     supportsStreaming: boolean;
     autoExecute: boolean; // Whether to auto-execute on server or require user interaction
@@ -84,10 +84,10 @@ export class ToolRegistry {
 
         if (webSearchSupportedModels.length > 0) {
             this.register({
-                name: 'web_search',
+                name: "web_search",
                 description:
-                    'Search the web using built-in web search capabilities (VT+ subscription required)',
-                category: 'web-search',
+                    "Search the web using built-in web search capabilities (VT+ subscription required)",
+                category: "web-search",
                 supportedModels: webSearchSupportedModels,
                 supportsStreaming: true,
                 autoExecute: true,
@@ -98,9 +98,9 @@ export class ToolRegistry {
 
         // Math Calculator Tool (existing)
         this.register({
-            name: 'math_calculator',
-            description: 'Perform mathematical calculations',
-            category: 'math',
+            name: "math_calculator",
+            description: "Perform mathematical calculations",
+            category: "math",
             supportsStreaming: false,
             autoExecute: true,
             tool: null, // Reference to existing math tool
@@ -108,9 +108,9 @@ export class ToolRegistry {
 
         // Chart Visualization Tool (existing)
         this.register({
-            name: 'chart_visualization',
-            description: 'Create interactive charts and graphs',
-            category: 'chart',
+            name: "chart_visualization",
+            description: "Create interactive charts and graphs",
+            category: "chart",
             supportsStreaming: false,
             autoExecute: true,
             tool: null, // Reference to existing chart tool
@@ -118,9 +118,9 @@ export class ToolRegistry {
 
         // Document Processing Tool (existing)
         this.register({
-            name: 'document_processing',
-            description: 'Process and analyze documents',
-            category: 'document',
+            name: "document_processing",
+            description: "Process and analyze documents",
+            category: "document",
             supportsStreaming: false,
             autoExecute: true,
             tool: null, // Reference to existing document tool
@@ -154,7 +154,7 @@ export class ToolRegistry {
             }
 
             // Special handling for web search functionality
-            if (name === 'web_search') {
+            if (name === "web_search") {
                 if (!supportsOpenAIWebSearch(context.model)) {
                     continue;
                 }
@@ -227,10 +227,10 @@ export class ToolRegistry {
      */
     async executeToolWithStreaming(
         toolCall: ToolCall,
-        executor: (args: any) => Promise<any>
+        executor: (args: any) => Promise<any>,
     ): Promise<ToolResult | null> {
         if (!this.streamingExecutor) {
-            throw new Error('Streaming executor not set up. Call setupStreaming() first.');
+            throw new Error("Streaming executor not set up. Call setupStreaming() first.");
         }
 
         return await this.streamingExecutor.executeToolWithStreaming(toolCall, executor);
@@ -271,7 +271,7 @@ export function getToolsForModel(
         enableCharts?: boolean;
         onToolCallUpdate?: (toolCall: ToolCall) => void;
         onToolResult?: (toolResult: ToolResult) => void;
-    } = {}
+    } = {},
 ): Record<string, any> {
     const context: ToolExecutionContext = {
         model,

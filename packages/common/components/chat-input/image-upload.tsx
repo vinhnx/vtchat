@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
-import { useChatStore } from '@repo/common/store';
-import { ChatModeConfig } from '@repo/shared/config';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { FeatureSlug } from '@repo/shared/types/subscription';
-import { Button, Tooltip } from '@repo/ui';
-import { Image } from 'lucide-react';
-import { type FC, useState } from 'react';
-import { GatedFeatureAlert } from '../gated-feature-alert';
-import { LoginRequiredDialog } from '../login-required-dialog';
+import { useSubscriptionAccess } from "@repo/common/hooks/use-subscription-access";
+import { useChatStore } from "@repo/common/store";
+import { ChatModeConfig } from "@repo/shared/config";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { FeatureSlug } from "@repo/shared/types/subscription";
+import { Button, Tooltip } from "@repo/ui";
+import { Image } from "lucide-react";
+import { type FC, useState } from "react";
+import { GatedFeatureAlert } from "../gated-feature-alert";
+import { LoginRequiredDialog } from "../login-required-dialog";
 
 // Create a wrapper component for Image to match expected icon prop type
 const ImageIcon: React.ComponentType<{ size?: number; className?: string }> = ({
@@ -87,28 +87,28 @@ export const ImageUpload: FC<TImageUpload> = ({
             <Tooltip
                 content={
                     hasImageAttached
-                        ? `Image attached: ${imageAttachment?.file?.name || 'Unknown'}`
+                        ? `Image attached: ${imageAttachment?.file?.name || "Unknown"}`
                         : tooltip
                 }
             >
                 {showIcon ? (
                     <Button
                         className={
-                            hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
+                            hasImageAttached ? "border-blue-300 bg-blue-100 hover:bg-blue-200" : ""
                         }
                         onClick={handleFileSelect}
                         size="icon-sm"
-                        variant={hasImageAttached ? 'default' : 'ghost'}
+                        variant={hasImageAttached ? "default" : "ghost"}
                     >
                         <Image size={16} strokeWidth={2} />
                     </Button>
                 ) : (
                     <Button
                         className={
-                            hasImageAttached ? 'border-blue-300 bg-blue-100 hover:bg-blue-200' : ''
+                            hasImageAttached ? "border-blue-300 bg-blue-100 hover:bg-blue-200" : ""
                         }
                         onClick={handleFileSelect}
-                        variant={hasImageAttached ? 'default' : 'bordered'}
+                        variant={hasImageAttached ? "default" : "bordered"}
                     >
                         {label}
                     </Button>

@@ -1,7 +1,7 @@
-import { log } from '@repo/shared/logger';
-import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-server';
-import { checkBudgetStatus, getUserMonthlySpend } from '@/lib/services/budget-tracking';
+import { log } from "@repo/shared/logger";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { checkBudgetStatus, getUserMonthlySpend } from "@/lib/services/budget-tracking";
 
 export async function GET(request: NextRequest) {
     try {
@@ -9,23 +9,23 @@ export async function GET(request: NextRequest) {
             headers: request.headers,
         });
         if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const userId = session.user.id;
 
         // Get global budget status
-        const globalBudgetStatus = await checkBudgetStatus('gemini');
+        const globalBudgetStatus = await checkBudgetStatus("gemini");
 
         // Get user-specific spending
-        const userSpending = await getUserMonthlySpend(userId, 'gemini');
+        const userSpending = await getUserMonthlySpend(userId, "gemini");
 
         return NextResponse.json({
             monthlyUsed: globalBudgetStatus.totalCostUSD,
             monthlyLimit: globalBudgetStatus.budgetLimitUSD,
             remainingBudget: globalBudgetStatus.budgetLimitUSD - globalBudgetStatus.totalCostUSD,
             usagePercent: globalBudgetStatus.percentageUsed,
-            warningLevel: globalBudgetStatus.status === 'ok' ? 'normal' : globalBudgetStatus.status,
+            warningLevel: globalBudgetStatus.status === "ok" ? "normal" : globalBudgetStatus.status,
             isEnabled: !globalBudgetStatus.shouldDisable,
             global: {
                 status: globalBudgetStatus.status,
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
             month: new Date().toISOString().slice(0, 7), // YYYY-MM format
         });
     } catch (error) {
-        log.error({ error }, 'Failed to get budget status');
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        log.error({ error }, "Failed to get budget status");
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

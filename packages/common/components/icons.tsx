@@ -1,5 +1,5 @@
-import { cn } from '@repo/ui';
-import { Code, Loader, Wrench, Zap } from 'lucide-react';
+import { cn } from "@repo/ui";
+import { Code, Loader, Wrench, Zap } from "lucide-react";
 
 export const ToolIcon = ({ className }: { className?: string }) => {
     return (
@@ -41,16 +41,16 @@ export const NewIcon = () => {
 
 export const CreditIcon = ({
     credits,
-    variant = 'default',
+    variant = "default",
 }: {
     credits: number;
-    variant?: 'default' | 'muted';
+    variant?: "default" | "muted";
 }) => {
     return (
         <div
             className={cn(
-                'flex-inline text-muted-foreground flex h-5 items-center justify-center gap-0.5 rounded-md border border-none font-sans text-xs font-medium opacity-50',
-                variant === 'muted' && 'border-none'
+                "flex-inline text-muted-foreground flex h-5 items-center justify-center gap-0.5 rounded-md border border-none font-sans text-xs font-medium opacity-50",
+                variant === "muted" && "border-none",
             )}
         >
             <Zap className="text-muted-foreground" size={14} strokeWidth={2} /> {credits}

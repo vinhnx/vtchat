@@ -1,10 +1,10 @@
-import { ModelEnum } from '@repo/ai/models';
-import { BUDGET_LIMITS, GEMINI_PRICES } from '@repo/shared/constants/rate-limits';
-import { log } from '@repo/shared/logger';
-import { isGeminiModel } from '@repo/shared/utils';
-import { and, eq, gte, sql } from 'drizzle-orm';
-import { db } from '@/lib/database';
-import { providerUsage } from '@/lib/database/schema';
+import { ModelEnum } from "@repo/ai/models";
+import { BUDGET_LIMITS, GEMINI_PRICES } from "@repo/shared/constants/rate-limits";
+import { log } from "@repo/shared/logger";
+import { isGeminiModel } from "@repo/shared/utils";
+import { and, eq, gte, sql } from "drizzle-orm";
+import { db } from "@/lib/database";
+import { providerUsage } from "@/lib/database/schema";
 
 /**
  * Record a request for budget tracking and cost monitoring
@@ -13,7 +13,7 @@ import { providerUsage } from '@/lib/database/schema';
 export async function recordProviderUsage(
     userId: string,
     modelId: ModelEnum,
-    provider: string = 'gemini'
+    provider: string = "gemini",
 ): Promise<void> {
     // Only track costs for models we have pricing data for
     if (!isGeminiModel(modelId)) {
@@ -54,10 +54,10 @@ export async function recordProviderUsage(
                 estimatedCostCents,
                 estimatedCostUSD: estimatedCostCents / 100,
             },
-            'Recorded provider usage for budget tracking'
+            "Recorded provider usage for budget tracking",
         );
     } catch (error) {
-        log.error({ error, userId, modelId }, 'Failed to record provider usage');
+        log.error({ error, userId, modelId }, "Failed to record provider usage");
         // Don't throw - budget tracking failure shouldn't break the main request
     }
 }
@@ -67,8 +67,8 @@ export async function recordProviderUsage(
  * Returns total cost in USD for the current month
  */
 export async function getMonthlySpend(
-    provider: string = 'gemini',
-    month: Date = new Date()
+    provider: string = "gemini",
+    month: Date = new Date(),
 ): Promise<{ totalCostUSD: number; requestCount: number }> {
     const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
     const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59, 999);
@@ -84,8 +84,8 @@ export async function getMonthlySpend(
                 and(
                     eq(providerUsage.provider, provider),
                     gte(providerUsage.requestTimestamp, startOfMonth),
-                    sql`${providerUsage.requestTimestamp} <= ${endOfMonth}`
-                )
+                    sql`${providerUsage.requestTimestamp} <= ${endOfMonth}`,
+                ),
             );
 
         const { totalCostCents, requestCount } = result[0] || {
@@ -98,7 +98,7 @@ export async function getMonthlySpend(
             requestCount: Number(requestCount),
         };
     } catch (error) {
-        log.error({ error, provider, month }, 'Failed to get monthly spend');
+        log.error({ error, provider, month }, "Failed to get monthly spend");
         return { totalCostUSD: 0, requestCount: 0 };
     }
 }
@@ -108,10 +108,10 @@ export async function getMonthlySpend(
  * Returns budget status and recommendations
  */
 export async function checkBudgetStatus(
-    provider: string = 'gemini',
-    month: Date = new Date()
+    provider: string = "gemini",
+    month: Date = new Date(),
 ): Promise<{
-    status: 'ok' | 'warning' | 'exceeded';
+    status: "ok" | "warning" | "exceeded";
     totalCostUSD: number;
     budgetLimitUSD: number;
     percentageUsed: number;
@@ -122,17 +122,17 @@ export async function checkBudgetStatus(
     const budgetLimitUSD = BUDGET_LIMITS.MONTHLY_CAP_USD;
     const percentageUsed = (totalCostUSD / budgetLimitUSD) * 100;
 
-    let status: 'ok' | 'warning' | 'exceeded';
+    let status: "ok" | "warning" | "exceeded";
     let shouldDisable = false;
 
     if (percentageUsed >= 100) {
-        status = 'exceeded';
+        status = "exceeded";
         shouldDisable = true;
     } else if (percentageUsed >= BUDGET_LIMITS.WARNING_THRESHOLD * 100) {
-        status = 'warning';
+        status = "warning";
         shouldDisable = false;
     } else {
-        status = 'ok';
+        status = "ok";
         shouldDisable = false;
     }
 
@@ -152,8 +152,8 @@ export async function checkBudgetStatus(
  */
 export async function getUserMonthlySpend(
     userId: string,
-    provider: string = 'gemini',
-    month: Date = new Date()
+    provider: string = "gemini",
+    month: Date = new Date(),
 ): Promise<{
     totalCostUSD: number;
     requestCount: number;
@@ -175,8 +175,8 @@ export async function getUserMonthlySpend(
                     eq(providerUsage.userId, userId),
                     eq(providerUsage.provider, provider),
                     gte(providerUsage.requestTimestamp, startOfMonth),
-                    sql`${providerUsage.requestTimestamp} <= ${endOfMonth}`
-                )
+                    sql`${providerUsage.requestTimestamp} <= ${endOfMonth}`,
+                ),
             )
             .groupBy(providerUsage.modelId);
 
@@ -203,7 +203,7 @@ export async function getUserMonthlySpend(
             modelBreakdown,
         };
     } catch (error) {
-        log.error({ error, userId, provider, month }, 'Failed to get user monthly spend');
+        log.error({ error, userId, provider, month }, "Failed to get user monthly spend");
         return { totalCostUSD: 0, requestCount: 0, modelBreakdown: {} };
     }
 }
@@ -213,6 +213,6 @@ export async function getUserMonthlySpend(
  * This can be called before processing requests to enforce budget caps
  */
 export async function shouldDisableGeminiModels(): Promise<boolean> {
-    const budgetStatus = await checkBudgetStatus('gemini');
+    const budgetStatus = await checkBudgetStatus("gemini");
     return budgetStatus.shouldDisable;
 }

@@ -3,16 +3,15 @@
  * Usage: bun run scripts/apply-admin-migration-dev.js
  */
 
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { readFileSync } from 'fs';
-import { Client } from 'pg';
+import { readFileSync } from "node:fs";
+import { Client } from "pg";
 
 async function applyAdminMigration() {
     if (!process.env.DATABASE_URL) {
-        console.log('❌ DATABASE_URL environment variable is required');
-        console.log('Please set your development database URL and run again.');
+        console.log("❌ DATABASE_URL environment variable is required");
+        console.log("Please set your development database URL and run again.");
         console.log(
-            'Example: DATABASE_URL="postgresql://..." bun run scripts/apply-admin-migration-dev.js'
+            'Example: DATABASE_URL="postgresql://..." bun run scripts/apply-admin-migration-dev.js',
         );
         process.exit(1);
     }
@@ -23,16 +22,16 @@ async function applyAdminMigration() {
 
     try {
         await client.connect();
-        console.log('✅ Connected to development database');
+        console.log("✅ Connected to development database");
 
         // Read the SQL migration file
-        const migrationSql = readFileSync('./scripts/apply-admin-migration-dev.sql', 'utf8');
+        const migrationSql = readFileSync("./scripts/apply-admin-migration-dev.sql", "utf8");
 
         // Split by statements and execute each one
         const statements = migrationSql
-            .split(';')
+            .split(";")
             .map((stmt) => stmt.trim())
-            .filter((stmt) => stmt && !stmt.startsWith('--'));
+            .filter((stmt) => stmt && !stmt.startsWith("--"));
 
         console.log(`📝 Executing ${statements.length} migration statements...`);
 
@@ -43,17 +42,17 @@ async function applyAdminMigration() {
             }
         }
 
-        console.log('✅ Admin migration applied successfully to development database!');
-        console.log('🚀 You can now restart your dev server: bun dev');
+        console.log("✅ Admin migration applied successfully to development database!");
+        console.log("🚀 You can now restart your dev server: bun dev");
     } catch (error) {
-        console.error('❌ Error applying admin migration:', error.message);
-        if (error.message.includes('already exists')) {
-            console.log('ℹ️  Some columns may already exist - this is normal.');
+        console.error("❌ Error applying admin migration:", error.message);
+        if (error.message.includes("already exists")) {
+            console.log("ℹ️  Some columns may already exist - this is normal.");
         }
         process.exit(1);
     } finally {
         await client.end();
-        console.log('🔌 Database connection closed');
+        console.log("🔌 Database connection closed");
     }
 }
 

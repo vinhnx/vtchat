@@ -1,8 +1,8 @@
-import type { DocumentAttachment } from '@repo/shared/types';
-import { Button, Sheet, SheetContent, SheetTrigger, TypographyH2, TypographyH4 } from '@repo/ui';
-import { FileText, Lightbulb } from 'lucide-react';
-import { memo } from 'react';
-import { DocumentDisplay } from './thread/components/document-display';
+import type { DocumentAttachment } from "@repo/shared/types";
+import { Button, Sheet, SheetContent, SheetTrigger, TypographyH2, TypographyH4 } from "@repo/ui";
+import { FileText, Lightbulb } from "lucide-react";
+import { memo } from "react";
+import { DocumentDisplay } from "./thread/components/document-display";
 
 type DocumentSidePanelProps = {
     documentAttachment: DocumentAttachment;
@@ -44,8 +44,8 @@ export const DocumentSidePanel = memo(
                                     <strong>Type:</strong> {documentAttachment.mimeType}
                                 </p>
                                 <p>
-                                    <strong>Size:</strong>{' '}
-                                    {Math.round((documentAttachment.base64.length * 3) / 4 / 1024)}{' '}
+                                    <strong>Size:</strong>{" "}
+                                    {Math.round((documentAttachment.base64.length * 3) / 4 / 1024)}{" "}
                                     KB
                                 </p>
                             </div>
@@ -66,7 +66,7 @@ export const DocumentSidePanel = memo(
                 </SheetContent>
             </Sheet>
         );
-    }
+    },
 );
 
-DocumentSidePanel.displayName = 'DocumentSidePanel';
+DocumentSidePanel.displayName = "DocumentSidePanel";

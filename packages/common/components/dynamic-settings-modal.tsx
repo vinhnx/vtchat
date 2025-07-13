@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Dialog, DialogContent, Skeleton } from '@repo/ui';
-import { lazy, Suspense } from 'react';
+import { Dialog, DialogContent, Skeleton } from "@repo/ui";
+import { lazy, Suspense } from "react";
 
 // Dynamic import the settings modal
 const SettingsModal = lazy(() =>
-    import('./settings-modal').then((module) => ({
+    import("./settings-modal").then((module) => ({
         default: module.SettingsModal,
-    }))
+    })),
 );
 
 // Settings modal loading skeleton

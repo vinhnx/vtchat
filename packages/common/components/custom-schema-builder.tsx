@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -11,15 +11,15 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
     Input,
-} from '@repo/ui';
-import { ChevronDown, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { z } from 'zod';
+} from "@repo/ui";
+import { ChevronDown, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
 
 interface SchemaField {
     id: string;
     name: string;
-    type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+    type: "string" | "number" | "boolean" | "array" | "object";
     description: string;
     optional: boolean;
 }
@@ -30,26 +30,26 @@ interface CustomSchemaBuilderProps {
 }
 
 const typeOptions = [
-    { value: 'string', label: 'Text' },
-    { value: 'number', label: 'Number' },
-    { value: 'boolean', label: 'Boolean' },
-    { value: 'array', label: 'Array' },
-    { value: 'object', label: 'Object' },
+    { value: "string", label: "Text" },
+    { value: "number", label: "Number" },
+    { value: "boolean", label: "Boolean" },
+    { value: "array", label: "Array" },
+    { value: "object", label: "Object" },
 ];
 
 export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBuilderProps) => {
-    const [schemaName, setSchemaName] = useState('');
+    const [schemaName, setSchemaName] = useState("");
     const [fields, setFields] = useState<SchemaField[]>([
-        { id: '1', name: '', type: 'string', description: '', optional: false },
+        { id: "1", name: "", type: "string", description: "", optional: false },
     ]);
     const [showPreview, setShowPreview] = useState(false);
 
     const addField = () => {
         const newField: SchemaField = {
             id: Date.now().toString(),
-            name: '',
-            type: 'string',
-            description: '',
+            name: "",
+            type: "string",
+            description: "",
             optional: false,
         };
         setFields([...fields, newField]);
@@ -80,19 +80,19 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
         validFields.forEach((field) => {
             let zodType;
             switch (field.type) {
-                case 'string':
+                case "string":
                     zodType = z.string();
                     break;
-                case 'number':
+                case "number":
                     zodType = z.number();
                     break;
-                case 'boolean':
+                case "boolean":
                     zodType = z.boolean();
                     break;
-                case 'array':
+                case "array":
                     zodType = z.array(z.string());
                     break;
-                case 'object':
+                case "object":
                     zodType = z.record(z.any());
                     break;
                 default:
@@ -113,7 +113,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
         const schema = z.object(schemaFields);
         onSchemaCreate({
             schema,
-            type: schemaName.toLowerCase().replace(/\s+/g, '_'),
+            type: schemaName.toLowerCase().replace(/\s+/g, "_"),
         });
     };
 
@@ -124,22 +124,22 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
         validFields.forEach((field) => {
             let example;
             switch (field.type) {
-                case 'string':
+                case "string":
                     example = field.description
                         ? `"${field.description.toLowerCase()}"`
                         : '"example text"';
                     break;
-                case 'number':
+                case "number":
                     example = 42;
                     break;
-                case 'boolean':
+                case "boolean":
                     example = true;
                     break;
-                case 'array':
-                    example = ['item1', 'item2'];
+                case "array":
+                    example = ["item1", "item2"];
                     break;
-                case 'object':
-                    example = { key: 'value' };
+                case "object":
+                    example = { key: "value" };
                     break;
                 default:
                     example = '"example"';
@@ -210,7 +210,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                                     <DropdownMenuTrigger asChild>
                                         <Button className="w-24" size="sm" variant="outlined">
                                             {typeOptions.find((opt) => opt.value === field.type)
-                                                ?.label || 'Text'}
+                                                ?.label || "Text"}
                                             <ChevronDown className="ml-1" size={14} />
                                         </Button>
                                     </DropdownMenuTrigger>
@@ -220,7 +220,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                                                 key={option.value}
                                                 onClick={() =>
                                                     updateField(field.id, {
-                                                        type: option.value as SchemaField['type'],
+                                                        type: option.value as SchemaField["type"],
                                                     })
                                                 }
                                             >

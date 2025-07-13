@@ -2,11 +2,11 @@
  * User tier constants for VT Chat
  */
 export enum UserTier {
-    FREE = 'FREE',
-    PLUS = 'PLUS',
+    FREE = "FREE",
+    PLUS = "PLUS",
 }
 
-export type UserTierType = 'FREE' | 'PLUS';
+export type UserTierType = "FREE" | "PLUS";
 
 // Helper functions
 export const isVtPlusUser = (userTier: UserTierType): boolean => {

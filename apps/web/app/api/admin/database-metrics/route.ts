@@ -1,16 +1,16 @@
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { users } from '@/lib/database/schema';
-import { eq, sql } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
+import { eq, sql } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { users } from "@/lib/database/schema";
 
 /**
  * Database metrics query constants for better maintainability
  */
 const DatabaseMetricsQueries = {
-    SCHEMA_NAME: 'public',
-    CURRENT_DATABASE: 'current_database()',
+    SCHEMA_NAME: "public",
+    CURRENT_DATABASE: "current_database()",
     LIMITS: {
         STATS_LIMIT: 10,
         TABLE_STATS_LIMIT: 5,
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
@@ -40,8 +40,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user || user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     try {
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
             FROM pg_stats 
             WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
             LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
-            `
+            `,
         );
 
         // Get database activity statistics with type-safe query
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
                 tup_deleted as tuples_deleted
             FROM pg_stat_database 
             WHERE datname = ${sql.raw(DatabaseMetricsQueries.CURRENT_DATABASE)}
-            `
+            `,
         );
 
         // Get table sizes with optimized query
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
             WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
             ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
             LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
-            `
+            `,
         );
 
         // Get index usage statistics with type-safe query
@@ -112,33 +112,33 @@ export async function GET(request: NextRequest) {
             WHERE schemaname = ${DatabaseMetricsQueries.SCHEMA_NAME}
             ORDER BY idx_tup_read DESC
             LIMIT ${DatabaseMetricsQueries.LIMITS.STATS_LIMIT}
-            `
+            `,
         );
 
         // Calculate cache hit ratio
         const activity = dbActivity.rows[0] as any;
         const cacheHitRatio = activity
             ? ((activity.blocks_hit / (activity.blocks_hit + activity.blocks_read)) * 100).toFixed(
-                  2
+                  2,
               )
-            : '0';
+            : "0";
 
         // Determine database health based on connection time thresholds
-        let dbHealth = 'excellent';
+        let dbHealth = "excellent";
         if (connectionTime > HealthThresholds.CRITICAL) {
-            dbHealth = 'critical';
+            dbHealth = "critical";
         } else if (connectionTime > HealthThresholds.WARNING) {
-            dbHealth = 'warning';
+            dbHealth = "warning";
         } else if (connectionTime > HealthThresholds.GOOD) {
-            dbHealth = 'good';
+            dbHealth = "good";
         }
 
         return NextResponse.json({
             database: {
                 health: dbHealth,
                 connectionTime,
-                provider: 'neon',
-                region: process.env.NEON_REGION || 'unknown',
+                provider: "neon",
+                region: process.env.NEON_REGION || "unknown",
                 metrics: {
                     cacheHitRatio: parseFloat(cacheHitRatio),
                     activeConnections: activity?.active_connections || 0,
@@ -175,7 +175,7 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error) {
-        log.error({ error }, 'Failed to fetch database metrics');
-        return NextResponse.json({ error: 'Failed to fetch database metrics' }, { status: 500 });
+        log.error({ error }, "Failed to fetch database metrics");
+        return NextResponse.json({ error: "Failed to fetch database metrics" }, { status: 500 });
     }
 }

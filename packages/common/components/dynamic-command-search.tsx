@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { CommandDialog, Skeleton } from '@repo/ui';
-import { lazy, Suspense } from 'react';
+import { CommandDialog, Skeleton } from "@repo/ui";
+import { lazy, Suspense } from "react";
 
 // Dynamic import the command search
 const CommandSearch = lazy(() =>
-    import('./command-search').then((module) => ({
+    import("./command-search").then((module) => ({
         default: module.CommandSearch,
-    }))
+    })),
 );
 
 // Command search loading skeleton

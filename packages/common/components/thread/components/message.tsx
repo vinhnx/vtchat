@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { ChatEditor, markdownStyles } from '@repo/common/components';
-import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
-import { useChatStore } from '@repo/common/store';
-import type { ThreadItem } from '@repo/shared/types';
-import { Button, cn, useToast } from '@repo/ui';
-import { Check, Copy, Pencil } from 'lucide-react';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { AttachmentDisplay } from './attachment-display';
-import { DocumentDisplay } from './document-display';
-import { ImageMessage } from './image-message';
+import { ChatEditor, markdownStyles } from "@repo/common/components";
+import { useAgentStream, useChatEditor, useCopyText } from "@repo/common/hooks";
+import { useChatStore } from "@repo/common/store";
+import type { ThreadItem } from "@repo/shared/types";
+import { Button, cn, useToast } from "@repo/ui";
+import { Check, Copy, Pencil } from "lucide-react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { AttachmentDisplay } from "./attachment-display";
+import { DocumentDisplay } from "./document-display";
+import { ImageMessage } from "./image-message";
 
 type MessageProps = {
     message: string;
@@ -50,29 +50,29 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
             )}
             <div
                 className={cn(
-                    'bg-tertiary text-foreground group relative max-w-[90%] overflow-hidden rounded-lg sm:max-w-[80%]',
-                    isEditing && 'border-hard'
+                    "bg-tertiary text-foreground group relative max-w-[90%] overflow-hidden rounded-lg sm:max-w-[80%]",
+                    isEditing && "border-hard",
                 )}
             >
                 {!isEditing && (
                     <>
                         <div
-                            className={cn('prose-base relative px-3 py-1.5 font-normal', {
-                                'pb-12': isExpanded,
+                            className={cn("prose-base relative px-3 py-1.5 font-normal", {
+                                "pb-12": isExpanded,
                                 markdownStyles,
                             })}
                             ref={messageRef}
                             style={{
-                                maxHeight: isExpanded ? 'none' : maxHeight,
-                                transition: 'max-height 0.3s ease-in-out',
+                                maxHeight: isExpanded ? "none" : maxHeight,
+                                transition: "max-height 0.3s ease-in-out",
                             }}
                         >
                             {message}
                         </div>
                         <div
                             className={cn(
-                                'absolute bottom-0 left-0 right-0 hidden flex-col items-center group-hover:flex',
-                                showExpandButton && 'flex'
+                                "absolute bottom-0 left-0 right-0 hidden flex-col items-center group-hover:flex",
+                                showExpandButton && "flex",
                             )}
                         >
                             <div className="via-tertiary/85 to-tertiary flex w-full items-center justify-end gap-1 bg-gradient-to-b from-transparent p-1.5">
@@ -84,16 +84,16 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                         size="xs"
                                         variant="secondary"
                                     >
-                                        {isExpanded ? 'Show less' : 'Show more'}
+                                        {isExpanded ? "Show less" : "Show more"}
                                     </Button>
                                 )}
                                 <Button
                                     onClick={handleCopy}
                                     size="icon-sm"
-                                    tooltip={status === 'copied' ? 'Copied' : 'Copy'}
+                                    tooltip={status === "copied" ? "Copied" : "Copy"}
                                     variant="bordered"
                                 >
-                                    {status === 'copied' ? (
+                                    {status === "copied" ? (
                                         <Check size={14} strokeWidth={2} />
                                     ) : (
                                         <Copy size={14} strokeWidth={2} />
@@ -102,8 +102,8 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                 <Button
                                     disabled={
                                         isGenerating ||
-                                        threadItem.status === 'QUEUED' ||
-                                        threadItem.status === 'PENDING'
+                                        threadItem.status === "QUEUED" ||
+                                        threadItem.status === "PENDING"
                                     }
                                     onClick={() => setIsEditing(true)}
                                     size="icon-sm"
@@ -153,16 +153,16 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     const handleSave = async (query: string) => {
         if (!query.trim()) {
             toast({
-                title: 'Please enter a message',
-                variant: 'destructive',
+                title: "Please enter a message",
+                variant: "destructive",
             });
             return;
         }
         removeFollowupThreadItems(threadItem.id);
 
         const formData = new FormData();
-        formData.append('query', query);
-        formData.append('imageAttachment', threadItem.imageAttachment || '');
+        formData.append("query", query);
+        formData.append("imageAttachment", threadItem.imageAttachment || "");
         const threadItems = await getThreadItems(threadItem.threadId);
 
         handleSubmit({
@@ -177,29 +177,29 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     return (
         <div className="relative flex max-w-full flex-col items-end gap-2">
             <div
-                className={cn(' relative px-3 py-0 text-base font-normal', {})}
+                className={cn(" relative px-3 py-0 text-base font-normal", {})}
                 style={{
                     minWidth: width,
-                    transition: 'max-height 0.3s ease-in-out',
+                    transition: "max-height 0.3s ease-in-out",
                 }}
             >
                 <ChatEditor
-                    className={cn('prose-base max-w-full overflow-y-scroll !p-0', markdownStyles)}
+                    className={cn("prose-base max-w-full overflow-y-scroll !p-0", markdownStyles)}
                     editor={editor}
                     maxHeight="100px"
                     sendMessage={() => {
-                        handleSave(editor?.getText() || '');
+                        handleSave(editor?.getText() || "");
                     }}
                 />
             </div>
-            <div className={cn('flex-col items-center group-hover:flex')}>
+            <div className={cn("flex-col items-center group-hover:flex")}>
                 <div className=" flex w-full items-center justify-end gap-1 bg-gradient-to-b from-transparent p-1.5">
                     <Button
                         onClick={() => {
-                            handleSave(editor?.getText() || '');
+                            handleSave(editor?.getText() || "");
                         }}
                         size="xs"
-                        tooltip={status === 'copied' ? 'Copied' : 'Copy'}
+                        tooltip={status === "copied" ? "Copied" : "Copy"}
                     >
                         Save
                     </Button>
@@ -212,4 +212,4 @@ export const EditMessage = memo(({ message, onCancel, threadItem, width }: TEdit
     );
 });
 
-Message.displayName = 'Message';
+Message.displayName = "Message";

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/logger';
-import { useCallback, useState } from 'react';
+import { log } from "@repo/shared/logger";
+import { useCallback, useState } from "react";
 
-type CopyStatus = 'idle' | 'copied' | 'error';
+type CopyStatus = "idle" | "copied" | "error";
 
 export const useCopyText = () => {
-    const [status, setStatus] = useState<CopyStatus>('idle');
-    const [markdownCopyStatus, setMarkdownCopyStatus] = useState<CopyStatus>('idle');
+    const [status, setStatus] = useState<CopyStatus>("idle");
+    const [markdownCopyStatus, setMarkdownCopyStatus] = useState<CopyStatus>("idle");
 
     const copyToClipboard = useCallback(async (element: HTMLElement) => {
-        if (typeof window === 'undefined' || typeof document === 'undefined') {
+        if (typeof window === "undefined" || typeof document === "undefined") {
             return false;
         }
 
@@ -19,63 +19,63 @@ export const useCopyText = () => {
             const selection = window.getSelection();
 
             if (!selection) {
-                throw new Error('No selection object available');
+                throw new Error("No selection object available");
             }
 
             selection.removeAllRanges();
             range.selectNodeContents(element);
             selection.addRange(range);
 
-            document.execCommand('copy');
+            document.execCommand("copy");
             selection.removeAllRanges();
 
-            setStatus('copied');
-            setTimeout(() => setStatus('idle'), 2000);
+            setStatus("copied");
+            setTimeout(() => setStatus("idle"), 2000);
 
             return true;
         } catch (err) {
-            log.error('Copy to clipboard failed:', { data: err });
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
+            log.error("Copy to clipboard failed:", { data: err });
+            setStatus("error");
+            setTimeout(() => setStatus("idle"), 3000);
             return false;
         }
     }, []);
 
     const copyMarkdown = useCallback(async (text?: string) => {
-        if (!text || typeof window === 'undefined' || typeof document === 'undefined') return;
+        if (!text || typeof window === "undefined" || typeof document === "undefined") return;
 
         try {
             // Try modern clipboard API first
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(text);
-                setMarkdownCopyStatus('copied');
-                setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
+                setMarkdownCopyStatus("copied");
+                setTimeout(() => setMarkdownCopyStatus("idle"), 2000);
                 return;
             }
 
             // Fallback to legacy method
-            const textArea = document.createElement('textarea');
+            const textArea = document.createElement("textarea");
             textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
 
-            const successful = document.execCommand('copy');
+            const successful = document.execCommand("copy");
             document.body.removeChild(textArea);
 
             if (successful) {
-                setMarkdownCopyStatus('copied');
-                setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
+                setMarkdownCopyStatus("copied");
+                setTimeout(() => setMarkdownCopyStatus("idle"), 2000);
             } else {
-                throw new Error('Copy command failed');
+                throw new Error("Copy command failed");
             }
         } catch (err) {
-            log.error('Copy markdown failed:', { data: err });
-            setMarkdownCopyStatus('error');
-            setTimeout(() => setMarkdownCopyStatus('idle'), 3000);
+            log.error("Copy markdown failed:", { data: err });
+            setMarkdownCopyStatus("error");
+            setTimeout(() => setMarkdownCopyStatus("idle"), 3000);
         }
     }, []);
 

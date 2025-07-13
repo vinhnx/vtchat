@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
 import {
     getModelFromChatMode,
     supportsReasoning,
     supportsTools,
     supportsWebSearch,
-} from '@repo/ai/models';
-import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
-import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { FeatureSlug } from '@repo/shared/types/subscription';
+} from "@repo/ai/models";
+import { useSubscriptionAccess, useVtPlusAccess } from "@repo/common/hooks";
+import { type ApiKeys, useApiKeysStore } from "@repo/common/store";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { FeatureSlug } from "@repo/shared/types/subscription";
 // Types imported by useChatModeAccess
 import {
     Badge,
@@ -20,15 +20,15 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-} from '@repo/ui';
-import { Brain, Globe, Wrench } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { LoginRequiredDialog } from '../../../login-required-dialog';
-import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
-import { getIconByName } from '../../config/icons';
-import { useLoginPrompt } from '../../hooks/useLoginPrompt';
-import { BYOKSetupModal } from '../../modals/BYOKSetupModal';
+} from "@repo/ui";
+import { Brain, Globe, Wrench } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LoginRequiredDialog } from "../../../login-required-dialog";
+import { chatOptions, modelOptions, modelOptionsByProvider } from "../../chat-config";
+import { getIconByName } from "../../config/icons";
+import { useLoginPrompt } from "../../hooks/useLoginPrompt";
+import { BYOKSetupModal } from "../../modals/BYOKSetupModal";
 
 interface ChatModeOptionsProps {
     chatMode: ChatMode;
@@ -128,7 +128,7 @@ export function ChatModeOptions({
 
         // Check auth requirement
         if (config?.isAuthRequired && !isSignedIn) {
-            push('/login');
+            push("/login");
             return;
         }
 
@@ -165,7 +165,7 @@ export function ChatModeOptions({
                 setPendingMode({
                     mode,
                     requiredApiKey,
-                    modelName: option?.label || 'this model',
+                    modelName: option?.label || "this model",
                 });
                 setBYOKModalOpen(true);
                 return;
@@ -221,16 +221,16 @@ export function ChatModeOptions({
                         return (
                             <DropdownMenuItem
                                 className={cn(
-                                    'h-auto',
+                                    "h-auto",
                                     option.value === _chatMode &&
-                                        'border-muted-foreground/30 border'
+                                        "border-muted-foreground/30 border",
                                 )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
                             >
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">
-                                        {'iconName' in option
+                                        {"iconName" in option
                                             ? getIconByName(option.iconName as string)
                                             : option.icon}
                                     </div>
@@ -279,9 +279,9 @@ export function ChatModeOptions({
                                 return (
                                     <DropdownMenuItem
                                         className={cn(
-                                            'h-auto pl-4',
+                                            "h-auto pl-4",
                                             option.value === _chatMode &&
-                                                'border-muted-foreground/30 border'
+                                                "border-muted-foreground/30 border",
                                         )}
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
@@ -302,7 +302,7 @@ export function ChatModeOptions({
                                                 {/* Model capability indicators */}
                                                 {(() => {
                                                     const model = getModelFromChatMode(
-                                                        option.value
+                                                        option.value,
                                                     );
                                                     if (!model) return null;
 

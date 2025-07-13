@@ -1,15 +1,15 @@
-import { MarkdownContent, SearchResultsList, StepStatus } from '@repo/common/components';
-import type { Step } from '@repo/shared/types';
-import { Badge, Label } from '@repo/ui';
-import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { MarkdownContent, SearchResultsList, StepStatus } from "@repo/common/components";
+import type { Step } from "@repo/shared/types";
+import { Badge, Label } from "@repo/ui";
+import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 
 export type StepRendererType = {
     step: Step;
 };
 
 export const StepRenderer = ({ step }: StepRendererType) => {
-    const isCompleted = step.status === 'COMPLETED';
+    const isCompleted = step.status === "COMPLETED";
 
     const renderTextStep = () => {
         if (step?.text) {
@@ -45,7 +45,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
     };
 
     const renderSearchStep = () => {
-        if (step?.steps && 'search' in step.steps) {
+        if (step?.steps && "search" in step.steps) {
             return (
                 <motion.div
                     animate={{
@@ -117,7 +117,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
     };
 
     const renderReadStep = () => {
-        if (step?.steps && 'read' in step.steps) {
+        if (step?.steps && "read" in step.steps) {
             return (
                 <motion.div
                     animate={{
@@ -165,9 +165,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
     };
 
     const renderReasoningStep = () => {
-        if (step?.steps && 'reasoning' in step.steps) {
+        if (step?.steps && "reasoning" in step.steps) {
             const reasoningData =
-                typeof step.steps?.reasoning?.data === 'string' ? step.steps.reasoning.data : '';
+                typeof step.steps?.reasoning?.data === "string" ? step.steps.reasoning.data : "";
 
             return (
                 <motion.div
@@ -218,7 +218,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
     };
 
     const renderWrapupStep = () => {
-        if (step?.steps && 'wrapup' in step.steps) {
+        if (step?.steps && "wrapup" in step.steps) {
             return (
                 <motion.div
                     animate={{
@@ -255,7 +255,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                         transition={{ delay: 0.7, duration: 0.3 }}
                     >
                         <MarkdownContent
-                            content={step.steps?.wrapup?.data || ''}
+                            content={step.steps?.wrapup?.data || ""}
                             isCompleted={isCompleted}
                             isLast={false}
                             shouldAnimate={!isCompleted}
@@ -301,7 +301,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
 
                 <motion.div
                     animate={{
-                        height: '100%',
+                        height: "100%",
                         opacity: isCompleted ? 0.6 : 0.3,
                     }}
                     className="border-border/40 min-h-full w-[1px] flex-1 border-l border-dashed transition-opacity duration-500"

@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-import { DatabaseMetricsChart } from '@repo/common/components/admin/database-metrics-chart';
-import { DatabaseHealthMetrics } from '../../../components/admin/database-health-metrics';
+import { DatabaseMetricsChart } from "@repo/common/components/admin/database-metrics-chart";
 import {
     Badge,
     Button,
@@ -25,28 +24,28 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-} from '@repo/ui';
+} from "@repo/ui";
+import { motion } from "framer-motion";
 import {
     Activity,
     AlertCircle,
     AlertTriangle,
+    BarChart3,
     CheckCircle,
     Clock,
     Database,
     HardDrive,
-    RefreshCw,
-    Server,
-    TrendingUp,
-    Zap,
-    XCircle,
     Info,
-    Settings,
-    BarChart3,
-    PieChart,
     LineChart,
-} from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+    PieChart,
+    RefreshCw,
+    Settings,
+    TrendingUp,
+    XCircle,
+    Zap,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DatabaseHealthMetrics } from "../../../components/admin/database-health-metrics";
 
 interface DashboardData {
     overview: {
@@ -102,11 +101,11 @@ export default function DatabaseMaintenanceDashboard() {
 
             const response = await fetch(
                 `/api/admin/database-maintenance-dashboard?hours=${hours}`,
-                { signal }
+                { signal },
             );
 
             if (response.status === 401 || response.status === 403) {
-                throw new Error('Access denied');
+                throw new Error("Access denied");
             }
 
             if (!response.ok) {
@@ -122,7 +121,7 @@ export default function DatabaseMaintenanceDashboard() {
                 overview: {
                     time_window_hours: hours,
                     last_updated: new Date().toISOString(),
-                    health_status: 'unknown',
+                    health_status: "unknown",
                     total_runs: 0,
                     success_rate: 0,
                     average_duration_ms: 0,
@@ -144,7 +143,7 @@ export default function DatabaseMaintenanceDashboard() {
             }
         } catch (err) {
             if (isMountedRef.current && !signal.aborted) {
-                setError(err instanceof Error ? err.message : 'Unknown error');
+                setError(err instanceof Error ? err.message : "Unknown error");
             }
         } finally {
             if (isMountedRef.current && !signal.aborted) {
@@ -171,25 +170,25 @@ export default function DatabaseMaintenanceDashboard() {
 
     const getHealthStatusColor = (status: string) => {
         switch (status) {
-            case 'excellent':
-                return 'bg-green-500';
-            case 'good':
-                return 'bg-blue-500';
-            case 'warning':
-                return 'bg-yellow-500';
-            case 'critical':
-                return 'bg-red-500';
+            case "excellent":
+                return "bg-green-500";
+            case "good":
+                return "bg-blue-500";
+            case "warning":
+                return "bg-yellow-500";
+            case "critical":
+                return "bg-red-500";
             default:
-                return 'bg-gray-500';
+                return "bg-gray-500";
         }
     };
 
     const getStatusIcon = (status: string) => {
         switch (status) {
-            case 'success':
+            case "success":
                 return <CheckCircle className="h-4 w-4 text-green-500" />;
-            case 'error':
-            case 'fatal_error':
+            case "error":
+            case "fatal_error":
                 return <XCircle className="h-4 w-4 text-red-500" />;
             default:
                 return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
@@ -322,7 +321,7 @@ export default function DatabaseMaintenanceDashboard() {
                                             Alert Thresholds
                                         </label>
                                         <p className="text-sm text-muted-foreground">
-                                            Connection errors {'>'} 5%
+                                            Connection errors {">"} 5%
                                         </p>
                                     </div>
                                 </div>
@@ -349,9 +348,9 @@ export default function DatabaseMaintenanceDashboard() {
                     <CardContent>
                         <div className="flex items-center gap-2">
                             <Badge
-                                className={`${getHealthStatusColor(data.overview.health_status || 'unknown')} text-white`}
+                                className={`${getHealthStatusColor(data.overview.health_status || "unknown")} text-white`}
                             >
-                                {(data.overview.health_status || 'unknown').toUpperCase()}
+                                {(data.overview.health_status || "unknown").toUpperCase()}
                             </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
@@ -434,9 +433,9 @@ export default function DatabaseMaintenanceDashboard() {
                                     <div
                                         key={index}
                                         className={`p-4 rounded-lg border-l-4 ${
-                                            alert.severity === 'critical'
-                                                ? 'border-l-red-500 bg-red-50 dark:bg-red-950/30'
-                                                : 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/30'
+                                            alert.severity === "critical"
+                                                ? "border-l-red-500 bg-red-50 dark:bg-red-950/30"
+                                                : "border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/30"
                                         }`}
                                     >
                                         <div className="flex items-start justify-between gap-4">
@@ -444,9 +443,9 @@ export default function DatabaseMaintenanceDashboard() {
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <Badge
                                                         variant={
-                                                            alert.severity === 'critical'
-                                                                ? 'destructive'
-                                                                : 'default'
+                                                            alert.severity === "critical"
+                                                                ? "destructive"
+                                                                : "default"
                                                         }
                                                     >
                                                         {alert.severity.toUpperCase()}
@@ -543,7 +542,7 @@ export default function DatabaseMaintenanceDashboard() {
                                                             </p>
                                                             <p className="text-sm text-muted-foreground">
                                                                 {new Date(
-                                                                    activity.timestamp
+                                                                    activity.timestamp,
                                                                 ).toLocaleString()}
                                                             </p>
                                                         </div>
@@ -594,7 +593,7 @@ export default function DatabaseMaintenanceDashboard() {
                                             <div className="flex items-center gap-3">
                                                 <div
                                                     className="w-3 h-3 rounded-full"
-                                                    style={{ backgroundColor: '#D9487D' }}
+                                                    style={{ backgroundColor: "#D9487D" }}
                                                 ></div>
                                                 <span className="text-sm">Hourly Operations</span>
                                             </div>
@@ -607,7 +606,7 @@ export default function DatabaseMaintenanceDashboard() {
                                             <div className="flex items-center gap-3">
                                                 <div
                                                     className="w-3 h-3 rounded-full"
-                                                    style={{ backgroundColor: '#D99A4E' }}
+                                                    style={{ backgroundColor: "#D99A4E" }}
                                                 ></div>
                                                 <span className="text-sm">Weekly Operations</span>
                                             </div>
@@ -635,9 +634,9 @@ export default function DatabaseMaintenanceDashboard() {
                                             <span className="font-medium">
                                                 {data.overview.last_updated
                                                     ? new Date(
-                                                          data.overview.last_updated
+                                                          data.overview.last_updated,
                                                       ).toLocaleString()
-                                                    : 'Not available'}
+                                                    : "Not available"}
                                             </span>
                                         </div>
                                     </div>
@@ -707,28 +706,28 @@ export default function DatabaseMaintenanceDashboard() {
                                 <CardContent className="space-y-4">
                                     {[
                                         {
-                                            task: 'Auto-vacuum',
-                                            status: 'Completed',
-                                            lastRun: '2 hours ago',
-                                            nextRun: 'In 22 hours',
+                                            task: "Auto-vacuum",
+                                            status: "Completed",
+                                            lastRun: "2 hours ago",
+                                            nextRun: "In 22 hours",
                                         },
                                         {
-                                            task: 'Reindex',
-                                            status: 'Completed',
-                                            lastRun: '1 day ago',
-                                            nextRun: 'In 6 days',
+                                            task: "Reindex",
+                                            status: "Completed",
+                                            lastRun: "1 day ago",
+                                            nextRun: "In 6 days",
                                         },
                                         {
-                                            task: 'Backup',
-                                            status: 'Running',
-                                            lastRun: '30 min ago',
-                                            nextRun: 'In 5h 30m',
+                                            task: "Backup",
+                                            status: "Running",
+                                            lastRun: "30 min ago",
+                                            nextRun: "In 5h 30m",
                                         },
                                         {
-                                            task: 'Statistics Update',
-                                            status: 'Scheduled',
-                                            lastRun: '6 hours ago',
-                                            nextRun: 'In 18 hours',
+                                            task: "Statistics Update",
+                                            status: "Scheduled",
+                                            lastRun: "6 hours ago",
+                                            nextRun: "In 18 hours",
                                         },
                                     ].map((task, index) => (
                                         <div
@@ -742,11 +741,11 @@ export default function DatabaseMaintenanceDashboard() {
                                                     </span>
                                                     <Badge
                                                         variant={
-                                                            task.status === 'Completed'
-                                                                ? 'default'
-                                                                : task.status === 'Running'
-                                                                  ? 'secondary'
-                                                                  : 'outline'
+                                                            task.status === "Completed"
+                                                                ? "default"
+                                                                : task.status === "Running"
+                                                                  ? "secondary"
+                                                                  : "outline"
                                                         }
                                                         className="text-xs"
                                                     >
@@ -781,10 +780,10 @@ export default function DatabaseMaintenanceDashboard() {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     {[
-                                        { name: 'conversations', size: '2.4 GB', percentage: 60 },
-                                        { name: 'messages', size: '1.8 GB', percentage: 45 },
-                                        { name: 'users', size: '145 MB', percentage: 8 },
-                                        { name: 'sessions', size: '89 MB', percentage: 5 },
+                                        { name: "conversations", size: "2.4 GB", percentage: 60 },
+                                        { name: "messages", size: "1.8 GB", percentage: 45 },
+                                        { name: "users", size: "145 MB", percentage: 8 },
+                                        { name: "sessions", size: "89 MB", percentage: 5 },
                                     ].map((table, index) => (
                                         <div key={index} className="space-y-2">
                                             <div className="flex justify-between items-center text-sm">
@@ -833,19 +832,19 @@ export default function DatabaseMaintenanceDashboard() {
                                 <CardContent className="space-y-4">
                                     {[
                                         {
-                                            query: 'SELECT * FROM conversations WHERE...',
-                                            time: '245ms',
-                                            count: '1,234',
+                                            query: "SELECT * FROM conversations WHERE...",
+                                            time: "245ms",
+                                            count: "1,234",
                                         },
                                         {
-                                            query: 'SELECT m.* FROM messages m JOIN...',
-                                            time: '189ms',
-                                            count: '856',
+                                            query: "SELECT m.* FROM messages m JOIN...",
+                                            time: "189ms",
+                                            count: "856",
                                         },
                                         {
-                                            query: 'UPDATE users SET last_seen WHERE...',
-                                            time: '156ms',
-                                            count: '423',
+                                            query: "UPDATE users SET last_seen WHERE...",
+                                            time: "156ms",
+                                            count: "423",
                                         },
                                     ].map((query, index) => (
                                         <div

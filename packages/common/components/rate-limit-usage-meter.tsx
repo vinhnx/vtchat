@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { ModelEnum } from '@repo/ai/models';
-import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
-import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
-import { PlanSlug } from '@repo/shared/types/subscription';
+import { ModelEnum } from "@repo/ai/models";
+import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
+import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
+import { PlanSlug } from "@repo/shared/types/subscription";
 import {
     Badge,
     Button,
@@ -16,26 +16,26 @@ import {
     Progress,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { useCallback, useEffect, useState } from 'react';
-import { useVtPlusAccess } from '../hooks/use-subscription-access';
-import { useApiKeysStore } from '../store/api-keys.store';
+} from "@repo/ui";
+import { useCallback, useEffect, useState } from "react";
+import { useVtPlusAccess } from "../hooks/use-subscription-access";
+import { useApiKeysStore } from "../store/api-keys.store";
 
 // Model configuration for display
 const MODEL_CONFIG = {
     [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
-        name: 'Gemini 2.5 Flash Lite',
-        description: 'Fast and efficient',
+        name: "Gemini 2.5 Flash Lite",
+        description: "Fast and efficient",
         limits: GEMINI_LIMITS.FLASH_LITE,
     },
     [ModelEnum.GEMINI_2_5_FLASH]: {
-        name: 'Gemini 2.5 Flash',
-        description: 'Fast performance',
+        name: "Gemini 2.5 Flash",
+        description: "Fast performance",
         limits: GEMINI_LIMITS.FLASH,
     },
     [ModelEnum.GEMINI_2_5_PRO]: {
-        name: 'Gemini 2.5 Pro',
-        description: 'Most capable',
+        name: "Gemini 2.5 Pro",
+        description: "Most capable",
         limits: GEMINI_LIMITS.PRO,
     },
 } as const;
@@ -78,12 +78,12 @@ export default function RateLimitUsageMeter({
     const isVtPlus = useVtPlusAccess();
     const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const hasGeminiApiKey = !!(
-        apiKeys[API_KEY_NAMES.GOOGLE] && apiKeys[API_KEY_NAMES.GOOGLE].trim() !== ''
+        apiKeys[API_KEY_NAMES.GOOGLE] && apiKeys[API_KEY_NAMES.GOOGLE].trim() !== ""
     );
 
     // Determine enhanced access status (BYOK = unlimited, VT+ = higher limits)
     const hasEnhancedAccess = hasGeminiApiKey || isVtPlus;
-    const accessType = hasGeminiApiKey ? 'byok' : PlanSlug.VT_PLUS;
+    const accessType = hasGeminiApiKey ? "byok" : PlanSlug.VT_PLUS;
 
     const fetchUsage = useCallback(async () => {
         if (!userId) {
@@ -100,10 +100,10 @@ export default function RateLimitUsageMeter({
                 setStatus(data);
                 setError(null);
             } else {
-                throw new Error('Failed to fetch rate limit status');
+                throw new Error("Failed to fetch rate limit status");
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load usage data');
+            setError(err instanceof Error ? err.message : "Failed to load usage data");
         } finally {
             setLoading(false);
         }
@@ -151,7 +151,7 @@ export default function RateLimitUsageMeter({
                 <CardContent>
                     <div className="py-8 text-center">
                         <p className="mb-4 text-sm text-muted-foreground">
-                            {error || 'Unable to load rate limit data'}
+                            {error || "Unable to load rate limit data"}
                         </p>
                         <Button onClick={fetchUsage} size="sm" variant="outline">
                             Retry
@@ -168,22 +168,22 @@ export default function RateLimitUsageMeter({
     const dailyPercentage = (status.dailyUsed / dailyLimit) * 100;
 
     return (
-        <div className={cn('w-full space-y-6', className)}>
+        <div className={cn("w-full space-y-6", className)}>
             {/* Header */}
             <div>
                 <TypographyH3>Rate Limit Overview</TypographyH3>
                 <TypographyMuted>
-                    Track your Gemini Flash Lite usage.{' '}
-                    {isVtPlusUser ? 'VT+ subscriber' : 'Free user'} limits apply.
+                    Track your Gemini Flash Lite usage.{" "}
+                    {isVtPlusUser ? "VT+ subscriber" : "Free user"} limits apply.
                 </TypographyMuted>
             </div>
 
             {/* Main Usage Card */}
-            <Card className={cn(hasEnhancedAccess && 'opacity-60 relative')}>
+            <Card className={cn(hasEnhancedAccess && "opacity-60 relative")}>
                 {hasEnhancedAccess && (
                     <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-sm rounded-lg flex items-center justify-center">
                         <Badge variant="outline" className="bg-background text-foreground">
-                            {accessType === 'byok' ? 'Using Your API Key' : 'VT+ Higher Limits'}
+                            {accessType === "byok" ? "Using Your API Key" : "VT+ Higher Limits"}
                         </Badge>
                     </div>
                 )}
@@ -191,10 +191,10 @@ export default function RateLimitUsageMeter({
                     <div className="flex items-center justify-between">
                         <CardTitle className="text-foreground">Gemini {config.name}</CardTitle>
                         <Badge
-                            variant={status.remainingDaily === 0 ? 'secondary' : 'outline'}
+                            variant={status.remainingDaily === 0 ? "secondary" : "outline"}
                             className="text-foreground"
                         >
-                            {status.remainingDaily === 0 ? 'Exhausted' : 'Available'}
+                            {status.remainingDaily === 0 ? "Exhausted" : "Available"}
                         </Badge>
                     </div>
                     <CardDescription>{config.description}</CardDescription>
@@ -231,7 +231,7 @@ export default function RateLimitUsageMeter({
                             <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Per-minute limit</span>
                                 <span className="text-foreground font-medium">
-                                    {status.remainingMinute <= 0 ? 'Rate limited' : 'Available'}
+                                    {status.remainingMinute <= 0 ? "Rate limited" : "Available"}
                                 </span>
                             </div>
                             {status.remainingMinute <= 0 && (
@@ -249,8 +249,8 @@ export default function RateLimitUsageMeter({
                                 </div>
                                 <div className="mt-1 text-xs text-muted-foreground">
                                     {isVtPlusUser
-                                        ? 'Limit will reset tomorrow.'
-                                        : 'Upgrade to VT+ for higher limits or use your own API key.'}
+                                        ? "Limit will reset tomorrow."
+                                        : "Upgrade to VT+ for higher limits or use your own API key."}
                                 </div>
                             </div>
                         )}
