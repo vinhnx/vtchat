@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@repo/ui";
+// import { Button } from "@repo/ui";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -37,13 +37,20 @@ export function MinimalErrorPage({
                     {children}
                     {actionButton ? (
                         actionButton.href ? (
-                            <Button size="sm" variant="default" asChild>
+                            <button 
+                                type="button"
+                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                            >
                                 <Link href={actionButton.href}>{actionButton.text}</Link>
-                            </Button>
+                            </button>
                         ) : (
-                            <Button size="sm" variant="default" onClick={actionButton.onClick}>
+                            <button 
+                                type="button"
+                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                                onClick={actionButton.onClick}
+                            >
                                 {actionButton.text}
-                            </Button>
+                            </button>
                         )
                     ) : null}
                 </div>

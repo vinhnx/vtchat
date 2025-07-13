@@ -230,6 +230,16 @@ function makeRequest(endpoint, type = "hourly") {
 
             res.on("end", () => {
                 try {
+                    // Enhanced debugging for HTML responses
+                    if (data.trim().startsWith("<!DOCTYPE") || data.trim().startsWith("<html")) {
+                        console.error(`❌ Received HTML instead of JSON from ${url}`);
+                        console.error(`Status: ${res.statusCode}`);
+                        console.error(`Headers:`, res.headers);
+                        console.error(`Response preview:`, data.substring(0, 200));
+                        reject(new Error(`Server returned HTML instead of JSON. Status: ${res.statusCode}`));
+                        return;
+                    }
+
                     const response = JSON.parse(data);
                     if (res.statusCode === 200 && response.success) {
                         console.log(`✅ ${type} maintenance completed successfully`);
@@ -248,6 +258,7 @@ function makeRequest(endpoint, type = "hourly") {
                     }
                 } catch (error) {
                     console.error("❌ Failed to parse response:", error);
+                    console.error(`Raw response (first 500 chars):`, data.substring(0, 500));
                     reject(error);
                 }
             });
