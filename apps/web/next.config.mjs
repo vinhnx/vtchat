@@ -158,10 +158,10 @@ const nextConfig = {
 
             // Optimize for development speed
             if (dev) {
-                // Use filesystem cache in development for better performance
+                // Use memory cache in development with limited generations
                 config.cache = {
-                    type: 'filesystem',
-                    maxMemoryGenerations: 1,
+                    type: 'memory',
+                    maxGenerations: 1,
                 };
 
                 // Reduce module resolution overhead
@@ -181,11 +181,8 @@ const nextConfig = {
                     },
                 };
             } else {
-                // Production optimizations with filesystem cache
-                config.cache = {
-                    type: 'filesystem',
-                    maxMemoryGenerations: 1,
-                };
+                // Production: Disable cache to reduce memory usage in constrained environments
+                config.cache = false;
 
                 // Enable tree shaking optimizations
                 config.optimization.usedExports = true;
@@ -208,109 +205,41 @@ const nextConfig = {
                 };
             }
 
-            // Optimize bundle splitting for better loading performance
-            if (!isServer) {
+            // Simplified bundle splitting for memory-constrained builds
+            if (!isServer && !dev) {
                 config.optimization.splitChunks = {
                     chunks: 'all',
-                    maxInitialRequests: 20, // Reduced from 25 for optimal loading
-                    maxAsyncRequests: 25, // Reduced from 30
-                    minSize: 20000, // 20KB minimum chunk size
-                    maxSize: 200000, // 200KB maximum chunk size
+                    maxInitialRequests: 15, // Reduced for memory efficiency
+                    maxAsyncRequests: 20,
+                    minSize: 30000, // Increased minimum size
+                    maxSize: 150000, // Reduced maximum size
                     cacheGroups: {
-                        // Framework core (React, Next.js)
+                        // Framework core
                         framework: {
-                            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types)[\\/]/,
+                            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
                             name: 'framework',
-                            priority: 50,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                            enforce: true,
-                        },
-                        // Next.js chunks
-                        nextjs: {
-                            test: /[\\/]node_modules[\\/]next[\\/]/,
-                            name: 'nextjs',
-                            priority: 45,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                        },
-                        // Critical form libraries
-                        forms: {
-                            test: /[\\/]node_modules[\\/](react-hook-form|zod)[\\/]/,
-                            name: 'form-libs',
                             priority: 40,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                        },
-                        // AI libraries (lazy loaded)
-                        ai: {
-                            test: /[\\/]node_modules[\\/](@ai-sdk|ai|@google\/generative-ai)[\\/]/,
-                            name: 'ai-libs',
-                            priority: 35,
-                            chunks: 'async', // Keep as async
-                            reuseExistingChunk: true,
-                            maxSize: 150000, // Smaller chunks for AI libs
-                        },
-                        // Chart libraries (lazy loaded)
-                        charts: {
-                            test: /[\\/]node_modules[\\/](recharts|d3)[\\/]/,
-                            name: 'chart-libs',
-                            priority: 30,
-                            chunks: 'async',
-                            reuseExistingChunk: true,
-                        },
-                        // Database libraries
-                        database: {
-                            test: /[\\/]node_modules[\\/](@neondatabase|drizzle-orm|better-auth)[\\/]/,
-                            name: 'database',
-                            priority: 25,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                        },
-                        // UI libraries - split into smaller chunks
-                        ui: {
-                            test: /[\\/]node_modules[\\/](@radix-ui|framer-motion|lucide-react|cmdk)[\\/]/,
-                            name: 'ui-libs',
-                            priority: 20,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                            maxSize: 100000, // Reduced from 200KB
-                        },
-                        // Date utilities
-                        dateFns: {
-                            test: /[\\/]node_modules[\\/]date-fns[\\/]/,
-                            name: 'date-fns',
-                            priority: 20,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
                             enforce: true,
                         },
-                        // Utilities
-                        utils: {
-                            test: /[\\/]node_modules[\\/](clsx|tailwind-merge|nanoid|immer|zustand)[\\/]/,
-                            name: 'utils',
-                            priority: 15,
-                            chunks: 'all',
-                            reuseExistingChunk: true,
-                            maxSize: 100000, // Reduced from 150KB
-                        },
-                        // Default vendor packages
+                        // Vendor packages
                         vendor: {
                             test: /[\\/]node_modules[\\/]/,
                             name: 'vendors',
-                            priority: 10,
+                            priority: 20,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 100000, // Reduced from 150KB
+                            maxSize: 120000,
                             minChunks: 1,
                         },
-                        // Common application code
-                        common: {
-                            name: 'common',
+                        // Application code
+                        default: {
+                            name: 'main',
                             minChunks: 2,
-                            priority: 5,
+                            priority: 10,
                             reuseExistingChunk: true,
-                            maxSize: 150000, // Reduced from 200KB
+                            maxSize: 100000,
                         },
                     },
                 };
