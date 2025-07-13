@@ -183,9 +183,8 @@ const nextConfig = {
                                 chunks: 'all',
                                 reuseExistingChunk: true,
                             },
-                            // Default chunk
+                            // Default chunk - omit name to auto-generate
                             default: {
-                                name: 'main',
                                 minChunks: 2,
                                 priority: 10,
                                 reuseExistingChunk: true,
