@@ -1,5 +1,10 @@
-// Service Worker for VT Chat - PWA with performance optimizations and push notifications
-const CACHE_NAME = 'vtchat-v2';
+// Service Worker for VT Chat - PWA with optimal caching strategy
+const CACHE_VERSION = '3.0.0';
+const STATIC_CACHE = `vtchat-static-v${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `vtchat-dynamic-v${CACHE_VERSION}`;
+const IMAGE_CACHE = `vtchat-images-v${CACHE_VERSION}`;
+
+// Static assets that rarely change
 const STATIC_ASSETS = [
     '/favicon.ico',
     '/icon.svg',
@@ -8,58 +13,185 @@ const STATIC_ASSETS = [
     '/icon-384x384.png',
     '/icon-512x512.png',
     '/manifest.webmanifest',
+    '/offline.html', // Add offline page to cache
 ];
 
-// Install event - cache static assets
+// Cache limits to prevent excessive storage usage
+const CACHE_LIMITS = {
+    [DYNAMIC_CACHE]: 50, // 50 dynamic pages
+    [IMAGE_CACHE]: 100, // 100 images
+};
+
+// Helper function to determine cache strategy based on request
+function getCacheStrategy(request) {
+    const url = new URL(request.url);
+
+    // Static assets - long term cache with versioning
+    if (STATIC_ASSETS.some((asset) => url.pathname.endsWith(asset))) {
+        return { cache: STATIC_CACHE, strategy: 'cache-first', maxAge: 365 * 24 * 60 * 60 }; // 1 year
+    }
+
+    // Images - optimize with size limits (including remote images and AI-generated content)
+    if (
+        url.pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|avif|ico)$/i) ||
+        // Avatar services
+        url.hostname.includes('googleusercontent.com') ||
+        url.hostname.includes('githubusercontent.com') ||
+        url.hostname.includes('discordapp.com') ||
+        url.hostname.includes('facebook.com') ||
+        url.hostname.includes('twimg.com') ||
+        // AI/LLM Provider Images
+        url.hostname.includes('oaidalleapiprodscus.blob.core.windows.net') ||
+        url.hostname.includes('cdn.openai.com') ||
+        url.hostname.includes('images.openai.com') ||
+        url.hostname.includes('storage.googleapis.com') ||
+        url.hostname.includes('generativelanguage.googleapis.com') ||
+        url.hostname.includes('claude.ai') ||
+        url.hostname.includes('cdn.anthropic.com') ||
+        url.hostname.includes('images.anthropic.com') ||
+        url.hostname.includes('api.stability.ai') ||
+        url.hostname.includes('cdn.stability.ai') ||
+        url.hostname.includes('images.groq.com') ||
+        url.hostname.includes('api.groq.com') ||
+        url.hostname.includes('replicate.delivery') ||
+        url.hostname.includes('pbxt.replicate.delivery') ||
+        url.hostname.includes('cdn.replicate.com') ||
+        url.hostname.includes('huggingface.co') ||
+        url.hostname.includes('cdn-uploads.huggingface.co') ||
+        url.hostname.includes('images.cohere.ai') ||
+        url.hostname.includes('api.cohere.ai') ||
+        url.hostname.includes('images.perplexity.ai') ||
+        url.hostname.includes('api.perplexity.ai') ||
+        // CDN and user-uploaded content
+        url.hostname.includes('cloudinary.com') ||
+        url.hostname.includes('imgur.com') ||
+        url.hostname.includes('unsplash.com')
+    ) {
+        // Use shorter cache for AI-generated images as they might be dynamic
+        const isAIGenerated =
+            url.hostname.includes('openai.com') ||
+            url.hostname.includes('anthropic.com') ||
+            url.hostname.includes('stability.ai') ||
+            url.hostname.includes('replicate.') ||
+            url.hostname.includes('groq.com') ||
+            url.hostname.includes('cohere.ai') ||
+            url.hostname.includes('perplexity.ai') ||
+            url.hostname.includes('huggingface.co') ||
+            url.hostname.includes('googleapis.com');
+
+        return {
+            cache: IMAGE_CACHE,
+            strategy: 'cache-first',
+            maxAge: isAIGenerated ? 24 * 60 * 60 : 7 * 24 * 60 * 60, // 1 day for AI images, 1 week for others
+        };
+    }
+
+    // CSS/JS files - moderate caching with network fallback
+    if (url.pathname.match(/\.(css|js|woff2?|ttf|eot)$/i)) {
+        return { cache: DYNAMIC_CACHE, strategy: 'stale-while-revalidate', maxAge: 24 * 60 * 60 }; // 1 day
+    }
+
+    // HTML pages - network first with cache fallback
+    if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+        return { cache: DYNAMIC_CACHE, strategy: 'network-first', maxAge: 5 * 60 }; // 5 minutes
+    }
+
+    // API calls - no caching for dynamic content
+    if (url.pathname.startsWith('/api/')) {
+        return { cache: null, strategy: 'network-only' };
+    }
+
+    // Default - network first with short cache
+    return { cache: DYNAMIC_CACHE, strategy: 'network-first', maxAge: 60 }; // 1 minute
+}
+
+// Helper function to check if cached response is still fresh
+function isCacheEntryFresh(response, maxAge) {
+    if (!response) return false;
+
+    const cachedTime = response.headers.get('sw-cached-at');
+    if (!cachedTime) return false;
+
+    const age = (Date.now() - parseInt(cachedTime)) / 1000;
+    return age < maxAge;
+}
+
+// Helper function to add cache metadata to response
+function addCacheMetadata(response) {
+    const responseClone = response.clone();
+    const headers = new Headers(responseClone.headers);
+    headers.set('sw-cached-at', Date.now().toString());
+
+    return new Response(responseClone.body, {
+        status: responseClone.status,
+        statusText: responseClone.statusText,
+        headers: headers,
+    });
+}
+
+// Helper function to clean up old cache entries
+async function cleanupCache(cacheName, limit) {
+    if (!limit) return;
+
+    try {
+        const cache = await caches.open(cacheName);
+        const keys = await cache.keys();
+
+        if (keys.length > limit) {
+            // Remove oldest entries (simple LRU simulation)
+            const entriesToDelete = keys.slice(0, keys.length - limit);
+            await Promise.all(entriesToDelete.map((key) => cache.delete(key)));
+        }
+    } catch {
+        // Silent cleanup failure - don't block other operations
+    }
+}
+
+// Install event - cache critical static assets only
 self.addEventListener('install', (event) => {
-    console.log('Service Worker installing...');
     event.waitUntil(
         caches
-            .open(CACHE_NAME)
+            .open(STATIC_CACHE)
             .then((cache) => {
-                console.log('Caching static assets');
                 return cache.addAll(STATIC_ASSETS);
             })
-            .then(() => {
-                console.log('Service Worker installed successfully');
-                return self.skipWaiting();
-            })
-            .catch((error) => {
-                console.error('Service Worker installation failed:', error);
+            .then(() => self.skipWaiting())
+            .catch(() => {
+                // Silent failure - don't block installation
             })
     );
 });
 
-// Activate event - clean old caches
+// Activate event - clean old caches and optimize storage
 self.addEventListener('activate', (event) => {
-    console.log('Service Worker activating...');
     event.waitUntil(
-        caches
-            .keys()
-            .then((cacheNames) => {
-                return Promise.all(
-                    cacheNames.map((cacheName) => {
-                        if (cacheName !== CACHE_NAME) {
-                            console.log('Deleting old cache:', cacheName);
-                            return caches.delete(cacheName);
-                        }
-                    })
-                );
-            })
-            .then(() => {
-                console.log('Service Worker activated successfully');
-                return self.clients.claim();
-            })
-            .catch((error) => {
-                console.error('Service Worker activation failed:', error);
-            })
+        Promise.all([
+            // Clean up old cache versions
+            caches
+                .keys()
+                .then((cacheNames) => {
+                    return Promise.all(
+                        cacheNames.map((cacheName) => {
+                            if (!cacheName.includes(CACHE_VERSION)) {
+                                return caches.delete(cacheName);
+                            }
+                        })
+                    );
+                }),
+            // Clean up oversized caches
+            Object.entries(CACHE_LIMITS).map(([cacheName, limit]) =>
+                cleanupCache(cacheName, limit)
+            ),
+            // Take control of all clients
+            self.clients.claim(),
+        ]).catch(() => {
+            // Silent failure - don't block activation
+        })
     );
 });
 
-// Push event - handle push notifications
+// Push event - handle push notifications with error resilience
 self.addEventListener('push', (event) => {
-    console.log('Push event received');
-
     if (event.data) {
         try {
             const data = event.data.json();
@@ -86,26 +218,25 @@ self.addEventListener('push', (event) => {
                 ],
                 requireInteraction: false,
                 silent: false,
+                timestamp: Date.now(),
             };
 
             event.waitUntil(self.registration.showNotification(data.title || 'VT Chat', options));
-        } catch (error) {
-            console.error('Error handling push notification:', error);
-            // Fallback notification
+        } catch {
+            // Fallback notification on parse error
             event.waitUntil(
                 self.registration.showNotification('VT Chat', {
                     body: 'You have a new message',
                     icon: '/icon-192x192.png',
+                    timestamp: Date.now(),
                 })
             );
         }
     }
 });
 
-// Notification click event
+// Notification click event - handle user interactions
 self.addEventListener('notificationclick', (event) => {
-    console.log('Notification click received');
-
     event.notification.close();
 
     const action = event.action;
@@ -134,13 +265,13 @@ self.addEventListener('notificationclick', (event) => {
                     return clients.openWindow(urlToOpen);
                 }
             })
-            .catch((error) => {
-                console.error('Error handling notification click:', error);
+            .catch(() => {
+                // Silent failure for notification click errors
             })
     );
 });
 
-// Fetch event - serve from cache with network fallback
+// Optimized fetch event - intelligent caching with multiple strategies
 self.addEventListener('fetch', (event) => {
     // Only handle GET requests
     if (event.request.method !== 'GET') return;
@@ -148,111 +279,219 @@ self.addEventListener('fetch', (event) => {
     // Skip non-http(s) requests
     if (!event.request.url.startsWith('http')) return;
 
-    // Skip API routes
-    if (event.request.url.includes('/api/')) return;
+    const { cache: cacheName, strategy, maxAge } = getCacheStrategy(event.request);
+
+    // Network-only requests (API calls)
+    if (strategy === 'network-only') {
+        return;
+    }
 
     event.respondWith(
-        caches
-            .match(event.request)
-            .then((response) => {
-                // Return cached version or fetch from network
-                return (
-                    response ||
-                    fetch(event.request).then((fetchResponse) => {
-                        // Cache successful responses for static assets
-                        if (
-                            fetchResponse.ok &&
-                            (event.request.url.endsWith('.woff2') ||
-                                event.request.url.endsWith('.ico') ||
-                                event.request.url.endsWith('.svg') ||
-                                event.request.url.endsWith('.png') ||
-                                event.request.url.endsWith('.jpg') ||
-                                event.request.url.endsWith('.jpeg') ||
-                                event.request.url.endsWith('.webmanifest') ||
-                                event.request.url.endsWith('.css') ||
-                                event.request.url.endsWith('.js'))
-                        ) {
-                            const responseClone = fetchResponse.clone();
-                            caches
-                                .open(CACHE_NAME)
-                                .then((cache) => cache.put(event.request, responseClone));
+        (async () => {
+            try {
+                switch (strategy) {
+                    case 'cache-first': {
+                        // Try cache first, fallback to network
+                        const cachedResponse = await caches.match(event.request);
+                        if (cachedResponse && isCacheEntryFresh(cachedResponse, maxAge)) {
+                            return cachedResponse;
                         }
-                        return fetchResponse;
-                    })
-                );
-            })
-            .catch(() => {
-                // Return offline page for navigation requests
-                if (event.request.mode === 'navigate') {
-                    return new Response(
-                        `<!DOCTYPE html>
-                        <html>
-                        <head>
-                            <title>VT - Offline</title>
-                            <meta name="viewport" content="width=device-width, initial-scale=1">
-                            <style>
-                                body {
-                                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    justify-content: center;
-                                    height: 100vh;
-                                    margin: 0;
-                                    background: #fafafa;
-                                    color: #333;
-                                    text-align: center;
-                                    padding: 20px;
-                                }
-                                .icon { font-size: 48px; margin-bottom: 16px; }
-                                h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
-                                p { margin: 0; color: #666; line-height: 1.5; }
-                                .retry {
-                                    margin-top: 24px;
-                                    padding: 12px 24px;
-                                    background: #007bff;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 6px;
-                                    cursor: pointer;
-                                    font-size: 16px;
-                                }
-                                .retry:hover { background: #0056b3; }
-                            </style>
-                        </head>
-                        <body>
-                            <h1>You're offline</h1>
-                            <p>Check your internet connection and try again.</p>
-                            <button class="retry" onclick="window.location.reload()">Try Again</button>
-                        </body>
-                        </html>`,
-                        {
-                            status: 200,
-                            headers: { 'Content-Type': 'text/html' },
+
+                        try {
+                            const networkResponse = await fetch(event.request);
+                            if (networkResponse.ok && cacheName) {
+                                const cache = await caches.open(cacheName);
+                                await cache.put(
+                                    event.request,
+                                    addCacheMetadata(networkResponse.clone())
+                                );
+                                // Cleanup cache if it gets too large
+                                cleanupCache(cacheName, CACHE_LIMITS[cacheName]);
+                            }
+                            return networkResponse;
+                        } catch {
+                            // Return stale cache if network fails
+                            return cachedResponse || createOfflineResponse(event.request);
                         }
-                    );
+                    }
+
+                    case 'network-first': {
+                        // Try network first, fallback to cache
+                        try {
+                            const networkResponse = await fetch(event.request);
+                            if (networkResponse.ok && cacheName) {
+                                const cache = await caches.open(cacheName);
+                                await cache.put(
+                                    event.request,
+                                    addCacheMetadata(networkResponse.clone())
+                                );
+                                cleanupCache(cacheName, CACHE_LIMITS[cacheName]);
+                            }
+                            return networkResponse;
+                        } catch {
+                            const cachedResponse = await caches.match(event.request);
+                            return cachedResponse || createOfflineResponse(event.request);
+                        }
+                    }
+
+                    case 'stale-while-revalidate': {
+                        // Return cache immediately, update in background
+                        const cachedResponse = await caches.match(event.request);
+
+                        // Background update if cache is stale
+                        if (!cachedResponse || !isCacheEntryFresh(cachedResponse, maxAge)) {
+                            event.waitUntil(
+                                fetch(event.request)
+                                    .then(async (networkResponse) => {
+                                        if (networkResponse.ok && cacheName) {
+                                            const cache = await caches.open(cacheName);
+                                            await cache.put(
+                                                event.request,
+                                                addCacheMetadata(networkResponse.clone())
+                                            );
+                                            cleanupCache(cacheName, CACHE_LIMITS[cacheName]);
+                                        }
+                                    })
+                                    .catch(() => {
+                                        // Silent background update failure
+                                    })
+                            );
+                        }
+
+                        if (cachedResponse) {
+                            return cachedResponse;
+                        }
+
+                        // If no cache, wait for network
+                        try {
+                            const networkResponse = await fetch(event.request);
+                            if (networkResponse.ok && cacheName) {
+                                const cache = await caches.open(cacheName);
+                                await cache.put(
+                                    event.request,
+                                    addCacheMetadata(networkResponse.clone())
+                                );
+                            }
+                            return networkResponse;
+                        } catch {
+                            return createOfflineResponse(event.request);
+                        }
+                    }
+
+                    default:
+                        return fetch(event.request);
                 }
-            })
+            } catch {
+                return createOfflineResponse(event.request);
+            }
+        })()
     );
 });
 
-// Background sync (optional, for future enhancement)
-self.addEventListener('sync', (event) => {
-    console.log('Background sync event:', event.tag);
+// Helper function to create appropriate offline responses
+function createOfflineResponse(request) {
+    // Return offline page for navigation requests
+    if (request.mode === 'navigate') {
+        // Try to get cached offline page first
+        return caches
+            .match('/offline.html')
+            .then((cachedOffline) => {
+                if (cachedOffline) {
+                    return cachedOffline;
+                }
 
+                // Fallback to fetch offline page
+                return fetch('/offline.html')
+                    .then((response) => (response.ok ? response : createFallbackOfflineResponse()))
+                    .catch(() => createFallbackOfflineResponse());
+            })
+            .catch(() => createFallbackOfflineResponse());
+    }
+
+    // For other requests, return a simple 503 response
+    return new Response('Service Unavailable', {
+        status: 503,
+        statusText: 'Service Unavailable',
+    });
+}
+
+// Fallback offline response if offline.html is not available
+function createFallbackOfflineResponse() {
+    return new Response(
+        `<!DOCTYPE html>
+        <html>
+        <head>
+            <title>VT - Offline</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    background: #fafafa;
+                    color: #333;
+                    text-align: center;
+                    padding: 20px;
+                }
+                .icon { font-size: 48px; margin-bottom: 16px; }
+                h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+                p { margin: 0; color: #666; line-height: 1.5; }
+                .retry {
+                    margin-top: 24px;
+                    padding: 12px 24px;
+                    background: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 16px;
+                }
+                .retry:hover { background: #0056b3; }
+            </style>
+        </head>
+        <body>
+            <div class="icon">📱</div>
+            <h1>You're offline</h1>
+            <p>Check your internet connection and try again.</p>
+            <button class="retry" onclick="window.location.reload()">Try Again</button>
+        </body>
+        </html>`,
+        {
+            status: 200,
+            headers: { 'Content-Type': 'text/html' },
+        }
+    );
+}
+
+// Background sync - handle offline actions when connection is restored
+self.addEventListener('sync', (event) => {
     if (event.tag === 'background-sync') {
         event.waitUntil(
             // Perform background sync operations here
-            console.log('Performing background sync...')
+            // This could include sending queued messages, syncing user data, etc.
+            Promise.resolve()
         );
     }
 });
 
-// Message event for communication with main thread
+// Message event - handle communication with main thread
 self.addEventListener('message', (event) => {
-    console.log('Service Worker received message:', event.data);
-
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
+    }
+
+    // Handle cache management messages from the main thread
+    if (event.data && event.data.type === 'CACHE_CLEANUP') {
+        event.waitUntil(
+            Promise.all(
+                Object.entries(CACHE_LIMITS).map(([cacheName, limit]) =>
+                    cleanupCache(cacheName, limit)
+                )
+            )
+        );
     }
 });

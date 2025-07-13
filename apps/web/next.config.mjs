@@ -70,17 +70,68 @@ const nextConfig = {
         styledComponents: true,
     },
 
-    // Image optimization
+    // Optimize for faster builds and better performance
+    compress: true,
+
+    // Optimize page loading
+    onDemandEntries: {
+        // Period (in ms) where the server will keep pages in the buffer
+        maxInactiveAge: 25 * 1000,
+        // Number of pages that should be kept simultaneously without being disposed
+        pagesBufferLength: 2,
+    },
+
+    // Image optimization with balanced caching
     images: {
         remotePatterns: [
             { hostname: 'www.google.com' },
             { hostname: 'startupfa.me' },
             { hostname: 'producthunt.com' },
+            // Avatar services
+            { hostname: 'lh3.googleusercontent.com' }, // Google avatars
+            { hostname: 'avatars.githubusercontent.com' }, // GitHub avatars
+            { hostname: 'cdn.discordapp.com' }, // Discord avatars
+            { hostname: 'graph.facebook.com' }, // Facebook avatars
+            { hostname: 'pbs.twimg.com' }, // Twitter avatars
+            // AI/LLM Provider Images
+            { hostname: 'oaidalleapiprodscus.blob.core.windows.net' }, // OpenAI DALL-E
+            { hostname: 'cdn.openai.com' }, // OpenAI CDN
+            { hostname: 'images.openai.com' }, // OpenAI Images
+            { hostname: 'storage.googleapis.com' }, // Google AI/Gemini storage
+            { hostname: 'generativelanguage.googleapis.com' }, // Gemini API images
+            { hostname: 'claude.ai' }, // Claude AI images
+            { hostname: 'cdn.anthropic.com' }, // Anthropic CDN
+            { hostname: 'images.anthropic.com' }, // Anthropic images
+            { hostname: 'api.stability.ai' }, // Stability AI
+            { hostname: 'cdn.stability.ai' }, // Stability AI CDN
+            { hostname: 'images.groq.com' }, // Groq images
+            { hostname: 'api.groq.com' }, // Groq API
+            { hostname: 'replicate.delivery' }, // Replicate model outputs
+            { hostname: 'pbxt.replicate.delivery' }, // Replicate CDN
+            { hostname: 'cdn.replicate.com' }, // Replicate CDN
+            { hostname: 'huggingface.co' }, // Hugging Face
+            { hostname: 'cdn-uploads.huggingface.co' }, // Hugging Face uploads
+            { hostname: 'images.cohere.ai' }, // Cohere images
+            { hostname: 'api.cohere.ai' }, // Cohere API
+            { hostname: 'images.perplexity.ai' }, // Perplexity images
+            { hostname: 'api.perplexity.ai' }, // Perplexity API
+            // Common CDN services
+            { hostname: 'cdn.jsdelivr.net' },
+            { hostname: 'unpkg.com' },
+            { hostname: 'images.unsplash.com' },
+            { hostname: 'via.placeholder.com' },
+            // User-uploaded content (if you use these services)
+            { hostname: 'cloudinary.com' },
+            { hostname: '*.cloudinary.com' },
+            { hostname: 'imgur.com' },
+            { hostname: 'i.imgur.com' },
         ],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         formats: ['image/webp', 'image/avif'],
-        minimumCacheTTL: 2_678_400, // 31 days
+        minimumCacheTTL: 86400, // 1 day (reduced from 31 days for better cache invalidation)
+        dangerouslyAllowSVG: true, // Allow SVG for icons and avatars
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     },
 
     // Webpack optimizations (only when not using Turbopack)
@@ -107,28 +158,38 @@ const nextConfig = {
 
             // Optimize for development speed
             if (dev) {
-                // Disable webpack cache in development to prevent bloating
-                config.cache = false;
+                // Use memory cache in development but with size limits
+                config.cache = {
+                    type: 'memory',
+                    maxGenerations: 1,
+                };
 
                 // Reduce module resolution overhead
                 config.resolve.symlinks = false;
 
-                // Disable optimizations that slow down dev builds
-                config.optimization.minimize = false;
+                // Optimize for faster rebuilds
                 config.optimization.splitChunks = {
                     chunks: 'async',
                     cacheGroups: {
                         default: false,
-                        vendors: false,
+                        vendors: {
+                            test: /[\\/]node_modules[\\/]/,
+                            name: 'vendors',
+                            chunks: 'initial',
+                            priority: 10,
+                        },
                     },
                 };
             } else {
-                // Production memory optimization: disable webpack cache
-                if (config.cache && !dev) {
-                    config.cache = Object.freeze({
-                        type: 'memory',
-                    });
-                }
+                // Production optimizations with memory constraints
+                config.cache = {
+                    type: 'memory',
+                    maxMemoryGenerations: 1,
+                };
+
+                // Enable tree shaking optimizations
+                config.optimization.usedExports = true;
+                config.optimization.sideEffects = false;
             }
 
             // Handle Node.js imports in client-side code
@@ -147,35 +208,55 @@ const nextConfig = {
                 };
             }
 
-            // Optimize bundle splitting
+            // Optimize bundle splitting for better loading performance
             if (!isServer) {
                 config.optimization.splitChunks = {
                     chunks: 'all',
-                    maxInitialRequests: 25,
-                    maxAsyncRequests: 30,
+                    maxInitialRequests: 20, // Reduced from 25 for optimal loading
+                    maxAsyncRequests: 25, // Reduced from 30
+                    minSize: 20000, // 20KB minimum chunk size
+                    maxSize: 200000, // 200KB maximum chunk size
                     cacheGroups: {
-                        // React ecosystem
-                        react: {
-                            test: /[\\/]node_modules[\\/](react|react-dom|react-hook-form)[\\/]/,
-                            name: 'react-core',
+                        // Framework core (React, Next.js)
+                        framework: {
+                            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types)[\\/]/,
+                            name: 'framework',
+                            priority: 50,
+                            chunks: 'all',
+                            reuseExistingChunk: true,
+                            enforce: true,
+                        },
+                        // Next.js chunks
+                        nextjs: {
+                            test: /[\\/]node_modules[\\/]next[\\/]/,
+                            name: 'nextjs',
+                            priority: 45,
+                            chunks: 'all',
+                            reuseExistingChunk: true,
+                        },
+                        // Critical form libraries
+                        forms: {
+                            test: /[\\/]node_modules[\\/](react-hook-form|zod)[\\/]/,
+                            name: 'form-libs',
                             priority: 40,
                             chunks: 'all',
                             reuseExistingChunk: true,
                         },
-                        // Heavy AI libraries
+                        // AI libraries (lazy loaded)
                         ai: {
                             test: /[\\/]node_modules[\\/](@ai-sdk|ai|@google\/generative-ai)[\\/]/,
                             name: 'ai-libs',
                             priority: 35,
-                            chunks: 'async', // Only load when needed
+                            chunks: 'async', // Keep as async
                             reuseExistingChunk: true,
+                            maxSize: 150000, // Smaller chunks for AI libs
                         },
                         // Chart libraries (lazy loaded)
                         charts: {
                             test: /[\\/]node_modules[\\/](recharts|d3)[\\/]/,
                             name: 'chart-libs',
                             priority: 30,
-                            chunks: 'async', // Only load when charts are rendered
+                            chunks: 'async',
                             reuseExistingChunk: true,
                         },
                         // Database libraries
@@ -186,14 +267,14 @@ const nextConfig = {
                             chunks: 'all',
                             reuseExistingChunk: true,
                         },
-                        // UI libraries
+                        // UI libraries - split into smaller chunks
                         ui: {
                             test: /[\\/]node_modules[\\/](@radix-ui|framer-motion|lucide-react|cmdk)[\\/]/,
                             name: 'ui-libs',
                             priority: 20,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 200_000, // ~200KB limit
+                            maxSize: 100000, // Reduced from 200KB
                         },
                         // Date utilities
                         dateFns: {
@@ -206,21 +287,22 @@ const nextConfig = {
                         },
                         // Utilities
                         utils: {
-                            test: /[\\/]node_modules[\\/](clsx|tailwind-merge|zod|nanoid)[\\/]/,
+                            test: /[\\/]node_modules[\\/](clsx|tailwind-merge|nanoid|immer|zustand)[\\/]/,
                             name: 'utils',
                             priority: 15,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 150_000, // ~150KB limit
+                            maxSize: 100000, // Reduced from 150KB
                         },
-                        // Remaining vendor packages
+                        // Default vendor packages
                         vendor: {
                             test: /[\\/]node_modules[\\/]/,
                             name: 'vendors',
                             priority: 10,
                             chunks: 'all',
                             reuseExistingChunk: true,
-                            maxSize: 150_000, // ~150KB limit per chunk
+                            maxSize: 100000, // Reduced from 150KB
+                            minChunks: 1,
                         },
                         // Common application code
                         common: {
@@ -228,7 +310,7 @@ const nextConfig = {
                             minChunks: 2,
                             priority: 5,
                             reuseExistingChunk: true,
-                            maxSize: 200_000, // ~200KB limit
+                            maxSize: 150000, // Reduced from 200KB
                         },
                     },
                 };
@@ -259,6 +341,28 @@ const nextConfig = {
                     {
                         key: 'Access-Control-Allow-Credentials',
                         value: 'true',
+                    },
+                ],
+            },
+            {
+                // CORS headers for AI provider image proxying
+                source: '/api/proxy/image/:path*',
+                headers: [
+                    {
+                        key: 'Access-Control-Allow-Origin',
+                        value: '*',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, OPTIONS',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Headers',
+                        value: 'Content-Type, Authorization',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=604800', // 1 day with 1 week stale
                     },
                 ],
             },
@@ -363,8 +467,28 @@ const nextConfig = {
                 ],
             },
             {
-                // Cache static assets
+                // Optimized cache headers for static assets
                 source: '/(.*)\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable', // 1 year for static assets with hash
+                    },
+                ],
+            },
+            {
+                // Shorter cache for dynamic assets that might change
+                source: '/_next/static/(.*)\\.(js|css)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=31536000', // 1 day with stale-while-revalidate
+                    },
+                ],
+            },
+            {
+                // Font files with longer cache
+                source: '/(.*)\\.(woff|woff2|ttf|eot)',
                 headers: [
                     {
                         key: 'Cache-Control',
@@ -373,7 +497,7 @@ const nextConfig = {
                 ],
             },
             {
-                // Service Worker specific headers
+                // Service Worker specific headers - never cache
                 source: '/sw.js',
                 headers: [
                     {
@@ -391,7 +515,7 @@ const nextConfig = {
                 ],
             },
             {
-                // Web App Manifest headers
+                // Web App Manifest headers - moderate cache
                 source: '/manifest.webmanifest',
                 headers: [
                     {
@@ -401,6 +525,72 @@ const nextConfig = {
                     {
                         key: 'Cache-Control',
                         value: 'public, max-age=86400', // 1 day
+                    },
+                ],
+            },
+            {
+                // Offline page - moderate cache for PWA functionality
+                source: '/offline.html',
+                headers: [
+                    {
+                        key: 'Content-Type',
+                        value: 'text/html; charset=utf-8',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400', // 1 day
+                    },
+                ],
+            },
+            {
+                // Next.js optimized images - balanced cache
+                source: '/_next/image',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=31536000', // 1 day with stale-while-revalidate
+                    },
+                ],
+            },
+            {
+                // AI-generated images - shorter cache due to dynamic nature
+                source: '/api/ai/images/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=604800', // 1 day with 1 week stale-while-revalidate
+                    },
+                    {
+                        key: 'Content-Type',
+                        value: 'image/*',
+                    },
+                ],
+            },
+            {
+                // HTML pages - short cache with revalidation
+                source: '/:path*.html',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=300, stale-while-revalidate=86400', // 5 min with stale-while-revalidate
+                    },
+                ],
+            },
+            {
+                // API responses - no cache for dynamic content
+                source: '/api/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'private, no-cache, no-store, must-revalidate',
+                    },
+                    {
+                        key: 'Pragma',
+                        value: 'no-cache',
+                    },
+                    {
+                        key: 'Expires',
+                        value: '0',
                     },
                 ],
             },
