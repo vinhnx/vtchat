@@ -1,6 +1,6 @@
 "use client";
 
-import { useCurrentPlan, useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
+import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
 import { PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import { Badge, cn } from "@repo/ui";
 
@@ -28,18 +28,13 @@ export function UserTierBadge({
     onUpgradeClick,
 }: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
-    const { planSlug: rawPlanSlug } = useCurrentPlan();
+
 
     // Use isPlusTier which now correctly checks both isVtPlus && isActive
     const isPlus = isPlusTier;
 
-    let finalPlanSlug: PlanSlug;
-    // Ensure rawPlanSlug is a valid PlanSlug key or default
-    if (rawPlanSlug && Object.values(PlanSlug).includes(rawPlanSlug as PlanSlug)) {
-        finalPlanSlug = rawPlanSlug as PlanSlug;
-    } else {
-        finalPlanSlug = isPlus ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
-    }
+    // Use isPlus (which checks active status) to determine display, not rawPlanSlug
+    const finalPlanSlug: PlanSlug = isPlus ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
     const planName = PLANS[finalPlanSlug].name;
 
     // Handle upgrade click

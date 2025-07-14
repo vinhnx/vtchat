@@ -160,7 +160,7 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 
 ## Logging
 
-- **NEVER use console.log/error/warn** - Always use Pino logger (`@repo/shared/lib/logger`)
+- DO NOT USE console.log/error/warn\*\* - Always use Pino logger log.info/error/debug/warn (`@repo/shared/lib/logger`)
 - **Import**: `import { log } from '@repo/shared/lib/logger'` for basic logging (use `log` not `logger`)
 - **Usage**: `log.info({ key: value }, 'message')`, `log.error({ error }, 'message')`
 - **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
