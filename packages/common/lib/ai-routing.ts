@@ -86,7 +86,10 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
     if (typeof mode === "string" && mode.includes("claude")) {
         return "ANTHROPIC_API_KEY";
     }
-    if (typeof mode === "string" && (mode.includes("gpt") || mode.includes("o1") || mode.includes("o3") || mode.includes("o4"))) {
+    if (
+        typeof mode === "string" &&
+        (mode.includes("gpt") || mode.includes("o1") || mode.includes("o3") || mode.includes("o4"))
+    ) {
         return "OPENAI_API_KEY";
     }
     if (typeof mode === "string" && mode.includes("grok")) {
@@ -96,12 +99,13 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
         return "FIREWORKS_API_KEY";
     }
     // OpenRouter models
-    if (typeof mode === "string" && (
-        mode.includes("deepseek") || 
-        mode.includes("qwen") || 
-        mode.includes("mistral") ||
-        mode.includes("kimi")
-    )) {
+    if (
+        typeof mode === "string" &&
+        (mode.includes("deepseek") ||
+            mode.includes("qwen") ||
+            mode.includes("mistral") ||
+            mode.includes("kimi"))
+    ) {
         return "OPENROUTER_API_KEY";
     }
     return null;

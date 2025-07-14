@@ -199,12 +199,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             "Workflow failed",
                         );
 
-                        // Update thread item with error status
+                        // Update thread item with error status - use ERROR status and error field for toast
                         if (data.threadItemId) {
                             updateThreadItem(data.threadId, {
                                 id: data.threadItemId,
-                                status: "FAILED",
-                                content: `Error: ${data.error}`,
+                                status: "ERROR",
+                                error: data.error || "Workflow failed",
+                                persistToDB: true,
                             });
                         }
                     }
@@ -213,7 +214,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     // The threadItemMap serves as a cache and should retain completed items
                 }
             },
-            [handleThreadItemUpdate, setIsGenerating],
+            [handleThreadItemUpdate, setIsGenerating, updateThreadItem],
         ),
     );
 
@@ -287,34 +288,56 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 if (!response.ok) {
                     let errorText = await response.text();
+                    let finalErrorMessage = errorText;
 
+                    // Try to parse JSON error response to extract meaningful message
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        if (errorData.message) {
+                            finalErrorMessage = errorData.message;
+                        } else if (errorData.error?.message) {
+                            finalErrorMessage = errorData.error.message;
+                        } else if (errorData.detail) {
+                            finalErrorMessage = errorData.detail;
+                        }
+                    } catch {
+                        // Use raw text if JSON parsing fails
+                        finalErrorMessage = errorText;
+                    }
+
+                    // Handle specific error status codes
                     if (response.status === 429) {
                         try {
                             const errorData = JSON.parse(errorText);
-                            if (errorData.message) {
-                                errorText = errorData.message;
-                            } else if (errorData.limitType === "daily_limit_exceeded") {
-                                errorText = getRateLimitMessage.dailyLimit(
+                            if (errorData.limitType === "daily_limit_exceeded") {
+                                finalErrorMessage = getRateLimitMessage.dailyLimit(
                                     isSignedIn,
                                     hasVtPlusAccess,
                                 );
                             } else {
-                                errorText = getRateLimitMessage.minuteLimit(
+                                finalErrorMessage = getRateLimitMessage.minuteLimit(
                                     isSignedIn,
                                     hasVtPlusAccess,
                                 );
                             }
                         } catch {
                             // Fallback if JSON parsing fails
-                            errorText = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
+                            finalErrorMessage = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
                         }
+                    } else if (response.status === 400) {
+                        // For 400 errors, use the extracted message or provide context
+                        if (!finalErrorMessage || finalErrorMessage === errorText) {
+                            finalErrorMessage = `API Error (${response.status}): ${finalErrorMessage}`;
+                        }
+                    } else if (response.status >= 500) {
+                        finalErrorMessage = `Service Error (${response.status}): ${finalErrorMessage || 'Internal server error'}`;
                     }
 
                     setIsGenerating(false);
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
                         status: "ERROR",
-                        error: errorText,
+                        error: finalErrorMessage,
                         persistToDB: true,
                     });
                     log.error({ errorText, status: response.status }, "Error response received");
@@ -446,25 +469,46 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     "Fatal stream error",
                 );
                 setIsGenerating(false);
+                
+                // Extract meaningful error message
+                let errorMessage = "Something went wrong. Please try again.";
+                
                 if (streamError.name === "AbortError") {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
                         status: "ABORTED",
                         error: "Generation aborted",
+                        persistToDB: true,
                     });
-                } else if (streamError.message.includes("429")) {
-                    updateThreadItem(body.threadId, {
-                        id: body.threadItemId,
-                        status: "ERROR",
-                        error: getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess),
-                    });
-                } else {
-                    updateThreadItem(body.threadId, {
-                        id: body.threadItemId,
-                        status: "ERROR",
-                        error: "Something went wrong. Please try again.",
-                    });
+                    return; // Early return for abort errors
                 }
+                
+                // Check for specific API errors in the error message
+                if (streamError.message) {
+                    const errorMsg = streamError.message.toLowerCase();
+                    
+                    if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
+                        errorMessage = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
+                    } else if (errorMsg.includes("credit balance") || errorMsg.includes("too low")) {
+                        errorMessage = "Your credit balance is too low to access the API. Please go to Plans & Billing to upgrade or purchase credits.";
+                    } else if (errorMsg.includes("unauthorized") || errorMsg.includes("invalid api key")) {
+                        errorMessage = "Authentication failed. Please check your API key in settings.";
+                    } else if (errorMsg.includes("503") || errorMsg.includes("service unavailable")) {
+                        errorMessage = "Service is temporarily unavailable. Please try again later.";
+                    } else if (errorMsg.includes("network") || errorMsg.includes("connection")) {
+                        errorMessage = "Network error occurred. Please check your connection and try again.";
+                    } else if (streamError.message.length < 200) {
+                        // Use the actual error message if it's not too long
+                        errorMessage = streamError.message;
+                    }
+                }
+                
+                updateThreadItem(body.threadId, {
+                    id: body.threadItemId,
+                    status: "ERROR",
+                    error: errorMessage,
+                    persistToDB: true,
+                });
             } finally {
                 setIsGenerating(false);
 

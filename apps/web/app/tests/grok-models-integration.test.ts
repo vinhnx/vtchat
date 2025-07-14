@@ -34,12 +34,12 @@ describe("Grok Models Integration", () => {
 
         it("should require XAI_API_KEY for all Grok models", () => {
             // Without XAI API key
-            grokModels.forEach(model => {
+            grokModels.forEach((model) => {
                 expect(mockHasApiKeyForChatMode(model, false)).toBe(false);
             });
 
             // With XAI API key
-            grokModels.forEach(model => {
+            grokModels.forEach((model) => {
                 expect(mockHasApiKeyForChatMode(model, true)).toBe(true);
             });
         });
@@ -54,7 +54,7 @@ describe("Grok Models Integration", () => {
         };
 
         it("should have correct API key mappings for BYOK validation", () => {
-            grokModels.forEach(model => {
+            grokModels.forEach((model) => {
                 expect(CHAT_MODE_TO_API_KEY[model]).toBe("XAI_API_KEY");
             });
         });
@@ -89,7 +89,7 @@ describe("Grok Models Integration", () => {
                 // XAI_API_KEY is missing
             };
 
-            grokModels.forEach(model => {
+            grokModels.forEach((model) => {
                 const hasRequiredKey = !!mockApiKeys["XAI_API_KEY"];
                 expect(hasRequiredKey).toBe(false);
             });
@@ -103,8 +103,8 @@ describe("Grok Models Integration", () => {
             };
 
             const mockApiKeys = { OPENAI_API_KEY: "test-key" };
-            
-            grokModels.forEach(model => {
+
+            grokModels.forEach((model) => {
                 expect(shouldShowBYOKDialog(model, mockApiKeys)).toBe(true);
             });
         });
@@ -115,14 +115,18 @@ describe("Grok Models Integration", () => {
             // Mock the getModelFromChatMode function
             const getModelFromChatMode = (mode: ChatMode) => {
                 switch (mode) {
-                    case ChatMode.GROK_3: return "grok-3";
-                    case ChatMode.GROK_3_MINI: return "grok-3-mini";
-                    case ChatMode.GROK_4: return "grok-4";
-                    default: return null;
+                    case ChatMode.GROK_3:
+                        return "grok-3";
+                    case ChatMode.GROK_3_MINI:
+                        return "grok-3-mini";
+                    case ChatMode.GROK_4:
+                        return "grok-4";
+                    default:
+                        return null;
                 }
             };
 
-            grokModels.forEach(model => {
+            grokModels.forEach((model) => {
                 const modelId = getModelFromChatMode(model);
                 expect(modelId).toBeTruthy();
                 expect(modelId).toContain("grok");
@@ -134,7 +138,7 @@ describe("Grok Models Integration", () => {
 // Test the CHAT_MODE_TO_API_KEY mapping specifically for the BYOK dialog issue
 const CHAT_MODE_TO_API_KEY = {
     [ChatMode.GROK_3]: "XAI_API_KEY",
-    [ChatMode.GROK_3_MINI]: "XAI_API_KEY", 
+    [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
     [ChatMode.GROK_4]: "XAI_API_KEY",
 };
 
