@@ -21,7 +21,7 @@ import { isMathTool } from "@repo/common/constants/math-tools";
 import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
 import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
-import { Alert, AlertDescription, cn } from "@repo/ui";
+import { Alert, AlertDescription, cn, useToast } from "@repo/ui";
 import { AlertCircle } from "lucide-react";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useInView } from "react-intersection-observer";
@@ -46,6 +46,7 @@ export const ThreadItem = memo(
         const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
+        const { toast } = useToast();
 
         // Check if there are active math tool calls
         const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some((toolCall) =>
@@ -88,6 +89,69 @@ export const ThreadItem = memo(
                     .filter((link): link is string => link !== undefined) || [];
             return setCurrentSources(sources);
         }, [threadItem, setCurrentSources]);
+
+        // Show toast notification for API call failures
+        useEffect(() => {
+            if (
+                threadItem.error &&
+                (threadItem.status === "ERROR" || threadItem.status === "ABORTED")
+            ) {
+                const errorMessage =
+                    typeof threadItem.error === "string"
+                        ? threadItem.error
+                        : getErrorDiagnosticMessage(threadItem.error);
+
+                // Determine toast variant and title based on error type
+                let variant: "destructive" | "default" = "destructive";
+                let title = "API Call Failed";
+
+                const errorLower = errorMessage.toLowerCase();
+
+                if (errorLower.includes("credit balance") || errorLower.includes("too low")) {
+                    title = "💳 Credit Balance Too Low";
+                } else if (errorLower.includes("rate limit") || errorLower.includes("quota")) {
+                    title = "⏱️ Rate Limit Exceeded";
+                } else if (
+                    errorLower.includes("network") ||
+                    errorLower.includes("connection") ||
+                    errorLower.includes("networkerror")
+                ) {
+                    title = "🌐 Network Error";
+                } else if (
+                    errorLower.includes("unauthorized") ||
+                    errorLower.includes("invalid api key") ||
+                    errorLower.includes("authentication")
+                ) {
+                    title = "🔑 Authentication Error";
+                } else if (
+                    errorLower.includes("billing") ||
+                    errorLower.includes("payment") ||
+                    errorLower.includes("plans & billing")
+                ) {
+                    title = "💸 Billing Issue";
+                } else if (
+                    errorLower.includes("503") ||
+                    errorLower.includes("service unavailable") ||
+                    errorLower.includes("502")
+                ) {
+                    title = "🔧 Service Unavailable";
+                } else if (
+                    errorLower.includes("aborted") ||
+                    errorLower.includes("stopped") ||
+                    errorLower.includes("cancelled")
+                ) {
+                    title = "⏹️ Request Cancelled";
+                    variant = "default";
+                }
+
+                toast({
+                    title,
+                    description: errorMessage,
+                    variant,
+                    duration: 6000, // Show for 6 seconds for better readability
+                });
+            }
+        }, [threadItem.error, threadItem.status, toast]);
 
         const hasAnswer = useMemo(() => {
             return threadItem.answer?.text && threadItem.answer?.text.length > 0;

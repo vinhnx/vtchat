@@ -21,29 +21,58 @@ type ProviderKeyMapping = {
 };
 
 const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
+    // OpenAI models
     [ChatMode.O3]: "OPENAI_API_KEY",
     [ChatMode.O3_Mini]: "OPENAI_API_KEY",
     [ChatMode.O4_Mini]: "OPENAI_API_KEY",
+    [ChatMode.O1]: "OPENAI_API_KEY",
+    [ChatMode.O1_MINI]: "OPENAI_API_KEY",
     [ChatMode.GPT_4o_Mini]: "OPENAI_API_KEY",
     [ChatMode.GPT_4o]: "OPENAI_API_KEY",
     [ChatMode.GPT_4_1_Mini]: "OPENAI_API_KEY",
     [ChatMode.GPT_4_1_Nano]: "OPENAI_API_KEY",
     [ChatMode.GPT_4_1]: "OPENAI_API_KEY",
+    // Gemini models
     [ChatMode.Deep]: "GEMINI_API_KEY",
     [ChatMode.Pro]: "GEMINI_API_KEY",
     [ChatMode.GEMINI_2_5_PRO]: "GEMINI_API_KEY",
     [ChatMode.GEMINI_2_5_FLASH]: "GEMINI_API_KEY",
+    [ChatMode.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
+    // Anthropic models
     [ChatMode.CLAUDE_4_SONNET]: "ANTHROPIC_API_KEY",
     [ChatMode.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
-    [ChatMode.DEEPSEEK_R1]: "FIREWORKS_API_KEY",
+    // Fireworks models
+    [ChatMode.DEEPSEEK_R1_FIREWORKS]: "FIREWORKS_API_KEY",
+    // xAI models
     [ChatMode.GROK_3]: "XAI_API_KEY",
     [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
+    [ChatMode.GROK_4]: "XAI_API_KEY",
+    // OpenRouter models
     [ChatMode.DEEPSEEK_V3_0324]: "OPENROUTER_API_KEY",
     [ChatMode.DEEPSEEK_R1]: "OPENROUTER_API_KEY",
     [ChatMode.QWEN3_235B_A22B]: "OPENROUTER_API_KEY",
     [ChatMode.QWEN3_32B]: "OPENROUTER_API_KEY",
     [ChatMode.MISTRAL_NEMO]: "OPENROUTER_API_KEY",
     [ChatMode.QWEN3_14B]: "OPENROUTER_API_KEY",
+    [ChatMode.KIMI_K2]: "OPENROUTER_API_KEY",
+    // LM Studio local models (no API key required)
+    [ChatMode.LMSTUDIO_LLAMA_3_8B]: null,
+    [ChatMode.LMSTUDIO_QWEN_7B]: null,
+    [ChatMode.LMSTUDIO_GEMMA_7B]: null,
+    [ChatMode.LMSTUDIO_GEMMA_3_1B]: null,
+    // Ollama local models (no API key required)
+    [ChatMode.OLLAMA_LLAMA_3_3]: null,
+    [ChatMode.OLLAMA_LLAMA_3_2]: null,
+    [ChatMode.OLLAMA_LLAMA_3_1]: null,
+    [ChatMode.OLLAMA_QWEN_3]: null,
+    [ChatMode.OLLAMA_QWEN_2_5]: null,
+    [ChatMode.OLLAMA_GEMMA_3]: null,
+    [ChatMode.OLLAMA_GEMMA_3N]: null,
+    [ChatMode.OLLAMA_GEMMA_2]: null,
+    [ChatMode.OLLAMA_DEEPSEEK_R1]: null,
+    [ChatMode.OLLAMA_MISTRAL]: null,
+    [ChatMode.OLLAMA_CODELLAMA]: null,
+    [ChatMode.OLLAMA_LLAVA]: null,
 } as const;
 
 const PROVIDER_NAMES = {

@@ -21,7 +21,7 @@ export const ModelEnum = {
     GROK_3_MINI: "grok-3-mini",
     GROK_4: "grok-4",
     // Fireworks models
-    DEEPSEEK_R1_FIREWORKS: "deepseek-r1-fireworks",
+    DEEPSEEK_R1_FIREWORKS: "accounts/fireworks/models/qwen3-30b-a3b",
     // OpenRouter models
     DEEPSEEK_V3_0324: "deepseek/deepseek-chat-v3-0324",
     DEEPSEEK_R1: "deepseek/deepseek-r1",
@@ -387,8 +387,6 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
             return ModelEnum.DEEPSEEK_V3_0324;
-        case ChatMode.DEEPSEEK_R1:
-            return ModelEnum.DEEPSEEK_R1;
         case ChatMode.QWEN3_235B_A22B:
             return ModelEnum.QWEN3_235B_A22B;
         case ChatMode.QWEN3_32B:

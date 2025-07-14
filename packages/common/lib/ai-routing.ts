@@ -71,6 +71,8 @@ const PROVIDER_API_KEYS = [
     "GROQ_API_KEY",
     "DEEPSEEK_API_KEY",
     "FIREWORKS_API_KEY",
+    "OPENROUTER_API_KEY",
+    "TOGETHER_API_KEY",
 ];
 
 /**
@@ -84,8 +86,23 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
     if (typeof mode === "string" && mode.includes("claude")) {
         return "ANTHROPIC_API_KEY";
     }
-    if (typeof mode === "string" && (mode.includes("gpt") || mode.includes("o1"))) {
+    if (typeof mode === "string" && (mode.includes("gpt") || mode.includes("o1") || mode.includes("o3") || mode.includes("o4"))) {
         return "OPENAI_API_KEY";
+    }
+    if (typeof mode === "string" && mode.includes("grok")) {
+        return "XAI_API_KEY";
+    }
+    if (typeof mode === "string" && mode.includes("fireworks")) {
+        return "FIREWORKS_API_KEY";
+    }
+    // OpenRouter models
+    if (typeof mode === "string" && (
+        mode.includes("deepseek") || 
+        mode.includes("qwen") || 
+        mode.includes("mistral") ||
+        mode.includes("kimi")
+    )) {
+        return "OPENROUTER_API_KEY";
     }
     return null;
 }

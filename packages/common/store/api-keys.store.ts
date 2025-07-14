@@ -246,6 +246,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return isValidKey(apiKeys.FIREWORKS_API_KEY);
                     case ChatMode.GROK_3:
                     case ChatMode.GROK_3_MINI:
+                    case ChatMode.GROK_4:
                         return isValidKey(apiKeys.XAI_API_KEY);
                     // OpenRouter models
                     case ChatMode.DEEPSEEK_V3_0324:

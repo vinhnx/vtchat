@@ -15,29 +15,8 @@ Exposure vectors: Browser dev tools, HAR files, server logs, XSS attacks
 No enterprise customer would accept this architecture
 ✅ SECURE BYOK ARCHITECTURE (Industry Standard):
 
-sequenceDiagram
-participant User
-participant Frontend
-participant API_Keys_Endpoint as /api/keys
-participant DB as Encrypted Storage
-participant KMS
-participant Completion_API as /api/completion
-participant Provider as OpenAI/Anthropic
-
-    User->>Frontend: Enter API key (one time)
-    Frontend->>API_Keys_Endpoint: POST {provider, key}
-    API_Keys_Endpoint->>KMS: Encrypt(key)
-    KMS-->>API_Keys_Endpoint: ciphertext
-    API_Keys_Endpoint->>DB: Store encrypted key
-
-    Note over User,Provider: Later chat requests
-    Frontend->>Completion_API: POST {mode, messages} (no keys!)
-    Completion_API->>DB: Get encrypted key for user+provider
-    Completion_API->>KMS: Decrypt(ciphertext)
-    KMS-->>Completion_API: plaintext key (in memory only)
-    Completion_API->>Provider: API call with decrypted key
-    Provider-->>Completion_API: Response
-    Completion_API-->>Frontend: Chat response
+sequenceDiagram 
+https://www.mermaidchart.com/app/projects/986bdae2-4539-4d68-8b20-21bad8251c63/diagrams/83085d52-bbcf-4596-9271-4807bfd86597/version/v0.1/edit
 
 🛠️ IMPLEMENTATION PLAN:
 

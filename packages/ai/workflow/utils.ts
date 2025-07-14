@@ -1374,6 +1374,7 @@ export const selectAvailableModel = (
             // xAI models
             [ModelEnum.GROK_3]: "XAI_API_KEY",
             [ModelEnum.GROK_3_MINI]: "XAI_API_KEY",
+            [ModelEnum.GROK_4]: "XAI_API_KEY",
             // OpenRouter models
             [ModelEnum.DEEPSEEK_V3_0324]: "OPENROUTER_API_KEY",
             [ModelEnum.DEEPSEEK_R1]: "OPENROUTER_API_KEY",
