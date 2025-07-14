@@ -108,39 +108,45 @@ export const ThreadItem = memo(
                 const errorLower = errorMessage.toLowerCase();
 
                 if (errorLower.includes("credit balance") || errorLower.includes("too low")) {
-                    title = "💳 Credit Balance Too Low";
+                    title = "Credit Balance Too Low";
+                } else if (
+                    errorLower.includes("x.ai credits required") ||
+                    errorLower.includes("doesn't have any credits yet") ||
+                    errorLower.includes("console.x.ai")
+                ) {
+                    title = "X.AI Credits Required";
                 } else if (errorLower.includes("rate limit") || errorLower.includes("quota")) {
-                    title = "⏱️ Rate Limit Exceeded";
+                    title = "Rate Limit Exceeded";
                 } else if (
                     errorLower.includes("network") ||
                     errorLower.includes("connection") ||
                     errorLower.includes("networkerror")
                 ) {
-                    title = "🌐 Network Error";
+                    title = "Network Error";
                 } else if (
                     errorLower.includes("unauthorized") ||
                     errorLower.includes("invalid api key") ||
                     errorLower.includes("authentication")
                 ) {
-                    title = "🔑 Authentication Error";
+                    title = "Authentication Error";
                 } else if (
                     errorLower.includes("billing") ||
                     errorLower.includes("payment") ||
                     errorLower.includes("plans & billing")
                 ) {
-                    title = "💸 Billing Issue";
+                    title = "Billing Issue";
                 } else if (
                     errorLower.includes("503") ||
                     errorLower.includes("service unavailable") ||
                     errorLower.includes("502")
                 ) {
-                    title = "🔧 Service Unavailable";
+                    title = "Service Unavailable";
                 } else if (
                     errorLower.includes("aborted") ||
                     errorLower.includes("stopped") ||
                     errorLower.includes("cancelled")
                 ) {
-                    title = "⏹️ Request Cancelled";
+                    title = "Request Cancelled";
                     variant = "default";
                 }
 

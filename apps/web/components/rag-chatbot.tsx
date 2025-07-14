@@ -33,12 +33,12 @@ import {
     ScrollArea,
     Sheet,
     SheetContent,
+    useToast,
 } from "@repo/ui";
 import { useChat } from "ai/react";
 import { Database, Eye, Menu, Send, Settings, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
 
 interface KnowledgeItem {
@@ -57,6 +57,7 @@ export function RAGChatbot() {
     const profile = useAppStore((state) => state.profile);
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const isMobile = useIsMobile();
+    const { toast } = useToast();
 
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -71,7 +72,7 @@ export function RAGChatbot() {
     const [isMinimized, setIsMinimized] = useState(false);
 
     // Enhanced error handling function
-    const showErrorToast = (error: any) => {
+    const showErrorToast = useCallback((error: any) => {
         // Debug logging to understand error structure
         log.error(
             { error, errorMessage: error?.message, errorType: typeof error },
@@ -154,7 +155,7 @@ export function RAGChatbot() {
                 "Failed to show error toast - this indicates a problem with the toast system",
             );
         }
-    };
+    }, [toast]);
 
     const allApiKeys = getAllKeys();
     const hasGeminiKey = !!allApiKeys[API_KEY_NAMES.GOOGLE];

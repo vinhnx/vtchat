@@ -287,7 +287,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 });
 
                 if (!response.ok) {
-                    let errorText = await response.text();
+                    const errorText = await response.text();
                     let finalErrorMessage = errorText;
 
                     // Try to parse JSON error response to extract meaningful message
@@ -326,6 +326,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                 isSignedIn,
                                 hasVtPlusAccess,
                             );
+                        }
+                    } else if (response.status === 403) {
+                        // Handle 403 errors, especially X.AI credit issues
+                        if (
+                            finalErrorMessage.includes("doesn't have any credits yet") ||
+                            finalErrorMessage.includes("console.x.ai")
+                        ) {
+                            finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
+                        } else {
+                            finalErrorMessage = `Access Denied (${response.status}): ${finalErrorMessage}`;
                         }
                     } else if (response.status === 400) {
                         // For 400 errors, use the extracted message or provide context
