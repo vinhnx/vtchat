@@ -72,90 +72,99 @@ export function RAGChatbot() {
     const [isMinimized, setIsMinimized] = useState(false);
 
     // Enhanced error handling function
-    const showErrorToast = useCallback((error: any) => {
-        // Debug logging to understand error structure
-        log.error(
-            { error, errorMessage: error?.message, errorType: typeof error },
-            "showErrorToast called",
-        );
-
-        // Check for specific quota_exceeded status from completion API
-        if (error?.status === "quota_exceeded" || error?.data?.status === "quota_exceeded") {
-            const quotaMessage = error?.error || error?.data?.error || "VT+ quota exceeded.";
-            toast.error("Daily Limit Reached", {
-                description: quotaMessage,
-            });
-            return;
-        }
-
-        // Extract error message from various possible structures
-        let errorMessage = "";
-        if (typeof error === "string") {
-            errorMessage = error;
-        } else if (error?.message) {
-            errorMessage = error.message;
-        } else if (error?.error?.message) {
-            errorMessage = error.error.message;
-        } else if (error?.toString) {
-            errorMessage = error.toString();
-        } else {
-            errorMessage = "Unknown error occurred";
-        }
-
-        const message = errorMessage.toLowerCase();
-        log.info({ message, originalError: error }, "Processing error message for toast");
-
-        try {
-            if (message.includes("api key is required") || message.includes("unauthorized")) {
-                toast.error("API Key Required", {
-                    description:
-                        "Please configure your API keys in Settings to use the Knowledge Assistant.",
-                    action: {
-                        label: "Add Keys",
-                        onClick: () => window.open("/settings", "_blank"),
-                    },
-                });
-            } else if (message.includes("rate limit") || message.includes("too many requests")) {
-                toast.error("Rate Limit Exceeded", {
-                    description: "Too many requests. Please try again in a few minutes.",
-                });
-            } else if (
-                message.includes("insufficient credits") ||
-                message.includes("quota exceeded")
-            ) {
-                toast.error("Credits Exhausted", {
-                    description:
-                        "Your API credits have been exhausted. Please check your provider account.",
-                });
-            } else if (message.includes("network") || message.includes("fetch")) {
-                toast.error("Network Error", {
-                    description: "Please check your internet connection and try again.",
-                });
-            } else if (message.includes("timeout")) {
-                toast.error("Request Timeout", {
-                    description: "The request took too long. Please try again.",
-                });
-            } else if (message.includes("server error") || message.includes("internal server")) {
-                toast.error("Server Error", {
-                    description: "Our servers are experiencing issues. Please try again later.",
-                });
-            } else if (message.includes("invalid") || message.includes("bad request")) {
-                toast.error("Invalid Request", {
-                    description: "There was an issue with your request. Please try again.",
-                });
-            } else {
-                toast.error("Chat Error", {
-                    description: errorMessage || "Something went wrong. Please try again.",
-                });
-            }
-            log.info({}, "Toast error shown successfully");
-        } catch (toastError) {
+    const showErrorToast = useCallback(
+        (error: any) => {
+            // Debug logging to understand error structure
             log.error(
-                { toastError, originalError: error },
-                "Failed to show error toast - this indicates a problem with the toast system",
+                { error, errorMessage: error?.message, errorType: typeof error },
+                "showErrorToast called",
             );
-        }
-    }, [toast]);
+
+            // Check for specific quota_exceeded status from completion API
+            if (error?.status === "quota_exceeded" || error?.data?.status === "quota_exceeded") {
+                const quotaMessage = error?.error || error?.data?.error || "VT+ quota exceeded.";
+                toast.error("Daily Limit Reached", {
+                    description: quotaMessage,
+                });
+                return;
+            }
+
+            // Extract error message from various possible structures
+            let errorMessage = "";
+            if (typeof error === "string") {
+                errorMessage = error;
+            } else if (error?.message) {
+                errorMessage = error.message;
+            } else if (error?.error?.message) {
+                errorMessage = error.error.message;
+            } else if (error?.toString) {
+                errorMessage = error.toString();
+            } else {
+                errorMessage = "Unknown error occurred";
+            }
+
+            const message = errorMessage.toLowerCase();
+            log.info({ message, originalError: error }, "Processing error message for toast");
+
+            try {
+                if (message.includes("api key is required") || message.includes("unauthorized")) {
+                    toast.error("API Key Required", {
+                        description:
+                            "Please configure your API keys in Settings to use the Knowledge Assistant.",
+                        action: {
+                            label: "Add Keys",
+                            onClick: () => window.open("/settings", "_blank"),
+                        },
+                    });
+                } else if (
+                    message.includes("rate limit") ||
+                    message.includes("too many requests")
+                ) {
+                    toast.error("Rate Limit Exceeded", {
+                        description: "Too many requests. Please try again in a few minutes.",
+                    });
+                } else if (
+                    message.includes("insufficient credits") ||
+                    message.includes("quota exceeded")
+                ) {
+                    toast.error("Credits Exhausted", {
+                        description:
+                            "Your API credits have been exhausted. Please check your provider account.",
+                    });
+                } else if (message.includes("network") || message.includes("fetch")) {
+                    toast.error("Network Error", {
+                        description: "Please check your internet connection and try again.",
+                    });
+                } else if (message.includes("timeout")) {
+                    toast.error("Request Timeout", {
+                        description: "The request took too long. Please try again.",
+                    });
+                } else if (
+                    message.includes("server error") ||
+                    message.includes("internal server")
+                ) {
+                    toast.error("Server Error", {
+                        description: "Our servers are experiencing issues. Please try again later.",
+                    });
+                } else if (message.includes("invalid") || message.includes("bad request")) {
+                    toast.error("Invalid Request", {
+                        description: "There was an issue with your request. Please try again.",
+                    });
+                } else {
+                    toast.error("Chat Error", {
+                        description: errorMessage || "Something went wrong. Please try again.",
+                    });
+                }
+                log.info({}, "Toast error shown successfully");
+            } catch (toastError) {
+                log.error(
+                    { toastError, originalError: error },
+                    "Failed to show error toast - this indicates a problem with the toast system",
+                );
+            }
+        },
+        [toast],
+    );
 
     const allApiKeys = getAllKeys();
     const hasGeminiKey = !!allApiKeys[API_KEY_NAMES.GOOGLE];
