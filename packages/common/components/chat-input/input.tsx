@@ -137,6 +137,14 @@ export const ChatInput = ({
     };
 
     const sendMessage = async () => {
+        log.debug({ 
+            chatMode, 
+            isSignedIn, 
+            isPlusTier,
+            hasTextInput: !!editor?.getText(),
+            editorText: editor?.getText()?.substring(0, 50) + "..."
+        }, "🚀 sendMessage called for Grok debug");
+        
         if (!isSignedIn) {
             // This specific check for chat mode auth requirement might be redundant
             // if the focus prompt already directs to login.
@@ -152,6 +160,7 @@ export const ChatInput = ({
 
         const messageText = editor?.getText();
         if (!messageText) {
+            log.debug({ chatMode, hasTextInput, editorExists: !!editor }, "Send blocked: no message text");
             return;
         }
 
@@ -167,6 +176,14 @@ export const ChatInput = ({
         })();
 
         if (needsApiKeyCheck && !hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)) {
+            log.debug({ 
+                chatMode, 
+                needsApiKeyCheck, 
+                isSignedIn, 
+                isPlusTier,
+                hasApiKey: hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)
+            }, "Send blocked: missing API key, showing BYOK dialog");
+            
             if (isSignedIn) {
                 // For signed-in users, show BYOK dialog
                 setPendingMessage(() => sendMessage);

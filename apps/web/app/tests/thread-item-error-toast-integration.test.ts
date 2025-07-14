@@ -4,9 +4,11 @@ import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
 
 // Mock the ThreadItem component behavior for error handling
 describe("ThreadItem Error Toast Integration", () => {
-    
     // Mock a ThreadItem with error status
-    const createMockThreadItem = (error: string, status: "ERROR" | "ABORTED" = "ERROR"): ThreadItemType => ({
+    const createMockThreadItem = (
+        error: string,
+        status: "ERROR" | "ABORTED" = "ERROR",
+    ): ThreadItemType => ({
         id: "test-thread-item",
         threadId: "test-thread",
         status,
@@ -20,18 +22,19 @@ describe("ThreadItem Error Toast Integration", () => {
     it("should trigger toast for credit balance error", async () => {
         const mockToast = vi.fn();
 
-        const errorMessage = "Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.";
+        const errorMessage =
+            "Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.";
         const threadItem = createMockThreadItem(errorMessage);
 
         // Simulate the useEffect logic from ThreadItem
         if (threadItem.error && threadItem.status === "ERROR") {
             const errorLower = errorMessage.toLowerCase();
             let title = "API Call Failed";
-            
+
             if (errorLower.includes("credit balance") || errorLower.includes("too low")) {
                 title = "💳 Credit Balance Too Low";
             }
-            
+
             mockToast({
                 title,
                 description: errorMessage,
@@ -51,7 +54,7 @@ describe("ThreadItem Error Toast Integration", () => {
 
     it("should trigger toast for network errors", async () => {
         const mockToast = vi.fn();
-        
+
         const errorMessage = "NetworkError when attempting to fetch resource";
         const threadItem = createMockThreadItem(errorMessage);
 
@@ -59,11 +62,11 @@ describe("ThreadItem Error Toast Integration", () => {
         if (threadItem.error && threadItem.status === "ERROR") {
             const errorLower = errorMessage.toLowerCase();
             let title = "API Call Failed";
-            
+
             if (errorLower.includes("network") || errorLower.includes("connection")) {
                 title = "🌐 Network Error";
             }
-            
+
             mockToast({
                 title,
                 description: errorMessage,
@@ -82,7 +85,7 @@ describe("ThreadItem Error Toast Integration", () => {
 
     it("should trigger toast with default variant for cancelled requests", async () => {
         const mockToast = vi.fn();
-        
+
         const errorMessage = "Request was cancelled by user";
         const threadItem = createMockThreadItem(errorMessage, "ABORTED");
 
@@ -91,12 +94,12 @@ describe("ThreadItem Error Toast Integration", () => {
             const errorLower = errorMessage.toLowerCase();
             let title = "API Call Failed";
             let variant: "destructive" | "default" = "destructive";
-            
+
             if (errorLower.includes("cancelled") || errorLower.includes("aborted")) {
                 title = "⏹️ Request Cancelled";
                 variant = "default";
             }
-            
+
             mockToast({
                 title,
                 description: errorMessage,
@@ -115,7 +118,7 @@ describe("ThreadItem Error Toast Integration", () => {
 
     it("should not trigger toast for thread items without errors", async () => {
         const mockToast = vi.fn();
-        
+
         const threadItem: ThreadItemType = {
             id: "test-thread-item",
             threadId: "test-thread",
@@ -124,11 +127,14 @@ describe("ThreadItem Error Toast Integration", () => {
             createdAt: new Date(),
             updatedAt: new Date(),
             parentId: null,
-            answer: { text: "Response text" }
+            answer: { text: "Response text" },
         };
 
         // Simulate the useEffect logic
-        if (threadItem.error && (threadItem.status === "ERROR" || threadItem.status === "ABORTED")) {
+        if (
+            threadItem.error &&
+            (threadItem.status === "ERROR" || threadItem.status === "ABORTED")
+        ) {
             mockToast({
                 title: "Should not be called",
                 description: "Should not be called",

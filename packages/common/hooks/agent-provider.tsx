@@ -322,7 +322,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             }
                         } catch {
                             // Fallback if JSON parsing fails
-                            finalErrorMessage = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
+                            finalErrorMessage = getRateLimitMessage.dailyLimit(
+                                isSignedIn,
+                                hasVtPlusAccess,
+                            );
                         }
                     } else if (response.status === 400) {
                         // For 400 errors, use the extracted message or provide context
@@ -330,7 +333,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             finalErrorMessage = `API Error (${response.status}): ${finalErrorMessage}`;
                         }
                     } else if (response.status >= 500) {
-                        finalErrorMessage = `Service Error (${response.status}): ${finalErrorMessage || 'Internal server error'}`;
+                        finalErrorMessage = `Service Error (${response.status}): ${finalErrorMessage || "Internal server error"}`;
                     }
 
                     setIsGenerating(false);
@@ -469,10 +472,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     "Fatal stream error",
                 );
                 setIsGenerating(false);
-                
+
                 // Extract meaningful error message
                 let errorMessage = "Something went wrong. Please try again.";
-                
+
                 if (streamError.name === "AbortError") {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
@@ -482,27 +485,40 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     });
                     return; // Early return for abort errors
                 }
-                
+
                 // Check for specific API errors in the error message
                 if (streamError.message) {
                     const errorMsg = streamError.message.toLowerCase();
-                    
+
                     if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
                         errorMessage = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
-                    } else if (errorMsg.includes("credit balance") || errorMsg.includes("too low")) {
-                        errorMessage = "Your credit balance is too low to access the API. Please go to Plans & Billing to upgrade or purchase credits.";
-                    } else if (errorMsg.includes("unauthorized") || errorMsg.includes("invalid api key")) {
-                        errorMessage = "Authentication failed. Please check your API key in settings.";
-                    } else if (errorMsg.includes("503") || errorMsg.includes("service unavailable")) {
-                        errorMessage = "Service is temporarily unavailable. Please try again later.";
+                    } else if (
+                        errorMsg.includes("credit balance") ||
+                        errorMsg.includes("too low")
+                    ) {
+                        errorMessage =
+                            "Your credit balance is too low to access the API. Please go to Plans & Billing to upgrade or purchase credits.";
+                    } else if (
+                        errorMsg.includes("unauthorized") ||
+                        errorMsg.includes("invalid api key")
+                    ) {
+                        errorMessage =
+                            "Authentication failed. Please check your API key in settings.";
+                    } else if (
+                        errorMsg.includes("503") ||
+                        errorMsg.includes("service unavailable")
+                    ) {
+                        errorMessage =
+                            "Service is temporarily unavailable. Please try again later.";
                     } else if (errorMsg.includes("network") || errorMsg.includes("connection")) {
-                        errorMessage = "Network error occurred. Please check your connection and try again.";
+                        errorMessage =
+                            "Network error occurred. Please check your connection and try again.";
                     } else if (streamError.message.length < 200) {
                         // Use the actual error message if it's not too long
                         errorMessage = streamError.message;
                     }
                 }
-                
+
                 updateThreadItem(body.threadId, {
                     id: body.threadItemId,
                     status: "ERROR",
