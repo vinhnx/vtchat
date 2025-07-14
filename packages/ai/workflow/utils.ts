@@ -166,6 +166,7 @@ export const generateTextWithGeminiSearch = async ({
             true,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
+            isVtPlusUser,
         );
         log.info("Selected model result:", {
             selectedModel: selectedModel ? "object" : selectedModel,
@@ -521,6 +522,29 @@ export const generateText = async ({
     mode?: string;
 }) => {
     try {
+        log.info(
+            {
+                model: model.toString(),
+                hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
+                anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
+                mode,
+                userTier,
+            },
+            "generateText called",
+        );
+
+        // Debug logging for generateText
+        log.info(
+            {
+                model: model.toString(),
+                hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
+                anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
+                mode,
+                userTier,
+            },
+            "🤖 generateText called",
+        );
+
         if (signal?.aborted) {
             throw new Error("Operation aborted");
         }
@@ -581,6 +605,7 @@ export const generateText = async ({
             useSearchGrounding,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
+            isVtPlusUser,
         );
 
         // Set up provider options based on model's reasoning type
@@ -810,6 +835,7 @@ export const generateObject = async ({
             undefined,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
+            isVtPlusUser,
         );
         log.info("Selected model for generateObject:", {
             hasModel: !!selectedModel,

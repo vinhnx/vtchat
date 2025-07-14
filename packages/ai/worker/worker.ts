@@ -104,6 +104,27 @@ ctx.addEventListener("message", async (event: MessageEvent) => {
 
                 self.JINA_API_KEY = apiKeys.JINA_API_KEY;
                 self.NEXT_PUBLIC_APP_URL = apiKeys.NEXT_PUBLIC_APP_URL;
+
+                // Debug logging for API keys
+                log.info(
+                    {
+                        mode,
+                        hasAnthropicKey: !!apiKeys.ANTHROPIC_API_KEY,
+                        anthropicKeyLength: apiKeys.ANTHROPIC_API_KEY?.length,
+                        allKeys: Object.keys(newApiKeys).filter((key) => newApiKeys[key]),
+                    },
+                    "Worker API keys set",
+                );
+
+                // Debug logging for API keys
+                log.info(
+                    {
+                        mode,
+                        hasAnthropicKey: !!apiKeys.ANTHROPIC_API_KEY,
+                        anthropicKeyLength: apiKeys.ANTHROPIC_API_KEY?.length,
+                    },
+                    "🔧 Worker received API keys",
+                );
             }
 
             // Initialize the workflow

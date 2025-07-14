@@ -40,7 +40,11 @@ declare global {
 
 // Helper function to get API key from env, global, or BYOK keys
 // Note: For LM Studio, this returns the base URL instead of an API key
-const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>): string => {
+const getApiKey = (
+    provider: ProviderEnumType,
+    byokKeys?: Record<string, string>,
+    isVtPlus?: boolean,
+): string => {
     // First check BYOK keys if provided
     if (byokKeys) {
         const keyMapping: Record<ProviderEnumType, string> = {
@@ -59,25 +63,26 @@ const getApiKey = (provider: ProviderEnumType, byokKeys?: Record<string, string>
         if (byokKey) return byokKey;
     }
 
-    // Check server-side environment variables if available
+    // Server-funded keys only for whitelisted providers (VT+ policy)
     if (typeof process !== "undefined" && process.env) {
-        const envKeyMapping: Record<ProviderEnumType, string> = {
-            [Providers.OPENAI]: process.env.OPENAI_API_KEY || "",
-            [Providers.ANTHROPIC]: process.env.ANTHROPIC_API_KEY || "",
-            [Providers.TOGETHER]: process.env.TOGETHER_API_KEY || "",
-            [Providers.GOOGLE]: process.env.GEMINI_API_KEY || "",
-            [Providers.FIREWORKS]: process.env.FIREWORKS_API_KEY || "",
-            [Providers.XAI]: process.env.XAI_API_KEY || "",
-            [Providers.OPENROUTER]: process.env.OPENROUTER_API_KEY || "",
-            [Providers.LMSTUDIO]: process.env.LMSTUDIO_BASE_URL || "",
-            [Providers.OLLAMA]: process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434",
-        };
-
-        const envKey = envKeyMapping[provider];
-        if (envKey) return envKey;
+        switch (provider) {
+            case Providers.GOOGLE:
+                // Only Gemini can use server-funded API key, and only for VT+ users
+                if (isVtPlus) {
+                    return process.env.GEMINI_API_KEY || "";
+                }
+                return "";
+            case Providers.LMSTUDIO:
+                return process.env.LMSTUDIO_BASE_URL || "";
+            case Providers.OLLAMA:
+                return process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
+            default:
+                // All other providers MUST use BYOK - no server-funded keys
+                return "";
+        }
     }
 
-    // For worker environments (use self)
+    // For worker environments (use self) - BYOK only
     if (typeof self !== "undefined") {
         // Check if AI_API_KEYS exists on self
         if ((self as any).AI_API_KEYS?.[provider]) {
@@ -102,8 +107,9 @@ export const getProviderInstance = (
     byokKeys?: Record<string, string>,
     isFreeModel?: boolean,
     claude4InterleavedThinking?: boolean,
+    isVtPlus?: boolean,
 ): any => {
-    const apiKey = getApiKey(provider, byokKeys);
+    const apiKey = getApiKey(provider, byokKeys, isVtPlus);
 
     log.info("Provider instance debug:", {
         provider,
@@ -299,6 +305,7 @@ export const getLanguageModel = (
     useSearchGrounding?: boolean,
     cachedContent?: string,
     claude4InterleavedThinking?: boolean,
+    isVtPlus?: boolean,
 ) => {
     log.info("=== getLanguageModel START ===");
     log.info("Parameters:", {
@@ -329,6 +336,7 @@ export const getLanguageModel = (
             byokKeys,
             model?.isFree,
             claude4InterleavedThinking,
+            isVtPlus,
         );
         log.info("Provider instance created:", {
             hasInstance: !!instance,

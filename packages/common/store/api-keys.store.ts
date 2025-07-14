@@ -203,8 +203,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 // For non-local models, user must be signed in
                 if (!isSignedIn) return false;
 
-                // VT+ users don't need API keys for Gemini models
-                if (isVtPlus && isGeminiModel(chatMode)) {
+                // VT+ users don't need API keys for Gemini models and research modes
+                if (
+                    isVtPlus &&
+                    (isGeminiModel(chatMode) ||
+                        chatMode === ChatMode.Deep ||
+                        chatMode === ChatMode.Pro)
+                ) {
                     return true; // VT+ users can use system API key
                 }
 

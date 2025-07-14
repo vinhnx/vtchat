@@ -187,6 +187,28 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 if (data.type === "done") {
                     setIsGenerating(false);
+
+                    // Handle workflow errors
+                    if (data.status === "error") {
+                        log.error(
+                            { error: data.error, threadId: data.threadId },
+                            "❌ Workflow error",
+                        );
+                        log.error(
+                            { error: data.error, threadId: data.threadId },
+                            "Workflow failed",
+                        );
+
+                        // Update thread item with error status
+                        if (data.threadItemId) {
+                            updateThreadItem(data.threadId, {
+                                id: data.threadItemId,
+                                status: "FAILED",
+                                content: `Error: ${data.error}`,
+                            });
+                        }
+                    }
+
                     // Don't delete the thread item from memory as it's needed for future reference
                     // The threadItemMap serves as a cache and should retain completed items
                 }
@@ -565,16 +587,39 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 attachments: multiModalAttachments,
             });
 
-            // Check if this is a free model that should use server-side API
-            const isFreeModel = mode === ChatMode.GEMINI_2_5_FLASH_LITE;
+            // Import routing utilities
+            const { shouldUseServerSideAPI: mustUseServer } = await import("../lib/ai-routing");
+            const { logRoutingDecision, logExecutionPath } = await import("../lib/agent-submit");
 
-            // For VT+ users, all Gemini models should use server-side API directly
-            const shouldUseServerSideAPI = isFreeModel || (hasVtPlusAccess && isGeminiModel(mode));
+            // Determine routing based on model, user tier, and features
+            const shouldUseServerSideAPI = mustUseServer({
+                mode,
+                hasVtPlus: hasVtPlusAccess,
+                deepResearch: mode === ChatMode.Deep,
+                proSearch: mode === ChatMode.Pro,
+                rag: false, // TODO: Add RAG feature detection
+            });
+
+            // Log routing decision for debugging
+            logRoutingDecision({
+                mode,
+                isFreeModel: mode === ChatMode.GEMINI_2_5_FLASH_LITE,
+                hasVtPlusAccess,
+                needsServerSide:
+                    (hasVtPlusAccess &&
+                        [ChatMode.CLAUDE_4_SONNET, ChatMode.GPT_4o].includes(mode)) ||
+                    isGeminiModel(mode),
+                shouldUseServerSideAPI,
+                hasApiKey: hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess),
+                deepResearch: mode === ChatMode.Deep,
+                proSearch: mode === ChatMode.Pro,
+            });
 
             if (
                 hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess) &&
                 !shouldUseServerSideAPI
             ) {
+                logExecutionPath("client-workflow", mode);
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);
@@ -589,9 +634,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     });
                 });
 
+                const apiKeys = getAllKeys();
                 log.info(
-                    { useWebSearch, useMathCalculator, useCharts },
+                    { useWebSearch, useMathCalculator, useCharts, apiKeys: Object.keys(apiKeys) },
                     "About to call startWorkflow",
+                );
+                log.info(
+                    {
+                        mode,
+                        hasAnthropicKey: !!apiKeys.ANTHROPIC_API_KEY,
+                        anthropicKeyLength: apiKeys.ANTHROPIC_API_KEY?.length,
+                        allKeys: Object.keys(apiKeys).filter((key) => apiKeys[key]),
+                    },
+                    "🚀 Starting workflow with API keys",
                 );
                 startWorkflow({
                     mode,
@@ -605,18 +660,37 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
                     showSuggestions: showSuggestions ?? true,
-                    apiKeys: getAllKeys(),
+                    apiKeys: apiKeys,
                     thinkingMode,
                     userTier: hasVtPlusAccess ? UserTier.PLUS : UserTier.FREE,
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
-                // BUT NOT for free models or VT+ users with Gemini models which don't require user API keys
+                // BUT NOT for free models or VT+ users with server-funded models which don't require user API keys
                 if (isSignedIn && !shouldUseServerSideAPI) {
+                    logExecutionPath("api-key-modal", mode);
                     setModalChatMode(mode);
                     setShowApiKeyModal(true);
                     setIsGenerating(false);
                     return;
+                }
+
+                logExecutionPath("server-api", mode);
+
+                // For server-side API, remove provider-specific keys to prevent mixing with server-funded keys
+                const { filterApiKeysForServerSide, getProviderKeyToRemove } = await import(
+                    "../lib/ai-routing"
+                );
+                const { logApiKeyRemoval } = await import("../lib/agent-submit");
+                const serverApiKeys = getAllKeys();
+                let finalApiKeys = serverApiKeys;
+
+                if (shouldUseServerSideAPI) {
+                    finalApiKeys = filterApiKeysForServerSide(serverApiKeys, mode);
+                    const removedKey = getProviderKeyToRemove(mode);
+                    if (removedKey) {
+                        logApiKeyRemoval(mode, removedKey.replace("_API_KEY", ""));
+                    }
                 }
 
                 runAgent({
@@ -631,7 +705,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
                     showSuggestions: showSuggestions ?? true,
-                    apiKeys: getAllKeys(),
+                    apiKeys: finalApiKeys,
                     userTier: hasVtPlusAccess ? UserTier.PLUS : UserTier.FREE,
                 });
             }

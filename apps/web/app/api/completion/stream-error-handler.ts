@@ -43,6 +43,8 @@ export enum AuthErrorKeywords {
     UNAUTHORIZED = "unauthorized",
     INVALID_API_KEY = "invalid api key",
     FORBIDDEN = "forbidden",
+    API_KEY_REQUIRED = "api key required",
+    MISSING_API_KEY = "missing api key",
 }
 
 export enum ServiceErrorKeywords {
@@ -202,6 +204,8 @@ export async function handleStreamError({
         errorString.includes(AuthErrorKeywords.UNAUTHORIZED) ||
         errorString.includes(AuthErrorKeywords.INVALID_API_KEY) ||
         errorString.includes(AuthErrorKeywords.FORBIDDEN) ||
+        errorString.includes(AuthErrorKeywords.API_KEY_REQUIRED) ||
+        errorString.includes(AuthErrorKeywords.MISSING_API_KEY) ||
         errorString.includes(HttpStatusCodes.UNAUTHORIZED) ||
         errorString.includes(HttpStatusCodes.FORBIDDEN)
     ) {
