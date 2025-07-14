@@ -4,12 +4,11 @@ import { isGeminiModel } from "@repo/shared/utils";
 const FREE_SERVER_MODELS: ChatMode[] = [ChatMode.GEMINI_2_5_FLASH_LITE];
 
 const PLUS_SERVER_MODELS: ChatMode[] = [
-    ChatMode.CLAUDE_4_SONNET,
-    ChatMode.CLAUDE_4_OPUS,
-    ChatMode.GPT_4o,
-    ChatMode.GPT_4o_Mini,
-    ChatMode.DEEPSEEK_R1,
-    ChatMode.GROK_BETA,
+    // Only Gemini models are server-funded for VT+ users
+    ChatMode.GEMINI_2_5_PRO,
+    ChatMode.GEMINI_2_5_FLASH,
+    ChatMode.GEMINI_2_5_FLASH_LITE,
+    // All other models (Claude, OpenAI, xAI, etc.) require BYOK even for VT+ users
 ];
 
 export type ServerSideAPIOpts = {
@@ -92,19 +91,33 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
 }
 
 /**
- * Remove ALL provider API keys for server-side calls to prevent mixing with server-funded keys
- * This is critical for security and cost attribution
+ * Filter API keys for server-side calls based on model type
+ * - For server-funded models: Remove ALL provider keys to prevent mixing
+ * - For BYOK models: Keep only the required provider key for that model
  */
 export function filterApiKeysForServerSide(
     apiKeys: Record<string, string>,
+    mode: ChatMode,
+    isServerFunded: boolean = false,
 ): Record<string, string> {
     const filtered: Record<string, string> = {};
 
-    // Only keep non-provider API keys (e.g., SERP_API_KEY, etc.)
+    // Keep non-provider API keys (SERP_API_KEY, etc.)
     for (const [key, value] of Object.entries(apiKeys)) {
         if (!PROVIDER_API_KEYS.includes(key)) {
             filtered[key] = value;
         }
+    }
+
+    // For server-funded models, don't include any provider keys
+    if (isServerFunded) {
+        return filtered;
+    }
+
+    // For BYOK models, include only the required provider key
+    const requiredKey = getProviderKeyToRemove(mode);
+    if (requiredKey && apiKeys[requiredKey]) {
+        filtered[requiredKey] = apiKeys[requiredKey];
     }
 
     return filtered;

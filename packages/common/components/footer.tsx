@@ -22,12 +22,16 @@ const links = [
         href: "mailto:hello@vtdotai.io.vn",
     },
     {
-        title: "X/Twitter",
-        href: "https://x.com/vtdotai",
+        title: "Help Center",
+        href: "/faq",
     },
     {
         title: "About",
         href: "/about",
+    },
+    {
+        title: "X/Twitter",
+        href: "https://x.com/vtdotai",
     },
 ];
 

@@ -92,7 +92,7 @@ export default function GlobalError({ error }: { error: Error }) {
                                     e.currentTarget.style.backgroundColor = "#0f172a";
                                 }}
                             >
-                                Go back home
+                                Back to VT
                             </a>
                         </div>
                     </main>

@@ -9,10 +9,10 @@ import { VTPlusAccess } from "@repo/shared/config/vt-plus-features";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { checkSubscriptionOptimized } from "../../../lib/auth/optimized-subscription-check";
-import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 
 /**
  * Get comprehensive subscription status for a user

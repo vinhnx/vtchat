@@ -37,7 +37,7 @@ async function testAnthropicStreaming() {
     try {
         console.log("🚀 Starting streaming test...\n");
 
-        let textChunks = [];
+        const textChunks = [];
         let eventCount = 0;
 
         // Create streaming request
@@ -81,7 +81,7 @@ async function testAnthropicStreaming() {
         console.log(`- Text chunks: ${textChunks.length}`);
         console.log(`- Total characters: ${textChunks.join("").length}`);
         console.log(`- Model used: ${message.model}`);
-        console.log(`- Token usage:`, message.usage);
+        console.log("- Token usage:", message.usage);
 
         console.log("\n🎉 Streaming test completed successfully!");
     } catch (error) {
@@ -112,7 +112,7 @@ async function testLowLevelStreaming() {
             stream: true,
         });
 
-        let eventTypes = [];
+        const eventTypes = [];
         let textContent = "";
 
         console.log("📡 Processing raw stream events...\n");

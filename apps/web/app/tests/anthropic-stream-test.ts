@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from "vitest";
 import Anthropic from "@anthropic-ai/sdk";
+import { beforeAll, describe, expect, it } from "vitest";
 
 describe("Anthropic API Streaming Test", () => {
     let client: Anthropic;
@@ -69,7 +69,7 @@ describe("Anthropic API Streaming Test", () => {
     it("should handle streaming with event listeners", async () => {
         let contentStartEvents = 0;
         let contentStopEvents = 0;
-        let textChunks: string[] = [];
+        const textChunks: string[] = [];
         let messageCompleted = false;
 
         const stream = client.messages

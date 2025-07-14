@@ -9,7 +9,7 @@ export default function NotFound() {
             title="Page Not Found"
             description="Sorry, we couldn't find the page you're looking for."
             actionButton={{
-                text: "Go back home",
+                text: "Back to VT",
                 href: "/",
             }}
         />

@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 title="Admin Access Required"
                 description="You need admin privileges to access this dashboard."
                 actionButton={{
-                    text: "Go back home",
+                    text: "Back to VT",
                     href: "/",
                 }}
             />

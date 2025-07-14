@@ -234,8 +234,8 @@ function makeRequest(endpoint, type = "hourly") {
                     if (data.trim().startsWith("<!DOCTYPE") || data.trim().startsWith("<html")) {
                         console.error(`❌ Received HTML instead of JSON from ${url}`);
                         console.error(`Status: ${res.statusCode}`);
-                        console.error(`Headers:`, res.headers);
-                        console.error(`Response preview:`, data.substring(0, 200));
+                        console.error("Headers:", res.headers);
+                        console.error("Response preview:", data.substring(0, 200));
                         reject(
                             new Error(
                                 `Server returned HTML instead of JSON. Status: ${res.statusCode}`,
@@ -262,7 +262,7 @@ function makeRequest(endpoint, type = "hourly") {
                     }
                 } catch (error) {
                     console.error("❌ Failed to parse response:", error);
-                    console.error(`Raw response (first 500 chars):`, data.substring(0, 500));
+                    console.error("Raw response (first 500 chars):", data.substring(0, 500));
                     reject(error);
                 }
             });

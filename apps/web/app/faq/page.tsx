@@ -684,52 +684,6 @@ function HelpCenterContent() {
                             </AccordionContent>
                         </AccordionItem>
 
-                        {/* Intelligent Tool Router */}
-                        <AccordionItem value="intelligent-tool-router">
-                            <AccordionTrigger className="font-medium">
-                                How does the intelligent tool router work?
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <p className="text-muted-foreground">
-                                    VT's intelligent tool router uses AI to automatically activate
-                                    the right tools based on your queries, making your experience
-                                    seamless and efficient:
-                                </p>
-                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
-                                    <li className="text-muted-foreground">
-                                        <strong>Free Feature:</strong> Available to all users with
-                                        AI-powered semantic routing
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Smart Detection:</strong> Automatically detects when
-                                        you need charts, calculations, web search, or document
-                                        processing
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>OpenAI Embeddings:</strong> Uses advanced AI
-                                        embeddings to understand query intent and context
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Pattern Matching:</strong> Fast regex patterns for
-                                        instant tool activation on common requests
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Automatic Activation:</strong> No need to manually
-                                        toggle tools - the AI does it for you
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Context Aware:</strong> Avoids duplicate activations
-                                        and respects your current tool settings
-                                    </li>
-                                </ul>
-                                <p className="text-muted-foreground mt-4 text-sm">
-                                    Just type naturally like "create a chart", "calculate 15% of
-                                    1000", or "search for latest AI news" and watch the router
-                                    automatically activate the right tools!
-                                </p>
-                            </AccordionContent>
-                        </AccordionItem>
-
                         {/* Chart Visualization */}
                         <AccordionItem value="chart-visualization">
                             <AccordionTrigger className="font-medium">
@@ -1014,69 +968,6 @@ function HelpCenterContent() {
                             </AccordionContent>
                         </AccordionItem>
 
-                        {/* Development & Deployment */}
-                        <AccordionItem value="development-deployment">
-                            <AccordionTrigger className="font-medium">
-                                How can I set up VT locally for development?
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <p className="text-muted-foreground">
-                                    VT supports local development with comprehensive setup
-                                    documentation:
-                                </p>
-                                <ol className="mt-4 list-outside list-decimal space-y-2 pl-4">
-                                    <li className="text-muted-foreground">
-                                        Clone the repository and install dependencies with Bun
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        Set up environment variables (Better Auth, database, API
-                                        keys)
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        Configure PostgreSQL database (local or Neon)
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        Run development server with <code>bun dev</code>
-                                    </li>
-                                </ol>
-                                <p className="text-muted-foreground mt-4 text-sm">
-                                    Check our comprehensive local development guide for detailed
-                                    setup instructions.
-                                </p>
-                            </AccordionContent>
-                        </AccordionItem>
-
-                        {/* Environment & Configuration */}
-                        <AccordionItem value="environment-configuration">
-                            <AccordionTrigger className="font-medium">
-                                What environment variables do I need?
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <p className="text-muted-foreground">
-                                    VT requires several environment variables for different
-                                    features:
-                                </p>
-                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
-                                    <li className="text-muted-foreground">
-                                        <strong>Authentication:</strong> BETTER_AUTH_SECRET,
-                                        BETTER_AUTH_URL
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Database:</strong> DATABASE_URL (PostgreSQL with
-                                        Neon or local)
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>AI Providers:</strong> API keys for OpenAI,
-                                        Anthropic, Google, etc. (BYOK)
-                                    </li>
-                                    <li className="text-muted-foreground">
-                                        <strong>Payment:</strong> CREEM_API_KEY, CREEM_PRODUCT_ID
-                                        (optional)
-                                    </li>
-                                </ul>
-                            </AccordionContent>
-                        </AccordionItem>
-
                         {/* Data Export & Backup */}
                         <AccordionItem value="data-export-backup">
                             <AccordionTrigger className="font-medium">
@@ -1172,8 +1063,7 @@ function HelpCenterContent() {
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        Use the feedback widget in the app for bug reports and
-                                        suggestions
+                                        Email us at hello@vtchat.io.vn.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Check our documentation for detailed feature explanations
@@ -1183,7 +1073,7 @@ function HelpCenterContent() {
                                         questions
                                     </li>
                                     <li className="text-muted-foreground">
-                                        Contact our support team for account-related issues
+                                        Contact us for account-related issues
                                     </li>
                                 </ul>
                             </AccordionContent>

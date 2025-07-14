@@ -4,7 +4,7 @@ import { ApiRoutes } from "@repo/shared/constants/routes";
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 import { useToast } from "@repo/ui";
 import { useRouter } from "next/navigation";

@@ -677,17 +677,28 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 logExecutionPath("server-api", mode);
 
-                // For server-side API, remove provider-specific keys to prevent mixing with server-funded keys
-                const { filterApiKeysForServerSide, getProviderKeyToRemove } = await import(
-                    "../lib/ai-routing"
-                );
-                const { logApiKeyRemoval } = await import("../lib/agent-submit");
+                // For ALL server-side API calls, filter API keys based on model type
+                const { filterApiKeysForServerSide } = await import("../lib/ai-routing");
                 const serverApiKeys = getAllKeys();
-                let finalApiKeys = serverApiKeys;
 
-                if (shouldUseServerSideAPI) {
-                    finalApiKeys = filterApiKeysForServerSide(serverApiKeys);
-                    log.info({ mode }, "🔐 Removed ALL provider API keys for server-side call");
+                // A request to /api/completion is always a server-side call → we must filter on EVERY path
+                const isServerFundedModel = [
+                    ChatMode.GEMINI_2_5_FLASH_LITE, // Free server model
+                    ...(hasVtPlusAccess
+                        ? [ChatMode.GEMINI_2_5_PRO, ChatMode.GEMINI_2_5_FLASH]
+                        : []), // VT+ server models
+                ].includes(mode);
+
+                const finalApiKeys = filterApiKeysForServerSide(
+                    serverApiKeys,
+                    mode,
+                    isServerFundedModel,
+                );
+
+                if (isServerFundedModel) {
+                    log.info({ mode }, "🔐 Server-funded model: Removed ALL provider API keys");
+                } else {
+                    log.info({ mode }, "🔑 BYOK model: Kept required provider API key only");
                 }
 
                 runAgent({

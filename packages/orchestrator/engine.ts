@@ -1,5 +1,5 @@
-import { EventEmitter } from "events";
 import { log } from "@repo/shared/logger";
+import { EventEmitter } from "events";
 import type { Context, ContextSchemaDefinition } from "./context";
 import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
 import { ExecutionContext } from "./execution-context";

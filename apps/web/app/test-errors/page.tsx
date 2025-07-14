@@ -15,7 +15,7 @@ const TestErrorPage: NextPage = () => {
                     title="Page Not Found"
                     description="Sorry, we couldn't find the page you're looking for."
                     actionButton={{
-                        text: "Go back home",
+                        text: "Back to VT",
                         href: "/",
                     }}
                 />
@@ -41,7 +41,7 @@ const TestErrorPage: NextPage = () => {
                     title="Admin Access Required"
                     description="You need admin privileges to access this dashboard."
                     actionButton={{
-                        text: "Go back home",
+                        text: "Back to VT",
                         href: "/",
                     }}
                 />
@@ -54,7 +54,7 @@ const TestErrorPage: NextPage = () => {
                     title="Something went wrong"
                     description="It seems we encountered an unexpected error. Please try refreshing the page or check back later."
                     actionButton={{
-                        text: "Go back home",
+                        text: "Back to VT",
                         href: "/",
                     }}
                 />

@@ -37,7 +37,7 @@ export function getSubscriptionStatusInfo(
                 actionRequired: false,
             };
 
-        case SubscriptionStatusEnum.TRIALING:
+        case SubscriptionStatusEnum.TRIALING: {
             const trialMessage =
                 daysUntilExpiry && daysUntilExpiry > 0
                     ? `Your VT+ trial has ${daysUntilExpiry} days remaining.`
@@ -50,9 +50,10 @@ export function getSubscriptionStatusInfo(
                 actionRequired: daysUntilExpiry && daysUntilExpiry <= 7,
                 actionText: "Upgrade to VT+",
             };
+        }
 
         case SubscriptionStatusEnum.CANCELED:
-        case SubscriptionStatusEnum.CANCELLED:
+        case SubscriptionStatusEnum.CANCELLED: {
             if (isExpired) {
                 return {
                     hasAccess: false,
@@ -76,6 +77,7 @@ export function getSubscriptionStatusInfo(
                 actionText: "Reactivate VT+",
                 isGracePeriod: true,
             };
+        }
 
         case SubscriptionStatusEnum.PAST_DUE:
             if (isExpired) {

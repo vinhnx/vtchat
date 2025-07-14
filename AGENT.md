@@ -34,6 +34,7 @@
 
 ## Development Workflow
 
+- Make sure you DO NOT CREATE ANY debug and test FILES IN ./ ROOT DIRECTORY. Only use files in /temps or apps/web/app/tests/ or /scripts.
 - Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
 - **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
@@ -45,7 +46,14 @@
 
 ## Deployment
 
-- **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io
+⚠️ **CRITICAL DEPLOYMENT POLICY** ⚠️
+**DO NOT DEPLOY TO PRODUCTION FLY.IO WITHOUT EXPLICIT USER APPROVAL**
+
+- NEVER run `./deploy-fly.sh` without user permission
+- Always ask for approval before any production deployment
+- This applies to ALL deployment commands and scripts
+
+- **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
     - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
     - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
     - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment

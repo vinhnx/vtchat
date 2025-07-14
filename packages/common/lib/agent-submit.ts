@@ -1,5 +1,4 @@
-import { ChatMode } from "@repo/shared/config";
-import { UserTier } from "@repo/shared/config";
+import type { ChatMode, UserTier } from "@repo/shared/config";
 import { log } from "@repo/shared/lib/logger";
 import type { CoreMessage } from "ai";
 

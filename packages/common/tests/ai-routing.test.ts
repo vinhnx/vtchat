@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 import {
-    shouldUseServerSideAPI,
-    needsServerSideForPlus,
-    getProviderKeyToRemove,
     filterApiKeysForServerSide,
+    getProviderKeyToRemove,
+    needsServerSideForPlus,
+    shouldUseServerSideAPI,
 } from "../lib/ai-routing";
 
 describe("shouldUseServerSideAPI", () => {

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, afterEach } from "vitest";
 import Anthropic from "@anthropic-ai/sdk";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 describe("Advanced Anthropic Streaming Tests", () => {
     let client: Anthropic;
@@ -191,7 +191,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
     }, 30000);
 
     it("should track message metadata and usage", async () => {
-        let streamEvents: any[] = [];
+        const streamEvents: any[] = [];
         let messageMetadata: any = null;
 
         const stream = client.messages
@@ -291,7 +291,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
             stream: true,
         });
 
-        let textParts: string[] = [];
+        const textParts: string[] = [];
         let usage: any = null;
 
         for await (const event of stream2) {
