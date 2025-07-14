@@ -137,7 +137,6 @@ export const ChatInput = ({
     };
 
     const sendMessage = async () => {
-
         if (!isSignedIn) {
             // This specific check for chat mode auth requirement might be redundant
             // if the focus prompt already directs to login.
@@ -168,7 +167,6 @@ export const ChatInput = ({
         })();
 
         if (needsApiKeyCheck && !hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)) {
-
             if (isSignedIn) {
                 // For signed-in users, show BYOK dialog
                 setPendingMessage(() => sendMessage);
