@@ -15,11 +15,14 @@ export async function GET(request: NextRequest) {
 
         const adminStatus = await isUserAdmin(session.user.id);
 
-        log.debug({
-            userId: session.user.id,
-            email: session.user.email,
-            adminStatus,
-        }, "Admin status check");
+        log.debug(
+            {
+                userId: session.user.id,
+                email: session.user.email,
+                adminStatus,
+            },
+            "Admin status check",
+        );
 
         return NextResponse.json({ isAdmin: adminStatus });
     } catch (error) {
