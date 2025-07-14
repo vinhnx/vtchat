@@ -686,11 +686,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 let finalApiKeys = serverApiKeys;
 
                 if (shouldUseServerSideAPI) {
-                    finalApiKeys = filterApiKeysForServerSide(serverApiKeys, mode);
-                    const removedKey = getProviderKeyToRemove(mode);
-                    if (removedKey) {
-                        logApiKeyRemoval(mode, removedKey.replace("_API_KEY", ""));
-                    }
+                    finalApiKeys = filterApiKeysForServerSide(serverApiKeys);
+                    log.info({ mode }, "🔐 Removed ALL provider API keys for server-side call");
                 }
 
                 runAgent({

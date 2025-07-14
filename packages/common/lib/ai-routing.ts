@@ -41,7 +41,7 @@ export function shouldUseServerSideAPI({
     }
 
     // 2. VT+ models that we fund on the backend?
-    if (hasVtPlus && (PLUS_SERVER_MODELS.includes(mode) || isGeminiModel(mode))) {
+    if (hasVtPlus && PLUS_SERVER_MODELS.includes(mode)) {
         return true;
     }
 
@@ -58,11 +58,25 @@ export function shouldUseServerSideAPI({
  * Helper to determine if a model needs server-side API for VT+ users
  */
 export function needsServerSideForPlus(mode: ChatMode): boolean {
-    return PLUS_SERVER_MODELS.includes(mode) || isGeminiModel(mode);
+    return PLUS_SERVER_MODELS.includes(mode);
 }
 
 /**
+ * List of all provider API keys that should be removed for server-side calls
+ */
+const PROVIDER_API_KEYS = [
+    "ANTHROPIC_API_KEY",
+    "OPENAI_API_KEY",
+    "GEMINI_API_KEY",
+    "XAI_API_KEY",
+    "GROQ_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "FIREWORKS_API_KEY",
+];
+
+/**
  * Helper to determine which API key to remove for server-side calls
+ * @deprecated Use filterApiKeysForServerSide instead
  */
 export function getProviderKeyToRemove(mode: ChatMode): string | null {
     if (isGeminiModel(mode)) {
@@ -78,17 +92,20 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
 }
 
 /**
- * Remove provider-specific API key for server-side calls to prevent mixing
+ * Remove ALL provider API keys for server-side calls to prevent mixing with server-funded keys
+ * This is critical for security and cost attribution
  */
 export function filterApiKeysForServerSide(
     apiKeys: Record<string, string>,
-    mode: ChatMode,
 ): Record<string, string> {
-    const keyToRemove = getProviderKeyToRemove(mode);
-    if (!keyToRemove) {
-        return apiKeys;
+    const filtered: Record<string, string> = {};
+
+    // Only keep non-provider API keys (e.g., SERP_API_KEY, etc.)
+    for (const [key, value] of Object.entries(apiKeys)) {
+        if (!PROVIDER_API_KEYS.includes(key)) {
+            filtered[key] = value;
+        }
     }
 
-    const { [keyToRemove]: _, ...restKeys } = apiKeys;
-    return restKeys;
+    return filtered;
 }
