@@ -1,5 +1,6 @@
 import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { log } from "@repo/shared/lib/logger";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import {
@@ -261,7 +262,7 @@ export async function GET(request: NextRequest) {
             performanceMetrics,
         });
     } catch (error) {
-        console.error("Failed to fetch system metrics:", error);
+        log.error({ error }, "Failed to fetch system metrics");
         return NextResponse.json({ error: "Failed to fetch system metrics" }, { status: 500 });
     }
 }

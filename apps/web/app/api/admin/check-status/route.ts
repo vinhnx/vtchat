@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { log } from "@repo/shared/lib/logger";
 import { isUserAdmin } from "@/lib/admin";
 import { auth } from "@/lib/auth-server";
 
@@ -14,15 +15,15 @@ export async function GET(request: NextRequest) {
 
         const adminStatus = await isUserAdmin(session.user.id);
 
-        console.log("Admin status check:", {
+        log.debug({
             userId: session.user.id,
             email: session.user.email,
             adminStatus,
-        });
+        }, "Admin status check");
 
         return NextResponse.json({ isAdmin: adminStatus });
     } catch (error) {
-        console.error("Error checking admin status:", error);
+        log.error({ error }, "Error checking admin status");
         return NextResponse.json({ isAdmin: false });
     }
 }

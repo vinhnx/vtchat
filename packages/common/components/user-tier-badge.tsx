@@ -29,7 +29,6 @@ export function UserTierBadge({
 }: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
 
-
     // Use isPlusTier which now correctly checks both isVtPlus && isActive
     const isPlus = isPlusTier;
 

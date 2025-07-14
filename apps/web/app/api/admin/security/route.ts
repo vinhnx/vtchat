@@ -1,5 +1,6 @@
 import { and, count, desc, eq, gte, isNotNull, ne, or, sql, sum } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { log } from "@repo/shared/lib/logger";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import { providerUsage, sessions, users } from "@/lib/database/schema";
@@ -174,7 +175,7 @@ export async function GET(request: NextRequest) {
             securityTimeline,
         });
     } catch (error) {
-        console.error("Failed to fetch security data:", error);
+        log.error({ error }, "Failed to fetch security data");
         return NextResponse.json({ error: "Failed to fetch security data" }, { status: 500 });
     }
 }
@@ -225,7 +226,7 @@ export async function POST(request: NextRequest) {
             case "blockIP":
                 // This would require implementing IP blocking functionality
                 // For now, just log the action
-                console.log("IP block requested for:", data.ipAddress);
+                log.info({ ipAddress: data.ipAddress }, "IP block requested");
                 break;
 
             default:
@@ -234,7 +235,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("Failed to perform security action:", error);
+        log.error({ error }, "Failed to perform security action");
         return NextResponse.json({ error: "Failed to perform security action" }, { status: 500 });
     }
 }
