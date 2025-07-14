@@ -28,10 +28,10 @@ export function UserTierBadge({
     onUpgradeClick,
 }: UserTierBadgeProps) {
     const isPlusTier = useVtPlusAccess();
-    const { planSlug: rawPlanSlug, isVtPlus } = useCurrentPlan();
+    const { planSlug: rawPlanSlug } = useCurrentPlan();
 
-    // Use isPlusTier from useVtPlusAccess for consistency
-    const isPlus = isPlusTier || isVtPlus;
+    // Use isPlusTier which now correctly checks both isVtPlus && isActive
+    const isPlus = isPlusTier;
 
     let finalPlanSlug: PlanSlug;
     // Ensure rawPlanSlug is a valid PlanSlug key or default
@@ -66,6 +66,7 @@ export function UserTierBadge({
                 <span className="text-xs font-medium">Free</span>
                 <div className="bg-muted-foreground/40 h-1 w-1 rounded-full" />
                 <button
+                    type="button"
                     className="text-primary hover:text-primary/80 text-xs font-medium transition-colors duration-150"
                     onClick={handleUpgradeClick}
                 >

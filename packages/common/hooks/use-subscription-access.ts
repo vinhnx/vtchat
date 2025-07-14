@@ -204,9 +204,9 @@ export function usePlanAccess(plan: PlanSlug): boolean {
 }
 
 export function useVtPlusAccess(): boolean {
-    const { isVtPlus, isLoaded } = useSubscriptionAccess();
+    const { isVtPlus, isActive, isLoaded } = useSubscriptionAccess();
     if (!isLoaded) return false;
-    return isVtPlus;
+    return isVtPlus && isActive;
 }
 
 export function useCurrentPlan(): {

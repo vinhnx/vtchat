@@ -80,7 +80,6 @@ export function SendStopButton({
                             aria-label="Send Message"
                             disabled={!hasTextInput}
                             onClick={() => {
-                                console.log("🐛 Send button clicked", { hasTextInput, disabled: !hasTextInput });
                                 sendMessage();
                             }}
                             size="icon-sm"

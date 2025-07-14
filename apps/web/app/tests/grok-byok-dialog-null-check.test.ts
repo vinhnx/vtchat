@@ -3,7 +3,6 @@ import { ChatMode } from "@repo/shared/config";
 
 // Replicate the CHAT_MODE_TO_API_KEY mapping logic from BYOK dialog
 describe("Grok BYOK Dialog Null Check", () => {
-    
     // This is the exact mapping from byok-validation-dialog.tsx
     const CHAT_MODE_TO_API_KEY = {
         // OpenAI models
@@ -100,10 +99,10 @@ describe("Grok BYOK Dialog Null Check", () => {
         // Simulate the exact logic from BYOKValidationDialog
         const chatMode = ChatMode.GROK_4;
         const requiredKeyType = CHAT_MODE_TO_API_KEY[chatMode];
-        
+
         // This is the condition that causes dialog to return null
         const wouldReturnNull = !requiredKeyType;
-        
+
         expect(wouldReturnNull).toBe(false);
         expect(requiredKeyType).toBe("XAI_API_KEY");
     });
