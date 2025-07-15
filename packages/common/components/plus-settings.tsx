@@ -355,41 +355,6 @@ export const PlusSettings = () => {
                     </AnimatePresence>
                 </CardContent>
             </Card>
-
-            {/* Available Features Summary */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Check className="h-5 w-5 text-green-500" />
-                        Your VT+ Features
-                    </CardTitle>
-                    <CardDescription>
-                        All the premium features included in your subscription
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        {Object.values(VT_PLUS_FEATURES).map((feature) => (
-                            <div
-                                className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
-                                key={feature.id}
-                            >
-                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                                    <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="text-foreground text-sm font-medium">
-                                        {feature.name}
-                                    </div>
-                                    <div className="text-muted-foreground mt-1 text-xs">
-                                        {getFeatureBenefit(feature.id)}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
         </div>
     );
 };

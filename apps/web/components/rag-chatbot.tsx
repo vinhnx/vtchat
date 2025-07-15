@@ -241,7 +241,10 @@ export function RAGChatbot() {
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
-                log.info({ total: resources.length, data }, "📚 Agent fetched");
+                // Only log agent fetch details in development
+                if (process.env.NODE_ENV === "development") {
+                    log.info({ total: resources.length, data }, "📚 Agent fetched");
+                }
                 setKnowledgeBase(resources);
             } else {
                 const errorText = await response.text();
@@ -348,6 +351,21 @@ export function RAGChatbot() {
     useEffect(() => {
         scrollToBottom();
     }, [scrollToBottom]);
+
+    // Also scroll when messages are added
+    useEffect(() => {
+        if (messages.length > 0) {
+            scrollToBottom();
+        }
+    }, [messages.length, scrollToBottom]);
+
+    // Scroll when loading state changes (to show/hide loading indicator)
+    useEffect(() => {
+        if (isLoading) {
+            // Small delay to ensure loading indicator is rendered
+            setTimeout(() => scrollToBottom(), 100);
+        }
+    }, [isLoading, scrollToBottom]);
 
     // Filter to only show Gemini models for RAG
     const geminiModels = models.filter((m) => m.id.startsWith("gemini-"));

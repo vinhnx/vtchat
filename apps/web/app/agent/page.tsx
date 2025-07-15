@@ -1,6 +1,5 @@
 "use client";
 
-import { Footer } from "@repo/common/components";
 import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
 import { useSession } from "@repo/shared/lib/auth-client";
 
@@ -131,13 +130,6 @@ export default function RAGPage() {
             <div className="min-h-0 flex-1 md:container md:mx-auto md:px-2 md:pb-4 lg:px-4 lg:pb-8">
                 <RAGChatbot />
             </div>
-
-            {/* Footer - Hidden on mobile, shown on desktop */}
-            <footer className="border-border/50 bg-background hidden border-t md:block">
-                <div className="mx-auto max-w-7xl">
-                    <Footer />
-                </div>
-            </footer>
         </div>
     );
 }
