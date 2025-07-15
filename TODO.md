@@ -4,9 +4,9 @@
 
 ok go-> https://vtchat.io.vn/
 
-
 --
-gemini-embedding-001
+
+research fix /404 once all for all, make it simple
 
 --
 
@@ -182,31 +182,6 @@ Subscription status still works (just hits DB each time)
 Recommendation: Start without Redis for development, add it later for production performance optimization.
 --
 
-fix
-@vtchat/web:build: Redis client not available for cache invalidation subscription
-@vtchat/web:build: Generating static pages (0/30) ...
-@vtchat/web:build: [Error: Objects are not valid as a React child (found: object with keys {$$typeof, type, key, ref, props, _owner}). If you meant to render a collection of children, use an array instead.]
-@vtchat/web:build: Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error
-@vtchat/web:build: Error: Objects are not valid as a React child (found: object with keys {$$typeof, type, key, ref, props, \_owner}). If you meant to render a collection of children, use an array instead.
-@vtchat/web:build: at retryNode (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4917:13)
-@vtchat/web:build: at renderNodeDestructive (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
-@vtchat/web:build: at renderElement (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4324:7)
-@vtchat/web:build: at retryNode (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
-@vtchat/web:build: at renderNodeDestructive (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
-@vtchat/web:build: at finishFunctionComponent (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4230:9)
-@vtchat/web:build: at renderElement (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4329:7)
-@vtchat/web:build: at retryNode (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
-@vtchat/web:build: at renderNodeDestructive (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
-@vtchat/web:build: at renderNode (/Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/node_modules/react-dom/cjs/react-dom-server.edge.production.js:5128:14)
-@vtchat/web:build: Export encountered an error on /\_error: /404, exiting the build.
-
---
-
-@vtchat/web:build: Redis client not available for cache invalidation subscription
-@vtchat/web:build: Redis client not available for cache invalidation subscription
-@vtchat/web:build: Redis client not available for cache invalidation subscription
-@vtchat/web:build: No Redis URL configured, caching disabled
-
 --
 
 defualt: don't show exampleprompts component {!currentThreadId && showGreeting && <ExamplePrompts />}
@@ -217,8 +192,6 @@ fix x? Experiments (use with caution):
 @vtchat/web:build: ✓ externalDir
 @vtchat/web:build: ⨯ webpackBuildWorker
 @vtchat/web:build: ⨯ preloadEntriesOnStart
-
-
 
 --
 

@@ -59,6 +59,10 @@ export function RAGChatbot() {
     const isMobile = useIsMobile();
     const { toast } = useToast();
 
+    // Stable toast reference to prevent fetchKnowledgeBase from recreating
+    const toastRef = useRef(toast);
+    toastRef.current = toast;
+
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
@@ -248,13 +252,24 @@ export function RAGChatbot() {
                     { status: response.status, statusText: response.statusText, errorText },
                     "Failed to fetch knowledge base",
                 );
-                showErrorToast(error);
+                // Use stable toast ref to avoid dependency issues
+                toastRef.current({
+                    title: "Failed to fetch knowledge base",
+                    description: error.message || "Please try again later.",
+                    variant: "destructive",
+                });
             }
         } catch (error) {
             log.error({ error }, "Error fetching knowledge base");
-            showErrorToast(error as Error);
+            // Use stable toast ref to avoid dependency issues
+            const errorMsg = error instanceof Error ? error.message : "Unknown error occurred";
+            toastRef.current({
+                title: "Error fetching knowledge base",
+                description: errorMsg,
+                variant: "destructive",
+            });
         }
-    }, [showErrorToast]);
+    }, []); // No dependencies to prevent infinite loop
 
     const clearKnowledgeBase = async () => {
         if (!session?.user?.id) return;
@@ -268,7 +283,10 @@ export function RAGChatbot() {
                 setKnowledgeBase([]);
                 setIsClearDialogOpen(false);
                 reload();
-                toast.success("Knowledge base cleared successfully");
+                toast({
+                    title: "Knowledge base cleared successfully",
+                    variant: "success",
+                });
             } else {
                 const errorText = await response.text();
                 const error = new Error(
@@ -295,7 +313,10 @@ export function RAGChatbot() {
                 setKnowledgeBase((prev) => prev.filter((item) => item.id !== id));
                 setDeleteItemId(null);
                 reload();
-                toast.success("Knowledge item deleted successfully");
+                toast({
+                    title: "Knowledge item deleted successfully",
+                    variant: "success",
+                });
             } else {
                 const errorText = await response.text();
                 const error = new Error(
@@ -318,8 +339,10 @@ export function RAGChatbot() {
     }, []);
 
     useEffect(() => {
+        // Fetch knowledge base only once on mount
         fetchKnowledgeBase();
-    }, [fetchKnowledgeBase]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run on mount, ignore fetchKnowledgeBase dependency to prevent infinite loop
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {
