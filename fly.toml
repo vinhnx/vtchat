@@ -45,6 +45,6 @@ primary_region = 'sin'
   timeout = "2s"
 
 [[vm]]
-  memory = '512mb'
+  memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1

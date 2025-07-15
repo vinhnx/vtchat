@@ -142,7 +142,7 @@ RUN cd apps/web && \
     echo "NODE_ENV will be automatically set by Next.js build process" && \
     echo "NEXT_PHASE: $NEXT_PHASE" && \
     echo "==============================" && \
-    bun run build
+    bun run build:turbo
 
 # Stage 4: Production
 FROM node:20-alpine AS runner
