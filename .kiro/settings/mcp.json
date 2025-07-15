@@ -1,0 +1,49 @@
+{
+    "mcpServers": {
+        "fetch": {
+            "command": "uvx",
+            "args": ["mcp-server-fetch"],
+            "env": {},
+            "disabled": true,
+            "autoApprove": []
+        },
+        "context7": {
+            "command": "bunx",
+            "args": ["@upstash/context7-mcp"],
+            "_target": "global"
+        },
+        "neon_production": {
+            "command": "bunx",
+            "args": [
+                "@neondatabase/mcp-server-neon",
+                "start",
+                "napi_dmpvy7933795mznidrkmgiadliagv3jin440tz3p3v7h4qss0zaq1v7e3ib9lkjb"
+            ],
+            "_target": "global"
+        },
+        "flymcp": {
+            "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
+            "env": {},
+            "_target": "global"
+        },
+        "time": {
+            "command": "uvx",
+            "args": ["mcp-server-time"],
+            "_target": "global"
+        },
+        "playwright": {
+            "command": "npx",
+            "args": ["-y", "@playwright/mcp@latest", "--headless", "--isolated"],
+            "_target": "global"
+        },
+        "neon_dev": {
+            "command": "bunx",
+            "args": [
+                "@neondatabase/mcp-server-neon",
+                "start",
+                "napi_81ej0iuhglfmiqtbrsxlay1eya0ku65wqo62ex838i408vgyzq0xta91n5mog4pi"
+            ],
+            "env": {}
+        }
+    }
+}

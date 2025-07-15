@@ -26,8 +26,8 @@ export const GEMINI_MODEL_ENUMS = [
  */
 export const GEMINI_EMBEDDING_MODELS = [
     "text-embedding-004",
-    "text-embedding-preview-0409",
-    "text-embedding-001",
+    "gemini-embedding-exp-03-07",
+    "gemini-embedding-001",
 ] as const;
 
 /**
