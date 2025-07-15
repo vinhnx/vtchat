@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
         if (!session) {
             // Handle anonymous users
             const sessionId = request.headers.get("x-session-id");
-            
+
             if (!sessionId) {
                 return NextResponse.json({
                     plan: PlanSlug.FREE,
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
 
         // Fetch from simplified subscription service
         const subscription = await getSubscription(userId);
-        
+
         if (!subscription) {
             // User not found or no subscription - default to free
             const defaultStatus = {
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 
             // Cache the result
             await getOrCreateSubscriptionRequest(userId, defaultStatus);
-            
+
             return NextResponse.json(defaultStatus);
         }
 
@@ -115,18 +115,20 @@ export async function GET(request: NextRequest) {
         });
 
         return NextResponse.json(response);
-
     } catch (error) {
         log.error("[Subscription Status API] Error:", { error });
-        
+
         // Return safe fallback
-        return NextResponse.json({
-            plan: PlanSlug.FREE,
-            status: "active",
-            isPlusSubscriber: false,
-            hasSubscription: false,
-            isAnonymous: true,
-            error: "Internal server error",
-        }, { status: 500 });
+        return NextResponse.json(
+            {
+                plan: PlanSlug.FREE,
+                status: "active",
+                isPlusSubscriber: false,
+                hasSubscription: false,
+                isAnonymous: true,
+                error: "Internal server error",
+            },
+            { status: 500 },
+        );
     }
 }

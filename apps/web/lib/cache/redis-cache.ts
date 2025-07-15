@@ -55,8 +55,9 @@ class RedisCache {
 
             if (!redisUrl) {
                 // Use debug level during build time to reduce noise
-                const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
-                                   (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL);
+                const isBuildTime =
+                    process.env.NEXT_PHASE === "phase-production-build" ||
+                    (process.env.NODE_ENV === "production" && !process.env.REDIS_URL);
                 if (isBuildTime) {
                     log.debug("No Redis URL configured, caching disabled");
                 } else {

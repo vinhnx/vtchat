@@ -37,7 +37,9 @@ vi.mock("@repo/shared/utils/subscription-grace-period", () => ({
 
 describe("Batch Subscription Fix", () => {
     it("should handle multiple user IDs in batch query correctly", async () => {
-        const { getSubscriptionsBatch } = await import("@/lib/subscription/fast-subscription-access");
+        const { getSubscriptionsBatch } = await import(
+            "@/lib/subscription/fast-subscription-access"
+        );
         const { db } = await import("@/lib/database");
         const { redisCache } = await import("@/lib/cache/redis-cache");
 
@@ -55,7 +57,7 @@ describe("Batch Subscription Fix", () => {
                 creemSubscriptionId: "sub_1",
             },
             {
-                userId: "user2", 
+                userId: "user2",
                 planSlug: "free",
                 subPlan: null,
                 status: null,
@@ -65,7 +67,7 @@ describe("Batch Subscription Fix", () => {
             {
                 userId: "user3",
                 planSlug: "vt-plus",
-                subPlan: "vt-plus", 
+                subPlan: "vt-plus",
                 status: "active",
                 currentPeriodEnd: new Date("2025-09-01"),
                 creemSubscriptionId: "sub_3",
@@ -74,7 +76,7 @@ describe("Batch Subscription Fix", () => {
 
         // Chain the mocked methods to return the mock data
         const selectMock = vi.fn().mockReturnValue(mockDbResults);
-        
+
         vi.mocked(db.select).mockReturnValue({
             from: vi.fn().mockReturnValue({
                 leftJoin: vi.fn().mockReturnValue({

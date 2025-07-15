@@ -46,7 +46,7 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
                     ELSE 2
                 END`,
                 desc(userSubscriptions.currentPeriodEnd),
-                desc(userSubscriptions.updatedAt)
+                desc(userSubscriptions.updatedAt),
             )
             .limit(1);
 
@@ -62,7 +62,8 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
             currentPeriodEnd: row.currentPeriodEnd,
         });
 
-        const isPremium = isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+        const isPremium =
+            isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
         const isVtPlus = isPremium;
 
         return {
@@ -126,35 +127,39 @@ export async function getSubscription(userId: string): Promise<SubscriptionData 
  */
 export async function hasVTPlusAccess(userId: string): Promise<boolean> {
     if (!userId) return false;
-    
+
     const subscription = await getSubscription(userId);
-    return subscription?.isVtPlus && subscription?.isActive || false;
+    return (subscription?.isVtPlus && subscription?.isActive) || false;
 }
 
 /**
  * Batch subscription lookup - simplified but correct
  */
-export async function getSubscriptionsBatch(userIds: string[]): Promise<Map<string, SubscriptionData>> {
+export async function getSubscriptionsBatch(
+    userIds: string[],
+): Promise<Map<string, SubscriptionData>> {
     const results = new Map<string, SubscriptionData>();
-    
+
     if (userIds.length === 0) return results;
 
     // Check Redis for all users
-    const cacheKeys = userIds.map(id => `sub:${id}`);
+    const cacheKeys = userIds.map((id) => `sub:${id}`);
     const cachedResults = await redisCache.mget(cacheKeys);
-    
+
     const uncachedIds: string[] = [];
-    
+
     for (let i = 0; i < userIds.length; i++) {
         const userId = userIds[i];
         const cached = cachedResults[i];
-        
+
         if (cached) {
             results.set(userId, {
                 planSlug: cached.planSlug,
                 subPlan: cached.subPlan,
                 status: cached.status,
-                currentPeriodEnd: cached.currentPeriodEnd ? new Date(cached.currentPeriodEnd) : null,
+                currentPeriodEnd: cached.currentPeriodEnd
+                    ? new Date(cached.currentPeriodEnd)
+                    : null,
                 creemSubscriptionId: cached.creemSubscriptionId,
                 isActive: cached.isActive,
                 isPremium: cached.isPremium,
@@ -187,11 +192,11 @@ export async function getSubscriptionsBatch(userIds: string[]): Promise<Map<stri
                         ELSE 2
                     END`,
                     desc(userSubscriptions.currentPeriodEnd),
-                    desc(userSubscriptions.updatedAt)
+                    desc(userSubscriptions.updatedAt),
                 );
 
             // Process results and deduplicate by user (take first = highest priority)
-            const userDataMap = new Map<string, typeof dbResults[0]>();
+            const userDataMap = new Map<string, (typeof dbResults)[0]>();
             for (const row of dbResults) {
                 if (!userDataMap.has(row.userId)) {
                     userDataMap.set(row.userId, row);
@@ -205,7 +210,9 @@ export async function getSubscriptionsBatch(userIds: string[]): Promise<Map<stri
                     currentPeriodEnd: row.currentPeriodEnd,
                 });
 
-                const isPremium = isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+                const isPremium =
+                    isActive &&
+                    (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
                 const isVtPlus = isPremium;
 
                 const subscription: SubscriptionData = {

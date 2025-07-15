@@ -16,14 +16,14 @@ export async function initializeApp(): Promise<void> {
     }
 
     // Skip initialization during build time
-    if (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL) {
+    if (process.env.NODE_ENV === "production" && !process.env.REDIS_URL) {
         log.debug("Skipping Redis cache invalidation setup - no Redis URL in production build");
         initialized = true;
         return;
     }
 
     // Skip initialization during Next.js build process
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
+    if (process.env.NEXT_PHASE === "phase-production-build") {
         log.debug("Skipping cache invalidation setup during build phase");
         initialized = true;
         return;
@@ -32,7 +32,7 @@ export async function initializeApp(): Promise<void> {
     try {
         // Initialize Redis pub/sub for cross-process cache invalidation (runtime only)
         await subscribeToCacheInvalidation();
-        
+
         initialized = true;
         log.info("Application initialization completed");
     } catch (error) {

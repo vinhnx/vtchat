@@ -297,5 +297,3 @@ export class SubscriptionService {
         log.info("Fixed subscription data integrity issues", { userId });
     }
 }
-
-

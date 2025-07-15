@@ -9,14 +9,16 @@ import { useEffect } from "react";
 export function AppInitializer() {
     useEffect(() => {
         // Only run on client side to avoid build-time initialization
-        if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
+        if (typeof window !== "undefined" && process.env.NODE_ENV !== "test") {
             // Dynamic import to avoid bundling during SSR/build
-            import("../lib/startup").then(({ initializeApp }) => {
-                initializeApp();
-            }).catch((error) => {
-                // Silent fallback if Redis services aren't available
-                console.debug("App services initialization skipped:", error?.message);
-            });
+            import("../lib/startup")
+                .then(({ initializeApp }) => {
+                    initializeApp();
+                })
+                .catch((error) => {
+                    // Silent fallback if Redis services aren't available
+                    console.debug("App services initialization skipped:", error?.message);
+                });
         }
     }, []);
 

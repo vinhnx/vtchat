@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
 
         // Invalidate all caches for the user after successful payment
         await invalidateAllCaches(userId);
-        
+
         log.info("[Payment Success API] Invalidated all caches for user", { userId });
 
         return NextResponse.json({
