@@ -3,7 +3,7 @@ app = 'vtchat'
 primary_region = 'sin'
 
 # US-focused 2-region setup
-# sin: Asia-Pacific (primary) 
+# sin: Asia-Pacific (primary)
 # iad: USA (Ashburn, Virginia) - Target market
 
 [build]

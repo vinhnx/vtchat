@@ -23,20 +23,29 @@ const nextConfig = {
     serverExternalPackages: ["@repo/shared", "@repo/common", "@repo/orchestrator"],
 
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
-    bundlePagesRouterDependencies: true,
-
-    // Minimal experimental features for memory-constrained builds
+    bundlePagesRouterDependencies: true, // Next.js 15.4 experimental features
     experimental: {
+        // Re-enable externalDir for monorepo support now that Turbopack works
         externalDir: true,
         // Disable memory-intensive optimizations
         webpackMemoryOptimizations: false,
         webpackBuildWorker: false,
         preloadEntriesOnStart: false,
-        // Disable package import optimizations to reduce memory usage
+
+        // NEW: Forward browser logs to terminal for easier debugging
+        browserDebugInfoInTerminal: true,
+
+        // Disable static optimization to fix React 19 useContext issues
+        forceSwcTransforms: false,
     },
 
-    // Moved from experimental to root level (Next.js 15+)
-    outputFileTracingRoot: path.join(__dirname, "../../"),
+    // Temporarily remove outputFileTracingRoot for Turbopack compatibility
+    // Next.js 15+ - moved from experimental to root level
+    // outputFileTracingRoot: path.join(__dirname, "../../"),
+
+    // Disable static generation completely for React 19 compatibility
+    trailingSlash: false,
+    skipTrailingSlashRedirect: true,
 
     // Performance optimizations
     compiler: {
@@ -509,6 +518,9 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+
+    // Note: Static page generation is disabled via layout.tsx exports
+    // (dynamic = "force-dynamic", revalidate = 0, dynamicParams = true)
 };
 
 export default withBundleAnalyzer(nextConfig);

@@ -22,6 +22,12 @@ import { ReactScan } from "../components/react-scan";
 // Force dynamic rendering to prevent SSR issues during build
 export const dynamic = "force-dynamic";
 
+// Disable static generation for all routes to prevent context issues
+export const dynamicParams = true;
+
+// Disable ISR/SSG completely for React 19 compatibility
+export const revalidate = 0;
+
 const bricolage = Bricolage_Grotesque({
     subsets: ["latin"],
     variable: "--font-bricolage",

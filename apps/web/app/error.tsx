@@ -1,5 +1,8 @@
 "use client";
 
+// Disable static generation to prevent React context issues during build
+export const dynamic = "force-dynamic";
+
 interface ErrorPageProps {
     error: Error & { digest?: string };
     reset: () => void;
@@ -11,37 +14,102 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
     };
 
     return (
-        <div className="flex min-h-dvh flex-col">
-            <main className="flex flex-1 items-center justify-center px-4">
-                <div className="w-full max-w-md text-center">
-                    <div className="mb-8">
-                        <h1 className="mb-2 text-4xl font-semibold text-foreground">Oops!</h1>
-                        <h2 className="mb-3 text-xl font-medium text-foreground">
-                            Something went wrong
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            We encountered an unexpected error. This has been logged and we'll look
-                            into it.
-                        </p>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-4">
+        <html lang="en">
+            <head>
+                <title>Error - Something went wrong</title>
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </head>
+            <body
+                style={{
+                    margin: 0,
+                    padding: 0,
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    display: "flex",
+                    minHeight: "100vh",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "#fff",
+                }}
+            >
+                <div
+                    style={{
+                        textAlign: "center",
+                        maxWidth: "400px",
+                        padding: "2rem",
+                    }}
+                >
+                    <h1
+                        style={{
+                            fontSize: "2.5rem",
+                            fontWeight: "600",
+                            margin: "0 0 1rem 0",
+                            color: "#1f2937",
+                        }}
+                    >
+                        Oops!
+                    </h1>
+                    <h2
+                        style={{
+                            fontSize: "1.25rem",
+                            fontWeight: "500",
+                            margin: "0 0 1rem 0",
+                            color: "#374151",
+                        }}
+                    >
+                        Something went wrong
+                    </h2>
+                    <p
+                        style={{
+                            fontSize: "0.875rem",
+                            color: "#6b7280",
+                            margin: "0 0 2rem 0",
+                            lineHeight: "1.5",
+                        }}
+                    >
+                        We encountered an unexpected error. This has been logged and we'll look into
+                        it.
+                    </p>
+                    <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                         <button
                             type="button"
                             onClick={reset}
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                            style={{
+                                padding: "0.75rem 1.5rem",
+                                backgroundColor: "#3b82f6",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "0.375rem",
+                                fontSize: "0.875rem",
+                                fontWeight: "500",
+                                cursor: "pointer",
+                                textDecoration: "none",
+                                display: "inline-block",
+                            }}
                         >
                             Try again
                         </button>
                         <button
                             type="button"
                             onClick={handleHomeNavigation}
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                            style={{
+                                padding: "0.75rem 1.5rem",
+                                backgroundColor: "#6b7280",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "0.375rem",
+                                fontSize: "0.875rem",
+                                fontWeight: "500",
+                                cursor: "pointer",
+                                textDecoration: "none",
+                                display: "inline-block",
+                            }}
                         >
-                            Back to Home
+                            Go home
                         </button>
                     </div>
                 </div>
-            </main>
-        </div>
+            </body>
+        </html>
     );
 }
