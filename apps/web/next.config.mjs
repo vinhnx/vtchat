@@ -476,7 +476,18 @@ const nextConfig = {
     },
 
     async redirects() {
-        return [];
+        return [
+            {
+                source: "/faq",
+                destination: "/help",
+                permanent: true,
+            },
+            {
+                source: "/plus",
+                destination: "/pricing",
+                permanent: true,
+            },
+        ];
     },
 
     // Fly.io-specific configuration for deployment

@@ -67,7 +67,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         "relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm";
 
     // Hide drop shadow on plus page
-    const shouldShowDropShadow = pathname !== "/plus";
+    const shouldShowDropShadow = pathname !== "/pricing";
 
     // Close mobile sidebar when route changes
     useEffect(() => {
@@ -289,7 +289,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 <Info className="mr-2" size={16} strokeWidth={2} />
                                 About
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push("/faq")}>
+                            <DropdownMenuItem onClick={() => router.push("/help")}>
                                 <HelpCircle className="mr-2" size={16} strokeWidth={2} />
                                 Help Center
                             </DropdownMenuItem>
@@ -331,12 +331,12 @@ export const SideDrawer = () => {
         pathname !== "/" &&
         pathname !== "/recent" &&
         pathname !== "/settings" &&
-        pathname !== "/plus" &&
+        pathname !== "/pricing" &&
         pathname !== "/about" &&
         pathname !== "/login" &&
         pathname !== "/privacy" &&
         pathname !== "/terms" &&
-        pathname !== "/faq";
+        pathname !== "/help";
 
     // Don't render during SSR to prevent hydration issues
     if (!isClient) {

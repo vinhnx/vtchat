@@ -71,7 +71,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     message,
     title = "Unlock Premium Features",
     onGatedClick,
-    upgradeUrl = "/plus",
+    upgradeUrl = "/pricing",
     children,
     fallback,
     showAlert = true,

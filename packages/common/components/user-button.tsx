@@ -93,7 +93,7 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Support & Legal */}
                 <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                <Link className="w-full" href="/faq">
+                <Link className="w-full" href="/help">
                     <DropdownMenuItem>
                         <HelpCircle className="mr-2 h-4 w-4" />
                         Help Center

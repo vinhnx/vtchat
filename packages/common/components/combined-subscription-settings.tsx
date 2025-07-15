@@ -269,7 +269,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
 
     const handleUpgradeToPlus = () => {
         onClose?.();
-        window.location.href = "/plus";
+        window.location.href = "/pricing";
     };
 
     return (

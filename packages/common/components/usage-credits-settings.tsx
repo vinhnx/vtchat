@@ -47,7 +47,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
     const handleUpgradeToPlus = () => {
         // Close settings modal and navigate to pricing page
         onClose?.();
-        window.location.href = "/plus";
+        window.location.href = "/pricing";
     };
 
     return (

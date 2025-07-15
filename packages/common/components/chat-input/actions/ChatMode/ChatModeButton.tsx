@@ -107,7 +107,7 @@ export function ChatModeButton() {
                                 </Button>
                                 <Button
                                     onClick={() => {
-                                        push("/plus");
+                                        push("/pricing");
                                         setShowGateAlert(null);
                                     }}
                                     className="flex-1"

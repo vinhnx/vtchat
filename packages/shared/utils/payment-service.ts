@@ -255,7 +255,7 @@ export class CreemService {
 
             // For production without customer ID, redirect to subscription management page
             return {
-                url: `${normalizedBaseUrl}/plus`,
+                url: `${normalizedBaseUrl}/pricing`,
                 success: true,
             };
         } catch (error) {
@@ -265,7 +265,7 @@ export class CreemService {
             const normalizedBaseUrl = baseUrl.startsWith("http") ? baseUrl : `https://${baseUrl}`;
 
             return {
-                url: `${normalizedBaseUrl}/plus`,
+                url: `${normalizedBaseUrl}/pricing`,
                 success: true,
             };
         }

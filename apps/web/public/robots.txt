@@ -35,8 +35,9 @@ Disallow: /chat/
 # --- Default rules for all other crawlers ------------------
 User-Agent: *
 Allow: /about
-Allow: /faq
+Allow: /help
 Allow: /privacy
+Allow: /pricing
 Allow: /terms
 Allow: /
 Disallow: /profile/

@@ -4,9 +4,15 @@
 
 ok go-> https://vtchat.io.vn/
 
---
+1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
+2. ## fix openrouter send dummy api/completion
 
-research fix /404 once all for all, make it simple
+✅ migrate route /faq -> /help
+✅ migrate route /plus -> /pricing
+update in #codebase
+
+https://vtchat.io.vn/help
+https://vtchat.io.vn/pricing
 
 --
 
@@ -230,22 +236,8 @@ oracle: check for vulnerable code path in codebase, in subscription, web hook, i
 
 --
 
-add kimi2 free
-https://openrouter.ai/moonshotai/kimi-k2:free
-
---
-
-important: critical
-
-https://www.kimi.com/share/d1q8vgm6s4ta557cdodg
-
--
-
-debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
-
---
-
-fix openrouter send dummy api/completion
+1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
+2. fix openrouter send dummy api/completion
 
 --
 

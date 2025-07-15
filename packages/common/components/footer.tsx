@@ -15,7 +15,7 @@ const links = [
     },
     {
         title: "VT+",
-        href: "/plus",
+        href: "/pricing",
     },
     {
         title: "Contact",
@@ -23,7 +23,7 @@ const links = [
     },
     {
         title: "Help Center",
-        href: "/faq",
+        href: "/help",
     },
     {
         title: "About",

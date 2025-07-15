@@ -21,7 +21,7 @@ describe("Footer Component", () => {
 
         expect(termsLink).toHaveAttribute("href", "/terms");
         expect(privacyLink).toHaveAttribute("href", "/privacy");
-        expect(faqLink).toHaveAttribute("href", "/faq");
+        expect(faqLink).toHaveAttribute("href", "/help");
     });
 
     it("should have appropriate styling classes", () => {

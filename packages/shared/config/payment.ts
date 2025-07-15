@@ -372,7 +372,7 @@ export class PaymentService {
             }
 
             return {
-                url: `${normalizedBaseUrl}/plus`,
+                url: `${normalizedBaseUrl}/pricing`,
                 success: true,
             };
         } catch (error) {
@@ -384,7 +384,7 @@ export class PaymentService {
             const normalizedBaseUrl = baseUrl.startsWith("http") ? baseUrl : `https://${baseUrl}`;
 
             return {
-                url: `${normalizedBaseUrl}/plus`,
+                url: `${normalizedBaseUrl}/pricing`,
                 success: true,
             };
         }

@@ -181,7 +181,7 @@ export const PlusSettings = () => {
                         <div className="mt-6 flex items-center justify-center">
                             <Button
                                 className="group gap-2"
-                                onClick={() => (window.location.href = "/plus")}
+                                onClick={() => (window.location.href = "/pricing")}
                             >
                                 <Sparkles className="h-4 w-4" />
                                 Upgrade to VT+

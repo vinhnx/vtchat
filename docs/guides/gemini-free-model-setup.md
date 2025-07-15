@@ -154,7 +154,7 @@ flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-prod
     "remainingDaily": 0,
     "remainingMinute": 1,
     "resetTime": "2024-01-02T00:00:00.000Z",
-    "upgradeUrl": "/plus"
+    "upgradeUrl": "/pricing"
 }
 ```
 
@@ -168,7 +168,7 @@ flyctl secrets set GEMINI_API_KEY=your_key_here -a vtchat-prod
     "remainingDaily": 5,
     "remainingMinute": 0,
     "resetTime": "2024-01-01T12:35:00.000Z",
-    "upgradeUrl": "/plus"
+    "upgradeUrl": "/pricing"
 }
 ```
 

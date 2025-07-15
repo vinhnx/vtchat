@@ -31,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
-            url: `${baseUrl}/faq`,
+            url: `${baseUrl}/help`,
             lastModified: new Date("2025-07-07"),
             changeFrequency: "monthly" as const,
             priority: 0.7,

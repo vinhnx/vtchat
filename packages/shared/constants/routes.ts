@@ -13,7 +13,7 @@ export const PublicRoutes = {
     API_AUTH: "/api/auth",
     PRIVACY: "/privacy",
     TERMS: "/terms",
-    FAQ: "/faq",
+    HELP: "/help",
     ABOUT: "/about",
 } as const;
 
@@ -26,7 +26,7 @@ export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
 export const ProtectedRoutes = {
     RECENT: "/recent",
     SETTINGS: "/settings",
-    PLUS: "/plus", // VT+ subscription page - requires login
+    PRICING: "/pricing", // VT+ subscription page - requires login
     SUCCESS: "/success",
 } as const;
 

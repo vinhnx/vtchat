@@ -91,7 +91,7 @@ describe("RateLimitErrorAlert", () => {
         const upgradeButton = screen.getByText("Upgrade to VT+");
         fireEvent.click(upgradeButton);
 
-        expect(mockWindowOpen).toHaveBeenCalledWith("/plus", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/pricing", "_blank");
     });
 
     it("should apply custom className when provided", () => {

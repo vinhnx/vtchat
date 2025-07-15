@@ -213,7 +213,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
                 remainingDaily: 0,
                 remainingMinute: 1,
                 resetTime: "2024-01-02T00:00:00.000Z",
-                upgradeUrl: "/plus",
+                upgradeUrl: "/pricing",
             });
 
             expect(response.headers.get("Retry-After")).toBeTruthy();
@@ -259,7 +259,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
                 remainingDaily: 5,
                 remainingMinute: 0,
                 resetTime: nextMinuteReset.toISOString(),
-                upgradeUrl: "/plus",
+                upgradeUrl: "/pricing",
             });
 
             // Should include Retry-After header
@@ -305,7 +305,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             expect(responseData).toHaveProperty("remainingMinute");
             expect(responseData).toHaveProperty("resetTime");
             expect(responseData).toHaveProperty("upgradeUrl");
-            expect(responseData.upgradeUrl).toBe("/plus");
+            expect(responseData.upgradeUrl).toBe("/pricing");
         });
     });
 

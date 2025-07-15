@@ -83,7 +83,7 @@ export default function RAGPage() {
                             <div className="space-y-3">
                                 <PremiumButton
                                     className="w-full"
-                                    onClick={() => router.push("/plus")}
+                                    onClick={() => router.push("/pricing")}
                                     shimmer
                                     size="lg"
                                     variant="premium"

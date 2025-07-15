@@ -285,7 +285,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        push("/faq");
+                                        push("/help");
                                     }}
                                 >
                                     <HelpCircle size={16} strokeWidth={2} />
@@ -617,7 +617,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
                                 } else {
-                                    push("/plus");
+                                    push("/pricing");
                                 }
                             }}
                             rounded="lg"
@@ -671,7 +671,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 if (isPlusSubscriber) {
                                     openCustomerPortal();
                                 } else {
-                                    push("/plus");
+                                    push("/pricing");
                                 }
                             }}
                             rounded="lg"

@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
                             message:
                                 "Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.",
                             reason: "budget_exceeded",
-                            upgradeUrl: "/plus",
+                            upgradeUrl: "/pricing",
                             usageSettingsAction: "open_usage_settings",
                         }),
                         {
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
                             error: "VT+ subscription required",
                             message:
                                 "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
-                            upgradeUrl: "/plus",
+                            upgradeUrl: "/pricing",
                             usageSettingsAction: "open_usage_settings",
                         }),
                         {
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
                             remainingDaily: rateLimitResult.remainingDaily,
                             remainingMinute: rateLimitResult.remainingMinute,
                             resetTime: resetTime.toISOString(),
-                            upgradeUrl: "/plus",
+                            upgradeUrl: "/pricing",
                             usageSettingsAction: "open_usage_settings",
                         }),
                         {

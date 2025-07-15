@@ -125,12 +125,12 @@ describe("Gemini 2.5 Flash Lite - Basic Validation", () => {
                 remainingDaily: 0,
                 remainingMinute: 1,
                 resetTime: "2024-01-02T00:00:00.000Z",
-                upgradeUrl: "/plus",
+                upgradeUrl: "/pricing",
                 usageSettingsAction: "open_usage_settings",
             };
 
             expect(dailyLimitError.limitType).toBe("daily_limit_exceeded");
-            expect(dailyLimitError.upgradeUrl).toBe("/plus");
+            expect(dailyLimitError.upgradeUrl).toBe("/pricing");
             expect(dailyLimitError.remainingDaily).toBe(0);
         });
 
@@ -141,12 +141,12 @@ describe("Gemini 2.5 Flash Lite - Basic Validation", () => {
                 limitType: "minute_limit_exceeded",
                 remainingDaily: 5,
                 remainingMinute: 0,
-                upgradeUrl: "/plus",
+                upgradeUrl: "/pricing",
                 usageSettingsAction: "open_usage_settings",
             };
 
             expect(minuteLimitError.limitType).toBe("minute_limit_exceeded");
-            expect(minuteLimitError.upgradeUrl).toBe("/plus");
+            expect(minuteLimitError.upgradeUrl).toBe("/pricing");
             expect(minuteLimitError.remainingMinute).toBe(0);
         });
     });

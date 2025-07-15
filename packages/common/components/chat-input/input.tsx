@@ -96,12 +96,12 @@ export const ChatInput = ({
         usePathname() !== "/" &&
         usePathname() !== "/recent" &&
         usePathname() !== "/settings" &&
-        usePathname() !== "/plus" &&
+        usePathname() !== "/pricing" &&
         usePathname() !== "/about" &&
         usePathname() !== "/login" &&
         usePathname() !== "/privacy" &&
         usePathname() !== "/terms" &&
-        usePathname() !== "/faq";
+        usePathname() !== "/help";
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);

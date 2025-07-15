@@ -16,7 +16,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     };
 
     const handleUpgrade = () => {
-        window.open("/plus", "_blank");
+        window.open("/pricing", "_blank");
     };
 
     const handleContactSupport = () => {

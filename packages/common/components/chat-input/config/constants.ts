@@ -26,10 +26,10 @@ export const EXCLUDED_PATHS = [
     "/",
     "/recent",
     "/settings",
-    "/plus",
+    "/pricing",
     "/about",
     "/login",
     "/privacy",
     "/terms",
-    "/faq",
+    "/help",
 ] as const;

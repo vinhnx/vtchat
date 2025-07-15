@@ -49,7 +49,7 @@ export default function PlusPage() {
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
             // Redirect to login page instead of showing dialog
-            router.push("/login?redirect_url=/plus");
+            router.push("/login?redirect_url=/pricing");
         }
     }, [isLoaded, isSignedIn, router]);
 
@@ -62,7 +62,7 @@ export default function PlusPage() {
 
     const handleSubscribe = async () => {
         if (!isSignedIn) {
-            router.push("/login?redirect_url=/plus");
+            router.push("/login?redirect_url=/pricing");
             return;
         }
 

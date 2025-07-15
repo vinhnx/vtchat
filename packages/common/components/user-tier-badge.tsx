@@ -42,7 +42,7 @@ export function UserTierBadge({
             onUpgradeClick();
         } else {
             // Default behavior: navigate to upgrade page
-            window.location.href = "/plus";
+            window.location.href = "/pricing";
         }
     };
 

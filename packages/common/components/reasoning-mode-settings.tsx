@@ -85,7 +85,7 @@ export const ReasoningModeSettings = () => {
                             className="mt-4"
                             size="sm"
                             onClick={() => {
-                                window.location.href = "/plus";
+                                window.location.href = "/pricing";
                             }}
                         >
                             Upgrade to VT+

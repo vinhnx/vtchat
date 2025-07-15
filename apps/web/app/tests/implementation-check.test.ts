@@ -164,7 +164,7 @@ describe("Gemini 2.5 Flash Lite - Implementation Verification", () => {
             remainingDaily: 0,
             remainingMinute: 1,
             resetTime: new Date("2024-01-02T00:00:00Z").toISOString(),
-            upgradeUrl: "/plus",
+            upgradeUrl: "/pricing",
         };
 
         // Validate required fields for upgrade decision
@@ -176,7 +176,7 @@ describe("Gemini 2.5 Flash Lite - Implementation Verification", () => {
         expect(rateLimitError).toHaveProperty("resetTime");
         expect(rateLimitError).toHaveProperty("upgradeUrl");
 
-        expect(rateLimitError.upgradeUrl).toBe("/plus");
+        expect(rateLimitError.upgradeUrl).toBe("/pricing");
         expect(rateLimitError.limitType).toMatch(/^(daily_limit_exceeded|minute_limit_exceeded)$/);
     });
 });
