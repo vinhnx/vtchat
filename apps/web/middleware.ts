@@ -1,8 +1,8 @@
+import { auth } from "@/lib/auth-server";
 import { isPublicRoute } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { getCookieCache } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -23,7 +23,10 @@ export default async function middleware(request: NextRequest) {
         pathname.startsWith("/_next") ||
         pathname.startsWith("/api/") ||
         pathname.includes(".") || // Files with extensions
-        pathname.startsWith("/favicon")
+        pathname.startsWith("/favicon") ||
+        pathname.startsWith("/robots") ||
+        pathname.startsWith("/sitemap") ||
+        pathname.startsWith("/manifest")
     ) {
         return NextResponse.next();
     }
