@@ -18,7 +18,15 @@ describe("404 Error Handling", () => {
         });
 
         it("should distinguish between valid and invalid routes", () => {
-            const validRoutes = ["/", "/login", "/recent", "/privacy", "/terms", "/help", "/pricing"];
+            const validRoutes = [
+                "/",
+                "/login",
+                "/recent",
+                "/privacy",
+                "/terms",
+                "/help",
+                "/pricing",
+            ];
 
             const invalidRoutes = ["/invalid-page", "/non-existent", "/old-route"];
 
