@@ -1370,7 +1370,8 @@ export const selectAvailableModel = (
             [ModelEnum.CLAUDE_4_SONNET]: "ANTHROPIC_API_KEY",
             [ModelEnum.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
             // Fireworks models
-            [ModelEnum.Deepseek_R1]: "FIREWORKS_API_KEY",
+            [ModelEnum.DEEPSEEK_R1_FIREWORKS]: "FIREWORKS_API_KEY",
+            [ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS]: "FIREWORKS_API_KEY",
             // xAI models
             [ModelEnum.GROK_3]: "XAI_API_KEY",
             [ModelEnum.GROK_3_MINI]: "XAI_API_KEY",

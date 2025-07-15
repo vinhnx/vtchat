@@ -22,6 +22,7 @@ export const ModelEnum = {
     GROK_4: "grok-4",
     // Fireworks models
     DEEPSEEK_R1_FIREWORKS: "accounts/fireworks/models/qwen3-30b-a3b",
+    KIMI_K2_INSTRUCT_FIREWORKS: "fireworks/models/kimi-k2-instruct",
     // OpenRouter models
     DEEPSEEK_V3_0324: "deepseek/deepseek-chat-v3-0324",
     DEEPSEEK_R1: "deepseek/deepseek-r1",
@@ -167,6 +168,21 @@ export const models: Model[] = [
         provider: "xai",
         maxTokens: 256_000,
         contextWindow: 256_000,
+    },
+    // Fireworks models
+    {
+        id: ModelEnum.DEEPSEEK_R1_FIREWORKS,
+        name: "DeepSeek R1 (Fireworks)",
+        provider: "fireworks",
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+    },
+    {
+        id: ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS,
+        name: "Kimi K2 Instruct (Fireworks)",
+        provider: "fireworks",
+        maxTokens: 4_096,
+        contextWindow: 131_072,
     },
     // OpenRouter models
     {
@@ -356,6 +372,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
             return ModelEnum.DEEPSEEK_R1_FIREWORKS;
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
+            return ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.DEEPSEEK_R1;
         case ChatMode.CLAUDE_4_SONNET:

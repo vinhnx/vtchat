@@ -243,6 +243,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.CLAUDE_4_OPUS:
                         return isValidKey(apiKeys.ANTHROPIC_API_KEY);
                     case ChatMode.DEEPSEEK_R1_FIREWORKS:
+                    case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
                         return isValidKey(apiKeys.FIREWORKS_API_KEY);
                     case ChatMode.GROK_3:
                     case ChatMode.GROK_3_MINI:

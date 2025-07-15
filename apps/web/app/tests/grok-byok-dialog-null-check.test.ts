@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 
 // Replicate the CHAT_MODE_TO_API_KEY mapping logic from BYOK dialog
 describe("Grok BYOK Dialog Null Check", () => {
@@ -27,6 +27,7 @@ describe("Grok BYOK Dialog Null Check", () => {
         [ChatMode.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
         // Fireworks models
         [ChatMode.DEEPSEEK_R1_FIREWORKS]: "FIREWORKS_API_KEY",
+        [ChatMode.KIMI_K2_INSTRUCT_FIREWORKS]: "FIREWORKS_API_KEY",
         // xAI models
         [ChatMode.GROK_3]: "XAI_API_KEY",
         [ChatMode.GROK_3_MINI]: "XAI_API_KEY",

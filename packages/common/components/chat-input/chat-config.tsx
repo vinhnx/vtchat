@@ -274,10 +274,17 @@ export const modelOptionsByProvider = {
     ],
     Fireworks: [
         {
-            label: "DeepSeek R1",
-            value: ChatMode.DEEPSEEK_R1,
+            label: "DeepSeek R1 (Fireworks)",
+            value: ChatMode.DEEPSEEK_R1_FIREWORKS,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
+        },
+        {
+            label: "Kimi K2 Instruct (Fireworks)",
+            value: ChatMode.KIMI_K2_INSTRUCT_FIREWORKS,
+            webSearch: true,
+            icon: undefined,
             requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
         },
     ],

@@ -22,6 +22,7 @@ export const ChatMode = {
     CLAUDE_4_SONNET: "claude-sonnet-4-20250514",
     CLAUDE_4_OPUS: "claude-opus-4-20250514",
     DEEPSEEK_R1_FIREWORKS: "deepseek-r1-fireworks",
+    KIMI_K2_INSTRUCT_FIREWORKS: "kimi-k2-instruct-fireworks",
     GROK_3: "grok-3",
     GROK_3_MINI: "grok-3-mini",
     GROK_4: "grok-4",
@@ -269,6 +270,23 @@ export const ChatModeConfig: Record<
         isNew: true,
     },
     [ChatMode.KIMI_K2]: {
+        webSearch: true,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    // Fireworks models
+    [ChatMode.DEEPSEEK_R1_FIREWORKS]: {
+        webSearch: true,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.KIMI_K2_INSTRUCT_FIREWORKS]: {
         webSearch: true,
         imageUpload: false,
         multiModal: false,
@@ -565,6 +583,11 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenRouter Qwen3 14B";
         case ChatMode.KIMI_K2:
             return "OpenRouter Kimi K2";
+        // Fireworks models
+        case ChatMode.DEEPSEEK_R1_FIREWORKS:
+            return "Fireworks DeepSeek R1";
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
+            return "Fireworks Kimi K2 Instruct";
         // LM Studio local models
         case ChatMode.LMSTUDIO_LLAMA_3_8B:
             return "LM Studio Llama 3 8B (Local)";

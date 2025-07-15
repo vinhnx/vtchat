@@ -43,6 +43,7 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
     // Fireworks models
     [ChatMode.DEEPSEEK_R1_FIREWORKS]: "FIREWORKS_API_KEY",
+    [ChatMode.KIMI_K2_INSTRUCT_FIREWORKS]: "FIREWORKS_API_KEY",
     // xAI models
     [ChatMode.GROK_3]: "XAI_API_KEY",
     [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
