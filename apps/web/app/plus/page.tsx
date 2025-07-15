@@ -6,7 +6,7 @@ import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription
 import { BUTTON_TEXT } from "@repo/shared/constants";
 // import { TypographyLarge, TypographyMuted, TypographyP } from '../../components/ui/typography';
 import { useSession } from "@repo/shared/lib/auth-client";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status"; // Added import
+// Added import
 import {
     Announcement,
     AnnouncementTag,
@@ -28,7 +28,6 @@ import { PRICING_CONFIG } from "../../lib/config/pricing";
 export default function PlusPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
     const {
-        subscriptionStatus,
         isPlusSubscriber,
         isLoading: isSubscriptionLoading,
         refreshSubscriptionStatus,
@@ -44,11 +43,8 @@ export default function PlusPage() {
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
-    const isCurrentlySubscribed =
-        isPlusSubscriber && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
-    const isFreeTier =
-        isLoaded &&
-        (!isPlusSubscriber || subscriptionStatus?.status !== SubscriptionStatusEnum.ACTIVE);
+    const isCurrentlySubscribed = isPlusSubscriber;
+    const isFreeTier = isLoaded && !isPlusSubscriber;
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {

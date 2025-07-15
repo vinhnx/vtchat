@@ -11,6 +11,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import { userSubscriptions, users } from "@/lib/database/schema";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 
 // Schema for processing payment success
 const PaymentSuccessSchema = z.object({
@@ -161,6 +162,11 @@ export async function POST(request: NextRequest) {
         });
 
         log.info("[Payment Success API] Database transaction completed successfully");
+
+        // Invalidate all caches for the user after successful payment
+        await invalidateAllCaches(userId);
+        
+        log.info("[Payment Success API] Invalidated all caches for user", { userId });
 
         return NextResponse.json({
             success: true,

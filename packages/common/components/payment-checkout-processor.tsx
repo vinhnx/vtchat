@@ -255,6 +255,20 @@ export function CreemCheckoutProcessor() {
                 // Skip subscription refresh since we'll do a full page reload
                 // This prevents double refresh and ensures clean state
 
+                // Force refresh the subscription provider after successful payment
+                try {
+                    await refreshSubscriptionStatus(true, "payment");
+                    log.info(
+                        {},
+                        "[CreemCheckoutProcessor] Forced subscription refresh after payment",
+                    );
+                } catch (refreshError) {
+                    log.warn(
+                        { refreshError },
+                        "[CreemCheckoutProcessor] Error refreshing subscription after payment",
+                    );
+                }
+
                 // Log successful purchase for analytics
                 log.info(
                     {

@@ -3,7 +3,7 @@
 import { Footer } from "@repo/common/components";
 import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
 import { useSession } from "@repo/shared/lib/auth-client";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+
 import {
     Badge,
     PremiumButton,
@@ -20,18 +20,13 @@ import { PRICING_CONFIG } from "../../lib/config/pricing";
 
 export default function RAGPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
-    const {
-        subscriptionStatus,
-        isPlusSubscriber,
-        isLoading: isSubscriptionLoading,
-    } = useGlobalSubscriptionStatus();
+    const { isPlusSubscriber, isLoading: isSubscriptionLoading } = useGlobalSubscriptionStatus();
     const router = useRouter();
 
     const isSignedIn = !!session?.user;
     const isLoaded = !isSessionLoading;
     const isLoading = isSessionLoading || isSubscriptionLoading;
-    const hasAccess =
-        isPlusSubscriber && subscriptionStatus?.status === SubscriptionStatusEnum.ACTIVE;
+    const hasAccess = isPlusSubscriber;
 
     // Handle redirect to login if not signed in
     useEffect(() => {

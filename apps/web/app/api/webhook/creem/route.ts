@@ -13,8 +13,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/database";
 import { sessions, userSubscriptions, users } from "@/lib/database/schema";
-import { invalidateSubscriptionCache } from "@/lib/subscription-cache";
-import { invalidateSessionSubscriptionCache } from "@/lib/subscription-session-cache";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 
 // Known event types and statuses for validation
 const KNOWN_EVENT_TYPES = [
@@ -258,13 +257,8 @@ async function updateUserSubscription(
             `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${status})`,
         );
 
-        // Invalidate subscription cache to force fresh data on next request
-        invalidateSubscriptionCache(userId);
-        log.info(`[Creem Webhook] Invalidated subscription cache for user ${userId}`);
-
-        // Invalidate session subscription cache to force fresh data in global provider
-        invalidateSessionSubscriptionCache(userId);
-        log.info(`[Creem Webhook] Invalidated session subscription cache for user ${userId}`);
+        // Invalidate all caches across all processes
+        await invalidateAllCaches(userId);
 
         // Invalidate user sessions to force fresh subscription data
         await invalidateUserSessions(userId);

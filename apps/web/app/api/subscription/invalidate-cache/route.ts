@@ -1,7 +1,7 @@
 import { log } from "@repo/shared/logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
-import { invalidateSubscriptionCache } from "@/lib/subscription-cache";
+import { invalidateSubscriptionCache } from "@/lib/subscription/subscription-access-simple";
 
 export async function POST(request: NextRequest) {
     try {
@@ -19,22 +19,23 @@ export async function POST(request: NextRequest) {
         let targetUserId;
         try {
             const body = await request.json();
-            targetUserId = body.targetUserId;
+            targetUserId = body.targetUserId || body.userId; // Support both field names
         } catch {
             // Empty body or invalid JSON - use current user ID
             targetUserId = undefined;
         }
 
-        // For now, users can only invalidate their own cache
-        // In production, you might want admin users to invalidate any cache
         const userIdToInvalidate = targetUserId || userId;
 
-        // TODO: Add admin check for invalidating other users' caches
+        // Check if user is admin for cross-user cache invalidation
         if (targetUserId && targetUserId !== userId) {
-            return NextResponse.json(
-                { error: "Forbidden: Cannot invalidate other users cache" },
-                { status: 403 },
-            );
+            // Check if current user is admin
+            if (session.user.role !== "admin") {
+                return NextResponse.json(
+                    { error: "Forbidden: Only admins can invalidate other users' caches" },
+                    { status: 403 },
+                );
+            }
         }
 
         invalidateSubscriptionCache(userIdToInvalidate);

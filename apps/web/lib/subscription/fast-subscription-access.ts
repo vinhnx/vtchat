@@ -4,10 +4,12 @@
 
 import { log } from "@repo/shared/lib/logger";
 import { PlanSlug, type VtPlusFeature } from "@repo/shared/types/subscription";
-import { eq } from "drizzle-orm";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
+import { desc, eq, inArray, sql } from "drizzle-orm";
 import { redisCache, type SubscriptionCacheData } from "@/lib/cache/redis-cache";
-import { db } from "@/lib/db";
-import { userSubscriptions, users } from "@/lib/db/schema";
+import { db } from "@/lib/database";
+import { userSubscriptions, users } from "@/lib/database/schema";
 
 interface FastSubscriptionData {
     planSlug: string | null;
@@ -115,7 +117,7 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
         return fastData;
     }
 
-    // 3. Fetch from database with optimized single query
+    // 3. Fetch from database with optimized single query - prioritize active subscriptions
     try {
         const result = await db
             .select({
@@ -128,6 +130,16 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
             .from(users)
             .leftJoin(userSubscriptions, eq(users.id, userSubscriptions.userId))
             .where(eq(users.id, userId))
+            .orderBy(
+                // Prioritize active/valid subscriptions first
+                sql`CASE 
+                        WHEN user_subscriptions.status IN ('active','trialing','past_due') THEN 0
+                        WHEN user_subscriptions.status IN ('canceled','cancelled') THEN 1
+                        ELSE 2
+                    END`,
+                desc(userSubscriptions.currentPeriodEnd),
+                desc(userSubscriptions.updatedAt),
+            )
             .limit(1);
 
         if (result.length === 0) {
@@ -135,7 +147,13 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
         }
 
         const row = result[0];
-        const isActive = row.status === "active";
+
+        // Use centralized grace period logic for access determination
+        const isActive = hasSubscriptionAccess({
+            status: row.status as SubscriptionStatusEnum,
+            currentPeriodEnd: row.currentPeriodEnd,
+        });
+
         const isPremium =
             isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
         const isVtPlus = isPremium;
@@ -339,10 +357,35 @@ export async function getSubscriptionsBatch(
                 })
                 .from(users)
                 .leftJoin(userSubscriptions, eq(users.id, userSubscriptions.userId))
-                .where(eq(users.id, stillUncachedIds[0])); // Would need to use 'in' for multiple IDs
+                .where(inArray(users.id, stillUncachedIds))
+                .orderBy(
+                    // Prioritize active/valid subscriptions first
+                    sql`CASE 
+                        WHEN user_subscriptions.status IN ('active','trialing','past_due') THEN 0
+                        WHEN user_subscriptions.status IN ('canceled','cancelled') THEN 1
+                        ELSE 2
+                    END`,
+                    desc(userSubscriptions.currentPeriodEnd),
+                    desc(userSubscriptions.updatedAt),
+                );
+
+            // Group by userId to handle multiple subscriptions per user (take first/highest priority)
+            const userDataMap = new Map<string, (typeof dbResults)[0]>();
 
             for (const row of dbResults) {
-                const isActive = row.status === "active";
+                if (!userDataMap.has(row.userId)) {
+                    userDataMap.set(row.userId, row);
+                }
+            }
+
+            // Process each user's subscription data
+            for (const [userId, row] of userDataMap) {
+                // Use centralized grace period logic for access determination
+                const isActive = hasSubscriptionAccess({
+                    status: row.status as SubscriptionStatusEnum,
+                    currentPeriodEnd: row.currentPeriodEnd,
+                });
+
                 const isPremium =
                     isActive &&
                     (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
@@ -359,11 +402,11 @@ export async function getSubscriptionsBatch(
                     isVtPlus,
                 };
 
-                results.set(row.userId, fastData);
-                subscriptionLRU.set(row.userId, fastData);
+                results.set(userId, fastData);
+                subscriptionLRU.set(userId, fastData);
 
                 // Cache in Redis
-                await redisCache.setSubscription(row.userId, {
+                await redisCache.setSubscription(userId, {
                     planSlug: fastData.planSlug,
                     subPlan: fastData.subPlan,
                     status: fastData.status,

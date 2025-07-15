@@ -5,7 +5,11 @@ export const revalidate = 0;
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { eq } from "drizzle-orm";
+import {
+    hasSubscriptionAccess,
+    getEffectiveAccessStatus,
+} from "@repo/shared/utils/subscription-grace-period";
+import { desc, eq, sql } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
@@ -36,11 +40,21 @@ async function fetchSubscriptionFromDB(
 
     const userPlanSlug = userResults.length > 0 ? userResults[0].planSlug : null;
 
-    // Get user subscription from database
+    // Get user subscription from database - prioritize active subscriptions
     const subscription = await db
         .select()
         .from(userSubscriptions)
         .where(eq(userSubscriptions.userId, userId))
+        .orderBy(
+            // Prioritize active/valid subscriptions first
+            sql`CASE 
+                WHEN status IN ('active','trialing','past_due') THEN 0
+                WHEN status IN ('canceled','cancelled') THEN 1
+                ELSE 2
+            END`,
+            desc(userSubscriptions.currentPeriodEnd),
+            desc(userSubscriptions.updatedAt),
+        )
         .limit(1);
 
     // Determine plan: prioritize user_subscriptions.plan, fallback to users.plan_slug, default to VT_BASE
@@ -59,10 +73,11 @@ async function fetchSubscriptionFromDB(
         subscriptionId = sub.creemSubscriptionId;
         hasDbSubscription = true;
 
-        // Check if subscription is expired
-        if (currentPeriodEnd && new Date() > currentPeriodEnd) {
-            subscriptionStatus = SubscriptionStatusEnum.EXPIRED;
-        }
+        // Use centralized grace period logic to get effective status
+        subscriptionStatus = getEffectiveAccessStatus({
+            status: sub.status as SubscriptionStatusEnum,
+            currentPeriodEnd: sub.currentPeriodEnd,
+        });
     } else if (userPlanSlug === PlanSlug.VT_PLUS) {
         // User has vt_plus in users.plan_slug but no subscription record
         // This indicates they should have VT+ access (possibly from admin grant or legacy data)
@@ -76,8 +91,13 @@ async function fetchSubscriptionFromDB(
         hasDbSubscription = false;
     }
 
+    // Use centralized grace period logic to determine access
     const isPlusSubscriber =
-        finalPlan === PlanSlug.VT_PLUS && subscriptionStatus === SubscriptionStatusEnum.ACTIVE;
+        finalPlan === PlanSlug.VT_PLUS &&
+        hasSubscriptionAccess({
+            status: subscriptionStatus,
+            currentPeriodEnd: currentPeriodEnd,
+        });
 
     return {
         plan: finalPlan,

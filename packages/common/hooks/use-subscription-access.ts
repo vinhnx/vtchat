@@ -168,6 +168,7 @@ export function useSubscriptionAccess() {
         isVtPlus: convertedStatus.isVtPlus && convertedStatus.isActive,
         isVtBase: convertedStatus.isVtBase && convertedStatus.isActive, // Base plan is active if current is base and active
         canUpgrade: convertedStatus.canUpgrade,
+        isActive: convertedStatus.isActive, // Add missing isActive property
 
         subscriptionStatus: convertedStatus, // Expose the full detailed status object
 

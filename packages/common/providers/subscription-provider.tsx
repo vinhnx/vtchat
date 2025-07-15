@@ -202,6 +202,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                             status.cachedAt = new Date(status.cachedAt);
                         }
 
+                        // Guarantee isPlusSubscriber boolean flag (Oracle's fix)
+                        if (status.isPlusSubscriber === undefined) {
+                            status.isPlusSubscriber = status.plan === PlanSlug.VT_PLUS;
+                        }
+
                         // Add product info for display purposes
                         if (status.plan === PlanSlug.VT_BASE) {
                             status.productInfo = VT_BASE_PRODUCT_INFO;
@@ -214,6 +219,14 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         if (error instanceof Error && error.name === "AbortError") {
                             throw new Error("Subscription fetch timeout (10s)");
                         }
+
+                        // Handle network errors during page navigation
+                        if (error instanceof TypeError && error.message.includes("NetworkError")) {
+                            throw new Error(
+                                "Network error - request cancelled during page navigation",
+                            );
+                        }
+
                         throw error;
                     }
                 });
@@ -250,11 +263,18 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 return result;
             } catch (err) {
-                log.error(
-                    { error: err instanceof Error ? err.message : "Unknown error" },
-                    "Error fetching subscription status",
-                );
                 const errorMessage = err instanceof Error ? err.message : "Unknown error";
+
+                // Don't log network errors during page navigation as errors
+                if (
+                    errorMessage.includes("request cancelled during page navigation") ||
+                    errorMessage.includes("NetworkError") ||
+                    errorMessage.includes("AbortError")
+                ) {
+                    log.debug("Request cancelled during page navigation", { error: errorMessage });
+                } else {
+                    log.error({ error: errorMessage }, "Error fetching subscription status");
+                }
 
                 // Update global and local error state
                 globalError = errorMessage;
@@ -278,7 +298,8 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                 globalSubscriptionStatus = fallbackFreeTier;
                 setSubscriptionStatus(fallbackFreeTier);
 
-                throw err;
+                // Return fallback instead of throwing to prevent unhandled promise rejections
+                return fallbackFreeTier;
             }
         },
         [session?.user],
@@ -359,9 +380,19 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         document.addEventListener("visibilitychange", handleVisibilityChange);
         window.addEventListener("popstate", handlePopState);
 
+        const handleBeforeUnload = () => {
+            // Clear any pending requests before page unload
+            if (globalFetchPromise) {
+                globalFetchPromise = null;
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("popstate", handlePopState);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, [refreshSubscriptionStatus]); // Include dependency but it's stable due to useCallback
 

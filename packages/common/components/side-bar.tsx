@@ -2,7 +2,6 @@
 import { HistoryItem, Logo } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
-import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
 import { useAppStore, useChatStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
 import { BUTTON_TEXT, TOOLTIP_TEXT } from "@repo/shared/constants";
@@ -78,11 +77,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
-    const { isPlusSubscriber: isPlusFromGlobal } = useGlobalSubscriptionStatus();
     const { logout, isLoggingOut } = useLogout();
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const { toast } = useToast();
     const { isAdmin } = useAdmin();
+
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -550,7 +549,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {isSidebarOpen && (
                             <span className="flex items-center gap-2">
                                 Agent
-                                {!isPlusFromGlobal && (
+                                {!isPlusSubscriber && (
                                     <Badge
                                         className="vt-plus-glass border-[#D99A4E]/30 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
                                         variant="secondary"

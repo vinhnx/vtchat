@@ -54,7 +54,14 @@ class RedisCache {
             const redisUrl = process.env.REDIS_URL || process.env.KV_URL;
 
             if (!redisUrl) {
-                log.warn("No Redis URL configured, caching disabled");
+                // Use debug level during build time to reduce noise
+                const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                                   (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL);
+                if (isBuildTime) {
+                    log.debug("No Redis URL configured, caching disabled");
+                } else {
+                    log.warn("No Redis URL configured, caching disabled");
+                }
                 return;
             }
 
@@ -90,6 +97,13 @@ class RedisCache {
 
     private getKey(key: string): string {
         return `${this.config.keyPrefix}${key}`;
+    }
+
+    /**
+     * Get Redis client instance for advanced operations (pub/sub, etc.)
+     */
+    getClient() {
+        return this.redis;
     }
 
     async get<T = any>(key: string): Promise<T | null> {
@@ -215,7 +229,10 @@ class RedisCache {
         if (data.currentPeriodEnd) {
             const periodEndTime = new Date(data.currentPeriodEnd).getTime();
             const timeUntilEnd = Math.floor((periodEndTime - Date.now()) / 1000);
-            dynamicTTL = Math.min(ttlSeconds, Math.max(5, timeUntilEnd - 30)); // 30s buffer before expiry
+            // Don't cache longer than the subscription period (with 30s buffer)
+            // But ensure minimum 5s cache even if period is ending soon
+            const maxAllowedTTL = Math.max(5, timeUntilEnd - 30);
+            dynamicTTL = Math.min(ttlSeconds, maxAllowedTTL);
         }
 
         return this.setJson(key, cacheData, dynamicTTL);

@@ -44,7 +44,7 @@ const CACHE_DURATIONS = {
         manual: 10 * 60 * 1000, // 10 minutes for manual refresh
     },
     [PlanSlug.VT_BASE]: {
-        initial: 60 * 60 * 1000, // 1 hour for free users
+        initial: 5 * 60 * 1000, // 5 minutes for free users (reduced from 60min)
         payment: 2 * 60 * 1000, // 2 minutes after payment
         expiration: 15 * 60 * 1000, // 15 minutes around expiration
         page_refresh: 30 * 60 * 1000, // 30 minutes for page refresh
