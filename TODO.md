@@ -4,6 +4,10 @@
 
 ok go-> https://vtchat.io.vn/
 
+
+--
+gemini-embedding-001
+
 --
 
 Based on the codebase analysis, here's how to properly set up Redis for VTChat:
