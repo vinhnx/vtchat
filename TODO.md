@@ -4,15 +4,124 @@
 
 ok go-> https://vtchat.io.vn/
 
+
+--
+
+
 1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
-2. ## fix openrouter send dummy api/completion
+2. fix openrouter send dummy api/completion
 
-✅ migrate route /faq -> /help
-✅ migrate route /plus -> /pricing
-update in #codebase
+--
+fix failed deploy
 
-https://vtchat.io.vn/help
-https://vtchat.io.vn/pricing
+~/Developer/learn-by-doing/vtchat main ⇡
+16:10:09 ❯ ./deploy-fly.sh --auto --version minor
+VT Chat Interactive Deployment Pipeline
+===============================================
+[SUCCESS] flyctl is installed and user is authenticated
+
+[STEP] Starting deployment pipeline...
+[STEP] Checking git repository status...
+[SUCCESS] Working directory is clean
+[STEP] Creating version tag...
+[INFO] Current version: v2.6.0
+[INFO] New version: v2.7.0
+[INFO] Creating tag v2.7.0...
+[SUCCESS] Created tag: v2.7.0
+[STEP] Pushing to remote repository...
+Everything up-to-date
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), 224 bytes | 224.00 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:vinhnx/vtchat.git
+
+- [new tag] v2.7.0 -> v2.7.0
+  [SUCCESS] Pushed to remote repository
+  [STEP] Deploying to Fly.io...
+  [INFO] App: vtchat
+  [INFO] Version: v2.7.0
+  [INFO] Config: fly.toml
+  [SUCCESS] Starting deployment...
+  [INFO] Running: flyctl deploy --app vtchat
+  [INFO] You can also monitor deployment progress at: https://fly.io/apps/vtchat
+  [INFO] View deployment logs at: https://fly.io/apps/vtchat/monitoring
+  ==> Verifying app config
+  Validating /Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/fly.toml
+  ✓ Configuration is valid
+  --> Verified app config
+  ==> Building image
+  ==> Building image with Depot
+  --> build: (​)
+  [+] Building 7.1s (11/26)
+  => [internal] load build definition from Dockerfile 0.1s
+  => => transferring dockerfile: 5.72kB 0.1s
+  => [internal] load metadata for docker.io/library/node:20-alpine 1.7s
+  => [internal] load .dockerignore 0.4s
+  => => transferring context: 902B 0.4s
+  => [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
+  => => resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
+  => [internal] load build context 4.8s
+  => => transferring context: 9.91MB 1.2s
+  => CACHED [runner 2/11] WORKDIR /app 0.0s
+  => CACHED [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates 0.0s
+  => CACHED [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/ 0.0s
+  => CACHED [deps 1/4] COPY package.json bun.lock ./ 0.0s
+  => CACHED [deps 2/4] COPY apps/web/package.json ./apps/web/ 0.0s
+  => [deps 3/4] COPY packages/ ./packages/ 0.2s
+  => ERROR [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile 3.3s
+
+---
+
+> [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile:
+> 0.335 bun install v1.2.18 (0d4089ea)
+> 0.537 Resolving dependencies
+> 3.140 Resolved, downloaded and extracted [290]
+> 3.140 warn: incorrect peer dependency "react@19.0.0"
+> 3.154 error: lockfile had changes, but lockfile is frozen
+
+## 3.154 note: try re-running without --frozen-lockfile and commit the updated lockfile
+
+==> Building image
+==> Building image with Depot
+--> build: (​)
+[+] Building 2.1s (12/26)
+=> [internal] load build definition from Dockerfile 0.1s
+=> => transferring dockerfile: 5.72kB 0.1s
+=> [internal] load metadata for docker.io/library/node:20-alpine 0.3s
+=> [internal] load .dockerignore 0.1s
+=> => transferring context: 902B 0.1s
+=> [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
+=> => resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
+=> [internal] load build context 0.3s
+=> => transferring context: 109.78kB 0.2s
+=> CACHED [runner 2/11] WORKDIR /app 0.0s
+=> CACHED [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates 0.0s
+=> CACHED [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/ 0.0s
+=> CACHED [deps 1/4] COPY package.json bun.lock ./ 0.0s
+=> CACHED [deps 2/4] COPY apps/web/package.json ./apps/web/ 0.0s
+=> CACHED [deps 3/4] COPY packages/ ./packages/ 0.0s
+=> ERROR [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile 1.2s
+
+---
+
+> [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile:
+> 0.090 bun install v1.2.18 (0d4089ea)
+> 0.114 Resolving dependencies
+> 1.082 Resolved, downloaded and extracted [290]
+> 1.082 warn: incorrect peer dependency "react@19.0.0"
+> 1.091 error: lockfile had changes, but lockfile is frozen
+
+## 1.091 note: try re-running without --frozen-lockfile and commit the updated lockfile
+
+Error: failed to fetch an image or build from source: error building: failed to solve: process "/bin/sh -c bun install --ignore-scripts --frozen-lockfile" did not complete successfully: exit code: 1
+[ERROR] Deployment failed with exit code 1
+[ERROR] Check the output above for details
+
+--
+
+1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
+2. fix openrouter send dummy api/completion
 
 --
 
@@ -187,17 +296,6 @@ All functionality remains available
 Subscription status still works (just hits DB each time)
 Recommendation: Start without Redis for development, add it later for production performance optimization.
 --
-
---
-
-defualt: don't show exampleprompts component {!currentThreadId && showGreeting && <ExamplePrompts />}
-
---
-
-fix x? Experiments (use with caution):
-@vtchat/web:build: ✓ externalDir
-@vtchat/web:build: ⨯ webpackBuildWorker
-@vtchat/web:build: ⨯ preloadEntriesOnStart
 
 --
 
