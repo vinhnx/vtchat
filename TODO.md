@@ -7,6 +7,11 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+Automatically migrate to AI SDK 5 with our initial set of codemods.
+
+https://v5.ai-sdk.dev/docs/migration-guides/migration-guide-5-0#codemods
+
+--
 
 1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
 2. fix openrouter send dummy api/completion

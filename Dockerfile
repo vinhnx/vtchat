@@ -24,7 +24,7 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/ ./packages/
 
 # Install all dependencies including workspace packages
-RUN bun install --ignore-scripts --frozen-lockfile
+RUN bun install --ignore-scripts
 
 # Stage 3: Build
 FROM base AS builder
