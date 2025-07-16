@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
             );
 
             session = await Promise.race([sessionPromise, timeoutPromise]);
-        } catch (_error) {
+        } catch {
             // Session check failed - treat as anonymous
             session = null;
         }

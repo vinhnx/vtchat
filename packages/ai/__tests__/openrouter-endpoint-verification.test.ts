@@ -198,7 +198,7 @@ describe("OpenRouter Endpoint Verification", () => {
 
             (createOpenRouter as any).mockReturnValue(mockProvider);
 
-            const { getLanguageModel, ModelEnum } = require("../models");
+            const { ModelEnum } = require("../models");
             const { getLanguageModel: getLanguageModelProvider } = require("../providers");
 
             const byokKeys = {

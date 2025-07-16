@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
         let apiKeysFromHeaders: Record<string, string> = {};
         try {
             apiKeysFromHeaders = extractApiKeysFromHeaders(request.headers);
-        } catch (error) {
+        } catch {
             log.debug("No API keys found in headers", {
                 url: new URL(request.url).pathname,
             });
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
 
                 if (modelProvider && transformedApiKeys) {
                     // Import validation functions
-                    const { validateProviderKey, getProviderKeyName } = await import(
+                    const { validateProviderKey, getProviderKeyName: _getProviderKeyName } = await import(
                         "@repo/ai/services/api-key-mapper"
                     );
                     const { generateErrorMessage } = await import(

@@ -2,7 +2,7 @@
  * Test for Sonner toast notifications on API call failures
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // Mock the thread item with different error scenarios
 const createThreadItemWithError = (error: string, status: "ERROR" | "ABORTED") => ({

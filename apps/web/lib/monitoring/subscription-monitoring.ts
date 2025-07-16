@@ -243,7 +243,7 @@ export class SubscriptionMonitoring {
 
         try {
             // Simulate the subscription status API call
-            const userResult = await db
+            const _userResult = await db
                 .select({ planSlug: users.planSlug })
                 .from(users)
                 .where(eq(users.id, testUserId))

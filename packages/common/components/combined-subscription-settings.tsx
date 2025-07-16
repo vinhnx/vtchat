@@ -12,7 +12,7 @@ import {
     DEFAULT_EMBEDDING_MODEL,
     EMBEDDING_MODEL_CONFIG,
 } from "@repo/shared/config/embedding-models";
-import { getEnabledVTPlusFeatures, VT_PLUS_FEATURES } from "@repo/shared/config/vt-plus-features";
+
 import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
@@ -38,17 +38,10 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {
     Activity,
-    ArrowRight,
-    BarChart3,
     Brain,
-    Check,
     CreditCard,
     Database,
     FileText,
-    Lock,
-    MessageSquare,
-    Palette,
-    Search,
     Settings,
     Shield,
     Sparkles,
@@ -101,7 +94,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         : DEFAULT_EMBEDDING_MODEL;
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
-    const vtPlusFeatures = getEnabledVTPlusFeatures();
 
     // Function to analyze knowledge base and suggest profile information
     const analyzeKnowledgeBase = async () => {
@@ -184,80 +176,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         });
     };
 
-    const getFeatureDetails = (featureId: FeatureSlug) => {
-        switch (featureId) {
-            case FeatureSlug.DOCUMENT_PARSING:
-                return {
-                    icon: <FileText className="h-4 w-4" />,
-                    benefit: "Upload and analyze documents",
-                    description:
-                        "Process PDFs, Word docs, spreadsheets, and other files directly in chat. Extract insights, summarize content, and ask questions about your documents.",
-                };
-            case FeatureSlug.STRUCTURED_OUTPUT:
-                return {
-                    icon: <MessageSquare className="h-4 w-4" />,
-                    benefit: "Organized, structured responses",
-                    description:
-                        "Get AI responses in clean tables, bullet points, numbered lists, and other organized formats for better readability and usability.",
-                };
-            case FeatureSlug.THINKING_MODE_TOGGLE:
-                return {
-                    icon: <Brain className="h-4 w-4" />,
-                    benefit: "AI reasoning transparency",
-                    description:
-                        "See exactly how the AI thinks through problems step-by-step. Understand the reasoning process for better learning and trust.",
-                };
-            case FeatureSlug.REASONING_CHAIN:
-                return {
-                    icon: <Activity className="h-4 w-4" />,
-                    benefit: "Step-by-step problem solving",
-                    description:
-                        "Watch AI break down complex problems into logical steps, showing the chain of reasoning for transparent decision making.",
-                };
-            case FeatureSlug.PRO_SEARCH:
-                return {
-                    icon: <Search className="h-4 w-4" />,
-                    benefit: "Advanced web search integration",
-                    description:
-                        "Get real-time information from the web with intelligent search capabilities that understand context and provide accurate results.",
-                };
-            case FeatureSlug.DEEP_RESEARCH:
-                return {
-                    icon: <Shield className="h-4 w-4" />,
-                    benefit: "Comprehensive research tools",
-                    description:
-                        "Conduct thorough research across multiple sources with AI-powered analysis, fact-checking, and synthesis of information.",
-                };
-            case FeatureSlug.DARK_THEME:
-                return {
-                    icon: <Palette className="h-4 w-4" />,
-                    benefit: "Comfortable dark mode",
-                    description:
-                        "Beautiful dark theme designed for extended use, reducing eye strain during long sessions and late-night work.",
-                };
-            case FeatureSlug.GEMINI_EXPLICIT_CACHING:
-                return {
-                    icon: <Zap className="h-4 w-4" />,
-                    benefit: "Cost-effective Gemini caching",
-                    description:
-                        "Reduce API costs for Gemini 2.5 and 2.0 models by reusing conversation context across multiple queries.",
-                };
-            case FeatureSlug.CHART_VISUALIZATION:
-                return {
-                    icon: <BarChart3 className="h-4 w-4" />,
-                    benefit: "Interactive chart generation",
-                    description:
-                        "Create beautiful interactive charts and graphs directly from AI conversations. Visualize data with bar charts, line charts, pie charts, and more.",
-                };
-            default:
-                return {
-                    icon: <Sparkles className="h-4 w-4" />,
-                    benefit: "Enhanced AI capabilities",
-                    description:
-                        "Premium features that unlock the full potential of AI assistance.",
-                };
-        }
-    };
 
     const handleManageSubscription = async () => {
         try {

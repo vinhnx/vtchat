@@ -15,9 +15,7 @@ console.log("DATABASE_URL preview:", `${process.env.DATABASE_URL?.substring(0, 2
 
 try {
     const { db } = await import("../apps/web/lib/database/index.js");
-    const { users, userSubscriptions } = await import("../apps/web/lib/database/schema.js");
-    const { PlanSlug } = await import("../packages/shared/types/subscription.js");
-    const { eq, and, isNull, or } = await import("drizzle-orm");
+    const { users } = await import("../apps/web/lib/database/schema.js");
 
     console.log("Successfully loaded database modules");
 

@@ -8,7 +8,7 @@ interface ErrorDiagnostic {
     category: "connection" | "auth" | "rate_limit" | "model" | "config" | "unknown";
 }
 
-export const generateErrorDiagnostic = (error: unknown): ErrorDiagnostic => {
+export const generateErrorDiagnostic = (_error: unknown): ErrorDiagnostic => {
     // Generic fallback with helpful diagnostics
     return {
         message: "An unexpected error occurred while processing your request.",

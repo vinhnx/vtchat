@@ -136,7 +136,7 @@ Your report should demonstrate subject matter expertise while remaining intellec
         return answer;
     },
     onError: handleError,
-    route: ({ result, context }) => {
+    route: ({ context }) => {
         if (context?.get("showSuggestions") && !!context?.get("answer")) {
             return "suggestions";
         }

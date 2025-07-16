@@ -147,7 +147,7 @@ Current date: ${getHumanizedDate()}
         };
     },
     onError: handleError,
-    route: ({ result, executionContext, config, context }) => {
+    route: ({ result }) => {
         if (result?.queries?.filter(Boolean)?.length > 0) {
             return "gemini-web-search";
         }

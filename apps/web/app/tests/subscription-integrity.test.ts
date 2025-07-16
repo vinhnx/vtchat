@@ -1,7 +1,6 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import {
     SubscriptionService,
-    DuplicateActiveSubscriptionError,
 } from "@/lib/services/subscription-service";
 import { SubscriptionMonitoring } from "@/lib/monitoring/subscription-monitoring";
 import { PlanSlug } from "@repo/shared/types/subscription";
@@ -75,7 +74,7 @@ describe("Subscription Integrity Protection", () => {
             invalidStatuses.forEach((status) => {
                 expect(() => {
                     // This would fail at the database level
-                    const subscription = {
+                    const _subscription = {
                         status: status as any,
                         plan: PlanSlug.VT_PLUS,
                     };
@@ -91,7 +90,7 @@ describe("Subscription Integrity Protection", () => {
             invalidPlans.forEach((plan) => {
                 expect(() => {
                     // This would fail at the database level
-                    const subscription = {
+                    const _subscription = {
                         plan: plan as any,
                         status: SubscriptionStatusEnum.ACTIVE,
                     };
