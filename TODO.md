@@ -6,6 +6,10 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+add https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project
+
+--
+
 use flymcp to debug and fix deployment failed, could be related to our previous next.js and react upgrade
 
 ```
