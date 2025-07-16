@@ -5,63 +5,13 @@
 ok go-> https://vtchat.io.vn/
 
 
---
-
-add https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project
-
---
-apply https://vercel.com/open-source-program
-
---
-
-use flymcp to debug and fix deployment failed, could be related to our previous next.js and react upgrade
-
-fix apps/web/app/error.tsx, apps/web/app/global-error.tsx layout, use minimal css and mute black white color scheme
-
---
-
-improve chat thread markdown content font, use SF Pro Display font if avaiable, or fallback to system font
-
---
-
-check reduntdant offline
-apps/web/public/sw.js
-apps/web/public/offline.html
-
---
-
-add groq
+add groq models
 
 https://ai-sdk.dev/providers/ai-sdk-providers/groq
 
 --
 
 check apply to use packages/ai/services/error-messages.ts
-
---
-fix open router
-
-curl 'https://openrouter.ai/api/v1/chat/completions' \
--X POST \
--H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) Gecko/20100101 Firefox/140.0' \
--H 'Accept: _/_' \
--H 'Accept-Language: en-US,en;q=0.5' \
--H 'Accept-Encoding: gzip, deflate, br, zstd' \
--H 'Content-Type: application/json' \
--H 'Authorization: Bearer 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' \
--H 'Referer: http://localhost:3000/' \
--H 'Origin: http://localhost:3000' \
--H 'DNT: 1' \
--H 'Sec-GPC: 1' \
--H 'Connection: keep-alive' \
--H 'Sec-Fetch-Dest: empty' \
--H 'Sec-Fetch-Mode: cors' \
--H 'Sec-Fetch-Site: cross-site' \
--H 'Priority: u=4' \
--H 'TE: trailers' \
---data-raw '{"model":"moonshot/kimi-k2","temperature":0,"messages":[{"role":"system","content":"You are a helpful assistant that can answer questions and help with tasks.\n Today is July 16, 2025, 11:16 AM.\n \n \n \n "},{"role":"user","content":"hello"}],"stream":true}'
-
-{"error":{"message":"No auth credentials found","code":401}}
 
 --
 
