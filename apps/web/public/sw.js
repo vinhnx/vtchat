@@ -390,81 +390,17 @@ self.addEventListener("fetch", (event) => {
 
 // Helper function to create appropriate offline responses
 function createOfflineResponse(request) {
-    // Return offline page for navigation requests
-    if (request.mode === "navigate") {
-        // Try to get cached offline page first
-        return caches
-            .match("/offline.html")
-            .then((cachedOffline) => {
-                if (cachedOffline) {
-                    return cachedOffline;
-                }
-
-                // Fallback to fetch offline page
-                return fetch("/offline.html")
-                    .then((response) => (response.ok ? response : createFallbackOfflineResponse()))
-                    .catch(() => createFallbackOfflineResponse());
-            })
-            .catch(() => createFallbackOfflineResponse());
+    // Return offline page for navigation requests.
+    if (request.mode === 'navigate') {
+        return caches.match('/offline.html');
     }
 
-    // For other requests, return a simple 503 response
-    return new Response("Service Unavailable", {
+    // For other requests (e.g., images, styles), return a simple error response.
+    return new Response('Service Unavailable', {
         status: 503,
-        statusText: "Service Unavailable",
+        statusText: 'Service Unavailable',
+        headers: { 'Content-Type': 'text/plain' },
     });
-}
-
-// Fallback offline response if offline.html is not available
-function createFallbackOfflineResponse() {
-    return new Response(
-        `<!DOCTYPE html>
-        <html>
-        <head>
-            <title>VT - Offline</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100vh;
-                    margin: 0;
-                    background: #fafafa;
-                    color: #333;
-                    text-align: center;
-                    padding: 20px;
-                }
-                .icon { font-size: 48px; margin-bottom: 16px; }
-                h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
-                p { margin: 0; color: #666; line-height: 1.5; }
-                .retry {
-                    margin-top: 24px;
-                    padding: 12px 24px;
-                    background: #007bff;
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 16px;
-                }
-                .retry:hover { background: #0056b3; }
-            </style>
-        </head>
-        <body>
-            <div class="icon">📱</div>
-            <h1>You're offline</h1>
-            <p>Check your internet connection and try again.</p>
-            <button class="retry" onclick="window.location.reload()">Try Again</button>
-        </body>
-        </html>`,
-        {
-            status: 200,
-            headers: { "Content-Type": "text/html" },
-        },
-    );
 }
 
 // Background sync - handle offline actions when connection is restored
