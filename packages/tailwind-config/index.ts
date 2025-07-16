@@ -77,7 +77,6 @@ const config: any = {
                 clash: ["var(--font-clash)", ...fontFamily.sans],
                 sans: ["var(--font-inter)", ...fontFamily.sans],
                 bricolage: ["var(--font-bricolage)", ...fontFamily.sans],
-                "prose-font": ['"SF Pro Display"', "system-ui", "sans-serif"],
             },
             fontSize: {
                 xs: ["0.75rem", { lineHeight: "1.2rem", letterSpacing: "0.01em" }],

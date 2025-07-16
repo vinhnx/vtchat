@@ -391,15 +391,15 @@ self.addEventListener("fetch", (event) => {
 // Helper function to create appropriate offline responses
 function createOfflineResponse(request) {
     // Return offline page for navigation requests.
-    if (request.mode === 'navigate') {
-        return caches.match('/offline.html');
+    if (request.mode === "navigate") {
+        return caches.match("/offline.html");
     }
 
     // For other requests (e.g., images, styles), return a simple error response.
-    return new Response('Service Unavailable', {
+    return new Response("Service Unavailable", {
         status: 503,
-        statusText: 'Service Unavailable',
-        headers: { 'Content-Type': 'text/plain' },
+        statusText: "Service Unavailable",
+        headers: { "Content-Type": "text/plain" },
     });
 }
 

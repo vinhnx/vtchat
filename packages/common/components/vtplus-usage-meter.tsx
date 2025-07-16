@@ -68,6 +68,10 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                         setError("Please sign in to view usage");
                         return;
                     }
+                    if (response.status === 403) {
+                        setError("VT+ subscription required to view usage tracking");
+                        return;
+                    }
                     throw new Error("Failed to fetch usage data");
                 }
 
@@ -108,16 +112,6 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                         <AlertTriangle className="h-4 w-4" />
                         <span>{error}</span>
                     </div>
-                </CardContent>
-            </Card>
-        );
-    }
-
-    if (!usage) {
-        return (
-            <Card>
-                <CardContent className="pt-6">
-                    <p className="text-muted-foreground">VT+ usage tracking is not available.</p>
                 </CardContent>
             </Card>
         );

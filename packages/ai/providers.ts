@@ -1,5 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGroq } from "@ai-sdk/groq";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
@@ -19,6 +20,8 @@ export const Providers = {
     OPENROUTER: "openrouter",
     LMSTUDIO: "lmstudio",
     OLLAMA: "ollama",
+    GROQ: "groq",
+    MOONSHOT: "moonshot",
 } as const;
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
@@ -64,6 +67,8 @@ const getApiKey = (
             [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
             [Providers.LMSTUDIO]: "LMSTUDIO_BASE_URL",
             [Providers.OLLAMA]: "OLLAMA_BASE_URL",
+            [Providers.GROQ]: "GROQ_API_KEY",
+            [Providers.MOONSHOT]: "MOONSHOT_API_KEY",
         };
 
         const byokKey = byokKeys[keyMapping[provider]];
@@ -83,6 +88,10 @@ const getApiKey = (
                 return process.env.LMSTUDIO_BASE_URL || "";
             case Providers.OLLAMA:
                 return process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
+            case Providers.GROQ:
+                return process.env.GROQ_API_KEY || "";
+            case Providers.MOONSHOT:
+                return process.env.MOONSHOT_API_KEY || "";
             default:
                 // All other providers MUST use BYOK - no server-funded keys
                 return "";
@@ -118,6 +127,7 @@ type ProviderInstance =
     | ReturnType<typeof createTogetherAI>
     | ReturnType<typeof createXai>
     | ReturnType<typeof createOpenRouter>
+    | ReturnType<typeof createGroq>
     | ReturnType<typeof createOpenAICompatible>;
 
 export const getProviderInstance = (
@@ -207,6 +217,17 @@ export const getProviderInstance = (
         case "openrouter":
             validateApiKey(Providers.OPENROUTER);
             return createOpenRouter({
+                apiKey,
+            });
+        case "groq":
+            validateApiKey(Providers.GROQ);
+            return createGroq({
+                apiKey,
+            });
+        case "moonshot":
+            validateApiKey(Providers.MOONSHOT);
+            return createOpenAI({
+                baseURL: "https://api.moonshot.cn/v1",
                 apiKey,
             });
         case "lmstudio": {

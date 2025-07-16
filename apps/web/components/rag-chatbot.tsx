@@ -8,7 +8,7 @@ import {
     MobilePullToRefresh,
     SwipeableMessage,
 } from "@repo/common/components";
-import { useSubscriptionAccess } from "@repo/common/hooks";
+import { useErrorHandler, useSubscriptionAccess } from "@repo/common/hooks";
 import { useApiKeysStore, useAppStore } from "@repo/common/store";
 import { EMBEDDING_MODEL_CONFIG } from "@repo/shared/config/embedding-models";
 import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
@@ -75,9 +75,11 @@ export function RAGChatbot() {
     // Mobile specific states
     const [isMinimized, setIsMinimized] = useState(false);
 
-    // Enhanced error handling function
+    // Enhanced error handling using centralized error message service
+    const { showError } = useErrorHandler();
+
     const showErrorToast = useCallback(
-        (error: any) => {
+        async (error: any) => {
             // Debug logging to understand error structure - serialize error properly
             log.error(
                 {
@@ -115,10 +117,9 @@ export function RAGChatbot() {
                 errorMessage = "Unknown error occurred";
             }
 
-            const message = errorMessage.toLowerCase();
             log.info(
                 {
-                    message,
+                    message: errorMessage.toLowerCase(),
                     originalErrorMessage: error instanceof Error ? error.message : String(error),
                     originalErrorType: typeof error,
                 },
@@ -126,82 +127,35 @@ export function RAGChatbot() {
             );
 
             try {
-                if (message.includes("api key is required") || message.includes("unauthorized")) {
-                    toast({
-                        title: "API Key Required",
-                        description:
-                            "Please configure your API keys in Settings to use the Knowledge Assistant.",
-                        variant: "destructive",
-                    });
-                } else if (
-                    message.includes("rate limit") ||
-                    message.includes("too many requests")
-                ) {
-                    toast({
-                        title: "Rate Limit Exceeded",
-                        description: "Too many requests. Please try again in a few minutes.",
-                        variant: "destructive",
-                    });
-                } else if (
-                    message.includes("insufficient credits") ||
-                    message.includes("quota exceeded")
-                ) {
-                    toast({
-                        title: "Credits Exhausted",
-                        description:
-                            "Your API credits have been exhausted. Please check your provider account.",
-                        variant: "destructive",
-                    });
-                } else if (message.includes("network") || message.includes("fetch")) {
-                    toast({
-                        title: "Network Error",
-                        description: "Please check your internet connection and try again.",
-                        variant: "destructive",
-                    });
-                } else if (message.includes("timeout")) {
-                    toast({
-                        title: "Request Timeout",
-                        description: "The request took too long. Please try again.",
-                        variant: "destructive",
-                    });
-                } else if (
-                    message.includes("server error") ||
-                    message.includes("internal server")
-                ) {
-                    toast({
-                        title: "Server Error",
-                        description: "Our servers are experiencing issues. Please try again later.",
-                        variant: "destructive",
-                    });
-                } else if (message.includes("invalid") || message.includes("bad request")) {
-                    toast({
-                        title: "Invalid Request",
-                        description: "There was an issue with your request. Please try again.",
-                        variant: "destructive",
-                    });
-                } else {
-                    toast({
-                        title: "Chat Error",
-                        description: errorMessage || "Something went wrong. Please try again.",
-                        variant: "destructive",
-                    });
-                }
-                log.info({}, "Toast error shown successfully");
-            } catch (toastError) {
+                // Use centralized error handling service
+                await showError(errorMessage, {
+                    // Try to extract context from the error or current state
+                    userId: user?.id,
+                    // Add more context if available from the component state
+                });
+
+                log.info({}, "Toast error shown successfully via centralized service");
+            } catch (serviceError) {
+                // Fallback to basic error handling if service fails
                 log.error(
                     {
-                        toastErrorMessage:
-                            toastError instanceof Error ? toastError.message : String(toastError),
-                        toastErrorType: typeof toastError,
-                        originalErrorMessage:
-                            error instanceof Error ? error.message : String(error),
-                        originalErrorType: typeof error,
+                        serviceError:
+                            serviceError instanceof Error
+                                ? serviceError.message
+                                : String(serviceError),
+                        originalError: errorMessage,
                     },
-                    "Failed to show error toast - this indicates a problem with the toast system",
+                    "Failed to use centralized error service, falling back to basic toast",
                 );
+
+                toast({
+                    title: "Chat Error",
+                    description: errorMessage || "Something went wrong. Please try again.",
+                    variant: "destructive",
+                });
             }
         },
-        [toast],
+        [showError, toast, user?.id],
     );
 
     const allApiKeys = getAllKeys();

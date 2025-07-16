@@ -1,8 +1,9 @@
+import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
+import { auth } from "@/lib/auth-server";
 import { VT_PLUS_LIMITS, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
 import { getAllUsage } from "@repo/common/lib/vtplusRateLimiter";
 import { log } from "@repo/shared/lib/logger";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,22 @@ export async function GET(request: NextRequest) {
         }
 
         const userId = session.user.id;
+
+        // Check VT+ access before returning usage data
+        const ip =
+            request.headers.get("x-real-ip") ?? request.headers.get("x-forwarded-for") ?? undefined;
+        const vtPlusCheck = await checkVTPlusAccess({ userId, ip });
+        if (!vtPlusCheck.hasAccess) {
+            return NextResponse.json(
+                {
+                    error: "VT+ subscription required",
+                    message: "VT+ usage tracking is only available for VT+ subscribers.",
+                    reason: vtPlusCheck.reason,
+                    subscriptionStatus: vtPlusCheck.subscriptionStatus,
+                },
+                { status: 403 },
+            );
+        }
 
         // Get usage for all VT+ features
         const usage = await getAllUsage(userId);

@@ -5,6 +5,7 @@ export * from "./use-clipboard";
 export * from "./use-copy-text";
 export * from "./use-document-attachment";
 export * from "./use-editor";
+export * from "./use-error-handler";
 export * from "./use-gemini-caching";
 export * from "./use-generation-timeout";
 export * from "./use-image-attachment";

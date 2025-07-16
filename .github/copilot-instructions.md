@@ -1,212 +1,326 @@
-# VT Chat AI Development Instructions
+# AGENT.md - Development Guidelines
 
-## Architecture Overview
+## Tech Stack & Project Overview
 
-VT Chat is a **privacy-first AI chat Turborepo monorepo** with sophisticated subscription tiers. Core structure:
-- `apps/web/` - Next.js 14 App Router application (main entry point)
-- `packages/ai/` - Agentic Graph System supporting 30+ models (OpenAI, Anthropic, Google, etc.)
-- `packages/common/` - Shared React components, hooks, Zustand stores with IndexedDB persistence
-- `packages/shared/` - Type-safe constants, utilities, types, Pino logger, Better-Auth integration
-- `packages/ui/` - Shadcn/ui base components with minimal design principles
-- `packages/actions/` - Server actions for feedback and form handling
-- `packages/orchestrator/` - Task orchestration and workflow management
+- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
+- **Core Technologies**: Next.js 15 (App Router), React 19.0.0, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
+- **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
+- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
 
-## Critical Development Patterns
+## Package Management
 
-### Constants & Configuration (NEVER Hardcode)
-**All values must use centralized enums** from `packages/shared/constants/`:
-```typescript
-// ✅ Use typed constants
-import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
-import { STORAGE_KEYS } from '@repo/shared/constants/storage';
-const limit = GEMINI_LIMITS.FLASH_LITE.FREE_DAY; // 20
+- Use `bun` instead of `npm` for all operations
 
-// ❌ Never hardcode - will break build
-const limit = 20; // Wrong! Use enum pattern
-```
+## Code Style
 
-Key constants files: `rate-limits.ts`, `routes.ts`, `storage.ts`, `features.ts`, `pricing.ts`, `thinking-mode.ts`, `user-tiers.ts`, `creem.ts`
+- Make sure no string in #codebase, use enum pattern.
+- Don't hard code values in the codebase.
+- Use environment variables for configuration (e.g., API keys, product IDs, ADMIN_USER_IDS for Better-Auth admin access - supports comma-separated user IDs)
+- Use centralize enum for custom reusable keys.
+- 4-space indentation, single quotes, 100 char line length
+- PascalCase components, camelCase hooks/utils, kebab-case files
+- Named exports preferred over default exports
+- Use oxlint for fast comprehensive linting (run `bun run lint`)
+- Use Prettier for markdown files only (run `bun run format`)
 
-### Zustand State Management (Critical Pattern)
-**Always use individual selectors** to prevent infinite re-renders (common source of bugs):
-```typescript
-// ✅ Correct - prevents infinite loops
-const isThinking = useChatStore(state => state.isThinking);
-const currentModel = useChatStore(state => state.currentModel);
+## UI/UX Design Principles
 
-// ❌ Wrong - causes infinite re-renders and crashes
-const { isThinking, currentModel } = useChatStore(state => ({
-    isThinking: state.isThinking,
-    currentModel: state.currentModel
-}));
-```
-
-### Per-Account Data Isolation
-**Privacy-first architecture** with user-specific IndexedDB databases:
-```typescript
-// Each user gets isolated storage: ThreadDatabase_${userId}
-class ThreadDatabase extends Dexie {
-    constructor(userId?: string) {
-        const dbName = userId ? `ThreadDatabase_${userId}` : 'ThreadDatabase_anonymous';
-        super(dbName);
-    }
-}
-```
-
-### Structured Logging (NEVER use console.*)
-**Always use Pino logger** with automatic PII redaction:
-```typescript
-// ✅ Use structured logger with PII protection
-import { log } from '@repo/shared/logger';
-log.info({ userId, action: 'chat_started' }, 'User started new chat');
-log.error({ error: err.message }, 'Failed to process request');
-
-// ❌ Never use console methods - security risk
-console.log('User:', userId); // Exposes PII!
-```
+- **Minimal Design**: Follow shadcn/ui principles with clean, minimal aesthetics
+- **No Colors**: Use only black/white/muted colors (avoid gradients, bright colors)
+- **Minimal Icons**: Reduce icon usage to essentials only
+- **Clean Typography**: Rely on typography hierarchy over visual decorations
+- **Neutral Palette**: Use `text-muted-foreground`, `bg-muted`, standard shadcn colors
+- **Simple Interactions**: Avoid flashy animations or complex visual effects
 
 ## Development Workflow
 
-### Required Tools & Commands
-- **Package Manager**: Use `bun` exclusively (not npm/yarn/pnpm)
-- **Linting**: `bun run lint` (oxlint) - fast comprehensive checking
-- **Format**: `bun run biome:format` - auto-fix formatting issues
-- **Build**: `bun run build` - verify compilation across all packages
-- **Test**: `bun test` (vitest) with jsdom environment for React components
-- **Dev**: `bun dev` - development server with optional React Scan (`bun run dev:scan`)
+- Make sure you DO NOT CREATE ANY debug and test FILES IN ./ ROOT DIRECTORY. Only use files in /temps or apps/web/app/tests/ or /scripts.
+- Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
+- **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
+- **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
+- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **NEVER commit changes yourself** - DO NOT execute `git commit` unless you have my approval
+- Run `bun run lint` (oxlint) for comprehensive error checking
+- Run `bun run build` to verify compilation before major changes
+- Test core functionality after significant changes
 
-### Oracle Consultation Workflow (MANDATORY)
-**All significant changes require Oracle approval** following ask-implement-review pattern:
+## Deployment
 
-1. **ASK-ORACLE**: Provide problem statement + code context, request detailed implementation plan
-2. **Implement**: Follow Oracle's plan strictly
-3. **REVIEW-ORACLE**: Present diff/changes for approval before merge
-4. **Document**: Record plan + approval in `memory-bank/<date>-oracle.md`
+⚠️ **CRITICAL DEPLOYMENT POLICY** ⚠️
+**DO NOT DEPLOY TO PRODUCTION FLY.IO WITHOUT EXPLICIT USER APPROVAL**
 
-Exceptions: Sev-1 production fixes (implement first, seek retroactive approval within 24h)
+- NEVER run `./deploy-fly.sh` without user permission
+- Always ask for approval before any production deployment
+- This applies to ALL deployment commands and scripts
 
-### Pre-Implementation Checklist
-1. **Always run `bun dev`** and check console for errors before starting new tasks
-2. **Run `bun run biome:format`** to auto-fix formatting
-3. **Consult Oracle workflow** for complex features (see AGENT.md)
-4. **Never commit changes yourself** - DO NOT execute `git commit` or use commit tools
+- **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
+    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
-### Shadcn/ui Component Installation
-```bash
-# Navigate to packages/ui first, then use bunx
-cd packages/ui
-bunx shadcn@latest add label
-```
+### Oracle Consultation Workflow (REQUIRED)
 
-## Code Style & Standards
+All code changes **must** follow this ask-implement-review loop with the Oracle.
 
-### File Naming & Structure
-- **PascalCase**: Components (`UserProfile.tsx`)
-- **camelCase**: Hooks, utilities (`useAuth.ts`, `formatDate.ts`)
-- **kebab-case**: Files, directories (`user-profile/`, `api-keys.ts`)
-- **Named exports** preferred over default exports
+1. **Task Intake**
+    - Write a concise Problem Statement, goals, and acceptance criteria.
 
-### Type Safety
-- **TypeScript required** for all new code
-- Use centralized types from `@repo/shared/types/`
-- Environment-specific types in `@repo/shared/types/environment.ts`
+2. **ASK-ORACLE (PLAN)**
+    - Provide the above context plus key code excerpts.
+    - Ask: "Oracle, please produce a detailed implementation plan."
 
-### UI/UX Principles
-- **Minimal Design**: Follow shadcn/ui principles, avoid colors/gradients
-- **No Hard Colors**: Use `text-muted-foreground`, `bg-muted`, standard shadcn palette
-- **Essential Icons Only**: Use lucide-react sparingly
-- **Clean Typography**: Rely on hierarchy over visual effects
+3. **Implementation**
+    - Implement strictly according to the received plan.
 
-## Testing Patterns
+4. **REVIEW-ORACLE**
+    - Present the diff or PR link and ask: "Oracle, please review and approve."
+    - Address comments; iterate until Oracle replies **Approved**.
 
-### Test Organization
-- **Integration tests**: `apps/web/app/tests/` (main application testing)
-- **Component tests**: `packages/*/components/__tests__/` (unit testing for components)
-- **Setup files**: Multiple setup files loaded in sequence by vitest config
+5. **Merge & Document**
+    - Merge only after approval.
+    - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
 
-### Testing Environment
-```typescript
-// vitest with jsdom, React Testing Library
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+6. **Exceptions**
+    - For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
 
-// Required for all component tests
-expect.extend(matchers);
-```
+**Best practices:**
+✔ Provide only relevant context; avoid massive dumps.
+✔ Use enumerated questions.
+✔ Time-box to 2 iterations; escalate if more.
+✔ Always run format, lint, build, and tests before requesting review.
 
-### Test Structure Requirements
-- Use `@testing-library/react` for component rendering
-- Use `@testing-library/user-event` for interactions
+### Git Hooks
+
+- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Philosophy**: Encourage good practices without blocking development flow
+
+## Tech Stack
+
+- Next.js 15 with App Router, React 19.0.0, TypeScript, Tailwind CSS
+- Zustand for state, Drizzle ORM for DB, Better Auth for authentication
+- Custom bot detection with Better-Auth plugin using isbot library
+- Framer Motion for animations, Radix UI components
+- Shadcn/ui for UI components, Lucide icons, clsx for classnames
+- Payment integration with Creem.io
+
+## Architecture
+
+- Turborepo monorepo: `apps/` and `packages/`
+- `@repo/common` - components/hooks, `@repo/shared` - types/utils
+- Use `'use client'` for client components
+
+## Domain Knowledge
+
+- Chat application with AI models (OpenAI, Anthropic, etc.)
+- Subscription tiers:VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+- MCP integration for external tools
+- Use promptBoost tools to enhance prompt quality
+- You can use playwright MCP tool to test web components integration
+
+## Testing
+
+- use ChatMode.ChatMode.GEMINI_2_5_FLASH_LITE to test instead GEMINI_2_5_PRO because cost.
+- Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
+- Every implemented feature should have a test case to maintain quality
+- Every unit test should cover critical paths and edge cases
+- Use `vitest` for testing, with `@testing-library/react` for React components.
+- Run tests regularly to ensure code quality
 - Use `@testing-library/jest-dom/vitest` for custom matchers
-- Cover critical paths and edge cases for all features
-- Test timeout: 10 seconds (configured globally)
+- Use `@testing-library/user-event` for simulating user interactions
+- Use `@testing-library/react` for rendering components in tests
+- Use `@testing-library/jest-dom` for custom matchers in tests
+- Use `@testing-library/react-hooks` for testing custom hooks
+- Use `@testing-library/dom` for DOM-related utilities in tests
 
-## Deployment & Production
+## Bun
 
-### Deployment Commands
-- **Production**: `./deploy-fly.sh` (interactive) or `./deploy-fly.sh --auto --version patch`
-- **Verification**: `bun scripts/verify-production-config.js`
+- Use `bun` instead of `npm` or `yarn`
+- Use `bun` for all package management and script execution
 
-### Environment Configuration
-Critical env vars managed through:
-- `packages/shared/constants/creem.ts` - Payment config
-- `apps/web/lib/config/react-scan.ts` - Development tools
-- Multiple safety checks prevent accidental production activation of dev tools
+## UI components
 
-## AI System Integration
+- when try to install components, navigatete to ~/Developer/learn-by-doing/vtchat/packages/ui first, then use bunx
+- To install shadcn components, check example command: `npx shadcn@latest add label`
+- Use shadcn/ui components for UI elements
+- Use `@repo/ui` for shared UI components
+- Use lucide icons from `lucide-react`
+- Use Tailwind CSS for styling
+- Use `clsx` for conditional class names
+- Use `tailwind-merge` for merging Tailwind classes
+- Use `framer-motion` for animations
 
-### Model Configuration
-- **Model definitions**: `packages/ai/models.ts` - Centralized enum with 30+ models
-- **Provider setup**: `packages/ai/providers.ts` - OpenAI, Anthropic, Google, Groq, etc.
-- **Rate limiting**: `packages/shared/constants/rate-limits.ts` - Per-model, per-tier limits
-- **Chat modes**: `packages/shared/config/chat-mode.ts` - Thinking, standard, etc.
+## Error Handling
 
-### Subscription Tiers & Access Control
-- **Free Tier**: All premium models with BYOK + 9 server-funded models
-- **VT+ Tier**: Exclusive access to PRO_SEARCH, DEEP_RESEARCH, RAG features
-- **Feature gates**: `packages/shared/constants/features.ts` - Centralized feature definitions
-- **User tier checks**: `getGlobalSubscriptionStatus()` for runtime access control
+- Use `try/catch` for async operations
+- Use Pino logger from `@repo/shared/logger` for structured logging with automatic PII redaction
+- Use `toast` from `@repo/ui` for user notifications
+- Use `ErrorBoundary` for catching errors in React components
 
-### AI Workflow Architecture
-```typescript
-// Agentic Graph System in packages/ai/
-// - workflow/ - Multi-step reasoning chains
-// - tools/ - External tool integrations (MCP protocol)
-// - prompts/ - System and user prompt templates
-// - cache/ - Response caching for performance
+## Logging
+
+- DO NOT USE console.log/error/warn\*\* - Always use Pino logger log.info/error/debug/warn (`@repo/shared/lib/logger`)
+- **Import**: `import { log } from '@repo/shared/lib/logger'` for basic logging (use `log` not `logger`)
+- **Usage**: `log.info({ key: value }, 'message')`, `log.error({ error }, 'message')`
+- **Automatic PII redaction** for sensitive fields (apiKey, token, password, email, etc.)
+- **Structured logging** - Always pass metadata as first parameter, message as second
+- **API key security** - API keys automatically redacted in logs (apiKey, api_key, Authorization headers)
+
+- **PII masking** - All string fields automatically masked using `maskPII()` function
+- **Environment-specific** configurations (development/production/test)
+- **Log levels**: debug (dev only), info, warn, error, fatal
+
+## Documentation
+
+- Use Markdown files for documentation, those guides with Guides markdown files should be in `docs/guides/`
+- You can search for documentation using `context7` MCP tool
+- You can search the internet using MCP tool `tavily-search`
+- Documentation should be in `docs/` directory
+- **Help Center = FAQ**: When user mentions "help center", they mean the FAQ page for end users
+- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
+- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.
+
+### Session Commands
+
+**Continue Session**: 'continue_session [session_file' (alias continue)
+continue')
+
+- Resumes a previous Amp session with oracle-enhanced analysis
+- If no file provided, lists 5 most recent sessions from ./local_ai_docs/sessions/\*
+- Usage: Ask Amp to "run continue_session" or "use continue_session with [filename]"
+
+**Save Session**: save_session [options] (alias save')
+
+- Saves current session with comprehensive analysis
+- Options:
+- '--deepthink': Enhanced analysis using oracle tool for deeper insights
+- '--fast': Quick save without oracle analysis for faster execution
+- Creates files in •
+  •/local_ai_docs/sessions/ with format: "[datel-[title]-amp.md"
+- Usage: Ask Amp to "run save_session" or "save_session --deepthink"
+
+**Plan Loop**: 'plan_loop [spec_file] [options]' (alias 'plan\*)
+
+- Comprehensive feature planning with 7-step process
+- Options:
+- '--deepthink: Oracle-enhanced planning and peer review
+- Creates detailed implementation specifications
+- Usage: Ask Amp to "run plan_loop with spec.md --deepthink"
+
+**Implementation Loop**: "implementation_loop [spec_file] [options] (alias "impl')
+
+- Iterative implementation with testing and validation
+- Options:
+- '--deepthink': Oracle analysis for complex decisions
+- '--fast': Skip oracle analysis for rapid cycles
+- Includes quality gates and automatic testing
+- Usage: Ask Amp to "run implementation_loop with spec.md --deepthink"
+
+### Bun
+
+Default to using Bun instead of Node.js.
+
+- Use `bun <file>` instead of `node <file>` or `ts-node <file>`
+- Use `bun test` instead of `jest` or `vitest`
+- Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
+- Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
+- Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
+- Bun automatically loads .env, so don't use dotenv.
+
+## APIs
+
+- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
+- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
+- `Bun.redis` for Redis. Don't use `ioredis`.
+- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
+- `WebSocket` is built-in. Don't use `ws`.
+- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
+- Bun.$`ls` instead of execa.
+
+## Testing
+
+Use `bun test` to run tests.
+
+```ts#index.test.ts
+import { test, expect } from "bun:test";
+
+test("hello world", () => {
+  expect(1).toBe(1);
+});
 ```
 
-## Key Integration Points
+## Frontend
 
-### Data Flow Architecture
-1. **Chat Store** (`packages/common/store/chat.store.ts`) - Zustand with IndexedDB persistence via Dexie
-2. **Per-User Isolation** - `ThreadDatabase_${userId}` ensures complete data separation
-3. **Authentication** - Better Auth with subscription tier integration
-4. **Payment System** - Creem.io webhooks with automatic tier upgrades
+Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
 
-### Cross-Package Communication Patterns
-```typescript
-// Foundation layer - never imports from other @repo packages
-'@repo/shared' - Constants, types, utilities, logger
+Server:
 
-// Consumer layer - imports from @repo/shared only
-'@repo/common' - React components, hooks, Zustand stores
+```ts#index.ts
+import index from "./index.html"
 
-// Application layer - can import from any package
-'apps/web' - Next.js app consuming all packages
-'@repo/ai' - AI system with workflow engine
-
-// UI layer - minimal dependencies
-'@repo/ui' - Pure shadcn/ui components, no business logic
+Bun.serve({
+  routes: {
+    "/": index,
+    "/api/users/:id": {
+      GET: (req) => {
+        return new Response(JSON.stringify({ id: req.params.id }));
+      },
+    },
+  },
+  // optional websocket support
+  websocket: {
+    open: (ws) => {
+      ws.send("Hello, world!");
+    },
+    message: (ws, message) => {
+      ws.send(message);
+    },
+    close: (ws) => {
+      // handle close
+    }
+  },
+  development: {
+    hmr: true,
+    console: true,
+  }
+})
 ```
 
-### Critical Service Boundaries
-- **Client-side AI**: Models run in browser via Web Workers (`packages/ai/worker/`)
-- **Server Actions**: Form handling and feedback in `packages/actions/`
-- **Task Orchestration**: Background workflows in `packages/orchestrator/`
-- **Database Layer**: All queries centralized in `packages/shared/lib/database-queries.ts`
+HTML files can import .tsx, .jsx or .js files directly and Bun's bundler will transpile & bundle automatically. `<link>` tags can point to stylesheets and Bun's CSS bundler will bundle.
 
-## Memory Bank Documentation
+```html#index.html
+<html>
+  <body>
+    <h1>Hello, world!</h1>
+    <script type="module" src="./frontend.tsx"></script>
+  </body>
+</html>
+```
 
-After each session, update relevant files in `memory-bank/` directory following the pattern established in existing `.md` files. Document architectural changes, feature implementations, and critical decisions for future development context.
+With the following `frontend.tsx`:
+
+```tsx#frontend.tsx
+import React from "react";
+
+// import .css files directly and it works
+import './index.css';
+
+import { createRoot } from "react-dom/client";
+
+const root = createRoot(document.body);
+
+export default function Frontend() {
+  return <h1>Hello, world!</h1>;
+}
+
+root.render(<Frontend />);
+```
+
+Then, run index.ts
+
+```sh
+bun --hot ./index.ts
+```
+
+For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.

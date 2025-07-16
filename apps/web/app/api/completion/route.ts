@@ -473,29 +473,45 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         log.error({ error }, "Error in POST handler");
 
-        // Provide specific error messages based on error type
+        // Use centralized error message service for consistent error handling
+        const { generateErrorMessage } = await import("@repo/ai/services/error-messages");
+
         let errorMessage = "Internal server error";
         let statusCode = 500;
 
         if (error instanceof Error) {
-            const errorString = error.message.toLowerCase();
+            // Extract provider context from the request data if available
+            const errorContext = {
+                provider: data?.provider,
+                model: data?.model,
+                userId: userId ?? undefined,
+                hasApiKey: !!data?.apiKeys?.[data?.provider as keyof typeof data.apiKeys],
+                isVtPlus: vtPlusAccess?.hasAccess ?? false,
+                originalError: error.message,
+            };
 
-            if (errorString.includes("unauthorized") || errorString.includes("forbidden")) {
-                errorMessage = "Authentication required. Please sign in and try again.";
+            const structuredError = generateErrorMessage(error, errorContext);
+            errorMessage = structuredError.message;
+
+            // Map error types to appropriate HTTP status codes
+            const errorString = error.message.toLowerCase();
+            if (
+                errorString.includes("unauthorized") ||
+                errorString.includes("forbidden") ||
+                structuredError.title.toLowerCase().includes("authentication")
+            ) {
                 statusCode = 401;
-            } else if (errorString.includes("rate limit") || errorString.includes("429")) {
-                errorMessage = "Rate limit exceeded. Please wait a moment before trying again.";
+            } else if (
+                errorString.includes("rate limit") ||
+                errorString.includes("429") ||
+                structuredError.title.toLowerCase().includes("rate limit")
+            ) {
                 statusCode = 429;
             } else if (errorString.includes("network") || errorString.includes("fetch")) {
-                errorMessage = "Network connection error. Please check your internet connection.";
                 statusCode = 503;
             } else if (errorString.includes("timeout")) {
-                errorMessage = "Request timed out. Please try again.";
                 statusCode = 408;
             } else if (errorString.includes("parse") || errorString.includes("invalid")) {
-                const fallbackMessage: string =
-                    "Invalid request format. Please refresh the page and try again.";
-                errorMessage = fallbackMessage;
                 statusCode = 400;
             }
         }

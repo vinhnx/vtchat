@@ -1,6 +1,6 @@
 import { db, schema } from "@repo/shared/lib/database";
 import { log } from "@repo/shared/lib/logger";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
@@ -220,6 +220,7 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
                 and(
                     eq(schema.vtplusUsage.userId, userId),
                     eq(schema.vtplusUsage.periodStart, periodStart),
+                    inArray(schema.vtplusUsage.feature, features),
                 ),
             );
 

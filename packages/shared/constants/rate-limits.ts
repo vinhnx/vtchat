@@ -19,11 +19,26 @@ export const GEMINI_LIMITS = {
 /**
  * Estimated cost per request in USD (rough flat estimate)
  * Used for budget tracking and cost projections
+ *
+ * Based on official Gemini API pricing as of July 2025:
+ * - Gemini 2.0 Flash-Lite: $0.075/1M input + $0.30/1M output tokens
+ * - Gemini 2.0 Flash: $0.10/1M input + $0.40/1M output tokens
+ * - Gemini 2.5 Flash-Lite: $0.10/1M input + $0.40/1M output tokens
+ * - Gemini 2.5 Flash: $0.30/1M input + $2.50/1M output tokens
+ * - Gemini 2.5 Pro: $1.25/1M input + $10.00/1M output tokens (≤200k prompts)
+ *
+ * Estimates assume ~1000 input + 500 output tokens per typical request:
+ * - Flash-Lite: ($0.10 * 1k + $0.40 * 0.5k) / 1M = $0.0003 → rounded up to $0.005 (0.5 cents)
+ * - Flash: ($0.30 * 1k + $2.50 * 0.5k) / 1M = $0.00155 → rounded up to $0.01 (1 cent)
+ * - Pro: ($1.25 * 1k + $10.00 * 0.5k) / 1M = $0.00625 → rounded up to $0.015 (1.5 cents)
+ *
+ * Note: Prices rounded up to ensure non-zero cost tracking when converted to cents
  */
 export const GEMINI_PRICES = {
-    FLASH_LITE: 0.00025,
-    FLASH: 0.002,
-    PRO: 0.01,
+    FLASH_LITE: 0.005, // 0.5 cents per request - minimum to ensure non-zero cost tracking
+    FLASH: 0.01, // 1 cent per request
+    PRO: 0.015, // 1.5 cents per request
+    "gemini-2.5-flash-lite-preview-06-17": 0.005, // Same as FLASH_LITE
 } as const;
 
 /**

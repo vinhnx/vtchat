@@ -4,8 +4,7 @@
 
 ok go-> https://vtchat.io.vn/
 
-
-add groq models
+--
 
 https://ai-sdk.dev/providers/ai-sdk-providers/groq
 
@@ -52,23 +51,6 @@ packages/ai/workflow/tasks/completion.ts
 
 --
 
-fix Provider Usage (Last 30 Days)
-gemini
-30 requests
-$0.00
-USD
-
-fix cost calculation in https://vtchat.io.vn/admin "Provider Usage (Last 30 Days)"
-
---
-We're iterating on making Next.js better for coding with AI agents.
-
-The new experimental flag `browserDebugInfoInTerminal` forwards the browser console to the terminal (Shipped in 15.4 today).
-
-This means that cursor, VSCode, or a CLI agent can see client side errors and fix them for you.
-
-Feedback welcome, we're planning to turn this on by default if it works well in practice.
-
 --
 
 https://ship-25-agents-workshop.vercel.app/docs
@@ -79,87 +61,10 @@ https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-mode
 
 --
 
-important: check firework ai models is using gemini api keys
-
-20:48:26.563
-Object { id: "fi0Y3UBGix", length: 10 }
-Generated legid thread ID 3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.567 threadItems
-Object { data: [] }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.568 🚀 Sending to handleSubmit with flags
-Object { useWebSearch: false, useMathCalculator: false, useCharts: false }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.569 Agent provider received flags
-Object { useWebSearch: false, useMathCalculator: false, useCharts: false }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.685
-Object { id: "Y2dt7JFGO", length: 9 }
-Generated legid thread ID 3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.981 🎯 API routing decision
-Object { mode: "kimi-k2-instruct-fireworks", isFreeModel: false, hasVtPlusAccess: true, needsServerSide: false, shouldUseServerSideAPI: false, hasApiKey: true, deepResearch: false, proSearch: false }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.983 📱 Using client-side workflow path
-Object { mode: "kimi-k2-instruct-fireworks" }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.985 About to call startWorkflow
-Object { useWebSearch: false, useMathCalculator: false, useCharts: false, apiKeys: (1) […] }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:26.985 🚀 Starting workflow with API keys
-Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined, allKeys: (1) […] }
-3c0f5*next_dist_49462250.*.js:1590:28
-20:48:27.003 Worker API keys set
-Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined, allKeys: (1) […] }
-_be8e6316._.js:61:21
-20:48:27.004 🔧 Worker received API keys
-Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined }
-_be8e6316._.js:61:21
-20:48:27.006 🔥 runWorkflow called with params: _be8e6316._.js:59:21
-20:48:27.006 🌟 Workflow context created with: _be8e6316._.js:59:21
-20:48:27.008 🚀 Executing task "router" (Run #1) _be8e6316._.js:59:21
-20:48:27.011 [Fast Refresh] rebuilding 3c0f5*next_dist_49462250.*.js:1590:28
-20:48:27.012 🚀 Executing task "completion" (Run #1) _be8e6316._.js:59:21
-20:48:27.019 🔧 Final tools for AI
-Object { data: "none" }
-_be8e6316._.js:61:21
-20:48:27.019 generateText called
-Object { model: "gemini-2.5-flash-lite-preview-06-17", hasAnthropicKey: false, anthropicKeyLength: undefined, mode: "kimi-k2-instruct-fireworks", userTier: "PLUS" }
-_be8e6316._.js:61:21
-20:48:27.019 🤖 generateText called
-Object { model: "gemini-2.5-flash-lite-preview-06-17", hasAnthropicKey: false, anthropicKeyLength: undefined, mode: "kimi-k2-instruct-fireworks", userTier: "PLUS" }
-_be8e6316._.js:61:21
-20:48:27.022 === getLanguageModel START === _be8e6316._.js:59:21
-20:48:27.022 Parameters: _be8e6316._.js:59:21
-20:48:27.022 Found model: _be8e6316._.js:59:21
-20:48:27.022 Getting provider instance for: _be8e6316._.js:59:21
-20:48:27.024 Provider instance debug: _be8e6316._.js:59:21
-20:48:27.024 No API key found for free Gemini model - checking environment... _be8e6316._.js:73:21
-20:48:27.024 Process env check: _be8e6316._.js:73:21
-20:48:27.024 Error in getLanguageModel: _be8e6316._.js:73:21
-20:48:27.028 Error stack: _be8e6316._.js:73:21
-20:48:27.028 Error: Error: Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api
-NextJS 3
-_be8e6316._.js:75:21
-20:48:27.029 ❌ Error in task "completion" (Attempt 1): _be8e6316._.js:73:21
-20:48:27.029 Task failed _be8e6316._.js:73:21
-20:48:27.398 [SharedWorker] Received thread-item-update event <empty string> db-sync.worker.js:19:17
-20:48:28.134 [Fast Refresh] done in 1252ms 3c0f5*next_dist_49462250.*.js:1590:28
-20:48:28.432 [Fast Refresh] rebuilding 3c0f5*next_dist_49462250.*.js:1590:28
-20:48:28.464 [Fast Refresh] done in 258ms 3c0f5*next_dist_49462250.*.js:1590:28
-
---
-
-fix VtPlusUsageMeter -> VT+ usage tracking is not available.
-
 --
 Automatically migrate to AI SDK 5 with our initial set of codemods.
 
 https://v5.ai-sdk.dev/docs/migration-guides/migration-guide-5-0#codemods
-
---
-
-1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
-2. fix openrouter send dummy api/completion
 
 --
 
