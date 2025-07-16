@@ -170,11 +170,12 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         ...(forceRefresh && { force: "true" }),
                     });
 
-                    // Create AbortController for timeout (increased to 10s for dev environments)
+                    // Create AbortController for timeout (longer in development)
                     const controller = new AbortController();
+                    const timeoutMs = process.env.NODE_ENV === "development" ? 30_000 : 15_000; // 30s dev, 15s prod
                     const timeoutId = setTimeout(() => {
                         controller.abort();
-                    }, 10_000); // 10 second timeout
+                    }, timeoutMs);
 
                     try {
                         const response = await fetch(`/api/subscription/status?${params}`, {
@@ -217,7 +218,24 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         clearTimeout(timeoutId);
 
                         if (error instanceof Error && error.name === "AbortError") {
-                            throw new Error("Subscription fetch timeout (10s)");
+                            const timeoutSec = process.env.NODE_ENV === "development" ? 30 : 15;
+                            log.warn(
+                                `Subscription fetch timeout (${timeoutSec}s) - using cached status`,
+                                {
+                                    userId: session?.user?.id,
+                                    trigger: state.lastRefreshTrigger,
+                                },
+                            );
+                            // Return cached status or fallback instead of throwing
+                            const fallbackFreeTier: SubscriptionStatus = {
+                                plan: PlanSlug.VT_BASE,
+                                status: SubscriptionStatusEnum.ACTIVE,
+                                isPlusSubscriber: false,
+                                hasSubscription: false,
+                                productInfo: VT_BASE_PRODUCT_INFO,
+                                isAnonymous: !session?.user,
+                            };
+                            return globalSubscriptionStatus || fallbackFreeTier;
                         }
 
                         // Handle network errors during page navigation
@@ -401,8 +419,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         if (!subscriptionStatus?.currentPeriodEnd) return;
 
         const checkExpiration = () => {
+            if (!subscriptionStatus.currentPeriodEnd) return;
+
             const now = new Date();
-            const expiryDate = new Date(subscriptionStatus.currentPeriodEnd!);
+            const expiryDate = new Date(subscriptionStatus.currentPeriodEnd);
             const timeDiff = expiryDate.getTime() - now.getTime();
             const daysDiff = timeDiff / (1000 * 3600 * 24);
 

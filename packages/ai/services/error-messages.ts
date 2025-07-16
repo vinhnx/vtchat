@@ -56,7 +56,7 @@ export class ErrorMessageService {
      * Generate user-friendly error message for missing API key
      */
     static getMissingApiKeyError(context: ErrorContext): ErrorMessage {
-        const { provider } = context;
+        const { provider, isVtPlus } = context;
 
         if (!provider) {
             return {
@@ -74,10 +74,10 @@ export class ErrorMessageService {
         // Special handling for local providers
         if (provider === Providers.LMSTUDIO) {
             return {
-                title: "LM Studio Not Configured",
+                title: "LM Studio Not Connected",
                 message:
-                    "LM Studio server URL is required. Make sure LM Studio is running locally and the server is started.",
-                action: "Configure LM Studio server URL in Settings → API Keys → LM Studio",
+                    "LM Studio server URL is required to use local models. Make sure LM Studio is running and the local server is started on your computer.",
+                action: "1. Start LM Studio → Local Server tab → Start Server\n2. Add server URL in Settings → API Keys → LM Studio\n3. Default URL: http://localhost:1234",
                 helpUrl: setupUrl,
                 settingsAction: "open_api_keys",
             };
@@ -85,19 +85,24 @@ export class ErrorMessageService {
 
         if (provider === Providers.OLLAMA) {
             return {
-                title: "Ollama Not Configured",
+                title: "Ollama Not Connected",
                 message:
-                    "Ollama server URL is required. Make sure Ollama is installed and running locally.",
-                action: "Configure Ollama server URL in Settings → API Keys → Ollama",
+                    "Ollama server URL is required to use local models. Make sure Ollama is installed and running on your computer.",
+                action: "1. Install Ollama from ollama.ai\n2. Run 'ollama serve' in terminal\n3. Add server URL in Settings → API Keys → Ollama\n4. Default URL: http://127.0.0.1:11434",
                 helpUrl: setupUrl,
                 settingsAction: "open_api_keys",
             };
         }
 
+        // Enhanced messages for cloud providers
+        const baseMessage = isVtPlus
+            ? `Your VT+ subscription includes server-funded usage, but you can add your own ${providerName} API key for unlimited access and faster responses.`
+            : `To use ${providerName} models, you need to provide your own API key. This is free to obtain and gives you direct access to ${providerName}'s latest models.`;
+
         return {
             title: `${providerName} API Key Required`,
-            message: `To use ${providerName} models, you need to provide your own API key. This ensures you have full control over your usage and costs.`,
-            action: `Get your free API key from ${providerName} and add it inSettings → API Keys → ${providerName}`,
+            message: baseMessage,
+            action: `1. Visit ${providerName}'s website to get your free API key\n2. Copy the API key\n3. Add it in Settings → API Keys → ${providerName}\n4. Start chatting with ${providerName} models`,
             helpUrl: setupUrl,
             settingsAction: "open_api_keys",
         };
@@ -126,8 +131,8 @@ export class ErrorMessageService {
         if (originalError?.includes("unauthorized") || originalError?.includes("401")) {
             return {
                 title: `${providerName} Authentication Failed`,
-                message: `Your ${providerName} API key is invalid or has expired. Please verify your API key is correct and has the necessary permissions.`,
-                action: `Update your API key in Settings → API Keys → ${providerName}`,
+                message: `Your ${providerName} API key is invalid, expired, or doesn't have the required permissions.`,
+                action: `1. Check your ${providerName} account is active and has billing set up\n2. Verify your API key hasn't expired\n3. Generate a new API key if needed\n4. Update it in Settings → API Keys → ${providerName}`,
                 helpUrl: setupUrl,
                 settingsAction: "open_api_keys",
             };
@@ -136,17 +141,39 @@ export class ErrorMessageService {
         if (originalError?.includes("forbidden") || originalError?.includes("403")) {
             return {
                 title: `${providerName} Access Denied`,
-                message: `Your ${providerName} API key doesn't have permission to access this model or feature. Check your account permissions or billing status.`,
-                action: `Verify your ${providerName} account status and API key permissions`,
+                message: `Your ${providerName} API key doesn't have permission to access this model or your account has billing issues.`,
+                action: `1. Check your ${providerName} account billing status\n2. Verify your API key has the required permissions\n3. Try a different model that's available in your plan\n4. Contact ${providerName} support if the issue persists`,
                 helpUrl: setupUrl,
                 settingsAction: "open_api_keys",
             };
         }
 
+        // Provider-specific format guidance
+        const getFormatGuidance = (provider: ProviderEnumType): string => {
+            switch (provider) {
+                case Providers.OPENAI:
+                    return "OpenAI API keys start with 'sk-' followed by 48+ characters";
+                case Providers.ANTHROPIC:
+                    return "Anthropic API keys start with 'sk-ant-' followed by 95+ characters";
+                case Providers.GOOGLE:
+                    return "Google API keys start with 'AIza' and are 39 characters long";
+                case Providers.OPENROUTER:
+                    return "OpenRouter API keys start with 'sk-or-v1-' followed by 64 hex characters";
+                case Providers.XAI:
+                    return "xAI API keys start with 'xai-' followed by 32+ characters";
+                case Providers.FIREWORKS:
+                    return "Fireworks API keys are 32+ character alphanumeric strings";
+                case Providers.TOGETHER:
+                    return "Together AI API keys are 64-character hexadecimal strings";
+                default:
+                    return "Please check the API key format requirements";
+            }
+        };
+
         return {
             title: `${providerName} API Key Invalid`,
-            message: `The ${providerName} API key format is incorrect. Please check that you've copied the complete API key.`,
-            action: `Update your API key in Settings → API Keys → ${providerName}`,
+            message: `The ${providerName} API key format is incorrect. ${getFormatGuidance(provider)}.`,
+            action: `1. Double-check you copied the complete API key\n2. Make sure there are no extra spaces or characters\n3. Generate a new API key if needed\n4. Update it in Settings → API Keys → ${providerName}`,
             helpUrl: setupUrl,
             settingsAction: "open_api_keys",
         };

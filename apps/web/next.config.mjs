@@ -24,19 +24,25 @@ const nextConfig = {
 
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true, // Next.js 15.4 experimental features
+
     experimental: {
         // Re-enable externalDir for monorepo support now that Turbopack works
         externalDir: true,
-        // Disable memory-intensive optimizations
+
+        // Disable problematic memory optimizations that cause module issues
         webpackMemoryOptimizations: false,
         webpackBuildWorker: false,
         preloadEntriesOnStart: false,
 
-        // NEW: Forward browser logs to terminal for easier debugging
+        // Improve stability for SWC/Turbopack
+        swcTraceProfiling: false,
+
+        // Forward browser logs to terminal for easier debugging
         browserDebugInfoInTerminal: true,
 
-        // Disable static optimization to fix React 19 useContext issues
-        forceSwcTransforms: false,
+        // Development optimizations
+        typedEnv: true,
+        inlineCss: true,
     },
 
     // Temporarily remove outputFileTracingRoot for Turbopack compatibility
@@ -70,6 +76,12 @@ const nextConfig = {
         // Number of pages that should be kept simultaneously without being disposed
         pagesBufferLength: 2,
     },
+
+    // Additional development optimizations
+    ...(process.env.NODE_ENV === "development" && {
+        // Optimize file watching
+        useFileSystemPublicRoutes: true,
+    }),
 
     // Image optimization with balanced caching
     images: {

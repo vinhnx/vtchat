@@ -13,8 +13,8 @@ import {
     Label,
 } from "@repo/ui";
 import { ExternalLink, Key } from "lucide-react";
-import { useState } from "react";
-import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
+import { useEffect, useState } from "react";
+import { useApiKeysStore, type ApiKeys } from "../store/api-keys.store";
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;
@@ -125,12 +125,76 @@ export const ApiKeyPromptModal = ({
 
     const [apiKeyValue, setApiKeyValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [validationError, setValidationError] = useState<string | null>(null);
+    const [isValid, setIsValid] = useState<boolean | null>(null);
 
     if (!requiredProvider) {
         return null;
     }
 
     const providerInfo = getApiKeyInfo(requiredProvider);
+
+    // Validate API key format as user types
+    useEffect(() => {
+        if (!apiKeyValue.trim()) {
+            setValidationError(null);
+            setIsValid(null);
+            return;
+        }
+
+        const validateApiKey = async () => {
+            try {
+                // Import validation function dynamically to avoid SSR issues
+                const { validateApiKeyFormat } = await import("@repo/ai/services/api-key-mapper");
+
+                // Map provider names to validation format
+                const providerMapping: Record<keyof ApiKeys, string> = {
+                    OPENAI_API_KEY: "openai",
+                    ANTHROPIC_API_KEY: "anthropic",
+                    GEMINI_API_KEY: "google",
+                    XAI_API_KEY: "xai",
+                    FIREWORKS_API_KEY: "fireworks",
+                    OPENROUTER_API_KEY: "openrouter",
+                    TOGETHER_API_KEY: "together",
+                    JINA_API_KEY: "together", // Use together format for now
+                };
+
+                const providerName = providerMapping[requiredProvider];
+                if (providerName) {
+                    const validation = validateApiKeyFormat(
+                        providerName as any,
+                        apiKeyValue.trim(),
+                    );
+
+                    if (validation.isValid) {
+                        setValidationError(null);
+                        setIsValid(true);
+                    } else {
+                        setValidationError(validation.error || "Invalid API key format");
+                        setIsValid(false);
+                    }
+                } else {
+                    // Basic validation for unknown providers
+                    if (apiKeyValue.trim().length < 10) {
+                        setValidationError("API key appears too short");
+                        setIsValid(false);
+                    } else {
+                        setValidationError(null);
+                        setIsValid(true);
+                    }
+                }
+            } catch (error) {
+                log.warn("API key validation failed:", { data: error });
+                // Don't show validation errors if validation service fails
+                setValidationError(null);
+                setIsValid(null);
+            }
+        };
+
+        // Debounce validation
+        const timeoutId = setTimeout(validateApiKey, 500);
+        return () => clearTimeout(timeoutId);
+    }, [apiKeyValue, requiredProvider]);
 
     const handleSave = async () => {
         if (!apiKeyValue.trim()) return;

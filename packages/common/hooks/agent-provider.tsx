@@ -705,16 +705,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 });
 
                 const apiKeys = getAllKeys();
+                // SECURITY: Log workflow start without exposing API key metadata
                 log.info(
-                    { useWebSearch, useMathCalculator, useCharts, apiKeys: Object.keys(apiKeys) },
+                    { useWebSearch, useMathCalculator, useCharts },
                     "About to call startWorkflow",
                 );
                 log.info(
                     {
                         mode,
-                        hasAnthropicKey: !!apiKeys.ANTHROPIC_API_KEY,
-                        anthropicKeyLength: apiKeys.ANTHROPIC_API_KEY?.length,
-                        allKeys: Object.keys(apiKeys).filter((key) => apiKeys[key]),
+                        apiKeysConfigured:
+                            Object.keys(apiKeys).filter((key) => apiKeys[key]).length > 0,
                     },
                     "🚀 Starting workflow with API keys",
                 );

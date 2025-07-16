@@ -57,11 +57,7 @@ export const Sidebar = () => {
         return (
             <Flex className="w-full" direction="col" gap="xs" items="start">
                 <p className="text-muted-foreground py-1 text-xs">{title}</p>
-                <Flex
-                    className="border-border/50 w-full gap-0.5 border-l pl-2"
-                    direction="col"
-                    gap="none"
-                >
+                <Flex className="w-full gap-0.5 pl-2" direction="col" gap="none">
                     {threads.map((thread) => (
                         <HistoryItem
                             dismiss={() => {
@@ -83,10 +79,8 @@ export const Sidebar = () => {
     return (
         <div
             className={cn(
-                "border-border/0 relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col border-l border-dashed py-2 transition-all duration-200",
-                isSidebarOpen
-                    ? "border-border/70 bg-background shadow-xs top-0 h-full w-[240px] border-l"
-                    : "w-[50px]",
+                "relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col py-2 transition-all duration-200",
+                isSidebarOpen ? "bg-background shadow-xs top-0 h-full w-[240px]" : "w-[50px]",
             )}
         >
             <Flex className="w-full flex-1 overflow-hidden" direction="col">

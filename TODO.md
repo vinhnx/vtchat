@@ -6,7 +6,15 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-remove sidebar vertical border
+check reduntdant offline
+apps/web/public/sw.js
+apps/web/public/offline.html
+
+--
+
+add groq
+
+https://ai-sdk.dev/providers/ai-sdk-providers/groq
 
 --
 

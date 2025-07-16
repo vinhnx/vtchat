@@ -463,7 +463,9 @@ export const generateTextWithGeminiSearch = async ({
         log.error("Error in generateTextWithGeminiSearch:", { data: error });
 
         // Use centralized error message service for better user feedback
-        const errorContext: ErrorContext = {
+        const { generateErrorMessage } = await import("../services/error-messages");
+
+        const errorContext = {
             provider: "google" as any,
             model: model.toString(),
             userId,
@@ -472,7 +474,7 @@ export const generateTextWithGeminiSearch = async ({
             originalError: error.message,
         };
 
-        const errorMsg = generateProviderErrorMessage(error, errorContext);
+        const errorMsg = generateErrorMessage(error, errorContext);
         throw new Error(errorMsg.message);
     }
 };

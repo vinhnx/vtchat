@@ -213,10 +213,31 @@ export async function handleStreamError({
             { error, userId, threadId: data.threadId },
             "Authentication error during streaming",
         );
+
+        // Provide more specific error messages based on error type
+        let errorMessage = "API authentication failed. Please check your API keys in Settings.";
+
+        if (
+            errorString.includes(AuthErrorKeywords.MISSING_API_KEY) ||
+            errorString.includes(AuthErrorKeywords.API_KEY_REQUIRED)
+        ) {
+            errorMessage =
+                "API key required for this model. Add your API key in Settings → API Keys to continue.";
+        } else if (
+            errorString.includes(AuthErrorKeywords.INVALID_API_KEY) ||
+            errorString.includes(HttpStatusCodes.UNAUTHORIZED)
+        ) {
+            errorMessage =
+                "Invalid API key. Please verify your API key is correct and hasn't expired in Settings → API Keys.";
+        } else if (errorString.includes(HttpStatusCodes.FORBIDDEN)) {
+            errorMessage =
+                "API key doesn't have permission for this model. Check your account billing status or try a different model.";
+        }
+
         const response: StreamErrorResponse = {
             type: StreamResponseType.DONE,
             status: StreamErrorStatus.ERROR,
-            error: "API authentication failed. Please check your API keys in Settings.",
+            error: errorMessage,
             threadId: data.threadId,
             threadItemId: data.threadItemId,
             parentThreadItemId: data.parentThreadItemId,

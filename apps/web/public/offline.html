@@ -131,18 +131,17 @@
 <body>
     <div class="container">
         <div class="content">
-            <div class="status-icon">📶</div>
             <div>
                 <h2 class="title">You're offline</h2>
                 <p class="description">
                     VT Chat is currently offline. We'll automatically retry when your connection is restored.
                 </p>
             </div>
-            
+
             <div class="status-indicator">
                 <div class="status-text" id="status-text">Checking connection...</div>
             </div>
-            
+
             <button class="button" onclick="checkConnection()" id="retry-button">
                 <span id="button-text">Retry Now</span>
                 <span id="button-loading" class="hidden pulse">Checking...</span>
@@ -153,15 +152,15 @@
     <script>
         let retryCount = 0;
         let retryInterval;
-        
+
         function updateStatus(message, isRetrying = false) {
             const statusText = document.getElementById('status-text');
             const buttonText = document.getElementById('button-text');
             const buttonLoading = document.getElementById('button-loading');
             const retryButton = document.getElementById('retry-button');
-            
+
             statusText.textContent = message;
-            
+
             if (isRetrying) {
                 buttonText.classList.add('hidden');
                 buttonLoading.classList.remove('hidden');
@@ -172,24 +171,24 @@
                 retryButton.disabled = false;
             }
         }
-        
+
         async function checkConnection() {
             updateStatus('Checking connection...', true);
             retryCount++;
-            
+
             try {
                 // Try to fetch the favicon (small, fast request)
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
+
                 const response = await fetch('/favicon.ico?' + Date.now(), {
                     method: 'HEAD',
                     cache: 'no-cache',
                     signal: controller.signal
                 });
-                
+
                 clearTimeout(timeoutId);
-                
+
                 if (response.ok) {
                     updateStatus('Connection restored! Redirecting...', true);
                     setTimeout(() => {
@@ -200,9 +199,9 @@
             } catch (error) {
                 console.log('Connection check failed:', error.message);
             }
-            
+
             updateStatus(`Still offline (attempt ${retryCount})`, false);
-            
+
             // Auto-retry with exponential backoff
             const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 30000); // Max 30s
             setTimeout(() => {
@@ -210,25 +209,25 @@
                 setTimeout(checkConnection, delay);
             }, 1000);
         }
-        
+
         // Auto-retry when page becomes visible
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 checkConnection();
             }
         });
-        
+
         // Auto-retry when online event fires
         window.addEventListener('online', () => {
             updateStatus('Connection detected! Checking...', true);
             setTimeout(checkConnection, 500);
         });
-        
+
         // Update status when offline
         window.addEventListener('offline', () => {
             updateStatus('Connection lost. Will retry automatically.', false);
         });
-        
+
         // Start initial check
         setTimeout(checkConnection, 1000);
     </script>

@@ -1,5 +1,6 @@
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
+import { type ApiKeyMetadata } from "@repo/shared/utils/key-rotation";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { isGeminiModel } from "../utils";
@@ -15,6 +16,15 @@ export type ApiKeys = {
 
     OPENROUTER_API_KEY?: string;
     TOGETHER_API_KEY?: string;
+};
+
+export type ApiKeyWithMetadata = {
+    value: string;
+    metadata: ApiKeyMetadata;
+};
+
+export type SecureApiKeys = {
+    [K in keyof ApiKeys]: ApiKeyWithMetadata;
 };
 
 // User-specific storage key management for per-account API key isolation

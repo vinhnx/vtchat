@@ -5,9 +5,14 @@ import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
 import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
+import {
+    createSecureHeaders,
+    extractApiKeysFromHeaders,
+    validateHTTPS,
+} from "@repo/shared/constants/security-headers";
 import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
-import { geolocation, type Geo } from "@vercel/functions";
+import { type Geo, geolocation } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
@@ -30,6 +35,26 @@ export async function POST(request: NextRequest) {
             headers: request.headers,
         });
         const userId = session?.user?.id ?? undefined;
+
+        // SECURITY: Validate HTTPS in production
+        if (process.env.NODE_ENV === "production" && !validateHTTPS(request)) {
+            log.warn("SECURITY: Non-HTTPS request rejected", {
+                url: new URL(request.url).pathname,
+            });
+            return new Response(
+                JSON.stringify({
+                    error: "HTTPS required",
+                    message: "All API requests must use HTTPS for security.",
+                }),
+                {
+                    status: 400,
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...createSecureHeaders(),
+                    },
+                },
+            );
+        }
 
         const parsed = await request.json().catch(() => ({}));
 
@@ -59,29 +84,132 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Transform API keys using centralized mapping service
+        // SECURITY: Extract API keys from secure headers first, then fallback to body
+        let apiKeysFromHeaders: Record<string, string> = {};
+        try {
+            apiKeysFromHeaders = extractApiKeysFromHeaders(request.headers);
+        } catch (error) {
+            log.debug("No API keys found in headers", {
+                url: new URL(request.url).pathname,
+            });
+        }
+
+        // Combine API keys from headers and body (headers take precedence for security)
+        const combinedApiKeys = {
+            ...data.apiKeys,
+            ...apiKeysFromHeaders,
+        };
+
+        // Transform and validate API keys using centralized mapping service
         let transformedApiKeys: Record<string, string> | undefined;
-        if (data.apiKeys && Object.keys(data.apiKeys).length > 0) {
-            log.info("Transforming API keys using centralized mapper", {
-                originalKeys: Object.keys(data.apiKeys),
-                hasKeys: Object.keys(data.apiKeys).length > 0,
+        if (Object.keys(combinedApiKeys).length > 0) {
+            // SECURITY: Log API key processing without exposing key names or metadata
+            log.info("Processing API keys", {
+                keyCount: Object.keys(combinedApiKeys).length,
+                fromHeaders: Object.keys(apiKeysFromHeaders).length,
+                fromBody: Object.keys(data.apiKeys || {}).length,
             });
 
             try {
-                transformedApiKeys = apiKeyMapper.mapFrontendToProvider(data.apiKeys);
+                transformedApiKeys = apiKeyMapper.mapFrontendToProvider(combinedApiKeys);
 
+                // SECURITY: Log transformation success without exposing key details
                 log.info("API key transformation completed", {
-                    transformedKeys: Object.keys(transformedApiKeys),
-                    transformedCount: Object.keys(transformedApiKeys).length,
+                    transformedKeyCount: Object.keys(transformedApiKeys).length,
                 });
+
+                // Validate API keys for the selected model's provider
+                const selectedModel = getModelFromChatMode(data.mode);
+                const modelProvider = selectedModel?.split("_")[0]?.toLowerCase(); // Extract provider from model name
+
+                if (modelProvider && transformedApiKeys) {
+                    // Import validation functions
+                    const { validateProviderKey, getProviderKeyName } = await import(
+                        "@repo/ai/services/api-key-mapper"
+                    );
+                    const { generateErrorMessage } = await import(
+                        "@repo/ai/services/error-messages"
+                    );
+
+                    // Map common model prefixes to provider names
+                    const providerMapping: Record<string, string> = {
+                        gpt: "openai",
+                        o3: "openai",
+                        o4: "openai",
+                        claude: "anthropic",
+                        gemini: "google",
+                        grok: "xai",
+                        deepseek: "fireworks", // or openrouter depending on model
+                        qwen: "openrouter",
+                        mistral: "openrouter",
+                    };
+
+                    const providerName = providerMapping[modelProvider] || modelProvider;
+
+                    if (
+                        providerName &&
+                        [
+                            "openai",
+                            "anthropic",
+                            "google",
+                            "xai",
+                            "fireworks",
+                            "openrouter",
+                        ].includes(providerName)
+                    ) {
+                        const validation = validateProviderKey(
+                            providerName as any,
+                            transformedApiKeys,
+                        );
+
+                        if (!validation.isValid) {
+                            const errorMsg = generateErrorMessage("API key required", {
+                                provider: providerName as any,
+                                hasApiKey: validation.hasApiKey,
+                                isVtPlus: false, // Will be determined later
+                                originalError: validation.error,
+                            });
+
+                            return new Response(
+                                JSON.stringify({
+                                    error: errorMsg.title,
+                                    message: errorMsg.message,
+                                    action: errorMsg.action,
+                                    helpUrl: errorMsg.helpUrl,
+                                    settingsAction: errorMsg.settingsAction,
+                                    provider: providerName,
+                                }),
+                                { status: 400, headers: { "Content-Type": "application/json" } },
+                            );
+                        }
+                    }
+                }
             } catch (error) {
-                log.error({ error }, "Failed to transform API keys");
+                log.error({ error }, "Failed to transform or validate API keys");
+
+                // Provide more specific error message
+                const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                let userMessage = "Failed to process API keys. Please check your key format.";
+                const statusCode = 400;
+
+                if (errorMessage.includes("Invalid API keys object")) {
+                    userMessage =
+                        "Invalid API key format. Please ensure all API keys are properly formatted strings.";
+                } else if (errorMessage.includes("validation")) {
+                    userMessage =
+                        "API key validation failed. Please check your API key format and try again.";
+                } else if (errorMessage.includes("mapping")) {
+                    userMessage = "API key mapping failed. Please refresh the page and try again.";
+                }
+
                 return new Response(
                     JSON.stringify({
-                        error: "API key configuration error",
-                        message: "Failed to process API keys. Please check your key format.",
+                        error: "API Key Configuration Error",
+                        message: userMessage,
+                        action: "Check your API keys in Settings → API Keys",
+                        settingsAction: "open_api_keys",
                     }),
-                    { status: 400, headers: { "Content-Type": "application/json" } },
+                    { status: statusCode, headers: { "Content-Type": "application/json" } },
                 );
             }
         } else {
@@ -149,19 +277,17 @@ export async function POST(request: NextRequest) {
                 // VT+ REQUIRED for server-funded Gemini access
                 vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                 if (!vtPlusAccess.hasAccess) {
-                    return new Response(
-                        JSON.stringify({
-                            error: "VT+ subscription required",
-                            message:
-                                "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
-                            upgradeUrl: "/pricing",
-                            usageSettingsAction: "open_usage_settings",
-                        }),
-                        {
-                            status: 403,
-                            headers: { "Content-Type": "application/json" },
-                        },
-                    );
+                    const errorResponse = {
+                        error: "VT+ subscription required",
+                        message:
+                            "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
+                        upgradeUrl: "/pricing",
+                        usageSettingsAction: "open_usage_settings",
+                    };
+                    return new Response(JSON.stringify(errorResponse), {
+                        status: 403,
+                        headers: { "Content-Type": "application/json" },
+                    });
                 }
 
                 // Check rate limits for VT+ users (guaranteed by access check above)
@@ -367,7 +493,9 @@ export async function POST(request: NextRequest) {
                 errorMessage = "Request timed out. Please try again.";
                 statusCode = 408;
             } else if (errorString.includes("parse") || errorString.includes("invalid")) {
-                errorMessage = "Invalid request format. Please refresh the page and try again.";
+                const fallbackMessage: string =
+                    "Invalid request format. Please refresh the page and try again.";
+                errorMessage = fallbackMessage;
                 statusCode = 400;
             }
         }
@@ -407,7 +535,7 @@ function createCompletionStream({
 }) {
     const _encoder = new TextEncoder();
     let heartbeatInterval: NodeJS.Timeout | null = null;
-    let isControllerClosed = false;
+    let isControllerClosed: boolean = false;
 
     return new ReadableStream({
         async start(controller) {

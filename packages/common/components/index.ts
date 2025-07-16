@@ -16,6 +16,7 @@ export * from "./custom-schema-builder";
 export * from "./document-side-panel";
 export * from "./error-boundary";
 export { default as ErrorBoundary } from "./error-boundary";
+export * from "./error-display";
 export * from "./error-placeholder";
 export * from "./example-prompts";
 export * from "./feedback-widget";
@@ -66,8 +67,8 @@ export * from "./theme-provider";
 export * from "./theme-switcher";
 export * from "./thinking-log";
 export * from "./thread";
-export * from "./thread/components/attachment-display";
 export * from "./thread-loading-indicator";
+export * from "./thread/components/attachment-display";
 
 export * from "./tools-menu";
 export * from "./tools-panel";
