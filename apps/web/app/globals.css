@@ -242,6 +242,10 @@ body::-webkit-scrollbar-corner {
         font-family: system-ui, sans-serif;
     }
 
+    .markdown-content {
+        font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
     strong {
         @apply font-medium;
     }

@@ -8,7 +8,7 @@ import { createXai } from "@ai-sdk/xai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
-import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
+import { wrapLanguageModel, type LanguageModelV1Middleware } from "ai";
 export const Providers = {
     OPENAI: "openai",
     ANTHROPIC: "anthropic",
@@ -24,7 +24,7 @@ export const Providers = {
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
 
 import { CLAUDE_4_CONFIG } from "./constants/reasoning";
-import { type ModelEnum, models } from "./models";
+import { models, type ModelEnum } from "./models";
 import { generateErrorMessage } from "./services/error-messages";
 
 // Define a global type for API keys
