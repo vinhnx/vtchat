@@ -17,14 +17,14 @@ export function useErrorHandler() {
                 duration?: number;
                 showToast?: boolean;
                 onError?: (structuredError: ErrorMessage) => void;
-            } = {}
+            } = {},
         ) => {
             const { duration = 6000, showToast = true, onError } = options;
 
             try {
                 // Dynamically import the error message service to avoid bundling issues
                 const { generateErrorMessage } = await import("@repo/ai/services/error-messages");
-                
+
                 const structuredError = generateErrorMessage(error, context);
 
                 // Call custom error handler if provided
@@ -46,7 +46,7 @@ export function useErrorHandler() {
             } catch (serviceError) {
                 // Fallback error handling if the service fails
                 const fallbackMessage = typeof error === "string" ? error : error.message;
-                
+
                 if (showToast) {
                     toast({
                         title: "Error",
@@ -62,7 +62,7 @@ export function useErrorHandler() {
                 };
             }
         },
-        [toast]
+        [toast],
     );
 
     const showApiError = useCallback(
@@ -76,7 +76,7 @@ export function useErrorHandler() {
                 duration?: number;
                 showToast?: boolean;
                 onError?: (structuredError: ErrorMessage) => void;
-            }
+            },
         ) => {
             const context: ErrorContext = {
                 provider: provider as any,
@@ -88,7 +88,7 @@ export function useErrorHandler() {
 
             return showError(error, context, options);
         },
-        [showError]
+        [showError],
     );
 
     const showNetworkError = useCallback(
@@ -99,7 +99,7 @@ export function useErrorHandler() {
                 duration?: number;
                 showToast?: boolean;
                 onError?: (structuredError: ErrorMessage) => void;
-            }
+            },
         ) => {
             const context: ErrorContext = {
                 provider: provider as any,
@@ -108,7 +108,7 @@ export function useErrorHandler() {
 
             return showError(error, context, options);
         },
-        [showError]
+        [showError],
     );
 
     return {
@@ -123,7 +123,7 @@ export function useErrorHandler() {
  */
 export function extractErrorContext(
     error: Error | string,
-    additionalContext: Partial<ErrorContext> = {}
+    additionalContext: Partial<ErrorContext> = {},
 ): ErrorContext {
     const errorMessage = typeof error === "string" ? error : error.message;
     const errorLower = errorMessage.toLowerCase();
@@ -131,13 +131,15 @@ export function extractErrorContext(
     // Try to extract provider from error message
     let provider: string | undefined;
     if (errorLower.includes("openai")) provider = "openai";
-    else if (errorLower.includes("anthropic") || errorLower.includes("claude")) provider = "anthropic";
+    else if (errorLower.includes("anthropic") || errorLower.includes("claude"))
+        provider = "anthropic";
     else if (errorLower.includes("google") || errorLower.includes("gemini")) provider = "google";
     else if (errorLower.includes("together")) provider = "together";
     else if (errorLower.includes("fireworks")) provider = "fireworks";
     else if (errorLower.includes("xai") || errorLower.includes("grok")) provider = "xai";
     else if (errorLower.includes("openrouter")) provider = "openrouter";
-    else if (errorLower.includes("lmstudio") || errorLower.includes("lm studio")) provider = "lmstudio";
+    else if (errorLower.includes("lmstudio") || errorLower.includes("lm studio"))
+        provider = "lmstudio";
     else if (errorLower.includes("ollama")) provider = "ollama";
 
     return {
