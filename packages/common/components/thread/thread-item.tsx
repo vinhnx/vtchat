@@ -107,7 +107,11 @@ export const ThreadItem = memo(
 
                 const errorLower = errorMessage.toLowerCase();
 
-                if (errorLower.includes("credit balance") || errorLower.includes("too low")) {
+                if (
+                    errorLower.includes("credit balance") ||
+                    errorLower.includes("too low") ||
+                    errorLower.includes("plans & billing")
+                ) {
                     title = "Credit Balance Too Low";
                 } else if (
                     errorLower.includes("x.ai credits required") ||

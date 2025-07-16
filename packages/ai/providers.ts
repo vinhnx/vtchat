@@ -1,8 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
-import { createFireworks } from "@ai-sdk/fireworks";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import type { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
 import { createTogetherAI } from "@ai-sdk/togetherai";
 import { createXai } from "@ai-sdk/xai";
@@ -10,9 +9,6 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
 import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
-import { CLAUDE_4_CONFIG } from "./constants/reasoning";
-import { type ModelEnum, models } from "./models";
-
 export const Providers = {
     OPENAI: "openai",
     ANTHROPIC: "anthropic",
@@ -27,6 +23,10 @@ export const Providers = {
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
 
+import { CLAUDE_4_CONFIG } from "./constants/reasoning";
+import { type ModelEnum, models } from "./models";
+import { generateErrorMessage } from "./services/error-messages";
+
 // Define a global type for API keys
 declare global {
     interface Window {
@@ -35,6 +35,13 @@ declare global {
         };
         JINA_API_KEY?: string;
         NEXT_PUBLIC_APP_URL?: string;
+    }
+
+    // Extend WorkerGlobalScope for web workers
+    interface WorkerGlobalScope {
+        AI_API_KEYS?: {
+            [key in ProviderEnumType]?: string;
+        };
     }
 }
 
@@ -84,15 +91,16 @@ const getApiKey = (
 
     // For worker environments (use self) - BYOK only
     if (typeof self !== "undefined") {
-        // Check if AI_API_KEYS exists on self
-        if ((self as any).AI_API_KEYS?.[provider]) {
-            return (self as any).AI_API_KEYS[provider];
+        // Check if AI_API_KEYS exists on self (worker environment)
+        const workerSelf = self as unknown as WorkerGlobalScope;
+        if (workerSelf.AI_API_KEYS?.[provider]) {
+            return workerSelf.AI_API_KEYS[provider];
         }
 
         // For browser environments (self is also defined in browser)
         try {
-            if (typeof window !== "undefined" && (window as any).AI_API_KEYS) {
-                return (window as any).AI_API_KEYS[provider] || "";
+            if (typeof window !== "undefined" && window.AI_API_KEYS) {
+                return window.AI_API_KEYS[provider] || "";
             }
         } catch {
             // window is not available in this environment
@@ -102,13 +110,23 @@ const getApiKey = (
     return "";
 };
 
+// Define proper return types for provider instances
+type ProviderInstance =
+    | ReturnType<typeof createOpenAI>
+    | ReturnType<typeof createAnthropic>
+    | ReturnType<typeof createGoogleGenerativeAI>
+    | ReturnType<typeof createTogetherAI>
+    | ReturnType<typeof createXai>
+    | ReturnType<typeof createOpenRouter>
+    | ReturnType<typeof createOpenAICompatible>;
+
 export const getProviderInstance = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>,
     isFreeModel?: boolean,
     claude4InterleavedThinking?: boolean,
     isVtPlus?: boolean,
-): any => {
+): ProviderInstance => {
     const apiKey = getApiKey(provider, byokKeys, isVtPlus);
 
     log.info("Provider instance debug:", {
@@ -119,6 +137,18 @@ export const getProviderInstance = (
         byokKeysKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         apiKeyLength: apiKey ? apiKey.length : 0,
     });
+
+    // Helper function to validate API key and throw consistent errors
+    const validateApiKey = (providerType: ProviderEnumType): void => {
+        if (!apiKey) {
+            const errorMsg = generateErrorMessage("API key required", {
+                provider: providerType,
+                hasApiKey: false,
+                isVtPlus,
+            });
+            throw new Error(errorMsg.message);
+        }
+    };
 
     // For free models, provide more helpful error messages if no API key is found
     if (isFreeModel && !apiKey && provider === "google") {
@@ -132,20 +162,12 @@ export const getProviderInstance = (
 
     switch (provider) {
         case Providers.OPENAI:
-            if (!apiKey) {
-                throw new Error(
-                    "OpenAI API key required. Please add your API key in Settings → API Keys → OpenAI. Get a key at https://platform.openai.com/api-keys",
-                );
-            }
+            validateApiKey(Providers.OPENAI);
             return createOpenAI({
                 apiKey,
             });
         case "anthropic": {
-            if (!apiKey) {
-                throw new Error(
-                    "Anthropic API key required. Please add your API key in Settings → API Keys → Anthropic. Get a key at https://console.anthropic.com/",
-                );
-            }
+            validateApiKey(Providers.ANTHROPIC);
             const headers: Record<string, string> = {
                 "anthropic-dangerous-direct-browser-access": "true",
             };
@@ -161,47 +183,29 @@ export const getProviderInstance = (
             });
         }
         case "together":
-            if (!apiKey) {
-                throw new Error(
-                    "Together AI API key required. Please add your API key in Settings → API Keys → Together AI. Get a key at https://api.together.xyz/",
-                );
-            }
+            validateApiKey(Providers.TOGETHER);
             return createTogetherAI({
                 apiKey,
             });
         case "google":
-            if (!apiKey) {
-                throw new Error(
-                    "Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api",
-                );
-            }
+            validateApiKey(Providers.GOOGLE);
             return createGoogleGenerativeAI({
                 apiKey,
             });
         case "fireworks":
-            if (!apiKey) {
-                throw new Error(
-                    "Fireworks AI API key required. Please add your API key in Settings → API Keys → Fireworks AI. Get a key at https://app.fireworks.ai/",
-                );
-            }
-            return createFireworks({
+            validateApiKey(Providers.FIREWORKS);
+            // Use OpenAI provider for Fireworks to avoid model ID transformation issues
+            return createOpenAI({
+                baseURL: "https://api.fireworks.ai/inference/v1",
                 apiKey,
             });
         case "xai":
-            if (!apiKey) {
-                throw new Error(
-                    "xAI Grok API key required. Please add your API key in Settings → API Keys → xAI. Get a key at https://x.ai/api",
-                );
-            }
+            validateApiKey(Providers.XAI);
             return createXai({
                 apiKey,
             });
         case "openrouter":
-            if (!apiKey) {
-                throw new Error(
-                    "OpenRouter API key required. Please add your API key in Settings → API Keys → OpenRouter. Get a key at https://openrouter.ai/keys",
-                );
-            }
+            validateApiKey(Providers.OPENROUTER);
             return createOpenRouter({
                 apiKey,
             });
@@ -222,7 +226,7 @@ export const getProviderInstance = (
                     return createOpenAI({
                         baseURL: "/api/lmstudio-proxy",
                         apiKey: "not-required",
-                        defaultHeaders: {
+                        headers: {
                             "x-lmstudio-url": rawURL,
                         },
                     });
@@ -236,8 +240,14 @@ export const getProviderInstance = (
             const allowRemote = process.env.ALLOW_REMOTE_LMSTUDIO === "true";
 
             if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
+                const errorMsg = generateErrorMessage("Network connection error", {
+                    provider: Providers.LMSTUDIO,
+                    hasApiKey: true,
+                    isVtPlus,
+                    originalError: "Remote connections not allowed in development",
+                });
                 throw new Error(
-                    "LM Studio base URL must resolve to localhost in development. Set ALLOW_REMOTE_LMSTUDIO=true to override or deploy to production.",
+                    `${errorMsg.message} Set ALLOW_REMOTE_LMSTUDIO=true to override or deploy to production.`,
                 );
             }
 
@@ -247,10 +257,9 @@ export const getProviderInstance = (
                 : `${url.origin.replace(/\/+$/, "")}/v1`;
 
             // Use the recommended @ai-sdk/openai-compatible for LM Studio
-            return createOpenAICompatible({
-                name: "lmstudio",
+            return createOpenAI({
                 baseURL,
-                // No API key required for LM Studio
+                apiKey: "not-required", // LM Studio doesn't require API key
             });
         }
         case "ollama": {
@@ -269,8 +278,14 @@ export const getProviderInstance = (
             const allowRemote = process.env.ALLOW_REMOTE_OLLAMA === "true";
 
             if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
+                const errorMsg = generateErrorMessage("Network connection error", {
+                    provider: Providers.OLLAMA,
+                    hasApiKey: true,
+                    isVtPlus,
+                    originalError: "Remote connections not allowed in development",
+                });
                 throw new Error(
-                    "Ollama base URL must resolve to localhost in development. Set ALLOW_REMOTE_OLLAMA=true to override or deploy to production.",
+                    `${errorMsg.message} Set ALLOW_REMOTE_OLLAMA=true to override or deploy to production.`,
                 );
             }
 
@@ -287,9 +302,12 @@ export const getProviderInstance = (
         }
         default:
             if (!apiKey) {
-                throw new Error(
-                    "API key required for this model. Please add your API key in Settings → API Keys. Check the model provider documentation for instructions.",
-                );
+                const errorMsg = generateErrorMessage("API key required", {
+                    provider: provider as ProviderEnumType,
+                    hasApiKey: false,
+                    isVtPlus,
+                });
+                throw new Error(errorMsg.message);
             }
             // Default to OpenAI-compatible for unknown providers
             return createOpenAI({
@@ -350,7 +368,10 @@ export const getLanguageModel = (
             log.info("Using model ID:", { data: modelId });
 
             try {
-                const modelOptions: any = {};
+                const modelOptions: {
+                    useSearchGrounding?: boolean;
+                    cachedContent?: string;
+                } = {};
 
                 if (useSearchGrounding) {
                     modelOptions.useSearchGrounding = true;
@@ -360,7 +381,12 @@ export const getLanguageModel = (
                     modelOptions.cachedContent = cachedContent;
                 }
 
-                const selectedModel = instance(modelId, modelOptions);
+                // Type assertion for model creation with options
+                const createModel = instance as (
+                    id: string,
+                    options?: Record<string, unknown>,
+                ) => LanguageModelV1;
+                const selectedModel = createModel(modelId, modelOptions);
                 log.info("Gemini model created with options:", {
                     hasModel: !!selectedModel,
                     modelType: typeof selectedModel,
@@ -376,11 +402,15 @@ export const getLanguageModel = (
                     }) as LanguageModelV1;
                 }
                 return selectedModel as LanguageModelV1;
-            } catch (error: any) {
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                const errorStack = error instanceof Error ? error.stack : undefined;
                 log.error("Error creating Gemini model with special options:", {
-                    data: error,
+                    data: errorMessage,
                 });
-                log.error("Error stack:", { data: error.stack });
+                if (errorStack) {
+                    log.error("Error stack:", { data: errorStack });
+                }
                 throw error;
             }
         }
@@ -390,7 +420,8 @@ export const getLanguageModel = (
         log.info("Using model ID:", { data: modelId });
 
         try {
-            const selectedModel = instance(modelId);
+            const createModel = instance as (id: string) => LanguageModelV1;
+            const selectedModel = createModel(modelId);
             log.info("Standard model created:", {
                 hasModel: !!selectedModel,
                 modelType: typeof selectedModel,
@@ -405,14 +436,22 @@ export const getLanguageModel = (
             }
             log.info("=== getLanguageModel END ===");
             return selectedModel as LanguageModelV1;
-        } catch (error: any) {
-            log.error("Error creating standard model:", { data: error });
-            log.error("Error stack:", { data: error.stack });
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorStack = error instanceof Error ? error.stack : undefined;
+            log.error("Error creating standard model:", { data: errorMessage });
+            if (errorStack) {
+                log.error("Error stack:", { data: errorStack });
+            }
             throw error;
         }
-    } catch (error: any) {
-        log.error("Error in getLanguageModel:", { data: error });
-        log.error("Error stack:", { data: error.stack });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorStack = error instanceof Error ? error.stack : undefined;
+        log.error("Error in getLanguageModel:", { data: errorMessage });
+        if (errorStack) {
+            log.error("Error stack:", { data: errorStack });
+        }
 
         // Re-throw the original error without modification to preserve
         // the clear, actionable error messages from getProviderInstance

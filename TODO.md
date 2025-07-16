@@ -6,121 +6,644 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+remove sidebar vertical border
+
+--
+
+check apply to use packages/ai/services/error-messages.ts
+
+--
+fix open router
+
+curl 'https://openrouter.ai/api/v1/chat/completions' \
+-X POST \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) Gecko/20100101 Firefox/140.0' \
+-H 'Accept: _/_' \
+-H 'Accept-Language: en-US,en;q=0.5' \
+-H 'Accept-Encoding: gzip, deflate, br, zstd' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer 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' \
+-H 'Referer: http://localhost:3000/' \
+-H 'Origin: http://localhost:3000' \
+-H 'DNT: 1' \
+-H 'Sec-GPC: 1' \
+-H 'Connection: keep-alive' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Priority: u=4' \
+-H 'TE: trailers' \
+--data-raw '{"model":"moonshot/kimi-k2","temperature":0,"messages":[{"role":"system","content":"You are a helpful assistant that can answer questions and help with tasks.\n Today is July 16, 2025, 11:16 AM.\n \n \n \n "},{"role":"user","content":"hello"}],"stream":true}'
+
+{"error":{"message":"No auth credentials found","code":401}}
+
+--
+
+enhance system prompt
+
+packages/ai/workflow/tasks/completion.ts
+
+        const prompt = `You are a helpful assistant that can answer questions and help with tasks.
+        Today is ${getHumanizedDate()}.
+        ${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
+        ${charts ? "You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart." : ""}
+        ${
+            webSearch && supportsOpenAISearch
+                ? `
+        IMPORTANT: You have access to web search tools. ALWAYS use web search tools when users ask about:
+        - Current events, news, or recent developments
+        - Real-time information (weather, stock prices, sports scores, etc.)
+        - Current status of companies, products, or services
+        - Recent statistics, data, or research
+        - Information that might have changed recently
+        - Specific locations, addresses, or business information
+        - Any question that requires up-to-date information
+
+        Examples of queries that MUST use web search:
+        - "What is the current weather in [location]?"
+        - "What are the latest news about [topic]?"
+        - "What is the stock price of [company]?"
+        - "What are the current exchange rates?"
+        - "What are the latest updates on [product/service]?"
+        - "What is happening in [location] right now?"
+        - "Who is [person]?"
+
+        Do NOT answer these types of questions without using web search first, even if you think you know the answer.
+        `
+                : ""
+        }
+        `;
+
+--
+use flymcp to debug and fix deployment failed, could be related to our previous next.js and react upgrade
+
+```
+
+
+flyctl deploy --build-only --push -a vtchat --image-label deployment-411a53329f20e983a463f116519e11dc --config fly.toml
+
+==> Verifying app config
+
+--> Verified app config
+
+Validating fly.toml
+
+✓ Configuration is valid
+
+==> Building image
+
+Waiting for depot builder...
+
+--> build: (​)
+
+#1 [internal] load build definition from Dockerfile
+
+#1 transferring dockerfile:
+
+#1 transferring dockerfile: 5.67kB 0.8s done
+
+#1 DONE 0.8s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+
+#2 DONE 2.3s
+
+#3 [internal] load .dockerignore
+
+#3 DONE 0.8s
+
+#4 [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244
+
+#4 resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 done
+
+#4 DONE 0.0s
+
+#5 ...
+
+#6 [runner 2/11] WORKDIR /app
+
+#6 CACHED
+
+#7 [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates
+
+#7 CACHED
+
+#8 [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/local/bin/bun
+
+#8 CACHED
+
+#9 [deps 1/4] COPY package.json bun.lock ./
+
+#9 DONE 0.1s
+
+#5 [internal] load build context
+
+#5 ...
+
+#10 [deps 2/4] COPY apps/web/package.json ./apps/web/
+
+#10 DONE 0.0s
+
+#11 [deps 3/4] COPY packages/ ./packages/
+
+#11 DONE 0.1s
+
+#12 [deps 4/4] RUN bun install --ignore-scripts
+
+#12 0.564 bun install v1.2.18 (0d4089ea)
+
+#12 0.704 Resolving dependencies
+
+#12 2.827 Resolved, downloaded and extracted [286]
+
+#12 31.59 Saved lockfile
+
+#12 31.59 + @better-auth/cli@1.2.12
+
+#12 31.59 + @biomejs/biome@2.0.6
+
+#12 31.59 + @flydotio/dockerfile@0.7.10
+
+#12 31.59 + @tailwindcss/typography@0.5.16
+
+#12 31.59 + @testing-library/jest-dom@6.6.3
+
+#12 31.59 + @testing-library/react@16.3.0
+
+#12 31.59 + @testing-library/user-event@14.6.1
+
+#12 31.59 + @types/node@24.0.10 (v24.0.14 available)
+
+#12 31.59 + @vitejs/plugin-react@4.6.0
+
+#12 31.59 + @vitest/coverage-v8@3.2.4
+
+#12 31.59 + @vitest/ui@3.2.4
+
+#12 31.59 + autoprefixer@10.4.21
+
+#12 31.59 + drizzle-kit@0.31.4
+
+#12 31.59 + globals@16.3.0
+
+#12 31.59 + happy-dom@18.0.1
+
+#12 31.59 + jsdom@26.1.0
+
+#12 31.59 + knip@5.61.3
+
+#12 31.59 + oxlint@1.6.0
+
+#12 31.59 + postcss@8.5.4 (v8.5.6 available)
+
+#12 31.59 + prettier@3.6.2
+
+#12 31.59 + prettier-plugin-tailwindcss@0.5.14
+
+#12 31.59 + tailwindcss@3.4.17 (v4.1.11 available)
+
+#12 31.59 + tsconfig-paths-webpack-plugin@4.2.0
+
+#12 31.59 + turbo@2.5.4
+
+#12 31.59 + typescript@5.8.3
+
+#12 31.59 + vite-tsconfig-paths@5.1.4
+
+#12 31.59 + vitest@3.2.4
+
+#12 31.59 + @ai-sdk/google@1.2.22
+
+#12 31.59 + @better-auth/utils@0.2.6
+
+#12 31.59 + @mozilla/readability@0.6.0
+
+#12 31.59 + @neondatabase/serverless@1.0.1
+
+#12 31.59 + @tanstack/react-table@8.21.3
+
+#12 31.59 + @types/pino@7.0.5
+
+#12 31.59 + @types/react@19.1.8
+
+#12 31.59 + @types/react-dom@19.1.6
+
+#12 31.59 + @types/react-window@1.8.8
+
+#12 31.59 + @vercel/functions@2.2.3
+
+#12 31.59 + better-auth@1.2.12
+
+#12 31.59 + better-auth-harmony@1.2.5
+
+#12 31.59 + creem@0.3.37
+
+#12 31.59 + date-fns@3.6.0 (v4.1.0 available)
+
+#12 31.59 + drizzle-orm@0.44.2 (v0.44.3 available)
+
+#12 31.59 + husky@9.1.7
+
+#12 31.59 + isbot@5.1.28
+
+#12 31.59 + legid@0.1.3 (v0.1.4 available)
+
+#12 31.59 + next@15.4.1
+
+#12 31.59 + next-themes@0.4.6
+
+#12 31.59 + node-fetch@3.3.2
+
+#12 31.59 + node-html-parser@7.0.1
+
+#12 31.59 + pdfjs-dist@5.3.93
+
+#12 31.59 + pg@8.16.3
+
+#12 31.59 + pino@9.7.0
+
+#12 31.59 + pino-pretty@13.0.0
+
+#12 31.59 + react@19.1.0
+
+#12 31.59 + react-dom@19.1.0
+
+#12 31.59 + react-dropzone@14.3.8
+
+#12 31.59 + react-intersection-observer@9.16.0
+
+#12 31.59 + react-scan@0.4.3
+
+#12 31.59 + react-window@1.8.11
+
+#12 31.59 + remark-slug@8.0.0
+
+#12 31.59 + turndown@7.2.0
+
+#12 31.59 + zustand@5.0.6
+
+#12 31.59
+
+#13 [builder 1/5] WORKDIR /app
+
+#13 CACHED
+
+#14 [builder 2/5] COPY --from=deps /app/node_modules ./node_modules
+
+#14 CACHED
+
+#15 [builder 3/5] COPY --from=deps /app/packages ./packages
+
+#15 CACHED
+
+#16 [builder 4/5] COPY . .
+
+#16 DONE 0.8s
+
+#5 [internal] load build context
+
+#5 ...
+
+#17 [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo
+
+#17 0.108 === BUILD ENVIRONMENT DEBUG ===
+
+#17 0.108 BASE_URL:
+
+#17 0.108 NEXT_PUBLIC_BASE_URL:
+
+#17 0.108 CREEM_ENVIRONMENT:
+
+#17 0.108 DATABASE_URL: [PLACEHOLDER - actual value set at runtime]
+
+#17 0.108 NODE_ENV will be automatically set by Next.js build process
+
+#17 0.108 NEXT_PHASE: phase-production-build
+
+#17 0.108 ==============================
+
+#17 3.432 This information is used to shape Next.js' roadmap and prioritize features.
+
+#17 3.432 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+
+#17 3.432 https://nextjs.org/telemetry
+
+#17 3.432
+
+#17 3.544 ▲ Next.js 15.4.1 (Turbopack)
+
+#17 3.544 - Experiments (use with caution):
+
+#17 3.544 ✓ externalDir
+
+#17 3.544 ⨯ webpackBuildWorker
+
+#17 3.544 ⨯ preloadEntriesOnStart
+
+#17 3.545 ✓ browserDebugInfoInTerminal
+
+#17 3.545
+
+#14 [builder 2/5] COPY --from=deps /app/node_modules ./node_modules
+
+#14 CACHED
+
+#17 [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo
+
+#17 315.9 Next.js build worker exited with code: null and signal: SIGKILL
+
+#17 316.2 error: script "build:turbo" exited with code 1
+
+#17 ERROR: process "/bin/sh -c cd apps/web && echo \"=== BUILD ENVIRONMENT DEBUG ===\" && echo \"BASE_URL: $BASE_URL\" && echo \"NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL\" && echo \"CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT\" && echo \"DATABASE_URL: [PLACEHOLDER - actual value set at runtime]\" && echo \"NODE_ENV will be automatically set by Next.js build process\" && echo \"NEXT_PHASE: $NEXT_PHASE\" && echo \"==============================\" && bun run build:turbo" did not complete successfully: exit code: 1
+
+#5 [internal] load build context
+
+------
+
+> [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo:
+
+3.544 ▲ Next.js 15.4.1 (Turbopack)
+
+3.544 - Experiments (use with caution):
+
+3.544 ✓ externalDir
+
+3.544 ⨯ webpackBuildWorker
+
+3.544 ⨯ preloadEntriesOnStart
+
+3.545 ✓ browserDebugInfoInTerminal
+
+3.545
+
+3.719 Creating an optimized production build ...
+
+315.9 Next.js build worker exited with code: null and signal: SIGKILL
+
+316.2 error: script "build:turbo" exited with code 1
+
+------
+
+==> Building image
+
+Waiting for depot builder...
+
+==> Building image with Depot
+
+--> build: (​)
+
+#1 [internal] load build definition from Dockerfile
+
+#1 transferring dockerfile:
+
+#1 transferring dockerfile: 5.67kB 0.8s done
+
+#1 DONE 0.8s
+
+#3 [internal] load .dockerignore
+
+#3 transferring context:
+
+#3 transferring context: 865B 0.7s done
+
+#3 DONE 0.8s
+
+#4 [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates
+
+#4 CACHED
+
+#5 [runner 2/11] WORKDIR /app
+
+#5 CACHED
+
+#6 [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/local/bin/bun
+
+#6 CACHED
+
+#7 [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244
+
+#7 resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 done
+
+#7 ...
+
+#8 [deps 3/4] COPY packages/ ./packages/
+
+#8 CACHED
+
+#9 [deps 4/4] RUN bun install --ignore-scripts
+
+#9 CACHED
+
+#10 [builder 3/5] COPY --from=deps /app/packages ./packages
+
+#10 CACHED
+
+#11 [deps 1/4] COPY package.json bun.lock ./
+
+#11 CACHED
+
+#12 [builder 2/5] COPY --from=deps /app/node_modules ./node_modules
+
+#12 Deduplicating step ID [builder 2/5] COPY --from=deps /app/node_modules ./node_modules, another build is calculating it done
+
+#12 CACHED
+
+#13 [builder 1/5] WORKDIR /app
+
+#13 CACHED
+
+#14 [deps 2/4] COPY apps/web/package.json ./apps/web/
+
+#14 CACHED
+
+#15 [builder 4/5] COPY . .
+
+#15 CACHED
+
+#16 [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo
+
+#16 0.146 === BUILD ENVIRONMENT DEBUG ===
+
+#16 0.146 BASE_URL:
+
+#16 0.146 NEXT_PUBLIC_BASE_URL:
+
+#16 0.146 CREEM_ENVIRONMENT:
+
+#16 0.146 DATABASE_URL: [PLACEHOLDER - actual value set at runtime]
+
+#16 0.146 NODE_ENV will be automatically set by Next.js build process
+
+#16 0.146 NEXT_PHASE: phase-production-build
+
+#16 0.146 ==============================
+
+#16 0.206 $ next build --turbopack
+
+#16 2.005 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+
+#16 2.007 This information is used to shape Next.js' roadmap and prioritize features.
+
+#16 2.007 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+
+#16 2.007 https://nextjs.org/telemetry
+
+#16 2.193 - Experiments (use with caution):
+
+#16 2.193 ✓ externalDir
+
+#16 2.194 ⨯ webpackBuildWorker
+
+#16 2.194 ⨯ preloadEntriesOnStart
+
+#16 2.194 ✓ browserDebugInfoInTerminal
+
+#16 2.194
+
+#17 [internal] load build context
+
+#16 [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo
+
+#16 531.0 Next.js build worker exited with code: null and signal: SIGKILL
+
+#16 531.1 error: script "build:turbo" exited with code 1
+
+#16 ERROR: process "/bin/sh -c cd apps/web && echo \"=== BUILD ENVIRONMENT DEBUG ===\" && echo \"BASE_URL: $BASE_URL\" && echo \"NEXT_PUBLIC_BASE_URL: $NEXT_PUBLIC_BASE_URL\" && echo \"CREEM_ENVIRONMENT: $CREEM_ENVIRONMENT\" && echo \"DATABASE_URL: [PLACEHOLDER - actual value set at runtime]\" && echo \"NODE_ENV will be automatically set by Next.js build process\" && echo \"NEXT_PHASE: $NEXT_PHASE\" && echo \"==============================\" && bun run build:turbo" did not complete successfully: exit code: 1
+
+#7 [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244
+
+------
+
+> [builder 5/5] RUN cd apps/web && echo "=== BUILD ENVIRONMENT DEBUG ===" && echo "BASE_URL: " && echo "NEXT_PUBLIC_BASE_URL: " && echo "CREEM_ENVIRONMENT: " && echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && echo "NODE_ENV will be automatically set by Next.js build process" && echo "NEXT_PHASE: phase-production-build" && echo "==============================" && bun run build:turbo:
+
+2.193 ▲ Next.js 15.4.1 (Turbopack)
+
+2.193 - Experiments (use with caution):
+
+2.193 ✓ externalDir
+
+2.194 ⨯ webpackBuildWorker
+
+2.194 ⨯ preloadEntriesOnStart
+
+2.194 ✓ browserDebugInfoInTerminal
+
+2.194
+
+2.397 Creating an optimized production build ...
+
+531.0 Next.js build worker exited with code: null and signal: SIGKILL
+
+531.1 error: script "build:turbo" exited with code 1
+
+unsuccessful command 'flyctl deploy --build-only --push -a vtchat --image-label deployment-411a53329f20e983a463f116519e11dc --config fly.toml'
+```
+
+--
+
+fix Provider Usage (Last 30 Days)
+gemini
+30 requests
+$0.00
+USD
+
+fix cost calculation in https://vtchat.io.vn/admin "Provider Usage (Last 30 Days)"
+
+--
+We're iterating on making Next.js better for coding with AI agents.
+
+The new experimental flag `browserDebugInfoInTerminal` forwards the browser console to the terminal (Shipped in 15.4 today).
+
+This means that cursor, VSCode, or a CLI agent can see client side errors and fix them for you.
+
+Feedback welcome, we're planning to turn this on by default if it works well in practice.
+
+--
+
+https://ship-25-agents-workshop.vercel.app/docs
+
+--
+
+https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-models
+
+--
+
+important: check firework ai models is using gemini api keys
+
+20:48:26.563
+Object { id: "fi0Y3UBGix", length: 10 }
+Generated legid thread ID 3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.567 threadItems
+Object { data: [] }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.568 🚀 Sending to handleSubmit with flags
+Object { useWebSearch: false, useMathCalculator: false, useCharts: false }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.569 Agent provider received flags
+Object { useWebSearch: false, useMathCalculator: false, useCharts: false }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.685
+Object { id: "Y2dt7JFGO", length: 9 }
+Generated legid thread ID 3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.981 🎯 API routing decision
+Object { mode: "kimi-k2-instruct-fireworks", isFreeModel: false, hasVtPlusAccess: true, needsServerSide: false, shouldUseServerSideAPI: false, hasApiKey: true, deepResearch: false, proSearch: false }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.983 📱 Using client-side workflow path
+Object { mode: "kimi-k2-instruct-fireworks" }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.985 About to call startWorkflow
+Object { useWebSearch: false, useMathCalculator: false, useCharts: false, apiKeys: (1) […] }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:26.985 🚀 Starting workflow with API keys
+Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined, allKeys: (1) […] }
+3c0f5*next_dist_49462250.*.js:1590:28
+20:48:27.003 Worker API keys set
+Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined, allKeys: (1) […] }
+_be8e6316._.js:61:21
+20:48:27.004 🔧 Worker received API keys
+Object { mode: "kimi-k2-instruct-fireworks", hasAnthropicKey: false, anthropicKeyLength: undefined }
+_be8e6316._.js:61:21
+20:48:27.006 🔥 runWorkflow called with params: _be8e6316._.js:59:21
+20:48:27.006 🌟 Workflow context created with: _be8e6316._.js:59:21
+20:48:27.008 🚀 Executing task "router" (Run #1) _be8e6316._.js:59:21
+20:48:27.011 [Fast Refresh] rebuilding 3c0f5*next_dist_49462250.*.js:1590:28
+20:48:27.012 🚀 Executing task "completion" (Run #1) _be8e6316._.js:59:21
+20:48:27.019 🔧 Final tools for AI
+Object { data: "none" }
+_be8e6316._.js:61:21
+20:48:27.019 generateText called
+Object { model: "gemini-2.5-flash-lite-preview-06-17", hasAnthropicKey: false, anthropicKeyLength: undefined, mode: "kimi-k2-instruct-fireworks", userTier: "PLUS" }
+_be8e6316._.js:61:21
+20:48:27.019 🤖 generateText called
+Object { model: "gemini-2.5-flash-lite-preview-06-17", hasAnthropicKey: false, anthropicKeyLength: undefined, mode: "kimi-k2-instruct-fireworks", userTier: "PLUS" }
+_be8e6316._.js:61:21
+20:48:27.022 === getLanguageModel START === _be8e6316._.js:59:21
+20:48:27.022 Parameters: _be8e6316._.js:59:21
+20:48:27.022 Found model: _be8e6316._.js:59:21
+20:48:27.022 Getting provider instance for: _be8e6316._.js:59:21
+20:48:27.024 Provider instance debug: _be8e6316._.js:59:21
+20:48:27.024 No API key found for free Gemini model - checking environment... _be8e6316._.js:73:21
+20:48:27.024 Process env check: _be8e6316._.js:73:21
+20:48:27.024 Error in getLanguageModel: _be8e6316._.js:73:21
+20:48:27.028 Error stack: _be8e6316._.js:73:21
+20:48:27.028 Error: Error: Gemini API key required. Please add your API key in Settings → API Keys → Google Gemini. Get a free key at https://ai.google.dev/api
+NextJS 3
+_be8e6316._.js:75:21
+20:48:27.029 ❌ Error in task "completion" (Attempt 1): _be8e6316._.js:73:21
+20:48:27.029 Task failed _be8e6316._.js:73:21
+20:48:27.398 [SharedWorker] Received thread-item-update event <empty string> db-sync.worker.js:19:17
+20:48:28.134 [Fast Refresh] done in 1252ms 3c0f5*next_dist_49462250.*.js:1590:28
+20:48:28.432 [Fast Refresh] rebuilding 3c0f5*next_dist_49462250.*.js:1590:28
+20:48:28.464 [Fast Refresh] done in 258ms 3c0f5*next_dist_49462250.*.js:1590:28
+
+--
+
+fix VtPlusUsageMeter -> VT+ usage tracking is not available.
+
+--
 Automatically migrate to AI SDK 5 with our initial set of codemods.
 
 https://v5.ai-sdk.dev/docs/migration-guides/migration-guide-5-0#codemods
-
---
-
-1. debug check openai/anthropic provider -> we are now not sending plan "apiKeys" field. so there is no model response. how to make sure it work?
-2. fix openrouter send dummy api/completion
-
---
-fix failed deploy
-
-~/Developer/learn-by-doing/vtchat main ⇡
-16:10:09 ❯ ./deploy-fly.sh --auto --version minor
-VT Chat Interactive Deployment Pipeline
-===============================================
-[SUCCESS] flyctl is installed and user is authenticated
-
-[STEP] Starting deployment pipeline...
-[STEP] Checking git repository status...
-[SUCCESS] Working directory is clean
-[STEP] Creating version tag...
-[INFO] Current version: v2.6.0
-[INFO] New version: v2.7.0
-[INFO] Creating tag v2.7.0...
-[SUCCESS] Created tag: v2.7.0
-[STEP] Pushing to remote repository...
-Everything up-to-date
-Enumerating objects: 1, done.
-Counting objects: 100% (1/1), done.
-Writing objects: 100% (1/1), 224 bytes | 224.00 KiB/s, done.
-Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
-To github.com:vinhnx/vtchat.git
-
-- [new tag] v2.7.0 -> v2.7.0
-  [SUCCESS] Pushed to remote repository
-  [STEP] Deploying to Fly.io...
-  [INFO] App: vtchat
-  [INFO] Version: v2.7.0
-  [INFO] Config: fly.toml
-  [SUCCESS] Starting deployment...
-  [INFO] Running: flyctl deploy --app vtchat
-  [INFO] You can also monitor deployment progress at: https://fly.io/apps/vtchat
-  [INFO] View deployment logs at: https://fly.io/apps/vtchat/monitoring
-  ==> Verifying app config
-  Validating /Users/vinh.nguyenxuan/Developer/learn-by-doing/vtchat/fly.toml
-  ✓ Configuration is valid
-  --> Verified app config
-  ==> Building image
-  ==> Building image with Depot
-  --> build: (​)
-  [+] Building 7.1s (11/26)
-  => [internal] load build definition from Dockerfile 0.1s
-  => => transferring dockerfile: 5.72kB 0.1s
-  => [internal] load metadata for docker.io/library/node:20-alpine 1.7s
-  => [internal] load .dockerignore 0.4s
-  => => transferring context: 902B 0.4s
-  => [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
-  => => resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
-  => [internal] load build context 4.8s
-  => => transferring context: 9.91MB 1.2s
-  => CACHED [runner 2/11] WORKDIR /app 0.0s
-  => CACHED [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates 0.0s
-  => CACHED [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/ 0.0s
-  => CACHED [deps 1/4] COPY package.json bun.lock ./ 0.0s
-  => CACHED [deps 2/4] COPY apps/web/package.json ./apps/web/ 0.0s
-  => [deps 3/4] COPY packages/ ./packages/ 0.2s
-  => ERROR [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile 3.3s
-
----
-
-> [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile:
-> 0.335 bun install v1.2.18 (0d4089ea)
-> 0.537 Resolving dependencies
-> 3.140 Resolved, downloaded and extracted [290]
-> 3.140 warn: incorrect peer dependency "react@19.0.0"
-> 3.154 error: lockfile had changes, but lockfile is frozen
-
-## 3.154 note: try re-running without --frozen-lockfile and commit the updated lockfile
-
-==> Building image
-==> Building image with Depot
---> build: (​)
-[+] Building 2.1s (12/26)
-=> [internal] load build definition from Dockerfile 0.1s
-=> => transferring dockerfile: 5.72kB 0.1s
-=> [internal] load metadata for docker.io/library/node:20-alpine 0.3s
-=> [internal] load .dockerignore 0.1s
-=> => transferring context: 902B 0.1s
-=> [runner 1/11] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
-=> => resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 0.0s
-=> [internal] load build context 0.3s
-=> => transferring context: 109.78kB 0.2s
-=> CACHED [runner 2/11] WORKDIR /app 0.0s
-=> CACHED [base 3/4] RUN apk add --no-cache curl bash python3 make g++ ca-certificates 0.0s
-=> CACHED [base 4/4] RUN corepack disable && curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/ && chmod +x /usr/ 0.0s
-=> CACHED [deps 1/4] COPY package.json bun.lock ./ 0.0s
-=> CACHED [deps 2/4] COPY apps/web/package.json ./apps/web/ 0.0s
-=> CACHED [deps 3/4] COPY packages/ ./packages/ 0.0s
-=> ERROR [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile 1.2s
-
----
-
-> [deps 4/4] RUN bun install --ignore-scripts --frozen-lockfile:
-> 0.090 bun install v1.2.18 (0d4089ea)
-> 0.114 Resolving dependencies
-> 1.082 Resolved, downloaded and extracted [290]
-> 1.082 warn: incorrect peer dependency "react@19.0.0"
-> 1.091 error: lockfile had changes, but lockfile is frozen
-
-## 1.091 note: try re-running without --frozen-lockfile and commit the updated lockfile
-
-Error: failed to fetch an image or build from source: error building: failed to solve: process "/bin/sh -c bun install --ignore-scripts --frozen-lockfile" did not complete successfully: exit code: 1
-[ERROR] Deployment failed with exit code 1
-[ERROR] Check the output above for details
 
 --
 

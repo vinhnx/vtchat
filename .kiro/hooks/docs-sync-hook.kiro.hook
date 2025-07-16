@@ -1,0 +1,31 @@
+{
+  "enabled": true,
+  "name": "Documentation Sync",
+  "description": "Monitors all TypeScript source files, configuration files, and other relevant project files for changes, then automatically updates documentation in README.md or /docs folder to keep it synchronized with code changes",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.json",
+      "**/*.md",
+      "**/*.mjs",
+      "**/*.toml",
+      "package.json",
+      "turbo.json",
+      "next.config.mjs",
+      "tailwind.config.ts",
+      "drizzle.config.ts",
+      "playwright.config.ts",
+      "vitest.config.ts",
+      "middleware.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Source files have been modified in this TypeScript/Next.js project. Please analyze the changes and update the documentation accordingly. Focus on:\n\n1. Update README.md if core functionality, setup instructions, or project overview has changed\n2. Update relevant files in the /docs folder if specific features, architecture, or implementation details have changed\n3. Ensure documentation reflects current API endpoints, component interfaces, configuration options, and usage patterns\n4. Update any code examples, installation steps, or feature descriptions that may be outdated\n5. Check if new features need documentation or if removed features should be cleaned up from docs\n\nPlease review the changed files and provide comprehensive documentation updates that keep users and developers informed about the current state of the project."
+  }
+}

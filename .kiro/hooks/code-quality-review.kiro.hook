@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "Code Quality Review",
+  "description": "Automatically reviews modified code files for quality issues, potential bugs, performance optimizations, security vulnerabilities, and accessibility concerns",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.vue",
+      "**/*.svelte"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review the current file for:\n1. Code quality issues (naming conventions, structure, maintainability)\n2. Potential bugs (logic errors, edge cases, type safety)\n3. Performance optimizations (unnecessary re-renders, memory leaks, inefficient algorithms)\n4. Security vulnerabilities (XSS, injection attacks, data exposure)\n5. Accessibility concerns (ARIA labels, keyboard navigation, screen reader support)\n\nProvide specific, actionable feedback with code examples where applicable."
+  }
+}

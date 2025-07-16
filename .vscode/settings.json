@@ -33,5 +33,6 @@
         "markdown": false
     },
     "npm.packageManager": "bun",
-    "amp.experimental.enhancedRules": true
+    "amp.experimental.enhancedRules": true,
+    "typescript.autoClosingTags": false
 }

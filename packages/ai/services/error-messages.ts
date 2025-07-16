@@ -1,0 +1,420 @@
+import { log } from "@repo/shared/logger";
+import { Providers, type ProviderEnumType } from "../constants/providers";
+
+/**
+ * Centralized error message service for AI provider errors
+ * Provides consistent, user-friendly error messages with specific guidance
+ */
+
+export interface ErrorContext {
+    provider?: ProviderEnumType;
+    model?: string;
+    userId?: string;
+    hasApiKey?: boolean;
+    isVtPlus?: boolean;
+    errorCode?: string;
+    originalError?: string;
+}
+
+export interface ErrorMessage {
+    title: string;
+    message: string;
+    action?: string;
+    helpUrl?: string;
+    upgradeUrl?: string;
+    settingsAction?: string;
+}
+
+// Provider-specific API key setup URLs
+export const PROVIDER_SETUP_URLS = {
+    [Providers.OPENAI]: "https://platform.openai.com/api-keys",
+    [Providers.ANTHROPIC]: "https://console.anthropic.com/",
+    [Providers.TOGETHER]: "https://api.together.xyz/",
+    [Providers.GOOGLE]: "https://ai.google.dev/api",
+    [Providers.FIREWORKS]: "https://app.fireworks.ai/",
+    [Providers.XAI]: "https://x.ai/api",
+    [Providers.OPENROUTER]: "https://openrouter.ai/keys",
+    [Providers.LMSTUDIO]: "https://lmstudio.ai/docs/local-server",
+    [Providers.OLLAMA]: "https://ollama.ai/download",
+} as const;
+
+// Provider display names for user-friendly messages
+export const PROVIDER_DISPLAY_NAMES = {
+    [Providers.OPENAI]: "OpenAI",
+    [Providers.ANTHROPIC]: "Anthropic Claude",
+    [Providers.TOGETHER]: "Together AI",
+    [Providers.GOOGLE]: "Google Gemini",
+    [Providers.FIREWORKS]: "Fireworks AI",
+    [Providers.XAI]: "xAI Grok",
+    [Providers.OPENROUTER]: "OpenRouter",
+    [Providers.LMSTUDIO]: "LM Studio",
+    [Providers.OLLAMA]: "Ollama",
+} as const;
+
+export class ErrorMessageService {
+    /**
+     * Generate user-friendly error message for missing API key
+     */
+    static getMissingApiKeyError(context: ErrorContext): ErrorMessage {
+        const { provider } = context;
+
+        if (!provider) {
+            return {
+                title: "API Key Required",
+                message:
+                    "An API key is required to use this AI model. Please configure your API keys in Settings.",
+                action: "Add API key in Settings → API Keys",
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        const providerName = PROVIDER_DISPLAY_NAMES[provider];
+        const setupUrl = PROVIDER_SETUP_URLS[provider];
+
+        // Special handling for local providers
+        if (provider === Providers.LMSTUDIO) {
+            return {
+                title: "LM Studio Not Configured",
+                message:
+                    "LM Studio server URL is required. Make sure LM Studio is running locally and the server is started.",
+                action: "Configure LM Studio server URL in Settings → API Keys → LM Studio",
+                helpUrl: setupUrl,
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        if (provider === Providers.OLLAMA) {
+            return {
+                title: "Ollama Not Configured",
+                message:
+                    "Ollama server URL is required. Make sure Ollama is installed and running locally.",
+                action: "Configure Ollama server URL in Settings → API Keys → Ollama",
+                helpUrl: setupUrl,
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        return {
+            title: `${providerName} API Key Required`,
+            message: `To use ${providerName} models, you need to provide your own API key. This ensures you have full control over your usage and costs.`,
+            action: `Get your free API key from ${providerName} and add it inSettings → API Keys → ${providerName}`,
+            helpUrl: setupUrl,
+            settingsAction: "open_api_keys",
+        };
+    }
+
+    /**
+     * Generate user-friendly error message for invalid API key
+     */
+    static getInvalidApiKeyError(context: ErrorContext): ErrorMessage {
+        const { provider, originalError } = context;
+
+        if (!provider) {
+            return {
+                title: "Invalid API Key",
+                message:
+                    "The provided API key appears to be invalid. Please check your API key format and try again.",
+                action: "Verify your API key in Settings → API Keys",
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        const providerName = PROVIDER_DISPLAY_NAMES[provider];
+        const setupUrl = PROVIDER_SETUP_URLS[provider];
+
+        // Check for specific error patterns
+        if (originalError?.includes("unauthorized") || originalError?.includes("401")) {
+            return {
+                title: `${providerName} Authentication Failed`,
+                message: `Your ${providerName} API key is invalid or has expired. Please verify your API key is correct and has the necessary permissions.`,
+                action: `Update your API key in Settings → API Keys → ${providerName}`,
+                helpUrl: setupUrl,
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        if (originalError?.includes("forbidden") || originalError?.includes("403")) {
+            return {
+                title: `${providerName} Access Denied`,
+                message: `Your ${providerName} API key doesn't have permission to access this model or feature. Check your account permissions or billing status.`,
+                action: `Verify your ${providerName} account status and API key permissions`,
+                helpUrl: setupUrl,
+                settingsAction: "open_api_keys",
+            };
+        }
+
+        return {
+            title: `${providerName} API Key Invalid`,
+            message: `The ${providerName} API key format is incorrect. Please check that you've copied the complete API key.`,
+            action: `Update your API key in Settings → API Keys → ${providerName}`,
+            helpUrl: setupUrl,
+            settingsAction: "open_api_keys",
+        };
+    }
+
+    /**
+     * Generate user-friendly error message for rate limiting
+     */
+    static getRateLimitError(context: ErrorContext): ErrorMessage {
+        const { provider, isVtPlus } = context;
+
+        if (!provider) {
+            return {
+                title: "Rate Limit Exceeded",
+                message:
+                    "You've exceeded the rate limit for this service. Please wait a moment before trying again.",
+                action: "Wait a few minutes and try again",
+            };
+        }
+
+        const providerName = PROVIDER_DISPLAY_NAMES[provider];
+
+        if (provider === Providers.GOOGLE && !context.hasApiKey) {
+            if (isVtPlus) {
+                return {
+                    title: "VT+ Rate Limit Reached",
+                    message:
+                        "You've reached your VT+ usage limit for Gemini models. Add your own API key for unlimited usage.",
+                    action: "Add your own Gemini API key in Settings → API Keys → Google Gemini",
+                    helpUrl: PROVIDER_SETUP_URLS[provider],
+                    settingsAction: "open_api_keys",
+                };
+            } else {
+                return {
+                    title: "Free Usage Limit Reached",
+                    message:
+                        "You've reached the daily limit for free Gemini usage. Add your own API key or upgrade to VT+ for higher limits.",
+                    action: "Add your own Gemini API key for unlimited usage",
+                    helpUrl: PROVIDER_SETUP_URLS[provider],
+                    upgradeUrl: "/pricing",
+                    settingsAction: "open_api_keys",
+                };
+            }
+        }
+
+        return {
+            title: `${providerName} Rate Limit`,
+            message: `You've exceeded the rate limit for ${providerName}. This is typically temporary and will reset shortly.`,
+            action: "Wait a few minutes and try again, or try a different model",
+        };
+    }
+
+    /**
+     * Generate user-friendly error message for network issues
+     */
+    static getNetworkError(context: ErrorContext): ErrorMessage {
+        const { provider, originalError } = context;
+        const providerName = provider ? PROVIDER_DISPLAY_NAMES[provider] : "AI service";
+
+        if (originalError?.includes("ECONNREFUSED") || originalError?.includes("ECONNRESET")) {
+            if (provider === Providers.LMSTUDIO || provider === Providers.OLLAMA) {
+                return {
+                    title: `${providerName} Connection Failed`,
+                    message: `Cannot connect to ${providerName}. Make sure ${providerName} is running and the server is started.`,
+                    action: `Start ${providerName} and ensure the server is running on the configured port`,
+                    helpUrl: PROVIDER_SETUP_URLS[provider!],
+                };
+            }
+        }
+
+        if (originalError?.includes("timeout") || originalError?.includes("ETIMEDOUT")) {
+            return {
+                title: "Request Timeout",
+                message: `The request to ${providerName} timed out. This might be due to network issues or high server load.`,
+                action: "Check your internet connection and try again",
+            };
+        }
+
+        return {
+            title: "Network Connection Error",
+            message: `Unable to connect to ${providerName}. Please check your internet connection.`,
+            action: "Check your internet connection and try again",
+        };
+    }
+
+    /**
+     * Generate user-friendly error message for service unavailable
+     */
+    static getServiceUnavailableError(context: ErrorContext): ErrorMessage {
+        const { provider, originalError } = context;
+        const providerName = provider ? PROVIDER_DISPLAY_NAMES[provider] : "AI service";
+
+        if (originalError?.includes("model not found")) {
+            return {
+                title: "Model Not Available",
+                message: `The requested model is not available on ${providerName}. It may have been deprecated or renamed.`,
+                action: "Try a different model or check the provider's documentation",
+                helpUrl: provider ? PROVIDER_SETUP_URLS[provider] : undefined,
+            };
+        }
+
+        if (
+            originalError?.includes("502") ||
+            originalError?.includes("503") ||
+            originalError?.includes("504")
+        ) {
+            return {
+                title: `${providerName} Temporarily Unavailable`,
+                message: `${providerName} is experiencing technical difficulties. This is usually temporary.`,
+                action: "Try again in a few minutes or use a different model",
+            };
+        }
+
+        return {
+            title: "Service Unavailable",
+            message: `${providerName} is currently unavailable. This might be due to maintenance or high demand.`,
+            action: "Try again later or use a different AI provider",
+        };
+    }
+
+    /**
+     * Generate user-friendly error message for quota exceeded
+     */
+    static getQuotaExceededError(context: ErrorContext): ErrorMessage {
+        const { provider, isVtPlus } = context;
+        const providerName = provider ? PROVIDER_DISPLAY_NAMES[provider] : "AI service";
+
+        if (provider === Providers.GOOGLE && !context.hasApiKey) {
+            if (isVtPlus) {
+                return {
+                    title: "VT+ Monthly Quota Exceeded",
+                    message:
+                        "You've used all your VT+ quota for this month. Add your own API key for unlimited usage.",
+                    action: "Add your own Gemini API key in Settings → API Keys → Google Gemini",
+                    helpUrl: PROVIDER_SETUP_URLS[provider],
+                    settingsAction: "open_api_keys",
+                };
+            } else {
+                return {
+                    title: "Free Quota Exceeded",
+                    message:
+                        "You've reached your free usage limit. Upgrade to VT+ or add your own API key for continued access.",
+                    action: "Upgrade to VT+ or add your own API key",
+                    upgradeUrl: "/pricing",
+                    helpUrl: PROVIDER_SETUP_URLS[provider],
+                    settingsAction: "open_api_keys",
+                };
+            }
+        }
+
+        return {
+            title: "Usage Quota Exceeded",
+            message: `You've exceeded your usage quota for ${providerName}. This may reset daily or monthly depending on your plan.`,
+            action: "Wait for quota reset or upgrade your plan",
+            upgradeUrl: "/pricing",
+        };
+    }
+
+    /**
+     * Main method to generate appropriate error message based on error type
+     */
+    static generateErrorMessage(error: Error | string, context: ErrorContext = {}): ErrorMessage {
+        const errorString = typeof error === "string" ? error : error.message;
+        const errorLower = errorString.toLowerCase();
+
+        // Log the error for debugging (without exposing sensitive data)
+        log.error("Generating user-friendly error message", {
+            provider: context.provider,
+            model: context.model,
+            hasApiKey: context.hasApiKey,
+            isVtPlus: context.isVtPlus,
+            errorType: typeof error,
+            errorLength: errorString.length,
+        });
+
+        // Determine error type and generate appropriate message
+        if (
+            errorLower.includes("api key required") ||
+            errorLower.includes("missing api key") ||
+            errorLower.includes("no api key")
+        ) {
+            return ErrorMessageService.getMissingApiKeyError(context);
+        }
+
+        if (
+            errorLower.includes("invalid api key") ||
+            errorLower.includes("unauthorized") ||
+            errorLower.includes("forbidden") ||
+            errorLower.includes("401") ||
+            errorLower.includes("403")
+        ) {
+            return ErrorMessageService.getInvalidApiKeyError({
+                ...context,
+                originalError: errorString,
+            });
+        }
+
+        if (
+            errorLower.includes("rate limit") ||
+            errorLower.includes("too many requests") ||
+            errorLower.includes("429")
+        ) {
+            return ErrorMessageService.getRateLimitError(context);
+        }
+
+        if (
+            errorLower.includes("quota exceeded") ||
+            errorLower.includes("usage limit") ||
+            errorLower.includes("billing")
+        ) {
+            return ErrorMessageService.getQuotaExceededError(context);
+        }
+
+        if (
+            errorLower.includes("network") ||
+            errorLower.includes("connection") ||
+            errorLower.includes("econnrefused") ||
+            errorLower.includes("econnreset") ||
+            errorLower.includes("etimedout") ||
+            errorLower.includes("timeout")
+        ) {
+            return ErrorMessageService.getNetworkError({ ...context, originalError: errorString });
+        }
+
+        if (
+            errorLower.includes("service unavailable") ||
+            errorLower.includes("model not found") ||
+            errorLower.includes("502") ||
+            errorLower.includes("503") ||
+            errorLower.includes("504")
+        ) {
+            return ErrorMessageService.getServiceUnavailableError({
+                ...context,
+                originalError: errorString,
+            });
+        }
+
+        // Generic fallback error
+        return {
+            title: "AI Service Error",
+            message:
+                "An unexpected error occurred while processing your request. Please try again or contact support if the issue persists.",
+            action: "Try again with a different model or check your settings",
+            settingsAction: "open_api_keys",
+        };
+    }
+}
+
+// Export convenience functions
+export const generateErrorMessage = (
+    error: Error | string,
+    context: ErrorContext = {},
+): ErrorMessage => ErrorMessageService.generateErrorMessage(error, context);
+
+export const getMissingApiKeyError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getMissingApiKeyError(context);
+
+export const getInvalidApiKeyError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getInvalidApiKeyError(context);
+
+export const getRateLimitError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getRateLimitError(context);
+
+export const getNetworkError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getNetworkError(context);
+
+export const getServiceUnavailableError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getServiceUnavailableError(context);
+
+export const getQuotaExceededError = (context: ErrorContext): ErrorMessage =>
+    ErrorMessageService.getQuotaExceededError(context);

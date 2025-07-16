@@ -8,10 +8,10 @@ import {
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
 import {
-    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
+    type CoreMessage,
     type ToolSet,
 } from "ai";
 import type { ZodSchema } from "zod";
@@ -462,23 +462,18 @@ export const generateTextWithGeminiSearch = async ({
     } catch (error: any) {
         log.error("Error in generateTextWithGeminiSearch:", { data: error });
 
-        // Provide more specific error messages
-        if (error.message?.includes("401") || error.message?.includes("unauthorized")) {
-            throw new Error(
-                "Invalid or missing Gemini API key. Please check your API key configuration.",
-            );
-        }
-        if (error.message?.includes("403") || error.message?.includes("forbidden")) {
-            throw new Error("Gemini API access forbidden. Please check your API key permissions.");
-        }
-        if (error.message?.includes("429")) {
-            throw new Error("Gemini API rate limit exceeded. Please try again later.");
-        }
-        if (error.message?.includes("undefined to object")) {
-            throw new Error("Gemini web search configuration error. Please check your API setup.");
-        }
+        // Use centralized error message service for better user feedback
+        const errorContext: ErrorContext = {
+            provider: "google" as any,
+            model: model.toString(),
+            userId,
+            hasApiKey: hasUserGeminiKey,
+            isVtPlus: isVtPlusUser,
+            originalError: error.message,
+        };
 
-        throw error;
+        const errorMsg = generateProviderErrorMessage(error, errorContext);
+        throw new Error(errorMsg.message);
     }
 };
 
@@ -929,28 +924,24 @@ export const generateObject = async ({
     } catch (error: any) {
         log.error("Error in generateObject:", { data: error });
 
-        // Provide more specific error messages for common issues
-        if (error.message?.includes("contents.parts must not be empty")) {
-            log.error(
-                "Empty parts error - this indicates messages with empty content were passed to Gemini API",
-            );
-            throw new Error(
-                "Invalid message format: Some messages have empty content. Please ensure all messages have valid content.",
-            );
-        }
-        if (error.message?.includes("401") || error.message?.includes("unauthorized")) {
-            throw new Error(
-                "Invalid or missing API key for the selected model. Please check your API key configuration.",
-            );
-        }
-        if (error.message?.includes("403") || error.message?.includes("forbidden")) {
-            throw new Error("API access forbidden. Please check your API key permissions.");
-        }
-        if (error.message?.includes("429")) {
-            throw new Error("API rate limit exceeded. Please try again later.");
-        }
+        // Use centralized error message service for better user feedback
+        const errorContext: ErrorContext = {
+            provider: model.toString().toLowerCase().includes("gemini")
+                ? ("google" as any)
+                : model.toString().toLowerCase().includes("claude")
+                  ? ("anthropic" as any)
+                  : model.toString().toLowerCase().includes("gpt")
+                    ? ("openai" as any)
+                    : undefined,
+            model: model.toString(),
+            userId,
+            hasApiKey: !!(byokKeys && Object.keys(byokKeys).length > 0),
+            isVtPlus: userTier === UserTier.PLUS,
+            originalError: error.message,
+        };
 
-        throw error; // Re-throw to let caller handle the error appropriately
+        const errorMsg = generateProviderErrorMessage(error, errorContext);
+        throw new Error(errorMsg.message);
     }
 };
 

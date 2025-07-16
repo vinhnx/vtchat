@@ -21,8 +21,8 @@ export const ModelEnum = {
     GROK_3_MINI: "grok-3-mini",
     GROK_4: "grok-4",
     // Fireworks models
-    DEEPSEEK_R1_FIREWORKS: "accounts/fireworks/models/qwen3-30b-a3b",
-    KIMI_K2_INSTRUCT_FIREWORKS: "fireworks/models/kimi-k2-instruct",
+    DEEPSEEK_R1_FIREWORKS: "accounts/fireworks/models/deepseek-r1-0528",
+    KIMI_K2_INSTRUCT_FIREWORKS: "accounts/fireworks/models/kimi-k2-instruct",
     // OpenRouter models
     DEEPSEEK_V3_0324: "deepseek/deepseek-chat-v3-0324",
     DEEPSEEK_R1: "deepseek/deepseek-r1",

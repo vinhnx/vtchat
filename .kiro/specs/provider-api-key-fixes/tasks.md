@@ -36,7 +36,7 @@
     - Ensure all logging is security-conscious and never exposes actual key values
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ]   7. Create unit tests for API key mapping
+- [x]   7. Create unit tests for API key mapping
     - Write tests for the new API key mapping service
     - Test key transformation from frontend format to provider format
     - Test validation functions for each provider
@@ -48,7 +48,7 @@
     - Test error handling when API keys are missing or invalid
     - _Requirements: 1.1, 1.2, 2.1, 2.2_
 
-- [ ]   9. Verify OpenRouter request authenticity
+- [x]   9. Verify OpenRouter request authenticity
     - Test OpenRouter models with valid API key to ensure authentic responses
     - Verify that OpenRouter requests are sent to correct endpoints
     - Ensure no dummy or mock responses are returned
@@ -59,3 +59,5 @@
     - Ensure users get clear feedback when API keys are missing or invalid
     - Add specific guidance for obtaining API keys for each provider
     - _Requirements: 1.5, 2.4, 2.5_
+
+- [ ]   11. Verify final all of above. make sure every requirements and acceptance criteria is met. Make sure API provider are correctly send.

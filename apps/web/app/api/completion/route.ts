@@ -1,14 +1,14 @@
-import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
-import { log } from "@repo/shared/logger";
-
-import { isGeminiModel } from "@repo/shared/utils";
-import { type Geo, geolocation } from "@vercel/functions";
-import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { shouldDisableGemini } from "@/lib/services/budget-monitor";
 import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
+import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
+import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
+import { ChatMode, ChatModeConfig } from "@repo/shared/config";
+import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
+import { isGeminiModel } from "@repo/shared/utils";
+import { geolocation, type Geo } from "@vercel/functions";
+import type { NextRequest } from "next/server";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
 // Force dynamic rendering for this route
@@ -59,6 +59,35 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // Transform API keys using centralized mapping service
+        let transformedApiKeys: Record<string, string> | undefined;
+        if (data.apiKeys && Object.keys(data.apiKeys).length > 0) {
+            log.info("Transforming API keys using centralized mapper", {
+                originalKeys: Object.keys(data.apiKeys),
+                hasKeys: Object.keys(data.apiKeys).length > 0,
+            });
+
+            try {
+                transformedApiKeys = apiKeyMapper.mapFrontendToProvider(data.apiKeys);
+
+                log.info("API key transformation completed", {
+                    transformedKeys: Object.keys(transformedApiKeys),
+                    transformedCount: Object.keys(transformedApiKeys).length,
+                });
+            } catch (error) {
+                log.error({ error }, "Failed to transform API keys");
+                return new Response(
+                    JSON.stringify({
+                        error: "API key configuration error",
+                        message: "Failed to process API keys. Please check your key format.",
+                    }),
+                    { status: 400, headers: { "Content-Type": "application/json" } },
+                );
+            }
+        } else {
+            log.info("No API keys provided in request");
+        }
+
         if (!!ChatModeConfig[data.mode]?.isAuthRequired && !userId) {
             return new Response(JSON.stringify({ error: "Authentication required" }), {
                 status: 401,
@@ -73,7 +102,9 @@ export async function POST(request: NextRequest) {
         const isGeminiModelResult = isGeminiModel(selectedModel);
 
         // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
-        const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
+        // Use transformed API keys if available, otherwise use original keys
+        const effectiveApiKeys = transformedApiKeys || data.apiKeys;
+        const geminiApiKey = effectiveApiKeys?.GEMINI_API_KEY;
         const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
         // Declare vtPlusAccess in outer scope for access in onFinish callback
@@ -209,11 +240,13 @@ export async function POST(request: NextRequest) {
                 if (accessResult.hasAccess) {
                     // VT+ user, no BYOK needed
                 } else {
-                    // Free user, check for BYOK
-                    const geminiApiKey = data.apiKeys?.GEMINI_API_KEY;
-                    const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
+                    // Free user, check for BYOK using transformed keys
+                    const geminiApiKey = effectiveApiKeys?.GEMINI_API_KEY;
+                    const hasByokGeminiKeyForMode = !!(
+                        geminiApiKey && geminiApiKey.trim().length > 0
+                    );
 
-                    if (!hasByokGeminiKey) {
+                    if (!hasByokGeminiKeyForMode) {
                         return new Response(
                             JSON.stringify({
                                 error: "VT+ subscription or API key required",
@@ -290,22 +323,22 @@ export async function POST(request: NextRequest) {
         const gl = geolocation(request);
 
         // Override userTier with server-validated value to prevent spoofing
+        // Use transformed API keys if available, otherwise use original keys
         const safeData = {
             ...data,
             userTier: actualUserTier,
+            apiKeys: transformedApiKeys || data.apiKeys,
         };
 
         const stream = createCompletionStream({
             data: safeData,
             userId,
-            _ip: ip,
+            ip: ip,
             abortController,
             requestId,
             gl,
             selectedModel,
-            hasByokGeminiKey: !!(
-                data.apiKeys?.GEMINI_API_KEY && data.apiKeys.GEMINI_API_KEY.trim().length > 0
-            ),
+            hasByokGeminiKey: hasByokGeminiKey,
             isGeminiModelResult,
             vtPlusAccess,
         });
@@ -363,7 +396,7 @@ function createCompletionStream({
 }: {
     data: any;
     userId?: string;
-    _ip?: string;
+    ip?: string;
     abortController: AbortController;
     requestId: string;
     gl: Geo;
