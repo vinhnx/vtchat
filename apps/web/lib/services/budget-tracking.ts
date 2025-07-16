@@ -27,6 +27,11 @@ export async function recordProviderUsage(
         case ModelEnum.GEMINI_2_5_FLASH_LITE:
             estimatedCostCents = Math.round(GEMINI_PRICES.FLASH_LITE * 100);
             break;
+        case "gemini-2.5-flash-lite-preview-06-17":
+            estimatedCostCents = Math.round(
+                GEMINI_PRICES["gemini-2.5-flash-lite-preview-06-17"] * 100,
+            );
+            break;
         case ModelEnum.GEMINI_2_5_FLASH:
             estimatedCostCents = Math.round(GEMINI_PRICES.FLASH * 100);
             break;

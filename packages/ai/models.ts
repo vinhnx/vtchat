@@ -49,6 +49,13 @@ export const ModelEnum = {
     OLLAMA_MISTRAL: "mistral",
     OLLAMA_CODELLAMA: "codellama",
     OLLAMA_LLAVA: "llava",
+    // Groq models
+    GROQ_GEMMA2_9B_IT: "gemma2-9b-it",
+    GROQ_LLAMA3_70B_8192: "llama3-70b-8192",
+    GROQ_LLAMA3_8B_8192: "llama3-8b-8192",
+    GROQ_MIXTRAL_8X7B_32768: "mixtral-8x7b-32768",
+    // Moonshot models
+    MOONSHOT_KIMI_K2_INSTRUCT: "moonshotai/kimi-k2-instruct",
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -358,6 +365,47 @@ export const models: Model[] = [
         contextWindow: 8192,
         isFree: true,
     },
+    // Groq models
+    {
+        id: ModelEnum.GROQ_GEMMA2_9B_IT,
+        name: "Gemma2 9B (Groq)",
+        provider: "groq",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.GROQ_LLAMA3_70B_8192,
+        name: "Llama3 70B (Groq)",
+        provider: "groq",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.GROQ_LLAMA3_8B_8192,
+        name: "Llama3 8B (Groq)",
+        provider: "groq",
+        maxTokens: 8192,
+        contextWindow: 8192,
+        isFree: true,
+    },
+    {
+        id: ModelEnum.GROQ_MIXTRAL_8X7B_32768,
+        name: "Mixtral 8x7B (Groq)",
+        provider: "groq",
+        maxTokens: 32768,
+        contextWindow: 32768,
+        isFree: true,
+    },
+    // Moonshot models
+    {
+        id: ModelEnum.MOONSHOT_KIMI_K2_INSTRUCT,
+        name: "Kimi K2 Instruct (Moonshot)",
+        provider: "moonshot",
+        maxTokens: 4096,
+        contextWindow: 131072,
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -462,8 +510,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return 1_048_576;
-        case ChatMode.DEEPSEEK_R1:
-            return 128_000;
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
             return 200_000;

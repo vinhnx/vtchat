@@ -41,8 +41,6 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
             return "ANTHROPIC_API_KEY";
-        case ChatMode.DEEPSEEK_R1:
-            return "FIREWORKS_API_KEY";
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
             return "XAI_API_KEY";

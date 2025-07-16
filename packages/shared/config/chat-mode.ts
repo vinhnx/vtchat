@@ -52,6 +52,13 @@ export const ChatMode = {
     OLLAMA_MISTRAL: "ollama-mistral",
     OLLAMA_CODELLAMA: "ollama-codellama",
     OLLAMA_LLAVA: "ollama-llava",
+    // Groq models
+    GROQ_GEMMA2_9B_IT: "gemma2-9b-it",
+    GROQ_LLAMA3_70B_8192: "llama3-70b-8192",
+    GROQ_LLAMA3_8B_8192: "llama3-8b-8192",
+    GROQ_MIXTRAL_8X7B_32768: "mixtral-8x7b-32768",
+    // Moonshot models
+    MOONSHOT_KIMI_K2_INSTRUCT: "moonshotai/kimi-k2-instruct",
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
@@ -438,6 +445,48 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
     },
+    // Groq models
+    [ChatMode.GROQ_GEMMA2_9B_IT]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.GROQ_LLAMA3_70B_8192]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.GROQ_LLAMA3_8B_8192]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.GROQ_MIXTRAL_8X7B_32768]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    // Moonshot models
+    [ChatMode.MOONSHOT_KIMI_K2_INSTRUCT]: {
+        webSearch: false,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
 };
 
 // Previously deprecated hasChatModeAccess function removed
@@ -618,5 +667,17 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI o1-mini";
         case ChatMode.O1:
             return "OpenAI o1";
+        // Groq models
+        case ChatMode.GROQ_GEMMA2_9B_IT:
+            return "Groq Gemma2 9B";
+        case ChatMode.GROQ_LLAMA3_70B_8192:
+            return "Groq Llama3 70B";
+        case ChatMode.GROQ_LLAMA3_8B_8192:
+            return "Groq Llama3 8B";
+        case ChatMode.GROQ_MIXTRAL_8X7B_32768:
+            return "Groq Mixtral 8x7B";
+        // Moonshot models
+        case ChatMode.MOONSHOT_KIMI_K2_INSTRUCT:
+            return "Moonshot Kimi K2 Instruct";
     }
 };

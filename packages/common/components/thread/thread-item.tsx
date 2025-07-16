@@ -92,75 +92,95 @@ export const ThreadItem = memo(
 
         // Show toast notification for API call failures
         useEffect(() => {
-            if (
-                threadItem.error &&
-                (threadItem.status === "ERROR" || threadItem.status === "ABORTED")
-            ) {
-                const errorMessage =
-                    typeof threadItem.error === "string"
-                        ? threadItem.error
-                        : getErrorDiagnosticMessage(threadItem.error);
-
-                // Determine toast variant and title based on error type
-                let variant: "destructive" | "default" = "destructive";
-                let title = "API Call Failed";
-
-                const errorLower = errorMessage.toLowerCase();
-
+            const showErrorToast = async () => {
                 if (
-                    errorLower.includes("credit balance") ||
-                    errorLower.includes("too low") ||
-                    errorLower.includes("plans & billing")
+                    threadItem.error &&
+                    (threadItem.status === "ERROR" || threadItem.status === "ABORTED")
                 ) {
-                    title = "Credit Balance Too Low";
-                } else if (
-                    errorLower.includes("x.ai credits required") ||
-                    errorLower.includes("doesn't have any credits yet") ||
-                    errorLower.includes("console.x.ai")
-                ) {
-                    title = "X.AI Credits Required";
-                } else if (errorLower.includes("rate limit") || errorLower.includes("quota")) {
-                    title = "Rate Limit Exceeded";
-                } else if (
-                    errorLower.includes("network") ||
-                    errorLower.includes("connection") ||
-                    errorLower.includes("networkerror")
-                ) {
-                    title = "Network Error";
-                } else if (
-                    errorLower.includes("unauthorized") ||
-                    errorLower.includes("invalid api key") ||
-                    errorLower.includes("authentication")
-                ) {
-                    title = "Authentication Error";
-                } else if (
-                    errorLower.includes("billing") ||
-                    errorLower.includes("payment") ||
-                    errorLower.includes("plans & billing")
-                ) {
-                    title = "Billing Issue";
-                } else if (
-                    errorLower.includes("503") ||
-                    errorLower.includes("service unavailable") ||
-                    errorLower.includes("502")
-                ) {
-                    title = "Service Unavailable";
-                } else if (
-                    errorLower.includes("aborted") ||
-                    errorLower.includes("stopped") ||
-                    errorLower.includes("cancelled")
-                ) {
-                    title = "Request Cancelled";
-                    variant = "default";
-                }
+                    const errorMessage =
+                        typeof threadItem.error === "string"
+                            ? threadItem.error
+                            : getErrorDiagnosticMessage(threadItem.error);
 
-                toast({
-                    title,
-                    description: errorMessage,
-                    variant,
-                    duration: 6000, // Show for 6 seconds for better readability
-                });
-            }
+                    // Determine toast variant and title based on error type
+                    let variant: "destructive" | "default" = "destructive";
+                    let title = "API Call Failed";
+
+                    const errorLower = errorMessage.toLowerCase();
+
+                    // Use centralized error message service for consistent error categorization
+                    try {
+                        const { generateErrorMessage } = await import(
+                            "@repo/ai/services/error-messages"
+                        );
+                        const structuredError = generateErrorMessage(errorMessage, {
+                            // Add context if available from thread item
+                            originalError: errorMessage,
+                        });
+                        title = structuredError.title;
+                    } catch {
+                        // Fallback to existing logic if service fails
+                        if (
+                            errorLower.includes("credit balance") ||
+                            errorLower.includes("too low") ||
+                            errorLower.includes("plans & billing")
+                        ) {
+                            title = "Credit Balance Too Low";
+                        } else if (
+                            errorLower.includes("x.ai credits required") ||
+                            errorLower.includes("doesn't have any credits yet") ||
+                            errorLower.includes("console.x.ai")
+                        ) {
+                            title = "X.AI Credits Required";
+                        } else if (
+                            errorLower.includes("rate limit") ||
+                            errorLower.includes("quota")
+                        ) {
+                            title = "Rate Limit Exceeded";
+                        } else if (
+                            errorLower.includes("network") ||
+                            errorLower.includes("connection") ||
+                            errorLower.includes("networkerror")
+                        ) {
+                            title = "Network Error";
+                        } else if (
+                            errorLower.includes("unauthorized") ||
+                            errorLower.includes("invalid api key") ||
+                            errorLower.includes("authentication")
+                        ) {
+                            title = "Authentication Error";
+                        } else if (
+                            errorLower.includes("billing") ||
+                            errorLower.includes("payment") ||
+                            errorLower.includes("plans & billing")
+                        ) {
+                            title = "Billing Issue";
+                        } else if (
+                            errorLower.includes("503") ||
+                            errorLower.includes("service unavailable") ||
+                            errorLower.includes("502")
+                        ) {
+                            title = "Service Unavailable";
+                        } else if (
+                            errorLower.includes("aborted") ||
+                            errorLower.includes("stopped") ||
+                            errorLower.includes("cancelled")
+                        ) {
+                            title = "Request Cancelled";
+                            variant = "default";
+                        }
+                    }
+
+                    toast({
+                        title,
+                        description: errorMessage,
+                        variant,
+                        duration: 6000, // Show for 6 seconds for better readability
+                    });
+                }
+            };
+
+            showErrorToast();
         }, [threadItem.error, threadItem.status, toast]);
 
         const hasAnswer = useMemo(() => {

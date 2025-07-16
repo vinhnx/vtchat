@@ -1,5 +1,6 @@
 "use client";
 
+import type { ErrorContext } from "@repo/ai/services/error-messages";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui";
 import { AlertCircle, ExternalLink, Settings } from "lucide-react";
 import { useState } from "react";
@@ -14,6 +15,18 @@ export interface ErrorDisplayProps {
     onRetry?: () => void;
     onOpenSettings?: () => void;
     className?: string;
+}
+
+/**
+ * Enhanced error display component that can work with the centralized error service
+ */
+export interface EnhancedErrorDisplayProps {
+    error: Error | string;
+    context?: ErrorContext;
+    onRetry?: () => void;
+    onOpenSettings?: () => void;
+    className?: string;
+    fallbackProps?: Partial<ErrorDisplayProps>;
 }
 
 export const ErrorDisplay = ({
@@ -132,6 +145,74 @@ export const ErrorDisplay = ({
                 </CardContent>
             )}
         </Card>
+    );
+};
+
+/**
+ * Enhanced error display that uses the centralized error message service
+ */
+export const EnhancedErrorDisplay = ({
+    error,
+    context = {},
+    onRetry,
+    onOpenSettings,
+    className = "",
+    fallbackProps = {},
+}: EnhancedErrorDisplayProps) => {
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const generateErrorMessage = async () => {
+            try {
+                const { generateErrorMessage: centralizedGenerator } = await import(
+                    "@repo/ai/services/error-messages"
+                );
+                const result = centralizedGenerator(error, context);
+                setErrorMessage(result);
+            } catch (serviceError) {
+                // Fallback to basic error display
+                const errorText = typeof error === "string" ? error : error.message;
+                setErrorMessage({
+                    title: fallbackProps.title || "Error",
+                    message: fallbackProps.message || errorText || "An unexpected error occurred",
+                    action: fallbackProps.action,
+                    helpUrl: fallbackProps.helpUrl,
+                    upgradeUrl: fallbackProps.upgradeUrl,
+                    settingsAction: fallbackProps.settingsAction,
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        generateErrorMessage();
+    }, [error, context, fallbackProps]);
+
+    if (isLoading) {
+        return (
+            <Card className={`border-orange-200 bg-orange-50 ${className}`}>
+                <CardContent className="p-6">
+                    <div className="flex items-center space-x-2">
+                        <AlertCircle className="h-5 w-5 text-orange-600 animate-pulse" />
+                        <span className="text-orange-800">Loading error details...</span>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    if (!errorMessage) {
+        return null;
+    }
+
+    return (
+        <ErrorDisplay
+            {...errorMessage}
+            onRetry={onRetry}
+            onOpenSettings={onOpenSettings}
+            className={className}
+        />
     );
 };
 

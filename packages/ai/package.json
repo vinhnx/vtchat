@@ -14,6 +14,7 @@
         "./models": "./models.ts",
         "./providers": "./providers.ts",
         "./services/api-key-mapper": "./services/api-key-mapper.ts",
+        "./services/error-messages": "./services/error-messages.ts",
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
         "./workflow/tasks/chat-mode-router": "./workflow/tasks/chat-mode-router.ts",
