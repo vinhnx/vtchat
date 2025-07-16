@@ -176,7 +176,7 @@ const reportGenerator = createTask({
     dependencies: ["informationAnalyzer"],
     execute: async ({ context, data }) => {
         const { analysis, insights } = data.informationAnalyzer;
-        const { query, searchResults } = context?.getAll() || {
+        const { query } = context?.getAll() || {
             query: "",
             searchResults: [],
         };

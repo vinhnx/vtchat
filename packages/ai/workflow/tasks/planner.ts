@@ -14,7 +14,7 @@ import {
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: "planner",
-    execute: async ({ events, context, data, signal }) => {
+    execute: async ({ events, context, signal }) => {
         const messages = context?.get("messages") || [];
         const question = context?.get("question") || "";
         const _currentYear = new Date().getFullYear();

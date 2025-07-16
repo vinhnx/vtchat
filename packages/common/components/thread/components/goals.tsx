@@ -48,10 +48,6 @@ const getNote = (threadItem: ThreadItem) => {
     return "";
 };
 
-type ReasoningStepProps = {
-    step: string;
-};
-
 type ToolStepProps = {
     toolCall?: ToolCall;
     toolResult?: ToolResult;

@@ -22,7 +22,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
 
     it("should handle multiple concurrent streams", async () => {
         const streamPromises = [];
-        const results: string[] = [];
+        const _results: string[] = [];
 
         // Create 3 concurrent streams
         for (let i = 1; i <= 3; i++) {
@@ -153,7 +153,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
 
     it("should handle streaming errors gracefully", async () => {
         let errorReceived = false;
-        let errorMessage = "";
+        let _errorMessage = "";
 
         try {
             const stream = client.messages

@@ -297,7 +297,7 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
                 hasApiKey: true,
                 keyLength: url.length,
             };
-        } catch (error) {
+        } catch {
             return {
                 isValid: false,
                 provider,

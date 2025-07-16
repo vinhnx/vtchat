@@ -61,7 +61,7 @@ const CHART_COLORS = {
 };
 
 // Bar Chart Component
-const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel, color }: any) => {
+const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel }: any) => {
     const chartConfig = {
         value: {
             label: yAxisLabel || "Value",
@@ -347,7 +347,7 @@ const InteractiveAreaChart = ({
 };
 
 // Pie Chart Component
-const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
+const InteractivePieChart = ({ title, data }: any) => {
     const chartConfig = data.reduce((config: any, item: any, index: number) => {
         const colorKeys = Object.keys(CHART_COLORS);
         const colorKey = colorKeys[index % colorKeys.length];
@@ -409,7 +409,7 @@ const InteractivePieChart = ({ title, data, showLabels, showLegend }: any) => {
 };
 
 // Radar Chart Component
-const InteractiveRadarChart = ({ title, data, maxValue }: any) => {
+const InteractiveRadarChart = ({ title, data }: any) => {
     const chartConfig = {
         value: {
             label: "Value",

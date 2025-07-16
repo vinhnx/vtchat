@@ -11,7 +11,7 @@ let log;
 try {
     const { log: pinoLog } = require("@repo/shared/lib/logger");
     log = pinoLog;
-} catch (_error) {
+} catch {
     // Fallback logger for standalone build
     const IS_PRODUCTION = process.env.NODE_ENV === "production";
 

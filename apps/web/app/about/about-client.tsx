@@ -5,7 +5,7 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { TypographyH1 } from "@repo/ui";
 
 export function AboutPageClient() {
-    const { data: session, isPending } = useSession();
+    const { data: _session, isPending } = useSession();
 
     return (
         <div className="flex min-h-dvh flex-col">

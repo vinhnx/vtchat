@@ -22,7 +22,7 @@ import {
     DropdownMenuLabel,
 } from "@repo/ui";
 import { Brain, Globe, Wrench } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 import { LoginRequiredDialog } from "../../../login-required-dialog";
 import { chatOptions, modelOptions, modelOptionsByProvider } from "../../chat-config";
@@ -49,7 +49,7 @@ export function ChatModeOptions({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const apiKeys = useApiKeysStore((state) => state.getAllKeys());
-    const { push } = useRouter();
+
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
     const isVtPlus = useVtPlusAccess();

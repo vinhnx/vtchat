@@ -135,7 +135,7 @@ const Sidebar = React.forwardRef<
         },
         ref,
     ) => {
-        const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+        const { isMobile, state, openMobile } = useSidebar();
 
         if (collapsible === "none") {
             return (
@@ -481,7 +481,7 @@ const SidebarMenuButton = React.forwardRef<
             isActive = false,
             variant = "default",
             size = "default",
-            tooltip,
+            tooltip: _tooltip,
             className,
             ...props
         },

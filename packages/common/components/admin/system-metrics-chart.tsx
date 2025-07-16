@@ -37,7 +37,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function SystemMetricsChart({ totalUsers, activeUsers }: SystemMetricsProps) {
+export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
     // Mock real-time system data (in real app, this would come from monitoring APIs)
     const performanceData = [
         { time: "00:00", performance: 95, memory: 45, cpu: 32 },

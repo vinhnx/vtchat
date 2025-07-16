@@ -27,7 +27,6 @@ import {
     ArrowRight,
     BarChart3,
     Brain,
-    Check,
     FileText,
     Link,
     Lock,
