@@ -141,8 +141,9 @@ RUN cd apps/web && \
     echo "DATABASE_URL: [PLACEHOLDER - actual value set at runtime]" && \
     echo "NODE_ENV will be automatically set by Next.js build process" && \
     echo "NEXT_PHASE: $NEXT_PHASE" && \
+    echo "Using standard Next.js build for memory efficiency" && \
     echo "==============================" && \
-    bun run build:turbo
+    NODE_OPTIONS="--max-old-space-size=896" bun run build
 
 # Stage 4: Production
 FROM node:20-alpine AS runner

@@ -6,83 +6,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-check reduntdant offline
-apps/web/public/sw.js
-apps/web/public/offline.html
-
---
-
-add groq
-
-https://ai-sdk.dev/providers/ai-sdk-providers/groq
-
---
-
-check apply to use packages/ai/services/error-messages.ts
-
---
-fix open router
-
-curl 'https://openrouter.ai/api/v1/chat/completions' \
--X POST \
--H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) Gecko/20100101 Firefox/140.0' \
--H 'Accept: _/_' \
--H 'Accept-Language: en-US,en;q=0.5' \
--H 'Accept-Encoding: gzip, deflate, br, zstd' \
--H 'Content-Type: application/json' \
--H 'Authorization: Bearer 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' \
--H 'Referer: http://localhost:3000/' \
--H 'Origin: http://localhost:3000' \
--H 'DNT: 1' \
--H 'Sec-GPC: 1' \
--H 'Connection: keep-alive' \
--H 'Sec-Fetch-Dest: empty' \
--H 'Sec-Fetch-Mode: cors' \
--H 'Sec-Fetch-Site: cross-site' \
--H 'Priority: u=4' \
--H 'TE: trailers' \
---data-raw '{"model":"moonshot/kimi-k2","temperature":0,"messages":[{"role":"system","content":"You are a helpful assistant that can answer questions and help with tasks.\n Today is July 16, 2025, 11:16 AM.\n \n \n \n "},{"role":"user","content":"hello"}],"stream":true}'
-
-{"error":{"message":"No auth credentials found","code":401}}
-
---
-
-enhance system prompt
-
-packages/ai/workflow/tasks/completion.ts
-
-        const prompt = `You are a helpful assistant that can answer questions and help with tasks.
-        Today is ${getHumanizedDate()}.
-        ${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
-        ${charts ? "You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart." : ""}
-        ${
-            webSearch && supportsOpenAISearch
-                ? `
-        IMPORTANT: You have access to web search tools. ALWAYS use web search tools when users ask about:
-        - Current events, news, or recent developments
-        - Real-time information (weather, stock prices, sports scores, etc.)
-        - Current status of companies, products, or services
-        - Recent statistics, data, or research
-        - Information that might have changed recently
-        - Specific locations, addresses, or business information
-        - Any question that requires up-to-date information
-
-        Examples of queries that MUST use web search:
-        - "What is the current weather in [location]?"
-        - "What are the latest news about [topic]?"
-        - "What is the stock price of [company]?"
-        - "What are the current exchange rates?"
-        - "What are the latest updates on [product/service]?"
-        - "What is happening in [location] right now?"
-        - "Who is [person]?"
-
-        Do NOT answer these types of questions without using web search first, even if you think you know the answer.
-        `
-                : ""
-        }
-        `;
-
---
 use flymcp to debug and fix deployment failed, could be related to our previous next.js and react upgrade
 
 ```
@@ -546,6 +469,84 @@ Waiting for depot builder...
 
 unsuccessful command 'flyctl deploy --build-only --push -a vtchat --image-label deployment-411a53329f20e983a463f116519e11dc --config fly.toml'
 ```
+
+--
+
+check reduntdant offline
+apps/web/public/sw.js
+apps/web/public/offline.html
+
+--
+
+add groq
+
+https://ai-sdk.dev/providers/ai-sdk-providers/groq
+
+--
+
+check apply to use packages/ai/services/error-messages.ts
+
+--
+fix open router
+
+curl 'https://openrouter.ai/api/v1/chat/completions' \
+-X POST \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) Gecko/20100101 Firefox/140.0' \
+-H 'Accept: _/_' \
+-H 'Accept-Language: en-US,en;q=0.5' \
+-H 'Accept-Encoding: gzip, deflate, br, zstd' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer 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' \
+-H 'Referer: http://localhost:3000/' \
+-H 'Origin: http://localhost:3000' \
+-H 'DNT: 1' \
+-H 'Sec-GPC: 1' \
+-H 'Connection: keep-alive' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Priority: u=4' \
+-H 'TE: trailers' \
+--data-raw '{"model":"moonshot/kimi-k2","temperature":0,"messages":[{"role":"system","content":"You are a helpful assistant that can answer questions and help with tasks.\n Today is July 16, 2025, 11:16 AM.\n \n \n \n "},{"role":"user","content":"hello"}],"stream":true}'
+
+{"error":{"message":"No auth credentials found","code":401}}
+
+--
+
+enhance system prompt
+
+packages/ai/workflow/tasks/completion.ts
+
+        const prompt = `You are a helpful assistant that can answer questions and help with tasks.
+        Today is ${getHumanizedDate()}.
+        ${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
+        ${charts ? "You can create charts and graphs to visualize data. Use chart tools when users ask for data visualization, trends, comparisons, or when displaying numerical data would be more effective as a visual chart." : ""}
+        ${
+            webSearch && supportsOpenAISearch
+                ? `
+        IMPORTANT: You have access to web search tools. ALWAYS use web search tools when users ask about:
+        - Current events, news, or recent developments
+        - Real-time information (weather, stock prices, sports scores, etc.)
+        - Current status of companies, products, or services
+        - Recent statistics, data, or research
+        - Information that might have changed recently
+        - Specific locations, addresses, or business information
+        - Any question that requires up-to-date information
+
+        Examples of queries that MUST use web search:
+        - "What is the current weather in [location]?"
+        - "What are the latest news about [topic]?"
+        - "What is the stock price of [company]?"
+        - "What are the current exchange rates?"
+        - "What are the latest updates on [product/service]?"
+        - "What is happening in [location] right now?"
+        - "Who is [person]?"
+
+        Do NOT answer these types of questions without using web search first, even if you think you know the answer.
+        `
+                : ""
+        }
+        `;
 
 --
 
