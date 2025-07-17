@@ -24,7 +24,7 @@ CREEM_ENVIRONMENT = 'production'
 BETTER_AUTH_ENV = 'production'
 
 # Node.js memory optimizations
-NODE_OPTIONS = '--max-old-space-size=512 --optimize-for-size --max-semi-space-size=64'
+NODE_OPTIONS = '--max-old-space-size=512 --max-semi-space-size=64'
 # Disable Next.js telemetry to save memory
 NEXT_TELEMETRY_DISABLED = '1'
 # Reduce garbage collection frequency for better performance
