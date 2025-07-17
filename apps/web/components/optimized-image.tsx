@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { useState } from "react";
+import Image, { type ImageProps } from "next/image";
+import { memo, useCallback, useState } from "react";
 
-interface OptimizedImageProps {
+interface OptimizedImageProps extends Omit<ImageProps, "onLoad" | "onError"> {
     src: string;
     alt: string;
     width?: number;
@@ -11,38 +11,58 @@ interface OptimizedImageProps {
     sizes?: string;
     fill?: boolean;
     quality?: number;
+    fallbackSrc?: string;
+    showErrorMessage?: boolean;
 }
 
-export function OptimizedImage({
+export const OptimizedImage = memo(function OptimizedImage({
     src,
     alt,
     width,
     height,
-    className,
+    className = "",
     priority = false,
     sizes,
     fill = false,
     quality = 85,
+    fallbackSrc,
+    showErrorMessage = true,
     ...props
 }: OptimizedImageProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
+    const [currentSrc, setCurrentSrc] = useState(src);
+
+    const handleLoad = useCallback(() => {
+        setIsLoading(false);
+    }, []);
+
+    const handleError = useCallback(() => {
+        setIsLoading(false);
+        if (fallbackSrc && currentSrc !== fallbackSrc) {
+            setCurrentSrc(fallbackSrc);
+            return;
+        }
+        setHasError(true);
+    }, [fallbackSrc, currentSrc]);
 
     if (hasError) {
-        return (
-            <div 
+        return showErrorMessage ? (
+            <div
                 className={`bg-muted flex items-center justify-center text-muted-foreground text-sm ${className}`}
-                style={{ width, height }}
+                style={{ width: fill ? undefined : width, height: fill ? undefined : height }}
+                role="img"
+                aria-label={`Failed to load: ${alt}`}
             >
                 Failed to load image
             </div>
-        );
+        ) : null;
     }
 
     return (
-        <div className={`relative ${isLoading ? 'animate-pulse bg-muted' : ''} ${className}`}>
+        <div className={`relative ${isLoading ? "animate-pulse bg-muted" : ""}`}>
             <Image
-                src={src}
+                src={currentSrc}
                 alt={alt}
                 width={fill ? undefined : width}
                 height={fill ? undefined : height}
@@ -51,30 +71,27 @@ export function OptimizedImage({
                 quality={quality}
                 sizes={sizes || (fill ? "100vw" : undefined)}
                 className={`transition-opacity duration-300 ${
-                    isLoading ? 'opacity-0' : 'opacity-100'
+                    isLoading ? "opacity-0" : "opacity-100"
                 } ${className}`}
-                onLoad={() => setIsLoading(false)}
-                onError={() => {
-                    setIsLoading(false);
-                    setHasError(true);
-                }}
+                onLoad={handleLoad}
+                onError={handleError}
                 {...props}
             />
         </div>
     );
-}
+});
 
 // Specific optimized components for common use cases
-export function OptimizedIcon({ 
-    src, 
-    alt, 
-    size = 24, 
-    className = "" 
-}: { 
-    src: string; 
-    alt: string; 
-    size?: number; 
-    className?: string; 
+export function OptimizedIcon({
+    src,
+    alt,
+    size = 24,
+    className = "",
+}: {
+    src: string;
+    alt: string;
+    size?: number;
+    className?: string;
 }) {
     return (
         <OptimizedImage
@@ -89,16 +106,16 @@ export function OptimizedIcon({
     );
 }
 
-export function OptimizedAvatar({ 
-    src, 
-    alt, 
-    size = 40, 
-    className = "" 
-}: { 
-    src: string; 
-    alt: string; 
-    size?: number; 
-    className?: string; 
+export function OptimizedAvatar({
+    src,
+    alt,
+    size = 40,
+    className = "",
+}: {
+    src: string;
+    alt: string;
+    size?: number;
+    className?: string;
 }) {
     return (
         <OptimizedImage
@@ -112,4 +129,3 @@ export function OptimizedAvatar({
         />
     );
 }
-
