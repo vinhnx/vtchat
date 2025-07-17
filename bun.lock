@@ -274,7 +274,7 @@
         "typescript": "latest",
       },
       "peerDependencies": {
-        "react": "^18",
+        "react": "^18 || ^19",
       },
     },
     "packages/tailwind-config": {

@@ -219,7 +219,7 @@ describe("OpenRouter Request Authenticity", () => {
             };
 
             // Test the actual request flow
-            const model = getLanguageModel(ModelEnum.DEEPSEEK_V3_0324, undefined, byokKeys);
+            getLanguageModel(ModelEnum.DEEPSEEK_V3_0324, undefined, byokKeys);
 
             // Simulate a text generation request
             const result = await mockStreamText({
@@ -456,7 +456,7 @@ describe("OpenRouter Request Authenticity", () => {
                 expect(createOpenRouter).toHaveBeenCalledWith({
                     apiKey: validOpenRouterApiKey,
                 });
-            } catch (error) {
+            } catch {
                 // Expected since we're mocking the provider
                 expect(createOpenRouter).toHaveBeenCalledWith({
                     apiKey: validOpenRouterApiKey,

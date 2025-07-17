@@ -72,7 +72,7 @@ describe("VT+ Gemini Web Search", () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (_error) {
+        } catch {
             // Expected to fail due to incomplete mocking, but we can verify the API key was passed
         }
 
@@ -125,7 +125,7 @@ describe("VT+ Gemini Web Search", () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (_error) {
+        } catch {
             // Expected to fail due to incomplete mocking
         }
 
@@ -178,7 +178,7 @@ describe("VT+ Gemini Web Search", () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (_error) {
+        } catch {
             // Expected to fail due to incomplete mocking
         }
 
@@ -225,7 +225,7 @@ describe("VT+ Gemini Web Search", () => {
                 events: mockEvents,
                 context: mockContext,
             });
-        } catch (_error) {
+        } catch {
             // Expected to fail
         }
 

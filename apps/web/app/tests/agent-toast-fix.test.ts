@@ -10,7 +10,7 @@ describe("Agent Toast Fix", () => {
     test("should use useToast instead of direct sonner import", () => {
         // Mock the useToast hook
         const mockToast = vi.fn();
-        const mockUseToast = vi.fn(() => ({ toast: mockToast }));
+        const _mockUseToast = vi.fn(() => ({ toast: mockToast }));
 
         // Test different error types that should trigger toasts
         const testErrors = [

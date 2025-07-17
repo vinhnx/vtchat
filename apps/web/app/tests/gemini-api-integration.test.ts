@@ -128,7 +128,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             // For now, we'll check that rate limiting is called correctly
             try {
                 await POST(request);
-            } catch (_error) {
+            } catch {
                 // Expected to fail due to incomplete mocking of stream handlers
             }
 
@@ -158,7 +158,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             // Should not fail authentication for paid models
             try {
                 await POST(request);
-            } catch (_error) {
+            } catch {
                 // Expected to fail due to incomplete mocking, but not auth error
             }
 
@@ -344,7 +344,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             // For now, we verify that the rate limit check was called
             try {
                 await POST(request);
-            } catch (_error) {
+            } catch {
                 // Expected due to incomplete mocking
             }
 
@@ -478,7 +478,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
             try {
                 await POST(request2);
-            } catch (_error) {
+            } catch {
                 // Expected due to incomplete mocking
             }
 

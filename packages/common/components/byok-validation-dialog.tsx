@@ -124,7 +124,7 @@ export function BYOKValidationDialog({
 
             // Close the dialog
             onClose();
-        } catch (error) {
+        } catch {
             // SECURITY: Never log error details that might contain API key information
             log.error({ context: "BYOKValidation" }, "Failed to save API key");
         } finally {

@@ -11,7 +11,7 @@ const _SuggestionSchema = z.object({
 
 export const suggestionsTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: "suggestions",
-    execute: async ({ events, context, data, signal }) => {
+    execute: async ({ events }) => {
         // Always return empty suggestions - follow-up suggestions are disabled entirely
         events?.update("suggestions", (_current) => []);
         return {
@@ -19,7 +19,7 @@ export const suggestionsTask = createTask<WorkflowEventSchema, WorkflowContextSc
         };
     },
     onError: handleError,
-    route: ({ result }) => {
+    route: () => {
         return "end";
     },
 });

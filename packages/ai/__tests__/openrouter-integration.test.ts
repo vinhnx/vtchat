@@ -155,7 +155,7 @@ describe.skipIf(shouldSkip)("OpenRouter Integration Tests", () => {
                 { modelEnum: ModelEnum.DEEPSEEK_R1, expectedId: "deepseek/deepseek-r1" },
             ];
 
-            testCases.forEach(({ modelEnum, expectedId }) => {
+            testCases.forEach(({ modelEnum, expectedId: _expectedId }) => {
                 const model = getLanguageModel(modelEnum, undefined, byokKeys);
                 expect(model).toBeDefined();
 
@@ -184,7 +184,7 @@ describe.skipIf(shouldSkip)("OpenRouter Integration Tests", () => {
                     prompt: "Say 'OpenRouter test' and nothing else.",
                     model: ModelEnum.DEEPSEEK_V3_0324,
                     byokKeys,
-                    onChunk: (chunk: string) => {
+                    onChunk: (_chunk: string) => {
                         responseReceived = true;
                         requestMade = true;
                     },

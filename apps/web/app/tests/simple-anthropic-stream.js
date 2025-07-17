@@ -59,7 +59,7 @@ async function testAnthropicStreaming() {
                 textChunks.push(text);
                 process.stdout.write(text); // Stream text to console in real-time
             })
-            .on("streamEvent", (event) => {
+            .on("streamEvent", (_event) => {
                 eventCount++;
                 if (eventCount === 1) {
                     console.log("\n📡 Receiving stream events...");

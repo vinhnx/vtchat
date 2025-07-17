@@ -123,5 +123,5 @@ ${s}
         };
     },
     onError: handleError,
-    route: ({ result }) => "writer",
+    route: () => "writer",
 });
