@@ -7,6 +7,16 @@ import type { Geo } from "@vercel/functions";
 import type { CompletionRequestType, StreamController } from "./types";
 import { sanitizePayloadForJSON } from "./utils";
 
+// Track closed controllers to prevent infinite loops
+const closedControllers = new WeakSet<StreamController>();
+
+/**
+ * Mark a controller as closed to prevent further message sending
+ */
+export function markControllerClosed(controller: StreamController) {
+    closedControllers.add(controller);
+}
+
 /**
  * Get thinking mode configuration for specific chat modes
  * Automatically enables high-effort reasoning for research modes
@@ -51,6 +61,11 @@ export function sendMessage(
     encoder: TextEncoder,
     payload: Record<string, any>,
 ) {
+    // Check if controller is already marked as closed
+    if (closedControllers.has(controller)) {
+        return; // Exit silently for closed controllers
+    }
+
     try {
         if (payload.content && typeof payload.content === "string") {
             payload.content = normalizeMarkdownContent(payload.content);
@@ -66,6 +81,8 @@ export function sendMessage(
         } catch (controllerError) {
             // Controller is closed, client likely disconnected
             if ((controllerError as any)?.code === "ERR_INVALID_STATE") {
+                // Mark controller as closed to prevent future attempts
+                closedControllers.add(controller);
                 log.warn(
                     {
                         payloadType: payload.type,
@@ -88,15 +105,27 @@ export function sendMessage(
             "Error serializing message payload",
         );
 
-        const errorMessage = `event: done\ndata: ${JSON.stringify({
-            type: "done",
-            status: "error",
-            error: "Stream data serialization failed. Please refresh the page and try again.",
-            threadId: payload.threadId,
-            threadItemId: payload.threadItemId,
-            parentThreadItemId: payload.parentThreadItemId,
-        })}\n\n`;
-        controller.enqueue(encoder.encode(errorMessage));
+        // Don't try to send error message if controller is closed
+        if (closedControllers.has(controller)) {
+            return;
+        }
+
+        try {
+            const errorMessage = `event: done\ndata: ${JSON.stringify({
+                type: "done",
+                status: "error",
+                error: "Stream data serialization failed. Please refresh the page and try again.",
+                threadId: payload.threadId,
+                threadItemId: payload.threadItemId,
+                parentThreadItemId: payload.parentThreadItemId,
+            })}\n\n`;
+            controller.enqueue(encoder.encode(errorMessage));
+        } catch (enqueueError) {
+            // If we can't enqueue the error message, mark controller as closed
+            if ((enqueueError as any)?.code === "ERR_INVALID_STATE") {
+                closedControllers.add(controller);
+            }
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 ---
-type: 'agent_requested'
+type: 'always_apply'
 description: 'Example description'
 ---
 

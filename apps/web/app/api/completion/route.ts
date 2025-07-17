@@ -574,6 +574,7 @@ function createCompletionStream({
                             clearInterval(heartbeatInterval);
                             heartbeatInterval = null;
                             // Abort the request to clean up resources
+                            markControllerClosed(controller);
                             abortController.abort();
                             unregisterStream(requestId);
                         }
@@ -628,6 +629,7 @@ function createCompletionStream({
                     clearInterval(heartbeatInterval);
                     heartbeatInterval = null;
                 }
+                markControllerClosed(controller);
                 unregisterStream(requestId);
                 controller.close();
 
@@ -643,6 +645,7 @@ function createCompletionStream({
                 clearInterval(heartbeatInterval);
                 heartbeatInterval = null;
             }
+            markControllerClosed(controller);
             unregisterStream(requestId);
             abortController.abort();
         },
