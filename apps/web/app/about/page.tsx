@@ -4,6 +4,9 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+// This page can be statically generated for better performance
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
     title: "About VT",
     description:

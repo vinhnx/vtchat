@@ -73,8 +73,16 @@ const config: any = {
                 "3xl": "1.5rem",
             },
             fontFamily: {
-                mono: ["var(--font-geist-mono)", ...fontFamily.mono],
-                clash: ["var(--font-clash)", ...fontFamily.sans],
+                mono: [
+                    "SF Mono",
+                    "SFMono-Regular",
+                    "Menlo",
+                    "Monaco",
+                    "Consolas",
+                    "Liberation Mono",
+                    "Courier New",
+                    ...fontFamily.mono,
+                ],
                 sans: [
                     "SF Pro",
                     "-apple-system",
@@ -85,7 +93,6 @@ const config: any = {
                     "Arial",
                     "sans-serif",
                 ],
-                bricolage: ["var(--font-bricolage)", ...fontFamily.sans],
             },
             fontSize: {
                 xs: ["0.75rem", { lineHeight: "1.2rem", letterSpacing: "0.01em" }],

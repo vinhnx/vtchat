@@ -9,32 +9,19 @@ import { PlusDefaultsProvider } from "@repo/common/components/plus-defaults-prov
 import { RootProvider } from "@repo/common/context";
 import { OptimizedAuthProvider } from "@repo/common/providers";
 import { SubscriptionProvider } from "@repo/common/providers/subscription-provider";
-import { cn, TooltipProvider } from "@repo/ui";
-import { GeistMono } from "geist/font/mono";
+import { TooltipProvider } from "@repo/ui";
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { BetterAuthProvider } from "../components/better-auth-provider";
 import { OfflineIndicator } from "../components/offline-indicator";
 import { PerformanceOptimizations } from "../components/performance-optimizations";
 import { PWAManager } from "../components/pwa-manager";
 import { ReactScan } from "../components/react-scan";
 
-// Force dynamic rendering to prevent SSR issues during build
-export const dynamic = "force-dynamic";
-
-// Disable static generation for all routes to prevent context issues
-export const dynamicParams = true;
-
-// Disable ISR/SSG completely for React 19 compatibility
-export const revalidate = 0;
-
-const bricolage = Bricolage_Grotesque({
-    subsets: ["latin"],
-    variable: "--font-bricolage",
-    display: "swap",
-});
+// Remove force-dynamic from layout to allow static generation for static pages
+// Individual pages that need dynamic rendering will set their own dynamic export
 
 import "@repo/ui/src/styles.css";
+import { AccessibilityHead } from "../components/accessibility-improvements";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -93,17 +80,7 @@ export const viewport: Viewport = {
     interactiveWidget: "resizes-content",
 };
 
-const inter = Inter({
-    subsets: ["latin"],
-    variable: "--font-inter",
-    display: "swap",
-});
-
-const clash = Bricolage_Grotesque({
-    subsets: ["latin"],
-    variable: "--font-clash",
-    display: "swap",
-});
+// Remove duplicate font definitions - already defined above
 
 export default function ParentLayout({
     children,
@@ -111,13 +88,10 @@ export default function ParentLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html
-            className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
-            lang="en"
-            suppressHydrationWarning
-        >
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <PerformanceOptimizations />
+                <AccessibilityHead />
                 <link href="/favicon.ico" rel="icon" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
