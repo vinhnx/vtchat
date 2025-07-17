@@ -11,9 +11,9 @@ import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 import { db } from "@/lib/database";
 import { sessions, userSubscriptions, users } from "@/lib/database/schema";
-import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 
 // Known event types and statuses for validation
 const KNOWN_EVENT_TYPES = [
@@ -364,9 +364,6 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
         case "subscription.trialing":
             subscriptionStatus = SubscriptionStatusEnum.TRIALING;
             break;
-        case "subscription.active":
-        case "subscription.paid":
-        case "subscription.update":
         default:
             // Use the status from the webhook data, but validate it's a known status
             if (KNOWN_SUBSCRIPTION_STATUSES.includes(data.status as any)) {

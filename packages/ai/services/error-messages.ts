@@ -1,5 +1,5 @@
 import { log } from "@repo/shared/logger";
-import { Providers, type ProviderEnumType } from "../constants/providers";
+import { type ProviderEnumType, Providers } from "../constants/providers";
 
 /**
  * Centralized error message service for AI provider errors
@@ -34,8 +34,6 @@ export const PROVIDER_SETUP_URLS = {
     [Providers.FIREWORKS]: "https://app.fireworks.ai/",
     [Providers.XAI]: "https://x.ai/api",
     [Providers.OPENROUTER]: "https://openrouter.ai/keys",
-    [Providers.LMSTUDIO]: "https://lmstudio.ai/docs/local-server",
-    [Providers.OLLAMA]: "https://ollama.ai/download",
 } as const;
 
 // Provider display names for user-friendly messages
@@ -47,8 +45,6 @@ export const PROVIDER_DISPLAY_NAMES = {
     [Providers.FIREWORKS]: "Fireworks AI",
     [Providers.XAI]: "xAI Grok",
     [Providers.OPENROUTER]: "OpenRouter",
-    [Providers.LMSTUDIO]: "LM Studio",
-    [Providers.OLLAMA]: "Ollama",
 } as const;
 
 export class ErrorMessageService {
@@ -70,29 +66,6 @@ export class ErrorMessageService {
 
         const providerName = PROVIDER_DISPLAY_NAMES[provider];
         const setupUrl = PROVIDER_SETUP_URLS[provider];
-
-        // Special handling for local providers
-        if (provider === Providers.LMSTUDIO) {
-            return {
-                title: "LM Studio Not Connected",
-                message:
-                    "LM Studio server URL is required to use local models. Make sure LM Studio is running and the local server is started on your computer.",
-                action: "1. Start LM Studio → Local Server tab → Start Server\n2. Add server URL in Settings → API Keys → LM Studio\n3. Default URL: http://localhost:1234",
-                helpUrl: setupUrl,
-                settingsAction: "open_api_keys",
-            };
-        }
-
-        if (provider === Providers.OLLAMA) {
-            return {
-                title: "Ollama Not Connected",
-                message:
-                    "Ollama server URL is required to use local models. Make sure Ollama is installed and running on your computer.",
-                action: "1. Install Ollama from ollama.ai\n2. Run 'ollama serve' in terminal\n3. Add server URL in Settings → API Keys → Ollama\n4. Default URL: http://127.0.0.1:11434",
-                helpUrl: setupUrl,
-                settingsAction: "open_api_keys",
-            };
-        }
 
         // Enhanced messages for cloud providers
         const baseMessage = isVtPlus
@@ -232,17 +205,6 @@ export class ErrorMessageService {
     static getNetworkError(context: ErrorContext): ErrorMessage {
         const { provider, originalError } = context;
         const providerName = provider ? PROVIDER_DISPLAY_NAMES[provider] : "AI service";
-
-        if (originalError?.includes("ECONNREFUSED") || originalError?.includes("ECONNRESET")) {
-            if (provider === Providers.LMSTUDIO || provider === Providers.OLLAMA) {
-                return {
-                    title: `${providerName} Connection Failed`,
-                    message: `Cannot connect to ${providerName}. Make sure ${providerName} is running and the server is started.`,
-                    action: `Start ${providerName} and ensure the server is running on the configured port`,
-                    helpUrl: PROVIDER_SETUP_URLS[provider!],
-                };
-            }
-        }
 
         if (originalError?.includes("timeout") || originalError?.includes("ETIMEDOUT")) {
             return {

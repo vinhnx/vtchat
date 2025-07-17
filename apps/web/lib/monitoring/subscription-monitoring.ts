@@ -4,7 +4,7 @@
  */
 
 import { log } from "@repo/shared/logger";
-import { eq, sql, inArray, and } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/database";
 import { userSubscriptions, users } from "@/lib/database/schema";
 import { SubscriptionService } from "@/lib/services/subscription-service";
@@ -131,7 +131,7 @@ export class SubscriptionMonitoring {
         const issues: string[] = [];
 
         try {
-            const metrics = await this.getMetrics();
+            const metrics = await SubscriptionMonitoring.getMetrics();
 
             // Define health thresholds
             if (metrics.duplicateActiveSubscriptions > 0) {

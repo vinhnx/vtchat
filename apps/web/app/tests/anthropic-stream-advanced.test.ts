@@ -153,7 +153,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
 
     it("should handle streaming errors gracefully", async () => {
         let errorReceived = false;
-        let _errorMessage = "";
+        const _errorMessage = "";
 
         try {
             const stream = client.messages

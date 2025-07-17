@@ -144,7 +144,7 @@ async function verifyOpenRouterAuthenticity() {
     console.log("\n📋 Test 4: Error Handling with Invalid Key");
     try {
         const invalidByokKeys = {
-            OPENROUTER_API_KEY: "sk-or-v1-invalid" + "a".repeat(60),
+            OPENROUTER_API_KEY: `sk-or-v1-invalid${"a".repeat(60)}`,
         };
 
         await generateText({

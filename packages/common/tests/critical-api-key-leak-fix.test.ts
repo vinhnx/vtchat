@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 import { filterApiKeysForServerSide } from "../lib/ai-routing";
 
 describe("CRITICAL API Key Leak Fix", () => {

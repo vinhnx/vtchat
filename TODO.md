@@ -6,10 +6,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-handle render OG metadata in SourceGrid in ToolsPanel thread item
-
---
-
 https://ship-25-agents-workshop.vercel.app/docs
 
 --
@@ -195,8 +191,6 @@ No performance impact for single-instance deployments
 All functionality remains available
 Subscription status still works (just hits DB each time)
 Recommendation: Start without Redis for development, add it later for production performance optimization.
---
-
 --
 
 🎯 ORACLE'S VERDICT: Current BYOK approach is NOT acceptable for production

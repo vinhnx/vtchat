@@ -8,7 +8,6 @@ body {
     /* Firefox - completely hide scrollbars globally */
     scrollbar-width: none;
     scrollbar-color: transparent transparent;
-    font-size: 16px;
 }
 
 /* WebKit browsers - hide scrollbars globally */

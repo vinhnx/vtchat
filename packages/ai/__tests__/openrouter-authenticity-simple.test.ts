@@ -15,11 +15,11 @@ import { getProviderInstance } from "../providers";
 import { apiKeyMapper } from "../services/api-key-mapper";
 
 describe("OpenRouter Request Authenticity", () => {
-    const validOpenRouterApiKey = "sk-or-v1-" + "a".repeat(64);
+    const validOpenRouterApiKey = `sk-or-v1-${"a".repeat(64)}`;
 
     describe("API Key Validation", () => {
         it("should validate OpenRouter API key format correctly", () => {
-            const validKey = "sk-or-v1-" + "a".repeat(64);
+            const validKey = `sk-or-v1-${"a".repeat(64)}`;
             const invalidKey = "invalid-key";
 
             const validResult = apiKeyMapper.validateApiKeyFormat("openrouter", validKey);
@@ -47,13 +47,13 @@ describe("OpenRouter Request Authenticity", () => {
 
         it("should validate OpenRouter API key pattern", () => {
             const testCases = [
-                { key: "sk-or-v1-" + "a".repeat(64), valid: true },
-                { key: "sk-or-v1-" + "1".repeat(64), valid: true },
-                { key: "sk-or-v1-" + "f".repeat(64), valid: true },
-                { key: "sk-or-v2-" + "a".repeat(64), valid: false }, // wrong version
-                { key: "sk-or-v1-" + "a".repeat(32), valid: false }, // too short
-                { key: "or-v1-" + "a".repeat(64), valid: false }, // missing sk-
-                { key: "sk-or-v1-" + "g".repeat(64), valid: false }, // invalid hex
+                { key: `sk-or-v1-${"a".repeat(64)}`, valid: true },
+                { key: `sk-or-v1-${"1".repeat(64)}`, valid: true },
+                { key: `sk-or-v1-${"f".repeat(64)}`, valid: true },
+                { key: `sk-or-v2-${"a".repeat(64)}`, valid: false }, // wrong version
+                { key: `sk-or-v1-${"a".repeat(32)}`, valid: false }, // too short
+                { key: `or-v1-${"a".repeat(64)}`, valid: false }, // missing sk-
+                { key: `sk-or-v1-${"g".repeat(64)}`, valid: false }, // invalid hex
                 { key: "", valid: false },
                 { key: "   ", valid: false },
             ];
@@ -240,7 +240,7 @@ describe("OpenRouter Request Authenticity", () => {
 
     describe("Security and Privacy", () => {
         it("should not expose API keys in error messages", () => {
-            const testKey = "sk-or-v1-" + "secret".repeat(10) + "a".repeat(14);
+            const testKey = `sk-or-v1-${"secret".repeat(10)}${"a".repeat(14)}`;
 
             try {
                 // This should succeed, but if it throws, the error shouldn't contain the key
@@ -252,7 +252,7 @@ describe("OpenRouter Request Authenticity", () => {
         });
 
         it("should validate key format without exposing the key", () => {
-            const testKey = "sk-or-v1-" + "sensitive".repeat(7) + "a".repeat(8);
+            const testKey = `sk-or-v1-${"sensitive".repeat(7)}${"a".repeat(8)}`;
 
             const result = apiKeyMapper.validateApiKeyFormat("openrouter", testKey);
 

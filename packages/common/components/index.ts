@@ -67,8 +67,8 @@ export * from "./theme-provider";
 export * from "./theme-switcher";
 export * from "./thinking-log";
 export * from "./thread";
-export * from "./thread-loading-indicator";
 export * from "./thread/components/attachment-display";
+export * from "./thread-loading-indicator";
 
 export * from "./tools-menu";
 export * from "./tools-panel";

@@ -56,24 +56,6 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.MISTRAL_NEMO]: "OPENROUTER_API_KEY",
     [ChatMode.QWEN3_14B]: "OPENROUTER_API_KEY",
     [ChatMode.KIMI_K2]: "OPENROUTER_API_KEY",
-    // LM Studio local models (no API key required)
-    [ChatMode.LMSTUDIO_LLAMA_3_8B]: null,
-    [ChatMode.LMSTUDIO_QWEN_7B]: null,
-    [ChatMode.LMSTUDIO_GEMMA_7B]: null,
-    [ChatMode.LMSTUDIO_GEMMA_3_1B]: null,
-    // Ollama local models (no API key required)
-    [ChatMode.OLLAMA_LLAMA_3_3]: null,
-    [ChatMode.OLLAMA_LLAMA_3_2]: null,
-    [ChatMode.OLLAMA_LLAMA_3_1]: null,
-    [ChatMode.OLLAMA_QWEN_3]: null,
-    [ChatMode.OLLAMA_QWEN_2_5]: null,
-    [ChatMode.OLLAMA_GEMMA_3]: null,
-    [ChatMode.OLLAMA_GEMMA_3N]: null,
-    [ChatMode.OLLAMA_GEMMA_2]: null,
-    [ChatMode.OLLAMA_DEEPSEEK_R1]: null,
-    [ChatMode.OLLAMA_MISTRAL]: null,
-    [ChatMode.OLLAMA_CODELLAMA]: null,
-    [ChatMode.OLLAMA_LLAVA]: null,
 } as const;
 
 const PROVIDER_NAMES = {

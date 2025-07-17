@@ -14,7 +14,7 @@ import {
 } from "@repo/ui";
 import { ExternalLink, Key } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useApiKeysStore, type ApiKeys } from "../store/api-keys.store";
+import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;

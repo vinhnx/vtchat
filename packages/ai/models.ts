@@ -31,31 +31,6 @@ export const ModelEnum = {
     MISTRAL_NEMO: "mistralai/mistral-nemo",
     QWEN3_14B: "qwen/qwen3-14b",
     KIMI_K2: "moonshot/kimi-k2",
-    // LM Studio models (using generic model names)
-    LMSTUDIO_LLAMA_3_8B: "llama-3-8b-instruct",
-    LMSTUDIO_QWEN_7B: "qwen2.5-7b-instruct",
-    LMSTUDIO_GEMMA_7B: "gemma-7b-instruct",
-    LMSTUDIO_GEMMA_3_1B: "google/gemma-3-1b",
-    // Ollama models (using Ollama model names)
-    OLLAMA_LLAMA_3_3: "llama3.3",
-    OLLAMA_LLAMA_3_2: "llama3.2",
-    OLLAMA_LLAMA_3_1: "llama3.1",
-    OLLAMA_QWEN_3: "qwen3",
-    OLLAMA_QWEN_2_5: "qwen2.5",
-    OLLAMA_GEMMA_3: "gemma3",
-    OLLAMA_GEMMA_3N: "gemma3n",
-    OLLAMA_GEMMA_2: "gemma2",
-    OLLAMA_DEEPSEEK_R1: "deepseek-r1",
-    OLLAMA_MISTRAL: "mistral",
-    OLLAMA_CODELLAMA: "codellama",
-    OLLAMA_LLAVA: "llava",
-    // Groq models
-    GROQ_GEMMA2_9B_IT: "gemma2-9b-it",
-    GROQ_LLAMA3_70B_8192: "llama3-70b-8192",
-    GROQ_LLAMA3_8B_8192: "llama3-8b-8192",
-    GROQ_MIXTRAL_8X7B_32768: "mixtral-8x7b-32768",
-    // Moonshot models
-    MOONSHOT_KIMI_K2_INSTRUCT: "moonshotai/kimi-k2-instruct",
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -235,177 +210,6 @@ export const models: Model[] = [
         maxTokens: 4096,
         contextWindow: 131_072,
     },
-    // LM Studio models
-    {
-        id: ModelEnum.LMSTUDIO_LLAMA_3_8B,
-        name: "Llama 3 8B (Local)",
-        provider: "lmstudio",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.LMSTUDIO_QWEN_7B,
-        name: "Qwen 2.5 7B (Local)",
-        provider: "lmstudio",
-        maxTokens: 8192,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.LMSTUDIO_GEMMA_7B,
-        name: "Gemma 7B (Local)",
-        provider: "lmstudio",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.LMSTUDIO_GEMMA_3_1B,
-        name: "Gemma 3 1B (Local)",
-        provider: "lmstudio",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    // Ollama models
-    {
-        id: ModelEnum.OLLAMA_LLAMA_3_3,
-        name: "Llama 3.3 70B (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 128000,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_LLAMA_3_2,
-        name: "Llama 3.2 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 128000,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_LLAMA_3_1,
-        name: "Llama 3.1 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 128000,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_QWEN_3,
-        name: "Qwen 3 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_QWEN_2_5,
-        name: "Qwen 2.5 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_GEMMA_3,
-        name: "Gemma 3 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_GEMMA_3N,
-        name: "Gemma 3n (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_GEMMA_2,
-        name: "Gemma 2 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_DEEPSEEK_R1,
-        name: "DeepSeek R1 (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_MISTRAL,
-        name: "Mistral (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_CODELLAMA,
-        name: "CodeLlama (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 16384,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.OLLAMA_LLAVA,
-        name: "LLaVA (Ollama)",
-        provider: "ollama",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    // Groq models
-    {
-        id: ModelEnum.GROQ_GEMMA2_9B_IT,
-        name: "Gemma2 9B (Groq)",
-        provider: "groq",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.GROQ_LLAMA3_70B_8192,
-        name: "Llama3 70B (Groq)",
-        provider: "groq",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.GROQ_LLAMA3_8B_8192,
-        name: "Llama3 8B (Groq)",
-        provider: "groq",
-        maxTokens: 8192,
-        contextWindow: 8192,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.GROQ_MIXTRAL_8X7B_32768,
-        name: "Mixtral 8x7B (Groq)",
-        provider: "groq",
-        maxTokens: 32768,
-        contextWindow: 32768,
-        isFree: true,
-    },
-    // Moonshot models
-    {
-        id: ModelEnum.MOONSHOT_KIMI_K2_INSTRUCT,
-        name: "Kimi K2 Instruct (Moonshot)",
-        provider: "moonshot",
-        maxTokens: 4096,
-        contextWindow: 131072,
-    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -463,40 +267,6 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.QWEN3_14B;
         case ChatMode.KIMI_K2:
             return ModelEnum.KIMI_K2;
-        // LM Studio local models
-        case ChatMode.LMSTUDIO_LLAMA_3_8B:
-            return ModelEnum.LMSTUDIO_LLAMA_3_8B;
-        case ChatMode.LMSTUDIO_QWEN_7B:
-            return ModelEnum.LMSTUDIO_QWEN_7B;
-        case ChatMode.LMSTUDIO_GEMMA_7B:
-            return ModelEnum.LMSTUDIO_GEMMA_7B;
-        case ChatMode.LMSTUDIO_GEMMA_3_1B:
-            return ModelEnum.LMSTUDIO_GEMMA_3_1B;
-        // Ollama local models
-        case ChatMode.OLLAMA_LLAMA_3_3:
-            return ModelEnum.OLLAMA_LLAMA_3_3;
-        case ChatMode.OLLAMA_LLAMA_3_2:
-            return ModelEnum.OLLAMA_LLAMA_3_2;
-        case ChatMode.OLLAMA_LLAMA_3_1:
-            return ModelEnum.OLLAMA_LLAMA_3_1;
-        case ChatMode.OLLAMA_QWEN_3:
-            return ModelEnum.OLLAMA_QWEN_3;
-        case ChatMode.OLLAMA_QWEN_2_5:
-            return ModelEnum.OLLAMA_QWEN_2_5;
-        case ChatMode.OLLAMA_GEMMA_3:
-            return ModelEnum.OLLAMA_GEMMA_3;
-        case ChatMode.OLLAMA_GEMMA_3N:
-            return ModelEnum.OLLAMA_GEMMA_3N;
-        case ChatMode.OLLAMA_GEMMA_2:
-            return ModelEnum.OLLAMA_GEMMA_2;
-        case ChatMode.OLLAMA_DEEPSEEK_R1:
-            return ModelEnum.OLLAMA_DEEPSEEK_R1;
-        case ChatMode.OLLAMA_MISTRAL:
-            return ModelEnum.OLLAMA_MISTRAL;
-        case ChatMode.OLLAMA_CODELLAMA:
-            return ModelEnum.OLLAMA_CODELLAMA;
-        case ChatMode.OLLAMA_LLAVA:
-            return ModelEnum.OLLAMA_LLAVA;
         default:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
@@ -538,13 +308,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.MISTRAL_NEMO:
         case ChatMode.KIMI_K2:
             return 131_072;
-        // LM Studio local models
-        case ChatMode.LMSTUDIO_LLAMA_3_8B:
-        case ChatMode.LMSTUDIO_GEMMA_7B:
-        case ChatMode.LMSTUDIO_GEMMA_3_1B:
-            return 8192;
-        case ChatMode.LMSTUDIO_QWEN_7B:
-            return 32768;
         default:
             return 100_000;
     }
