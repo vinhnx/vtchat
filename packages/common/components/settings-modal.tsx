@@ -16,6 +16,7 @@ import {
     cn,
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogTitle,
     Input,
     TypographyH1,
@@ -120,6 +121,9 @@ export const SettingsModal = () => {
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
             <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
+                <DialogDescription className="sr-only">
+                    Customize your VT experience and manage your account settings
+                </DialogDescription>
                 <div
                     className="scrollbar-thin relative w-full overflow-y-auto overflow-x-hidden"
                     ref={scrollRef}

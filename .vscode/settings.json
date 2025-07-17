@@ -34,5 +34,8 @@
     },
     "npm.packageManager": "bun",
     "amp.experimental.enhancedRules": true,
-    "typescript.autoClosingTags": false
+    "typescript.autoClosingTags": false,
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    }
 }
