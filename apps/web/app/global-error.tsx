@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@repo/ui";
 import { log } from "@repo/shared/logger";
+import { Button } from "@repo/ui";
 import { useEffect } from "react";
 
 interface GlobalErrorProps {

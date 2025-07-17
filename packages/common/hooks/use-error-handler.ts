@@ -1,6 +1,6 @@
+import type { ErrorContext, ErrorMessage } from "@repo/ai/services/error-messages";
 import { useToast } from "@repo/ui";
 import { useCallback } from "react";
-import type { ErrorContext, ErrorMessage } from "@repo/ai/services/error-messages";
 
 /**
  * Custom hook for consistent error handling across React components
@@ -43,7 +43,7 @@ export function useErrorHandler() {
                 }
 
                 return structuredError;
-            } catch (serviceError) {
+            } catch (_serviceError) {
                 // Fallback error handling if the service fails
                 const fallbackMessage = typeof error === "string" ? error : error.message;
 

@@ -11,9 +11,9 @@ import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 import { db } from "@/lib/database";
 import { sessions, userSubscriptions, users } from "@/lib/database/schema";
-import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
 
 // Known event types and statuses for validation
 const KNOWN_EVENT_TYPES = [

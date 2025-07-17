@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 
 describe("Grok Send Button - Comprehensive Debug", () => {
     // Test the complete flow that could cause "tap send does nothing"

@@ -1,6 +1,5 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createGroq } from "@ai-sdk/groq";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
@@ -9,7 +8,7 @@ import { createXai } from "@ai-sdk/xai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
-import { wrapLanguageModel, type LanguageModelV1Middleware } from "ai";
+import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
 export const Providers = {
     OPENAI: "openai",
     ANTHROPIC: "anthropic",
@@ -18,16 +17,12 @@ export const Providers = {
     FIREWORKS: "fireworks",
     XAI: "xai",
     OPENROUTER: "openrouter",
-    LMSTUDIO: "lmstudio",
-    OLLAMA: "ollama",
-    GROQ: "groq",
-    MOONSHOT: "moonshot",
 } as const;
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
 
 import { CLAUDE_4_CONFIG } from "./constants/reasoning";
-import { models, type ModelEnum } from "./models";
+import { type ModelEnum, models } from "./models";
 import { generateErrorMessage } from "./services/error-messages";
 
 // Define a global type for API keys
@@ -65,10 +60,6 @@ const getApiKey = (
             [Providers.FIREWORKS]: "FIREWORKS_API_KEY",
             [Providers.XAI]: "XAI_API_KEY",
             [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
-            [Providers.LMSTUDIO]: "LMSTUDIO_BASE_URL",
-            [Providers.OLLAMA]: "OLLAMA_BASE_URL",
-            [Providers.GROQ]: "GROQ_API_KEY",
-            [Providers.MOONSHOT]: "MOONSHOT_API_KEY",
         };
 
         const byokKey = byokKeys[keyMapping[provider]];
@@ -84,14 +75,6 @@ const getApiKey = (
                     return process.env.GEMINI_API_KEY || "";
                 }
                 return "";
-            case Providers.LMSTUDIO:
-                return process.env.LMSTUDIO_BASE_URL || "";
-            case Providers.OLLAMA:
-                return process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
-            case Providers.GROQ:
-                return process.env.GROQ_API_KEY || "";
-            case Providers.MOONSHOT:
-                return process.env.MOONSHOT_API_KEY || "";
             default:
                 // All other providers MUST use BYOK - no server-funded keys
                 return "";
@@ -127,7 +110,6 @@ type ProviderInstance =
     | ReturnType<typeof createTogetherAI>
     | ReturnType<typeof createXai>
     | ReturnType<typeof createOpenRouter>
-    | ReturnType<typeof createGroq>
     | ReturnType<typeof createOpenAICompatible>;
 
 export const getProviderInstance = (
@@ -219,108 +201,6 @@ export const getProviderInstance = (
             return createOpenRouter({
                 apiKey,
             });
-        case "groq":
-            validateApiKey(Providers.GROQ);
-            return createGroq({
-                apiKey,
-            });
-        case "moonshot":
-            validateApiKey(Providers.MOONSHOT);
-            return createOpenAI({
-                baseURL: "https://api.moonshot.cn/v1",
-                apiKey,
-            });
-        case "lmstudio": {
-            // LM Studio uses baseURL instead of API key
-            let rawURL = apiKey || "http://localhost:1234";
-
-            // Add protocol if missing
-            if (!/^https?:\/\//i.test(rawURL)) {
-                rawURL = `http://${rawURL}`;
-            }
-
-            // For browser environments, use proxy to avoid CORS/mixed content issues
-            if (typeof window !== "undefined" && window.location) {
-                // In production, use the proxy endpoint
-                const isProduction = window.location.protocol === "https:";
-                if (isProduction) {
-                    return createOpenAI({
-                        baseURL: "/api/lmstudio-proxy",
-                        apiKey: "not-required",
-                        headers: {
-                            "x-lmstudio-url": rawURL,
-                        },
-                    });
-                }
-            }
-
-            // Security: Validate that base URL is localhost only in development (prevent SSRF)
-            const url = new URL(rawURL);
-            const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "0.0.0.0"]);
-            const isProduction = process.env.NODE_ENV === "production";
-            const allowRemote = process.env.ALLOW_REMOTE_LMSTUDIO === "true";
-
-            if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
-                const errorMsg = generateErrorMessage("Network connection error", {
-                    provider: Providers.LMSTUDIO,
-                    hasApiKey: true,
-                    isVtPlus,
-                    originalError: "Remote connections not allowed in development",
-                });
-                throw new Error(
-                    `${errorMsg.message} Set ALLOW_REMOTE_LMSTUDIO=true to override or deploy to production.`,
-                );
-            }
-
-            // Clean up URL and add /v1 endpoint if needed
-            const baseURL = rawURL.includes("/v1")
-                ? rawURL
-                : `${url.origin.replace(/\/+$/, "")}/v1`;
-
-            // Use the recommended @ai-sdk/openai-compatible for LM Studio
-            return createOpenAI({
-                baseURL,
-                apiKey: "not-required", // LM Studio doesn't require API key
-            });
-        }
-        case "ollama": {
-            // Ollama uses baseURL instead of API key and has OpenAI compatibility
-            let rawURL = apiKey || "http://127.0.0.1:11434";
-
-            // Add protocol if missing
-            if (!/^https?:\/\//i.test(rawURL)) {
-                rawURL = `http://${rawURL}`;
-            }
-
-            // Security: Validate that base URL is localhost only in development (prevent SSRF)
-            const url = new URL(rawURL);
-            const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "0.0.0.0"]);
-            const isProduction = process.env.NODE_ENV === "production";
-            const allowRemote = process.env.ALLOW_REMOTE_OLLAMA === "true";
-
-            if (!LOCAL_HOSTS.has(url.hostname) && !isProduction && !allowRemote) {
-                const errorMsg = generateErrorMessage("Network connection error", {
-                    provider: Providers.OLLAMA,
-                    hasApiKey: true,
-                    isVtPlus,
-                    originalError: "Remote connections not allowed in development",
-                });
-                throw new Error(
-                    `${errorMsg.message} Set ALLOW_REMOTE_OLLAMA=true to override or deploy to production.`,
-                );
-            }
-
-            // Ollama uses /v1 endpoint for OpenAI compatibility
-            const baseURL = rawURL.includes("/v1")
-                ? rawURL
-                : `${url.origin.replace(/\/+$/, "")}/v1`;
-
-            // Use OpenAI provider for Ollama since it's OpenAI compatible
-            return createOpenAI({
-                baseURL,
-                apiKey: "ollama", // Required by OpenAI SDK but unused by Ollama
-            });
-        }
         default:
             if (!apiKey) {
                 const errorMsg = generateErrorMessage("API key required", {

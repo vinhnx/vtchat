@@ -7,7 +7,7 @@
  * - Graceful fallback when Redis is not available
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 describe("Redis Cache Initialization", () => {
     let originalEnv: Record<string, string | undefined>;

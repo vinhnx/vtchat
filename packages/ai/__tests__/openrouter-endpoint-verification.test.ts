@@ -16,7 +16,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@openrouter/ai-sdk-provider");
 
 describe("OpenRouter Endpoint Verification", () => {
-    const validApiKey = "sk-or-v1-" + "a".repeat(64);
+    const validApiKey = `sk-or-v1-${"a".repeat(64)}`;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -332,8 +332,8 @@ describe("OpenRouter Endpoint Verification", () => {
             const invalidKeys = [
                 "sk-invalid",
                 "openrouter-key",
-                "sk-or-v2-" + "a".repeat(64), // wrong version
-                "sk-or-v1-" + "a".repeat(32), // too short
+                `sk-or-v2-${"a".repeat(64)}`, // wrong version
+                `sk-or-v1-${"a".repeat(32)}`, // too short
             ];
 
             invalidKeys.forEach((key) => {
