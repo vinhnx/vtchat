@@ -1,23 +1,37 @@
-import { Suspense, lazy } from "react";
 import { InlineLoader } from "@repo/common/components";
+import { Suspense, lazy } from "react";
 
-// Lazy load heavy components for better performance
+// Lazy load heavy components for better performance with error boundaries
 export const LazyThread = lazy(() =>
-    import("@repo/common/components").then((mod) => ({
-        default: mod.Thread,
-    }))
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.Thread,
+        }))
+        .catch(() => ({
+            default: () => <div className="text-destructive">Failed to load Thread component</div>,
+        })),
 );
 
 export const LazyChatInput = lazy(() =>
-    import("@repo/common/components").then((mod) => ({
-        default: mod.ChatInput,
-    }))
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.ChatInput,
+        }))
+        .catch(() => ({
+            default: () => (
+                <div className="text-destructive">Failed to load ChatInput component</div>
+            ),
+        })),
 );
 
 export const LazyFooter = lazy(() =>
-    import("@repo/common/components").then((mod) => ({
-        default: mod.Footer,
-    }))
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.Footer,
+        }))
+        .catch(() => ({
+            default: () => <div className="text-destructive">Failed to load Footer component</div>,
+        })),
 );
 
 // Wrapper components with suspense boundaries
@@ -51,13 +65,8 @@ export function ChatInputWithSuspense({ showGreeting = false }: { showGreeting?:
 
 export function FooterWithSuspense() {
     return (
-        <Suspense
-            fallback={
-                <div className="h-16 bg-muted animate-pulse rounded" />
-            }
-        >
+        <Suspense fallback={<div className="h-16 bg-muted animate-pulse rounded" />}>
             <LazyFooter />
         </Suspense>
     );
 }
-
