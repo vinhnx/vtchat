@@ -29,8 +29,8 @@ const nextConfig = {
         // Re-enable externalDir for monorepo support now that Turbopack works
         externalDir: true,
 
-        // Disable problematic memory optimizations that cause module issues
-        webpackMemoryOptimizations: false,
+        // Conservative memory optimizations for Next.js 15
+        webpackMemoryOptimizations: false, // Disable temporarily due to build issues
         webpackBuildWorker: false,
         preloadEntriesOnStart: false,
 
@@ -145,9 +145,12 @@ const nextConfig = {
                 hints: false,
             };
 
-            // Disable cache completely in production to save memory
+            // Enhanced memory optimizations for Next.js 15
             if (!dev) {
-                config.cache = false;
+                // Use memory cache type instead of disabling completely
+                config.cache = Object.freeze({
+                    type: "memory",
+                });
             }
 
             // Minimize parallel processing to reduce memory usage
@@ -168,7 +171,10 @@ const nextConfig = {
                             return external(context, request, callback);
                         };
                     }
-                    return external !== "undici";
+                    if (typeof external === "string") {
+                        return external !== "undici";
+                    }
+                    return external;
                 });
             }
 
@@ -521,6 +527,11 @@ const nextConfig = {
     // Production-specific optimizations
     ...(process.env.NODE_ENV === "production" && {
         productionBrowserSourceMaps: false,
+        // Additional memory optimizations for production
+        experimental: {
+            // Disable source maps in production to save memory
+            serverSourceMaps: false,
+        },
     }),
 
     // Disable problematic features for initial deployment

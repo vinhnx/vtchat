@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 
 // Test the specific logic that determines if Grok models should show BYOK dialog
 describe("Grok Send Button Debug", () => {

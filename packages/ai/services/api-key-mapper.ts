@@ -1,5 +1,5 @@
 import { log } from "../../shared/src/lib/logger";
-import { Providers, type ProviderEnumType } from "../constants/providers";
+import { type ProviderEnumType, Providers } from "../constants/providers";
 
 /**
  * Centralized API key mapping service that standardizes key transformation
@@ -15,8 +15,6 @@ export const FRONTEND_KEY_NAMES = {
     FIREWORKS_API_KEY: "FIREWORKS_API_KEY",
     XAI_API_KEY: "XAI_API_KEY",
     OPENROUTER_API_KEY: "OPENROUTER_API_KEY",
-    LMSTUDIO_BASE_URL: "LMSTUDIO_BASE_URL",
-    OLLAMA_BASE_URL: "OLLAMA_BASE_URL",
 } as const;
 
 // Provider key mapping (provider -> frontend key name)
@@ -29,8 +27,6 @@ export const PROVIDER_KEY_MAPPING: Record<ProviderEnumType, keyof typeof FRONTEN
     [Providers.FIREWORKS]: "FIREWORKS_API_KEY",
     [Providers.XAI]: "XAI_API_KEY",
     [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
-    [Providers.LMSTUDIO]: "LMSTUDIO_BASE_URL",
-    [Providers.OLLAMA]: "OLLAMA_BASE_URL",
 } as const;
 
 // API key validation patterns - using bounded quantifiers to prevent ReDoS attacks
@@ -42,11 +38,6 @@ const API_KEY_PATTERNS: Record<ProviderEnumType, RegExp> = {
     [Providers.FIREWORKS]: /^[a-zA-Z0-9]{32,100}$/,
     [Providers.XAI]: /^xai-[a-zA-Z0-9]{32,100}$/,
     [Providers.OPENROUTER]: /^sk-or-v1-[a-f0-9]{64}$/,
-    // LM Studio and Ollama use URLs - strict validation with port range check
-    [Providers.LMSTUDIO]:
-        /^https?:\/\/[a-zA-Z0-9.-]+(?::[1-9][0-9]{0,3}|:[1-5][0-9]{4}|:6[0-4][0-9]{3}|:65[0-4][0-9]{2}|:655[0-2][0-9]|:6553[0-5])?(?:\/[^\s]*)?$/,
-    [Providers.OLLAMA]:
-        /^https?:\/\/[a-zA-Z0-9.-]+(?::[1-9][0-9]{0,3}|:[1-5][0-9]{4}|:6[0-4][0-9]{3}|:65[0-4][0-9]{2}|:655[0-2][0-9]|:6553[0-5])?(?:\/[^\s]*)?$/,
 };
 
 // Minimum key lengths for basic validation
@@ -58,8 +49,6 @@ const MIN_KEY_LENGTHS: Record<ProviderEnumType, number> = {
     [Providers.FIREWORKS]: 32,
     [Providers.XAI]: 32,
     [Providers.OPENROUTER]: 64,
-    [Providers.LMSTUDIO]: 10, // Minimum URL length
-    [Providers.OLLAMA]: 10, // Minimum URL length
 };
 
 export interface ApiKeyValidationResult {
@@ -215,9 +204,6 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
                 error: `API key too short for ${provider}. Expected minimum ${minLength} characters, got ${trimmedKey.length}`,
                 expectedFormat: this.getExpectedFormat(provider),
             };
-        } else if (provider === Providers.LMSTUDIO || provider === Providers.OLLAMA) {
-            // Special URL validation for local providers
-            result = this.validateUrlFormat(provider, trimmedKey);
         } else if (!pattern.test(trimmedKey)) {
             // Pattern validation for API keys
             result = {
@@ -347,10 +333,6 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
                 return "xai-... (starts with 'xai-', followed by 32+ characters)";
             case Providers.OPENROUTER:
                 return "sk-or-v1-... (starts with 'sk-or-v1-', followed by 64-character hex)";
-            case Providers.LMSTUDIO:
-                return "HTTP/HTTPS URL (e.g., http://localhost:1234)";
-            case Providers.OLLAMA:
-                return "HTTP/HTTPS URL (e.g., http://127.0.0.1:11434)";
             default:
                 return "Valid API key for the provider";
         }

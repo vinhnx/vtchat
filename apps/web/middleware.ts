@@ -1,8 +1,8 @@
-import { auth } from "@/lib/auth-server";
 import { isPublicRoute } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { getCookieCache } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;

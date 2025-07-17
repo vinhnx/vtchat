@@ -4,12 +4,14 @@
             "command": "uvx",
             "args": ["mcp-server-fetch"],
             "env": {},
-            "disabled": false
+            "disabled": false,
+            "autoApprove": ["fetch"]
         },
         "context7": {
             "command": "bunx",
             "args": ["@upstash/context7-mcp"],
-            "_target": "global"
+            "disabled": false,
+            "autoApprove": []
         },
         "neon_production": {
             "command": "bunx",
@@ -18,22 +20,27 @@
                 "start",
                 "napi_dmpvy7933795mznidrkmgiadliagv3jin440tz3p3v7h4qss0zaq1v7e3ib9lkjb"
             ],
-            "_target": "global"
+            "disabled": false,
+            "autoApprove": []
         },
         "flymcp": {
             "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
+            "args": [],
             "env": {},
-            "_target": "global"
+            "disabled": false,
+            "autoApprove": []
         },
         "time": {
             "command": "uvx",
             "args": ["mcp-server-time"],
-            "_target": "global"
+            "disabled": false,
+            "autoApprove": []
         },
         "playwright": {
             "command": "npx",
             "args": ["-y", "@playwright/mcp@latest", "--headless", "--isolated"],
-            "_target": "global"
+            "disabled": false,
+            "autoApprove": []
         },
         "neon_dev": {
             "command": "bunx",
@@ -42,7 +49,9 @@
                 "start",
                 "napi_81ej0iuhglfmiqtbrsxlay1eya0ku65wqo62ex838i408vgyzq0xta91n5mog4pi"
             ],
-            "env": {}
+            "env": {},
+            "disabled": false,
+            "autoApprove": []
         }
     }
 }

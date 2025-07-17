@@ -342,7 +342,10 @@ export function RAGChatbot() {
         // Fetch knowledge base only once on mount
         fetchKnowledgeBase();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Only run on mount, ignore fetchKnowledgeBase dependency to prevent infinite loop
+    }, [
+        // Fetch knowledge base only once on mount
+        fetchKnowledgeBase,
+    ]); // Only run on mount, ignore fetchKnowledgeBase dependency to prevent infinite loop
 
     // Scroll to bottom when messages change or when processing state changes
     useEffect(() => {

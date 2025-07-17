@@ -38,10 +38,6 @@ export function isPremiumMode(mode: ChatMode): boolean {
     // Free models are NOT premium
     const freeModels = [
         ChatMode.GEMINI_2_5_FLASH_LITE, // Free model
-        ChatMode.LMSTUDIO_LLAMA_3_8B, // Local models
-        ChatMode.LMSTUDIO_QWEN_7B,
-        ChatMode.LMSTUDIO_GEMMA_7B,
-        ChatMode.LMSTUDIO_GEMMA_3_1B,
     ];
 
     const isFreeModel = freeModels.includes(mode);

@@ -27,7 +27,6 @@ describe("Grok BYOK Dialog Null Check", () => {
         [ChatMode.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
         // Fireworks models
         [ChatMode.DEEPSEEK_R1_FIREWORKS]: "FIREWORKS_API_KEY",
-        [ChatMode.KIMI_K2_INSTRUCT_FIREWORKS]: "FIREWORKS_API_KEY",
         // xAI models
         [ChatMode.GROK_3]: "XAI_API_KEY",
         [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
@@ -39,25 +38,6 @@ describe("Grok BYOK Dialog Null Check", () => {
         [ChatMode.QWEN3_32B]: "OPENROUTER_API_KEY",
         [ChatMode.MISTRAL_NEMO]: "OPENROUTER_API_KEY",
         [ChatMode.QWEN3_14B]: "OPENROUTER_API_KEY",
-        [ChatMode.KIMI_K2]: "OPENROUTER_API_KEY",
-        // LM Studio local models (no API key required)
-        [ChatMode.LMSTUDIO_LLAMA_3_8B]: null,
-        [ChatMode.LMSTUDIO_QWEN_7B]: null,
-        [ChatMode.LMSTUDIO_GEMMA_7B]: null,
-        [ChatMode.LMSTUDIO_GEMMA_3_1B]: null,
-        // Ollama local models (no API key required)
-        [ChatMode.OLLAMA_LLAMA_3_3]: null,
-        [ChatMode.OLLAMA_LLAMA_3_2]: null,
-        [ChatMode.OLLAMA_LLAMA_3_1]: null,
-        [ChatMode.OLLAMA_QWEN_3]: null,
-        [ChatMode.OLLAMA_QWEN_2_5]: null,
-        [ChatMode.OLLAMA_GEMMA_3]: null,
-        [ChatMode.OLLAMA_GEMMA_3N]: null,
-        [ChatMode.OLLAMA_GEMMA_2]: null,
-        [ChatMode.OLLAMA_DEEPSEEK_R1]: null,
-        [ChatMode.OLLAMA_MISTRAL]: null,
-        [ChatMode.OLLAMA_CODELLAMA]: null,
-        [ChatMode.OLLAMA_LLAVA]: null,
     } as const;
 
     it("should NOT return null for Grok models - this prevents dialog from showing", () => {
@@ -80,13 +60,13 @@ describe("Grok BYOK Dialog Null Check", () => {
         expect(grok4Required).not.toBeUndefined();
     });
 
-    it("should return null for local models (correct behavior)", () => {
-        // Local models should return null - this is expected
-        const lmStudioRequired = CHAT_MODE_TO_API_KEY[ChatMode.LMSTUDIO_LLAMA_3_8B];
-        const ollamaRequired = CHAT_MODE_TO_API_KEY[ChatMode.OLLAMA_LLAMA_3_3];
+    it("should return correct API key for remaining models", () => {
+        // Check that remaining models have correct API key mappings
+        const openaiRequired = CHAT_MODE_TO_API_KEY[ChatMode.O3];
+        const anthropicRequired = CHAT_MODE_TO_API_KEY[ChatMode.CLAUDE_4_SONNET];
 
-        expect(lmStudioRequired).toBeNull();
-        expect(ollamaRequired).toBeNull();
+        expect(openaiRequired).toBe("OPENAI_API_KEY");
+        expect(anthropicRequired).toBe("ANTHROPIC_API_KEY");
     });
 
     it("should verify ChatMode constants exist and match expected values", () => {

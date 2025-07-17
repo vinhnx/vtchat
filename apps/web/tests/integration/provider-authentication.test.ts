@@ -16,12 +16,12 @@ describe("Provider Authentication Integration Tests", () => {
     const mockApiKeys = {
         valid: {
             OPENAI_API_KEY: "sk-1234567890abcdef1234567890abcdef",
-            ANTHROPIC_API_KEY: "sk-ant-" + "a".repeat(95),
-            OPENROUTER_API_KEY: "sk-or-v1-" + "a".repeat(64),
+            ANTHROPIC_API_KEY: `sk-ant-${"a".repeat(95)}`,
+            OPENROUTER_API_KEY: `sk-or-v1-${"a".repeat(64)}`,
             GEMINI_API_KEY: "AIzaSyDXVvK9tQ7nlppjWQaMhEAa01y_MiKgOOI",
             TOGETHER_API_KEY: "a".repeat(64),
             FIREWORKS_API_KEY: "a".repeat(32), // Fireworks keys are alphanumeric only
-            XAI_API_KEY: "xai-" + "a".repeat(32),
+            XAI_API_KEY: `xai-${"a".repeat(32)}`,
         },
         invalid: {
             OPENAI_API_KEY: "invalid-key",
@@ -334,7 +334,7 @@ describe("Provider Authentication Integration Tests", () => {
         });
 
         it("should handle whitespace in API keys", () => {
-            const keyWithWhitespace = "  " + mockApiKeys.valid.OPENAI_API_KEY + "  ";
+            const keyWithWhitespace = `  ${mockApiKeys.valid.OPENAI_API_KEY}  `;
             const result = apiKeyMapper.validateApiKeyFormat(Providers.OPENAI, keyWithWhitespace);
 
             expect(result.isValid).toBe(true);
@@ -424,7 +424,7 @@ describe("Provider Authentication Integration Tests", () => {
         });
 
         it("should handle special characters in API keys", () => {
-            const specialKey = "sk-" + "a".repeat(20) + "_-+=";
+            const specialKey = `sk-${"a".repeat(20)}_-+=`;
             const result = apiKeyMapper.validateApiKeyFormat(Providers.OPENAI, specialKey);
 
             // Should validate based on pattern, not reject special chars
@@ -432,7 +432,7 @@ describe("Provider Authentication Integration Tests", () => {
         });
 
         it("should handle unicode characters gracefully", () => {
-            const unicodeKey = "sk-" + "🔑".repeat(10);
+            const unicodeKey = `sk-${"🔑".repeat(10)}`;
             const result = apiKeyMapper.validateApiKeyFormat(Providers.OPENAI, unicodeKey);
 
             expect(result.hasApiKey).toBe(true);

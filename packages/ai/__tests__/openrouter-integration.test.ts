@@ -107,7 +107,7 @@ describe.skipIf(shouldSkip)("OpenRouter Integration Tests", () => {
 
         it("should handle OpenRouter API errors properly", async () => {
             const invalidByokKeys = {
-                OPENROUTER_API_KEY: "sk-or-v1-invalid" + "a".repeat(60),
+                OPENROUTER_API_KEY: `sk-or-v1-invalid${"a".repeat(60)}`,
             };
 
             let errorThrown = false;
@@ -238,12 +238,12 @@ describe("OpenRouter Configuration Tests", () => {
     it("should validate OpenRouter API key format", () => {
         const { apiKeyMapper } = require("../services/api-key-mapper");
 
-        const validKey = "sk-or-v1-" + "a".repeat(64);
+        const validKey = `sk-or-v1-${"a".repeat(64)}`;
         const invalidKeys = [
             "sk-invalid",
-            "or-v1-" + "a".repeat(64),
-            "sk-or-v2-" + "a".repeat(64),
-            "sk-or-v1-" + "a".repeat(32), // too short
+            `or-v1-${"a".repeat(64)}`,
+            `sk-or-v2-${"a".repeat(64)}`,
+            `sk-or-v1-${"a".repeat(32)}`, // too short
             "",
         ];
 

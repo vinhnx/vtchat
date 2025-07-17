@@ -34,31 +34,6 @@ export const ChatMode = {
     MISTRAL_NEMO: "mistral-nemo",
     QWEN3_14B: "qwen3-14b",
     KIMI_K2: "kimi-k2",
-    // LM Studio local models
-    LMSTUDIO_LLAMA_3_8B: "lmstudio-llama-3-8b",
-    LMSTUDIO_QWEN_7B: "lmstudio-qwen-7b",
-    LMSTUDIO_GEMMA_7B: "lmstudio-gemma-7b",
-    LMSTUDIO_GEMMA_3_1B: "lmstudio-gemma-3-1b",
-    // Ollama local models
-    OLLAMA_LLAMA_3_3: "ollama-llama-3.3",
-    OLLAMA_LLAMA_3_2: "ollama-llama-3.2",
-    OLLAMA_LLAMA_3_1: "ollama-llama-3.1",
-    OLLAMA_QWEN_3: "ollama-qwen-3",
-    OLLAMA_QWEN_2_5: "ollama-qwen-2.5",
-    OLLAMA_GEMMA_3: "ollama-gemma-3",
-    OLLAMA_GEMMA_3N: "ollama-gemma-3n",
-    OLLAMA_GEMMA_2: "ollama-gemma-2",
-    OLLAMA_DEEPSEEK_R1: "ollama-deepseek-r1",
-    OLLAMA_MISTRAL: "ollama-mistral",
-    OLLAMA_CODELLAMA: "ollama-codellama",
-    OLLAMA_LLAVA: "ollama-llava",
-    // Groq models
-    GROQ_GEMMA2_9B_IT: "gemma2-9b-it",
-    GROQ_LLAMA3_70B_8192: "llama3-70b-8192",
-    GROQ_LLAMA3_8B_8192: "llama3-8b-8192",
-    GROQ_MIXTRAL_8X7B_32768: "mixtral-8x7b-32768",
-    // Moonshot models
-    MOONSHOT_KIMI_K2_INSTRUCT: "moonshotai/kimi-k2-instruct",
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
@@ -235,14 +210,6 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    [ChatMode.DEEPSEEK_R1]: {
-        webSearch: true,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
 
     [ChatMode.QWEN3_235B_A22B]: {
         webSearch: true,
@@ -275,16 +242,7 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
         isNew: true,
-    },
-    [ChatMode.KIMI_K2]: {
-        webSearch: true,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
-    // Fireworks models
+    }, // Fireworks models
     [ChatMode.DEEPSEEK_R1_FIREWORKS]: {
         webSearch: true,
         imageUpload: false,
@@ -301,136 +259,6 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    // LM Studio local models - no auth required, free local models
-    [ChatMode.LMSTUDIO_LLAMA_3_8B]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.LMSTUDIO_QWEN_7B]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.LMSTUDIO_GEMMA_7B]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.LMSTUDIO_GEMMA_3_1B]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    // Ollama local models - no auth required, free local models
-    [ChatMode.OLLAMA_LLAMA_3_3]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_LLAMA_3_2]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_LLAMA_3_1]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_QWEN_3]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_QWEN_2_5]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_GEMMA_3]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_GEMMA_3N]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_GEMMA_2]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_DEEPSEEK_R1]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_MISTRAL]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_CODELLAMA]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
-    [ChatMode.OLLAMA_LLAVA]: {
-        webSearch: false,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: false,
-        isNew: true,
-    },
     [ChatMode.O1_MINI]: {
         webSearch: false,
         imageUpload: false,
@@ -444,48 +272,6 @@ export const ChatModeConfig: Record<
         multiModal: false,
         retry: true,
         isAuthRequired: true,
-    },
-    // Groq models
-    [ChatMode.GROQ_GEMMA2_9B_IT]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
-    [ChatMode.GROQ_LLAMA3_70B_8192]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
-    [ChatMode.GROQ_LLAMA3_8B_8192]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
-    [ChatMode.GROQ_MIXTRAL_8X7B_32768]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
-    // Moonshot models
-    [ChatMode.MOONSHOT_KIMI_K2_INSTRUCT]: {
-        webSearch: false,
-        imageUpload: false,
-        multiModal: false,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
     },
 };
 
@@ -630,54 +416,14 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenRouter Mistral Nemo";
         case ChatMode.QWEN3_14B:
             return "OpenRouter Qwen3 14B";
-        case ChatMode.KIMI_K2:
-            return "OpenRouter Kimi K2";
         // Fireworks models
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
             return "Fireworks DeepSeek R1";
         case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
             return "Fireworks Kimi K2 Instruct";
-        // LM Studio local models
-        case ChatMode.LMSTUDIO_LLAMA_3_8B:
-            return "LM Studio Llama 3 8B (Local)";
-        case ChatMode.LMSTUDIO_QWEN_7B:
-            return "LM Studio Qwen 2.5 7B (Local)";
-        case ChatMode.LMSTUDIO_GEMMA_7B:
-            return "LM Studio Gemma 7B (Local)";
-        case ChatMode.LMSTUDIO_GEMMA_3_1B:
-            return "LM Studio Gemma 3 1B (Local)";
-        // Ollama local models
-        case ChatMode.OLLAMA_LLAMA_3_3:
-            return "Ollama Llama 3.3 70B (Local)";
-        case ChatMode.OLLAMA_LLAMA_3_2:
-            return "Ollama Llama 3.2 (Local)";
-        case ChatMode.OLLAMA_LLAMA_3_1:
-            return "Ollama Llama 3.1 (Local)";
-        case ChatMode.OLLAMA_QWEN_2_5:
-            return "Ollama Qwen 2.5 (Local)";
-        case ChatMode.OLLAMA_GEMMA_2:
-            return "Ollama Gemma 2 (Local)";
-        case ChatMode.OLLAMA_MISTRAL:
-            return "Ollama Mistral (Local)";
-        case ChatMode.OLLAMA_CODELLAMA:
-            return "Ollama CodeLlama (Local)";
-        case ChatMode.OLLAMA_LLAVA:
-            return "Ollama LLaVA (Local)";
         case ChatMode.O1_MINI:
             return "OpenAI o1-mini";
         case ChatMode.O1:
             return "OpenAI o1";
-        // Groq models
-        case ChatMode.GROQ_GEMMA2_9B_IT:
-            return "Groq Gemma2 9B";
-        case ChatMode.GROQ_LLAMA3_70B_8192:
-            return "Groq Llama3 70B";
-        case ChatMode.GROQ_LLAMA3_8B_8192:
-            return "Groq Llama3 8B";
-        case ChatMode.GROQ_MIXTRAL_8X7B_32768:
-            return "Groq Mixtral 8x7B";
-        // Moonshot models
-        case ChatMode.MOONSHOT_KIMI_K2_INSTRUCT:
-            return "Moonshot Kimi K2 Instruct";
     }
 };

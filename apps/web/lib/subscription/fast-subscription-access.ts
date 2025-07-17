@@ -4,7 +4,7 @@
 
 import { log } from "@repo/shared/lib/logger";
 import { PlanSlug, type VtPlusFeature } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
 import { desc, eq, inArray, sql } from "drizzle-orm";
 import { redisCache, type SubscriptionCacheData } from "@/lib/cache/redis-cache";

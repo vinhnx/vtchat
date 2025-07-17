@@ -16,5 +16,8 @@
     "devDependencies": {
         "@repo/typescript-config": "*",
         "typescript": "^5.3.3"
+    },
+    "dependencies": {
+        "events": "^3.3.0"
     }
 }

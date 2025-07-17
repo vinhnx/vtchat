@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
-import {
-    hasSubscriptionAccess,
-    getEffectiveAccessStatus,
-} from "@repo/shared/utils/subscription-grace-period";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import {
+    getEffectiveAccessStatus,
+    hasSubscriptionAccess,
+} from "@repo/shared/utils/subscription-grace-period";
+import { describe, expect, it } from "vitest";
 
 describe("Subscription Grace Period Logic", () => {
     const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now

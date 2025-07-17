@@ -53,7 +53,7 @@ vi.mock("@repo/shared/logger", () => ({
 const { POST } = await import("../api/webhook/creem/route");
 
 // Helper to create a test webhook request
-function createWebhookRequest(eventType: string, payload: any, secret?: string): Request {
+function createWebhookRequest(_eventType: string, payload: any, secret?: string): Request {
     const body = JSON.stringify(payload);
     const headers = new Headers({
         "content-type": "application/json",
