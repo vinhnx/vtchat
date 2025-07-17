@@ -20,7 +20,7 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/a
 export const dynamic = "force-dynamic";
 
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from "./constants";
-import { executeStream } from "./stream-handlers";
+import { executeStream, markControllerClosed } from "./stream-handlers";
 import { registerStream, unregisterStream } from "./stream-registry";
 import { completionRequestSchema, SSE_HEADERS } from "./types";
 import { getIp } from "./utils";
@@ -124,9 +124,8 @@ export async function POST(request: NextRequest) {
 
                 if (modelProvider && transformedApiKeys) {
                     // Import validation functions
-                    const { validateProviderKey, getProviderKeyName: _getProviderKeyName } = await import(
-                        "@repo/ai/services/api-key-mapper"
-                    );
+                    const { validateProviderKey, getProviderKeyName: _getProviderKeyName } =
+                        await import("@repo/ai/services/api-key-mapper");
                     const { generateErrorMessage } = await import(
                         "@repo/ai/services/error-messages"
                     );

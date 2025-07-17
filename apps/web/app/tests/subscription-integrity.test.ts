@@ -1,7 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import {
-    SubscriptionService,
-} from "@/lib/services/subscription-service";
+import { SubscriptionService } from "@/lib/services/subscription-service";
 import { SubscriptionMonitoring } from "@/lib/monitoring/subscription-monitoring";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";

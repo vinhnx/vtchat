@@ -8,6 +8,7 @@ body {
     /* Firefox - completely hide scrollbars globally */
     scrollbar-width: none;
     scrollbar-color: transparent transparent;
+    font-size: 12px;
 }
 
 /* WebKit browsers - hide scrollbars globally */
@@ -239,10 +240,6 @@ body::-webkit-scrollbar-corner {
 
     body {
         @apply bg-background text-foreground;
-        font-family: system-ui, sans-serif;
-    }
-
-    .markdown-content {
         font-family:
             "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
             Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";

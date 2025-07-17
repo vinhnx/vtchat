@@ -69,7 +69,12 @@ const COLORS = [
     "hsl(var(--chart-4))",
 ];
 
-export function UserCharts({ users, stats: _stats, planDistribution, registrationTrend }: UserChartsProps) {
+export function UserCharts({
+    users,
+    stats: _stats,
+    planDistribution,
+    registrationTrend,
+}: UserChartsProps) {
     // Process user status data
     const activeUsers = users.filter((u) => !u.banned).length;
     const bannedUsers = users.filter((u) => u.banned).length;

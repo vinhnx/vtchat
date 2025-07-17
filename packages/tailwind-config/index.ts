@@ -75,7 +75,16 @@ const config: any = {
             fontFamily: {
                 mono: ["var(--font-geist-mono)", ...fontFamily.mono],
                 clash: ["var(--font-clash)", ...fontFamily.sans],
-                sans: ["var(--font-inter)", ...fontFamily.sans],
+                sans: [
+                    "SF Pro",
+                    "-apple-system",
+                    "BlinkMacSystemFont",
+                    "Segoe UI",
+                    "Roboto",
+                    "Helvetica Neue",
+                    "Arial",
+                    "sans-serif",
+                ],
                 bricolage: ["var(--font-bricolage)", ...fontFamily.sans],
             },
             fontSize: {
