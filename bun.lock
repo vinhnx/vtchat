@@ -235,6 +235,9 @@
     "packages/orchestrator": {
       "name": "@repo/orchestrator",
       "version": "1.0.0",
+      "dependencies": {
+        "events": "^3.3.0",
+      },
       "devDependencies": {
         "@repo/typescript-config": "*",
         "typescript": "^5.3.3",
