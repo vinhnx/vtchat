@@ -2,8 +2,8 @@
  * Test for Grok models integration and API key validation
  */
 
-import { describe, expect, it } from "vitest";
 import { ChatMode } from "@repo/shared/config";
+import { describe, expect, it } from "vitest";
 
 describe("Grok Models Integration", () => {
     const grokModels = [ChatMode.GROK_3, ChatMode.GROK_3_MINI, ChatMode.GROK_4];
@@ -90,7 +90,7 @@ describe("Grok Models Integration", () => {
             };
 
             grokModels.forEach((_model) => {
-                const hasRequiredKey = !!mockApiKeys["XAI_API_KEY"];
+                const hasRequiredKey = !!mockApiKeys.XAI_API_KEY;
                 expect(hasRequiredKey).toBe(false);
             });
         });

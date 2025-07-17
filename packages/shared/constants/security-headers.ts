@@ -67,7 +67,7 @@ export function extractApiKeysFromHeaders(headers: Headers): Record<string, stri
     // Extract API keys from headers
     Object.entries(API_KEY_TO_HEADER_MAP).forEach(([keyType, headerName]) => {
         const headerValue = headers.get(headerName);
-        if (headerValue && headerValue.trim()) {
+        if (headerValue?.trim()) {
             apiKeys[keyType] = headerValue.trim();
         }
     });

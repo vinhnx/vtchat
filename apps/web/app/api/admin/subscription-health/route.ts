@@ -1,6 +1,6 @@
+import { log } from "@repo/shared/logger";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
-import { log } from "@repo/shared/logger";
 import { SubscriptionMonitoring } from "@/lib/monitoring/subscription-monitoring";
 
 export async function GET() {

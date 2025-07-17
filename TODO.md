@@ -6,10 +6,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-handle render OG metadata in SourceGrid in ToolsPanel thread item
-
---
-
 https://ship-25-agents-workshop.vercel.app/docs
 
 --

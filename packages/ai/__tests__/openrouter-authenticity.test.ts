@@ -27,7 +27,7 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 describe("OpenRouter Request Authenticity", () => {
-    const validOpenRouterApiKey = "sk-or-v1-" + "a".repeat(64);
+    const validOpenRouterApiKey = `sk-or-v1-${"a".repeat(64)}`;
     const mockOpenRouterInstance = {
         chat: {
             completions: {
@@ -52,7 +52,7 @@ describe("OpenRouter Request Authenticity", () => {
 
     describe("API Key Validation", () => {
         it("should validate OpenRouter API key format correctly", () => {
-            const validKey = "sk-or-v1-" + "a".repeat(64);
+            const validKey = `sk-or-v1-${"a".repeat(64)}`;
             const invalidKey = "invalid-key";
 
             const validResult = apiKeyMapper.validateApiKeyFormat("openrouter", validKey);
@@ -262,7 +262,7 @@ describe("OpenRouter Request Authenticity", () => {
             mockFetch.mockResolvedValue(mockResponse);
 
             // Create a test that verifies headers are set correctly
-            const testApiKey = "sk-or-v1-" + "b".repeat(64);
+            const testApiKey = `sk-or-v1-${"b".repeat(64)}`;
 
             await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
@@ -297,7 +297,7 @@ describe("OpenRouter Request Authenticity", () => {
                 ok: true,
                 status: 200,
                 json: async () => ({
-                    id: "chatcmpl-" + Math.random().toString(36).substring(7),
+                    id: `chatcmpl-${Math.random().toString(36).substring(7)}`,
                     object: "chat.completion",
                     created: Math.floor(Date.now() / 1000),
                     model: "deepseek/deepseek-chat-v3-0324",

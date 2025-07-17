@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock the ThreadItem component behavior for error handling
 describe("ThreadItem Error Toast Integration", () => {

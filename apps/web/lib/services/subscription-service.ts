@@ -6,9 +6,9 @@
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { eq, and, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/database";
-import { userSubscriptions, users, type NewUserSubscription } from "@/lib/database/schema";
+import { type NewUserSubscription, userSubscriptions, users } from "@/lib/database/schema";
 import { invalidateUserCaches } from "@/lib/subscription/fast-subscription-access";
 
 export class DuplicateActiveSubscriptionError extends Error {
@@ -227,7 +227,7 @@ export class SubscriptionService {
      * Fix subscription data integrity issues for a user
      */
     static async fixUserSubscriptions(userId: string): Promise<void> {
-        const validation = await this.validateUserSubscriptions(userId);
+        const validation = await SubscriptionService.validateUserSubscriptions(userId);
 
         if (validation.isValid) {
             log.info("User subscriptions are already valid", { userId });

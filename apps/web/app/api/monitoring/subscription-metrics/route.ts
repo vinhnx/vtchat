@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { log } from "@repo/shared/logger";
+import { NextResponse } from "next/server";
 import { SubscriptionMonitoring } from "@/lib/monitoring/subscription-monitoring";
 
 export const dynamic = "force-dynamic";

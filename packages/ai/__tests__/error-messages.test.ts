@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Providers } from "../constants/providers";
 import {
-    PROVIDER_DISPLAY_NAMES,
-    PROVIDER_SETUP_URLS,
     generateErrorMessage,
     getInvalidApiKeyError,
     getMissingApiKeyError,
@@ -10,6 +8,8 @@ import {
     getQuotaExceededError,
     getRateLimitError,
     getServiceUnavailableError,
+    PROVIDER_DISPLAY_NAMES,
+    PROVIDER_SETUP_URLS,
 } from "../services/error-messages";
 
 describe("Error Message Service", () => {

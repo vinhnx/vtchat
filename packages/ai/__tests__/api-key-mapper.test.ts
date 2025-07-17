@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { Providers, type ProviderEnumType } from "../providers";
+import { type ProviderEnumType, Providers } from "../providers";
 import {
-    FRONTEND_KEY_NAMES,
-    PROVIDER_KEY_MAPPING,
     apiKeyMapper,
+    FRONTEND_KEY_NAMES,
     getAvailableProviders,
     getProviderKeyName,
     mapFrontendToProvider,
+    PROVIDER_KEY_MAPPING,
     validateApiKeyFormat,
     validateProviderKey,
 } from "../services/api-key-mapper";
@@ -163,7 +163,7 @@ describe("API Key Mapping Service", () => {
 
         describe("Anthropic API key validation", () => {
             it("should validate correct Anthropic API key format", () => {
-                const validKey = "sk-ant-api03-" + "a".repeat(95);
+                const validKey = `sk-ant-api03-${"a".repeat(95)}`;
                 const result = validateApiKeyFormat(Providers.ANTHROPIC, validKey);
 
                 expect(result.isValid).toBe(true);
@@ -183,7 +183,7 @@ describe("API Key Mapping Service", () => {
             });
 
             it("should reject Anthropic API key with wrong format", () => {
-                const wrongKey = "sk-wrong-" + "a".repeat(95);
+                const wrongKey = `sk-wrong-${"a".repeat(95)}`;
                 const result = validateApiKeyFormat(Providers.ANTHROPIC, wrongKey);
 
                 expect(result.isValid).toBe(false);
@@ -273,7 +273,7 @@ describe("API Key Mapping Service", () => {
 
         describe("xAI API key validation", () => {
             it("should validate correct xAI API key format", () => {
-                const validKey = "xai-" + "A".repeat(32);
+                const validKey = `xai-${"A".repeat(32)}`;
                 const result = validateApiKeyFormat(Providers.XAI, validKey);
 
                 expect(result.isValid).toBe(true);
@@ -283,7 +283,7 @@ describe("API Key Mapping Service", () => {
             });
 
             it("should reject xAI API key with wrong format", () => {
-                const wrongKey = "wrong-" + "A".repeat(32);
+                const wrongKey = `wrong-${"A".repeat(32)}`;
                 const result = validateApiKeyFormat(Providers.XAI, wrongKey);
 
                 expect(result.isValid).toBe(false);
@@ -296,7 +296,7 @@ describe("API Key Mapping Service", () => {
 
         describe("OpenRouter API key validation", () => {
             it("should validate correct OpenRouter API key format", () => {
-                const validKey = "sk-or-v1-" + "a".repeat(64);
+                const validKey = `sk-or-v1-${"a".repeat(64)}`;
                 const result = validateApiKeyFormat(Providers.OPENROUTER, validKey);
 
                 expect(result.isValid).toBe(true);
@@ -306,7 +306,7 @@ describe("API Key Mapping Service", () => {
             });
 
             it("should reject OpenRouter API key with wrong format", () => {
-                const wrongKey = "sk-wrong-v1-" + "a".repeat(64);
+                const wrongKey = `sk-wrong-v1-${"a".repeat(64)}`;
                 const result = validateApiKeyFormat(Providers.OPENROUTER, wrongKey);
 
                 expect(result.isValid).toBe(false);
@@ -455,7 +455,7 @@ describe("API Key Mapping Service", () => {
         it("should return providers with valid keys", () => {
             const keys = {
                 OPENAI_API_KEY: "sk-test123456789012345678",
-                ANTHROPIC_API_KEY: "sk-ant-api03-" + "a".repeat(95),
+                ANTHROPIC_API_KEY: `sk-ant-api03-${"a".repeat(95)}`,
                 INVALID_KEY: "invalid",
             };
 
@@ -470,12 +470,12 @@ describe("API Key Mapping Service", () => {
         it("should handle all providers with valid keys", () => {
             const keys = {
                 OPENAI_API_KEY: "sk-test123456789012345678",
-                ANTHROPIC_API_KEY: "sk-ant-api03-" + "a".repeat(95),
+                ANTHROPIC_API_KEY: `sk-ant-api03-${"a".repeat(95)}`,
                 TOGETHER_API_KEY: "a".repeat(64),
                 GEMINI_API_KEY: "A".repeat(39),
                 FIREWORKS_API_KEY: "A".repeat(32),
-                XAI_API_KEY: "xai-" + "A".repeat(32),
-                OPENROUTER_API_KEY: "sk-or-v1-" + "a".repeat(64),
+                XAI_API_KEY: `xai-${"A".repeat(32)}`,
+                OPENROUTER_API_KEY: `sk-or-v1-${"a".repeat(64)}`,
                 LMSTUDIO_BASE_URL: "http://localhost:1234",
                 OLLAMA_BASE_URL: "http://127.0.0.1:11434",
             };
@@ -641,7 +641,7 @@ describe("API Key Mapping Service", () => {
         });
 
         it("should handle very long API keys within bounds", () => {
-            const veryLongKey = "sk-" + "a".repeat(97); // Within 100 char limit
+            const veryLongKey = `sk-${"a".repeat(97)}`; // Within 100 char limit
             const result = validateApiKeyFormat(Providers.OPENAI, veryLongKey);
 
             expect(result.isValid).toBe(true);
@@ -649,7 +649,7 @@ describe("API Key Mapping Service", () => {
         });
 
         it("should reject API keys exceeding maximum length", () => {
-            const tooLongKey = "sk-" + "a".repeat(200); // Exceeds 100 char limit
+            const tooLongKey = `sk-${"a".repeat(200)}`; // Exceeds 100 char limit
             const result = validateApiKeyFormat(Providers.OPENAI, tooLongKey);
 
             expect(result.isValid).toBe(false);
@@ -690,7 +690,7 @@ describe("API Key Mapping Service", () => {
         it("should handle concurrent validation requests", async () => {
             const keys = {
                 OPENAI_API_KEY: "sk-test123456789012345678",
-                ANTHROPIC_API_KEY: "sk-ant-api03-" + "a".repeat(95),
+                ANTHROPIC_API_KEY: `sk-ant-api03-${"a".repeat(95)}`,
             };
 
             // Run multiple validations concurrently
