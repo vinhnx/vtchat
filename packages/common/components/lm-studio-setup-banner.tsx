@@ -15,57 +15,61 @@ export function LMStudioSetupBanner() {
             description: "Download and install LM Studio from the official website",
             action: "Download LM Studio",
             link: "https://lmstudio.ai/",
-            icon: <ExternalLink size={16} />,
+            icon: <ExternalLink className="h-4 w-4" />,
         },
         {
             title: "Start the Server",
             description: "Open terminal and start LM Studio server with CORS enabled",
             action: "lms server start --cors",
-            icon: <Terminal size={16} />,
+            icon: <Terminal className="h-4 w-4" />,
         },
         {
             title: "Load a Model",
             description: "In LM Studio app, download and load any compatible model",
             action: "Browse & Load Model",
-            icon: <ExternalLink size={16} />,
+            icon: <ExternalLink className="h-4 w-4" />,
         },
     ];
 
     return (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+        <div className="relative mx-auto mb-4 max-w-3xl rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-3">
-                    <AlertCircle className="text-blue-500 mt-0.5" size={20} />
+                    <AlertCircle className="mt-0.5 h-5 w-5 text-neutral-500 dark:text-neutral-400" />
                     <div className="flex-1">
-                        <h3 className="font-medium text-blue-900 mb-2">
-                            🔧 Set up LM Studio for Local AI Models
+                        <h3 className="mb-2 font-medium text-neutral-900 dark:text-neutral-100">
+                            Set up LM Studio for Local AI Models
                         </h3>
 
                         <div className="space-y-3">
-                            {steps.map((step, index) => (
+                            {steps.map((step, i) => (
                                 <div
-                                    key={index}
-                                    className={`flex items-center space-x-3 p-2 rounded ${
-                                        currentStep === index
-                                            ? "bg-blue-100 border border-blue-300"
-                                            : "bg-white"
+                                    key={`lmstudio-step-${i}`}
+                                    className={`flex items-center space-x-3 rounded-sm p-2 ${
+                                        currentStep === i
+                                            ? "border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800/50"
+                                            : ""
                                     }`}
                                 >
                                     <div
-                                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                                            currentStep > index
-                                                ? "bg-green-500 text-white"
-                                                : currentStep === index
-                                                  ? "bg-blue-500 text-white"
-                                                  : "bg-gray-300 text-gray-600"
+                                        className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
+                                            currentStep > i
+                                                ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                                                : currentStep === i
+                                                  ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
+                                                  : "bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
                                         }`}
                                     >
-                                        {currentStep > index ? "✓" : index + 1}
+                                        {currentStep > i ? "✓" : i + 1}
                                     </div>
 
                                     <div className="flex-1">
-                                        <p className="font-medium text-gray-900">{step.title}</p>
-                                        <p className="text-sm text-gray-600">{step.description}</p>
+                                        <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                                            {step.title}
+                                        </p>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                                            {step.description}
+                                        </p>
                                     </div>
 
                                     {step.link ? (
@@ -73,13 +77,13 @@ export function LMStudioSetupBanner() {
                                             href={step.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm"
+                                            className="flex items-center space-x-1 text-sm font-medium text-neutral-900 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-400"
                                         >
                                             <span>{step.action}</span>
                                             {step.icon}
                                         </a>
                                     ) : (
-                                        <code className="bg-gray-700 px-2 py-1 rounded text-gray-100 text-sm font-sans">
+                                        <code className="rounded bg-neutral-100 px-2 py-1 text-sm font-mono text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
                                             {step.action}
                                         </code>
                                     )}
@@ -90,8 +94,9 @@ export function LMStudioSetupBanner() {
                         <div className="mt-4 flex space-x-2">
                             {currentStep < steps.length - 1 && (
                                 <button
+                                    type="button"
                                     onClick={() => setCurrentStep(currentStep + 1)}
-                                    className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                                    className="inline-flex items-center justify-center rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-200 dark:focus-visible:ring-neutral-300"
                                 >
                                     Next Step
                                 </button>
@@ -99,31 +104,33 @@ export function LMStudioSetupBanner() {
 
                             {currentStep > 0 && (
                                 <button
+                                    type="button"
                                     onClick={() => setCurrentStep(currentStep - 1)}
-                                    className="bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-400"
+                                    className="inline-flex items-center justify-center rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50 dark:hover:bg-neutral-800 dark:hover:text-neutral-50 dark:focus-visible:ring-neutral-300"
                                 >
                                     Previous
                                 </button>
                             )}
 
                             <button
+                                type="button"
                                 onClick={() => setIsVisible(false)}
-                                className="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm hover:bg-gray-200"
+                                className="inline-flex items-center justify-center rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50 dark:hover:bg-neutral-800 dark:hover:text-neutral-50 dark:focus-visible:ring-neutral-300"
                             >
                                 Got it, hide this
                             </button>
                         </div>
 
-                        <div className="mt-3 text-xs text-gray-500">
-                            💡 <strong>Privacy First:</strong> All processing happens locally on
-                            your machine. No data is sent to external servers.
+                        <div className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
+                            <span className="font-medium">Privacy First:</span> All processing
+                            happens locally on your machine. No data is sent to external servers.
                         </div>
 
-                        <div className="mt-2 text-xs text-gray-500">
-                            📖 <strong>Need help?</strong>{" "}
+                        <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                            <span className="font-medium">Need help?</span>{" "}
                             <a
                                 href="https://github.com/vinhnx/vtchat/blob/main/docs/guides/lm-studio-setup.md"
-                                className="text-green-600 hover:text-green-800 underline"
+                                className="font-medium text-neutral-900 underline hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300"
                             >
                                 View detailed setup guide
                             </a>
@@ -132,10 +139,12 @@ export function LMStudioSetupBanner() {
                 </div>
 
                 <button
+                    type="button"
                     onClick={() => setIsVisible(false)}
-                    className="text-blue-400 hover:text-blue-600"
+                    className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
+                    aria-label="Close"
                 >
-                    <X size={20} />
+                    <X className="h-4 w-4" />
                 </button>
             </div>
         </div>
