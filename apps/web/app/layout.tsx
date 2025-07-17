@@ -18,20 +18,17 @@ import { OfflineIndicator } from "../components/offline-indicator";
 import { PerformanceOptimizations } from "../components/performance-optimizations";
 import { PWAManager } from "../components/pwa-manager";
 import { ReactScan } from "../components/react-scan";
+import { AccessibilityImprovements } from "../components/accessibility-improvements";
 
-// Force dynamic rendering to prevent SSR issues during build
-export const dynamic = "force-dynamic";
+// Remove force-dynamic from layout to allow static generation for static pages
+// Individual pages that need dynamic rendering will set their own dynamic export
 
-// Disable static generation for all routes to prevent context issues
-export const dynamicParams = true;
-
-// Disable ISR/SSG completely for React 19 compatibility
-export const revalidate = 0;
-
-const bricolage = Bricolage_Grotesque({
+// Optimize font loading - reduce to essential fonts only
+const inter = Inter({
     subsets: ["latin"],
-    variable: "--font-bricolage",
+    variable: "--font-inter",
     display: "swap",
+    weight: ["400", "500", "600"], // Only load essential weights
 });
 
 import "@repo/ui/src/styles.css";
@@ -93,17 +90,7 @@ export const viewport: Viewport = {
     interactiveWidget: "resizes-content",
 };
 
-const inter = Inter({
-    subsets: ["latin"],
-    variable: "--font-inter",
-    display: "swap",
-});
-
-const clash = Bricolage_Grotesque({
-    subsets: ["latin"],
-    variable: "--font-clash",
-    display: "swap",
-});
+// Remove duplicate font definitions - already defined above
 
 export default function ParentLayout({
     children,
@@ -112,12 +99,13 @@ export default function ParentLayout({
 }>) {
     return (
         <html
-            className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
+            className={cn(GeistMono.variable, inter.variable)}
             lang="en"
             suppressHydrationWarning
         >
             <head>
                 <PerformanceOptimizations />
+                <AccessibilityImprovements />
                 <link href="/favicon.ico" rel="icon" sizes="any" />
             </head>
             <body className="bg-background text-foreground antialiased">
