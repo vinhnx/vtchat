@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     extend: {
-        typography: ({ theme }) => ({
+        typography: ({ theme: _theme }) => ({
             custom: {
                 css: {
                     "--tw-prose-body": "hsl(var(--foreground))",

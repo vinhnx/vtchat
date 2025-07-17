@@ -75,7 +75,7 @@ describe("Batch Subscription Fix", () => {
         ];
 
         // Chain the mocked methods to return the mock data
-        const selectMock = vi.fn().mockReturnValue(mockDbResults);
+        const _selectMock = vi.fn().mockReturnValue(mockDbResults);
 
         vi.mocked(db.select).mockReturnValue({
             from: vi.fn().mockReturnValue({

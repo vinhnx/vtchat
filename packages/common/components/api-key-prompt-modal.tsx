@@ -125,8 +125,8 @@ export const ApiKeyPromptModal = ({
 
     const [apiKeyValue, setApiKeyValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [validationError, setValidationError] = useState<string | null>(null);
-    const [isValid, setIsValid] = useState<boolean | null>(null);
+    const [, setValidationError] = useState<string | null>(null);
+    const [, setIsValid] = useState<boolean | null>(null);
 
     if (!requiredProvider) {
         return null;

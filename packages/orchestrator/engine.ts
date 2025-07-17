@@ -29,7 +29,7 @@ export class WorkflowEngine<
 
     constructor({
         id,
-        initialEventState,
+        initialEventState: _initialEventState,
         events,
         context,
         config,

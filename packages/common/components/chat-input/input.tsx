@@ -46,11 +46,9 @@ import { StructuredOutputButton } from "./structured-output-button";
 
 export const ChatInput = ({
     showGreeting = true,
-    showBottomBar = true,
     isFollowUp = false,
 }: {
     showGreeting?: boolean;
-    showBottomBar?: boolean;
     isFollowUp?: boolean;
 }) => {
     const { data: session } = useSession();
@@ -109,7 +107,7 @@ export const ChatInput = ({
     const stopGeneration = useChatStore((state) => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
-    const { dropzoneProps: docDropzoneProps } = useDocumentAttachment();
+    useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore((state) => state.chatMode);
     const { hasApiKeyForChatMode } = useApiKeysStore();

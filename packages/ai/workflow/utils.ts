@@ -114,7 +114,7 @@ export const generateTextWithGeminiSearch = async ({
         let windowApiKey = false;
         try {
             windowApiKey = typeof window !== "undefined" && !!(window as any).AI_API_KEYS?.google;
-        } catch (_error) {
+        } catch {
             // window is not available in this environment
             windowApiKey = false;
         }
@@ -1137,8 +1137,12 @@ export const processWebPages = async (
     const timeoutSignal = AbortSignal.timeout(options.timeout);
     const combinedSignal = new AbortController();
 
-    signal?.addEventListener("abort", () => combinedSignal.abort());
-    timeoutSignal.addEventListener("abort", () => combinedSignal.abort());
+    // Store function references for proper cleanup
+    const abortHandler = () => combinedSignal.abort();
+    const timeoutAbortHandler = () => combinedSignal.abort();
+
+    signal?.addEventListener("abort", abortHandler);
+    timeoutSignal.addEventListener("abort", timeoutAbortHandler);
 
     try {
         const startTime = Date.now();
@@ -1170,8 +1174,8 @@ export const processWebPages = async (
         return processedResults.slice(0, options.maxPages);
     } finally {
         // Clean up event listeners to prevent memory leaks
-        signal?.removeEventListener("abort", () => combinedSignal.abort());
-        timeoutSignal.removeEventListener("abort", () => combinedSignal.abort());
+        signal?.removeEventListener("abort", abortHandler);
+        timeoutSignal.removeEventListener("abort", timeoutAbortHandler);
     }
 };
 
@@ -1194,7 +1198,7 @@ export type TReaderResult = {
     error?: string;
 };
 
-export const handleError = (error: Error, { context, events }: TaskParams) => {
+export const handleError = (error: Error, { events }: TaskParams) => {
     const errorMessage = generateErrorMessage(error);
     log.error("Task failed", { data: error });
 
@@ -1318,13 +1322,13 @@ export const selectAvailableModel = (
 
     try {
         hasSelfApiKeys = typeof self !== "undefined" && !!(self as any).AI_API_KEYS;
-    } catch (_error) {
+    } catch {
         // self not available
     }
 
     try {
         hasWindowApiKeys = typeof window !== "undefined" && !!(window as any).AI_API_KEYS;
-    } catch (_error) {
+    } catch {
         // window not available
     }
 
@@ -1336,7 +1340,7 @@ export const selectAvailableModel = (
         hasWindow: (() => {
             try {
                 return typeof window !== "undefined";
-            } catch (_error) {
+            } catch {
                 return false;
             }
         })(),
@@ -1407,7 +1411,7 @@ export const selectAvailableModel = (
                     return true;
                 }
             }
-        } catch (_error) {
+        } catch {
             // self not available
         }
 
@@ -1430,7 +1434,7 @@ export const selectAvailableModel = (
                     return true;
                 }
             }
-        } catch (_error) {
+        } catch {
             // window not available
         }
 

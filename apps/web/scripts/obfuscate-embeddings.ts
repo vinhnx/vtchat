@@ -9,10 +9,7 @@ import { db } from "../lib/database";
 import { embeddings } from "../lib/database/schema";
 import { containsPII, secureContentForEmbedding } from "../lib/utils/content-security";
 
-interface EmbeddingRecord {
-    id: string;
-    content: string;
-}
+
 
 async function obfuscateExistingEmbeddings() {
     try {

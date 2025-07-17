@@ -201,7 +201,7 @@ export class CreemService {
                         customerId = userResults[0].creemCustomerId;
                         log.info({ userId }, "[CreemService] Found customer ID for user");
                     }
-                } catch (_dbError) {
+                } catch {
                     log.info("[CreemService] Database lookup failed, proceeding with fallback");
                 }
             }

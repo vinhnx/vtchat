@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
 
 // Mock the ThreadItem component behavior for error handling

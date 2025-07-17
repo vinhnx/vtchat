@@ -67,7 +67,7 @@ test.describe("Authenticated User Tests", () => {
                 await expect(page.locator("body")).toBeVisible();
                 // Verify we're not redirected to login
                 await expect(page).not.toHaveURL(/\/login/);
-            } catch (_error) {
+            } catch {
                 // Route might not exist, continue testing
                 console.log(`Route ${route} not accessible or doesn't exist`);
             }

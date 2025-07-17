@@ -89,7 +89,7 @@ describe("Grok Models Integration", () => {
                 // XAI_API_KEY is missing
             };
 
-            grokModels.forEach((model) => {
+            grokModels.forEach((_model) => {
                 const hasRequiredKey = !!mockApiKeys["XAI_API_KEY"];
                 expect(hasRequiredKey).toBe(false);
             });

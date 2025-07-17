@@ -23,7 +23,7 @@ const config = {
                     hard: "hsl(var(--border-hard))",
                 },
             },
-            typography: ({}) => ({
+            typography: () => ({
                 prosetheme: {
                     css: {
                         "--tw-prose-body": "hsl(var(--foreground) / 0.8)",

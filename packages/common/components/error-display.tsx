@@ -11,7 +11,6 @@ export interface ErrorDisplayProps {
     helpUrl?: string;
     upgradeUrl?: string;
     settingsAction?: string;
-    provider?: string;
     onRetry?: () => void;
     onOpenSettings?: () => void;
     className?: string;
@@ -24,7 +23,6 @@ export const ErrorDisplay = ({
     helpUrl,
     upgradeUrl,
     settingsAction,
-    provider,
     onRetry,
     onOpenSettings,
     className = "",
