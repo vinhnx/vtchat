@@ -1,0 +1,72 @@
+import { InlineLoader } from "@repo/common/components";
+import { Suspense, lazy } from "react";
+
+// Lazy load heavy components for better performance with error boundaries
+export const LazyThread = lazy(() =>
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.Thread,
+        }))
+        .catch(() => ({
+            default: () => <div className="text-destructive">Failed to load Thread component</div>,
+        })),
+);
+
+export const LazyChatInput = lazy(() =>
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.ChatInput,
+        }))
+        .catch(() => ({
+            default: () => (
+                <div className="text-destructive">Failed to load ChatInput component</div>
+            ),
+        })),
+);
+
+export const LazyFooter = lazy(() =>
+    import("@repo/common/components")
+        .then((mod) => ({
+            default: mod.Footer,
+        }))
+        .catch(() => ({
+            default: () => <div className="text-destructive">Failed to load Footer component</div>,
+        })),
+);
+
+// Wrapper components with suspense boundaries
+export function ThreadWithSuspense() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex h-full items-center justify-center">
+                    <InlineLoader />
+                </div>
+            }
+        >
+            <LazyThread />
+        </Suspense>
+    );
+}
+
+export function ChatInputWithSuspense({ showGreeting = false }: { showGreeting?: boolean }) {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex h-16 items-center justify-center">
+                    <InlineLoader />
+                </div>
+            }
+        >
+            <LazyChatInput showGreeting={showGreeting} />
+        </Suspense>
+    );
+}
+
+export function FooterWithSuspense() {
+    return (
+        <Suspense fallback={<div className="h-16 bg-muted animate-pulse rounded" />}>
+            <LazyFooter />
+        </Suspense>
+    );
+}

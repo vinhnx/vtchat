@@ -9,6 +9,7 @@ export function PerformanceOptimizations() {
 
             {/* Resource hints for better performance */}
             <link href="/api/health" rel="prefetch" />
+            <link href="/favicon.ico" rel="preload" as="image" />
 
             {/* Optimize viewport for mobile */}
             <meta content="#000000" name="theme-color" />

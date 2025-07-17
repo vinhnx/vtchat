@@ -1,46 +1,32 @@
 "use client";
 
-import { Footer, InlineLoader, Thread } from "@repo/common/components";
-import { useSession } from "@repo/shared/lib/auth-client";
-import dynamic from "next/dynamic";
+// This page needs dynamic rendering due to real-time chat functionality
+export const dynamic = "force-dynamic";
 
-// Dynamically import ChatInput to avoid SSR issues
-const ChatInput = dynamic(
-    () =>
-        import("@repo/common/components").then((mod) => ({
-            default: mod.ChatInput,
-        })),
-    {
-        ssr: false,
-        loading: () => (
-            <div className="flex h-full items-center justify-center">
-                <InlineLoader />
-            </div>
-        ),
-    },
-);
+import { useSession } from "@repo/shared/lib/auth-client";
+import { ThreadWithSuspense, ChatInputWithSuspense, FooterWithSuspense } from "../components/lazy-components";
 
 export default function HomePage() {
     const { data: session, isPending } = useSession();
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
-            <div className="flex-1 overflow-hidden">
+            <main id="main-content" className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col">
                     <div className="flex-1 overflow-y-auto">
-                        <Thread />
+                        <ThreadWithSuspense />
                     </div>
                 </div>
-            </div>
+            </main>
             <div className="flex-shrink-0">
-                <ChatInput showGreeting={true} />
+                <ChatInputWithSuspense showGreeting={true} />
             </div>
 
             {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
                     <div className="pointer-events-auto">
-                        <Footer />
+                        <FooterWithSuspense />
                     </div>
                 </div>
             )}
