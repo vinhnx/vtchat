@@ -364,9 +364,6 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
         case "subscription.trialing":
             subscriptionStatus = SubscriptionStatusEnum.TRIALING;
             break;
-        case "subscription.active":
-        case "subscription.paid":
-        case "subscription.update":
         default:
             // Use the status from the webhook data, but validate it's a known status
             if (KNOWN_SUBSCRIPTION_STATUSES.includes(data.status as any)) {
