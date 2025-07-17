@@ -369,11 +369,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 const streamStartTime = performance.now();
 
                 let buffer = "";
+                let consecutiveErrors = 0;
 
                 while (true) {
                     try {
                         const { value, done } = await reader.read();
                         if (done) break;
+
+                        // Reset consecutive errors on successful read
+                        consecutiveErrors = 0;
 
                         buffer += decoder.decode(value, { stream: true });
                         const messages = buffer.split("\n\n");
@@ -467,8 +471,31 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                 }
                             }
                         }
-                    } catch (readError) {
-                        log.error({ error: readError }, "Error reading from stream");
+                    } catch (readError: any) {
+                        consecutiveErrors++;
+
+                        // Check if this is a stream closed error or abort error
+                        if (
+                            readError.name === "AbortError" ||
+                            readError.message?.includes("stream") ||
+                            readError.message?.includes("closed") ||
+                            readError.message?.includes("cancelled")
+                        ) {
+                            log.info("Stream was closed or aborted, ending read loop");
+                            break;
+                        }
+
+                        // If we've had too many consecutive errors, break the loop
+                        if (consecutiveErrors > 3) {
+                            log.error("Too many consecutive stream read errors, breaking loop");
+                            break;
+                        }
+
+                        // For other errors, log and retry with backoff
+                        log.error(
+                            { error: readError, consecutiveErrors },
+                            "Error reading from stream",
+                        );
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
                 }

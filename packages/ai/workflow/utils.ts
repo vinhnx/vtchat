@@ -8,10 +8,10 @@ import {
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
 import {
+    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
-    type CoreMessage,
     type ToolSet,
 } from "ai";
 import type { ZodSchema } from "zod";
@@ -463,8 +463,6 @@ export const generateTextWithGeminiSearch = async ({
         log.error("Error in generateTextWithGeminiSearch:", { data: error });
 
         // Use centralized error message service for better user feedback
-        const { generateErrorMessage } = await import("../services/error-messages");
-
         const errorContext = {
             provider: "google" as any,
             model: model.toString(),
@@ -474,7 +472,7 @@ export const generateTextWithGeminiSearch = async ({
             originalError: error.message,
         };
 
-        const errorMsg = generateErrorMessage(error, errorContext);
+        const errorMsg = centralizedGenerateErrorMessage(error, errorContext);
         throw new Error(errorMsg.message);
     }
 };
