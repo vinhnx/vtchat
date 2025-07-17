@@ -130,7 +130,7 @@ export function RAGChatbot() {
                 // Use centralized error handling service
                 await showError(errorMessage, {
                     // Try to extract context from the error or current state
-                    userId: user?.id,
+                    userId: session?.user?.id,
                     // Add more context if available from the component state
                 });
 
@@ -155,7 +155,7 @@ export function RAGChatbot() {
                 });
             }
         },
-        [showError, toast, user?.id],
+        [showError, toast, session?.user?.id],
     );
 
     const allApiKeys = getAllKeys();

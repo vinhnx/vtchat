@@ -3,7 +3,7 @@
 import { useAdmin } from "@repo/common/hooks";
 import { Button, LoadingSpinner } from "@repo/ui";
 import { motion } from "framer-motion";
-import { Activity, ArrowLeft, Database, Shield, Terminal, Users } from "lucide-react";
+import { Activity, ArrowLeft, Shield, Terminal, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { MinimalErrorPage } from "../../components/minimal-error-page";
@@ -93,14 +93,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 Users
                             </Button>
 
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => router.push("/admin/database-maintenance")}
-                            >
-                                <Database className="h-4 w-4 mr-2" />
-                                Database
-                            </Button>
                             <Button
                                 variant="outline"
                                 size="sm"

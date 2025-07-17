@@ -53,7 +53,6 @@ import React, { useState } from "react";
 import { Combobox } from "./combobox";
 import { PaymentRedirectLoader } from "./payment-redirect-loader";
 import { UserTierBadge } from "./user-tier-badge";
-import { VtPlusUsageMeter } from "./vtplus-usage-meter";
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -175,7 +174,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
             includeThoughts,
         });
     };
-
 
     const handleManageSubscription = async () => {
         try {
@@ -812,15 +810,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     />
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* VT+ Usage Tracking for VT+ Users */}
-                {isVtPlus && (
-                    <Card>
-                        <CardContent className="pt-6">
-                            <VtPlusUsageMeter userId={profile?.auth?.user?.id} />
                         </CardContent>
                     </Card>
                 )}

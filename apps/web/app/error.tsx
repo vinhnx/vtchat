@@ -27,7 +27,7 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
                         Try again
                     </Button>
                     <Button onClick={handleHomeNavigation} variant="outline">
-                        Go home
+                        Back to VT
                     </Button>
                 </div>
             </div>

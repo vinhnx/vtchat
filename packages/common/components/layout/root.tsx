@@ -276,9 +276,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
                             {/* Admin Menu Item */}
                             {isAdmin && (
-                                <DropdownMenuItem
-                                    onClick={() => router.push("/admin/database-maintenance")}
-                                >
+                                <DropdownMenuItem onClick={() => router.push("/admin")}>
                                     <Database className="mr-2" size={16} strokeWidth={2} />
                                     Admin Dashboard
                                 </DropdownMenuItem>

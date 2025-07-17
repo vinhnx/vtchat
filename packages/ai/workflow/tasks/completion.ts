@@ -81,19 +81,23 @@ When users upload documents, you can:
 ${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
 
 ### Data Visualization
-${charts ? `You have access to advanced chart creation tools. Use these tools when users ask for:
+${
+    charts
+        ? `You have access to advanced chart creation tools. Use these tools when users ask for:
 - Data visualization and graphical representations
 - Charts, graphs, and plots (bar charts, line graphs, pie charts, scatter plots)
 - Trend analysis and comparisons
 - Statistical visualizations
 - Any scenario where visual representation would enhance understanding
 
-Always create charts when numerical data would be more effective as a visual representation.` : "You can describe data visualization concepts, but chart creation tools are not currently enabled."}
+Always create charts when numerical data would be more effective as a visual representation.`
+        : "You can describe data visualization concepts, but chart creation tools are not currently enabled."
+}
 
 ### Web Search & Real-Time Information
 ${
-            webSearch && supportsOpenAISearch
-                ? `
+    webSearch && supportsOpenAISearch
+        ? `
 🌐 IMPORTANT: You have access to real-time web search capabilities. ALWAYS use web search tools when users ask about:
 
 **Current & Time-Sensitive Information:**
@@ -120,8 +124,8 @@ ${
 - "What is happening in [location] right now?"
 
 **Critical Rule:** Do NOT answer these types of questions without using web search first, even if you think you know the answer. Always verify current information with web search.`
-                : "Web search capabilities are not currently enabled for this session."
-        }
+        : "Web search capabilities are not currently enabled for this session."
+}
 
 ## Response Guidelines
 

@@ -9,8 +9,6 @@ import { db } from "../lib/database";
 import { embeddings } from "../lib/database/schema";
 import { containsPII, secureContentForEmbedding } from "../lib/utils/content-security";
 
-
-
 async function obfuscateExistingEmbeddings() {
     try {
         // Get all embeddings that might need obfuscation
