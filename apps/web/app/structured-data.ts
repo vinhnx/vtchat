@@ -7,7 +7,7 @@ export const organizationSchema: WithContext<Organization> = {
     "@type": "Organization",
     name: "VT",
     url: baseUrl,
-    logo: `${baseUrl}/og-image-v2.jpg`,
+    logo: `${baseUrl}/og-image-v3.jpg`,
     description: "Privacy-first AI chat application with advanced AI capabilities",
     foundingDate: "2025",
     contactPoint: {

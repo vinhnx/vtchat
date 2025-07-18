@@ -16,7 +16,7 @@ export function generateMetadata({
     description = "Minimal AI chat application.",
     pathname = "",
     keywords,
-    image = "/og-image-v2.jpg",
+    image = "/og-image-v3.jpg",
     noIndex = false,
 }: MetadataConfig = {}): Metadata {
     const canonicalUrl = `${BASE_URL}${pathname}`;
@@ -24,7 +24,7 @@ export function generateMetadata({
 
     // Use current timestamp for fresh cache busting
     // File Renaming Strategy:
-    // example: og-image-v2.jpg  // New file when image changes
+    // example: og-image-v3.jpg  // New file when image changes
     const imageVersion = Date.now().toString(); // Current timestamp for cache busting
 
     return {
@@ -56,7 +56,7 @@ export function generateMetadata({
             card: "summary_large_image",
             title: fullTitle,
             description,
-            images: [`${BASE_URL}/twitter-image-v2.jpg`],
+            images: [`${BASE_URL}/twitter-image-v3.jpg`],
         },
         robots: noIndex ? "noindex,nofollow" : "index,follow",
     };
