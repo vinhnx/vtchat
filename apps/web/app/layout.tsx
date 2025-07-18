@@ -55,7 +55,7 @@ export default function ParentLayout({
                             "@type": "Organization",
                             name: "VT",
                             url: "https://vtchat.io.vn",
-                            logo: "https://vtchat.io.vn/og-image-v3.jpg",
+                            logo: "https://vtchat.io.vn/og-image-v3.jpg?v=5",
                             description:
                                 "Privacy-first AI chat application with advanced AI capabilities",
                             foundingDate: "2025",
