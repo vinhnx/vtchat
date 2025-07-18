@@ -302,7 +302,7 @@ export const modelOptionsByProvider = {
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: "DeepSeek V3 0324 Pro",
+            label: "DeepSeek V3 0324",
             value: ChatMode.DEEPSEEK_V3_0324,
             webSearch: true,
             icon: undefined,
