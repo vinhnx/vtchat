@@ -1,5 +1,5 @@
 // Service Worker for VT Chat - PWA with optimal caching strategy
-const CACHE_VERSION = "3.0.0";
+const CACHE_VERSION = "3.1.0";
 const STATIC_CACHE = `vtchat-static-v${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `vtchat-dynamic-v${CACHE_VERSION}`;
 const IMAGE_CACHE = `vtchat-images-v${CACHE_VERSION}`;
