@@ -106,8 +106,7 @@ const nextConfig = {
             { hostname: "images.anthropic.com" }, // Anthropic images
             { hostname: "api.stability.ai" }, // Stability AI
             { hostname: "cdn.stability.ai" }, // Stability AI CDN
-            { hostname: "images.groq.com" }, // Groq images
-            { hostname: "api.groq.com" }, // Groq API
+
             { hostname: "replicate.delivery" }, // Replicate model outputs
             { hostname: "pbxt.replicate.delivery" }, // Replicate CDN
             { hostname: "cdn.replicate.com" }, // Replicate CDN

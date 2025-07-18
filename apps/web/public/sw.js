@@ -51,8 +51,6 @@ function getCacheStrategy(request) {
         url.hostname.includes("images.anthropic.com") ||
         url.hostname.includes("api.stability.ai") ||
         url.hostname.includes("cdn.stability.ai") ||
-        url.hostname.includes("images.groq.com") ||
-        url.hostname.includes("api.groq.com") ||
         url.hostname.includes("replicate.delivery") ||
         url.hostname.includes("pbxt.replicate.delivery") ||
         url.hostname.includes("cdn.replicate.com") ||
@@ -73,7 +71,6 @@ function getCacheStrategy(request) {
             url.hostname.includes("anthropic.com") ||
             url.hostname.includes("stability.ai") ||
             url.hostname.includes("replicate.") ||
-            url.hostname.includes("groq.com") ||
             url.hostname.includes("cohere.ai") ||
             url.hostname.includes("perplexity.ai") ||
             url.hostname.includes("huggingface.co") ||

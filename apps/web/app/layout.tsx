@@ -93,6 +93,48 @@ export default function ParentLayout({
                 <PerformanceOptimizations />
                 <AccessibilityHead />
                 <link href="/favicon.ico" rel="icon" sizes="any" />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "Organization",
+                            name: "VT",
+                            url: "https://vtchat.io.vn",
+                            logo: "https://vtchat.io.vn/og-image-v2.jpg",
+                            description:
+                                "Privacy-first AI chat application with advanced AI capabilities",
+                            foundingDate: "2025",
+                            contactPoint: {
+                                "@type": "ContactPoint",
+                                email: "hello@vtchat.io.vn",
+                                contactType: "customer service",
+                            },
+                            sameAs: ["https://github.com/vinhnx/vtchat", "https://x.com/vinhnx"],
+                        }),
+                    }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "WebSite",
+                            name: "VT",
+                            url: "https://vtchat.io.vn",
+                            description:
+                                "Privacy-first AI chat application with advanced AI capabilities",
+                            potentialAction: {
+                                "@type": "SearchAction",
+                                target: {
+                                    "@type": "EntryPoint",
+                                    urlTemplate: "https://vtchat.io.vn/chat?q={search_term_string}",
+                                },
+                                "query-input": "required name=search_term_string",
+                            },
+                        }),
+                    }}
+                />
             </head>
             <body className="bg-background text-foreground antialiased">
                 <GatedThemeProvider
