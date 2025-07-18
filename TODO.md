@@ -5,6 +5,60 @@
 ok go-> https://vtchat.io.vn/
 
 --
+verification: {
+
+        // Add your verification codes here when you get them
+
+        // google: "your-google-verification-code",
+
+        // yandex: "your-yandex-verification-code",
+
+        // yahoo: "your-yahoo-verification-code",
+
+    }, what is thsi
+
+Kiro
+This is a Google Search Console verification section in your metadata configuration. It's currently commented out and serves as a placeholder for when you want to verify your website ownership with various search engines.
+
+What These Verification Codes Do:
+Google Search Console Verification
+verification: {
+  google: "your-actual-verification-code-here"
+}
+Proves you own the website to Google
+Enables access to Google Search Console features
+Allows you to submit sitemaps, request indexing, see search performance
+Other Search Engine Verifications
+Yandex: Russian search engine verification
+Yahoo: Yahoo search verification (less commonly used now)
+How to Get Your Google Verification Code:
+Go to Google Search Console: https://search.google.com/search-console
+Add your property: https://vtchat.io.vn
+Choose "HTML tag" verification method
+Copy the verification code from the meta tag they provide
+Add it to your metadata
+Example Implementation:
+Once you get your code from Google, update the file:
+
+// In apps/web/app/page-metadata.ts
+verification: {
+  google: "abc123def456ghi789", // Your actual code from Google
+  // yandex: "your-yandex-verification-code",
+  // yahoo: "your-yahoo-verification-code",
+},
+Why This Helps Your SEO Issues:
+Proves ownership to Google Search Console
+Enables sitemap submission (critical for your indexing issues)
+Allows manual indexing requests for your important pages
+Provides search performance data and indexing status
+Next Steps for Your SEO Fix:
+Set up Google Search Console with this verification
+Submit your sitemap (https://vtchat.io.vn/sitemap.xml)
+Request indexing for your main pages
+Monitor the "Crawled - currently not indexed" issues
+This verification step is essential for resolving your Google Search Console indexing problems!
+
+--
 
 https://ship-25-agents-workshop.vercel.app/docs
 
