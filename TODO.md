@@ -4,6 +4,10 @@
 
 ok go-> https://vtchat.io.vn/
 
+
+--
+
+https://developer.chrome.com/docs/lighthouse/seo/is-crawlable/
 --
 verification: {
 
