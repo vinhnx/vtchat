@@ -43,7 +43,7 @@ export const defaultMetadata: Metadata = {
             "Privacy-first AI chat with all premium models free (BYOK). Advanced AI capabilities for everyone.",
         images: [
             {
-                url: `${baseUrl}/og-image-v3.jpg?v=4`,
+                url: `${baseUrl}/og-image-v3.jpg?v=5`,
                 width: 1200,
                 height: 630,
                 alt: "VT - Privacy-First AI Chat",
@@ -56,7 +56,7 @@ export const defaultMetadata: Metadata = {
         title: "VT - Privacy-First AI Chat",
         description:
             "Privacy-first AI chat with all premium models free (BYOK). Advanced AI capabilities for everyone.",
-        images: [`${baseUrl}/twitter-image-v3.jpg?v=4`],
+        images: [`${baseUrl}/twitter-image-v3.jpg?v=5`],
         creator: "@vinhnx",
         site: "@vinhnx",
     },
