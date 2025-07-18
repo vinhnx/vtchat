@@ -125,7 +125,7 @@ function AboutContent() {
                                 </li>
                                 <li>
                                     <strong>Premium AI Models (Free with BYOK):</strong> ALL premium
-                                    models including Claude 4, GPT-4.1, O3 series, O1 series, Gemini
+                                    models including Claude 4, GPT-4.1, o3 series, o1 series, Gemini
                                     2.5 Pro, DeepSeek R1, Grok 3 - available to all logged-in users
                                     with their own API keys
                                 </li>
