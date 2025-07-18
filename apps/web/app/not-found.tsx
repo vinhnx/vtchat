@@ -3,7 +3,14 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
     title: "404 - Page Not Found | VT",
-    description: "The page you're looking for doesn't exist.",
+    description:
+        "The page you're looking for doesn't exist. Return to VT to continue chatting with AI.",
+    robots: {
+        index: false,
+        follow: false,
+        noarchive: true,
+        nosnippet: true,
+    },
 };
 
 export default function NotFound() {

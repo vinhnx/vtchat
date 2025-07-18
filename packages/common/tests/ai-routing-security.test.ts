@@ -10,7 +10,7 @@ describe("AI Routing Security Tests", () => {
                 OPENAI_API_KEY: "openai-key",
                 GEMINI_API_KEY: "gemini-key",
                 XAI_API_KEY: "xai-key",
-                GROQ_API_KEY: "groq-key",
+
                 DEEPSEEK_API_KEY: "deepseek-key",
                 FIREWORKS_API_KEY: "fireworks-key",
                 SERP_API_KEY: "serp-key",
@@ -35,7 +35,7 @@ describe("AI Routing Security Tests", () => {
             expect(result).not.toHaveProperty("OPENAI_API_KEY");
             expect(result).not.toHaveProperty("GEMINI_API_KEY");
             expect(result).not.toHaveProperty("XAI_API_KEY");
-            expect(result).not.toHaveProperty("GROQ_API_KEY");
+
             expect(result).not.toHaveProperty("DEEPSEEK_API_KEY");
             expect(result).not.toHaveProperty("FIREWORKS_API_KEY");
         });

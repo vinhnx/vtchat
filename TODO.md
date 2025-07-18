@@ -13,6 +13,32 @@ https://ship-25-agents-workshop.vercel.app/docs
 https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-models
 
 --
+Crawled - currently not indexed
+These pages aren't indexed or served on Google
+
+Validation Failed
+Started: 7/8/25
+Failed: 7/15/25
+Affected pages
+6
+4/18/25
+4/29/255/10/255/21/256/1/256/12/256/23/257/4/257/15/256420
+Examples
+
+URL
+Last crawled
+https://vtchat.io.vn/chat
+Jul 11, 2025
+https://vtchat.io.vn/_next/static/media/9d5a263311222317-s.p.woff2
+Jul 7, 2025
+https://vtchat.io.vn/_next/static/media/e4af272ccee01ff0-s.p.woff2
+Jul 6, 2025
+https://vtchat.io.vn/_next/static/media/5b01f339abf2f1a5.p.woff2
+Jul 5, 2025
+https://vtchat.io.vn/api/health
+Jul 5, 2025
+https://vtchat.io.vn/favicon.ico
+Jul 4, 2025
 
 --
 Automatically migrate to AI SDK 5 with our initial set of codemods.
