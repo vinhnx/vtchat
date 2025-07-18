@@ -6,6 +6,9 @@ ok go-> https://vtchat.io.vn/
 
 
 --
+https://natiakourdadze.substack.com/p/how-to-find-the-first-100-users-for-2de
+
+--
 
 https://developer.chrome.com/docs/lighthouse/seo/is-crawlable/
 --
