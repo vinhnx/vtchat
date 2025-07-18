@@ -23,55 +23,9 @@ import { ReactScan } from "../components/react-scan";
 import "@repo/ui/src/styles.css";
 import { AccessibilityHead } from "../components/accessibility-improvements";
 import "./globals.css";
+import { defaultMetadata } from "./page-metadata";
 
-export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://vtchat.io.vn"),
-    title: "VT",
-    description: "Minimal AI chat application.",
-    keywords:
-        "agent, ai, chatbot, assistant, openai, multimodal, tool-use, llm, llms, function-calling",
-    authors: [{ name: "Vinh Nguyen", url: "https://vinhnx.github.io/" }],
-    creator: "Vinh Nguyen",
-    publisher: "Vinh Nguyen",
-    openGraph: {
-        title: "VT",
-        siteName: "VT",
-        description: "Minimal AI chat application.",
-        url: "https://vtchat.io.vn",
-        type: "website",
-        locale: "en_US",
-        images: [
-            {
-                url: "https://vtchat.io.vn/og-image-v3.jpg",
-                width: 1200,
-                height: 630,
-                alt: "VT Preview",
-            },
-        ],
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "VT",
-        site: "VT",
-        creator: "@vinhnx",
-        description: "Minimal AI chat application.",
-        images: ["https://vtchat.io.vn/twitter-image-v3.jpg"],
-    },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    },
-    alternates: {
-        canonical: "https://vtchat.io.vn",
-    },
-};
+export const metadata: Metadata = defaultMetadata;
 
 export const viewport: Viewport = {
     width: "device-width",
