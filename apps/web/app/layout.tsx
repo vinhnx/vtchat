@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         locale: "en_US",
         images: [
             {
-                url: "https://vtchat.io.vn/og-image-v2.jpg",
+                url: "https://vtchat.io.vn/og-image-v3.jpg",
                 width: 1200,
                 height: 630,
                 alt: "VT Preview",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         site: "VT",
         creator: "@vinhnx",
         description: "Minimal AI chat application.",
-        images: ["https://vtchat.io.vn/twitter-image-v2.jpg"],
+        images: ["https://vtchat.io.vn/twitter-image-v3.jpg"],
     },
     robots: {
         index: true,
@@ -101,7 +101,7 @@ export default function ParentLayout({
                             "@type": "Organization",
                             name: "VT",
                             url: "https://vtchat.io.vn",
-                            logo: "https://vtchat.io.vn/og-image-v2.jpg",
+                            logo: "https://vtchat.io.vn/og-image-v3.jpg",
                             description:
                                 "Privacy-first AI chat application with advanced AI capabilities",
                             foundingDate: "2025",

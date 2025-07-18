@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         type: "website",
         images: [
             {
-                url: "https://vtchat.io.vn/og-image-v2.jpg",
+                url: "https://vtchat.io.vn/og-image-v3.jpg",
                 width: 1200,
                 height: 630,
                 alt: "VT Pricing",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         title: "Pricing - VT",
         description:
             "Most powerful AI features free with BYOK. VT+ adds exclusive research capabilities.",
-        images: ["https://vtchat.io.vn/twitter-image-v2.jpg"],
+        images: ["https://vtchat.io.vn/twitter-image-v3.jpg"],
     },
     robots: {
         index: true,
