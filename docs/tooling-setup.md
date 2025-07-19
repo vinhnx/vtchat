@@ -137,7 +137,7 @@ bun lint
 bun run check
 ```
 
-### Pre-commit Workflow
+### Recommended Development Workflow
 
 1. **Format code**: `bun run biome:format`
 2. **Check linting**: `bun run biome:check`
@@ -222,7 +222,6 @@ bunx @biomejs/biome format src/
 
 ## Future Enhancements
 
-- **Pre-commit hooks**: Husky integration for automatic checks
 - **CI/CD integration**: GitHub Actions for automated quality checks
 - **Custom rules**: Project-specific linting rules
 - **Performance monitoring**: Track tooling performance metrics

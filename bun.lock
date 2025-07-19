@@ -20,7 +20,6 @@
         "creem": "^0.3.37",
         "date-fns": "3.6.0",
         "drizzle-orm": "^0.44.2",
-        "husky": "^9.1.7",
         "isbot": "^5.1.28",
         "legid": "^0.1.3",
         "next": "15.4.1",
@@ -130,7 +129,6 @@
         "@types/react-dom": "^19.1.6",
         "autoprefixer": "^10.4.20",
         "drizzle-kit": "^0.31.4",
-        "husky": "^9.1.4",
         "postcss": "^8.5.3",
         "postcss-load-config": "^6.0.1",
         "postgres": "^3.4.4",
@@ -1912,8 +1910,6 @@
     "https-proxy-agent": ["https-proxy-agent@7.0.6", "", { "dependencies": { "agent-base": "^7.1.2", "debug": "4" } }, "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw=="],
 
     "humanize-ms": ["humanize-ms@1.2.1", "", { "dependencies": { "ms": "^2.0.0" } }, "sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ=="],
-
-    "husky": ["husky@9.1.7", "", { "bin": { "husky": "bin.js" } }, "sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA=="],
 
     "iconv-lite": ["iconv-lite@0.6.3", "", { "dependencies": { "safer-buffer": ">= 2.1.2 < 3.0.0" } }, "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="],
 
