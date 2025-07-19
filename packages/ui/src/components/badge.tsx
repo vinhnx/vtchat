@@ -3,16 +3,16 @@ import type * as React from "react";
 import { cn } from "../lib/utils";
 
 const badgeVariants = cva(
-    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm px-2 py-0.5 font-medium text-[0.7rem] transition-all duration-200",
+    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-xs px-2 py-0.5 font-medium text-[0.7rem] transition-all duration-200",
     {
         variants: {
             variant: {
-                default: "rounded-md bg-tertiary text-foreground shadow-sm hover:shadow-md",
+                default: "rounded-md bg-tertiary text-foreground shadow-xs hover:shadow-md",
                 secondary:
-                    "rounded-full bg-tertiary text-tertiary-foreground shadow-sm hover:shadow-md",
-                tertiary: "rounded-full bg-brand text-brand-foreground shadow-sm hover:shadow-md",
-                brand: "bg-brand text-brand-foreground shadow-sm hover:shadow-md",
-                destructive: "bg-destructive text-destructive-foreground shadow-sm hover:shadow-md",
+                    "rounded-full bg-tertiary text-tertiary-foreground shadow-xs hover:shadow-md",
+                tertiary: "rounded-full bg-brand text-brand-foreground shadow-xs hover:shadow-md",
+                brand: "bg-brand text-brand-foreground shadow-xs hover:shadow-md",
+                destructive: "bg-destructive text-destructive-foreground shadow-xs hover:shadow-md",
                 outline:
                     "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
                 success:

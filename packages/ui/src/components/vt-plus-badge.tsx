@@ -19,7 +19,7 @@ const VTPlusBadge = React.forwardRef<HTMLDivElement, VTPlusBadgeProps>(
 
         const variantClasses = {
             default: "vt-plus-glass text-[#D99A4E] border-[#D99A4E]/30 shadow-lg",
-            minimal: "vt-plus-glass text-[#D99A4E] border-[#D99A4E]/20 shadow-sm",
+            minimal: "vt-plus-glass text-[#D99A4E] border-[#D99A4E]/20 shadow-xs",
         };
 
         return (

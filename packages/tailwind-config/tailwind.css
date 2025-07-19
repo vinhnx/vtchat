@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Content paths for Tailwind v4 */
+@source "../../apps/web/app/**/*.{js,ts,jsx,tsx}";
+@source "../../apps/web/components/**/*.{js,ts,jsx,tsx}";
+@source "../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
+@source "../../packages/common/src/**/*.{js,ts,jsx,tsx}";
+
 /* Tailwind v4 CSS Configuration */
 @theme {
   /* Container configuration */
@@ -49,14 +55,10 @@
   /* Border configuration */
   --border-width: 0.8px;
   
-  /* Border radius */
-  --radius-xs: 0.25rem;
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.625rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.5rem;
+  /* Note: Tailwind v4 generates border-radius utilities automatically, we don't need to override them */
+  
+  /* Custom border radius for specific use cases */
+  --radius-lg: 0.625rem; /* Keep this for shadcn compatibility */
 
   /* Font families */
   --font-family-mono: "SF Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", ui-monospace, monospace;
@@ -106,14 +108,18 @@
   --font-weight-extrabold: 800;
   --font-weight-black: 900;
 
-  /* Box shadows */
-  --shadow-subtle-xs: var(--shadow-subtle-xs);
-  --shadow-subtle-sm: var(--shadow-subtle-sm);
+  /* Note: Tailwind v4 generates shadow utilities automatically, we don't need to override them */
+  
+  /* Custom shadows */
+  --shadow-subtle-xs: rgba(0, 0, 0, 0.04) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  --shadow-subtle-sm: rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 2px 2px -1px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
   --shadow-glow-sm: 0 0 10px rgba(59, 130, 246, 0.3);
   --shadow-glow-md: 0 0 20px rgba(59, 130, 246, 0.4);
   --shadow-glow-lg: 0 0 30px rgba(59, 130, 246, 0.5);
   --shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-premium-lg: 0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  /* Note: Tailwind v4 generates ring utilities automatically, we don't need to override them */
 
   /* Spacing */
   --spacing-18: 4.5rem;
@@ -186,7 +192,7 @@
   100% { transform: translateY(0); opacity: 1; }
 }
 
-/* Typography plugin configuration */
-@plugin "tailwindcss/typography";
+/* Plugin configuration for v4 */
+@plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 @plugin "tailwind-scrollbar-hide";
