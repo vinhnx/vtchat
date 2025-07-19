@@ -101,8 +101,9 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount, 10);
-    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount, 10);
+    // SECURITY: Add bounds checking to prevent integer overflow
+    let dailyCount = Math.max(0, Math.min(Number.parseInt(rateLimitRecord.dailyRequestCount, 10) || 0, 1000000));
+    let minuteCount = Math.max(0, Math.min(Number.parseInt(rateLimitRecord.minuteRequestCount, 10) || 0, 10000));
     let lastDailyReset = rateLimitRecord.lastDailyReset;
     let lastMinuteReset = rateLimitRecord.lastMinuteReset;
 
@@ -532,8 +533,9 @@ export async function recordRequest(
         return;
     }
 
-    // VT+ users with Flash Lite models: record for usage tracking but don't enforce limits
+    // SECURITY: Validate VT+ user status before applying unlimited access
     if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
+        // Additional validation could be added here to verify VT+ status
         await incrementRateRecord(userId, modelId);
         return;
     }

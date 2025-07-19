@@ -170,14 +170,21 @@ function mapCreemProductToPlan(
     return PlanSlug.VT_BASE; // Safe default
 }
 
-// Find user by email from Creem
+// Find user by email from Creem with proper error handling
 async function findUserByCreemData(customerEmail: string): Promise<string | null> {
     try {
-        // Find user by email
+        // SECURITY: Validate email format before database query
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(customerEmail)) {
+            log.error("[Creem Webhook] Invalid email format provided");
+            return null;
+        }
+
+        // Find user by email with explicit column selection
         const userByEmail = await db
-            .select()
+            .select({ id: users.id })
             .from(users)
-            .where(eq(users.email, customerEmail))
+            .where(eq(users.email, customerEmail.toLowerCase().trim()))
             .limit(1);
 
         if (userByEmail.length > 0) {
@@ -459,42 +466,35 @@ export async function POST(request: NextRequest) {
 
         log.info("[Creem Webhook] =================================");
         log.info("[Creem Webhook] Received webhook request at /api/webhook/creem");
-        log.info("[Creem Webhook] Headers:", {
-            headers: Object.fromEntries(request.headers.entries()),
+        log.info("[Creem Webhook] Request metadata:", {
+            bodyLength: body.length,
+            hasSignature: !!request.headers.get("creem-signature"),
+            timestamp: new Date().toISOString(),
         });
-        log.info("[Creem Webhook] Body length:", { bodyLength: body.length });
-        log.info("[Creem Webhook] Raw body:", { body });
+        // SECURITY: Don't log headers or raw body to prevent sensitive data exposure
 
         // Get webhook secret from environment
         const webhookSecret = process.env.CREEM_WEBHOOK_SECRET;
 
-        // In development, we might not have webhook secret configured
-        const isDevelopment = getCurrentEnvironment() === EnvironmentType.DEVELOPMENT;
-
-        if (!(webhookSecret || isDevelopment)) {
+        // SECURITY: Always require webhook secret - no development bypass
+        if (!webhookSecret) {
             log.error("[Creem Webhook] CREEM_WEBHOOK_SECRET not configured");
             return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
         }
 
-        // Verify webhook signature if secret is available and not in development
-        if (webhookSecret && !isDevelopment) {
-            const signature = request.headers.get("creem-signature");
-            if (!signature) {
-                log.error("[Creem Webhook] No creem-signature header found");
-                return NextResponse.json({ error: "Missing signature" }, { status: 401 });
-            }
-
-            if (!verifyWebhookSignature(body, signature, webhookSecret)) {
-                log.error("[Creem Webhook] Invalid webhook signature");
-                return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-            }
-
-            log.info("[Creem Webhook] Signature verified successfully");
-        } else {
-            log.warn(
-                "[Creem Webhook] Running in development mode - skipping signature verification",
-            );
+        // SECURITY: Always verify webhook signature regardless of environment
+        const signature = request.headers.get("creem-signature");
+        if (!signature) {
+            log.error("[Creem Webhook] No creem-signature header found");
+            return NextResponse.json({ error: "Missing signature" }, { status: 401 });
         }
+
+        if (!verifyWebhookSignature(body, signature, webhookSecret)) {
+            log.error("[Creem Webhook] Invalid webhook signature");
+            return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+        }
+
+        log.info("[Creem Webhook] Signature verified successfully");
 
         // Parse webhook event
         let event;
