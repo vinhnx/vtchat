@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 
 const premiumButtonVariants = cva(
-    "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm transition-all duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring-3 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
@@ -13,7 +13,7 @@ const premiumButtonVariants = cva(
                 destructive:
                     "bg-destructive text-destructive-foreground shadow-destructive/25 shadow-lg hover:scale-[1.02] hover:shadow-destructive/30 hover:shadow-xl active:scale-[0.98]",
                 outline:
-                    "border border-input bg-background shadow-sm transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:text-accent-foreground hover:shadow-md",
+                    "border border-input bg-background shadow-xs transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:text-accent-foreground hover:shadow-md",
                 secondary:
                     "bg-secondary text-secondary-foreground shadow-md hover:scale-[1.01] hover:bg-secondary/80 hover:shadow-lg active:scale-[0.99]",
                 ghost: "hover:scale-[1.01] hover:bg-accent hover:text-accent-foreground active:scale-[0.99]",

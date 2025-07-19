@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 
 const inputVariants = cva(
-    "flex h-9 w-full rounded-xl bg-background px-3 text-sm shadow-subtle-xs outline-none transition-colors file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    "flex h-9 w-full rounded-xl bg-background px-3 text-sm shadow-subtle-xs outline-hidden transition-colors file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
     {
         variants: {
             variant: {
@@ -14,7 +14,7 @@ const inputVariants = cva(
                 default: "h-9 px-4 text-sm",
                 sm: "h-9 px-3 text-xs md:text-sm",
             },
-            rounded: {
+            rounded-sm: {
                 default: "rounded-md",
                 lg: "rounded-lg",
                 full: "rounded-full",
@@ -23,7 +23,7 @@ const inputVariants = cva(
         defaultVariants: {
             variant: "default",
             size: "default",
-            rounded: "default",
+            rounded-sm: "default",
         },
     },
 );
@@ -33,11 +33,11 @@ export interface InputProps
         VariantProps<typeof inputVariants> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, variant, size, rounded, ...props }, ref) => {
+    ({ className, type, variant, size, rounded-sm, ...props }, ref) => {
         return (
             <input
                 autoComplete="off"
-                className={cn(inputVariants({ variant, size, rounded, className }))}
+                className={cn(inputVariants({ variant, size, rounded-sm, className }))}
                 ref={ref}
                 type={type}
                 {...props}

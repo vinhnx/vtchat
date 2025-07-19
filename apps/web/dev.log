@@ -1,0 +1,33 @@
+
+> @vtchat/web@1.0.0 dev
+> next dev --turbopack
+
+ ⚠ Port 3000 is in use by process 15
+21
+22
+23, using available port 3001 instead.
+   ▲ Next.js 15.4.1 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://172.20.18.101:3001
+   - Experiments (use with caution):
+     ✓ typedEnv
+     ✓ inlineCss
+     ✓ externalDir
+     · ...
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 3.9s
+ ✓ Ready in 6.3s
+ ⨯ Error: DATABASE_URL environment variable is required
+    at [project]/apps/web/lib/database/index.ts [middleware-edge] (ecmascript) (apps/web/lib/database/index.ts:7:10)
+    at [project]/apps/web/lib/auth-server.ts [middleware-edge] (ecmascript) (apps/web/lib/auth-server.ts:8:0)
+   5 |
+   6 | if (!process.env.DATABASE_URL) {
+>  7 |     throw new Error("DATABASE_URL environment variable is required");
+     |          ^
+   8 | }
+   9 |
+  10 | // Configure Neon for serverless environments with robust error handling
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.5s

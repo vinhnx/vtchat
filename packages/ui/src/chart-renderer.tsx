@@ -243,7 +243,7 @@ export function ChartRenderer(props: ChartProps) {
                                     strokeWidth: 2,
                                     stroke: "var(--color-series1)",
                                 }}
-                                className="drop-shadow-sm"
+                                className="drop-shadow-xs"
                             />
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
@@ -257,7 +257,7 @@ export function ChartRenderer(props: ChartProps) {
                                         strokeWidth: 2,
                                         stroke: "var(--color-series2)",
                                     }}
-                                    className="drop-shadow-sm"
+                                    className="drop-shadow-xs"
                                 />
                             )}
                         </LineChart>
@@ -296,7 +296,7 @@ export function ChartRenderer(props: ChartProps) {
                                 fillOpacity={0.6}
                                 strokeWidth={2}
                                 stackId={props.stacked ? "1" : undefined}
-                                className="drop-shadow-sm"
+                                className="drop-shadow-xs"
                                 activeDot={{
                                     r: 6,
                                     strokeWidth: 2,
@@ -312,7 +312,7 @@ export function ChartRenderer(props: ChartProps) {
                                     fillOpacity={0.6}
                                     strokeWidth={2}
                                     stackId={props.stacked ? "1" : undefined}
-                                    className="drop-shadow-sm"
+                                    className="drop-shadow-xs"
                                     activeDot={{
                                         r: 6,
                                         strokeWidth: 2,
