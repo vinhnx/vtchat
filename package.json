@@ -72,7 +72,7 @@
         "prettier-plugin-tailwindcss": "^0.5.12",
         "tailwindcss": "3.4.17",
         "tsconfig-paths-webpack-plugin": "^4.2.0",
-        "turbo": "latest",
+        "turbo": "^2.5.4",
         "typescript": "^5.8.3",
         "vite-tsconfig-paths": "^5.1.4",
         "vitest": "^3.2.4"
@@ -99,6 +99,7 @@
         "@types/react-dom": "19.1.6",
         "@types/react-window": "^1.8.8",
         "@vercel/functions": "^2.2.0",
+        "ai": "^4.3.19",
         "better-auth": "^1.2.9",
         "better-auth-harmony": "^1.2.5",
         "creem": "^0.3.37",
