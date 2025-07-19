@@ -381,14 +381,12 @@ const sendSlackAlert = async (message: string, severity: 'critical' | 'warning' 
 ### Key Metrics to Track
 
 1. **Performance Metrics**
-
     - Page load times
     - API response times
     - AI model latency
     - Database query performance
 
 2. **Business Metrics**
-
     - Active users
     - Subscription conversions
     - Feature usage

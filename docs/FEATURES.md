@@ -1,6 +1,6 @@
 # VT (VTChat) Features Overview
 
-VT is a production-ready, privacy-focused AI chat application with security and comprehensive AI capabilities. This document provides a complete overview of all features and capabilities.
+VT is a minimal, privacy-focused AI chat application with security and comprehensive AI capabilities. This document provides a complete overview of all features and capabilities.
 
 ## 🤖 AI & Language Models
 
@@ -149,7 +149,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 ### Enterprise Reliability
 
 - **Comprehensive Error Boundaries**: Graceful error handling with proper fallback mechanisms
-- **Health Monitoring**: Production-ready health checks at `/api/health` with 30s intervals
+- **Health Monitoring**: Minimal health checks at `/api/health` with 30s intervals
 - **Automatic Recovery**: Self-healing capabilities with proper service degradation
 - **Production Deployment**: Fly.io configuration with auto-scaling and resource optimization
 
@@ -269,7 +269,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 10/day)                               |
 | **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 5/day)                             |
 | **Personal AI Memory (RAG)**      | ❌                                     | ✅ (AI Assistant with Memory - 2,000/month)                     |
-| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models        |
+| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models         |
 
 ## 🎯 Target Use Cases
 

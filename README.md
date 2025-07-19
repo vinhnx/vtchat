@@ -17,7 +17,7 @@
 
 ## Overview
 
-VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through an extremely generous free tier and a focused premium subscription. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
+VT is a minimal, privacy-focused AI chat application delivering cutting-edge AI capabilities through an extremely generous free tier and a focused premium subscription. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
 
 Live at [https://vtchat.io.vn](https://vtchat.io.vn)
 
@@ -135,7 +135,7 @@ vtchat/
 - **Application Security**: Bot detection for authentication and secure OAuth integration
 - **Payment Processing**: Creem.io integration
 - **Local Storage**: IndexedDB via Dexie.js
-- **Deployment**: Fly.io (production-ready)
+- **Deployment**: Fly.io (minimal)
 
 ### **Development & Build**
 
@@ -254,7 +254,7 @@ The application requires several environment variables for full functionality. R
 
 ## Deployment
 
-VT is production-ready and deployed on Fly.io:
+VT is minimal and deployed on Fly.io:
 
 ### **Production Deployment**
 

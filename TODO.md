@@ -4,6 +4,61 @@
 
 ok go-> https://vtchat.io.vn/
 
+
+--
+
+improve and update missing loading indicator steps for step SideRender. in long process like deep research -> improve ui/ux for loading ui/ux. make it indicate long processing steps visualize thinking chain for tool call
+
+--
+
+
+Grounding Web Search - Steps
+2
+Wrapping up
+
+--
+
+
+https://www.semrush.com/siteaudit/campaign/25538918/review/issues?restrictions=eyJzZWFyY2giOiIiLCJzZXZlcml0eSI6ImFsbCIsImNoZWNrcyI6Im5vbnplcm8ifQ%253D%253D
+
+--
+
+fix seo issues
+Sitemap URL
+Link URL
+Issue Type
+Discovered
+Sortable
+https://vtchat.io.vn/sitemap.xml
+https://vtchat.io.vn/about
+Non-canonical URL
+Jul 18, 2025, 9:19
+New
+https://vtchat.io.vn/sitemap.xml
+https://vtchat.io.vn/help
+Non-canonical URL
+Jul 18, 2025, 9:19
+New
+https://vtchat.io.vn/sitemap.xml
+https://vtchat.io.vn/privacy
+Non-canonical URL
+Jul 18, 2025, 9:19
+New
+https://vtchat.io.vn/sitemap.xml
+https://vtchat.io.vn/docs
+Broken URL
+Jul 18, 2025, 9:19
+New
+https://vtchat.io.vn/sitemap.xml
+https://vtchat.io.vn/terms
+Non-canonical URL
+Jul 18, 2025, 9:19
+New
+
+--
+
+https://prettier.io/blog/2025/06/23/3.6.0 integrate this into with our bun tool chain prettier oxc.
+
 --
 
 https://agents-ui.github.io/agents-kit/

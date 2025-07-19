@@ -1,5 +1,5 @@
-import { log } from "@repo/shared/logger";
-import { useCallback, useState } from "react";
+import { log } from '@repo/shared/logger';
+import { useCallback, useState } from 'react';
 
 type CopiedValue = string | null;
 
@@ -9,9 +9,9 @@ export function useClipboard() {
     const [copiedText, setCopiedText] = useState<CopiedValue>(null);
     const [showCopied, setShowCopied] = useState<boolean>(false);
 
-    const copy: CopyFn = useCallback(async (text) => {
+    const copy: CopyFn = useCallback(async text => {
         if (!navigator?.clipboard) {
-            log.warn("Clipboard not supported");
+            log.warn('Clipboard not supported');
             return false;
         }
         try {
@@ -23,7 +23,7 @@ export function useClipboard() {
             }, 2000);
             return true;
         } catch (error) {
-            log.warn("Copy failed", { data: error });
+            log.warn('Copy failed', { data: error });
             setCopiedText(null);
             return false;
         }

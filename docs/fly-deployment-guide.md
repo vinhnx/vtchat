@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to deploy VT (Bun + Next.js 15 + Turborepo) to Fly.io with production-ready configuration.
+This guide explains how to deploy VT (Bun + Next.js 15 + Turborepo) to Fly.io with minimal configuration.
 
 ## Prerequisites
 

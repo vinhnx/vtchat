@@ -5,16 +5,19 @@ React Scan is a performance monitoring tool that helps identify slow renders and
 ## Quick Start
 
 ### Run with React Scan enabled (from project root)
+
 ```bash
 bun run dev:scan
 ```
 
 ### Run with React Scan enabled (from apps/web)
+
 ```bash
 bun run dev:scan
 ```
 
 ### Manual environment variable
+
 ```bash
 REACT_SCAN_ENABLED=true bun run dev
 ```
@@ -45,6 +48,7 @@ bunx react-scan localhost:3000
 ## Performance Impact
 
 React Scan adds minimal overhead but can affect performance when:
+
 - Logging is enabled (`REACT_SCAN_LOG=true`)
 - Tracking unnecessary renders
 - Many components are rendering simultaneously

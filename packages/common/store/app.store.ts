@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { ModelEnum } from "@repo/ai/models";
-import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from "@repo/shared/config/embedding-models";
-import { log } from "@repo/shared/lib/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
+import { ModelEnum } from '@repo/ai/models';
+import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from '@repo/shared/config/embedding-models';
+import { log } from '@repo/shared/lib/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
 import {
     getDefaultSettingsForPlan,
     mergeWithPlusDefaults,
     type PlusDefaultSettings,
-} from "@repo/shared/utils/plus-defaults";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+} from '@repo/shared/utils/plus-defaults';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 export const SETTING_TABS = {
-    API_KEYS: "api-keys",
-    MCP_TOOLS: "mcp-tools",
-    PERSONALIZATION: "personalization",
-    PROFILE: "profile",
-    USAGE: "usage",
-    USAGE_CREDITS: "usage-credits",
-    PLUS: "plus",
-    REASONING_MODE: "reasoning-mode",
-    ACTIVE_SESSIONS: "active-sessions",
-    TERMS: "terms",
-    PRIVACY: "privacy",
-    CACHE: "cache",
+    API_KEYS: 'api-keys',
+    MCP_TOOLS: 'mcp-tools',
+    PERSONALIZATION: 'personalization',
+    PROFILE: 'profile',
+    USAGE: 'usage',
+    USAGE_CREDITS: 'usage-credits',
+    PLUS: 'plus',
+    REASONING_MODE: 'reasoning-mode',
+    ACTIVE_SESSIONS: 'active-sessions',
+    TERMS: 'terms',
+    PRIVACY: 'privacy',
+    CACHE: 'cache',
 } as const;
 
 type SideDrawerProps = {
@@ -38,7 +38,7 @@ type SideDrawerProps = {
 type State = {
     isSidebarOpen: boolean;
     sidebarAnimationDisabled: boolean;
-    sidebarPlacement: "left" | "right";
+    sidebarPlacement: 'left' | 'right';
     isSourcesOpen: boolean;
     isSettingsOpen: boolean;
     showSignInModal: boolean;
@@ -80,7 +80,7 @@ type Actions = {
     // UI state actions
     setIsSidebarOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setSidebarAnimationDisabled: (disabled: boolean) => void;
-    setSidebarPlacement: (placement: "left" | "right") => void;
+    setSidebarPlacement: (placement: 'left' | 'right') => void;
     setIsSourcesOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     setIsSettingsOpen: (open: boolean) => void;
     setSettingTab: (tab: (typeof SETTING_TABS)[keyof typeof SETTING_TABS]) => void;
@@ -96,12 +96,12 @@ type Actions = {
     setUseMathCalculator: (use: boolean) => void;
     setUseCharts: (use: boolean) => void;
     setShowSuggestions: (show: boolean) => void;
-    setThinkingMode: (mode: Partial<State["thinkingMode"]>) => void;
-    setGeminiCaching: (caching: Partial<State["geminiCaching"]>) => void;
+    setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
+    setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
     setEmbeddingModel: (model: EmbeddingModel) => void;
     setRagChatModel: (model: ModelEnum) => void;
     // Profile settings actions
-    setProfile: (profile: Partial<State["profile"]>) => void;
+    setProfile: (profile: Partial<State['profile']>) => void;
     // Plus user settings actions
     applyPlusDefaults: (plan: PlanSlug, preserveUserChanges?: boolean) => void;
     initializeSettingsForPlan: (plan: PlanSlug) => void;
@@ -115,12 +115,12 @@ type Actions = {
 
 // Helper to initialize sidebar state
 function initializeSidebarState() {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
         return { isOpen: true, animationDisabled: false };
     }
 
     try {
-        const stored = localStorage.getItem("sidebar-state");
+        const stored = localStorage.getItem('sidebar-state');
         if (stored) {
             const parsed = JSON.parse(stored);
             return {
@@ -147,14 +147,14 @@ export const useAppStore = create<State & Actions>()(
                 // Initial state
                 isSidebarOpen: initialSidebarOpen,
                 sidebarAnimationDisabled: animationDisabled,
-                sidebarPlacement: "right",
+                sidebarPlacement: 'right',
                 isSourcesOpen: false,
                 isSettingsOpen: false,
                 settingTab: SETTING_TABS.USAGE_CREDITS,
                 showSignInModal: false,
                 // Default settings - using base plan defaults initially
                 showExamplePrompts: false, // Disable by default for cleaner interface
-                customInstructions: "",
+                customInstructions: '',
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
@@ -164,13 +164,13 @@ export const useAppStore = create<State & Actions>()(
                 embeddingModel: DEFAULT_EMBEDDING_MODEL,
                 ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
                 profile: {
-                    name: "",
-                    workDescription: "",
+                    name: '',
+                    workDescription: '',
                 },
                 sideDrawer: {
                     open: false,
                     badge: undefined,
-                    title: "",
+                    title: '',
                     renderContent: () => null,
                 },
                 portalState: {
@@ -179,57 +179,57 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 // Actions
-                setIsSidebarOpen: (open) => {
-                    const newState = typeof open === "function" ? open(get().isSidebarOpen) : open;
+                setIsSidebarOpen: open => {
+                    const newState = typeof open === 'function' ? open(get().isSidebarOpen) : open;
                     set({ isSidebarOpen: newState });
 
                     // Save to localStorage
                     try {
                         localStorage.setItem(
-                            "sidebar-state",
+                            'sidebar-state',
                             JSON.stringify({
                                 isOpen: newState,
                                 animationDisabled: get().sidebarAnimationDisabled,
-                            }),
+                            })
                         );
                     } catch (error) {
-                        log.warn({ error }, "Failed to save sidebar state");
+                        log.warn({ error }, 'Failed to save sidebar state');
                     }
                 },
 
-                setSidebarAnimationDisabled: (disabled) => {
+                setSidebarAnimationDisabled: disabled => {
                     set({ sidebarAnimationDisabled: disabled });
 
                     // Save to localStorage
                     try {
                         localStorage.setItem(
-                            "sidebar-state",
+                            'sidebar-state',
                             JSON.stringify({
                                 isOpen: get().isSidebarOpen,
                                 animationDisabled: disabled,
-                            }),
+                            })
                         );
                     } catch (error) {
-                        log.warn({ error }, "Failed to save sidebar state");
+                        log.warn({ error }, 'Failed to save sidebar state');
                     }
                 },
 
-                setSidebarPlacement: (placement) => {
+                setSidebarPlacement: placement => {
                     set({ sidebarPlacement: placement });
                 },
 
-                setIsSourcesOpen: (open) => {
-                    const newState = typeof open === "function" ? open(get().isSourcesOpen) : open;
+                setIsSourcesOpen: open => {
+                    const newState = typeof open === 'function' ? open(get().isSourcesOpen) : open;
                     set({ isSourcesOpen: newState });
                 },
 
-                setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
+                setIsSettingsOpen: open => set({ isSettingsOpen: open }),
 
-                setSettingTab: (tab) => set({ settingTab: tab }),
+                setSettingTab: tab => set({ settingTab: tab }),
 
-                setShowSignInModal: (show) => set({ showSignInModal: show }),
+                setShowSignInModal: show => set({ showSignInModal: show }),
 
-                openSideDrawer: (props) => {
+                openSideDrawer: props => {
                     set({
                         sideDrawer: {
                             open: true,
@@ -240,8 +240,8 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
-                updateSideDrawer: (props) => {
-                    set((state) => {
+                updateSideDrawer: props => {
+                    set(state => {
                         Object.assign(state.sideDrawer, props);
                     });
                 },
@@ -251,13 +251,13 @@ export const useAppStore = create<State & Actions>()(
                         sideDrawer: {
                             open: false,
                             badge: undefined,
-                            title: "",
+                            title: '',
                             renderContent: () => null,
                         },
                     });
                 },
 
-                setShowExamplePrompts: (show) => {
+                setShowExamplePrompts: show => {
                     set({ showExamplePrompts: show });
                 },
 
@@ -281,14 +281,14 @@ export const useAppStore = create<State & Actions>()(
                     set({ showSuggestions: show });
                 },
 
-                setThinkingMode: (mode: Partial<State["thinkingMode"]>) => {
-                    set((state) => {
+                setThinkingMode: (mode: Partial<State['thinkingMode']>) => {
+                    set(state => {
                         state.thinkingMode = { ...state.thinkingMode, ...mode };
                     });
                 },
 
-                setGeminiCaching: (caching: Partial<State["geminiCaching"]>) => {
-                    set((state) => {
+                setGeminiCaching: (caching: Partial<State['geminiCaching']>) => {
+                    set(state => {
                         state.geminiCaching = { ...state.geminiCaching, ...caching };
                     });
                 },
@@ -301,14 +301,14 @@ export const useAppStore = create<State & Actions>()(
                     set({ ragChatModel: model });
                 },
 
-                setProfile: (profile: Partial<State["profile"]>) => {
-                    set((state) => {
+                setProfile: (profile: Partial<State['profile']>) => {
+                    set(state => {
                         state.profile = { ...state.profile, ...profile };
                     });
                 },
 
                 applyPlusDefaults: (plan: PlanSlug, preserveUserChanges = true) => {
-                    set((state) => {
+                    set(state => {
                         const currentSettings: PlusDefaultSettings = {
                             thinkingMode: state.thinkingMode,
                             geminiCaching: state.geminiCaching,
@@ -317,7 +317,7 @@ export const useAppStore = create<State & Actions>()(
                         const mergedSettings = mergeWithPlusDefaults(
                             currentSettings,
                             plan,
-                            preserveUserChanges,
+                            preserveUserChanges
                         );
 
                         state.thinkingMode = mergedSettings.thinkingMode;
@@ -327,7 +327,7 @@ export const useAppStore = create<State & Actions>()(
 
                 initializeSettingsForPlan: (plan: PlanSlug) => {
                     const defaults = getDefaultSettingsForPlan(plan);
-                    set((state) => {
+                    set(state => {
                         // Only apply defaults if current settings are still at base defaults
                         const isUsingBaseDefaults = !(
                             state.thinkingMode.enabled || state.geminiCaching.enabled
@@ -341,12 +341,12 @@ export const useAppStore = create<State & Actions>()(
                 },
 
                 resetUserState: () => {
-                    set((state) => {
+                    set(state => {
                         // Reset all user preferences to base plan defaults
                         const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
                         state.showExamplePrompts = false; // Disable by default for cleaner interface
-                        state.customInstructions = "";
+                        state.customInstructions = '';
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
                         state.useCharts = false;
@@ -362,7 +362,7 @@ export const useAppStore = create<State & Actions>()(
                         state.sideDrawer = {
                             open: false,
                             badge: undefined,
-                            title: "",
+                            title: '',
                             renderContent: () => null,
                         };
                         state.portalState = {
@@ -372,11 +372,11 @@ export const useAppStore = create<State & Actions>()(
                     });
                 },
 
-                setPortalState: (state) => {
+                setPortalState: state => {
                     set({ portalState: state });
                 },
 
-                openPortal: (url) => {
+                openPortal: url => {
                     set({
                         portalState: {
                             isOpen: true,
@@ -396,8 +396,8 @@ export const useAppStore = create<State & Actions>()(
             };
         }),
         {
-            name: "vtchat-settings",
-            partialize: (state) => ({
+            name: 'vtchat-settings',
+            partialize: state => ({
                 sidebarPlacement: state.sidebarPlacement,
                 showExamplePrompts: state.showExamplePrompts,
                 customInstructions: state.customInstructions,
@@ -411,6 +411,6 @@ export const useAppStore = create<State & Actions>()(
                 ragChatModel: state.ragChatModel,
                 profile: state.profile,
             }),
-        },
-    ),
+        }
+    )
 );

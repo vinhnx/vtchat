@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useChatStore } from "@repo/common/store";
+import { useChatStore } from '@repo/common/store';
 import {
     Button,
     Dialog,
@@ -10,18 +10,18 @@ import {
     DialogTitle,
     DropdownMenu,
     DropdownMenuTrigger,
-} from "@repo/ui";
-import { ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { chatOptions, modelOptions } from "../../chat-config";
-import { getIconByName } from "../../config/icons";
-import { useChatModeAccess } from "../../hooks/useChatModeAccess";
-import { ChatModeOptions } from "./ChatModeOptions";
+} from '@repo/ui';
+import { ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { chatOptions, modelOptions } from '../../chat-config';
+import { getIconByName } from '../../config/icons';
+import { useChatModeAccess } from '../../hooks/useChatModeAccess';
+import { ChatModeOptions } from './ChatModeOptions';
 
 export function ChatModeButton() {
-    const chatMode = useChatStore((state) => state.chatMode);
-    const setChatMode = useChatStore((state) => state.setChatMode);
+    const chatMode = useChatStore(state => state.chatMode);
+    const setChatMode = useChatStore(state => state.setChatMode);
     const [isChatModeOpen, setIsChatModeOpen] = useState(false);
     const { push } = useRouter();
     const [showGateAlert, setShowGateAlert] = useState<{
@@ -34,12 +34,12 @@ export function ChatModeButton() {
     const { isGated } = useChatModeAccess(chatMode);
 
     const selectedOption =
-        [...chatOptions, ...modelOptions].find((option) => option.value === chatMode) ??
+        [...chatOptions, ...modelOptions].find(option => option.value === chatMode) ??
         modelOptions[0];
 
     // Get the icon for the selected option
     const selectedIcon =
-        selectedOption && "iconName" in selectedOption
+        selectedOption && 'iconName' in selectedOption
             ? getIconByName(selectedOption.iconName as string)
             : selectedOption?.icon;
 
@@ -48,7 +48,7 @@ export function ChatModeButton() {
             setShowGateAlert(gateInfo);
             setIsChatModeOpen(false);
         },
-        [],
+        []
     );
 
     return (
@@ -57,9 +57,9 @@ export function ChatModeButton() {
                 <DropdownMenuTrigger asChild>
                     {isGated ? (
                         <Button
-                            className="opacity-70 border border-muted-foreground/30"
+                            className="border-muted-foreground/30 border opacity-70"
                             size="xs"
-                            variant={"secondary"}
+                            variant={'secondary'}
                         >
                             {selectedIcon}
                             {selectedOption?.label} (VT+)
@@ -67,9 +67,9 @@ export function ChatModeButton() {
                         </Button>
                     ) : (
                         <Button
-                            className="border border-muted-foreground/30"
+                            className="border-muted-foreground/30 border"
                             size="xs"
-                            variant={"secondary"}
+                            variant={'secondary'}
                         >
                             {selectedIcon}
                             {selectedOption?.label}
@@ -87,7 +87,7 @@ export function ChatModeButton() {
             {/* Gated Feature Alert Modal */}
             {showGateAlert && (
                 <Dialog
-                    onOpenChange={(open) => !open && setShowGateAlert(null)}
+                    onOpenChange={open => !open && setShowGateAlert(null)}
                     open={!!showGateAlert}
                 >
                     <DialogContent className="max-w-md">
@@ -107,7 +107,7 @@ export function ChatModeButton() {
                                 </Button>
                                 <Button
                                     onClick={() => {
-                                        push("/pricing");
+                                        push('/pricing');
                                         setShowGateAlert(null);
                                     }}
                                     className="flex-1"

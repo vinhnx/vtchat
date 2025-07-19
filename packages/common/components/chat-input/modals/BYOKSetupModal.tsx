@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { type ApiKeys, useApiKeysStore } from "@repo/common/store";
-import { log } from "@repo/shared/logger";
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input } from "@repo/ui";
-import { useState } from "react";
-import { BYOKIcon } from "../../icons";
-import { getProviderInfo } from "../config/providers";
+import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
+import { log } from '@repo/shared/logger';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input } from '@repo/ui';
+import { useState } from 'react';
+import { BYOKIcon } from '../../icons';
+import { getProviderInfo } from '../config/providers';
 
 interface BYOKSetupModalProps {
     isOpen: boolean;
@@ -22,9 +22,9 @@ export function BYOKSetupModal({
     modelName,
     onApiKeySaved,
 }: BYOKSetupModalProps) {
-    const setApiKey = useApiKeysStore((state) => state.setKey);
-    const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
-    const [apiKeyValue, setApiKeyValue] = useState("");
+    const setApiKey = useApiKeysStore(state => state.setKey);
+    const getAllKeys = useApiKeysStore(state => state.getAllKeys);
+    const [apiKeyValue, setApiKeyValue] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
     const provider = getProviderInfo(requiredApiKey);
@@ -43,23 +43,23 @@ export function BYOKSetupModal({
                 if (savedKeys[requiredApiKey] === apiKeyValue.trim()) {
                     // Key saved successfully
                 } else {
-                    log.error({ requiredApiKey }, "[BYOK Modal] API key verification failed");
+                    log.error({ requiredApiKey }, '[BYOK Modal] API key verification failed');
                 }
             }, 200);
 
-            setApiKeyValue("");
+            setApiKeyValue('');
             onApiKeySaved();
             onClose();
         } catch (error) {
-            log.error({ error }, "Failed to save API key");
-            alert("Failed to save API key. Please try again.");
+            log.error({ error }, 'Failed to save API key');
+            alert('Failed to save API key. Please try again.');
         } finally {
             setIsSaving(false);
         }
     };
 
     const handleClose = () => {
-        setApiKeyValue("");
+        setApiKeyValue('');
         onClose();
     };
 
@@ -89,7 +89,7 @@ export function BYOKSetupModal({
                             <label className="text-sm font-medium">{provider.name} API Key</label>
                             <Input
                                 className="font-sans"
-                                onChange={(e) => setApiKeyValue(e.target.value)}
+                                onChange={e => setApiKeyValue(e.target.value)}
                                 placeholder={provider.placeholder}
                                 type="password"
                                 value={apiKeyValue}
@@ -113,7 +113,7 @@ export function BYOKSetupModal({
                             disabled={!apiKeyValue.trim() || isSaving}
                             onClick={handleSave}
                         >
-                            {isSaving ? "Saving..." : "Save & Continue"}
+                            {isSaving ? 'Saving...' : 'Save & Continue'}
                         </Button>
                     </div>
                 </div>

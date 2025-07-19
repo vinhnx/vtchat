@@ -64,13 +64,11 @@ const getDatabaseName = (userId: string | null): string => {
 **Key Components**:
 
 1. **Thread Authentication Hook** (`packages/common/hooks/use-thread-auth.ts`):
-
     - Monitors user session changes
     - Triggers database switches when user login/logout occurs
     - Provides logging for debugging
 
 2. **Database Management Functions** (`packages/common/store/chat.store.ts`):
-
     - `initializeUserDatabase(userId)`: Sets up user-specific database
     - `switchUserDatabase(userId)`: Switches active database and loads user's threads
     - Graceful error handling and fallback states
@@ -160,22 +158,18 @@ export const useThreadAuth = () => {
 ## Files Modified
 
 1. **`packages/common/hooks/use-logout.ts`**
-
     - Added `clearAllThreads()` call to logout flow
 
 2. **`packages/common/store/chat.store.ts`**
-
     - Implemented user-specific database namespacing
     - Added `switchUserDatabase()` and `initializeUserDatabase()` functions
     - Modified database initialization logic
 
 3. **`packages/common/hooks/use-thread-auth.ts`** (New)
-
     - Created authentication monitoring hook
     - Handles automatic database switching
 
 4. **`packages/common/hooks/index.ts`**
-
     - Exported new `useThreadAuth` hook
 
 5. **`packages/common/context/root.tsx`**

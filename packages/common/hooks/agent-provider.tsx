@@ -120,7 +120,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
             // Extract reasoning from steps if present
             let reasoning = prevItem.reasoningText;
-            let reasoningDetails = prevItem.reasoningText;
 
             if (eventType === "steps" && eventData?.steps) {
                 // Look for reasoning in the steps structure
@@ -128,15 +127,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 if (stepsData[0]?.steps?.reasoningText?.data) {
                     reasoning = stepsData[0].steps.reasoningText.data;
                 }
-                // Look for structured reasoning details
-                if (stepsData[0]?.steps?.reasoningText?.data) {
-                    reasoningDetails = stepsData[0].steps.reasoningText.data;
-                }
             }
 
             // Handle reasoning details from answer events if present
             if (eventType === "answer" && eventData?.answer?.reasoningText) {
-                reasoningDetails = eventData.answer.reasoningText;
+                reasoning = eventData.answer.reasoningText;
             }
 
             const updatedItem: ThreadItem = {
@@ -147,8 +142,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 parentId: parentThreadItemId || prevItem.parentId,
                 id: threadItemId,
                 object: eventData?.object || prevItem.object,
-                reasoningText,
-                reasoningText,
+                reasoningText: reasoning || prevItem.reasoningText,
                 createdAt: prevItem.createdAt || new Date(),
                 updatedAt: new Date(),
                 ...(eventType === "answer"
@@ -464,9 +458,17 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                     log.warn(
                                         {
                                             rawData: dataMatch[1],
-                                            error: jsonError,
+                                            errorMessage:
+                                                jsonError instanceof Error
+                                                    ? jsonError.message
+                                                    : String(jsonError),
+                                            errorName:
+                                                jsonError instanceof Error
+                                                    ? jsonError.name
+                                                    : "Unknown",
+                                            eventType: currentEvent,
                                         },
-                                        "JSON parse error for data",
+                                        "JSON parse error for streaming data",
                                     );
                                 }
                             }

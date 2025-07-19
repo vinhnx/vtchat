@@ -1,6 +1,6 @@
 # Product Overview
 
-VT is a production-ready, privacy-first AI chat application that provides cutting-edge AI capabilities through a generous free tier and focused premium subscription.
+VT is a minimal, privacy-first AI chat application that provides cutting-edge AI capabilities through a generous free tier and focused premium subscription.
 
 ## Core Value Proposition
 
@@ -38,4 +38,4 @@ VT is a production-ready, privacy-first AI chat application that provides cuttin
 
 - **Production URL**: https://vtchat.io.vn
 - **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
-- **Status**: Production-ready with comprehensive monitoring and security
+- **Status**: Minimal with comprehensive monitoring and security

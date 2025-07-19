@@ -76,16 +76,16 @@ skills: { technical: [], soft: [], languages: [] }
 ### Invoice Schema
 
 ```typescript
-invoiceNumber, date, dueDate;
+(invoiceNumber, date, dueDate);
 vendor: {
-    name, address, email, phone;
+    (name, address, email, phone);
 }
 customer: {
-    name, address, email;
+    (name, address, email);
 }
 items: [{ description, quantity, unitPrice, total }];
 totals: {
-    subtotal, tax, total, currency;
+    (subtotal, tax, total, currency);
 }
 ```
 

@@ -2,7 +2,7 @@
 
 ## 🏗️ System Architecture
 
-VT is built as a production-ready, privacy-first AI chat application using a modern monorepo architecture with TypeScript, Next.js 15, React 19.0.0, and comprehensive security integrations.
+VT is built as a minimal, privacy-first AI chat application using a modern monorepo architecture with TypeScript, Next.js 15, React 19.0.0, and comprehensive security integrations.
 
 ## 📂 Monorepo Structure
 
@@ -266,7 +266,7 @@ graph TB
 
 ### Application Monitoring
 
-- **Health Checks**: Production-ready health endpoints
+- **Health Checks**: Minimal health endpoints
 - **Error Tracking**: Comprehensive error boundaries and logging
 - **Performance Metrics**: Real-time performance monitoring
 - **Security Events**: Arcjet security event tracking
@@ -296,4 +296,4 @@ graph TB
 
 ---
 
-This architecture provides a solid foundation for a production-ready, privacy-focused AI chat application with security, performance, and scalability.
+This architecture provides a solid foundation for a minimal, privacy-focused AI chat application with security, performance, and scalability.

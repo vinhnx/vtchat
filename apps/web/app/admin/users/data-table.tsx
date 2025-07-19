@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Button,
@@ -18,7 +18,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@repo/ui";
+} from '@repo/ui';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -31,10 +31,10 @@ import {
     type SortingState,
     useReactTable,
     type VisibilityState,
-} from "@tanstack/react-table";
-import { ChevronDown, Search } from "lucide-react";
-import * as React from "react";
-import { DataTablePagination } from "./data-table-pagination";
+} from '@tanstack/react-table';
+import { ChevronDown, Search } from 'lucide-react';
+import * as React from 'react';
+import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -101,11 +101,11 @@ export function DataTable<TData, TValue>({
             {/* Filters */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
                     <Input
                         placeholder="Search users by name or email..."
                         value={searchValue}
-                        onChange={(e) => onSearchChange(e.target.value)}
+                        onChange={e => onSearchChange(e.target.value)}
                         className="pl-10"
                     />
                 </div>
@@ -141,16 +141,14 @@ export function DataTable<TData, TValue>({
                     <DropdownMenuContent align="end">
                         {table
                             .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
+                            .filter(column => column.getCanHide())
+                            .map(column => {
                                 return (
                                     <DropdownMenuCheckboxItem
                                         key={column.id}
                                         className="capitalize"
                                         checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
+                                        onCheckedChange={value => column.toggleVisibility(!!value)}
                                     >
                                         {column.id}
                                     </DropdownMenuCheckboxItem>
@@ -164,16 +162,16 @@ export function DataTable<TData, TValue>({
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
+                        {table.getHeaderGroups().map(headerGroup => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                                {headerGroup.headers.map(header => {
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
                                                       header.column.columnDef.header,
-                                                      header.getContext(),
+                                                      header.getContext()
                                                   )}
                                         </TableHead>
                                     );
@@ -189,16 +187,16 @@ export function DataTable<TData, TValue>({
                                 </TableCell>
                             </TableRow>
                         ) : table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
+                            table.getRowModel().rows.map(row => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={row.getIsSelected() && 'selected'}
                                 >
-                                    {row.getVisibleCells().map((cell) => (
+                                    {row.getVisibleCells().map(cell => (
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext(),
+                                                cell.getContext()
                                             )}
                                         </TableCell>
                                     ))}
@@ -217,8 +215,8 @@ export function DataTable<TData, TValue>({
 
             {/* Selection and Pagination */}
             <div className="flex items-center justify-between">
-                <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                <div className="text-muted-foreground flex-1 text-sm">
+                    {table.getFilteredSelectedRowModel().rows.length} of{' '}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <DataTablePagination table={table} />

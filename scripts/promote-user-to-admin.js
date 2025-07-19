@@ -5,19 +5,19 @@
  * Usage: bun scripts/promote-user-to-admin.js <user_id>
  */
 
-const { eq } = require("drizzle-orm");
+const { eq } = require('drizzle-orm');
 
 async function promoteUserToAdmin(userId) {
     if (!userId) {
-        console.error("Error: User ID is required");
-        console.log("Usage: bun scripts/promote-user-to-admin.js <user_id>");
+        console.error('Error: User ID is required');
+        console.log('Usage: bun scripts/promote-user-to-admin.js <user_id>');
         process.exit(1);
     }
 
     try {
         // Import database connection and schema
-        const { db } = require("../apps/web/lib/database");
-        const { users } = require("../apps/web/lib/database/schema");
+        const { db } = require('../apps/web/lib/database');
+        const { users } = require('../apps/web/lib/database/schema');
 
         console.log(`Promoting user ${userId} to admin...`);
 
@@ -30,7 +30,7 @@ async function promoteUserToAdmin(userId) {
         }
 
         const user = existingUser[0];
-        console.log(`Found user: ${user.name || "Unknown"} (${user.email})`);
+        console.log(`Found user: ${user.name || 'Unknown'} (${user.email})`);
         console.log(`Current role: ${user.role}`);
         console.log(`Current protected status: ${user.protected}`);
 
@@ -38,7 +38,7 @@ async function promoteUserToAdmin(userId) {
         const result = await db
             .update(users)
             .set({
-                role: "admin",
+                role: 'admin',
                 protected: true,
                 updatedAt: new Date(),
             })
@@ -46,16 +46,16 @@ async function promoteUserToAdmin(userId) {
             .returning();
 
         if (result.length > 0) {
-            console.log("✅ Successfully promoted user to admin!");
-            console.log(`User: ${result[0].name || "Unknown"} (${result[0].email})`);
+            console.log('✅ Successfully promoted user to admin!');
+            console.log(`User: ${result[0].name || 'Unknown'} (${result[0].email})`);
             console.log(`New role: ${result[0].role}`);
             console.log(`Protected: ${result[0].protected}`);
         } else {
-            console.error("❌ Failed to update user");
+            console.error('❌ Failed to update user');
             process.exit(1);
         }
     } catch (error) {
-        console.error("❌ Error promoting user to admin:", error);
+        console.error('❌ Error promoting user to admin:', error);
         process.exit(1);
     }
 }

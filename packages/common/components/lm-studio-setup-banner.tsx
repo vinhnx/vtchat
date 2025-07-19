@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AlertCircle, ExternalLink, Terminal, X } from "lucide-react";
-import { useState } from "react";
+import { AlertCircle, ExternalLink, Terminal, X } from 'lucide-react';
+import { useState } from 'react';
 
 export function LMStudioSetupBanner() {
     const [isVisible, setIsVisible] = useState(true);
@@ -11,22 +11,22 @@ export function LMStudioSetupBanner() {
 
     const steps = [
         {
-            title: "Install LM Studio",
-            description: "Download and install LM Studio from the official website",
-            action: "Download LM Studio",
-            link: "https://lmstudio.ai/",
+            title: 'Install LM Studio',
+            description: 'Download and install LM Studio from the official website',
+            action: 'Download LM Studio',
+            link: 'https://lmstudio.ai/',
             icon: <ExternalLink className="h-4 w-4" />,
         },
         {
-            title: "Start the Server",
-            description: "Open terminal and start LM Studio server with CORS enabled",
-            action: "lms server start --cors",
+            title: 'Start the Server',
+            description: 'Open terminal and start LM Studio server with CORS enabled',
+            action: 'lms server start --cors',
             icon: <Terminal className="h-4 w-4" />,
         },
         {
-            title: "Load a Model",
-            description: "In LM Studio app, download and load any compatible model",
-            action: "Browse & Load Model",
+            title: 'Load a Model',
+            description: 'In LM Studio app, download and load any compatible model',
+            action: 'Browse & Load Model',
             icon: <ExternalLink className="h-4 w-4" />,
         },
     ];
@@ -47,20 +47,20 @@ export function LMStudioSetupBanner() {
                                     key={`lmstudio-step-${i}`}
                                     className={`flex items-center space-x-3 rounded-sm p-2 ${
                                         currentStep === i
-                                            ? "border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800/50"
-                                            : ""
+                                            ? 'border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800/50'
+                                            : ''
                                     }`}
                                 >
                                     <div
                                         className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
                                             currentStep > i
-                                                ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                                                ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
                                                 : currentStep === i
-                                                  ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
-                                                  : "bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
+                                                  ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900'
+                                                  : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
                                         }`}
                                     >
-                                        {currentStep > i ? "✓" : i + 1}
+                                        {currentStep > i ? '✓' : i + 1}
                                     </div>
 
                                     <div className="flex-1">
@@ -83,7 +83,7 @@ export function LMStudioSetupBanner() {
                                             {step.icon}
                                         </a>
                                     ) : (
-                                        <code className="rounded bg-neutral-100 px-2 py-1 text-sm font-mono text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+                                        <code className="rounded bg-neutral-100 px-2 py-1 font-mono text-sm text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
                                             {step.action}
                                         </code>
                                     )}
@@ -127,7 +127,7 @@ export function LMStudioSetupBanner() {
                         </div>
 
                         <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                            <span className="font-medium">Need help?</span>{" "}
+                            <span className="font-medium">Need help?</span>{' '}
                             <a
                                 href="https://github.com/vinhnx/vtchat/blob/main/docs/guides/lm-studio-setup.md"
                                 className="font-medium text-neutral-900 underline hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300"

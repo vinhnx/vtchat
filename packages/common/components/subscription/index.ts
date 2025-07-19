@@ -13,7 +13,7 @@
  */
 
 // Core types and configuration
-export * from "@repo/shared/types/subscription";
+export * from '@repo/shared/types/subscription';
 // Re-export commonly used items for convenience
 export {
     DEFAULT_PLAN,
@@ -21,9 +21,9 @@ export {
     FeatureSlug,
     PLANS,
     PlanSlug,
-} from "@repo/shared/types/subscription";
+} from '@repo/shared/types/subscription';
 // Client-side utilities
-export * from "@repo/shared/utils/subscription";
+export * from '@repo/shared/utils/subscription';
 
 // Utility functions for subscription access control
 export {
@@ -40,4 +40,4 @@ export {
     isFreePlan,
     isPremiumPlan,
     requiresAuth,
-} from "@repo/shared/utils/subscription";
+} from '@repo/shared/utils/subscription';

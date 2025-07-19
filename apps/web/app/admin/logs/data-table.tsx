@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Button,
@@ -18,7 +18,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@repo/ui";
+} from '@repo/ui';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -30,9 +30,9 @@ import {
     type SortingState,
     useReactTable,
     type VisibilityState,
-} from "@tanstack/react-table";
-import { ChevronDown, Search } from "lucide-react";
-import { useState } from "react";
+} from '@tanstack/react-table';
+import { ChevronDown, Search } from 'lucide-react';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
-    const [searchValue, setSearchValue] = useState("");
+    const [searchValue, setSearchValue] = useState('');
 
     const table = useReactTable({
         data,
@@ -93,25 +93,25 @@ export function DataTable<TData, TValue>({
     };
 
     const handleStatusFilter = (value: string) => {
-        onStatusFilter?.(value === "all" ? "" : value);
-        table.getColumn("expiresAt")?.setFilterValue(value === "all" ? undefined : value);
+        onStatusFilter?.(value === 'all' ? '' : value);
+        table.getColumn('expiresAt')?.setFilterValue(value === 'all' ? undefined : value);
     };
 
     const handleImpersonationFilter = (value: string) => {
-        onImpersonationFilter?.(value === "all" ? "" : value);
-        table.getColumn("impersonatedBy")?.setFilterValue(value === "all" ? undefined : value);
+        onImpersonationFilter?.(value === 'all' ? '' : value);
+        table.getColumn('impersonatedBy')?.setFilterValue(value === 'all' ? undefined : value);
     };
 
     return (
         <div className="w-full">
             <div className="flex items-center gap-4 py-4">
                 {/* Search */}
-                <div className="relative flex-1 max-w-sm">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <div className="relative max-w-sm flex-1">
+                    <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
                     <Input
                         placeholder="Search sessions..."
                         value={searchValue}
-                        onChange={(event) => handleSearch(event.target.value)}
+                        onChange={event => handleSearch(event.target.value)}
                         className="pl-10"
                     />
                 </div>
@@ -150,16 +150,14 @@ export function DataTable<TData, TValue>({
                     <DropdownMenuContent align="end">
                         {table
                             .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
+                            .filter(column => column.getCanHide())
+                            .map(column => {
                                 return (
                                     <DropdownMenuCheckboxItem
                                         key={column.id}
                                         className="capitalize"
                                         checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
+                                        onCheckedChange={value => column.toggleVisibility(!!value)}
                                     >
                                         {column.id}
                                     </DropdownMenuCheckboxItem>
@@ -173,16 +171,16 @@ export function DataTable<TData, TValue>({
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
+                        {table.getHeaderGroups().map(headerGroup => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                                {headerGroup.headers.map(header => {
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
                                                       header.column.columnDef.header,
-                                                      header.getContext(),
+                                                      header.getContext()
                                                   )}
                                         </TableHead>
                                     );
@@ -198,16 +196,16 @@ export function DataTable<TData, TValue>({
                                 </TableCell>
                             </TableRow>
                         ) : table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
+                            table.getRowModel().rows.map(row => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={row.getIsSelected() && 'selected'}
                                 >
-                                    {row.getVisibleCells().map((cell) => (
+                                    {row.getVisibleCells().map(cell => (
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext(),
+                                                cell.getContext()
                                             )}
                                         </TableCell>
                                     ))}
@@ -227,12 +225,12 @@ export function DataTable<TData, TValue>({
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
                 <div className="flex items-center justify-between space-x-2 py-4">
-                    <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    <div className="text-muted-foreground flex-1 text-sm">
+                        {table.getFilteredSelectedRowModel().rows.length} of{' '}
                         {table.getFilteredRowModel().rows.length} row(s) selected.
                         <span className="ml-4">
-                            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                            {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+                            Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
+                            {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
                             {pagination.total} sessions
                         </span>
                     </div>

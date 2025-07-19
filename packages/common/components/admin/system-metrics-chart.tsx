@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Card,
@@ -9,9 +9,9 @@ import {
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from "@repo/ui";
-import { Activity, Database, TrendingUp, Zap } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis } from "recharts";
+} from '@repo/ui';
+import { Activity, Database, TrendingUp, Zap } from 'lucide-react';
+import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
 interface SystemMetricsProps {
     totalUsers: number;
@@ -20,57 +20,57 @@ interface SystemMetricsProps {
 
 const chartConfig = {
     performance: {
-        label: "Performance Score",
-        color: "#D9487D",
+        label: 'Performance Score',
+        color: '#D9487D',
     },
     memory: {
-        label: "Memory Usage",
-        color: "#262626",
+        label: 'Memory Usage',
+        color: '#262626',
     },
     cpu: {
-        label: "CPU Usage",
-        color: "#BFB38F",
+        label: 'CPU Usage',
+        color: '#BFB38F',
     },
     users: {
-        label: "Active Users",
-        color: "#D99A4E",
+        label: 'Active Users',
+        color: '#D99A4E',
     },
 } satisfies ChartConfig;
 
 export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
     // Mock real-time system data (in real app, this would come from monitoring APIs)
     const performanceData = [
-        { time: "00:00", performance: 95, memory: 45, cpu: 32 },
-        { time: "04:00", performance: 92, memory: 52, cpu: 28 },
-        { time: "08:00", performance: 89, memory: 68, cpu: 45 },
-        { time: "12:00", performance: 94, memory: 58, cpu: 38 },
-        { time: "16:00", performance: 96, memory: 62, cpu: 42 },
-        { time: "20:00", performance: 93, memory: 55, cpu: 35 },
+        { time: '00:00', performance: 95, memory: 45, cpu: 32 },
+        { time: '04:00', performance: 92, memory: 52, cpu: 28 },
+        { time: '08:00', performance: 89, memory: 68, cpu: 45 },
+        { time: '12:00', performance: 94, memory: 58, cpu: 38 },
+        { time: '16:00', performance: 96, memory: 62, cpu: 42 },
+        { time: '20:00', performance: 93, memory: 55, cpu: 35 },
     ];
 
     const userActivityData = [
-        { hour: "0", users: Math.floor(activeUsers * 0.1) },
-        { hour: "4", users: Math.floor(activeUsers * 0.05) },
-        { hour: "8", users: Math.floor(activeUsers * 0.3) },
-        { hour: "12", users: Math.floor(activeUsers * 0.8) },
-        { hour: "16", users: Math.floor(activeUsers * 0.9) },
-        { hour: "20", users: Math.floor(activeUsers * 0.6) },
+        { hour: '0', users: Math.floor(activeUsers * 0.1) },
+        { hour: '4', users: Math.floor(activeUsers * 0.05) },
+        { hour: '8', users: Math.floor(activeUsers * 0.3) },
+        { hour: '12', users: Math.floor(activeUsers * 0.8) },
+        { hour: '16', users: Math.floor(activeUsers * 0.9) },
+        { hour: '20', users: Math.floor(activeUsers * 0.6) },
     ];
 
     const systemHealthData = [
-        { metric: "Database", value: 98, status: "Healthy", color: "#D9487D" },
-        { metric: "API", value: 96, status: "Healthy", color: "#D99A4E" },
-        { metric: "Memory", value: 78, status: "Good", color: "#BFB38F" },
-        { metric: "Storage", value: 65, status: "Good", color: "#BF4545" },
+        { metric: 'Database', value: 98, status: 'Healthy', color: '#D9487D' },
+        { metric: 'API', value: 96, status: 'Healthy', color: '#D99A4E' },
+        { metric: 'Memory', value: 78, status: 'Good', color: '#BFB38F' },
+        { metric: 'Storage', value: 65, status: 'Good', color: '#BF4545' },
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* System Performance */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Activity className="h-5 w-5 mr-2" />
+                        <Activity className="mr-2 h-5 w-5" />
                         System Performance (24h)
                     </CardTitle>
                 </CardHeader>
@@ -89,7 +89,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                                 dataKey="performance"
                                 stroke="#D9487D"
                                 strokeWidth={2}
-                                dot={{ fill: "#D9487D", strokeWidth: 2, r: 4 }}
+                                dot={{ fill: '#D9487D', strokeWidth: 2, r: 4 }}
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
                         </LineChart>
@@ -101,7 +101,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <TrendingUp className="h-5 w-5 mr-2" />
+                        <TrendingUp className="mr-2 h-5 w-5" />
                         User Activity Today
                     </CardTitle>
                 </CardHeader>
@@ -114,7 +114,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                                 tickLine={false}
                                 tickMargin={10}
                                 axisLine={false}
-                                tickFormatter={(value) => `${value}:00`}
+                                tickFormatter={value => `${value}:00`}
                             />
                             <Area
                                 type="monotone"
@@ -133,7 +133,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Database className="h-5 w-5 mr-2" />
+                        <Database className="mr-2 h-5 w-5" />
                         Resource Usage
                     </CardTitle>
                 </CardHeader>
@@ -171,7 +171,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Zap className="h-5 w-5 mr-2" />
+                        <Zap className="mr-2 h-5 w-5" />
                         System Health
                     </CardTitle>
                 </CardHeader>
@@ -180,7 +180,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                         <div key={index} className="flex items-center justify-between">
                             <span className="text-sm font-medium">{item.metric}</span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-24 bg-muted rounded-full h-2">
+                                <div className="bg-muted h-2 w-24 rounded-full">
                                     <div
                                         className="h-2 rounded-full"
                                         style={{
@@ -189,7 +189,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                                         }}
                                     />
                                 </div>
-                                <span className="text-sm text-muted-foreground">{item.value}%</span>
+                                <span className="text-muted-foreground text-sm">{item.value}%</span>
                             </div>
                         </div>
                     ))}

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
 import {
     getModelFromChatMode,
     supportsReasoning,
     supportsTools,
     supportsWebSearch,
-} from "@repo/ai/models";
-import { useSubscriptionAccess, useVtPlusAccess } from "@repo/common/hooks";
-import { type ApiKeys, useApiKeysStore } from "@repo/common/store";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { FeatureSlug } from "@repo/shared/types/subscription";
+} from '@repo/ai/models';
+import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
+import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
 import {
     Badge,
@@ -20,15 +20,15 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-} from "@repo/ui";
-import { Brain, Globe, Wrench } from "lucide-react";
+} from '@repo/ui';
+import { Brain, Globe, Wrench } from 'lucide-react';
 
-import { useState } from "react";
-import { LoginRequiredDialog } from "../../../login-required-dialog";
-import { chatOptions, modelOptions, modelOptionsByProvider } from "../../chat-config";
-import { getIconByName } from "../../config/icons";
-import { useLoginPrompt } from "../../hooks/useLoginPrompt";
-import { BYOKSetupModal } from "../../modals/BYOKSetupModal";
+import { useState } from 'react';
+import { LoginRequiredDialog } from '../../../login-required-dialog';
+import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
+import { getIconByName } from '../../config/icons';
+import { useLoginPrompt } from '../../hooks/useLoginPrompt';
+import { BYOKSetupModal } from '../../modals/BYOKSetupModal';
 
 interface ChatModeOptionsProps {
     chatMode: ChatMode;
@@ -48,7 +48,7 @@ export function ChatModeOptions({
 }: ChatModeOptionsProps) {
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const apiKeys = useApiKeysStore((state) => state.getAllKeys());
+    const apiKeys = useApiKeysStore(state => state.getAllKeys());
 
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
@@ -117,8 +117,8 @@ export function ChatModeOptions({
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
-        const option = [...chatOptions, ...modelOptions].find((opt) => opt.value === mode);
-        const modelOption = modelOptions.find((opt) => opt.value === mode);
+        const option = [...chatOptions, ...modelOptions].find(opt => opt.value === mode);
+        const modelOption = modelOptions.find(opt => opt.value === mode);
 
         // Check auth requirement - only require login for models that need authentication
         if (config?.isAuthRequired && !isSignedIn) {
@@ -159,7 +159,7 @@ export function ChatModeOptions({
                 setPendingMode({
                     mode,
                     requiredApiKey,
-                    modelName: option?.label || "this model",
+                    modelName: option?.label || 'this model',
                 });
                 setBYOKModalOpen(true);
                 return;
@@ -211,20 +211,20 @@ export function ChatModeOptions({
             >
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map((option) => {
+                    {chatOptions.map(option => {
                         return (
                             <DropdownMenuItem
                                 className={cn(
-                                    "h-auto",
+                                    'h-auto',
                                     option.value === _chatMode &&
-                                        "border-muted-foreground/30 border",
+                                        'border-muted-foreground/30 border'
                                 )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
                             >
                                 <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
                                     <div className="flex flex-col gap-0 pt-1">
-                                        {"iconName" in option
+                                        {'iconName' in option
                                             ? getIconByName(option.iconName as string)
                                             : option.icon}
                                     </div>
@@ -269,13 +269,13 @@ export function ChatModeOptions({
                             <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
                                 {providerName}
                             </DropdownMenuLabel>
-                            {options.map((option) => {
+                            {options.map(option => {
                                 return (
                                     <DropdownMenuItem
                                         className={cn(
-                                            "h-auto pl-4",
+                                            'h-auto pl-4',
                                             option.value === _chatMode &&
-                                                "border-muted-foreground/30 border",
+                                                'border-muted-foreground/30 border'
                                         )}
                                         key={`model-${option.value}`}
                                         onSelect={() => handleDropdownSelect(option.value)}
@@ -296,7 +296,7 @@ export function ChatModeOptions({
                                                 {/* Model capability indicators */}
                                                 {(() => {
                                                     const model = getModelFromChatMode(
-                                                        option.value,
+                                                        option.value
                                                     );
                                                     if (!model) return null;
 

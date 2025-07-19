@@ -136,7 +136,7 @@ All documentation updated to reflect the browser-compatible implementation:
 
 ### 🎯 Next Steps
 
-The structured output feature is **production-ready**. Future enhancements could include:
+The structured output feature is **minimal**. Future enhancements could include:
 
 - Additional document format support (DOCX, TXT)
 - Custom schema definitions

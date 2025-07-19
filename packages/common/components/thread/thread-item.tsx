@@ -22,7 +22,7 @@ import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
 import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
 import { Alert, AlertDescription, cn, useToast } from "@repo/ui";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCheck } from "lucide-react";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
@@ -312,14 +312,44 @@ export const ThreadItem = memo(
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
                                         <div className="mt-4 w-full space-y-4">
-                                            {chartToolResults.map((toolResult) => (
-                                                <ChartComponent
-                                                    chartData={toolResult.output}
-                                                    key={toolResult.toolCallId}
-                                                />
-                                            ))}
+                                            {chartToolResults
+                                                .filter((toolResult) => toolResult.result?.type)
+                                                .map((toolResult) => (
+                                                    <ChartComponent
+                                                        chartData={toolResult.result}
+                                                        key={toolResult.toolCallId}
+                                                    />
+                                                ))}
                                         </div>
                                     )}
+
+                                    {/* Render Math Calculator Results */}
+                                    {Object.values(threadItem?.toolResults || {})
+                                        .filter((result) => isMathTool(result.toolName))
+                                        .map((toolResult) => (
+                                            <div
+                                                key={toolResult.toolCallId}
+                                                className="mt-4 w-full"
+                                            >
+                                                <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                                                            <CheckCheck className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                                        </div>
+                                                        <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                                                            {toolResult.toolName}
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-lg font-mono text-green-900 dark:text-green-100">
+                                                        {typeof toolResult.result === "object" &&
+                                                        toolResult.result !== null &&
+                                                        "result" in toolResult.result
+                                                            ? String(toolResult.result.result)
+                                                            : String(toolResult.result)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
 
                                     {threadItem.documentAttachment && (
                                         <div className="flex justify-start">

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { LoginRequiredDialog, useLoginRequired } from "@repo/common/components";
-import { useChatStore } from "@repo/common/store";
-import { useSession } from "@repo/shared/lib/auth-client";
-import type { Thread } from "@repo/shared/types";
+import { LoginRequiredDialog, useLoginRequired } from '@repo/common/components';
+import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
+import type { Thread } from '@repo/shared/types';
 import {
     Button,
     cn,
@@ -11,11 +11,11 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@repo/ui";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+} from '@repo/ui';
+import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export const HistoryItem = ({
     thread,
@@ -37,15 +37,15 @@ export const HistoryItem = ({
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
-    const deleteThread = useChatStore((state) => state.deleteThread);
-    const switchThread = useChatStore((state) => state.switchThread);
+    const deleteThread = useChatStore(state => state.deleteThread);
+    const switchThread = useChatStore(state => state.switchThread);
     const [openOptions, setOpenOptions] = useState(false);
 
     const containerClasses = cn(
-        "group relative flex w-full flex-row items-center gap-2 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-accent/70",
+        'group relative flex w-full flex-row items-center gap-2 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-accent/70',
         // Removed border for borderless look
-        isActive ? "bg-accent shadow-sm" : "",
-        isPinned && "border-l-2 border-l-amber-400 dark:border-l-amber-500",
+        isActive ? 'bg-accent shadow-sm' : '',
+        isPinned && 'border-l-2 border-l-amber-400 dark:border-l-amber-500'
     );
 
     const handleDeleteConfirm = () => {
@@ -56,7 +56,7 @@ export const HistoryItem = ({
 
         deleteThread(thread.id);
         if (currentThreadId === thread.id) {
-            push("/");
+            push('/');
         }
     };
 
@@ -70,10 +70,10 @@ export const HistoryItem = ({
                 <div className="flex-1 overflow-hidden">
                     <p
                         className={cn(
-                            "w-full truncate text-sm font-medium leading-relaxed transition-colors",
+                            'w-full truncate text-sm font-medium leading-relaxed transition-colors',
                             isActive
-                                ? "text-foreground font-semibold"
-                                : "text-muted-foreground hover:text-foreground",
+                                ? 'text-foreground font-semibold'
+                                : 'text-muted-foreground hover:text-foreground'
                         )}
                     >
                         {thread.title}
@@ -84,11 +84,11 @@ export const HistoryItem = ({
                 <DropdownMenuTrigger asChild>
                     <Button
                         className={cn(
-                            "shrink-0 transition-all duration-200",
-                            "opacity-0 group-hover:opacity-100",
-                            "border-border/30 bg-background/80 hover:bg-accent absolute right-2 border",
+                            'shrink-0 transition-all duration-200',
+                            'opacity-0 group-hover:opacity-100',
+                            'border-border/30 bg-background/80 hover:bg-accent absolute right-2 border'
                         )}
-                        onClick={(e) => {
+                        onClick={e => {
                             e.stopPropagation();
                             setOpenOptions(!openOptions);
                         }} // fixed from icon-xs
@@ -104,7 +104,7 @@ export const HistoryItem = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" side="right">
                     <DropdownMenuItem
-                        onClick={(e) => {
+                        onClick={e => {
                             e.stopPropagation();
                             handleDeleteConfirm();
                         }}
