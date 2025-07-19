@@ -405,7 +405,7 @@ export const getChatModeName = (mode: ChatMode) => {
             return "xAI Grok 4";
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
-            return "OpenRouter DeepSeek V3 0324 Pro";
+            return "OpenRouter DeepSeek V3 0324";
         case ChatMode.DEEPSEEK_R1:
             return "OpenRouter DeepSeek R1";
         case ChatMode.QWEN3_235B_A22B:
