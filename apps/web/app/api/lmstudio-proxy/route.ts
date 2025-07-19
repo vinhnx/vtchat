@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
+            const errorText = await response.text.text.text.text();
             log.error("LM Studio proxy error:", {
                 status: response.status,
                 statusText: response.statusText,

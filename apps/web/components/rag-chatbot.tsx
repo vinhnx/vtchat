@@ -35,7 +35,7 @@ import {
     SheetContent,
     useToast,
 } from "@repo/ui";
-import { useChat } from "ai/react";
+import { useChat } from '@ai-sdk/react';
 import { Database, Eye, Menu, Send, Settings, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -244,7 +244,7 @@ export function RAGChatbot() {
                 }
                 setKnowledgeBase(resources);
             } else {
-                const errorText = await response.text();
+                const errorText = await response.text.text.text.text();
                 const error = new Error(
                     errorText || `HTTP ${response.status}: ${response.statusText}`,
                 );
@@ -288,7 +288,7 @@ export function RAGChatbot() {
                     variant: "success",
                 });
             } else {
-                const errorText = await response.text();
+                const errorText = await response.text.text.text.text();
                 const error = new Error(
                     errorText || `HTTP ${response.status}: Failed to clear knowledge base`,
                 );
@@ -318,7 +318,7 @@ export function RAGChatbot() {
                     variant: "success",
                 });
             } else {
-                const errorText = await response.text();
+                const errorText = await response.text.text.text.text();
                 const error = new Error(
                     errorText || `HTTP ${response.status}: Failed to delete knowledge item`,
                 );

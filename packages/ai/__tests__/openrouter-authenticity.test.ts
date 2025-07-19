@@ -243,7 +243,7 @@ describe("OpenRouter Request Authenticity", () => {
             );
 
             // Verify the response is authentic (not dummy data)
-            expect(result.text).toBe("This is an authentic OpenRouter response from DeepSeek V3.");
+            expect(result.text.text.text.text).toBe("This is an authentic OpenRouter response from DeepSeek V3.");
             expect(result.usage).toBeDefined();
             expect(result.usage.total_tokens).toBe(25);
             expect(result.finishReason).toBe("stop");

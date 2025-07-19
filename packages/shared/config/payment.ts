@@ -307,7 +307,7 @@ export class PaymentService {
                     });
 
                     if (!response.ok) {
-                        const errorText = await response.text();
+                        const errorText = await response.text.text.text.text();
                         throw new CreemApiError(
                             `Creem API error: ${response.status} ${response.statusText} - ${errorText}`,
                             response.status,

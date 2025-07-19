@@ -8,7 +8,7 @@ import {
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
 import {
-    type CoreMessage,
+    type ModelMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
@@ -87,7 +87,7 @@ export const generateTextWithGeminiSearch = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -360,13 +360,13 @@ export const generateTextWithGeminiSearch = async ({
 
                 log.info("Received chunk:", {
                     type: chunk?.type,
-                    hasTextDelta: !!(chunk as any)?.textDelta,
+                    hasText: !!(chunk as any)?.text,
                     chunkKeys: chunk ? Object.keys(chunk) : undefined,
                 });
 
-                if (chunk.type === "text-delta") {
-                    fullText += chunk.textDelta;
-                    onChunk?.(chunk.textDelta, fullText);
+                if (chunk.type === 'text') {
+                    fullText += chunk.text;
+                    onChunk?.(chunk.text, fullText);
                 }
             }
         } catch (error: any) {
@@ -422,8 +422,8 @@ export const generateTextWithGeminiSearch = async ({
         let reasoningDetails: any[] = [];
 
         try {
-            if (streamResult?.reasoning) {
-                reasoning = (await streamResult.reasoning) || "";
+            if (streamResult?.reasoningText) {
+                reasoning = (await streamResult.reasoningText) || "";
                 log.info("Reasoning extracted:", { data: reasoning.length });
             }
         } catch (error) {
@@ -431,8 +431,8 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         try {
-            if (streamResult?.reasoningDetails) {
-                reasoningDetails = (await streamResult.reasoningDetails) || [];
+            if (streamResult?.reasoningText) {
+                reasoningDetails = (await streamResult.reasoningText) || [];
                 log.info("ReasoningDetails extracted:", {
                     data: reasoningDetails.length,
                 });
@@ -445,17 +445,17 @@ export const generateTextWithGeminiSearch = async ({
             text: fullText,
             sources: resolvedSources,
             groundingMetadata,
-            reasoning,
-            reasoningDetails,
+            reasoningText,
+            reasoningText,
         };
 
         log.info("=== generateTextWithGeminiSearch END ===");
         log.info("Returning result:", {
-            textLength: result.text.length,
+            textLength: result.text.text.text.text.length,
             sourcesCount: result.sources.length,
             hasGroundingMetadata: !!result.groundingMetadata,
-            hasReasoning: !!result.reasoning,
-            reasoningDetailsCount: result.reasoningDetails.length,
+            hasReasoning: !!result.reasoningText,
+            reasoningDetailsCount: result.reasoningText.length,
         });
 
         return result;
@@ -500,7 +500,7 @@ export const generateText = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
     onReasoningDetails?: (details: ReasoningDetail[]) => void;
     tools?: ToolSet;
@@ -622,7 +622,7 @@ export const generateText = async ({
                 case "anthropic-reasoning":
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
-                        reasoning: true,
+                        reasoningText: true,
                     };
                     break;
 
@@ -690,13 +690,13 @@ export const generateText = async ({
                 throw new Error("Operation aborted");
             }
 
-            if (chunk.type === "text-delta") {
-                fullText += chunk.textDelta;
-                onChunk?.(chunk.textDelta, fullText);
+            if (chunk.type === 'text') {
+                fullText += chunk.text;
+                onChunk?.(chunk.text, fullText);
             }
             if (chunk.type === "reasoning") {
-                reasoning += chunk.textDelta;
-                onReasoning?.(chunk.textDelta, reasoning);
+                reasoning += chunk.text;
+                onReasoning?.(chunk.text, reasoning);
             }
             if (chunk.type === "tool-call") {
                 onToolCall?.(chunk);
@@ -713,8 +713,8 @@ export const generateText = async ({
 
         // Extract reasoning details if available
         try {
-            if (streamResult?.reasoningDetails) {
-                const reasoningDetails = (await streamResult.reasoningDetails) || [];
+            if (streamResult?.reasoningText) {
+                const reasoningDetails = (await streamResult.reasoningText) || [];
                 if (reasoningDetails.length > 0) {
                     onReasoningDetails?.(reasoningDetails);
                 }
@@ -745,7 +745,7 @@ export const generateObject = async ({
     prompt: string;
     model: ModelEnum;
     schema: ZodSchema;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -856,7 +856,7 @@ export const generateObject = async ({
                 case ReasoningType.ANTHROPIC_REASONING:
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
-                        reasoning: true,
+                        reasoningText: true,
                     };
                     break;
 

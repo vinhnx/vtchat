@@ -27,7 +27,7 @@ export const buildCoreMessagesFromThreadItems = ({
             content.push({
                 type: "file",
                 data: buffer,
-                mimeType: item.documentAttachment.mimeType,
+                mediaType: item.documentAttachment.mimeType,
             });
         }
 
@@ -43,7 +43,7 @@ export const buildCoreMessagesFromThreadItems = ({
                     content.push({
                         type: "file",
                         data: buffer,
-                        mimeType: attachment.contentType,
+                        mediaType: attachment.contentType,
                     });
                 }
             });
@@ -75,7 +75,7 @@ export const buildCoreMessagesFromThreadItems = ({
         currentContent.push({
             type: "file",
             data: buffer,
-            mimeType: documentAttachment.mimeType,
+            mediaType: documentAttachment.mimeType,
         });
     }
 
@@ -91,7 +91,7 @@ export const buildCoreMessagesFromThreadItems = ({
                 currentContent.push({
                     type: "file",
                     data: buffer,
-                    mimeType: attachment.contentType,
+                    mediaType: attachment.contentType,
                 });
             }
         });

@@ -90,7 +90,7 @@ export async function secureFetch<T = any>(
         try {
             data = await response.json();
         } catch {
-            data = (await response.text()) as any;
+            data = (await response.text.text.text.text()) as any;
         }
 
         // SECURITY: Log response without exposing sensitive data

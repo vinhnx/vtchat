@@ -40,7 +40,7 @@ const MIN_CONTENT_LENGTH = 500;
 const readURL = async (url: string): Promise<TReaderResult> => {
     try {
         const response = await fetch(url);
-        const html = await response.text();
+        const html = await response.text.text.text.text();
         const cleanedHtml = cleanHtml(html);
 
         // Use node-html-parser instead of JSDOM
