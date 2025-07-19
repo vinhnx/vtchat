@@ -1,5 +1,5 @@
-import { log } from "../../shared/src/lib/logger";
-import { type ProviderEnumType, Providers } from "../constants/providers";
+import { log } from '../../shared/src/lib/logger';
+import { type ProviderEnumType, Providers } from '../constants/providers';
 
 /**
  * Centralized API key mapping service that standardizes key transformation
@@ -8,25 +8,25 @@ import { type ProviderEnumType, Providers } from "../constants/providers";
 
 // Frontend key names (what the UI sends)
 export const FRONTEND_KEY_NAMES = {
-    OPENAI_API_KEY: "OPENAI_API_KEY",
-    ANTHROPIC_API_KEY: "ANTHROPIC_API_KEY",
-    TOGETHER_API_KEY: "TOGETHER_API_KEY",
-    GEMINI_API_KEY: "GEMINI_API_KEY",
-    FIREWORKS_API_KEY: "FIREWORKS_API_KEY",
-    XAI_API_KEY: "XAI_API_KEY",
-    OPENROUTER_API_KEY: "OPENROUTER_API_KEY",
+    OPENAI_API_KEY: 'OPENAI_API_KEY',
+    ANTHROPIC_API_KEY: 'ANTHROPIC_API_KEY',
+    TOGETHER_API_KEY: 'TOGETHER_API_KEY',
+    GEMINI_API_KEY: 'GEMINI_API_KEY',
+    FIREWORKS_API_KEY: 'FIREWORKS_API_KEY',
+    XAI_API_KEY: 'XAI_API_KEY',
+    OPENROUTER_API_KEY: 'OPENROUTER_API_KEY',
 } as const;
 
 // Provider key mapping (provider -> frontend key name)
 // This is the single source of truth for provider-to-key mappings
 export const PROVIDER_KEY_MAPPING: Record<ProviderEnumType, keyof typeof FRONTEND_KEY_NAMES> = {
-    [Providers.OPENAI]: "OPENAI_API_KEY",
-    [Providers.ANTHROPIC]: "ANTHROPIC_API_KEY",
-    [Providers.TOGETHER]: "TOGETHER_API_KEY",
-    [Providers.GOOGLE]: "GEMINI_API_KEY",
-    [Providers.FIREWORKS]: "FIREWORKS_API_KEY",
-    [Providers.XAI]: "XAI_API_KEY",
-    [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
+    [Providers.OPENAI]: 'OPENAI_API_KEY',
+    [Providers.ANTHROPIC]: 'ANTHROPIC_API_KEY',
+    [Providers.TOGETHER]: 'TOGETHER_API_KEY',
+    [Providers.GOOGLE]: 'GEMINI_API_KEY',
+    [Providers.FIREWORKS]: 'FIREWORKS_API_KEY',
+    [Providers.XAI]: 'XAI_API_KEY',
+    [Providers.OPENROUTER]: 'OPENROUTER_API_KEY',
 } as const;
 
 // API key validation patterns - using bounded quantifiers to prevent ReDoS attacks
@@ -64,10 +64,10 @@ export interface ApiKeyValidationResult {
 // Type guard for API key objects
 export const isValidApiKeyObject = (obj: unknown): obj is Record<string, string> => {
     return (
-        typeof obj === "object" &&
+        typeof obj === 'object' &&
         obj !== null &&
         !Array.isArray(obj) &&
-        Object.values(obj).every((value) => typeof value === "string")
+        Object.values(obj).every(value => typeof value === 'string')
     );
 };
 
@@ -94,7 +94,7 @@ export interface ApiKeyMappingService {
      */
     validateProviderKey(
         provider: ProviderEnumType,
-        keys: Record<string, string>,
+        keys: Record<string, string>
     ): ApiKeyValidationResult;
 
     /**
@@ -121,10 +121,10 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
     mapFrontendToProvider(apiKeys: Record<string, string>): Record<string, string> {
         // Input validation
         if (!isValidApiKeyObject(apiKeys)) {
-            throw new Error("Invalid API keys object provided");
+            throw new Error('Invalid API keys object provided');
         }
 
-        log.info("API key mapping initiated", {
+        log.info('API key mapping initiated', {
             inputCount: Object.keys(apiKeys).length,
             hasKeys: Object.keys(apiKeys).length > 0,
         });
@@ -142,7 +142,7 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
             }
         }
 
-        log.info("API key mapping completed", {
+        log.info('API key mapping completed', {
             outputCount: Object.keys(mappedKeys).length,
             filteredEmptyKeys: filteredCount,
         });
@@ -160,7 +160,7 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
 
     validateProviderKey(
         provider: ProviderEnumType,
-        keys: Record<string, string>,
+        keys: Record<string, string>
     ): ApiKeyValidationResult {
         const expectedKeyName = this.getProviderKeyName(provider);
         const apiKey = keys[expectedKeyName];
@@ -239,7 +239,7 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
             const urlObj = new URL(url);
 
             // Check protocol
-            if (!["http:", "https:"].includes(urlObj.protocol)) {
+            if (!['http:', 'https:'].includes(urlObj.protocol)) {
                 return {
                     isValid: false,
                     provider,
@@ -306,12 +306,12 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
         }
 
         log.info(
-            "Available providers determined",
+            'Available providers determined',
             JSON.stringify({
                 totalProviders: Object.values(Providers).length,
                 availableCount: availableProviders.length,
                 availableProviders,
-            }),
+            })
         );
 
         return availableProviders;
@@ -324,17 +324,17 @@ class ApiKeyMapperImpl implements ApiKeyMappingService {
             case Providers.ANTHROPIC:
                 return "sk-ant-... (starts with 'sk-ant-', followed by 95+ characters)";
             case Providers.TOGETHER:
-                return "64-character hexadecimal string";
+                return '64-character hexadecimal string';
             case Providers.GOOGLE:
-                return "39-character alphanumeric string";
+                return '39-character alphanumeric string';
             case Providers.FIREWORKS:
-                return "32+ character alphanumeric string";
+                return '32+ character alphanumeric string';
             case Providers.XAI:
                 return "xai-... (starts with 'xai-', followed by 32+ characters)";
             case Providers.OPENROUTER:
                 return "sk-or-v1-... (starts with 'sk-or-v1-', followed by 64-character hex)";
             default:
-                return "Valid API key for the provider";
+                return 'Valid API key for the provider';
         }
     }
 }
@@ -351,12 +351,12 @@ export const getProviderKeyName = (provider: ProviderEnumType): string =>
 
 export const validateProviderKey = (
     provider: ProviderEnumType,
-    keys: Record<string, string>,
+    keys: Record<string, string>
 ): ApiKeyValidationResult => apiKeyMapper.validateProviderKey(provider, keys);
 
 export const validateApiKeyFormat = (
     provider: ProviderEnumType,
-    apiKey: string,
+    apiKey: string
 ): ApiKeyValidationResult => apiKeyMapper.validateApiKeyFormat(provider, apiKey);
 
 export const getAvailableProviders = (apiKeys: Record<string, string>): ProviderEnumType[] =>

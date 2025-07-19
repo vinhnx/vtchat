@@ -4,21 +4,21 @@
 
 // Tool feature names (used in chat features, analytics, etc.)
 export const TOOL_FEATURES = {
-    WEB_SEARCH: "webSearch",
-    MATH_CALCULATOR: "mathCalculator",
-    CHARTS: "charts",
+    WEB_SEARCH: 'webSearch',
+    MATH_CALCULATOR: 'mathCalculator',
+    CHARTS: 'charts',
 } as const;
 
 // Feature toggle states
 export const FEATURE_STATES = {
-    ENABLED: "enabled",
-    DISABLED: "disabled",
+    ENABLED: 'enabled',
+    DISABLED: 'disabled',
 } as const;
 
 // Settings actions
 export const SETTINGS_ACTIONS = {
-    SETTINGS_OPENED: "settings_opened",
-    MANAGE_SUBSCRIPTION_ACCESSED: "manage_subscription_accessed",
+    SETTINGS_OPENED: 'settings_opened',
+    MANAGE_SUBSCRIPTION_ACCESSED: 'manage_subscription_accessed',
 } as const;
 
 // Export types for better type safety
@@ -28,40 +28,40 @@ export type SettingsAction = (typeof SETTINGS_ACTIONS)[keyof typeof SETTINGS_ACT
 
 // Analytics events that were hardcoded but couldn't be added to main ANALYTICS_EVENTS due to redaction
 export const ADDITIONAL_ANALYTICS_EVENTS = {
-    API_KEY_ADDED: "ApiKeyAdded",
-    API_KEY_REMOVED: "ApiKeyRemoved",
+    API_KEY_ADDED: 'ApiKeyAdded',
+    API_KEY_REMOVED: 'ApiKeyRemoved',
 } as const;
 
 // Payment event types
 export const PAYMENT_EVENT_TYPES = {
-    PAYMENT_STARTED: "payment_started",
-    PAYMENT_COMPLETED: "payment_completed",
-    PAYMENT_FAILED: "payment_failed",
+    PAYMENT_STARTED: 'payment_started',
+    PAYMENT_COMPLETED: 'payment_completed',
+    PAYMENT_FAILED: 'payment_failed',
 } as const;
 
 // User journey categories
 export const USER_JOURNEY_CATEGORIES = {
-    ONBOARDING: "onboarding",
+    ONBOARDING: 'onboarding',
 } as const;
 
 // Currency constants
 export const CURRENCIES = {
-    USD: "USD",
-    EUR: "EUR",
-    GBP: "GBP",
+    USD: 'USD',
+    EUR: 'EUR',
+    GBP: 'GBP',
 } as const;
 
 // Payment service constants
 export const PAYMENT_SERVICES = {
-    CREEM: "creem",
-    STRIPE: "stripe",
-    PAYPAL: "paypal",
+    CREEM: 'creem',
+    STRIPE: 'stripe',
+    PAYPAL: 'paypal',
 } as const;
 
 // Subscription source constants
 export const SUBSCRIPTION_SOURCES = {
-    CREEM: "creem",
-    NONE: "none",
+    CREEM: 'creem',
+    NONE: 'none',
 } as const;
 
 // Export types for payment events

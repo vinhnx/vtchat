@@ -118,13 +118,10 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        hasUserGeminiKey = !!(
-            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0
-        );
-        hasSystemGeminiKey = !!(
-            (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) ||
-            windowApiKey
-        );
+        hasUserGeminiKey =
+            !!(byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0);
+        hasSystemGeminiKey =
+            !!((typeof process !== "undefined" && process.env?.GEMINI_API_KEY) || windowApiKey);
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;

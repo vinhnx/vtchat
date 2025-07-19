@@ -1,45 +1,45 @@
-"use client";
+'use client';
 
-import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from "@repo/common/components";
-import { log } from "@repo/shared/logger";
-import { cn } from "@repo/ui";
-import { MDXRemote } from "next-mdx-remote";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
-import { serialize } from "next-mdx-remote/serialize";
-import { memo, Suspense, useEffect, useState } from "react";
-import remarkGfm from "remark-gfm";
+import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from '@repo/common/components';
+import { log } from '@repo/shared/logger';
+import { cn } from '@repo/ui';
+import { MDXRemote } from 'next-mdx-remote';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
+import { serialize } from 'next-mdx-remote/serialize';
+import { memo, Suspense, useEffect, useState } from 'react';
+import remarkGfm from 'remark-gfm';
 
 export const markdownStyles = {
-    "animate-fade-in prose prose-base min-w-full": true,
+    'animate-fade-in prose prose-base min-w-full': true,
 
     // Text styles
-    "prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0": true,
-    "prose-headings:text-base prose-headings:font-medium ": true,
-    "prose-h1:text-2xl prose-h1:font-medium ": true,
-    "prose-h2:text-2xl prose-h2:font-medium ": true,
-    "prose-h3:text-lg prose-h3:font-medium ": true,
-    "prose-strong:font-medium prose-th:font-medium": true,
+    'prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0': true,
+    'prose-headings:text-base prose-headings:font-medium ': true,
+    'prose-h1:text-2xl prose-h1:font-medium ': true,
+    'prose-h2:text-2xl prose-h2:font-medium ': true,
+    'prose-h3:text-lg prose-h3:font-medium ': true,
+    'prose-strong:font-medium prose-th:font-medium': true,
 
-    "prose-li:text-muted-foreground prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0": true,
+    'prose-li:text-muted-foreground prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0': true,
 
     // Code styles
-    "prose-code:font-sans prose-code:text-sm prose-code:font-normal": true,
-    "prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5": true,
+    'prose-code:font-sans prose-code:text-sm prose-code:font-normal': true,
+    'prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5': true,
 
     // Table styles
-    "prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background": true,
+    'prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background': true,
 
     // Table header
-    "prose-th:text-sm prose-th:font-medium prose-th:text-muted-foreground prose-th:bg-tertiary prose-th:px-3 prose-th:py-1.5": true,
+    'prose-th:text-sm prose-th:font-medium prose-th:text-muted-foreground prose-th:bg-tertiary prose-th:px-3 prose-th:py-1.5': true,
 
     // Table row
-    "prose-tr:border-border prose-tr:border": true,
+    'prose-tr:border-border prose-tr:border': true,
 
     // Table cell
-    "prose-td:px-3 prose-td:py-2.5": true,
+    'prose-td:px-3 prose-td:py-2.5': true,
 
     // Theme
-    "prose-prosetheme": true,
+    'prose-prosetheme': true,
 };
 
 type MarkdownContentProps = {
@@ -53,10 +53,10 @@ type MarkdownContentProps = {
 export const removeIncompleteTags = (content: string) => {
     // A simpler approach that handles most cases:
     // 1. If the last < doesn't have a matching >, remove from that point onward
-    const lastLessThan = content.lastIndexOf("<");
+    const lastLessThan = content.lastIndexOf('<');
     if (lastLessThan !== -1) {
         const textAfterLastLessThan = content.substring(lastLessThan);
-        if (!textAfterLastLessThan.includes(">")) {
+        if (!textAfterLastLessThan.includes('>')) {
             return content.substring(0, lastLessThan);
         }
     }
@@ -67,15 +67,15 @@ export const removeIncompleteTags = (content: string) => {
 // Function to detect and handle incomplete table markdown with better performance
 export const handleIncompleteTable = (content: string): string => {
     // Check if content contains table markdown
-    if (!content.includes("|")) return content;
+    if (!content.includes('|')) return content;
 
     // Early return for very long content to avoid performance issues
     if (content.length > 10000) {
         // For large content, just check the last 1000 characters
         const lastPart = content.slice(-1000);
-        if (lastPart.includes("|")) {
-            const lines = lastPart.split("\n");
-            const lastTableLine = lines.findLastIndex((line) => line.includes("|"));
+        if (lastPart.includes('|')) {
+            const lines = lastPart.split('\n');
+            const lastTableLine = lines.findLastIndex(line => line.includes('|'));
             if (lastTableLine !== -1 && lastTableLine === lines.length - 1) {
                 // Incomplete table at the end, remove the last table line
                 return content.slice(0, content.lastIndexOf(lines[lastTableLine]));
@@ -84,7 +84,7 @@ export const handleIncompleteTable = (content: string): string => {
         return content;
     }
 
-    const lines = content.split("\n");
+    const lines = content.split('\n');
     let tableStartIndex = -1;
     let tableEndIndex = -1;
     let inTable = false;
@@ -94,7 +94,7 @@ export const handleIncompleteTable = (content: string): string => {
         const line = lines[i].trim();
 
         // Check if line looks like a table row (contains |)
-        if (line.includes("|") && line.length > 0) {
+        if (line.includes('|') && line.length > 0) {
             if (!inTable) {
                 tableStartIndex = i;
                 inTable = true;
@@ -102,7 +102,7 @@ export const handleIncompleteTable = (content: string): string => {
             tableEndIndex = i;
         } else if (inTable && line.length === 0) {
             // Empty line in table is OK
-        } else if (inTable && !line.includes("|")) {
+        } else if (inTable && !line.includes('|')) {
             // Non-table line after table content
             break;
         }
@@ -116,19 +116,19 @@ export const handleIncompleteTable = (content: string): string => {
         if (tableLines.length >= 2) {
             const headerSeparator = tableLines[1];
             const hasValidSeparator =
-                headerSeparator.includes("-") && headerSeparator.includes("|");
+                headerSeparator.includes('-') && headerSeparator.includes('|');
 
             if (!hasValidSeparator) {
                 // Table is incomplete, remove the incomplete table
-                const beforeTable = lines.slice(0, tableStartIndex).join("\n");
-                const afterTable = lines.slice(tableEndIndex + 1).join("\n");
-                return `${beforeTable}${afterTable ? `\n${afterTable}` : ""}`;
+                const beforeTable = lines.slice(0, tableStartIndex).join('\n');
+                const afterTable = lines.slice(tableEndIndex + 1).join('\n');
+                return `${beforeTable}${afterTable ? `\n${afterTable}` : ''}`;
             }
         } else if (tableLines.length === 1) {
             // Only one line of table, likely incomplete
-            const beforeTable = lines.slice(0, tableStartIndex).join("\n");
-            const afterTable = lines.slice(tableEndIndex + 1).join("\n");
-            return `${beforeTable}${afterTable ? `\n${afterTable}` : ""}`;
+            const beforeTable = lines.slice(0, tableStartIndex).join('\n');
+            const afterTable = lines.slice(tableEndIndex + 1).join('\n');
+            return `${beforeTable}${afterTable ? `\n${afterTable}` : ''}`;
         }
     }
 
@@ -139,7 +139,7 @@ export const handleIncompleteTable = (content: string): string => {
 export const normalizeContent = (content: string) => {
     // Replace literal "\n" strings with actual newlines
     // This handles cases where newlines are escaped in the string
-    return content.replace(/\\n/g, "\n");
+    return content.replace(/\\n/g, '\n');
 };
 
 function parseCitationsWithSourceTags(markdown: string): string {
@@ -154,11 +154,11 @@ function parseCitationsWithSourceTags(markdown: string): string {
 
     // This regex and replacement logic needs to be fixed
     const multipleCitationsRegex = /\[(\d+(?:,\s*\d+)+)\]/g;
-    result = result.replace(multipleCitationsRegex, (match) => {
+    result = result.replace(multipleCitationsRegex, match => {
         // Extract all numbers from the citation
         const numbers = match.match(/\d+/g) || [];
         // Create Source tags for each number
-        return numbers.map((num) => `<Source>${num}</Source>`).join(" ");
+        return numbers.map(num => `<Source>${num}</Source>`).join(' ');
     });
 
     return result;
@@ -167,7 +167,7 @@ function parseCitationsWithSourceTags(markdown: string): string {
 export const MarkdownContent = memo(
     ({ content, className, isCompleted, isLast }: MarkdownContentProps) => {
         const [previousContent, setPreviousContent] = useState<string[]>([]);
-        const [currentContent, setCurrentContent] = useState<string>("");
+        const [currentContent, setCurrentContent] = useState<string>('');
 
         useEffect(() => {
             if (!content) return;
@@ -183,13 +183,13 @@ export const MarkdownContent = memo(
                 setPreviousContent([]);
                 setCurrentContent(contentWithCitations);
             } catch (error) {
-                log.error("Error processing content:", { data: error });
+                log.error('Error processing content:', { data: error });
             }
         }, [content, isCompleted]);
 
         if (isCompleted && !isLast) {
             return (
-                <div className={cn("", markdownStyles, className)}>
+                <div className={cn('', markdownStyles, className)}>
                     <ErrorBoundary fallback={<ErrorPlaceholder />}>
                         <MemoizedMdxChunk chunk={currentContent} />
                     </ErrorBoundary>
@@ -198,7 +198,7 @@ export const MarkdownContent = memo(
         }
 
         return (
-            <div className={cn("", markdownStyles, className)}>
+            <div className={cn('', markdownStyles, className)}>
                 {previousContent.length > 0 &&
                     previousContent.map((chunk, index) => (
                         <ErrorBoundary fallback={<ErrorPlaceholder />} key={`prev-${index}`}>
@@ -212,10 +212,10 @@ export const MarkdownContent = memo(
                 )}
             </div>
         );
-    },
+    }
 );
 
-MarkdownContent.displayName = "MarkdownContent";
+MarkdownContent.displayName = 'MarkdownContent';
 
 export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     const [mdx, setMdx] = useState<MDXRemoteSerializeResult | null>(null);
@@ -238,7 +238,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                 });
 
                 const timeoutPromise = new Promise<never>((_, reject) => {
-                    setTimeout(() => reject(new Error("MDX serialization timeout")), 3000); // Reduced from 5000ms to 3000ms
+                    setTimeout(() => reject(new Error('MDX serialization timeout')), 3000); // Reduced from 5000ms to 3000ms
                 });
 
                 const serialized = await Promise.race([serializationPromise, timeoutPromise]);
@@ -247,7 +247,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                     setMdx(serialized);
                 }
             } catch (serializationError) {
-                log.error("Error serializing MDX chunk:", {
+                log.error('Error serializing MDX chunk:', {
                     data: serializationError,
                     chunkLength: chunk.length,
                     chunkPreview: chunk.substring(0, 200),
@@ -265,8 +265,8 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
                         const fallbackTimeoutPromise = new Promise<never>((_, reject) => {
                             setTimeout(
-                                () => reject(new Error("Fallback serialization timeout")),
-                                2000,
+                                () => reject(new Error('Fallback serialization timeout')),
+                                2000
                             );
                         });
 
@@ -276,8 +276,8 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                         ]);
                         setMdx(fallbackSerialized);
                     } catch (fallbackError) {
-                        log.error("Fallback serialization also failed:", { data: fallbackError });
-                        setError("Failed to render content");
+                        log.error('Fallback serialization also failed:', { data: fallbackError });
+                        setError('Failed to render content');
                     }
                 }
             }
@@ -310,4 +310,4 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     );
 });
 
-MemoizedMdxChunk.displayName = "MemoizedMdxChunk";
+MemoizedMdxChunk.displayName = 'MemoizedMdxChunk';

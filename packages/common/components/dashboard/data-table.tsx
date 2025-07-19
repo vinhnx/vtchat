@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Badge,
@@ -22,8 +22,8 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@repo/ui";
-import { ChevronDown, Columns, Plus } from "lucide-react";
+} from '@repo/ui';
+import { ChevronDown, Columns, Plus } from 'lucide-react';
 
 export interface DataTableItem {
     id: number;
@@ -104,7 +104,7 @@ export function DataTable({ data }: { data: DataTableItem[] }) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.map((item) => (
+                            {data.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.header}</TableCell>
                                     <TableCell>

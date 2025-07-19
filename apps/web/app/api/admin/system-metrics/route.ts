@@ -1,8 +1,8 @@
-import { log } from "@repo/shared/lib/logger";
-import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
+import { log } from '@repo/shared/lib/logger';
+import { count, desc, eq, gte, sql, sum } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
 import {
     embeddings,
     feedback,
@@ -11,7 +11,7 @@ import {
     sessions,
     users,
     vtplusUsage,
-} from "@/lib/database/schema";
+} from '@/lib/database/schema';
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user is admin
@@ -27,8 +27,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     try {
@@ -174,13 +174,13 @@ export async function GET(request: NextRequest) {
 
         // Performance Metrics
         const performanceMetrics = {
-            systemUptime: "99.9%", // This would come from monitoring systems
-            avgResponseTime: "245ms", // This would come from APM
+            systemUptime: '99.9%', // This would come from monitoring systems
+            avgResponseTime: '245ms', // This would come from APM
             requestsPerSecond:
                 dailyUsageTrends.length > 0
                     ? Math.round(
                           dailyUsageTrends[dailyUsageTrends.length - 1]?.totalRequests /
-                              (24 * 60 * 60),
+                              (24 * 60 * 60)
                       )
                     : 0,
             errorRate: (errorRate.recentFeedback / Math.max(errorRate.totalFeedback, 1)) * 100,
@@ -199,39 +199,39 @@ export async function GET(request: NextRequest) {
                 totalEmbeddings: totalEmbeddings.count,
                 avgSessionDurationHours: avgSessionDuration[0]?.avgDuration || 0,
             },
-            providerStats: providerStats.map((stat) => ({
+            providerStats: providerStats.map(stat => ({
                 provider: stat.provider,
                 requests: stat.totalRequests,
                 costUsd: stat.totalCostCents
                     ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
+                    : '0.00',
                 uniqueUsers: Number(stat.uniqueUsers),
                 avgCostPerRequest: stat.avgCostPerRequest
                     ? (Number(stat.avgCostPerRequest) / 100).toFixed(4)
-                    : "0.00",
+                    : '0.00',
             })),
-            vtPlusFeatureStats: vtPlusFeatureStats.map((stat) => ({
+            vtPlusFeatureStats: vtPlusFeatureStats.map(stat => ({
                 feature: stat.feature,
                 totalUsage: Number(stat.totalUsage) || 0,
                 uniqueUsers: Number(stat.uniqueUsers) || 0,
                 avgUsagePerUser: Number(stat.avgUsagePerUser) || 0,
             })),
             trends: {
-                dailyUsage: dailyUsageTrends.map((day) => ({
+                dailyUsage: dailyUsageTrends.map(day => ({
                     date: day.date,
                     requests: day.totalRequests,
                     users: Number(day.uniqueUsers),
                     costUsd: day.totalCostCents
                         ? (Number(day.totalCostCents) / 100).toFixed(2)
-                        : "0.00",
+                        : '0.00',
                 })),
-                userGrowth: userGrowthTrends.map((day) => ({
+                userGrowth: userGrowthTrends.map(day => ({
                     date: day.date,
                     newUsers: day.newUsers,
                 })),
             },
             topUsers: {
-                byRequests: topUsersByRequests.map((user) => ({
+                byRequests: topUsersByRequests.map(user => ({
                     userId: user.userId,
                     name: user.userName,
                     email: user.userEmail,
@@ -239,9 +239,9 @@ export async function GET(request: NextRequest) {
                     requests: user.totalRequests,
                     costUsd: user.totalCostCents
                         ? (Number(user.totalCostCents) / 100).toFixed(2)
-                        : "0.00",
+                        : '0.00',
                 })),
-                byResources: resourceStats.map((user) => ({
+                byResources: resourceStats.map(user => ({
                     userId: user.userId,
                     name: user.userName,
                     email: user.userEmail,
@@ -251,18 +251,18 @@ export async function GET(request: NextRequest) {
             financialMetrics: {
                 totalCostUsd: totalCostStats.totalCostCents
                     ? (Number(totalCostStats.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
+                    : '0.00',
                 avgCostPerUser: totalCostStats.avgCostPerUser
                     ? (Number(totalCostStats.avgCostPerUser) / 100).toFixed(2)
-                    : "0.00",
+                    : '0.00',
                 avgCostPerRequest: totalCostStats.avgCostPerRequest
                     ? (Number(totalCostStats.avgCostPerRequest) / 100).toFixed(4)
-                    : "0.00",
+                    : '0.00',
             },
             performanceMetrics,
         });
     } catch (error) {
-        log.error({ error }, "Failed to fetch system metrics");
-        return NextResponse.json({ error: "Failed to fetch system metrics" }, { status: 500 });
+        log.error({ error }, 'Failed to fetch system metrics');
+        return NextResponse.json({ error: 'Failed to fetch system metrics' }, { status: 500 });
     }
 }

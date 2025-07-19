@@ -4,25 +4,25 @@
  * - Footer should only appear after authentication state is loaded
  */
 
-const { test, expect } = require("@playwright/test");
+const { test, expect } = require('@playwright/test');
 
-test.describe("Footer Flash Fix", () => {
-    test("VT+ user should not see footer flash on home page reload", async ({ page }) => {
+test.describe('Footer Flash Fix', () => {
+    test('VT+ user should not see footer flash on home page reload', async ({ page }) => {
         // Mock a VT+ user session
         await page.addInitScript(() => {
             // Mock the session loading state
             window.__TEST_SESSION_LOADING__ = true;
-            window.__TEST_SESSION_DATA__ = { user: { id: "123", planSlug: "vt_plus" } };
+            window.__TEST_SESSION_DATA__ = { user: { id: '123', planSlug: 'vt_plus' } };
 
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
             }, 100); // Simulate async session loading
         });
 
-        await page.goto("/");
+        await page.goto('/');
 
         // Check that footer is not visible initially (while session is loading)
-        const footer = page.locator("footer").first();
+        const footer = page.locator('footer').first();
         await expect(footer).not.toBeVisible();
 
         // Wait for session to load
@@ -32,7 +32,7 @@ test.describe("Footer Flash Fix", () => {
         await expect(footer).not.toBeVisible();
     });
 
-    test("Free user should see footer after session loads", async ({ page }) => {
+    test('Free user should see footer after session loads', async ({ page }) => {
         // Mock a free user (no session)
         await page.addInitScript(() => {
             window.__TEST_SESSION_LOADING__ = true;
@@ -43,10 +43,10 @@ test.describe("Footer Flash Fix", () => {
             }, 100);
         });
 
-        await page.goto("/");
+        await page.goto('/');
 
         // Footer should not be visible initially (while loading)
-        const footer = page.locator("footer").first();
+        const footer = page.locator('footer').first();
         await expect(footer).not.toBeVisible();
 
         // Wait for session to load
@@ -56,21 +56,21 @@ test.describe("Footer Flash Fix", () => {
         await expect(footer).toBeVisible();
     });
 
-    test("Chat footer should not flash for VT+ users", async ({ page }) => {
+    test('Chat footer should not flash for VT+ users', async ({ page }) => {
         // Mock VT+ user
         await page.addInitScript(() => {
             window.__TEST_SESSION_LOADING__ = true;
-            window.__TEST_SESSION_DATA__ = { user: { id: "123", planSlug: "vt_plus" } };
+            window.__TEST_SESSION_DATA__ = { user: { id: '123', planSlug: 'vt_plus' } };
 
             setTimeout(() => {
                 window.__TEST_SESSION_LOADING__ = false;
             }, 100);
         });
 
-        await page.goto("/");
+        await page.goto('/');
 
         // Chat footer should not be visible initially or after session loads
-        const footer = page.locator("footer").first();
+        const footer = page.locator('footer').first();
         await expect(footer).not.toBeVisible();
 
         // Wait for session to load

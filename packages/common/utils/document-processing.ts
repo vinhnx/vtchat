@@ -1,5 +1,5 @@
-import type { ChatMode } from "@repo/shared/config";
-import { isGeminiModel } from "@repo/shared/utils";
+import type { ChatMode } from '@repo/shared/config';
+import { isGeminiModel } from '@repo/shared/utils';
 
 /**
  * Check if a chat mode corresponds to a Gemini model
@@ -19,12 +19,12 @@ export const hasDocumentProcessingToolCalls = (toolCalls?: Record<string, any>):
     if (!toolCalls) return false;
 
     return Object.values(toolCalls).some(
-        (toolCall) =>
+        toolCall =>
             toolCall.toolName &&
-            (toolCall.toolName.includes("document") ||
-                toolCall.toolName.includes("file") ||
-                toolCall.toolName.includes("pdf") ||
-                toolCall.toolName.includes("read")),
+            (toolCall.toolName.includes('document') ||
+                toolCall.toolName.includes('file') ||
+                toolCall.toolName.includes('pdf') ||
+                toolCall.toolName.includes('read'))
     );
 };
 
@@ -35,11 +35,11 @@ export const hasCompletedDocumentProcessing = (toolResults?: Record<string, any>
     if (!toolResults) return false;
 
     return Object.values(toolResults).some(
-        (result) =>
+        result =>
             result.toolName &&
-            (result.toolName.includes("document") ||
-                result.toolName.includes("file") ||
-                result.toolName.includes("pdf") ||
-                result.toolName.includes("read")),
+            (result.toolName.includes('document') ||
+                result.toolName.includes('file') ||
+                result.toolName.includes('pdf') ||
+                result.toolName.includes('read'))
     );
 };

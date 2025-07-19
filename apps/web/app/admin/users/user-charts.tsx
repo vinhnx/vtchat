@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Card,
@@ -9,8 +9,8 @@ import {
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from "@repo/ui";
-import { BarChart3, PieChart as PieIcon, TrendingUp } from "lucide-react";
+} from '@repo/ui';
+import { BarChart3, PieChart as PieIcon, TrendingUp } from 'lucide-react';
 import {
     Area,
     AreaChart,
@@ -22,7 +22,7 @@ import {
     PieChart,
     XAxis,
     YAxis,
-} from "recharts";
+} from 'recharts';
 
 interface UserChartsProps {
     users: any[];
@@ -33,40 +33,40 @@ interface UserChartsProps {
 
 const chartConfig = {
     active: {
-        label: "Active Users",
-        color: "hsl(var(--chart-1))",
+        label: 'Active Users',
+        color: 'hsl(var(--chart-1))',
     },
     banned: {
-        label: "Banned Users",
-        color: "hsl(var(--chart-2))",
+        label: 'Banned Users',
+        color: 'hsl(var(--chart-2))',
     },
     verified: {
-        label: "Verified Users",
-        color: "hsl(var(--chart-3))",
+        label: 'Verified Users',
+        color: 'hsl(var(--chart-3))',
     },
     unverified: {
-        label: "Unverified Users",
-        color: "hsl(var(--chart-4))",
+        label: 'Unverified Users',
+        color: 'hsl(var(--chart-4))',
     },
     vtBase: {
-        label: "VT Base",
-        color: "hsl(var(--chart-1))",
+        label: 'VT Base',
+        color: 'hsl(var(--chart-1))',
     },
     vtPlus: {
-        label: "VT Plus",
-        color: "hsl(var(--chart-2))",
+        label: 'VT Plus',
+        color: 'hsl(var(--chart-2))',
     },
     registrations: {
-        label: "New Registrations",
-        color: "hsl(var(--chart-3))",
+        label: 'New Registrations',
+        color: 'hsl(var(--chart-3))',
     },
 } satisfies ChartConfig;
 
 const COLORS = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
+    'hsl(var(--chart-1))',
+    'hsl(var(--chart-2))',
+    'hsl(var(--chart-3))',
+    'hsl(var(--chart-4))',
 ];
 
 export function UserCharts({
@@ -76,33 +76,33 @@ export function UserCharts({
     registrationTrend,
 }: UserChartsProps) {
     // Process user status data
-    const activeUsers = users.filter((u) => !u.banned).length;
-    const bannedUsers = users.filter((u) => u.banned).length;
-    const verifiedUsers = users.filter((u) => u.emailVerified).length;
-    const unverifiedUsers = users.filter((u) => !u.emailVerified).length;
+    const activeUsers = users.filter(u => !u.banned).length;
+    const bannedUsers = users.filter(u => u.banned).length;
+    const verifiedUsers = users.filter(u => u.emailVerified).length;
+    const unverifiedUsers = users.filter(u => !u.emailVerified).length;
 
     const statusData = [
-        { name: "Active", value: activeUsers, fill: COLORS[0] },
-        { name: "Banned", value: bannedUsers, fill: COLORS[1] },
+        { name: 'Active', value: activeUsers, fill: COLORS[0] },
+        { name: 'Banned', value: bannedUsers, fill: COLORS[1] },
     ];
 
     const verificationData = [
-        { name: "Verified", value: verifiedUsers, fill: COLORS[2] },
-        { name: "Unverified", value: unverifiedUsers, fill: COLORS[3] },
+        { name: 'Verified', value: verifiedUsers, fill: COLORS[2] },
+        { name: 'Unverified', value: unverifiedUsers, fill: COLORS[3] },
     ];
 
     // Process plan distribution data
     const planData = planDistribution.map((item, index) => ({
-        plan: item.plan === "vt_plus" ? "VT Plus" : "VT Base",
+        plan: item.plan === 'vt_plus' ? 'VT Plus' : 'VT Base',
         count: item.count,
         fill: COLORS[index % COLORS.length],
     }));
 
     // Process registration trend data (format dates for display)
-    const trendData = registrationTrend.map((item) => ({
-        date: new Date(item.date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
+    const trendData = registrationTrend.map(item => ({
+        date: new Date(item.date).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
         }),
         count: item.count,
     }));

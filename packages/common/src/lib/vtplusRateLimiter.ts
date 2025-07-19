@@ -1,40 +1,40 @@
-import { db, schema } from "@repo/shared/lib/database";
-import { log } from "@repo/shared/lib/logger";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { db, schema } from '@repo/shared/lib/database';
+import { log } from '@repo/shared/lib/logger';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
     type QuotaWindow,
     VT_PLUS_LIMITS,
     VtPlusFeature,
-} from "../config/vtPlusLimits";
+} from '../config/vtPlusLimits';
 
 /**
  * Rate limiter error messages
  */
 const RateLimiterErrorMessage = {
-    AMOUNT_MUST_BE_POSITIVE: "Amount must be positive",
-    FAILED_TO_CONSUME_QUOTA: "Failed to consume quota",
+    AMOUNT_MUST_BE_POSITIVE: 'Amount must be positive',
+    FAILED_TO_CONSUME_QUOTA: 'Failed to consume quota',
 } as const;
 
 /**
  * Rate limiter log messages
  */
 const RateLimiterLogMessage = {
-    ATTEMPTING_TO_CONSUME: "Attempting to consume VT+ quota",
-    QUOTA_CONSUMED_SUCCESS: "VT+ quota consumed successfully via Drizzle",
-    FAILED_TO_CONSUME: "Failed to consume VT+ quota",
+    ATTEMPTING_TO_CONSUME: 'Attempting to consume VT+ quota',
+    QUOTA_CONSUMED_SUCCESS: 'VT+ quota consumed successfully via Drizzle',
+    FAILED_TO_CONSUME: 'Failed to consume VT+ quota',
 } as const;
 
 /**
  * Type-safe database column constants to prevent typos
  */
 const VtPlusUsageColumns = {
-    USER_ID: "user_id",
-    FEATURE: "feature",
-    PERIOD_START: "period_start",
-    USED: "used",
-    UPDATED_AT: "updated_at",
+    USER_ID: 'user_id',
+    FEATURE: 'feature',
+    PERIOD_START: 'period_start',
+    USED: 'used',
+    UPDATED_AT: 'updated_at',
 } as const;
 
 /**
@@ -44,7 +44,7 @@ async function getCurrentUsage(
     tx: any,
     userId: string,
     feature: VtPlusFeature,
-    periodStart: Date,
+    periodStart: Date
 ): Promise<number> {
     const result = await tx.execute(
         sql`
@@ -52,8 +52,8 @@ async function getCurrentUsage(
             FROM vtplus_usage
             WHERE ${sql.identifier(VtPlusUsageColumns.USER_ID)} = ${userId}
             AND ${sql.identifier(VtPlusUsageColumns.FEATURE)} = ${feature}
-            AND ${sql.identifier(VtPlusUsageColumns.PERIOD_START)} = ${periodStart.toISOString().split("T")[0]}
-        `,
+            AND ${sql.identifier(VtPlusUsageColumns.PERIOD_START)} = ${periodStart.toISOString().split('T')[0]}
+        `
     );
     return (result.rows[0]?.used as number) || 0;
 }
@@ -66,9 +66,9 @@ async function upsertUsage(
     userId: string,
     feature: VtPlusFeature,
     periodStart: Date,
-    amount: number,
+    amount: number
 ): Promise<number> {
-    const periodStartStr = periodStart.toISOString().split("T")[0];
+    const periodStartStr = periodStart.toISOString().split('T')[0];
     const result = await tx.execute(
         sql`
             INSERT INTO vtplus_usage (
@@ -89,7 +89,7 @@ async function upsertUsage(
                 ${sql.identifier(VtPlusUsageColumns.USED)} = vtplus_usage.${sql.identifier(VtPlusUsageColumns.USED)} + ${amount},
                 ${sql.identifier(VtPlusUsageColumns.UPDATED_AT)} = NOW()
             RETURNING ${sql.identifier(VtPlusUsageColumns.USED)};
-        `,
+        `
     );
     return result.rows[0].used as number;
 }
@@ -132,12 +132,12 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
     }
 
     // Check if user is admin - bypass quota restrictions completely
-    const adminUserIds = process.env.ADMIN_USER_IDS?.split(",").map((id) => id.trim()) || [];
+    const adminUserIds = process.env.ADMIN_USER_IDS?.split(',').map(id => id.trim()) || [];
     const isAdmin = adminUserIds.includes(userId);
     if (isAdmin) {
         log.info(
             { userId, feature, amount },
-            "Admin user detected - bypassing quota restrictions completely",
+            'Admin user detected - bypassing quota restrictions completely'
         );
         return; // Admin users have unlimited quota
     }
@@ -147,12 +147,12 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
 
     log.info(
         { userId, feature, amount, periodStart, window },
-        RateLimiterLogMessage.ATTEMPTING_TO_CONSUME,
+        RateLimiterLogMessage.ATTEMPTING_TO_CONSUME
     );
 
     // Use a cleaner approach with separate check and update operations
     try {
-        await db.transaction(async (tx) => {
+        await db.transaction(async tx => {
             // Step 1: Get current usage to validate quota availability
             const currentUsage = await getCurrentUsage(tx, userId, feature, periodStart);
 
@@ -166,7 +166,7 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
 
             log.info(
                 { userId, feature, newUsage: newUsed, limit },
-                RateLimiterLogMessage.QUOTA_CONSUMED_SUCCESS,
+                RateLimiterLogMessage.QUOTA_CONSUMED_SUCCESS
             );
         });
     } catch (error) {
@@ -184,7 +184,7 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
 export async function getUsage(userId: string, feature: VtPlusFeature): Promise<UsageResponse> {
     const { limit, window } = VT_PLUS_LIMITS[feature];
     const periodStart = getPeriodStart(window);
-    const periodStartStr = periodStart.toISOString().split("T")[0];
+    const periodStartStr = periodStart.toISOString().split('T')[0];
 
     const usage = await db
         .select()
@@ -193,8 +193,8 @@ export async function getUsage(userId: string, feature: VtPlusFeature): Promise<
             and(
                 eq(schema.vtplusUsage.userId, userId),
                 eq(schema.vtplusUsage.feature, feature),
-                eq(schema.vtplusUsage.periodStart, periodStartStr),
-            ),
+                eq(schema.vtplusUsage.periodStart, periodStartStr)
+            )
         )
         .limit(1);
 
@@ -225,7 +225,7 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
     // Query each window type separately
     for (const [window, features] of Array.from(featuresByWindow.entries())) {
         const periodStart = getPeriodStart(window);
-        const periodStartStr = periodStart.toISOString().split("T")[0];
+        const periodStartStr = periodStart.toISOString().split('T')[0];
 
         const usageRecords = await db
             .select()
@@ -234,13 +234,13 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
                 and(
                     eq(schema.vtplusUsage.userId, userId),
                     eq(schema.vtplusUsage.periodStart, periodStartStr),
-                    inArray(schema.vtplusUsage.feature, features),
-                ),
+                    inArray(schema.vtplusUsage.feature, features)
+                )
             );
 
         // Create a map for quick lookup
         const usageMap = new Map(
-            usageRecords.map((record) => [record.feature as VtPlusFeature, record.used]),
+            usageRecords.map(record => [record.feature as VtPlusFeature, record.used])
         );
 
         // Build response for features in this window
