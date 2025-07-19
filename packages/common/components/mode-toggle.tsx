@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { ThemeSwitcher } from "./theme-switcher";
+import { ThemeSwitcher } from './theme-switcher';
 
 interface ModeToggleProps {
     onClose?: () => void;

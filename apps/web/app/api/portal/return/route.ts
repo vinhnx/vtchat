@@ -1,5 +1,5 @@
-import { log } from "@repo/shared/logger";
-import { type NextRequest, NextResponse } from "next/server";
+import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 
 /**
  * Handle return from Creem portal
@@ -7,14 +7,14 @@ import { type NextRequest, NextResponse } from "next/server";
  */
 export async function GET(request: NextRequest) {
     try {
-        log.info("[Portal Return] User returned from portal");
+        log.info('[Portal Return] User returned from portal');
 
         // Get the return URL from query params or default to home
         const searchParams = request.nextUrl.searchParams;
-        const returnTo = searchParams.get("returnTo") || "/";
+        const returnTo = searchParams.get('returnTo') || '/';
 
         // Log the return for debugging
-        log.info("[Portal Return] Redirecting to:", { data: returnTo });
+        log.info('[Portal Return] Redirecting to:', { data: returnTo });
 
         // Send a message to the parent window to refresh subscription status
         const html = `
@@ -55,13 +55,13 @@ export async function GET(request: NextRequest) {
 
         return new NextResponse(html, {
             headers: {
-                "Content-Type": "text/html",
+                'Content-Type': 'text/html',
             },
         });
     } catch (error) {
-        log.error("[Portal Return] Error handling return:", { error });
+        log.error('[Portal Return] Error handling return:', { error });
 
         // Fallback redirect
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL('/', request.url));
     }
 }

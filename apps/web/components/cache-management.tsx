@@ -2,26 +2,26 @@
  * Cache Management Component - For settings page
  */
 
-"use client";
+'use client';
 
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui";
-import { AlertCircle, Database, HardDrive, RefreshCw, Trash2, Wifi, WifiOff } from "lucide-react";
-import { useState } from "react";
-import { useServiceWorker } from "../lib/hooks/use-service-worker";
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
+import { AlertCircle, Database, HardDrive, RefreshCw, Trash2, Wifi, WifiOff } from 'lucide-react';
+import { useState } from 'react';
+import { useServiceWorker } from '../lib/hooks/use-service-worker';
 
 function formatBytes(bytes: number): string {
-    if (bytes === 0) return "0 B";
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
 }
 
 function formatCacheName(name: string): string {
     return name
-        .replace("vtchat-", "")
-        .replace("-v3.0", "")
-        .replace(/^\w/, (c) => c.toUpperCase());
+        .replace('vtchat-', '')
+        .replace('-v3.0', '')
+        .replace(/^\w/, c => c.toUpperCase());
 }
 
 export function CacheManagement() {
@@ -59,7 +59,7 @@ export function CacheManagement() {
     }
 
     const handleClearCache = async (cacheName?: string) => {
-        setClearing(cacheName || "all");
+        setClearing(cacheName || 'all');
         try {
             await clearCache(cacheName);
         } finally {
@@ -98,7 +98,7 @@ export function CacheManagement() {
                     <div className="flex items-center justify-between">
                         <span>Connection Status</span>
                         <Badge
-                            variant={isOnline ? "default" : "destructive"}
+                            variant={isOnline ? 'default' : 'destructive'}
                             className="flex items-center gap-1"
                         >
                             {isOnline ? (
@@ -106,14 +106,14 @@ export function CacheManagement() {
                             ) : (
                                 <WifiOff className="h-3 w-3" />
                             )}
-                            {isOnline ? "Online" : "Offline"}
+                            {isOnline ? 'Online' : 'Offline'}
                         </Badge>
                     </div>
 
                     <div className="flex items-center justify-between">
                         <span>Registration</span>
-                        <Badge variant={isRegistered ? "default" : "secondary"}>
-                            {isRegistered ? "Active" : "Not Registered"}
+                        <Badge variant={isRegistered ? 'default' : 'secondary'}>
+                            {isRegistered ? 'Active' : 'Not Registered'}
                         </Badge>
                     </div>
 
@@ -149,7 +149,7 @@ export function CacheManagement() {
                             onClick={handleRefreshStats}
                             disabled={refreshing || isLoading}
                         >
-                            <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+                            <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                         </Button>
                     </CardTitle>
                     <CardDescription>
@@ -158,13 +158,13 @@ export function CacheManagement() {
                 </CardHeader>
                 <CardContent>
                     {isLoading ? (
-                        <div className="text-center py-8 text-muted-foreground">
+                        <div className="text-muted-foreground py-8 text-center">
                             Loading cache statistics...
                         </div>
                     ) : cacheStats ? (
                         <div className="space-y-4">
                             {/* Total Summary */}
-                            <div className="p-4 rounded-lg bg-muted/50 border">
+                            <div className="bg-muted/50 rounded-lg border p-4">
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <div className="font-medium">Total Size</div>
@@ -186,7 +186,7 @@ export function CacheManagement() {
                                         return (
                                             <div
                                                 key={name}
-                                                className="p-3 rounded-lg border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20"
+                                                className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20"
                                             >
                                                 <div className="flex items-center justify-between">
                                                     <div>
@@ -210,14 +210,14 @@ export function CacheManagement() {
                                         : 0;
 
                                     return (
-                                        <div key={name} className="p-3 rounded-lg border">
-                                            <div className="flex items-center justify-between mb-2">
+                                        <div key={name} className="rounded-lg border p-3">
+                                            <div className="mb-2 flex items-center justify-between">
                                                 <div>
                                                     <div className="font-medium">
                                                         {formatCacheName(name)}
                                                     </div>
-                                                    <div className="text-sm text-muted-foreground">
-                                                        {formatBytes(cache.size)} • {cache.entries}{" "}
+                                                    <div className="text-muted-foreground text-sm">
+                                                        {formatBytes(cache.size)} • {cache.entries}{' '}
                                                         entries
                                                     </div>
                                                 </div>
@@ -226,7 +226,7 @@ export function CacheManagement() {
                                                     variant="outline"
                                                     onClick={() =>
                                                         handleClearCache(
-                                                            `vtchat-${name.toLowerCase()}-v3.0`,
+                                                            `vtchat-${name.toLowerCase()}-v3.0`
                                                         )
                                                     }
                                                     disabled={
@@ -250,14 +250,14 @@ export function CacheManagement() {
                                                         <span>Size Usage</span>
                                                         <span>{usagePercentSize.toFixed(1)}%</span>
                                                     </div>
-                                                    <div className="w-full bg-muted rounded-full h-2">
+                                                    <div className="bg-muted h-2 w-full rounded-full">
                                                         <div
                                                             className={`h-2 rounded-full transition-all ${
                                                                 usagePercentSize > 80
-                                                                    ? "bg-red-500"
+                                                                    ? 'bg-red-500'
                                                                     : usagePercentSize > 60
-                                                                      ? "bg-yellow-500"
-                                                                      : "bg-green-500"
+                                                                      ? 'bg-yellow-500'
+                                                                      : 'bg-green-500'
                                                             }`}
                                                             style={{
                                                                 width: `${Math.min(usagePercentSize, 100)}%`,
@@ -268,21 +268,21 @@ export function CacheManagement() {
                                             )}
 
                                             {cache.maxEntries && (
-                                                <div className="space-y-1 mt-2">
+                                                <div className="mt-2 space-y-1">
                                                     <div className="flex justify-between text-xs">
                                                         <span>Entry Usage</span>
                                                         <span>
                                                             {usagePercentEntries.toFixed(1)}%
                                                         </span>
                                                     </div>
-                                                    <div className="w-full bg-muted rounded-full h-2">
+                                                    <div className="bg-muted h-2 w-full rounded-full">
                                                         <div
                                                             className={`h-2 rounded-full transition-all ${
                                                                 usagePercentEntries > 80
-                                                                    ? "bg-red-500"
+                                                                    ? 'bg-red-500'
                                                                     : usagePercentEntries > 60
-                                                                      ? "bg-yellow-500"
-                                                                      : "bg-green-500"
+                                                                      ? 'bg-yellow-500'
+                                                                      : 'bg-green-500'
                                                             }`}
                                                             style={{
                                                                 width: `${Math.min(usagePercentEntries, 100)}%`,
@@ -297,21 +297,21 @@ export function CacheManagement() {
                             </div>
 
                             {/* Clear All Button */}
-                            <div className="pt-4 border-t">
+                            <div className="border-t pt-4">
                                 <Button
                                     variant="destructive"
                                     onClick={() => handleClearCache()}
-                                    disabled={clearing === "all"}
+                                    disabled={clearing === 'all'}
                                     className="w-full"
                                 >
-                                    {clearing === "all" ? (
+                                    {clearing === 'all' ? (
                                         <>
-                                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                                             Clearing All Caches...
                                         </>
                                     ) : (
                                         <>
-                                            <Trash2 className="h-4 w-4 mr-2" />
+                                            <Trash2 className="mr-2 h-4 w-4" />
                                             Clear All Caches
                                         </>
                                     )}
@@ -319,7 +319,7 @@ export function CacheManagement() {
                             </div>
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-muted-foreground">
+                        <div className="text-muted-foreground py-8 text-center">
                             No cache data available
                         </div>
                     )}

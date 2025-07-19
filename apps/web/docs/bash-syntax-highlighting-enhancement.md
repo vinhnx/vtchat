@@ -9,6 +9,7 @@ Enhanced bash syntax highlighting for markdown content using Prism.js in the VT 
 The VT Chat application already had **excellent bash syntax highlighting** configured:
 
 ### Pre-existing Features:
+
 - ✅ **Prism.js bash component** imported (`prism-bash`)
 - ✅ **Language aliases** for `sh` and `zsh` → `bash`
 - ✅ **Terminal icons** for shell scripts
@@ -18,13 +19,16 @@ The VT Chat application already had **excellent bash syntax highlighting** confi
 ## 🚀 Enhancements Added
 
 ### 1. Extended Shell Support
+
 **Before:**
+
 ```typescript
 sh: 'bash',
 zsh: 'bash',
 ```
 
 **After:**
+
 ```typescript
 sh: 'bash',
 shell: 'bash',
@@ -36,7 +40,9 @@ tcsh: 'bash',
 ```
 
 ### 2. Enhanced Icons
+
 **Before:**
+
 ```typescript
 case 'bash':
 case 'sh':
@@ -46,6 +52,7 @@ case 'powershell':
 ```
 
 **After:**
+
 ```typescript
 case 'bash':
 case 'sh':
@@ -60,12 +67,15 @@ case 'powershell':
 ```
 
 ### 3. Bash-Specific CSS Enhancements
+
 Added specialized styling for:
+
 - **Shebangs** (`#!/bin/bash`): Bold green
 - **Bash operators**: Bold yellow
 - **Bash variables**: Medium weight purple
 
 **Light Mode:**
+
 ```css
 .token.shebang {
     color: #16a34a;
@@ -85,6 +95,7 @@ Added specialized styling for:
 ```
 
 **Dark Mode:**
+
 ```css
 .dark .token.shebang {
     color: #86efac;
@@ -105,44 +116,47 @@ Added specialized styling for:
 
 ## 📊 Syntax Elements Supported
 
-| Element | Light Mode | Dark Mode | Example |
-|---------|------------|-----------|---------|
-| **Comments** | `#797979` | `#ffffff5c` | `# This is a comment` |
-| **Strings** | `#16a34a` | `#86efac` | `"Hello World!"` |
-| **Keywords** | `#c267ce` | `#d99fff` | `if`, `then`, `else`, `for` |
-| **Functions** | `#215ddf` | `#7dd3fc` | `function greet() {}` |
-| **Variables** | `#9f42f5` | `#b8a6ff` | `$NAME`, `${HOME}` |
-| **Operators** | `#ca8a04` | `#fbbf24` | `-eq`, `-gt`, `>`, `<` |
-| **Built-ins** | `#16a34a` | `#86efac` | `echo`, `printf`, `read` |
-| **Numbers** | `#9f42f5` | `#b8a6ff` | `42`, `3.14` |
-| **Shebangs** | `#16a34a` **bold** | `#86efac` **bold** | `#!/bin/bash` |
+| Element       | Light Mode         | Dark Mode          | Example                     |
+| ------------- | ------------------ | ------------------ | --------------------------- |
+| **Comments**  | `#797979`          | `#ffffff5c`        | `# This is a comment`       |
+| **Strings**   | `#16a34a`          | `#86efac`          | `"Hello World!"`            |
+| **Keywords**  | `#c267ce`          | `#d99fff`          | `if`, `then`, `else`, `for` |
+| **Functions** | `#215ddf`          | `#7dd3fc`          | `function greet() {}`       |
+| **Variables** | `#9f42f5`          | `#b8a6ff`          | `$NAME`, `${HOME}`          |
+| **Operators** | `#ca8a04`          | `#fbbf24`          | `-eq`, `-gt`, `>`, `<`      |
+| **Built-ins** | `#16a34a`          | `#86efac`          | `echo`, `printf`, `read`    |
+| **Numbers**   | `#9f42f5`          | `#b8a6ff`          | `42`, `3.14`                |
+| **Shebangs**  | `#16a34a` **bold** | `#86efac` **bold** | `#!/bin/bash`               |
 
 ## 📁 Files Modified
 
 ### Enhanced Files:
+
 1. **`packages/common/components/code-block/code-block.tsx`**
-   - Added shell variant aliases (fish, ksh, csh, tcsh)
-   - Extended icon detection for all shell types
+    - Added shell variant aliases (fish, ksh, csh, tcsh)
+    - Extended icon detection for all shell types
 
 2. **`packages/common/components/code-block/code-block.css`**
-   - Added bash-specific token styling
-   - Enhanced shebang, operator, and variable highlighting
-   - Both light and dark mode support
+    - Added bash-specific token styling
+    - Enhanced shebang, operator, and variable highlighting
+    - Both light and dark mode support
 
 ### Documentation Added:
+
 3. **`packages/common/components/code-block/bash-syntax-highlighting.md`**
-   - Comprehensive documentation with examples
-   - Color scheme reference
-   - Usage guidelines
+    - Comprehensive documentation with examples
+    - Color scheme reference
+    - Usage guidelines
 
 4. **`apps/web/docs/bash-syntax-highlighting-enhancement.md`**
-   - This summary document
+    - This summary document
 
 ## 🧪 Testing Results
 
 ### Shell Variants Tested:
+
 - ✅ `bash` - Primary bash syntax
-- ✅ `sh` - Shell scripts  
+- ✅ `sh` - Shell scripts
 - ✅ `shell` - Generic shell
 - ✅ `zsh` - Z shell
 - ✅ `fish` - Fish shell
@@ -152,6 +166,7 @@ Added specialized styling for:
 - ✅ `powershell` - PowerShell
 
 ### Syntax Elements Verified:
+
 - ✅ **Shebangs**: `#!/bin/bash` (bold green)
 - ✅ **Comments**: `# comment` (gray)
 - ✅ **Variables**: `$VAR`, `${HOME}` (purple)
@@ -164,6 +179,7 @@ Added specialized styling for:
 ## 🎯 Usage Examples
 
 ### Basic Bash Script:
+
 ````markdown
 ```bash
 #!/bin/bash
@@ -185,6 +201,7 @@ fi
 ````
 
 ### Shell Variants:
+
 ````markdown
 ```fish
 # Fish shell
@@ -208,11 +225,13 @@ echo "Works with any shell"
 ## 🎨 Visual Improvements
 
 ### Before Enhancement:
+
 - ✅ Good basic bash highlighting
 - ✅ Standard colors for all tokens
 - ✅ Light and dark mode support
 
 ### After Enhancement:
+
 - ✅ **Extended shell support** (fish, ksh, csh, tcsh)
 - ✅ **Enhanced shebang styling** (bold green)
 - ✅ **Improved operator visibility** (bold yellow)

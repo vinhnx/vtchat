@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useChatStore } from "@repo/common/store";
-import { log } from "@repo/shared/logger";
-import type { FeatureSlug } from "@repo/shared/types/subscription";
-import { useLoginPrompt } from "./useLoginPrompt";
-import { useSubscriptionGate } from "./useSubscriptionGate";
+import { useChatStore } from '@repo/common/store';
+import { log } from '@repo/shared/logger';
+import type { FeatureSlug } from '@repo/shared/types/subscription';
+import { useLoginPrompt } from './useLoginPrompt';
+import { useSubscriptionGate } from './useSubscriptionGate';
 
 export interface FeatureToggleConfig {
     enabledSelector: (state: any) => boolean;
-    activeKey: "webSearch" | "mathCalculator" | "charts";
+    activeKey: 'webSearch' | 'mathCalculator' | 'charts';
     requiredFeature?: FeatureSlug;
     featureName: string;
     logPrefix: string;
@@ -18,7 +18,7 @@ export const useFeatureToggle = (config: FeatureToggleConfig) => {
     const { enabledSelector, activeKey, requiredFeature, featureName, logPrefix } = config;
 
     const isEnabled = useChatStore(enabledSelector);
-    const setActiveButton = useChatStore((state) => state.setActiveButton);
+    const setActiveButton = useChatStore(state => state.setActiveButton);
     const { requireLogin, showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { canAccessFeature } = useSubscriptionGate();
 

@@ -3,7 +3,6 @@
 ## System Architecture
 
 - **Monorepo Structure:** The project utilizes a monorepo (likely managed by Turborepo, given `turbo.json`) containing:
-
     - `apps/web`: A Next.js web application.
     - `packages/`: Shared libraries for common functionality:
         - `packages/common`: UI components, hooks, store, context providers.

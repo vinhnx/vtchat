@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Badge,
@@ -22,8 +22,8 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@repo/ui";
-import { ChevronDown, Columns, Plus } from "lucide-react";
+} from '@repo/ui';
+import { ChevronDown, Columns, Plus } from 'lucide-react';
 
 export interface DataTableItem {
     id: number;
@@ -44,7 +44,7 @@ export function DataTable({ data }: { data: DataTableItem[] }) {
                 </Label>
                 <Select defaultValue="outline">
                     <SelectTrigger
-                        className="flex w-fit @4xl/main:hidden"
+                        className="@4xl/main:hidden flex w-fit"
                         size="sm"
                         id="view-selector"
                     >
@@ -57,7 +57,7 @@ export function DataTable({ data }: { data: DataTableItem[] }) {
                         <SelectItem value="focus-documents">Focus Documents</SelectItem>
                     </SelectContent>
                 </Select>
-                <TabsList className="hidden @4xl/main:flex">
+                <TabsList className="@4xl/main:flex hidden">
                     <TabsTrigger value="outline">Outline</TabsTrigger>
                     <TabsTrigger value="past-performance">
                         Past Performance <Badge variant="secondary">3</Badge>
@@ -104,7 +104,7 @@ export function DataTable({ data }: { data: DataTableItem[] }) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.map((item) => (
+                            {data.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.header}</TableCell>
                                     <TableCell>

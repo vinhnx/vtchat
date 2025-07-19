@@ -5,9 +5,9 @@
  * Should be placed inside SubscriptionProvider in the component tree
  */
 
-"use client";
+'use client';
 
-import { usePlusDefaults } from "../hooks/use-plus-defaults";
+import { usePlusDefaults } from '../hooks/use-plus-defaults';
 
 interface PlusDefaultsProviderProps {
     children: React.ReactNode;

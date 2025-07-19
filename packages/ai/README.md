@@ -31,7 +31,6 @@ A flexible and powerful system for building AI agent workflows using a graph-bas
     ```
 
 2. Set up environment variables:
-
     - Copy `.env.example` to `.env.local`:
         ```bash
         cp .env.example .env.local

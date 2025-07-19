@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-VT is a production-ready, privacy-focused AI chat application with security and comprehensive AI capabilities. This documentation provides complete guides for deployment, development, and feature implementation.
+VT is a minimal, privacy-focused AI chat application with security and comprehensive AI capabilities. This documentation provides complete guides for deployment, development, and feature implementation.
 
 ## 🚀 Quick Start
 
@@ -186,4 +186,4 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 **Status**: ✅ Production Ready | **Version**: v1.0 | **Last Updated**: June 30, 2025
 
-VT (VTChat) represents a complete, production-ready AI chat application that prioritizes user privacy while delivering cutting-edge AI capabilities through an intuitive, modern interface.
+VT (VTChat) represents a complete, minimal AI chat application that prioritizes user privacy while delivering cutting-edge AI capabilities through an intuitive, modern interface.

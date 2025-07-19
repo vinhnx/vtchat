@@ -1,12 +1,12 @@
-import { useChatStore } from "@repo/common/store";
-import { Button } from "@repo/ui";
-import type { Editor } from "@tiptap/react";
-import { motion } from "framer-motion";
-import { HelpCircle } from "lucide-react";
-import { useShallow } from "zustand/react/shallow";
+import { useChatStore } from '@repo/common/store';
+import { Button } from '@repo/ui';
+import type { Editor } from '@tiptap/react';
+import { motion } from 'framer-motion';
+import { HelpCircle } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 export const FollowupSuggestions = ({ suggestions }: { suggestions: string[] }) => {
-    const editor: Editor | undefined = useChatStore(useShallow((state) => state.editor));
+    const editor: Editor | undefined = useChatStore(useShallow(state => state.editor));
 
     if (!suggestions || suggestions?.length === 0) {
         return null;
@@ -34,7 +34,7 @@ export const FollowupSuggestions = ({ suggestions }: { suggestions: string[] }) 
                     },
                 }}
             >
-                {suggestions?.map((suggestion) => (
+                {suggestions?.map(suggestion => (
                     <motion.div
                         key={suggestion}
                         variants={{

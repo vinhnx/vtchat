@@ -80,18 +80,15 @@ All OAuth providers support secure account linking:
 ### Twitter/X OAuth Setup
 
 1. **Create Twitter App**
-
     - Go to [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard)
     - Create a new application
     - Configure OAuth 2.0 settings
 
 2. **Configure Callback URLs**
-
     - **Development**: `http://localhost:3000/api/auth/callback/twitter`
     - **Production**: `https://vtchat.io.vn/api/auth/callback/twitter`
 
 3. **Request Email Scope**
-
     - Enable "Request email from users" in Twitter app settings
     - This allows VTChat to retrieve user email addresses
 
@@ -104,7 +101,6 @@ All OAuth providers support secure account linking:
 ### GitHub OAuth Setup (Already Configured)
 
 1. **GitHub Developer Settings**
-
     - Go to GitHub Settings > Developer settings > OAuth Apps
     - Create new OAuth App
 
@@ -116,7 +112,6 @@ All OAuth providers support secure account linking:
 ### Google OAuth Setup (Already Configured)
 
 1. **Google Cloud Console**
-
     - Go to [Google Cloud Console](https://console.cloud.google.com/)
     - Create/select project
     - Enable Google+ API
@@ -169,12 +164,10 @@ All OAuth providers support secure account linking:
 ### Common Issues
 
 1. **Invalid Redirect URI**
-
     - Ensure callback URLs match exactly in OAuth app settings
     - Check both development and production URLs
 
 2. **Missing Email Permissions**
-
     - Verify email scope is requested in OAuth configuration
     - Check provider app settings for email permissions
 

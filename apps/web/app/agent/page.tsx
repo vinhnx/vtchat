@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
-import { useSession } from "@repo/shared/lib/auth-client";
+import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { useSession } from '@repo/shared/lib/auth-client';
 
 import {
     Badge,
@@ -10,12 +10,12 @@ import {
     PremiumCardContent,
     PremiumCardHeader,
     PremiumCardTitle,
-} from "@repo/ui";
-import { Database, Lock, Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { RAGChatbot } from "../../components/rag-chatbot";
-import { PRICING_CONFIG } from "../../lib/config/pricing";
+} from '@repo/ui';
+import { Database, Lock, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { RAGChatbot } from '../../components/rag-chatbot';
+import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export default function RAGPage() {
     const { data: session, isPending: isSessionLoading } = useSession();
@@ -30,7 +30,7 @@ export default function RAGPage() {
     // Handle redirect to login if not signed in
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
-            router.push("/login?redirect_url=/agent");
+            router.push('/login?redirect_url=/agent');
         }
     }, [isLoaded, isSignedIn, router]);
 
@@ -68,7 +68,7 @@ export default function RAGPage() {
                         </PremiumCardHeader>
                         <PremiumCardContent className="space-y-4">
                             <p className="text-muted-foreground">
-                                This feature is available exclusively for{" "}
+                                This feature is available exclusively for{' '}
                                 {PRICING_CONFIG.product.name} subscribers.
                             </p>
                             <div className="bg-muted rounded-lg p-4">
@@ -82,7 +82,7 @@ export default function RAGPage() {
                             <div className="space-y-3">
                                 <PremiumButton
                                     className="w-full"
-                                    onClick={() => router.push("/pricing")}
+                                    onClick={() => router.push('/pricing')}
                                     shimmer
                                     size="lg"
                                     variant="premium"
@@ -92,7 +92,7 @@ export default function RAGPage() {
                                 </PremiumButton>
                                 <PremiumButton
                                     className="w-full"
-                                    onClick={() => router.push("/")}
+                                    onClick={() => router.push('/')}
                                     variant="outline"
                                 >
                                     Continue with Free Chat

@@ -5,19 +5,19 @@
  * Run with: bun run scripts/migrate-user-profile.ts
  */
 
-import { log } from "@repo/shared/logger";
-import { sql } from "drizzle-orm";
-import { db } from "../apps/web/lib/database";
+import { log } from '@repo/shared/logger';
+import { sql } from 'drizzle-orm';
+import { db } from '../apps/web/lib/database';
 
 async function runMigration() {
     // CLI output for user
-    console.log("🚀 Starting user profile enhancement migration...");
-    log.info("Starting user profile migration");
+    console.log('🚀 Starting user profile enhancement migration...');
+    log.info('Starting user profile migration');
 
     try {
         // Read and execute the migration SQL
-        console.log("📝 Adding enhanced user profile fields...");
-        log.info("Adding enhanced user profile fields");
+        console.log('📝 Adding enhanced user profile fields...');
+        log.info('Adding enhanced user profile fields');
 
         await db.execute(sql`
             -- Add enhanced user profile fields
@@ -32,10 +32,10 @@ async function runMigration() {
             ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_email BOOLEAN DEFAULT true;
             ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_marketing BOOLEAN DEFAULT false;
         `);
-        log.info("Enhanced user profile fields added");
+        log.info('Enhanced user profile fields added');
 
-        console.log("📊 Adding performance indexes...");
-        log.info("Adding performance indexes");
+        console.log('📊 Adding performance indexes...');
+        log.info('Adding performance indexes');
 
         await db.execute(sql`
             -- Add indexes for performance
@@ -43,30 +43,30 @@ async function runMigration() {
             CREATE INDEX IF NOT EXISTS idx_users_company ON users(company);
             CREATE INDEX IF NOT EXISTS idx_users_timezone ON users(timezone);
         `);
-        log.info("Performance indexes added");
+        log.info('Performance indexes added');
 
-        console.log("🔄 Updating timestamps...");
-        log.info("Updating timestamps");
+        console.log('🔄 Updating timestamps...');
+        log.info('Updating timestamps');
 
         await db.execute(sql`
             -- Update the updated_at field for this migration
             UPDATE users SET updated_at = NOW() WHERE bio IS NULL;
         `);
-        log.info("Timestamps updated");
+        log.info('Timestamps updated');
 
-        console.log("✅ Migration completed successfully!");
-        console.log("🎉 Enhanced user profile fields are now available:");
-        console.log("   - Bio (personal description)");
-        console.log("   - Location (city, country)");
-        console.log("   - Website (personal/company URL)");
-        console.log("   - Company (employer)");
-        console.log("   - Job Title (professional role)");
-        console.log("   - Timezone, Language, Theme preferences");
-        console.log("   - Notification preferences");
-        log.info("User profile migration completed successfully");
+        console.log('✅ Migration completed successfully!');
+        console.log('🎉 Enhanced user profile fields are now available:');
+        console.log('   - Bio (personal description)');
+        console.log('   - Location (city, country)');
+        console.log('   - Website (personal/company URL)');
+        console.log('   - Company (employer)');
+        console.log('   - Job Title (professional role)');
+        console.log('   - Timezone, Language, Theme preferences');
+        console.log('   - Notification preferences');
+        log.info('User profile migration completed successfully');
     } catch (error) {
-        console.error("❌ Migration failed:", error);
-        log.error({ error }, "User profile migration failed");
+        console.error('❌ Migration failed:', error);
+        log.error({ error }, 'User profile migration failed');
         process.exit(1);
     }
 }
@@ -74,12 +74,12 @@ async function runMigration() {
 // Run the migration
 runMigration()
     .then(() => {
-        console.log("🏁 Migration script completed");
-        log.info("Migration script completed successfully");
+        console.log('🏁 Migration script completed');
+        log.info('Migration script completed successfully');
         process.exit(0);
     })
-    .catch((error) => {
-        console.error("💥 Migration script failed:", error);
-        log.error({ error }, "Migration script failed");
+    .catch(error => {
+        console.error('💥 Migration script failed:', error);
+        log.error({ error }, 'Migration script failed');
         process.exit(1);
     });

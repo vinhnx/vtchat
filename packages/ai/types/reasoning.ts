@@ -6,13 +6,13 @@
 /**
  * Reasoning detail content types
  */
-export type ReasoningDetailType = "text" | "redacted";
+export type ReasoningDetailType = 'text' | 'redacted';
 
 /**
  * Text reasoning detail
  */
 export interface TextReasoningDetail {
-    type: "text";
+    type: 'text';
     text: string;
     signature?: string;
 }
@@ -21,7 +21,7 @@ export interface TextReasoningDetail {
  * Redacted reasoning detail
  */
 export interface RedactedReasoningDetail {
-    type: "redacted";
+    type: 'redacted';
     data: string;
 }
 
@@ -37,8 +37,8 @@ export interface GenerateTextWithReasoningResult {
     text: string;
     sources?: any[];
     groundingMetadata?: any;
-    reasoning?: string;
-    reasoningDetails?: ReasoningDetail[];
+    reasoningText?: string;
+    reasoningText?: ReasoningDetail[];
 }
 
 /**
@@ -68,6 +68,6 @@ export interface ReasoningProviderOptions {
         thinkingConfig?: GoogleThinkingConfig;
     };
     anthropic?: {
-        reasoning?: boolean;
+        reasoningText?: boolean;
     };
 }

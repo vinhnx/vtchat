@@ -9,11 +9,21 @@ export function sanitizePayloadForJSON(payload: any): any {
         return payload;
     }
 
+    // Handle Error objects specially
+    if (payload instanceof Error) {
+        return {
+            name: payload.name,
+            message: payload.message,
+            stack: payload.stack,
+            ...(payload.cause && { cause: sanitizePayloadForJSON(payload.cause) }),
+        };
+    }
+
     if (Array.isArray(payload)) {
         return payload.map((item) => sanitizePayloadForJSON(item));
     }
 
-    const sanitized: Record<string, any> = {};
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(payload)) {
         if (typeof value !== "function" && typeof value !== "symbol") {
             sanitized[key] = sanitizePayloadForJSON(value);

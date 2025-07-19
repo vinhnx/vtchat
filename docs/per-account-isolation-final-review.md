@@ -149,19 +149,16 @@ const logout = async () => {
 ### **Authentication Scenarios**
 
 1. **Anonymous → Login**:
-
     - Switches from `*-anonymous` to `*-user-123` storage
     - Previous anonymous data preserved separately
     - User sees only their data
 
 2. **User A → User B**:
-
     - Switches from `*-user-A` to `*-user-B` storage
     - Complete data isolation maintained
     - No cross-contamination
 
 3. **Login → Logout**:
-
     - All data cleared via `useLogout`
     - Switches to `*-anonymous` storage
     - Clean slate for next user

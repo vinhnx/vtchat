@@ -16,7 +16,7 @@ VTChat uses a modern development tooling setup optimized for performance and cod
 ### Configuration Files
 
 - `biome.json`: Biome configuration
-- `.oxlintrc.json`: oxlint configuration  
+- `.oxlintrc.json`: oxlint configuration
 - `turbo.json`: Turborepo caching configuration
 - `package.json`: Scripts and dependencies
 
@@ -35,6 +35,7 @@ bunx @biomejs/biome init
 ```
 
 Configuration in `biome.json`:
+
 ```json
 {
     "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
@@ -85,6 +86,7 @@ bun add -D oxlint
 ```
 
 Configuration in `.oxlintrc.json`:
+
 ```json
 {
     "env": {
@@ -103,6 +105,7 @@ Configuration in `.oxlintrc.json`:
 ### 3. Package Scripts
 
 Added to `package.json`:
+
 ```json
 {
     "scripts": {
@@ -134,7 +137,7 @@ bun lint
 bun run check
 ```
 
-### Pre-commit Workflow
+### Recommended Development Workflow
 
 1. **Format code**: `bun run biome:format`
 2. **Check linting**: `bun run biome:check`
@@ -219,7 +222,6 @@ bunx @biomejs/biome format src/
 
 ## Future Enhancements
 
-- **Pre-commit hooks**: Husky integration for automatic checks
 - **CI/CD integration**: GitHub Actions for automated quality checks
 - **Custom rules**: Project-specific linting rules
 - **Performance monitoring**: Track tooling performance metrics

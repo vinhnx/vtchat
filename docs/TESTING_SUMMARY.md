@@ -7,20 +7,20 @@ The AI routing fix has been successfully implemented and deployed to production 
 ### Key Changes Made:
 
 1. **Modularized Routing Logic** (`packages/common/lib/ai-routing.ts`):
-   - `shouldUseServerSideAPI()` - Determines if request should route to `/api/completion`
-   - `needsServerSideForPlus()` - Checks if model needs server-side for VT+ users
-   - `getProviderKeyToRemove()` - Identifies which API key to remove for server calls
-   - `filterApiKeysForServerSide()` - Removes provider-specific keys for server routing
+    - `shouldUseServerSideAPI()` - Determines if request should route to `/api/completion`
+    - `needsServerSideForPlus()` - Checks if model needs server-side for VT+ users
+    - `getProviderKeyToRemove()` - Identifies which API key to remove for server calls
+    - `filterApiKeysForServerSide()` - Removes provider-specific keys for server routing
 
 2. **Updated Implementation** (`packages/common/hooks/agent-provider.tsx`):
-   - Refactored `handleSubmit` function to use new routing logic
-   - Proper API key filtering for server-side calls
-   - Detailed logging for debugging
+    - Refactored `handleSubmit` function to use new routing logic
+    - Proper API key filtering for server-side calls
+    - Detailed logging for debugging
 
 3. **Comprehensive Testing** (`packages/common/tests/ai-routing.test.ts`):
-   - Unit tests for all routing scenarios
-   - Edge case coverage
-   - All tests passing ✅
+    - Unit tests for all routing scenarios
+    - Edge case coverage
+    - All tests passing ✅
 
 ## 🚀 Deployment Status: LIVE
 
@@ -41,11 +41,13 @@ The AI routing fix has been successfully implemented and deployed to production 
 ### Models to Test:
 
 #### ✅ Should Route to `/api/completion`:
+
 - **Free Models**: Gemini 2.5 Flash Lite Preview
 - **VT+ Models**: Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
 - **VT+ Features**: Deep Research, Pro Search, RAG
 
 #### Expected Network Requests:
+
 ```
 POST https://vtchat.io.vn/api/completion
 Content-Type: application/json
@@ -78,7 +80,7 @@ bun test packages/common/tests/ai-routing.test.ts
 - [ ] Login to vtchat.io.vn successfully
 - [ ] Open DevTools Network tab
 - [ ] Test Claude 4 Sonnet → verify `/api/completion` call
-- [ ] Test Claude 4 Opus → verify `/api/completion` call  
+- [ ] Test Claude 4 Opus → verify `/api/completion` call
 - [ ] Test GPT 4o → verify `/api/completion` call
 - [ ] Test GPT 4o Mini → verify `/api/completion` call
 - [ ] Test DeepSeek R1 → verify `/api/completion` call
@@ -92,6 +94,7 @@ bun test packages/common/tests/ai-routing.test.ts
 ## 🐛 Issue Reporting:
 
 If you find any issues, please report:
+
 1. **Model name** and provider
 2. **Expected vs actual** routing behavior
 3. **Network request** details (URL, method, status)
@@ -109,13 +112,15 @@ If you find any issues, please report:
 ## 🎯 Success Criteria:
 
 **✅ Fix is successful if:**
+
 - All VT+ models route to `/api/completion`
-- VT+ exclusive features route to `/api/completion` 
+- VT+ exclusive features route to `/api/completion`
 - No authentication errors for VT+ users
 - API keys are properly filtered
 - Free models work correctly
 
 **❌ Fix needs attention if:**
+
 - VT+ models use client-side routing
 - Authentication errors occur
 - API key leakage in server calls

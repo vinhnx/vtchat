@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ModelEnum } from "@repo/ai/models";
-import { useRateLimit } from "@repo/common/hooks";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { getFormatDistanceToNow } from "@repo/shared/utils";
+import { ModelEnum } from '@repo/ai/models';
+import { useRateLimit } from '@repo/common/hooks';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { getFormatDistanceToNow } from '@repo/shared/utils';
 import {
     Card,
     CardContent,
@@ -12,7 +12,7 @@ import {
     CardTitle,
     Progress,
     Skeleton,
-} from "@repo/ui";
+} from '@repo/ui';
 
 export function RateLimitMeter() {
     const { data: session } = useSession();
@@ -79,12 +79,12 @@ export function RateLimitMeter() {
                             </span>
                         </div>
                         <Progress
-                            className="h-2 bg-muted"
+                            className="bg-muted h-2"
                             indicatorClassName="bg-foreground"
                             value={dailyUsagePercent}
                         />
                         <div className="text-muted-foreground text-xs">
-                            {status.remainingDaily} requests remaining • Resets{" "}
+                            {status.remainingDaily} requests remaining • Resets{' '}
                             {getFormatDistanceToNow(status.resetTime.daily, { addSuffix: true })}
                         </div>
                     </div>
@@ -94,12 +94,12 @@ export function RateLimitMeter() {
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Per-minute rate limit</span>
                             <span className="text-foreground font-medium">
-                                {isAtMinuteLimit ? "Rate limited" : "Available"}
+                                {isAtMinuteLimit ? 'Rate limited' : 'Available'}
                             </span>
                         </div>
                         {isAtMinuteLimit && (
-                            <div className="text-xs text-muted-foreground">
-                                Next request available{" "}
+                            <div className="text-muted-foreground text-xs">
+                                Next request available{' '}
                                 {getFormatDistanceToNow(status.resetTime.minute, {
                                     addSuffix: true,
                                 })}
@@ -109,22 +109,22 @@ export function RateLimitMeter() {
 
                     {/* Status Messages */}
                     {status.remainingDaily === 0 && (
-                        <div className="rounded-lg border border-border bg-muted/20 p-4">
-                            <div className="text-sm text-foreground font-medium">
+                        <div className="border-border bg-muted/20 rounded-lg border p-4">
+                            <div className="text-foreground text-sm font-medium">
                                 Daily limit reached
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground mt-1 text-xs">
                                 Upgrade to VT+ for unlimited access to all models.
                             </div>
                         </div>
                     )}
 
                     {status.remainingDaily <= 2 && status.remainingDaily > 0 && (
-                        <div className="rounded-lg border border-border bg-muted/20 p-4">
-                            <div className="text-sm text-foreground font-medium">
+                        <div className="border-border bg-muted/20 rounded-lg border p-4">
+                            <div className="text-foreground text-sm font-medium">
                                 Low on daily requests
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground mt-1 text-xs">
                                 Consider upgrading to VT+ for unlimited access.
                             </div>
                         </div>

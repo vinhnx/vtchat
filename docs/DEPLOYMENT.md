@@ -2,7 +2,7 @@
 
 ## 📋 Quick Start
 
-VT is production-ready with automated deployment scripts for both development and production environments.
+VT is minimal with automated deployment scripts for both development and production environments.
 
 ```bash
 # Development deployment

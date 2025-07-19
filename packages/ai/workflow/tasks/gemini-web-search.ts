@@ -83,54 +83,107 @@ Please include:
                 hasGroundingMetadata: !!result?.groundingMetadata,
             });
 
-            // Update sources if available
-            if (result.sources && result.sources.length > 0) {
-                context?.update("sources", (current) => {
-                    const existingSources = current ?? [];
-                    const newSources = result.sources
-                        ?.filter(
-                            (source: any) =>
-                                source?.url &&
-                                typeof source.url === "string" &&
-                                source.url.trim() !== "" &&
-                                !existingSources.some((existing) => existing.link === source.url),
-                        )
-                        .map((source: any, index: number) => ({
-                            title: source.title || "Web Search Result",
-                            link: source.url,
-                            snippet: source.description || "",
-                            index: index + (existingSources?.length || 1),
-                        }));
-                    return [...existingSources, ...newSources];
+            // Wrap all result processing in try-catch to isolate the error
+            try {
+                log.info("Starting result processing...");
+
+                // Update sources if available
+                if (result.sources && result.sources.length > 0) {
+                    log.info("Processing sources...");
+                    context?.update("sources", (current) => {
+                        const existingSources = current ?? [];
+                        const newSources =
+                            result.sources
+                                ?.filter(
+                                    (source: any) =>
+                                        source?.url &&
+                                        typeof source.url === "string" &&
+                                        source.url.trim() !== "" &&
+                                        !existingSources.some(
+                                            (existing) => existing.link === source.url,
+                                        ),
+                                )
+                                .map((source: any, index: number) => ({
+                                    title: source.title || "Web Search Result",
+                                    link: source.url,
+                                    snippet: source.description || "",
+                                    index: index + (existingSources?.length || 1),
+                                })) || [];
+                        return [...existingSources, ...newSources];
+                    });
+                }
+
+                log.info("Processing summaries...");
+                context?.update("summaries", (current) => [...(current ?? []), result.text]);
+
+                log.info("Updating step status...");
+                // Mark step as completed
+                if (stepId !== undefined) {
+                    updateStep({
+                        stepId,
+                        stepStatus: "COMPLETED",
+                        text: "Web search completed successfully",
+                        subSteps: {},
+                    });
+                }
+
+                log.info("Result processing completed successfully");
+
+                log.info("=== gemini-web-search EXECUTE END ===");
+
+                // Wrap return in try-catch to isolate return value issues
+                try {
+                    const returnValue = {
+                        stepId,
+                        summary: result.text,
+                        sources: result.sources,
+                        groundingMetadata: result.groundingMetadata,
+                    };
+                    log.info("Return value prepared successfully:", {
+                        hasStepId: !!returnValue.stepId,
+                        hasSummary: !!returnValue.summary,
+                        summaryLength: returnValue.summary?.length,
+                        hasSources: !!returnValue.sources,
+                        sourcesLength: returnValue.sources?.length,
+                        hasGroundingMetadata: !!returnValue.groundingMetadata,
+                    });
+                    return returnValue;
+                } catch (returnError: unknown) {
+                    log.error("Error preparing return value:", {
+                        message:
+                            returnError instanceof Error
+                                ? returnError.message
+                                : String(returnError),
+                        stack: returnError instanceof Error ? returnError.stack : undefined,
+                        resultStructure: {
+                            hasResult: !!result,
+                            hasText: !!result?.text,
+                            hasSources: !!result?.sources,
+                            hasGroundingMetadata: !!result?.groundingMetadata,
+                        },
+                    });
+                    throw returnError;
+                }
+            } catch (processingError: unknown) {
+                log.error("Error during result processing:", {
+                    message:
+                        processingError instanceof Error
+                            ? processingError.message
+                            : String(processingError),
+                    stack: processingError instanceof Error ? processingError.stack : undefined,
+                    processingStep: "result processing",
                 });
+                throw processingError;
             }
-
-            context?.update("summaries", (current) => [...(current ?? []), result.text]);
-
-            // Mark step as completed
-            if (stepId !== undefined) {
-                updateStep({
-                    stepId,
-                    stepStatus: "COMPLETED",
-                    text: "Web search completed successfully",
-                    subSteps: {},
-                });
-            }
-
-            log.info("=== gemini-web-search EXECUTE END ===");
-            return {
-                stepId,
-                summary: result.text,
-                sources: result.sources,
-                groundingMetadata: result.groundingMetadata,
-            };
-        } catch (error: any) {
+        } catch (error: unknown) {
             log.error("=== gemini-web-search ERROR ===");
             log.error("Error details:", {
-                message: error.message,
-                name: error.name,
-                stack: error.stack,
+                message: error instanceof Error ? error.message : "No error message",
+                name: error instanceof Error ? error.name : "No error name",
+                stack: error instanceof Error ? error.stack : "No stack trace",
                 errorType: typeof error,
+                fullError: error,
+                errorString: String(error),
             });
 
             // Mark step as failed if there's an error
@@ -138,10 +191,16 @@ Please include:
                 updateStep({
                     stepId,
                     stepStatus: "COMPLETED",
-                    text: `Web search failed: ${error.message || "Unknown error"}`,
+                    text: `Web search failed: ${error instanceof Error ? error.message : "Unknown error"}`,
                     subSteps: {},
                 });
             }
+
+            // Get the scoped variables for error handling
+            const mode = context?.get("mode") || "";
+            const userTier = context?.get("userTier") || UserTier.FREE;
+            const userApiKeys = context?.get("apiKeys") || {};
+            const model = getModelFromChatMode(mode);
 
             // Provide more user-friendly error messages based on model and API key status
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
@@ -149,13 +208,27 @@ Please include:
             const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
             const isVtPlusUser = userTier === UserTier.PLUS;
 
-            if (error.message?.includes("Free Gemini model requires system configuration")) {
+            // Handle AI SDK v5 model version compatibility error
+            const errorMessage = error instanceof Error ? error.message : "";
+            if (
+                errorMessage?.includes("AI_UnsupportedModelVersionError") ||
+                errorMessage?.includes("Unsupported model version") ||
+                errorMessage?.includes(
+                    "AI SDK 4 only supports models that implement specification version 'v1'",
+                )
+            ) {
+                throw new Error(
+                    "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                );
+            }
+
+            if (errorMessage?.includes("Free Gemini model requires system configuration")) {
                 // System configuration issue for free model
                 throw new Error(
                     "Web search is temporarily unavailable for the free Gemini model. Please try again later or upgrade to use your own API key for unlimited access.",
                 );
             }
-            if (error.message?.includes("API key")) {
+            if (errorMessage?.includes("API key")) {
                 if (isVtPlusUser && !hasUserApiKey && !hasSystemApiKey) {
                     throw new Error(
                         "Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.",
@@ -170,7 +243,7 @@ Please include:
                     "Gemini API key is required for web search. Please configure your API key in settings.",
                 );
             }
-            if (error.message?.includes("unauthorized") || error.message?.includes("401")) {
+            if (errorMessage?.includes("unauthorized") || errorMessage?.includes("401")) {
                 if (isVtPlusUser && !hasUserApiKey) {
                     throw new Error(
                         "Web search service encountered an authentication issue. Please add your own Gemini API key in settings for unlimited usage.",
@@ -183,10 +256,10 @@ Please include:
                 }
                 throw new Error("Invalid Gemini API key. Please check your API key in settings.");
             }
-            if (error.message?.includes("forbidden") || error.message?.includes("403")) {
+            if (errorMessage?.includes("forbidden") || errorMessage?.includes("403")) {
                 throw new Error("Gemini API access denied. Please check your API key permissions.");
             }
-            if (error.message?.includes("rate limit") || error.message?.includes("429")) {
+            if (errorMessage?.includes("rate limit") || errorMessage?.includes("429")) {
                 if (isVtPlusUser && !hasUserApiKey) {
                     throw new Error(
                         "Web search rate limit reached. Add your own Gemini API key in settings for unlimited usage.",
@@ -201,14 +274,14 @@ Please include:
                     "Gemini API rate limit exceeded. Please try again in a few moments.",
                 );
             }
-            if (error.message?.includes("undefined to object")) {
+            if (errorMessage?.includes("undefined to object")) {
                 throw new Error(
                     "Web search configuration error. Please try using a different model or check your settings.",
                 );
             }
 
             throw new Error(
-                `Web search failed: ${error.message || "Please try again or use a different model."}`,
+                `Web search failed: ${errorMessage || "Please try again or use a different model."}`,
             );
         }
     },

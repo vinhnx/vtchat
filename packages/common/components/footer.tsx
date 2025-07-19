@@ -1,37 +1,37 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const links = [
     {
-        title: "Home",
-        href: "/",
+        title: 'Home',
+        href: '/',
     },
     {
-        title: "Terms",
-        href: "/terms",
+        title: 'Terms',
+        href: '/terms',
     },
     {
-        title: "Privacy",
-        href: "/privacy",
+        title: 'Privacy',
+        href: '/privacy',
     },
     {
-        title: "VT+",
-        href: "/pricing",
+        title: 'VT+',
+        href: '/pricing',
     },
     {
-        title: "Contact",
-        href: "mailto:hello@vtdotai.io.vn",
+        title: 'Contact',
+        href: 'mailto:hello@vtdotai.io.vn',
     },
     {
-        title: "Help Center",
-        href: "/help",
+        title: 'Help Center',
+        href: '/help',
     },
     {
-        title: "About",
-        href: "/about",
+        title: 'About',
+        href: '/about',
     },
     {
-        title: "X/Twitter",
-        href: "https://x.com/vtdotai",
+        title: 'X/Twitter',
+        href: 'https://x.com/vtdotai',
     },
 ];
 
@@ -39,7 +39,7 @@ export const Footer = () => {
     return (
         <footer className="py-4 md:py-16">
             <div className="mx-auto max-w-5xl px-4 md:px-6">
-                <div className="my-2 md:my-8 flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm">
+                <div className="my-2 flex flex-wrap justify-center gap-3 text-xs md:my-8 md:gap-6 md:text-sm">
                     {links.map((link, index) => (
                         <Link
                             key={index}
@@ -51,7 +51,7 @@ export const Footer = () => {
                     ))}
                 </div>
                 <span className="text-muted-foreground block text-center text-xs md:text-sm">
-                    {" "}
+                    {' '}
                     © {new Date().getFullYear()} VT, All rights reserved
                 </span>
             </div>

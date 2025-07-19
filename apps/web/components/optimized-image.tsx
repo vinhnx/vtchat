@@ -1,7 +1,7 @@
-import Image, { type ImageProps } from "next/image";
-import { memo, useCallback, useState } from "react";
+import Image, { type ImageProps } from 'next/image';
+import { memo, useCallback, useState } from 'react';
 
-interface OptimizedImageProps extends Omit<ImageProps, "onLoad" | "onError"> {
+interface OptimizedImageProps extends Omit<ImageProps, 'onLoad' | 'onError'> {
     src: string;
     alt: string;
     width?: number;
@@ -20,7 +20,7 @@ export const OptimizedImage = memo(function OptimizedImage({
     alt,
     width,
     height,
-    className = "",
+    className = '',
     priority = false,
     sizes,
     fill = false,
@@ -49,7 +49,7 @@ export const OptimizedImage = memo(function OptimizedImage({
     if (hasError) {
         return showErrorMessage ? (
             <div
-                className={`bg-muted flex items-center justify-center text-muted-foreground text-sm ${className}`}
+                className={`bg-muted text-muted-foreground flex items-center justify-center text-sm ${className}`}
                 style={{ width: fill ? undefined : width, height: fill ? undefined : height }}
                 role="img"
                 aria-label={`Failed to load: ${alt}`}
@@ -60,7 +60,7 @@ export const OptimizedImage = memo(function OptimizedImage({
     }
 
     return (
-        <div className={`relative ${isLoading ? "animate-pulse bg-muted" : ""}`}>
+        <div className={`relative ${isLoading ? 'bg-muted animate-pulse' : ''}`}>
             <Image
                 src={currentSrc}
                 alt={alt}
@@ -69,9 +69,9 @@ export const OptimizedImage = memo(function OptimizedImage({
                 fill={fill}
                 priority={priority}
                 quality={quality}
-                sizes={sizes || (fill ? "100vw" : undefined)}
+                sizes={sizes || (fill ? '100vw' : undefined)}
                 className={`transition-opacity duration-300 ${
-                    isLoading ? "opacity-0" : "opacity-100"
+                    isLoading ? 'opacity-0' : 'opacity-100'
                 } ${className}`}
                 onLoad={handleLoad}
                 onError={handleError}
@@ -86,7 +86,7 @@ export function OptimizedIcon({
     src,
     alt,
     size = 24,
-    className = "",
+    className = '',
 }: {
     src: string;
     alt: string;
@@ -110,7 +110,7 @@ export function OptimizedAvatar({
     src,
     alt,
     size = 40,
-    className = "",
+    className = '',
 }: {
     src: string;
     alt: string;

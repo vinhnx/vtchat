@@ -230,7 +230,7 @@ Updated `useStructuredExtraction` to support:
 
 ### Production Ready
 
-The enhanced structured output feature is now production-ready with:
+The enhanced structured output feature is now minimal with:
 
 - Comprehensive error handling
 - Accessibility compliance

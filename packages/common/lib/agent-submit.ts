@@ -1,13 +1,13 @@
-import type { ChatMode, UserTier } from "@repo/shared/config";
-import { log } from "@repo/shared/lib/logger";
-import type { CoreMessage } from "ai";
+import type { ChatMode, UserTier } from '@repo/shared/config';
+import { log } from '@repo/shared/lib/logger';
+import type { ModelMessage } from 'ai';
 
 export type ThreadMeta = {
     threadId: string;
     query: string;
     optimisticAiThreadItemId: string;
     mode: ChatMode;
-    coreMessages: CoreMessage[];
+    coreMessages: ModelMessage[];
 };
 
 export type SubmitOptions = {
@@ -49,26 +49,26 @@ export function logRoutingDecision(params: {
     proSearch?: boolean;
     rag?: boolean;
 }) {
-    log.info(params, "🎯 API routing decision");
+    log.info(params, '🎯 API routing decision');
 }
 
 /**
  * Log which execution path is being taken
  */
 export function logExecutionPath(
-    path: "client-workflow" | "server-api" | "api-key-modal",
-    mode: ChatMode,
+    path: 'client-workflow' | 'server-api' | 'api-key-modal',
+    mode: ChatMode
 ) {
     const icons = {
-        "client-workflow": "📱",
-        "server-api": "🖥️",
-        "api-key-modal": "🔑",
+        'client-workflow': '📱',
+        'server-api': '🖥️',
+        'api-key-modal': '🔑',
     };
 
     const messages = {
-        "client-workflow": "Using client-side workflow path",
-        "server-api": "Using server-side API path (/api/completion)",
-        "api-key-modal": "Showing API key modal - missing required key",
+        'client-workflow': 'Using client-side workflow path',
+        'server-api': 'Using server-side API path (/api/completion)',
+        'api-key-modal': 'Showing API key modal - missing required key',
     };
 
     log.info({ mode }, `${icons[path]} ${messages[path]}`);

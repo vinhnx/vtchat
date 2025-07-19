@@ -7,13 +7,7 @@ import {
     getVTPlusFeatureFromChatMode,
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
-import {
-    type CoreMessage,
-    extractReasoningMiddleware,
-    generateObject as generateObjectAi,
-    streamText,
-    type ToolSet,
-} from "ai";
+import { generateObject as generateObjectAi, type ModelMessage, type ToolSet } from "ai";
 import type { ZodSchema } from "zod";
 import { CLAUDE_4_CONFIG, ReasoningType } from "../constants/reasoning";
 import { ModelEnum } from "../models";
@@ -87,7 +81,7 @@ export const generateTextWithGeminiSearch = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -105,6 +99,11 @@ export const generateTextWithGeminiSearch = async ({
         byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
     });
 
+    // Declare variables outside try-catch block so they're accessible in error handling
+    let hasUserGeminiKey = false;
+    let hasSystemGeminiKey = false;
+    let isVtPlusUser = userTier === UserTier.PLUS;
+
     try {
         if (signal?.aborted) {
             throw new Error("Operation aborted");
@@ -119,14 +118,13 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        const hasUserGeminiKey =
-            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-        const hasSystemGeminiKey =
-            (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) || windowApiKey;
+        hasUserGeminiKey =
+            !!(byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0);
+        hasSystemGeminiKey =
+            !!((typeof process !== "undefined" && process.env?.GEMINI_API_KEY) || windowApiKey);
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-        const isVtPlusUser = userTier === UserTier.PLUS;
 
         if (!(hasUserGeminiKey || hasSystemGeminiKey)) {
             if (isFreeGeminiModel) {
@@ -290,12 +288,28 @@ export const generateTextWithGeminiSearch = async ({
                 const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
                 const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
 
-                streamResult = await streamTextWithQuota(streamTextConfig as any, {
-                    user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                    feature: "PS", // PRO_SEARCH constant to avoid circular imports
-                    amount: 1,
-                    isByokKey: isUsingByokKeys(byokKeys),
-                });
+                try {
+                    streamResult = await streamTextWithQuota(streamTextConfig as any, {
+                        user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
+                        feature: "PS", // PRO_SEARCH constant to avoid circular imports
+                        amount: 1,
+                        isByokKey: isUsingByokKeys(byokKeys),
+                    });
+                } catch (error: any) {
+                    // Handle AI SDK v5 model version compatibility error
+                    if (
+                        error.message?.includes("AI_UnsupportedModelVersionError") ||
+                        error.message?.includes("Unsupported model version") ||
+                        error.message?.includes(
+                            "AI SDK 4 only supports models that implement specification version",
+                        )
+                    ) {
+                        throw new Error(
+                            "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                        );
+                    }
+                    throw error;
+                }
             } else {
                 // Import streamText dynamically to ensure proper loading
                 log.info("Importing streamText function...");
@@ -313,7 +327,23 @@ export const generateTextWithGeminiSearch = async ({
                     configKeys: Object.keys(streamTextConfig),
                 });
 
-                streamResult = streamTextFn(streamTextConfig as any);
+                try {
+                    streamResult = streamTextFn(streamTextConfig as any);
+                } catch (error: any) {
+                    // Handle AI SDK v5 model version compatibility error
+                    if (
+                        error.message?.includes("AI_UnsupportedModelVersionError") ||
+                        error.message?.includes("Unsupported model version") ||
+                        error.message?.includes(
+                            "AI SDK 4 only supports models that implement specification version",
+                        )
+                    ) {
+                        throw new Error(
+                            "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                        );
+                    }
+                    throw error;
+                }
             }
             log.info("StreamText call successful, result type:", {
                 data: typeof streamResult,
@@ -321,6 +351,20 @@ export const generateTextWithGeminiSearch = async ({
         } catch (error: any) {
             log.error("Error creating streamText:", { data: error });
             log.error("Error stack:", { data: error.stack });
+
+            // Handle AI SDK v5 model version compatibility error
+            if (
+                error.message?.includes("AI_UnsupportedModelVersionError") ||
+                error.message?.includes("Unsupported model version") ||
+                error.message?.includes(
+                    "AI SDK 4 only supports models that implement specification version",
+                )
+            ) {
+                throw new Error(
+                    "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                );
+            }
+
             if (error.message?.includes("undefined to object")) {
                 throw new Error(
                     "Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.",
@@ -357,12 +401,6 @@ export const generateTextWithGeminiSearch = async ({
                 if (signal?.aborted) {
                     throw new Error("Operation aborted");
                 }
-
-                log.info("Received chunk:", {
-                    type: chunk?.type,
-                    hasTextDelta: !!(chunk as any)?.textDelta,
-                    chunkKeys: chunk ? Object.keys(chunk) : undefined,
-                });
 
                 if (chunk.type === "text-delta") {
                     fullText += chunk.textDelta;
@@ -422,8 +460,8 @@ export const generateTextWithGeminiSearch = async ({
         let reasoningDetails: any[] = [];
 
         try {
-            if (streamResult?.reasoning) {
-                reasoning = (await streamResult.reasoning) || "";
+            if (streamResult?.reasoningText) {
+                reasoning = (await streamResult.reasoningText) || "";
                 log.info("Reasoning extracted:", { data: reasoning.length });
             }
         } catch (error) {
@@ -431,8 +469,8 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         try {
-            if (streamResult?.reasoningDetails) {
-                reasoningDetails = (await streamResult.reasoningDetails) || [];
+            if (streamResult?.reasoningText) {
+                reasoningDetails = (await streamResult.reasoningText) || [];
                 log.info("ReasoningDetails extracted:", {
                     data: reasoningDetails.length,
                 });
@@ -445,8 +483,7 @@ export const generateTextWithGeminiSearch = async ({
             text: fullText,
             sources: resolvedSources,
             groundingMetadata,
-            reasoning,
-            reasoningDetails,
+            reasoningText: reasoning,
         };
 
         log.info("=== generateTextWithGeminiSearch END ===");
@@ -454,8 +491,9 @@ export const generateTextWithGeminiSearch = async ({
             textLength: result.text.length,
             sourcesCount: result.sources.length,
             hasGroundingMetadata: !!result.groundingMetadata,
-            hasReasoning: !!result.reasoning,
-            reasoningDetailsCount: result.reasoningDetails.length,
+            hasReasoning: !!result.reasoningText,
+            reasoningLength:
+                typeof result.reasoningText === "string" ? result.reasoningText.length : 0,
         });
 
         return result;
@@ -500,7 +538,7 @@ export const generateText = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
     onReasoningDetails?: (details: ReasoningDetail[]) => void;
     tools?: ToolSet;
@@ -568,12 +606,13 @@ export const generateText = async ({
         let middleware: any;
         const reasoningTagName = getReasoningTagName(model);
 
-        if (reasoningTagName && supportsReasoning(model)) {
-            middleware = extractReasoningMiddleware({
-                tagName: reasoningTagName,
-                separator: "\n",
-            });
-        }
+        // Temporarily disable reasoning middleware to debug _def error
+        // if (reasoningTagName && supportsReasoning(model)) {
+        //     middleware = extractReasoningMiddleware({
+        //         tagName: reasoningTagName,
+        //         separator: "\n",
+        //     });
+        // }
 
         // Handle API key logic for VT+ users and Gemini models
         const isGeminiModel = model.toString().toLowerCase().includes("gemini");
@@ -622,7 +661,7 @@ export const generateText = async ({
                 case "anthropic-reasoning":
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
-                        reasoning: true,
+                        reasoningText: true,
                     };
                     break;
 
@@ -638,20 +677,21 @@ export const generateText = async ({
                   system: prompt,
                   model: selectedModel,
                   messages: filteredMessages,
-                  tools,
-                  maxSteps,
-                  toolChoice: toolChoice as any,
+                  // Temporarily remove potentially problematic parameters
+                  // tools,
+                  // maxSteps,
+                  // toolChoice: toolChoice as any,
                   abortSignal: signal,
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                  // ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
               }
             : {
                   prompt,
                   model: selectedModel,
-                  tools,
-                  maxSteps,
-                  toolChoice: toolChoice as any,
+                  // tools,
+                  // maxSteps,
+                  // toolChoice: toolChoice as any,
                   abortSignal: signal,
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                  // ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
               };
 
         // Use quota-enforced streamText for VT+ users with correct feature based on mode
@@ -671,15 +711,49 @@ export const generateText = async ({
             const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
             const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
 
-            streamResult = await streamTextWithQuota(streamConfig, {
-                user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                feature: vtplusFeature!,
-                amount: 1,
-                isByokKey: isUsingByokKeys(byokKeys),
-            });
+            try {
+                streamResult = await streamTextWithQuota(streamConfig, {
+                    user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
+                    feature: vtplusFeature!,
+                    amount: 1,
+                    isByokKey: isUsingByokKeys(byokKeys),
+                });
+            } catch (error: any) {
+                // Handle AI SDK v5 model version compatibility error
+                if (
+                    error.message?.includes("AI_UnsupportedModelVersionError") ||
+                    error.message?.includes("Unsupported model version") ||
+                    error.message?.includes(
+                        "AI SDK 4 only supports models that implement specification version",
+                    )
+                ) {
+                    throw new Error(
+                        "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                    );
+                }
+                throw error;
+            }
         } else {
             // Regular chat or VT+ user with unlimited models
-            streamResult = streamText(streamConfig);
+            try {
+                // Use dynamic import to avoid module conflicts
+                const { streamText } = await import("ai");
+                streamResult = streamText(streamConfig);
+            } catch (error: any) {
+                // Handle AI SDK v5 model version compatibility error
+                if (
+                    error.message?.includes("AI_UnsupportedModelVersionError") ||
+                    error.message?.includes("Unsupported model version") ||
+                    error.message?.includes(
+                        "AI SDK 4 only supports models that implement specification version",
+                    )
+                ) {
+                    throw new Error(
+                        "This model requires a newer version of our AI system. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.",
+                    );
+                }
+                throw error;
+            }
         }
         const { fullStream } = streamResult;
         let fullText = "";
@@ -690,18 +764,28 @@ export const generateText = async ({
                 throw new Error("Operation aborted");
             }
 
+            // AI SDK v5 uses different chunk properties
             if (chunk.type === "text-delta") {
-                fullText += chunk.textDelta;
-                onChunk?.(chunk.textDelta, fullText);
+                // In v5, text-delta uses 'delta' instead of 'textDelta'
+                const textDelta = chunk.delta || chunk.textDelta;
+                fullText += textDelta;
+                onChunk?.(textDelta, fullText);
+            }
+            if (chunk.type === "reasoning-delta") {
+                // In v5, reasoning uses reasoning-delta with 'delta' property
+                const reasoningDelta = chunk.delta || chunk.textDelta;
+                reasoning += reasoningDelta;
+                onReasoning?.(reasoningDelta, reasoning);
             }
             if (chunk.type === "reasoning") {
+                // Fallback for v4 compatibility
                 reasoning += chunk.textDelta;
                 onReasoning?.(chunk.textDelta, reasoning);
             }
             if (chunk.type === "tool-call") {
                 onToolCall?.(chunk);
             }
-            if (chunk.type === ("tool-result" as any)) {
+            if (chunk.type === "tool-result") {
                 onToolResult?.(chunk);
             }
 
@@ -713,8 +797,8 @@ export const generateText = async ({
 
         // Extract reasoning details if available
         try {
-            if (streamResult?.reasoningDetails) {
-                const reasoningDetails = (await streamResult.reasoningDetails) || [];
+            if (streamResult?.reasoningText) {
+                const reasoningDetails = (await streamResult.reasoningText) || [];
                 if (reasoningDetails.length > 0) {
                     onReasoningDetails?.(reasoningDetails);
                 }
@@ -745,7 +829,7 @@ export const generateObject = async ({
     prompt: string;
     model: ModelEnum;
     schema: ZodSchema;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -856,7 +940,7 @@ export const generateObject = async ({
                 case ReasoningType.ANTHROPIC_REASONING:
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
-                        reasoning: true,
+                        reasoningText: true,
                     };
                     break;
 

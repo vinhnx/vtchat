@@ -9,7 +9,6 @@ Updated the global CSS theming system to fully comply with Shadcn UI's official 
 ### 1. Core CSS Variable Updates
 
 - **Files Updated**:
-
     - `/apps/web/app/globals.css`
     - `/packages/ui/src/styles.css`
 

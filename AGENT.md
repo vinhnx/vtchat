@@ -91,7 +91,7 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 ✔ Time-box to 2 iterations; escalate if more.
 ✔ Always run format, lint, build, and tests before requesting review.
 
-### Git Hooks
+### Development Quality
 
 - **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
 - **Philosophy**: Encourage good practices without blocking development flow

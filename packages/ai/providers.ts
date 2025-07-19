@@ -1,21 +1,14 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import type { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import type { LanguageModelV1 } from "@ai-sdk/provider";
-import { createTogetherAI } from "@ai-sdk/togetherai";
-import { createXai } from "@ai-sdk/xai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
-import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
+import { type LanguageModelV1, type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
 export const Providers = {
     OPENAI: "openai",
     ANTHROPIC: "anthropic",
-    TOGETHER: "together",
     GOOGLE: "google",
-    FIREWORKS: "fireworks",
-    XAI: "xai",
     OPENROUTER: "openrouter",
 } as const;
 
@@ -55,10 +48,7 @@ const getApiKey = (
         const keyMapping: Record<ProviderEnumType, string> = {
             [Providers.OPENAI]: "OPENAI_API_KEY",
             [Providers.ANTHROPIC]: "ANTHROPIC_API_KEY",
-            [Providers.TOGETHER]: "TOGETHER_API_KEY",
             [Providers.GOOGLE]: "GEMINI_API_KEY",
-            [Providers.FIREWORKS]: "FIREWORKS_API_KEY",
-            [Providers.XAI]: "XAI_API_KEY",
             [Providers.OPENROUTER]: "OPENROUTER_API_KEY",
         };
 
@@ -107,10 +97,7 @@ type ProviderInstance =
     | ReturnType<typeof createOpenAI>
     | ReturnType<typeof createAnthropic>
     | ReturnType<typeof createGoogleGenerativeAI>
-    | ReturnType<typeof createTogetherAI>
-    | ReturnType<typeof createXai>
-    | ReturnType<typeof createOpenRouter>
-    | ReturnType<typeof createOpenAICompatible>;
+    | ReturnType<typeof createOpenRouter>;
 
 export const getProviderInstance = (
     provider: ProviderEnumType,
@@ -174,26 +161,9 @@ export const getProviderInstance = (
                 headers,
             });
         }
-        case "together":
-            validateApiKey(Providers.TOGETHER);
-            return createTogetherAI({
-                apiKey,
-            });
         case "google":
             validateApiKey(Providers.GOOGLE);
             return createGoogleGenerativeAI({
-                apiKey,
-            });
-        case "fireworks":
-            validateApiKey(Providers.FIREWORKS);
-            // Use OpenAI provider for Fireworks to avoid model ID transformation issues
-            return createOpenAI({
-                baseURL: "https://api.fireworks.ai/inference/v1",
-                apiKey,
-            });
-        case "xai":
-            validateApiKey(Providers.XAI);
-            return createXai({
                 apiKey,
             });
         case "openrouter":
@@ -340,6 +310,21 @@ export const getLanguageModel = (
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             const errorStack = error instanceof Error ? error.stack : undefined;
+
+            // Handle AI SDK v5 model version compatibility error
+            if (
+                errorMessage.includes("AI_UnsupportedModelVersionError") ||
+                errorMessage.includes("Unsupported model version") ||
+                errorMessage.includes(
+                    "AI SDK 4 only supports models that implement specification version 'v1'",
+                )
+            ) {
+                log.error("AI SDK v5 model compatibility error:", { data: errorMessage });
+                throw new Error(
+                    `This model (${model.name}) requires AI SDK v5 which is not yet supported. Please try using Gemini 2.5 Flash Lite instead, which is compatible with the current system.`,
+                );
+            }
+
             log.error("Error creating standard model:", { data: errorMessage });
             if (errorStack) {
                 log.error("Error stack:", { data: errorStack });
