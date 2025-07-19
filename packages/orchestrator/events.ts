@@ -26,7 +26,7 @@ export class TypedEventEmitter<T extends EventSchemaDefinition> {
         };
 
         for (const event of Object.keys(this.state) as Array<keyof T>) {
-            this.on(event, data => allEventsCallback(event, data));
+            this.on(event, (data) => allEventsCallback(event, data));
         }
 
         return this;
@@ -39,7 +39,7 @@ export class TypedEventEmitter<T extends EventSchemaDefinition> {
 
     emit<K extends keyof T>(event: K, data: T[K]) {
         this.state[event] = data;
-        this.listeners.get(event)?.forEach(callback => {
+        this.listeners.get(event)?.forEach((callback) => {
             callback(data);
         });
         return this;
@@ -62,7 +62,7 @@ export class TypedEventEmitter<T extends EventSchemaDefinition> {
 }
 
 export function createTypedEventEmitter<T extends EventSchemaDefinition>(
-    initialState?: Partial<{ [K in keyof T]: T[K] }>
+    initialState?: Partial<{ [K in keyof T]: T[K] }>,
 ) {
     return new TypedEventEmitter<T>(initialState);
 }

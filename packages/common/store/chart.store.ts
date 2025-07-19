@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type ChartData = {
     id: string;
-    type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
+    type: "barChart" | "lineChart" | "areaChart" | "pieChart" | "radarChart";
     title: string;
     data: any[];
     threadItemId?: string;
@@ -15,7 +15,7 @@ export type ChartData = {
 
 type ChartStore = {
     charts: ChartData[];
-    addChart: (chart: Omit<ChartData, 'id' | 'createdAt'>) => string;
+    addChart: (chart: Omit<ChartData, "id" | "createdAt">) => string;
     getChart: (id: string) => ChartData | undefined;
     getChartsForThreadItem: (threadItemId: string) => ChartData[];
     clearCharts: () => void;
@@ -27,7 +27,7 @@ export const useChartStore = create<ChartStore>()(
         (set, get) => ({
             charts: [],
 
-            addChart: chartData => {
+            addChart: (chartData) => {
                 const id = `chart_${Date.now()}_${Math.random().toString(36).substring(7)}`;
                 const chart: ChartData = {
                     ...chartData,
@@ -35,24 +35,24 @@ export const useChartStore = create<ChartStore>()(
                     createdAt: Date.now(),
                 };
 
-                set(state => ({
+                set((state) => ({
                     charts: [...state.charts, chart],
                 }));
 
                 return id;
             },
 
-            getChart: id => {
-                return get().charts.find(chart => chart.id === id);
+            getChart: (id) => {
+                return get().charts.find((chart) => chart.id === id);
             },
 
-            getChartsForThreadItem: threadItemId => {
-                return get().charts.filter(chart => chart.threadItemId === threadItemId);
+            getChartsForThreadItem: (threadItemId) => {
+                return get().charts.filter((chart) => chart.threadItemId === threadItemId);
             },
 
-            removeChart: id => {
-                set(state => ({
-                    charts: state.charts.filter(chart => chart.id !== id),
+            removeChart: (id) => {
+                set((state) => ({
+                    charts: state.charts.filter((chart) => chart.id !== id),
                 }));
             },
 
@@ -61,8 +61,8 @@ export const useChartStore = create<ChartStore>()(
             },
         }),
         {
-            name: 'vtchat-charts',
+            name: "vtchat-charts",
             version: 1,
-        }
-    )
+        },
+    ),
 );

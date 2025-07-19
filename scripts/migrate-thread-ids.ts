@@ -6,12 +6,12 @@
  * Usage: bun scripts/migrate-thread-ids.ts
  */
 
-import { ChatStorage } from '../packages/common/store/chat.store';
-import { migrateThreadIds, validateThreadIds } from '../packages/shared/lib/migrate-thread-ids';
-import { log } from '../packages/shared/logger';
+import { ChatStorage } from "../packages/common/store/chat.store";
+import { migrateThreadIds, validateThreadIds } from "../packages/shared/lib/migrate-thread-ids";
+import { log } from "../packages/shared/logger";
 
 async function main() {
-    log.info({}, 'Starting thread ID migration process');
+    log.info({}, "Starting thread ID migration process");
 
     try {
         // Initialize storage
@@ -26,7 +26,7 @@ async function main() {
 
         // Update thread ID function
         const updateThreadId = async (oldId: string, newId: string) => {
-            await storage.transaction('rw', [storage.threads, storage.threadItems], async () => {
+            await storage.transaction("rw", [storage.threads, storage.threadItems], async () => {
                 // Get the thread
                 const thread = await storage.threads.get(oldId);
                 if (!thread) {
@@ -40,7 +40,7 @@ async function main() {
 
                 // Update all thread items to reference new thread ID
                 const threadItems = await storage.threadItems
-                    .where('threadId')
+                    .where("threadId")
                     .equals(oldId)
                     .toArray();
                 for (const item of threadItems) {
@@ -54,23 +54,23 @@ async function main() {
                         newId,
                         threadItemsUpdated: threadItems.length,
                     },
-                    'Updated thread and related items'
+                    "Updated thread and related items",
                 );
             });
         };
 
         // Validate current state
-        log.info({}, 'Validating current thread IDs...');
+        log.info({}, "Validating current thread IDs...");
         const preValidation = await validateThreadIds(getThreads);
-        log.info(preValidation, 'Pre-migration validation results');
+        log.info(preValidation, "Pre-migration validation results");
 
         // Run migration
         const migrationResult = await migrateThreadIds(getThreads, updateThreadId);
 
         // Validate post-migration
-        log.info({}, 'Validating migrated thread IDs...');
+        log.info({}, "Validating migrated thread IDs...");
         const postValidation = await validateThreadIds(getThreads);
-        log.info(postValidation, 'Post-migration validation results');
+        log.info(postValidation, "Post-migration validation results");
 
         // Summary
         log.info(
@@ -79,17 +79,17 @@ async function main() {
                 preValidation,
                 postValidation,
             },
-            'Migration completed successfully'
+            "Migration completed successfully",
         );
 
         if (migrationResult.errors.length > 0) {
-            log.warn({ errors: migrationResult.errors }, 'Migration completed with errors');
+            log.warn({ errors: migrationResult.errors }, "Migration completed with errors");
             process.exit(1);
         }
 
         await storage.close();
     } catch (error) {
-        log.error({ error }, 'Migration failed');
+        log.error({ error }, "Migration failed");
         process.exit(1);
     }
 }

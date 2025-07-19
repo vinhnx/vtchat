@@ -1,5 +1,5 @@
-import { log } from '@repo/shared/logger';
-import { checkBudgetStatus } from './budget-tracking';
+import { log } from "@repo/shared/logger";
+import { checkBudgetStatus } from "./budget-tracking";
 
 /**
  * Cache for budget status to avoid excessive database queries
@@ -8,7 +8,7 @@ import { checkBudgetStatus } from './budget-tracking';
 let budgetStatusCache: {
     shouldDisable: boolean;
     lastChecked: Date;
-    status: 'ok' | 'warning' | 'exceeded';
+    status: "ok" | "warning" | "exceeded";
 } | null = null;
 
 const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes for tight budget control
@@ -19,7 +19,7 @@ const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes for tight budget control
  */
 export async function shouldDisableGemini(): Promise<{
     shouldDisable: boolean;
-    status: 'ok' | 'warning' | 'exceeded';
+    status: "ok" | "warning" | "exceeded";
     reason?: string;
 }> {
     const now = new Date();
@@ -32,13 +32,13 @@ export async function shouldDisableGemini(): Promise<{
         return {
             shouldDisable: budgetStatusCache.shouldDisable,
             status: budgetStatusCache.status,
-            reason: budgetStatusCache.shouldDisable ? 'Monthly budget limit exceeded' : undefined,
+            reason: budgetStatusCache.shouldDisable ? "Monthly budget limit exceeded" : undefined,
         };
     }
 
     try {
         // Check current budget status
-        const budgetStatus = await checkBudgetStatus('gemini');
+        const budgetStatus = await checkBudgetStatus("gemini");
 
         // Update cache
         budgetStatusCache = {
@@ -54,31 +54,31 @@ export async function shouldDisableGemini(): Promise<{
                     budgetLimitUSD: budgetStatus.budgetLimitUSD,
                     percentageUsed: budgetStatus.percentageUsed,
                 },
-                'Gemini models disabled due to budget limit exceeded'
+                "Gemini models disabled due to budget limit exceeded",
             );
-        } else if (budgetStatus.status === 'warning') {
+        } else if (budgetStatus.status === "warning") {
             log.info(
                 {
                     totalCostUSD: budgetStatus.totalCostUSD,
                     budgetLimitUSD: budgetStatus.budgetLimitUSD,
                     percentageUsed: budgetStatus.percentageUsed,
                 },
-                'Approaching budget limit for Gemini models'
+                "Approaching budget limit for Gemini models",
             );
         }
 
         return {
             shouldDisable: budgetStatus.shouldDisable,
             status: budgetStatus.status,
-            reason: budgetStatus.shouldDisable ? 'Monthly budget limit exceeded' : undefined,
+            reason: budgetStatus.shouldDisable ? "Monthly budget limit exceeded" : undefined,
         };
     } catch (error) {
-        log.error({ error }, 'Failed to check budget status, allowing requests to continue');
+        log.error({ error }, "Failed to check budget status, allowing requests to continue");
 
         // On error, allow requests to continue (fail open)
         return {
             shouldDisable: false,
-            status: 'ok',
+            status: "ok",
         };
     }
 }
@@ -89,7 +89,7 @@ export async function shouldDisableGemini(): Promise<{
  */
 export function refreshBudgetCache(): void {
     budgetStatusCache = null;
-    log.info('Budget status cache cleared');
+    log.info("Budget status cache cleared");
 }
 
 /**
@@ -97,5 +97,5 @@ export function refreshBudgetCache(): void {
  * Useful for admin dashboards that need real-time data
  */
 export async function getCurrentBudgetStatus() {
-    return await checkBudgetStatus('gemini');
+    return await checkBudgetStatus("gemini");
 }

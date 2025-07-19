@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { GatedFeatureAlert } from '@repo/common/components';
-import type { FeatureSlug } from '@repo/shared/types/subscription';
-import { Button, cn } from '@repo/ui';
-import React from 'react';
-import { LoginRequiredDialog } from '../../login-required-dialog';
-import { COLOUR_CLASSES } from '../config/constants';
-import { useFeatureToggle } from '../hooks/useFeatureToggle';
+import { GatedFeatureAlert } from "@repo/common/components";
+import type { FeatureSlug } from "@repo/shared/types/subscription";
+import { Button, cn } from "@repo/ui";
+import React from "react";
+import { LoginRequiredDialog } from "../../login-required-dialog";
+import { COLOUR_CLASSES } from "../config/constants";
+import { useFeatureToggle } from "../hooks/useFeatureToggle";
 
 export interface FeatureToggleButtonProps {
     enabledSelector: (state: any) => boolean;
-    activeKey: 'webSearch' | 'mathCalculator' | 'charts';
+    activeKey: "webSearch" | "mathCalculator" | "charts";
     icon: React.ReactNode;
     label: string;
-    colour: 'blue' | 'orange' | 'purple';
+    colour: "blue" | "orange" | "purple";
     requiredFeature?: FeatureSlug;
     tooltip: (enabled: boolean) => string;
     featureName: string;
@@ -52,17 +52,17 @@ export function FeatureToggleButton({
             >
                 <Button
                     aria-label={isEnabled ? `${label} Enabled` : `Enable ${label}`}
-                    className={cn('gap-2', isEnabled && `${colourClass.bg} ${colourClass.text}`)}
+                    className={cn("gap-2", isEnabled && `${colourClass.bg} ${colourClass.text}`)}
                     onClick={handleToggle}
-                    size={isEnabled ? 'sm' : 'icon-sm'}
+                    size={isEnabled ? "sm" : "icon-sm"}
                     tooltip={tooltip(isEnabled)}
-                    variant={isEnabled ? 'secondary' : 'ghost'}
+                    variant={isEnabled ? "secondary" : "ghost"}
                 >
-                    {React.isValidElement(icon) && typeof icon.type !== 'symbol'
+                    {React.isValidElement(icon) && typeof icon.type !== "symbol"
                         ? React.cloneElement(icon as React.ReactElement<any>, {
                               className: cn(
-                                  isEnabled ? colourClass.iconText : 'text-muted-foreground',
-                                  (icon as React.ReactElement<any>).props.className
+                                  isEnabled ? colourClass.iconText : "text-muted-foreground",
+                                  (icon as React.ReactElement<any>).props.className,
                               ),
                               size: 16,
                               strokeWidth: 2,

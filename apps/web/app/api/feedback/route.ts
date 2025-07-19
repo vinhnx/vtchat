@@ -1,12 +1,12 @@
-import { geolocation } from '@vercel/functions';
-import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-server';
-import { db } from '@/lib/database';
-import { feedback } from '@/lib/database/schema';
+import { geolocation } from "@vercel/functions";
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { feedback } from "@/lib/database/schema";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const userId = session?.user?.id;
 
     if (!userId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { feedback: feedbackText } = await request.json();
@@ -28,5 +28,5 @@ export async function POST(request: NextRequest) {
         },
     });
 
-    return NextResponse.json({ message: 'Feedback received' }, { status: 200 });
+    return NextResponse.json({ message: "Feedback received" }, { status: 200 });
 }

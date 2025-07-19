@@ -37,7 +37,7 @@ export class Context<T extends ContextSchemaDefinition> {
 }
 
 export function createContext<T extends ContextSchemaDefinition>(
-    initialState?: Partial<{ [K in keyof T]: T[K] }>
+    initialState?: Partial<{ [K in keyof T]: T[K] }>,
 ) {
     return new Context<T>(initialState);
 }

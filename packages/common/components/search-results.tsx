@@ -1,8 +1,8 @@
-'use client';
-import { LinkPreviewPopover } from '@repo/common/components';
-import type { Source } from '@repo/shared/types';
-import { getHost, getHostname } from '@repo/shared/utils';
-import { Badge, Flex, LinkFavicon } from '@repo/ui';
+"use client";
+import { LinkPreviewPopover } from "@repo/common/components";
+import type { Source } from "@repo/shared/types";
+import { getHost, getHostname } from "@repo/shared/utils";
+import { Badge, Flex, LinkFavicon } from "@repo/ui";
 
 export type SearchResultsType = {
     sources: Source[];
@@ -21,7 +21,7 @@ export const SearchResultsList = ({ sources }: SearchResultsType) => {
                         <LinkPreviewPopover key={`source-${source.link}-${index}`} source={source}>
                             <Badge
                                 onClick={() => {
-                                    window?.open(source?.link, '_blank');
+                                    window?.open(source?.link, "_blank");
                                 }}
                                 size="md"
                                 variant="default"

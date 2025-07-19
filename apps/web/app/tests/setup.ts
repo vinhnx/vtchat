@@ -1,24 +1,24 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 // Mock Next.js environment
-process.env.NODE_ENV = 'test';
-process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000';
+process.env.NODE_ENV = "test";
+process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3000";
 
 // Mock environment variables for testing
-process.env.GEMINI_API_KEY = 'test-gemini-key';
-process.env.LMSTUDIO_BASE_URL = 'http://localhost:1234';
-process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
-process.env.BETTER_AUTH_SECRET = 'test-secret';
-process.env.BETTER_AUTH_URL = 'http://localhost:3000';
+process.env.GEMINI_API_KEY = "test-gemini-key";
+process.env.LMSTUDIO_BASE_URL = "http://localhost:1234";
+process.env.OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
+process.env.BETTER_AUTH_SECRET = "test-secret";
+process.env.BETTER_AUTH_URL = "http://localhost:3000";
 
 // Mock global fetch for API calls
 global.fetch = vi.fn();
 
 // Mock crypto.randomUUID for consistent test results
-Object.defineProperty(global, 'crypto', {
+Object.defineProperty(global, "crypto", {
     value: {
-        randomUUID: vi.fn(() => 'test-uuid-1234'),
+        randomUUID: vi.fn(() => "test-uuid-1234"),
     },
 });
 
@@ -68,7 +68,7 @@ export const restoreConsole = () => {
 };
 
 // Mock logger to prevent actual logging during tests
-vi.mock('@repo/shared/logger', () => ({
+vi.mock("@repo/shared/logger", () => ({
     log: {
         info: vi.fn(),
         warn: vi.fn(),
@@ -78,7 +78,7 @@ vi.mock('@repo/shared/logger', () => ({
 }));
 
 // Mock the orchestrator to prevent complex workflow execution
-vi.mock('@repo/orchestrator', () => ({
+vi.mock("@repo/orchestrator", () => ({
     createContext: vi.fn(() => ({})),
     createTypedEventEmitter: vi.fn(() => ({
         getAllState: vi.fn(() => ({})),
@@ -94,7 +94,7 @@ vi.mock('@repo/orchestrator', () => ({
 }));
 
 // Mock database to prevent connection issues
-vi.mock('@/lib/database', () => ({
+vi.mock("@/lib/database", () => ({
     db: {
         select: vi.fn(),
         insert: vi.fn(),
@@ -104,7 +104,7 @@ vi.mock('@/lib/database', () => ({
 }));
 
 // Mock Drizzle ORM
-vi.mock('drizzle-orm', () => ({
+vi.mock("drizzle-orm", () => ({
     eq: vi.fn(),
     and: vi.fn(),
     or: vi.fn(),

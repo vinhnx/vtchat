@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import type { ComponentType, ReactNode } from 'react';
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactNode } from "react";
 
 /**
  * Higher-order component that wraps a component with client-side dynamic import
@@ -9,12 +9,12 @@ import type { ComponentType, ReactNode } from 'react';
  */
 export function withClientOnly<P extends object>(
     Component: ComponentType<P>,
-    loadingComponent?: ComponentType | (() => ReactNode)
+    loadingComponent?: ComponentType | (() => ReactNode),
 ) {
     const ClientComponent = dynamic(() => Promise.resolve(Component), {
         ssr: false,
         loading: loadingComponent
-            ? typeof loadingComponent === 'function' && loadingComponent.length === 0
+            ? typeof loadingComponent === "function" && loadingComponent.length === 0
                 ? (loadingComponent as () => ReactNode)
                 : () => {
                       const LoadingComp = loadingComponent as ComponentType;

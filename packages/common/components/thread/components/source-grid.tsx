@@ -1,27 +1,27 @@
-import { SourceList } from '@repo/common/components';
-import { useAppStore } from '@repo/common/store';
-import type { Source } from '@repo/shared/types';
-import { getHost } from '@repo/shared/utils';
-import { LinkFavicon } from '@repo/ui';
+import { SourceList } from "@repo/common/components";
+import { useAppStore } from "@repo/common/store";
+import type { Source } from "@repo/shared/types";
+import { getHost } from "@repo/shared/utils";
+import { LinkFavicon } from "@repo/ui";
 
 type SourceGridProps = {
     sources: Source[];
 };
 
 export const SourceGrid = ({ sources }: SourceGridProps) => {
-    const openSideDrawer = useAppStore(state => state.openSideDrawer);
+    const openSideDrawer = useAppStore((state) => state.openSideDrawer);
     if (!(sources && Array.isArray(sources)) || sources?.length === 0) {
         return null;
     }
 
     // Filter out invalid sources and ensure they have required properties
     const validSources = sources.filter(
-        source =>
+        (source) =>
             source &&
-            typeof source.title === 'string' &&
-            typeof source.link === 'string' &&
-            source.link.trim() !== '' &&
-            typeof source.index === 'number'
+            typeof source.title === "string" &&
+            typeof source.link === "string" &&
+            source.link.trim() !== "" &&
+            typeof source.index === "number",
     );
 
     if (validSources.length === 0) {
@@ -37,7 +37,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     className="bg-quaternary/60 hover:bg-quaternary flex cursor-pointer flex-col justify-between rounded-md p-2"
                     key={index}
                     onClick={() => {
-                        window?.open(source?.link, '_blank');
+                        window?.open(source?.link, "_blank");
                     }}
                 >
                     {source?.link && (
@@ -57,7 +57,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     key={4}
                     onClick={() => {
                         openSideDrawer({
-                            title: 'Sources',
+                            title: "Sources",
                             badge: sortedSources.length,
                             renderContent: () => <SourceList sources={sortedSources} />,
                         });

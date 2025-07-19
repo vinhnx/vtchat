@@ -3,11 +3,11 @@
  * Uses Neon database tools for comprehensive checks
  */
 
-import { log } from '@repo/shared/logger';
+import { log } from "@repo/shared/logger";
 // Note: These imports will need to be provided by the consuming application
 // This utility is designed to be used from API routes where database access is available
-import { PlanSlug } from '@repo/shared/types/subscription';
-import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { PlanSlug } from "@repo/shared/types/subscription";
+import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 
 export interface SubscriptionVerificationResult {
     hasActiveSubscription: boolean;
@@ -20,7 +20,7 @@ export interface SubscriptionVerificationResult {
         creemCustomerId?: string | null;
     };
     userPlanSlug?: string | null;
-    verificationSource: 'database_subscription' | 'user_plan_slug' | 'none';
+    verificationSource: "database_subscription" | "user_plan_slug" | "none";
     message: string;
 }
 
@@ -38,13 +38,13 @@ export interface DatabaseDependencies {
 export async function verifyExistingCreemSubscription(
     userId: string,
     deps: DatabaseDependencies,
-    targetPlan: PlanSlug = PlanSlug.VT_PLUS
+    targetPlan: PlanSlug = PlanSlug.VT_PLUS,
 ): Promise<SubscriptionVerificationResult> {
     const { db, userSubscriptions, users, eq } = deps;
 
     try {
-        if (process.env.NODE_ENV === 'development') {
-            log.info({ userId, targetPlan }, 'Checking existing subscription for user');
+        if (process.env.NODE_ENV === "development") {
+            log.info({ userId, targetPlan }, "Checking existing subscription for user");
         }
 
         // Step 1: Check user_subscriptions table for formal subscription records
@@ -74,10 +74,10 @@ export async function verifyExistingCreemSubscription(
         const userPlanSlug = user.length > 0 ? user[0].planSlug : null;
         const _userCreemCustomerId = user.length > 0 ? user[0].creemCustomerId : null;
 
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === "development") {
             log.info(
                 { subscriptionCount: subscription.length, userPlanSlug },
-                'Found subscription records'
+                "Found subscription records",
             );
         }
 
@@ -89,7 +89,7 @@ export async function verifyExistingCreemSubscription(
             const isNotExpired = !sub.currentPeriodEnd || new Date() < sub.currentPeriodEnd;
             const hasActiveSubscription = isTargetPlan && isActiveStatus && isNotExpired;
 
-            if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === "development") {
                 log.info(
                     {
                         plan: sub.plan,
@@ -100,7 +100,7 @@ export async function verifyExistingCreemSubscription(
                         hasActiveSubscription,
                         currentPeriodEnd: sub.currentPeriodEnd,
                     },
-                    'Subscription analysis'
+                    "Subscription analysis",
                 );
             }
 
@@ -116,7 +116,7 @@ export async function verifyExistingCreemSubscription(
                         creemCustomerId: sub.creemCustomerId,
                     },
                     userPlanSlug,
-                    verificationSource: 'database_subscription',
+                    verificationSource: "database_subscription",
                     message: `Active ${targetPlan} subscription found in database`,
                 };
             }
@@ -131,37 +131,37 @@ export async function verifyExistingCreemSubscription(
                     creemCustomerId: sub.creemCustomerId,
                 },
                 userPlanSlug,
-                verificationSource: 'database_subscription',
+                verificationSource: "database_subscription",
                 message: `Inactive/expired ${targetPlan} subscription found in database`,
             };
         }
 
         // Step 4: Fallback to users.plan_slug check
         if (userPlanSlug === targetPlan) {
-            if (process.env.NODE_ENV === 'development') {
-                log.info({ targetPlan }, 'Found plan in user.plan_slug but no subscription record');
+            if (process.env.NODE_ENV === "development") {
+                log.info({ targetPlan }, "Found plan in user.plan_slug but no subscription record");
             }
 
             return {
                 hasActiveSubscription: true,
                 userPlanSlug,
-                verificationSource: 'user_plan_slug',
+                verificationSource: "user_plan_slug",
                 message: `${targetPlan} plan found in user profile (legacy/admin-granted access)`,
             };
         }
 
         // Step 5: No active subscription found
-        if (process.env.NODE_ENV === 'development') {
-            log.info({ targetPlan }, 'No active subscription found');
+        if (process.env.NODE_ENV === "development") {
+            log.info({ targetPlan }, "No active subscription found");
         }
         return {
             hasActiveSubscription: false,
             userPlanSlug,
-            verificationSource: 'none',
+            verificationSource: "none",
             message: `No active ${targetPlan} subscription found`,
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error during verification:', {
+        log.error("[Subscription Verification] Error during verification:", {
             data: error,
         });
 
@@ -169,8 +169,8 @@ export async function verifyExistingCreemSubscription(
         // to prevent blocking legitimate purchases
         return {
             hasActiveSubscription: false,
-            verificationSource: 'none',
-            message: 'Verification failed due to database error - assuming no active subscription',
+            verificationSource: "none",
+            message: "Verification failed due to database error - assuming no active subscription",
         };
     }
 }
@@ -180,10 +180,10 @@ export async function verifyExistingCreemSubscription(
  */
 export async function getCreemCustomerInfo(
     userId: string,
-    deps: DatabaseDependencies
+    deps: DatabaseDependencies,
 ): Promise<{
     customerId: string | null;
-    source: 'subscription' | 'user' | 'none';
+    source: "subscription" | "user" | "none";
 }> {
     const { db, userSubscriptions, users, eq } = deps;
 
@@ -200,7 +200,7 @@ export async function getCreemCustomerInfo(
         if (subscription.length > 0 && subscription[0].creemCustomerId) {
             return {
                 customerId: subscription[0].creemCustomerId,
-                source: 'subscription',
+                source: "subscription",
             };
         }
 
@@ -216,21 +216,21 @@ export async function getCreemCustomerInfo(
         if (user.length > 0 && user[0].creemCustomerId) {
             return {
                 customerId: user[0].creemCustomerId,
-                source: 'user',
+                source: "user",
             };
         }
 
         return {
             customerId: null,
-            source: 'none',
+            source: "none",
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error getting Creem customer info:', {
+        log.error("[Subscription Verification] Error getting Creem customer info:", {
             data: error,
         });
         return {
             customerId: null,
-            source: 'none',
+            source: "none",
         };
     }
 }
@@ -241,7 +241,7 @@ export async function getCreemCustomerInfo(
  */
 export async function validateSubscriptionConsistency(
     userId: string,
-    deps: DatabaseDependencies
+    deps: DatabaseDependencies,
 ): Promise<{
     isConsistent: boolean;
     issues: string[];
@@ -254,9 +254,9 @@ export async function validateSubscriptionConsistency(
         const verification = await verifyExistingCreemSubscription(userId, deps);
 
         // Check for common inconsistency patterns
-        if (verification.verificationSource === 'user_plan_slug') {
-            issues.push('User has VT+ in plan_slug but no subscription record');
-            recommendations.push('Consider running subscription sync utility');
+        if (verification.verificationSource === "user_plan_slug") {
+            issues.push("User has VT+ in plan_slug but no subscription record");
+            recommendations.push("Consider running subscription sync utility");
         }
 
         if (
@@ -264,8 +264,8 @@ export async function validateSubscriptionConsistency(
             verification.subscriptionDetails?.currentPeriodEnd &&
             new Date() > verification.subscriptionDetails.currentPeriodEnd
         ) {
-            issues.push('Subscription marked as active but period has ended');
-            recommendations.push('Check webhook processing for period updates');
+            issues.push("Subscription marked as active but period has ended");
+            recommendations.push("Check webhook processing for period updates");
         }
 
         return {
@@ -274,13 +274,13 @@ export async function validateSubscriptionConsistency(
             recommendations,
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error during consistency check:', {
+        log.error("[Subscription Verification] Error during consistency check:", {
             data: error,
         });
         return {
             isConsistent: false,
-            issues: ['Database error during consistency check'],
-            recommendations: ['Check database connectivity and try again'],
+            issues: ["Database error during consistency check"],
+            recommendations: ["Check database connectivity and try again"],
         };
     }
 }

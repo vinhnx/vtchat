@@ -6,15 +6,15 @@
  * retry logic with exponential backoff, and enhanced security measures.
  */
 
-const https = require('node:https');
-const crypto = require('node:crypto');
+const https = require("node:https");
+const crypto = require("node:crypto");
 
-const BASE_URL = process.env.BASE_URL || 'https://vtchat.io.vn';
+const BASE_URL = process.env.BASE_URL || "https://vtchat.io.vn";
 const CRON_SECRET = process.env.CRON_SECRET_TOKEN;
-const TIMEOUT_MS = parseInt(process.env.TIMEOUT_MS || '300000'); // 5 minutes default
-const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || '3');
-const INITIAL_RETRY_DELAY = parseInt(process.env.INITIAL_RETRY_DELAY || '1000'); // 1 second
-const MAX_RETRY_DELAY = parseInt(process.env.MAX_RETRY_DELAY || '30000'); // 30 seconds
+const TIMEOUT_MS = parseInt(process.env.TIMEOUT_MS || "300000"); // 5 minutes default
+const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || "3");
+const INITIAL_RETRY_DELAY = parseInt(process.env.INITIAL_RETRY_DELAY || "1000"); // 1 second
+const MAX_RETRY_DELAY = parseInt(process.env.MAX_RETRY_DELAY || "30000"); // 30 seconds
 
 // Create HTTPS agent with optimized settings
 const httpsAgent = new https.Agent({
@@ -25,7 +25,7 @@ const httpsAgent = new https.Agent({
     timeout: TIMEOUT_MS,
     // Enable TCP keep-alive
     keepAliveTimeout: 30000,
-    scheduling: 'fifo',
+    scheduling: "fifo",
 });
 
 // Enhanced validation with constant-time comparison for secrets
@@ -33,26 +33,26 @@ function validateEnvironment() {
     const errors = [];
 
     if (!CRON_SECRET) {
-        errors.push('CRON_SECRET_TOKEN environment variable is required');
+        errors.push("CRON_SECRET_TOKEN environment variable is required");
     } else if (CRON_SECRET.length < 32) {
-        errors.push('CRON_SECRET_TOKEN must be at least 32 characters long');
+        errors.push("CRON_SECRET_TOKEN must be at least 32 characters long");
     }
 
-    if (!BASE_URL || !BASE_URL.startsWith('https://')) {
-        errors.push('BASE_URL must be a valid HTTPS URL');
+    if (!BASE_URL || !BASE_URL.startsWith("https://")) {
+        errors.push("BASE_URL must be a valid HTTPS URL");
     }
 
     if (TIMEOUT_MS < 5000 || TIMEOUT_MS > 600000) {
-        errors.push('TIMEOUT_MS must be between 5000 and 600000 milliseconds');
+        errors.push("TIMEOUT_MS must be between 5000 and 600000 milliseconds");
     }
 
     if (MAX_RETRIES < 1 || MAX_RETRIES > 10) {
-        errors.push('MAX_RETRIES must be between 1 and 10');
+        errors.push("MAX_RETRIES must be between 1 and 10");
     }
 
     if (errors.length > 0) {
-        console.error('❌ Environment validation failed:');
-        errors.forEach(error => console.error(`   • ${error}`));
+        console.error("❌ Environment validation failed:");
+        errors.forEach((error) => console.error(`   • ${error}`));
         process.exit(1);
     }
 }
@@ -69,26 +69,26 @@ function _safeCompare(a, b) {
 validateEnvironment();
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Enhanced retry logic with jitter and circuit breaker pattern
-async function makeRequestWithRetry(endpoint, type = 'hourly', attempt = 1) {
+async function makeRequestWithRetry(endpoint, type = "hourly", attempt = 1) {
     const startTime = Date.now();
 
     try {
         const result = await makeRequest(endpoint, type);
         const duration = Date.now() - startTime;
-        logMetrics(type, 'success', duration, attempt);
+        logMetrics(type, "success", duration, attempt);
         return result;
     } catch (error) {
         const duration = Date.now() - startTime;
-        logMetrics(type, 'error', duration, attempt, error.message);
+        logMetrics(type, "error", duration, attempt, error.message);
 
         if (attempt >= MAX_RETRIES) {
             throw new Error(
                 `All ${MAX_RETRIES} attempts failed for ${type} maintenance. ` +
-                    `Last error: ${error.message}`
+                    `Last error: ${error.message}`,
             );
         }
 
@@ -98,7 +98,7 @@ async function makeRequestWithRetry(endpoint, type = 'hourly', attempt = 1) {
         const delay = Math.floor(baseDelay + jitter);
 
         console.log(
-            `⚠️  Attempt ${attempt}/${MAX_RETRIES} failed after ${duration}ms: ${error.message}`
+            `⚠️  Attempt ${attempt}/${MAX_RETRIES} failed after ${duration}ms: ${error.message}`,
         );
         console.log(`⏳ Retrying in ${delay}ms...`);
 
@@ -116,9 +116,9 @@ function logMetrics(type, status, duration, attempt, error = null) {
         duration_ms: duration,
         attempt,
         error: error || null,
-        environment: process.env.NODE_ENV || 'production',
+        environment: process.env.NODE_ENV || "production",
         metadata: {
-            runner: process.env.RUNNER_ENVIRONMENT || 'fly-cron',
+            runner: process.env.RUNNER_ENVIRONMENT || "fly-cron",
             node_version: process.version,
             base_url: BASE_URL,
         },
@@ -128,7 +128,7 @@ function logMetrics(type, status, duration, attempt, error = null) {
     console.log(`📊 METRICS: ${JSON.stringify(metrics)}`);
 
     // Send metrics to observability endpoint (fire and forget)
-    sendMetricsToEndpoint(metrics).catch(err => {
+    sendMetricsToEndpoint(metrics).catch((err) => {
         // Don't fail the main process if metrics reporting fails
         console.log(`⚠️  Failed to send metrics: ${err.message}`);
     });
@@ -141,19 +141,19 @@ async function sendMetricsToEndpoint(metrics) {
         const payload = JSON.stringify(metrics);
 
         const options = {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(payload),
-                'User-Agent': 'Cron-Metrics-Reporter',
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(payload),
+                "User-Agent": "Cron-Metrics-Reporter",
             },
             timeout: 10000, // 10 second timeout for metrics
         };
 
-        const req = https.request(url, options, res => {
-            let data = '';
-            res.on('data', chunk => (data += chunk));
-            res.on('end', () => {
+        const req = https.request(url, options, (res) => {
+            let data = "";
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => {
                 if (res.statusCode === 200) {
                     resolve(true);
                 } else {
@@ -162,10 +162,10 @@ async function sendMetricsToEndpoint(metrics) {
             });
         });
 
-        req.on('error', reject);
-        req.on('timeout', () => {
+        req.on("error", reject);
+        req.on("timeout", () => {
             req.destroy();
-            reject(new Error('Metrics request timeout'));
+            reject(new Error("Metrics request timeout"));
         });
 
         req.write(payload);
@@ -178,15 +178,15 @@ async function performHealthCheck() {
     return new Promise((resolve, reject) => {
         const url = `${BASE_URL}/api/health`;
         const options = {
-            method: 'GET',
+            method: "GET",
             timeout: 10000, // 10 second timeout for health check
             agent: httpsAgent,
         };
 
-        const req = https.request(url, options, res => {
-            let data = '';
-            res.on('data', chunk => (data += chunk));
-            res.on('end', () => {
+        const req = https.request(url, options, (res) => {
+            let data = "";
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => {
                 if (res.statusCode === 200) {
                     resolve(true);
                 } else {
@@ -195,25 +195,25 @@ async function performHealthCheck() {
             });
         });
 
-        req.on('error', reject);
-        req.on('timeout', () => {
+        req.on("error", reject);
+        req.on("timeout", () => {
             req.destroy();
-            reject(new Error('Health check timeout'));
+            reject(new Error("Health check timeout"));
         });
 
         req.end();
     });
 }
 
-function makeRequest(endpoint, type = 'hourly') {
+function makeRequest(endpoint, type = "hourly") {
     return new Promise((resolve, reject) => {
         const url = `${BASE_URL}${endpoint}`;
         const options = {
-            method: 'POST',
+            method: "POST",
             headers: {
                 Authorization: `Bearer ${CRON_SECRET}`,
-                'Content-Type': 'application/json',
-                'User-Agent': 'Fly.io-Cron-Job',
+                "Content-Type": "application/json",
+                "User-Agent": "Fly.io-Cron-Job",
             },
             agent: httpsAgent,
             timeout: TIMEOUT_MS,
@@ -221,25 +221,25 @@ function makeRequest(endpoint, type = 'hourly') {
 
         console.log(`🚀 Starting ${type} database maintenance...`);
 
-        const req = https.request(url, options, res => {
-            let data = '';
+        const req = https.request(url, options, (res) => {
+            let data = "";
 
-            res.on('data', chunk => {
+            res.on("data", (chunk) => {
                 data += chunk;
             });
 
-            res.on('end', () => {
+            res.on("end", () => {
                 try {
                     // Enhanced debugging for HTML responses
-                    if (data.trim().startsWith('<!DOCTYPE') || data.trim().startsWith('<html')) {
+                    if (data.trim().startsWith("<!DOCTYPE") || data.trim().startsWith("<html")) {
                         console.error(`❌ Received HTML instead of JSON from ${url}`);
                         console.error(`Status: ${res.statusCode}`);
-                        console.error('Headers:', res.headers);
-                        console.error('Response preview:', data.substring(0, 200));
+                        console.error("Headers:", res.headers);
+                        console.error("Response preview:", data.substring(0, 200));
                         reject(
                             new Error(
-                                `Server returned HTML instead of JSON. Status: ${res.statusCode}`
-                            )
+                                `Server returned HTML instead of JSON. Status: ${res.statusCode}`,
+                            ),
                         );
                         return;
                     }
@@ -248,35 +248,35 @@ function makeRequest(endpoint, type = 'hourly') {
                     if (res.statusCode === 200 && response.success) {
                         console.log(`✅ ${type} maintenance completed successfully`);
                         console.log(
-                            `📊 Health: ${response.health.healthy ? 'Good' : 'Issues detected'}`
+                            `📊 Health: ${response.health.healthy ? "Good" : "Issues detected"}`,
                         );
                         if (response.health.issues.length > 0) {
-                            console.log(`⚠️  Issues: ${response.health.issues.join(', ')}`);
+                            console.log(`⚠️  Issues: ${response.health.issues.join(", ")}`);
                         }
                         resolve(response);
                     } else {
                         console.error(`❌ ${type} maintenance failed:`, response);
                         reject(
-                            new Error(`Maintenance failed: ${response.error || 'Unknown error'}`)
+                            new Error(`Maintenance failed: ${response.error || "Unknown error"}`),
                         );
                     }
                 } catch (error) {
-                    console.error('❌ Failed to parse response:', error);
-                    console.error('Raw response (first 500 chars):', data.substring(0, 500));
+                    console.error("❌ Failed to parse response:", error);
+                    console.error("Raw response (first 500 chars):", data.substring(0, 500));
                     reject(error);
                 }
             });
         });
 
-        req.on('error', error => {
-            console.error('❌ Request failed:', error);
+        req.on("error", (error) => {
+            console.error("❌ Request failed:", error);
             reject(error);
         });
 
-        req.on('timeout', () => {
-            console.error('❌ Request timed out after 30 seconds');
+        req.on("timeout", () => {
+            console.error("❌ Request timed out after 30 seconds");
             req.destroy();
-            reject(new Error('Request timeout'));
+            reject(new Error("Request timeout"));
         });
 
         req.end();
@@ -284,30 +284,30 @@ function makeRequest(endpoint, type = 'hourly') {
 }
 
 async function runHourlyMaintenance() {
-    console.log('🚀 Starting hourly maintenance process...');
+    console.log("🚀 Starting hourly maintenance process...");
 
     try {
         // Perform health check before maintenance
         await performHealthCheck();
-        console.log('✅ Health check passed');
+        console.log("✅ Health check passed");
 
-        const result = await makeRequestWithRetry('/api/cron/database-maintenance', 'hourly');
+        const result = await makeRequestWithRetry("/api/cron/database-maintenance", "hourly");
 
-        console.log('🎉 Hourly database maintenance completed successfully');
-        console.log(`📊 Health: ${result.health?.healthy ? 'Good' : 'Issues detected'}`);
+        console.log("🎉 Hourly database maintenance completed successfully");
+        console.log(`📊 Health: ${result.health?.healthy ? "Good" : "Issues detected"}`);
 
         if (result.health?.issues?.length > 0) {
-            console.log(`⚠️  Issues found: ${result.health.issues.join(', ')}`);
+            console.log(`⚠️  Issues found: ${result.health.issues.join(", ")}`);
         }
 
         // Cleanup HTTPS agent
         httpsAgent.destroy();
         process.exit(0);
     } catch (error) {
-        console.error('💥 Hourly maintenance failed:', error.message);
+        console.error("💥 Hourly maintenance failed:", error.message);
 
         // Log structured error for monitoring
-        logMetrics('hourly', 'fatal_error', 0, 0, error.message);
+        logMetrics("hourly", "fatal_error", 0, 0, error.message);
 
         // Cleanup and exit with error
         httpsAgent.destroy();
@@ -316,30 +316,30 @@ async function runHourlyMaintenance() {
 }
 
 async function runWeeklyMaintenance() {
-    console.log('🚀 Starting weekly maintenance process...');
+    console.log("🚀 Starting weekly maintenance process...");
 
     try {
         // Perform health check before maintenance
         await performHealthCheck();
-        console.log('✅ Health check passed');
+        console.log("✅ Health check passed");
 
-        const result = await makeRequestWithRetry('/api/cron/weekly-maintenance', 'weekly');
+        const result = await makeRequestWithRetry("/api/cron/weekly-maintenance", "weekly");
 
-        console.log('🎉 Weekly database maintenance completed successfully');
-        console.log(`📊 Health: ${result.health?.healthy ? 'Good' : 'Issues detected'}`);
+        console.log("🎉 Weekly database maintenance completed successfully");
+        console.log(`📊 Health: ${result.health?.healthy ? "Good" : "Issues detected"}`);
 
         if (result.health?.issues?.length > 0) {
-            console.log(`⚠️  Issues found: ${result.health.issues.join(', ')}`);
+            console.log(`⚠️  Issues found: ${result.health.issues.join(", ")}`);
         }
 
         // Cleanup HTTPS agent
         httpsAgent.destroy();
         process.exit(0);
     } catch (error) {
-        console.error('💥 Weekly maintenance failed:', error.message);
+        console.error("💥 Weekly maintenance failed:", error.message);
 
         // Log structured error for monitoring
-        logMetrics('weekly', 'fatal_error', 0, 0, error.message);
+        logMetrics("weekly", "fatal_error", 0, 0, error.message);
 
         // Cleanup and exit with error
         httpsAgent.destroy();
@@ -348,22 +348,22 @@ async function runWeeklyMaintenance() {
 }
 
 // Graceful shutdown handler
-process.on('SIGTERM', () => {
-    console.log('⚠️  Received SIGTERM, shutting down gracefully...');
+process.on("SIGTERM", () => {
+    console.log("⚠️  Received SIGTERM, shutting down gracefully...");
     httpsAgent.destroy();
     process.exit(0);
 });
 
-process.on('SIGINT', () => {
-    console.log('⚠️  Received SIGINT, shutting down gracefully...');
+process.on("SIGINT", () => {
+    console.log("⚠️  Received SIGINT, shutting down gracefully...");
     httpsAgent.destroy();
     process.exit(0);
 });
 
 // Unhandled promise rejection handler
-process.on('unhandledRejection', (reason, _promise) => {
-    console.error('💥 Unhandled Promise Rejection:', reason);
-    logMetrics('unknown', 'unhandled_rejection', 0, 0, reason.toString());
+process.on("unhandledRejection", (reason, _promise) => {
+    console.error("💥 Unhandled Promise Rejection:", reason);
+    logMetrics("unknown", "unhandled_rejection", 0, 0, reason.toString());
     httpsAgent.destroy();
     process.exit(1);
 });
@@ -371,12 +371,12 @@ process.on('unhandledRejection', (reason, _promise) => {
 // Determine which maintenance to run based on command line argument
 const maintenanceType = process.argv[2];
 
-if (maintenanceType === 'weekly') {
+if (maintenanceType === "weekly") {
     runWeeklyMaintenance();
-} else if (maintenanceType === 'hourly') {
+} else if (maintenanceType === "hourly") {
     runHourlyMaintenance();
 } else {
     console.error('❌ Invalid maintenance type. Use "hourly" or "weekly"');
-    console.error('Usage: node cron-database-maintenance.js [hourly|weekly]');
+    console.error("Usage: node cron-database-maintenance.js [hourly|weekly]");
     process.exit(1);
 }

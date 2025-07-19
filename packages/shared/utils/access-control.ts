@@ -5,8 +5,8 @@
  * throughout the codebase like `user?.planSlug === 'vt_plus'`
  */
 
-import { PlanSlug } from '../types/subscription';
-import type { SubscriptionStatusEnum } from '../types/subscription-status';
+import { PlanSlug } from "../types/subscription";
+import type { SubscriptionStatusEnum } from "../types/subscription-status";
 
 export interface UserContext {
     id?: string;
@@ -70,7 +70,7 @@ export function hasVTPlusAccessFromSubscription(subscription: SubscriptionData):
  */
 export function isEligibleForQuotaConsumption(
     user: UserContext,
-    isByokKey: boolean = false
+    isByokKey: boolean = false,
 ): boolean {
     return !isByokKey && hasVTPlusAccess(user);
 }
@@ -95,7 +95,7 @@ export function getNormalizedPlanSlug(planSlug?: string | null): PlanSlug {
  */
 export function hasFeatureAccess(
     user: UserContext,
-    requiredPlan: PlanSlug = PlanSlug.VT_PLUS
+    requiredPlan: PlanSlug = PlanSlug.VT_PLUS,
 ): boolean {
     if (requiredPlan === PlanSlug.VT_BASE) {
         return true; // Base features are available to all users
@@ -116,11 +116,11 @@ export function validateUserForQuota(user: UserContext): {
     reason?: string;
 } {
     if (!user?.id) {
-        return { isValid: false, reason: 'User ID is required' };
+        return { isValid: false, reason: "User ID is required" };
     }
 
     if (!hasVTPlusAccess(user)) {
-        return { isValid: false, reason: 'VT+ access required' };
+        return { isValid: false, reason: "VT+ access required" };
     }
 
     return { isValid: true };
@@ -133,16 +133,16 @@ export function validateUserForQuota(user: UserContext): {
 export function getVTPlusFeatureFromChatMode(mode?: string): string | null {
     // Import VtPlusFeature enum values as constants to avoid circular imports
     const VT_PLUS_FEATURES = {
-        DEEP_RESEARCH: 'DR',
-        PRO_SEARCH: 'PS',
-        RAG: 'RAG',
+        DEEP_RESEARCH: "DR",
+        PRO_SEARCH: "PS",
+        RAG: "RAG",
     } as const;
 
     // ChatMode constants to avoid imports
     const CHAT_MODES = {
-        Deep: 'deep',
-        Pro: 'pro',
-        RAG: 'rag',
+        Deep: "deep",
+        Pro: "pro",
+        RAG: "rag",
     } as const;
 
     switch (mode) {

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { MotionSkeleton } from '@repo/common/components';
+import { MotionSkeleton } from "@repo/common/components";
 
 export function GeneratingStatus() {
     return (

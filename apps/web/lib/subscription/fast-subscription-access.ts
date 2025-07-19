@@ -2,14 +2,14 @@
  * Fast subscription access utilities with caching and optimized queries
  */
 
-import { log } from '@repo/shared/lib/logger';
-import { PlanSlug, type VtPlusFeature } from '@repo/shared/types/subscription';
-import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
-import { desc, eq, inArray, sql } from 'drizzle-orm';
-import { redisCache, type SubscriptionCacheData } from '@/lib/cache/redis-cache';
-import { db } from '@/lib/database';
-import { userSubscriptions, users } from '@/lib/database/schema';
+import { log } from "@repo/shared/lib/logger";
+import { PlanSlug, type VtPlusFeature } from "@repo/shared/types/subscription";
+import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
+import { desc, eq, inArray, sql } from "drizzle-orm";
+import { redisCache, type SubscriptionCacheData } from "@/lib/cache/redis-cache";
+import { db } from "@/lib/database";
+import { userSubscriptions, users } from "@/lib/database/schema";
 
 interface FastSubscriptionData {
     planSlug: string | null;
@@ -138,7 +138,7 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
                         ELSE 2
                     END`,
                 desc(userSubscriptions.currentPeriodEnd),
-                desc(userSubscriptions.updatedAt)
+                desc(userSubscriptions.updatedAt),
             )
             .limit(1);
 
@@ -186,7 +186,7 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
 
         return fastData;
     } catch (error) {
-        log.error('Failed to fetch subscription data:', { userId, error });
+        log.error("Failed to fetch subscription data:", { userId, error });
         return null;
     }
 }
@@ -196,29 +196,29 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
  */
 export async function checkVTPlusAccessFast(
     userIdOrSubscription: string | FastSubscriptionData | null,
-    _ip?: string
+    _ip?: string,
 ): Promise<VTPlusAccessResult> {
     if (!userIdOrSubscription) {
-        return { hasAccess: false, reason: 'No user ID provided' };
+        return { hasAccess: false, reason: "No user ID provided" };
     }
 
     let subscription: FastSubscriptionData | null;
 
-    if (typeof userIdOrSubscription === 'string') {
+    if (typeof userIdOrSubscription === "string") {
         subscription = await getSubscriptionFast(userIdOrSubscription);
     } else {
         subscription = userIdOrSubscription;
     }
 
     if (!subscription) {
-        return { hasAccess: false, reason: 'Subscription not found' };
+        return { hasAccess: false, reason: "Subscription not found" };
     }
 
     const hasAccess = subscription.isVtPlus && subscription.isActive;
 
     return {
         hasAccess,
-        reason: hasAccess ? undefined : 'VT+ subscription required',
+        reason: hasAccess ? undefined : "VT+ subscription required",
         planSlug: subscription.planSlug,
         subscriptionStatus: subscription.status,
     };
@@ -229,7 +229,7 @@ export async function checkVTPlusAccessFast(
  */
 export async function checkFeatureAccessFast(
     userIdOrSubscription: string | FastSubscriptionData | null,
-    _feature: VtPlusFeature
+    _feature: VtPlusFeature,
 ): Promise<boolean> {
     const accessResult = await checkVTPlusAccessFast(userIdOrSubscription);
 
@@ -286,14 +286,14 @@ export async function invalidateUserCaches(userId: string): Promise<void> {
     // Clear LRU cache
     subscriptionLRU.clear(); // Clear all for simplicity, could be more targeted
 
-    log.debug('Invalidated caches for user', { userId });
+    log.debug("Invalidated caches for user", { userId });
 }
 
 /**
  * Batch subscription lookup for multiple users
  */
 export async function getSubscriptionsBatch(
-    userIds: string[]
+    userIds: string[],
 ): Promise<Map<string, FastSubscriptionData>> {
     const results = new Map<string, FastSubscriptionData>();
     const uncachedIds: string[] = [];
@@ -313,7 +313,7 @@ export async function getSubscriptionsBatch(
     }
 
     // Check Redis cache for uncached users
-    const redisCacheKeys = uncachedIds.map(id => `sub:${id}`);
+    const redisCacheKeys = uncachedIds.map((id) => `sub:${id}`);
     const redisResults = await redisCache.mget<SubscriptionCacheData>(redisCacheKeys);
 
     const stillUncachedIds: string[] = [];
@@ -366,7 +366,7 @@ export async function getSubscriptionsBatch(
                         ELSE 2
                     END`,
                     desc(userSubscriptions.currentPeriodEnd),
-                    desc(userSubscriptions.updatedAt)
+                    desc(userSubscriptions.updatedAt),
                 );
 
             // Group by userId to handle multiple subscriptions per user (take first/highest priority)
@@ -418,7 +418,7 @@ export async function getSubscriptionsBatch(
                 });
             }
         } catch (error) {
-            log.error('Failed to batch fetch subscription data:', {
+            log.error("Failed to batch fetch subscription data:", {
                 userIds: stillUncachedIds,
                 error,
             });

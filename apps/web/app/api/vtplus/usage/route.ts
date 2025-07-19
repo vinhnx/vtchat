@@ -1,11 +1,11 @@
-import { VT_PLUS_LIMITS, VtPlusFeature } from '@repo/common/config/vtPlusLimits';
-import { getAllUsage } from '@repo/common/lib/vtplusRateLimiter';
-import { log } from '@repo/shared/lib/logger';
-import { type NextRequest, NextResponse } from 'next/server';
-import { checkVTPlusAccess } from '@/app/api/subscription/access-control';
-import { auth } from '@/lib/auth-server';
+import { VT_PLUS_LIMITS, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
+import { getAllUsage } from "@repo/common/lib/vtplusRateLimiter";
+import { log } from "@repo/shared/lib/logger";
+import { type NextRequest, NextResponse } from "next/server";
+import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
+import { auth } from "@/lib/auth-server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
     try {
@@ -14,24 +14,24 @@ export async function GET(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+            return NextResponse.json({ error: "Authentication required" }, { status: 401 });
         }
 
         const userId = session.user.id;
 
         // Check VT+ access before returning usage data
         const ip =
-            request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for') ?? undefined;
+            request.headers.get("x-real-ip") ?? request.headers.get("x-forwarded-for") ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId, ip });
         if (!vtPlusCheck.hasAccess) {
             return NextResponse.json(
                 {
-                    error: 'VT+ subscription required',
-                    message: 'VT+ usage tracking is only available for VT+ subscribers.',
+                    error: "VT+ subscription required",
+                    message: "VT+ usage tracking is only available for VT+ subscribers.",
                     reason: vtPlusCheck.reason,
                     subscriptionStatus: vtPlusCheck.subscriptionStatus,
                 },
-                { status: 403 }
+                { status: 403 },
             );
         }
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
         // For daily features: next day at 00:00 UTC
         const nextDayReset = new Date(
-            Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+            Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
         );
 
         // For monthly features: first day of next month
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
                 percentage: Math.round(
                     (usage[VtPlusFeature.DEEP_RESEARCH].used /
                         usage[VtPlusFeature.DEEP_RESEARCH].limit) *
-                        100
+                        100,
                 ),
                 resetAt: nextDayReset.toISOString(),
             },
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
                 window: VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].window,
                 percentage: Math.round(
                     (usage[VtPlusFeature.PRO_SEARCH].used / usage[VtPlusFeature.PRO_SEARCH].limit) *
-                        100
+                        100,
                 ),
                 resetAt: nextDayReset.toISOString(),
             },
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
                 feature: VtPlusFeature.RAG,
                 window: VT_PLUS_LIMITS[VtPlusFeature.RAG].window,
                 percentage: Math.round(
-                    (usage[VtPlusFeature.RAG].used / usage[VtPlusFeature.RAG].limit) * 100
+                    (usage[VtPlusFeature.RAG].used / usage[VtPlusFeature.RAG].limit) * 100,
                 ),
                 resetAt: nextMonthReset.toISOString(),
             },
@@ -87,15 +87,15 @@ export async function GET(request: NextRequest) {
             resetAt: nextMonthReset.toISOString(),
             currentPeriod: usage[VtPlusFeature.DEEP_RESEARCH].periodStart
                 .toISOString()
-                .split('T')[0],
+                .split("T")[0],
         };
 
-        log.info({ userId, usage: response }, 'VT+ usage retrieved');
+        log.info({ userId, usage: response }, "VT+ usage retrieved");
 
         return NextResponse.json(response);
     } catch (error) {
-        log.error({ error }, 'Failed to get VT+ usage');
+        log.error({ error }, "Failed to get VT+ usage");
 
-        return NextResponse.json({ error: 'Failed to retrieve usage data' }, { status: 500 });
+        return NextResponse.json({ error: "Failed to retrieve usage data" }, { status: 500 });
     }
 }

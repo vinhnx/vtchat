@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { Drawer } from 'vaul';
+import type { ReactNode } from "react";
+import { Drawer } from "vaul";
 
 type VaulDrawerProps = {
     children: ReactNode;

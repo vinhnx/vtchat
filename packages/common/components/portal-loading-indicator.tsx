@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { LOADING_MESSAGES } from '@repo/shared/constants';
-import { Card } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ExternalLink, Loader2 } from 'lucide-react';
+import { LOADING_MESSAGES } from "@repo/shared/constants";
+import { Card } from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
+import { ExternalLink, Loader2 } from "lucide-react";
 
 interface PortalLoadingIndicatorProps {
     isVisible: boolean;

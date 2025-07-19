@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { cn } from '../lib/utils';
-import { Flex } from './flex';
-import { Type } from './text';
+import Link from "next/link";
+import { cn } from "../lib/utils";
+import { Flex } from "./flex";
+import { Type } from "./text";
 
 export type TFormLabel = {
     children?: React.ReactNode;
@@ -22,7 +22,7 @@ export const FormLabel = ({
     link,
 }: TFormLabel) => {
     return (
-        <Flex className={cn('w-full', className)} direction="col" gap="none" items="start">
+        <Flex className={cn("w-full", className)} direction="col" gap="none" items="start">
             <Flex className="w-full" gap="sm" items="center">
                 <Flex gap="xs" items="center">
                     <Type size="sm" weight="medium">

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useSubscriptionAccess } from '@repo/common/hooks';
-import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
-import { useState } from 'react';
+import { useSubscriptionAccess } from "@repo/common/hooks";
+import type { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
+import { useState } from "react";
 
 interface GateInfo {
     feature?: string;

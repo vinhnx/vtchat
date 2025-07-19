@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { Kbd } from '@repo/ui';
+import { useChatStore } from "@repo/common/store";
+import { Kbd } from "@repo/ui";
 
 export function NewLineIndicator() {
-    const editor = useChatStore(state => state.editor);
+    const editor = useChatStore((state) => state.editor);
     const hasTextInput = !!editor?.getText();
 
     if (!hasTextInput) return null;

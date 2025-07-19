@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { ChartRenderer, Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui';
-import { BarChart3, X } from 'lucide-react';
-import { useState } from 'react';
+import { ChartRenderer, Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui";
+import { BarChart3, X } from "lucide-react";
+import { useState } from "react";
 
 export type ChartData = {
-    type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
+    type: "barChart" | "lineChart" | "areaChart" | "pieChart" | "radarChart";
     title: string;
     data: any[];
     [key: string]: any;

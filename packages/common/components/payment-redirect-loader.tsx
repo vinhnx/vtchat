@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { FullPageLoader } from './full-page-loader';
+import { FullPageLoader } from "./full-page-loader";
 
 export type PaymentRedirectLoaderProps = {
     isLoading: boolean;

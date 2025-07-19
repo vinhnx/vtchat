@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useSession } from '@repo/shared/lib/auth-client';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { useSession } from "@repo/shared/lib/auth-client";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-const VT_PLUS_ANNOUNCEMENT_KEY = 'vt-plus-gemini-rag-announcement-seen';
+const VT_PLUS_ANNOUNCEMENT_KEY = "vt-plus-gemini-rag-announcement-seen";
 
 export function useVTPlusAnnouncement() {
     const { data: session } = useSession();
@@ -13,7 +13,7 @@ export function useVTPlusAnnouncement() {
 
     // Mark announcement as seen
     const markAsSeen = useCallback(() => {
-        localStorage.setItem(VT_PLUS_ANNOUNCEMENT_KEY, 'true');
+        localStorage.setItem(VT_PLUS_ANNOUNCEMENT_KEY, "true");
     }, []);
 
     // Show toast with close button
@@ -22,9 +22,9 @@ export function useVTPlusAnnouncement() {
 
         toastShown.current = true;
 
-        toast('VT+ now includes Gemini models & RAG!', {
+        toast("VT+ now includes Gemini models & RAG!", {
             description:
-                'VT+ subscriber will now have unlimited access to Gemini Models (Gemini 2.5 Pro, Gemini 2.5 Flash) and Personal AI Assistant. Enjoy!',
+                "VT+ subscriber will now have unlimited access to Gemini Models (Gemini 2.5 Pro, Gemini 2.5 Flash) and Personal AI Assistant. Enjoy!",
             duration: 8000, // 8 seconds
             onDismiss: markAsSeen,
             onAutoClose: markAsSeen,

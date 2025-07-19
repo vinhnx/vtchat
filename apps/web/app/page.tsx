@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 // This page needs dynamic rendering due to real-time chat functionality
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { useSession } from "@repo/shared/lib/auth-client";
 import {

@@ -2,7 +2,7 @@
  * Request deduplication utility to prevent multiple identical API calls
  */
 
-import { log } from '@repo/shared/logger';
+import { log } from "@repo/shared/logger";
 
 interface PendingRequest<T> {
     promise: Promise<T>;
@@ -19,11 +19,11 @@ class RequestDeduplicator {
 
         const existing = this.pendingRequests.get(key);
         if (existing) {
-            log.debug({ key }, 'Using existing request');
+            log.debug({ key }, "Using existing request");
             return existing.promise;
         }
 
-        log.debug({ key }, 'Creating new request');
+        log.debug({ key }, "Creating new request");
         const promise = requestFn().finally(() => {
             // Remove from pending requests when completed
             this.pendingRequests.delete(key);
@@ -41,7 +41,7 @@ class RequestDeduplicator {
         const now = Date.now();
         for (const [key, request] of this.pendingRequests.entries()) {
             if (now - request.timestamp > this.timeout) {
-                log.debug({ key }, 'Cleaning up expired request');
+                log.debug({ key }, "Cleaning up expired request");
                 this.pendingRequests.delete(key);
             }
         }

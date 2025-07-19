@@ -2,14 +2,14 @@
  * Simplified subscription access - reduced complexity while maintaining critical functionality
  */
 
-import { log } from '@repo/shared/lib/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
-import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
-import { desc, eq, inArray, sql } from 'drizzle-orm';
-import { redisCache } from '@/lib/cache/redis-cache';
-import { db } from '@/lib/database';
-import { userSubscriptions, users } from '@/lib/database/schema';
+import { log } from "@repo/shared/lib/logger";
+import { PlanSlug } from "@repo/shared/types/subscription";
+import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
+import { desc, eq, inArray, sql } from "drizzle-orm";
+import { redisCache } from "@/lib/cache/redis-cache";
+import { db } from "@/lib/database";
+import { userSubscriptions, users } from "@/lib/database/schema";
 
 interface SubscriptionData {
     planSlug: string | null;
@@ -46,7 +46,7 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
                     ELSE 2
                 END`,
                 desc(userSubscriptions.currentPeriodEnd),
-                desc(userSubscriptions.updatedAt)
+                desc(userSubscriptions.updatedAt),
             )
             .limit(1);
 
@@ -77,7 +77,7 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
             isVtPlus,
         };
     } catch (error) {
-        log.error('Failed to fetch subscription data:', { userId, error });
+        log.error("Failed to fetch subscription data:", { userId, error });
         return null;
     }
 }
@@ -136,14 +136,14 @@ export async function hasVTPlusAccess(userId: string): Promise<boolean> {
  * Batch subscription lookup - simplified but correct
  */
 export async function getSubscriptionsBatch(
-    userIds: string[]
+    userIds: string[],
 ): Promise<Map<string, SubscriptionData>> {
     const results = new Map<string, SubscriptionData>();
 
     if (userIds.length === 0) return results;
 
     // Check Redis for all users
-    const cacheKeys = userIds.map(id => `sub:${id}`);
+    const cacheKeys = userIds.map((id) => `sub:${id}`);
     const cachedResults = await redisCache.mget(cacheKeys);
 
     const uncachedIds: string[] = [];
@@ -192,7 +192,7 @@ export async function getSubscriptionsBatch(
                         ELSE 2
                     END`,
                     desc(userSubscriptions.currentPeriodEnd),
-                    desc(userSubscriptions.updatedAt)
+                    desc(userSubscriptions.updatedAt),
                 );
 
             // Process results and deduplicate by user (take first = highest priority)
@@ -241,7 +241,7 @@ export async function getSubscriptionsBatch(
                 });
             }
         } catch (error) {
-            log.error('Failed to batch fetch subscription data:', { userIds: uncachedIds, error });
+            log.error("Failed to batch fetch subscription data:", { userIds: uncachedIds, error });
         }
     }
 
@@ -253,7 +253,7 @@ export async function getSubscriptionsBatch(
  */
 export async function invalidateSubscriptionCache(userId: string): Promise<void> {
     await redisCache.invalidateSubscription(userId);
-    log.debug('Invalidated subscription cache', { userId });
+    log.debug("Invalidated subscription cache", { userId });
 }
 
 export type { SubscriptionData };

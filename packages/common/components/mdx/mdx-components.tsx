@@ -1,9 +1,9 @@
-import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from '@repo/common/components';
-import { isValidUrl } from '@repo/shared/utils';
-import type { MDXRemote } from 'next-mdx-remote/rsc';
-import { type ComponentProps, type ReactElement, useContext } from 'react';
+import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from "@repo/common/components";
+import { isValidUrl } from "@repo/shared/utils";
+import type { MDXRemote } from "next-mdx-remote/rsc";
+import { type ComponentProps, type ReactElement, useContext } from "react";
 
-export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
+export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     Source: ({ children }) => {
         const { getSourceByIndex } = useContext(CitationProviderContext);
         const index = children as string;
@@ -38,15 +38,15 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
     },
 
     pre: ({ children }) => {
-        if (typeof children === 'string') {
-            return <CodeBlock code={children.replace(/<FadeEffect \/>$/, '')} />;
+        if (typeof children === "string") {
+            return <CodeBlock code={children.replace(/<FadeEffect \/>$/, "")} />;
         }
         const codeElement = children as ReactElement<any>;
-        const className = codeElement?.props?.className || '';
-        const lang = className.replace('language-', '');
+        const className = codeElement?.props?.className || "";
+        const lang = className.replace("language-", "");
         const code = codeElement?.props?.children;
 
-        return <CodeBlock code={String(code).replace(/<FadeEffect \/>$/, '')} lang={lang} />;
+        return <CodeBlock code={String(code).replace(/<FadeEffect \/>$/, "")} lang={lang} />;
     },
     code: ({ children, className }) => {
         if (!className) {
@@ -56,7 +56,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
                 </code>
             );
         }
-        const lang = className.replace('language-', '');
-        return <CodeBlock code={String(children).replace(/<FadeEffect \/>$/, '')} lang={lang} />;
+        const lang = className.replace("language-", "");
+        return <CodeBlock code={String(children).replace(/<FadeEffect \/>$/, "")} lang={lang} />;
     },
 };

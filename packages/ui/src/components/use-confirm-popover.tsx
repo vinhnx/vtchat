@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import type { LucideIcon } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from './button';
-import { Flex } from './flex';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import type { LucideIcon } from "lucide-react";
+import { useState } from "react";
+import { Button } from "./button";
+import { Flex } from "./flex";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export type TPopoverConfirm = {
     title: string;
     onConfirm: (dismiss: () => void) => void;
     confimBtnText?: string;
-    confimBtnVariant?: 'destructive' | 'default';
+    confimBtnVariant?: "destructive" | "default";
     confirmIcon?: LucideIcon;
     onCancel?: () => void;
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export const PopOverConfirmProvider = ({
     onConfirm,
     confirmIcon,
     confimBtnVariant,
-    confimBtnText = 'Confirm',
+    confimBtnText = "Confirm",
     onCancel,
     children,
 }: TPopoverConfirm) => {
@@ -34,7 +34,7 @@ export const PopOverConfirmProvider = ({
                 <p className="pb-4 text-sm font-medium">{title}</p>
                 <Flex gap="sm">
                     <Button
-                        onClick={e => {
+                        onClick={(e) => {
                             onConfirm(() => setOpenConfirm(false));
                             e.stopPropagation();
                         }}
@@ -46,7 +46,7 @@ export const PopOverConfirmProvider = ({
                         {confimBtnText}
                     </Button>
                     <Button
-                        onClick={e => {
+                        onClick={(e) => {
                             onCancel?.();
                             setOpenConfirm(false);
                             e.stopPropagation();
@@ -56,7 +56,7 @@ export const PopOverConfirmProvider = ({
                     >
                         Cancel
                     </Button>
-                </Flex>{' '}
+                </Flex>{" "}
             </PopoverContent>
         </Popover>
     );

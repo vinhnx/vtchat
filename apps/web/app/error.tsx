@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 // Disable static generation to prevent React context issues during build
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface ErrorPageProps {
     error: Error & { digest?: string };
@@ -10,7 +10,7 @@ interface ErrorPageProps {
 
 export default function ErrorPage({ reset }: ErrorPageProps) {
     const handleHomeNavigation = () => {
-        window.location.href = '/';
+        window.location.href = "/";
     };
 
     return (

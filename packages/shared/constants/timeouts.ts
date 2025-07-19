@@ -20,20 +20,20 @@ export const GENERATION_TIMEOUTS = {
  * Loading indicator messages for different timeout states
  */
 export const TIMEOUT_MESSAGES = {
-    GENERATING: 'AI is generating response...',
-    TIMEOUT_WARNING: 'Processing is taking longer than usual...',
-    SLOW_RESPONSE: 'Slow response detected...',
-    CRITICAL_TIMEOUT: 'Very slow response - you may want to try again...',
+    GENERATING: "AI is generating response...",
+    TIMEOUT_WARNING: "Processing is taking longer than usual...",
+    SLOW_RESPONSE: "Slow response detected...",
+    CRITICAL_TIMEOUT: "Very slow response - you may want to try again...",
 } as const;
 
 /**
  * Loading states based on generation progress
  */
 export const LOADING_STATES = {
-    NORMAL: 'normal',
-    TIMEOUT: 'timeout',
-    SLOW: 'slow',
-    CRITICAL: 'critical',
+    NORMAL: "normal",
+    TIMEOUT: "timeout",
+    SLOW: "slow",
+    CRITICAL: "critical",
 } as const;
 
 export type LoadingState = (typeof LOADING_STATES)[keyof typeof LOADING_STATES];

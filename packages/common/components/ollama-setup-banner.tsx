@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { AlertCircle, ExternalLink, Terminal, X } from 'lucide-react';
-import { useState } from 'react';
+import { AlertCircle, ExternalLink, Terminal, X } from "lucide-react";
+import { useState } from "react";
 
 export function OllamaSetupBanner() {
     const [isVisible, setIsVisible] = useState(true);
@@ -11,22 +11,22 @@ export function OllamaSetupBanner() {
 
     const steps = [
         {
-            title: 'Install Ollama',
-            description: 'Download and install Ollama from the official website',
-            action: 'Download Ollama',
-            link: 'https://ollama.com/',
+            title: "Install Ollama",
+            description: "Download and install Ollama from the official website",
+            action: "Download Ollama",
+            link: "https://ollama.com/",
             icon: <ExternalLink className="h-4 w-4" />,
         },
         {
-            title: 'Start Ollama Server',
-            description: 'Open terminal and start the Ollama server',
-            action: 'ollama serve',
+            title: "Start Ollama Server",
+            description: "Open terminal and start the Ollama server",
+            action: "ollama serve",
             icon: <Terminal className="h-4 w-4" />,
         },
         {
-            title: 'Download a Model',
-            description: 'Pull and run a model (e.g., Llama 3.3, Qwen 3, or Gemma 3)',
-            action: 'ollama pull llama3.3',
+            title: "Download a Model",
+            description: "Pull and run a model (e.g., Llama 3.3, Qwen 3, or Gemma 3)",
+            action: "ollama pull llama3.3",
             icon: <Terminal className="h-4 w-4" />,
         },
     ];
@@ -47,20 +47,20 @@ export function OllamaSetupBanner() {
                                     key={`ollama-step-${i}`}
                                     className={`flex items-center space-x-3 rounded-sm p-2 ${
                                         currentStep === i
-                                            ? 'border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800/50'
-                                            : ''
+                                            ? "border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800/50"
+                                            : ""
                                     }`}
                                 >
                                     <div
                                         className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
                                             currentStep > i
-                                                ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
+                                                ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
                                                 : currentStep === i
-                                                  ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900'
-                                                  : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
+                                                  ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
+                                                  : "bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
                                         }`}
                                     >
-                                        {currentStep > i ? '✓' : i + 1}
+                                        {currentStep > i ? "✓" : i + 1}
                                     </div>
 
                                     <div className="flex-1">
@@ -127,7 +127,7 @@ export function OllamaSetupBanner() {
                         </div>
 
                         <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                            <span className="font-medium">Need help?</span>{' '}
+                            <span className="font-medium">Need help?</span>{" "}
                             <a
                                 href="https://github.com/vinhnx/vtchat/blob/main/docs/guides/ollama-setup.md"
                                 className="font-medium text-neutral-900 underline hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300"

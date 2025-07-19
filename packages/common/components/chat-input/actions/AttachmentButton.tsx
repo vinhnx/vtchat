@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui';
-import { Paperclip } from 'lucide-react';
-import { ICON_SIZES } from '../config/constants';
+import { Button } from "@repo/ui";
+import { Paperclip } from "lucide-react";
+import { ICON_SIZES } from "../config/constants";
 
 export function AttachmentButton() {
     return (

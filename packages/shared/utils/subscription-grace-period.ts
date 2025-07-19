@@ -3,7 +3,7 @@
  * Used consistently across all subscription access checks
  */
 
-import { SubscriptionStatusEnum } from '../types/subscription-status';
+import { SubscriptionStatusEnum } from "../types/subscription-status";
 
 export interface SubscriptionWithPeriod {
     status: SubscriptionStatusEnum;
@@ -80,7 +80,7 @@ export function isSubscriptionActive(status: SubscriptionStatusEnum): boolean {
  * @returns simplified status for UI purposes
  */
 export function getEffectiveAccessStatus(
-    subscription: SubscriptionWithPeriod
+    subscription: SubscriptionWithPeriod,
 ): SubscriptionStatusEnum {
     if (hasSubscriptionAccess(subscription)) {
         // If user has access, show the most relevant status

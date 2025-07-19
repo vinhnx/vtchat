@@ -1,10 +1,10 @@
-import { getProviderInstance, Providers } from '@repo/ai/providers';
-import { isGeminiModel } from '@repo/common/utils';
-import { log } from '@repo/shared/logger';
-import { generateObject } from 'ai';
-import { type NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { checkVTPlusAccess } from '../../subscription/access-control';
+import { getProviderInstance, Providers } from "@repo/ai/providers";
+import { isGeminiModel } from "@repo/common/utils";
+import { log } from "@repo/shared/logger";
+import { generateObject } from "ai";
+import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { checkVTPlusAccess } from "../../subscription/access-control";
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({
@@ -35,7 +35,7 @@ const getDocumentSchemas = () => ({
                 quantity: z.number().optional(),
                 unitPrice: z.number().optional(),
                 total: z.number().optional(),
-            })
+            }),
         ),
         totals: z.object({
             subtotal: z.number().optional(),
@@ -61,7 +61,7 @@ const getDocumentSchemas = () => ({
                 startDate: z.string(),
                 endDate: z.string().optional(),
                 description: z.string().optional(),
-            })
+            }),
         ),
         education: z.array(
             z.object({
@@ -69,7 +69,7 @@ const getDocumentSchemas = () => ({
                 degree: z.string(),
                 field: z.string().optional(),
                 graduationDate: z.string().optional(),
-            })
+            }),
         ),
         skills: z.array(z.string()),
     }),
@@ -80,7 +80,7 @@ const getDocumentSchemas = () => ({
                 name: z.string(),
                 role: z.string(),
                 address: z.string().optional(),
-            })
+            }),
         ),
         effectiveDate: z.string().optional(),
         expirationDate: z.string().optional(),
@@ -93,26 +93,26 @@ const getDocumentSchemas = () => ({
             })
             .optional(),
     }),
-    'markdown-document': z.object({
+    "markdown-document": z.object({
         title: z.string().optional(),
         headings: z.array(
             z.object({
                 level: z.number(),
                 text: z.string(),
-            })
+            }),
         ),
         sections: z.array(
             z.object({
                 heading: z.string(),
                 content: z.string(),
-            })
+            }),
         ),
         links: z
             .array(
                 z.object({
                     text: z.string(),
                     url: z.string(),
-                })
+                }),
             )
             .optional(),
         codeBlocks: z
@@ -120,7 +120,7 @@ const getDocumentSchemas = () => ({
                 z.object({
                     language: z.string().optional(),
                     code: z.string(),
-                })
+                }),
             )
             .optional(),
     }),
@@ -150,16 +150,16 @@ export async function POST(request: NextRequest) {
         // Validate required fields
         if (!textContent || !documentType || !chatMode) {
             return NextResponse.json(
-                { error: 'Missing required fields: textContent, documentType, chatMode' },
-                { status: 400 }
+                { error: "Missing required fields: textContent, documentType, chatMode" },
+                { status: 400 },
             );
         }
 
         // Validate that it's a Gemini model
         if (!isGeminiModel(chatMode)) {
             return NextResponse.json(
-                { error: 'Structured extraction only supports Gemini models' },
-                { status: 400 }
+                { error: "Structured extraction only supports Gemini models" },
+                { status: 400 },
             );
         }
 
@@ -171,8 +171,8 @@ export async function POST(request: NextRequest) {
         if (hasVtPlusAccess && !effectiveApiKeys.GEMINI_API_KEY) {
             if (!process.env.GEMINI_API_KEY) {
                 return NextResponse.json(
-                    { error: 'System Gemini API key not configured' },
-                    { status: 500 }
+                    { error: "System Gemini API key not configured" },
+                    { status: 500 },
                 );
             }
             effectiveApiKeys = {
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
         if (!schema) {
             return NextResponse.json(
                 { error: `Unsupported document type: ${documentType}` },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -216,18 +216,18 @@ ${textContent}`,
         return NextResponse.json({
             data: object,
             type: documentType,
-            fileName: fileName || 'unknown',
+            fileName: fileName || "unknown",
             extractedAt: new Date().toISOString(),
             confidence: 0.9,
         });
     } catch (error) {
-        log.error('Structured extraction failed:', { error });
+        log.error("Structured extraction failed:", { error });
         return NextResponse.json(
             {
-                error: 'Failed to extract structured data',
-                details: error instanceof Error ? error.message : 'Unknown error',
+                error: "Failed to extract structured data",
+                details: error instanceof Error ? error.message : "Unknown error",
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

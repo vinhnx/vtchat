@@ -1,9 +1,9 @@
-import type { ItemStatus } from '@repo/shared/types';
-import { motion } from 'framer-motion';
+import type { ItemStatus } from "@repo/shared/types";
+import { motion } from "framer-motion";
 
 export const StepStatus = ({ status }: { status: ItemStatus }) => {
     switch (status) {
-        case 'PENDING':
+        case "PENDING":
             return (
                 <motion.span
                     className="relative flex size-3 items-center justify-center"
@@ -20,7 +20,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                         transition={{
                             duration: 2,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: 'easeInOut',
+                            ease: "easeInOut",
                         }}
                     />
                     <motion.span
@@ -31,12 +31,12 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                         transition={{
                             duration: 1.5,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: 'easeInOut',
+                            ease: "easeInOut",
                         }}
                     />
                 </motion.span>
             );
-        case 'COMPLETED':
+        case "COMPLETED":
             return (
                 <motion.span
                     className="relative flex size-3 items-center justify-center"
@@ -62,7 +62,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                     </motion.span>
                 </motion.span>
             );
-        case 'ERROR':
+        case "ERROR":
             return (
                 <motion.span
                     className="relative flex size-3 items-center justify-center"
@@ -231,21 +231,21 @@ export const DotSpinner = ({ size = 24, ...props }: { size?: number; className?:
 };
 
 const loadingContainer = {
-    width: '1.2rem',
-    height: '1.2rem',
-    display: 'flex',
-    alignItems: 'center',
+    width: "1.2rem",
+    height: "1.2rem",
+    display: "flex",
+    alignItems: "center",
 };
 
 const loadingCircle = {
-    display: 'block',
-    width: '0.2rem',
-    height: '0.2rem',
-    overflow: 'hidden',
-    marginLeft: '0.1rem',
-    marginRight: '0.1rem',
-    backgroundColor: 'currentColor',
-    borderRadius: '30%',
+    display: "block",
+    width: "0.2rem",
+    height: "0.2rem",
+    overflow: "hidden",
+    marginLeft: "0.1rem",
+    marginRight: "0.1rem",
+    backgroundColor: "currentColor",
+    borderRadius: "30%",
 };
 
 export const ThreeDotsWave = () => {
@@ -259,7 +259,7 @@ export const ThreeDotsWave = () => {
                     duration: 0.2,
                     repeat: Number.POSITIVE_INFINITY,
                     repeatDelay: 0.8,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                 }}
             />
             <motion.span
@@ -270,7 +270,7 @@ export const ThreeDotsWave = () => {
                     duration: 0.2,
                     repeat: Number.POSITIVE_INFINITY,
                     repeatDelay: 0.8,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                     delay: 0.2,
                 }}
             />
@@ -282,7 +282,7 @@ export const ThreeDotsWave = () => {
                     duration: 0.2,
                     repeat: Number.POSITIVE_INFINITY,
                     repeatDelay: 0.8,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                     delay: 0.4,
                 }}
             />

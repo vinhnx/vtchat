@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { ModelEnum } from '@repo/ai/models';
-import { useSession } from '@repo/shared/lib/auth-client';
-import { useEffect, useState } from 'react';
+import { ModelEnum } from "@repo/ai/models";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { useEffect, useState } from "react";
 
 export interface RateLimitStatus {
     dailyUsed: number;
@@ -36,7 +36,7 @@ export function useRateLimit(modelId: ModelEnum) {
 
             try {
                 const response = await fetch(
-                    `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`
+                    `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`,
                 );
 
                 if (!response.ok) {
@@ -55,7 +55,7 @@ export function useRateLimit(modelId: ModelEnum) {
 
                 setStatus(data);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch rate limit status');
+                setError(err instanceof Error ? err.message : "Failed to fetch rate limit status");
                 setStatus(null);
             } finally {
                 setIsLoading(false);

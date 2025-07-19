@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useRootContext } from '@repo/common/context';
-import { useChatStore } from '@repo/common/store';
-import { getFormatDistanceToNow } from '@repo/shared/utils';
-import { Button } from '@repo/ui';
-import { ArrowRight, MessageCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRootContext } from "@repo/common/context";
+import { useChatStore } from "@repo/common/store";
+import { getFormatDistanceToNow } from "@repo/shared/utils";
+import { Button } from "@repo/ui";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const RecentThreads = () => {
     const { setIsCommandSearchOpen } = useRootContext();
-    const threads = useChatStore(state => state.threads.slice(0, 4));
+    const threads = useChatStore((state) => state.threads.slice(0, 4));
     const router = useRouter();
 
     useEffect(() => {
-        threads.forEach(thread => {
+        threads.forEach((thread) => {
             router.prefetch(`/chat/${thread.id}`);
         });
     }, [threads, router]);
@@ -40,7 +40,7 @@ export const RecentThreads = () => {
             <div className="grid grid-cols-4 gap-2">
                 {threads
                     ?.sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime())
-                    .map(thread => (
+                    .map((thread) => (
                         <div
                             className="border-border bg-background flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 text-sm transition-all duration-200 hover:border-yellow-900/20 hover:bg-yellow-700/5 hover:shadow-sm"
                             key={thread.id}

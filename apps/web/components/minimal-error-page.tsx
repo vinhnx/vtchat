@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 // import { Button } from "@repo/ui";
-import Link from 'next/link';
-import type { ReactNode } from 'react';
+import Link from "next/link";
+import type { ReactNode } from "react";
 
 interface MinimalErrorPageProps {
     code?: string;

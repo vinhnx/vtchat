@@ -4,38 +4,38 @@ import {
     NoSSR,
     RootLayout,
     SSRErrorBoundary,
-} from '@repo/common/components';
-import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
-import { RootProvider } from '@repo/common/context';
-import { OptimizedAuthProvider } from '@repo/common/providers';
-import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
-import { TooltipProvider } from '@repo/ui';
-import type { Metadata, Viewport } from 'next';
-import { BetterAuthProvider } from '../components/better-auth-provider';
-import { OfflineIndicator } from '../components/offline-indicator';
-import { PerformanceOptimizations } from '../components/performance-optimizations';
-import { PWAManager } from '../components/pwa-manager';
-import { ReactScan } from '../components/react-scan';
+} from "@repo/common/components";
+import { PlusDefaultsProvider } from "@repo/common/components/plus-defaults-provider";
+import { RootProvider } from "@repo/common/context";
+import { OptimizedAuthProvider } from "@repo/common/providers";
+import { SubscriptionProvider } from "@repo/common/providers/subscription-provider";
+import { TooltipProvider } from "@repo/ui";
+import type { Metadata, Viewport } from "next";
+import { BetterAuthProvider } from "../components/better-auth-provider";
+import { OfflineIndicator } from "../components/offline-indicator";
+import { PerformanceOptimizations } from "../components/performance-optimizations";
+import { PWAManager } from "../components/pwa-manager";
+import { ReactScan } from "../components/react-scan";
 
 // Remove force-dynamic from layout to allow static generation for static pages
 // Individual pages that need dynamic rendering will set their own dynamic export
 
-import '@repo/ui/src/styles.css';
-import { AccessibilityHead } from '../components/accessibility-improvements';
-import './globals.css';
-import { defaultMetadata } from './page-metadata';
+import "@repo/ui/src/styles.css";
+import { AccessibilityHead } from "../components/accessibility-improvements";
+import "./globals.css";
+import { defaultMetadata } from "./page-metadata";
 
 export const metadata: Metadata = defaultMetadata;
 
 export const viewport: Viewport = {
-    width: 'device-width',
+    width: "device-width",
     initialScale: 1,
     userScalable: true,
-    interactiveWidget: 'resizes-content',
-    colorScheme: 'light dark',
+    interactiveWidget: "resizes-content",
+    colorScheme: "light dark",
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-        { media: '(prefers-color-scheme: dark)', color: '#000000' },
+        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+        { media: "(prefers-color-scheme: dark)", color: "#000000" },
     ],
 };
 
@@ -56,20 +56,20 @@ export default function ParentLayout({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
-                            '@context': 'https://schema.org',
-                            '@type': 'Organization',
-                            name: 'VT',
-                            url: 'https://vtchat.io.vn',
-                            logo: 'https://vtchat.io.vn/og-image-v3.jpg?v=5',
+                            "@context": "https://schema.org",
+                            "@type": "Organization",
+                            name: "VT",
+                            url: "https://vtchat.io.vn",
+                            logo: "https://vtchat.io.vn/og-image-v3.jpg?v=5",
                             description:
-                                'Privacy-first AI chat application with advanced AI capabilities',
-                            foundingDate: '2025',
+                                "Privacy-first AI chat application with advanced AI capabilities",
+                            foundingDate: "2025",
                             contactPoint: {
-                                '@type': 'ContactPoint',
-                                email: 'hello@vtchat.io.vn',
-                                contactType: 'customer service',
+                                "@type": "ContactPoint",
+                                email: "hello@vtchat.io.vn",
+                                contactType: "customer service",
                             },
-                            sameAs: ['https://github.com/vinhnx/vtchat', 'https://x.com/vinhnx'],
+                            sameAs: ["https://github.com/vinhnx/vtchat", "https://x.com/vinhnx"],
                         }),
                     }}
                 />
@@ -77,19 +77,19 @@ export default function ParentLayout({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
-                            '@context': 'https://schema.org',
-                            '@type': 'WebSite',
-                            name: 'VT',
-                            url: 'https://vtchat.io.vn',
+                            "@context": "https://schema.org",
+                            "@type": "WebSite",
+                            name: "VT",
+                            url: "https://vtchat.io.vn",
                             description:
-                                'Privacy-first AI chat application with advanced AI capabilities',
+                                "Privacy-first AI chat application with advanced AI capabilities",
                             potentialAction: {
-                                '@type': 'SearchAction',
+                                "@type": "SearchAction",
                                 target: {
-                                    '@type': 'EntryPoint',
-                                    urlTemplate: 'https://vtchat.io.vn/chat?q={search_term_string}',
+                                    "@type": "EntryPoint",
+                                    urlTemplate: "https://vtchat.io.vn/chat?q={search_term_string}",
                                 },
-                                'query-input': 'required name=search_term_string',
+                                "query-input": "required name=search_term_string",
                             },
                         }),
                     }}

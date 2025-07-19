@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -11,15 +11,15 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
     Input,
-} from '@repo/ui';
-import { ChevronDown, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { z } from 'zod';
+} from "@repo/ui";
+import { ChevronDown, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
 
 interface SchemaField {
     id: string;
     name: string;
-    type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+    type: "string" | "number" | "boolean" | "array" | "object";
     description: string;
     optional: boolean;
 }
@@ -30,26 +30,26 @@ interface CustomSchemaBuilderProps {
 }
 
 const typeOptions = [
-    { value: 'string', label: 'Text' },
-    { value: 'number', label: 'Number' },
-    { value: 'boolean', label: 'Boolean' },
-    { value: 'array', label: 'Array' },
-    { value: 'object', label: 'Object' },
+    { value: "string", label: "Text" },
+    { value: "number", label: "Number" },
+    { value: "boolean", label: "Boolean" },
+    { value: "array", label: "Array" },
+    { value: "object", label: "Object" },
 ];
 
 export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBuilderProps) => {
-    const [schemaName, setSchemaName] = useState('');
+    const [schemaName, setSchemaName] = useState("");
     const [fields, setFields] = useState<SchemaField[]>([
-        { id: '1', name: '', type: 'string', description: '', optional: false },
+        { id: "1", name: "", type: "string", description: "", optional: false },
     ]);
     const [showPreview, setShowPreview] = useState(false);
 
     const addField = () => {
         const newField: SchemaField = {
             id: Date.now().toString(),
-            name: '',
-            type: 'string',
-            description: '',
+            name: "",
+            type: "string",
+            description: "",
             optional: false,
         };
         setFields([...fields, newField]);
@@ -57,12 +57,12 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
 
     const removeField = (id: string) => {
         if (fields.length > 1) {
-            setFields(fields.filter(f => f.id !== id));
+            setFields(fields.filter((f) => f.id !== id));
         }
     };
 
     const updateField = (id: string, updates: Partial<SchemaField>) => {
-        setFields(fields.map(f => (f.id === id ? { ...f, ...updates } : f)));
+        setFields(fields.map((f) => (f.id === id ? { ...f, ...updates } : f)));
     };
 
     const createSchema = () => {
@@ -70,29 +70,29 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
             return;
         }
 
-        const validFields = fields.filter(f => f.name.trim());
+        const validFields = fields.filter((f) => f.name.trim());
         if (validFields.length === 0) {
             return;
         }
 
         const schemaFields: Record<string, any> = {};
 
-        validFields.forEach(field => {
+        validFields.forEach((field) => {
             let zodType;
             switch (field.type) {
-                case 'string':
+                case "string":
                     zodType = z.string();
                     break;
-                case 'number':
+                case "number":
                     zodType = z.number();
                     break;
-                case 'boolean':
+                case "boolean":
                     zodType = z.boolean();
                     break;
-                case 'array':
+                case "array":
                     zodType = z.array(z.string());
                     break;
-                case 'object':
+                case "object":
                     zodType = z.record(z.any());
                     break;
                 default:
@@ -113,33 +113,33 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
         const schema = z.object(schemaFields);
         onSchemaCreate({
             schema,
-            type: schemaName.toLowerCase().replace(/\s+/g, '_'),
+            type: schemaName.toLowerCase().replace(/\s+/g, "_"),
         });
     };
 
     const generatePreview = () => {
-        const validFields = fields.filter(f => f.name.trim());
+        const validFields = fields.filter((f) => f.name.trim());
         const preview: Record<string, any> = {};
 
-        validFields.forEach(field => {
+        validFields.forEach((field) => {
             let example;
             switch (field.type) {
-                case 'string':
+                case "string":
                     example = field.description
                         ? `"${field.description.toLowerCase()}"`
                         : '"example text"';
                     break;
-                case 'number':
+                case "number":
                     example = 42;
                     break;
-                case 'boolean':
+                case "boolean":
                     example = true;
                     break;
-                case 'array':
-                    example = ['item1', 'item2'];
+                case "array":
+                    example = ["item1", "item2"];
                     break;
-                case 'object':
-                    example = { key: 'value' };
+                case "object":
+                    example = { key: "value" };
                     break;
                 default:
                     example = '"example"';
@@ -178,7 +178,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                     <label className="text-sm font-medium">Schema Name</label>
                     <Input
                         className="mt-1"
-                        onChange={e => setSchemaName(e.target.value)}
+                        onChange={(e) => setSchemaName(e.target.value)}
                         placeholder="e.g., Financial Report, Meeting Notes"
                         value={schemaName}
                     />
@@ -193,13 +193,13 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                         </Button>
                     </div>
 
-                    {fields.map(field => (
+                    {fields.map((field) => (
                         <div className="space-y-2 rounded-lg border p-3" key={field.id}>
                             <div className="flex items-center gap-2">
                                 <div className="flex-1">
                                     <Input
                                         className="text-sm"
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             updateField(field.id, { name: e.target.value })
                                         }
                                         placeholder="Field name"
@@ -209,18 +209,18 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button className="w-24" size="sm" variant="outlined">
-                                            {typeOptions.find(opt => opt.value === field.type)
-                                                ?.label || 'Text'}
+                                            {typeOptions.find((opt) => opt.value === field.type)
+                                                ?.label || "Text"}
                                             <ChevronDown className="ml-1" size={14} />
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        {typeOptions.map(option => (
+                                        {typeOptions.map((option) => (
                                             <DropdownMenuItem
                                                 key={option.value}
                                                 onClick={() =>
                                                     updateField(field.id, {
-                                                        type: option.value as SchemaField['type'],
+                                                        type: option.value as SchemaField["type"],
                                                     })
                                                 }
                                             >
@@ -233,7 +233,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                                     <input
                                         checked={field.optional}
                                         className="mr-1"
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             updateField(field.id, { optional: e.target.checked })
                                         }
                                         type="checkbox"
@@ -252,7 +252,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                             </div>
                             <Input
                                 className="text-sm"
-                                onChange={e =>
+                                onChange={(e) =>
                                     updateField(field.id, { description: e.target.value })
                                 }
                                 placeholder="Description (helps AI understand what to extract)"
@@ -276,7 +276,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                         Cancel
                     </Button>
                     <Button
-                        disabled={!(schemaName.trim() && fields.some(f => f.name.trim()))}
+                        disabled={!(schemaName.trim() && fields.some((f) => f.name.trim()))}
                         onClick={createSchema}
                     >
                         Create & Extract

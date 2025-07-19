@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from '@repo/common/hooks';
-import { getEnabledVTPlusFeatures } from '@repo/shared/config/vt-plus-features';
-import { BUTTON_TEXT, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
-import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
+import { useCreemSubscription, useCurrentPlan, useVtPlusAccess } from "@repo/common/hooks";
+import { getEnabledVTPlusFeatures } from "@repo/shared/config/vt-plus-features";
+import { BUTTON_TEXT, VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
+import { PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import {
     Button,
     Card,
@@ -15,10 +15,10 @@ import {
     Skeleton,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { PaymentRedirectLoader } from './payment-redirect-loader';
-import { RateLimitMeter } from './rate-limit-meter';
-import { UserTierBadge } from './user-tier-badge';
+} from "@repo/ui";
+import { PaymentRedirectLoader } from "./payment-redirect-loader";
+import { RateLimitMeter } from "./rate-limit-meter";
+import { UserTierBadge } from "./user-tier-badge";
 
 interface UsageCreditsSettingsProps {
     onClose?: () => void;
@@ -40,14 +40,14 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
         try {
             await openCustomerPortal();
         } catch (error) {
-            log.error({ data: error }, 'Failed to open subscription portal');
+            log.error({ data: error }, "Failed to open subscription portal");
         }
     };
 
     const handleUpgradeToPlus = () => {
         // Close settings modal and navigate to pricing page
         onClose?.();
-        window.location.href = '/pricing';
+        window.location.href = "/pricing";
     };
 
     return (
@@ -127,7 +127,7 @@ export function UsageCreditsSettings({ onClose }: UsageCreditsSettingsProps) {
                         <div className="grid gap-3">
                             {isVtPlus ? (
                                 // VT+ Features
-                                vtPlusFeatures.map(feature => (
+                                vtPlusFeatures.map((feature) => (
                                     <div
                                         className="border-border/50 bg-muted/20 flex items-start gap-3 rounded-lg border p-3"
                                         key={feature.id}

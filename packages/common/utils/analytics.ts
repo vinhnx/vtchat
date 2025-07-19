@@ -12,8 +12,8 @@ import {
     type ToolEventData,
     type UserJourneyEvent,
     type UserProperties,
-} from '@repo/shared/types/analytics';
-import type { PlanSlug } from '@repo/shared/types/subscription';
+} from "@repo/shared/types/analytics";
+import type { PlanSlug } from "@repo/shared/types/subscription";
 
 // Generic event data type for analytics
 type EventData = Record<string, string | number | boolean | undefined>;
@@ -111,10 +111,10 @@ export class AnalyticsUtils {
         accountAge?: number;
         messageCount?: number;
         preferredModel?: string;
-        themePreference?: 'light' | 'dark' | 'system';
+        themePreference?: "light" | "dark" | "system";
         timezone?: string;
         locale?: string;
-        deviceType?: 'desktop' | 'mobile' | 'tablet';
+        deviceType?: "desktop" | "mobile" | "tablet";
         browserName?: string;
         referralSource?: string;
         featureFlags?: string[];
@@ -222,7 +222,7 @@ export const createPerformanceEventData = (_params: {
 
 export const createSecurityEventData = (params: {
     eventType: string;
-    severity?: 'low' | 'medium' | 'high' | 'critical';
+    severity?: "low" | "medium" | "high" | "critical";
     blocked?: boolean;
     userAgent?: string;
 }): SecurityEventData => ({

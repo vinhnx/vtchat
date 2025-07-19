@@ -1,4 +1,4 @@
-import { Skeleton } from '@repo/ui';
+import { Skeleton } from "@repo/ui";
 
 export type FullPageLoaderProps = {
     label?: string;

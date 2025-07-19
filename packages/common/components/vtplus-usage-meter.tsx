@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
+import type { QUOTA_WINDOW } from "../src/config/vtPlusLimits";
 
 interface VtPlusUsageData {
     deepResearch: {
@@ -45,7 +45,7 @@ export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
                 </p>
             </div>
             <div className="text-muted-foreground text-sm">
-                VT+ Usage component loaded successfully. User ID: {userId || 'Not provided'}
+                VT+ Usage component loaded successfully. User ID: {userId || "Not provided"}
             </div>
         </div>
     );

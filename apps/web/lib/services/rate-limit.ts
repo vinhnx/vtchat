@@ -50,7 +50,7 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         // Create new record with race condition handling
@@ -58,8 +58,8 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
             id: crypto.randomUUID(),
             userId,
             modelId,
-            dailyRequestCount: '0',
-            minuteRequestCount: '0',
+            dailyRequestCount: "0",
+            minuteRequestCount: "0",
             lastDailyReset: now,
             lastMinuteReset: now,
             createdAt: now,
@@ -70,16 +70,16 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
             await db.insert(userRateLimits).values(rateLimitRecord);
         } catch (error: any) {
             // Handle race condition - another request may have created the record
-            if (error?.code === '23505' && error?.constraint === 'unique_user_model') {
+            if (error?.code === "23505" && error?.constraint === "unique_user_model") {
                 // Fetch the existing record
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)
                     .where(
-                        and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId))
+                        and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)),
                     )
                     .limit(1)
-                    .then(rows => rows[0]);
+                    .then((rows) => rows[0]);
 
                 if (existingRecord) {
                     rateLimitRecord = existingRecord;
@@ -152,7 +152,7 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
         .where(eq(userRateLimits.id, rateLimitRecord.id));
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
-    recordProviderUsage(userId, modelId, 'gemini').catch(_error => {
+    recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -289,7 +289,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
     if (effectiveRemainingDaily <= 0) {
         return {
             allowed: false,
-            reason: 'daily_limit_exceeded',
+            reason: "daily_limit_exceeded",
             remainingDaily: 0,
             remainingMinute: effectiveRemainingMinute,
             resetTime: {
@@ -302,7 +302,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
     if (effectiveRemainingMinute <= 0) {
         return {
             allowed: false,
-            reason: 'minute_limit_exceeded',
+            reason: "minute_limit_exceeded",
             remainingDaily: effectiveRemainingDaily,
             remainingMinute: 0,
             resetTime: {
@@ -325,7 +325,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
 
 export interface RateLimitResult {
     allowed: boolean;
-    reason?: 'daily_limit_exceeded' | 'minute_limit_exceeded';
+    reason?: "daily_limit_exceeded" | "minute_limit_exceeded";
     remainingDaily: number;
     remainingMinute: number;
     resetTime: {
@@ -357,7 +357,7 @@ export interface RateLimitStatus {
 export async function checkRateLimit(
     userId: string,
     modelId: ModelEnum,
-    isVTPlusUser?: boolean
+    isVTPlusUser?: boolean,
 ): Promise<RateLimitResult> {
     // Only apply rate limiting to Gemini models
     if (!isGeminiModel(modelId)) {
@@ -406,7 +406,7 @@ export async function checkRateLimit(
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         // Create new record
@@ -414,8 +414,8 @@ export async function checkRateLimit(
             id: crypto.randomUUID(),
             userId,
             modelId,
-            dailyRequestCount: '0',
-            minuteRequestCount: '0',
+            dailyRequestCount: "0",
+            minuteRequestCount: "0",
             lastDailyReset: now,
             lastMinuteReset: now,
             createdAt: now,
@@ -452,7 +452,7 @@ export async function checkRateLimit(
     if (remainingDaily <= 0) {
         return {
             allowed: false,
-            reason: 'daily_limit_exceeded',
+            reason: "daily_limit_exceeded",
             remainingDaily: 0,
             remainingMinute,
             resetTime: {
@@ -465,7 +465,7 @@ export async function checkRateLimit(
     if (remainingMinute <= 0) {
         return {
             allowed: false,
-            reason: 'minute_limit_exceeded',
+            reason: "minute_limit_exceeded",
             remainingDaily,
             remainingMinute: 0,
             resetTime: {
@@ -493,7 +493,7 @@ async function updateExistingRateLimitRecord(
     rateLimitRecord: any,
     now: Date,
     userId: string,
-    modelId: ModelEnum
+    modelId: ModelEnum,
 ): Promise<void> {
     // Check if resets are needed
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
@@ -531,7 +531,7 @@ async function updateExistingRateLimitRecord(
         .where(eq(userRateLimits.id, rateLimitRecord.id));
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
-    recordProviderUsage(userId, modelId, 'gemini').catch(_error => {
+    recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -544,7 +544,7 @@ async function updateExistingRateLimitRecord(
 export async function recordRequest(
     userId: string,
     modelId: ModelEnum,
-    isVTPlusUser?: boolean
+    isVTPlusUser?: boolean,
 ): Promise<void> {
     // Only track Gemini models
     if (!isGeminiModel(modelId)) {
@@ -575,7 +575,7 @@ export async function recordRequest(
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         // Create new record with count of 1
@@ -585,8 +585,8 @@ export async function recordRequest(
                 id: crypto.randomUUID(),
                 userId,
                 modelId,
-                dailyRequestCount: '1',
-                minuteRequestCount: '1',
+                dailyRequestCount: "1",
+                minuteRequestCount: "1",
                 lastDailyReset: now,
                 lastMinuteReset: now,
                 createdAt: now,
@@ -595,15 +595,15 @@ export async function recordRequest(
             return;
         } catch (error: any) {
             // If duplicate key error, fetch the existing record and update it
-            if (error?.code === '23505') {
+            if (error?.code === "23505") {
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)
                     .where(
-                        and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId))
+                        and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)),
                     )
                     .limit(1)
-                    .then(rows => rows[0]);
+                    .then((rows) => rows[0]);
 
                 if (existingRecord) {
                     // Update existing record - proceed with normal update logic
@@ -628,7 +628,7 @@ export async function recordRequest(
 export async function getRateLimitStatus(
     userId: string,
     modelId: ModelEnum,
-    isVTPlusUser?: boolean
+    isVTPlusUser?: boolean,
 ): Promise<RateLimitStatus | null> {
     // Only provide status for Gemini models
     if (!isGeminiModel(modelId)) {
@@ -689,7 +689,7 @@ export async function getRateLimitStatus(
         .from(userRateLimits)
         .where(and(eq(userRateLimits.userId, userId), eq(userRateLimits.modelId, modelId)))
         .limit(1)
-        .then(rows => rows[0]);
+        .then((rows) => rows[0]);
 
     if (!rateLimitRecord) {
         return {

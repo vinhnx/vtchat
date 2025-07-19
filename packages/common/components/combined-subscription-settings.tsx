@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { ModelEnum, models } from '@repo/ai/models';
+import { ModelEnum, models } from "@repo/ai/models";
 import {
     useCreemSubscription,
     useCurrentPlan,
     useFeatureAccess,
     useVtPlusAccess,
-} from '@repo/common/hooks';
-import { useAppStore } from '@repo/common/store';
+} from "@repo/common/hooks";
+import { useAppStore } from "@repo/common/store";
 import {
     DEFAULT_EMBEDDING_MODEL,
     EMBEDDING_MODEL_CONFIG,
-} from '@repo/shared/config/embedding-models';
+} from "@repo/shared/config/embedding-models";
 
-import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
-import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
+import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
+import { log } from "@repo/shared/logger";
+import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import {
     Alert,
     AlertDescription,
@@ -34,8 +34,8 @@ import {
     Textarea,
     TypographyH3,
     TypographyMuted,
-} from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+} from "@repo/ui";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Activity,
     Brain,
@@ -48,11 +48,11 @@ import {
     Trash2,
     User,
     Zap,
-} from 'lucide-react';
-import React, { useState } from 'react';
-import { Combobox } from './combobox';
-import { PaymentRedirectLoader } from './payment-redirect-loader';
-import { UserTierBadge } from './user-tier-badge';
+} from "lucide-react";
+import React, { useState } from "react";
+import { Combobox } from "./combobox";
+import { PaymentRedirectLoader } from "./payment-redirect-loader";
+import { UserTierBadge } from "./user-tier-badge";
 
 interface CombinedSubscriptionSettingsProps {
     onClose?: () => void;
@@ -69,16 +69,16 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
 
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
     const hasGeminiCachingAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
-    const thinkingMode = useAppStore(state => state.thinkingMode);
-    const setThinkingMode = useAppStore(state => state.setThinkingMode);
-    const geminiCaching = useAppStore(state => state.geminiCaching);
-    const setGeminiCaching = useAppStore(state => state.setGeminiCaching);
-    const embeddingModel = useAppStore(state => state.embeddingModel);
-    const setEmbeddingModel = useAppStore(state => state.setEmbeddingModel);
-    const ragChatModel = useAppStore(state => state.ragChatModel);
-    const setRagChatModel = useAppStore(state => state.setRagChatModel);
-    const profile = useAppStore(state => state.profile);
-    const setProfile = useAppStore(state => state.setProfile);
+    const thinkingMode = useAppStore((state) => state.thinkingMode);
+    const setThinkingMode = useAppStore((state) => state.setThinkingMode);
+    const geminiCaching = useAppStore((state) => state.geminiCaching);
+    const setGeminiCaching = useAppStore((state) => state.setGeminiCaching);
+    const embeddingModel = useAppStore((state) => state.embeddingModel);
+    const setEmbeddingModel = useAppStore((state) => state.setEmbeddingModel);
+    const ragChatModel = useAppStore((state) => state.ragChatModel);
+    const setRagChatModel = useAppStore((state) => state.setRagChatModel);
+    const profile = useAppStore((state) => state.profile);
+    const setProfile = useAppStore((state) => state.setProfile);
 
     // Auto-fill suggestions from knowledge base
     const [knowledgeBaseSuggestions, setKnowledgeBaseSuggestions] = useState<{
@@ -98,14 +98,14 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const analyzeKnowledgeBase = async () => {
         setIsAnalyzing(true);
         try {
-            const response = await fetch('/api/agent/knowledge');
+            const response = await fetch("/api/agent/knowledge");
             if (response.ok) {
                 const data = await response.json();
                 const resources = data.resources || data.knowledge || [];
 
                 if (resources.length > 0) {
                     // Simple analysis to extract potential name and work info
-                    const allContent = resources.map((r: any) => r.content).join(' ');
+                    const allContent = resources.map((r: any) => r.content).join(" ");
 
                     // Look for patterns like "I'm [name]", "My name is [name]", "call me [name]"
                     const namePatterns = [
@@ -113,10 +113,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         /(?:this is|here's|i'm)\s+([A-Z][a-z]+)/gi,
                     ];
 
-                    let suggestedName = '';
+                    let suggestedName = "";
                     for (const pattern of namePatterns) {
                         const match = pattern.exec(allContent);
-                        if (match?.[1] && !['The', 'A', 'An', 'This', 'That'].includes(match[1])) {
+                        if (match?.[1] && !["The", "A", "An", "This", "That"].includes(match[1])) {
                             suggestedName = match[1];
                             break;
                         }
@@ -129,7 +129,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                         /(?:at [A-Z][a-z]+ [A-Z][a-z]+|at [A-Z][a-z]+)/gi,
                     ];
 
-                    let suggestedWork = '';
+                    let suggestedWork = "";
                     for (const pattern of workPatterns) {
                         const match = pattern.exec(allContent);
                         if (match) {
@@ -150,7 +150,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                 }
             }
         } catch (error) {
-            log.error({ error }, 'Error analyzing knowledge base');
+            log.error({ error }, "Error analyzing knowledge base");
         } finally {
             setIsAnalyzing(false);
         }
@@ -179,13 +179,13 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         try {
             await openCustomerPortal();
         } catch (error) {
-            log.error({ error }, 'Failed to open subscription portal');
+            log.error({ error }, "Failed to open subscription portal");
         }
     };
 
     const handleUpgradeToPlus = () => {
         onClose?.();
-        window.location.href = '/pricing';
+        window.location.href = "/pricing";
     };
 
     return (
@@ -299,7 +299,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <AnimatePresence mode="wait">
                                 {thinkingMode.enabled && (
                                     <motion.div
-                                        animate={{ opacity: 1, height: 'auto' }}
+                                        animate={{ opacity: 1, height: "auto" }}
                                         className="space-y-4"
                                         exit={{ opacity: 0, height: 0 }}
                                         initial={{ opacity: 0, height: 0 }}
@@ -409,7 +409,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     <Switch
                                         checked={geminiCaching.enabled}
                                         id="gemini-caching"
-                                        onCheckedChange={enabled => setGeminiCaching({ enabled })}
+                                        onCheckedChange={(enabled) => setGeminiCaching({ enabled })}
                                     />
                                 </div>
                             </div>
@@ -417,7 +417,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                             <AnimatePresence mode="wait">
                                 {geminiCaching.enabled && (
                                     <motion.div
-                                        animate={{ opacity: 1, height: 'auto' }}
+                                        animate={{ opacity: 1, height: "auto" }}
                                         className="space-y-4"
                                         exit={{ opacity: 0, height: 0 }}
                                         initial={{ opacity: 0, height: 0 }}
@@ -432,10 +432,10 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Cache Duration:{' '}
+                                                            Cache Duration:{" "}
                                                             {Math.round(
-                                                                geminiCaching.ttlSeconds / 60
-                                                            )}{' '}
+                                                                geminiCaching.ttlSeconds / 60,
+                                                            )}{" "}
                                                             minutes
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
@@ -471,7 +471,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     </div>
                                                     <div className="flex-1">
                                                         <Label className="text-sm font-medium">
-                                                            Max Cached Conversations:{' '}
+                                                            Max Cached Conversations:{" "}
                                                             {geminiCaching.maxCaches}
                                                         </Label>
                                                         <div className="text-muted-foreground text-xs">
@@ -533,7 +533,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     <Input
                                         className="w-full"
                                         id="profile-name"
-                                        onChange={e => setProfile({ name: e.target.value })}
+                                        onChange={(e) => setProfile({ name: e.target.value })}
                                         placeholder="e.g., Alex, Dr. Smith, or your preferred name"
                                         value={profile.name}
                                     />
@@ -570,7 +570,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         className="min-h-[80px] w-full resize-none"
                                         id="profile-work"
                                         maxLength={500}
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             setProfile({ workDescription: e.target.value })
                                         }
                                         placeholder="e.g., Software engineer at a fintech startup, Marketing manager in healthcare, Student studying computer science..."
@@ -596,7 +596,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                 {knowledgeBaseSuggestions.work.length > 30
                                                     ? `${knowledgeBaseSuggestions.work.substring(
                                                           0,
-                                                          30
+                                                          30,
                                                       )}...`
                                                     : knowledgeBaseSuggestions.work}
                                                 "
@@ -633,7 +633,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     size="sm"
                                     variant="outline"
                                 >
-                                    {isAnalyzing ? 'Analyzing...' : 'Re-analyze Agent'}
+                                    {isAnalyzing ? "Analyzing..." : "Re-analyze Agent"}
                                 </Button>
                             </div>
                         </CardContent>
@@ -659,7 +659,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     className="flex-1"
                                     onClick={() => {
                                         // Open the AI Assistant page to view knowledge base
-                                        window.open('/agent', '_blank');
+                                        window.open("/agent", "_blank");
                                     }}
                                     variant="outline"
                                 >
@@ -671,24 +671,24 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     onClick={async () => {
                                         if (
                                             confirm(
-                                                'Are you sure you want to clear all knowledge base data? This action cannot be undone.'
+                                                "Are you sure you want to clear all knowledge base data? This action cannot be undone.",
                                             )
                                         ) {
                                             try {
-                                                const response = await fetch('/api/agent/clear', {
-                                                    method: 'DELETE',
+                                                const response = await fetch("/api/agent/clear", {
+                                                    method: "DELETE",
                                                 });
                                                 if (response.ok) {
-                                                    alert('Knowledge base cleared successfully');
+                                                    alert("Knowledge base cleared successfully");
                                                 } else {
-                                                    alert('Failed to clear knowledge base');
+                                                    alert("Failed to clear knowledge base");
                                                 }
                                             } catch (error) {
                                                 log.error(
                                                     { error },
-                                                    'Error clearing knowledge base'
+                                                    "Error clearing knowledge base",
                                                 );
-                                                alert('Error clearing knowledge base');
+                                                alert("Error clearing knowledge base");
                                             }
                                         }
                                     }}
@@ -737,13 +737,13 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     </div>
                                     <Combobox
                                         className="w-full"
-                                        onValueChange={value => setEmbeddingModel(value as any)}
+                                        onValueChange={(value) => setEmbeddingModel(value as any)}
                                         options={Object.entries(EMBEDDING_MODEL_CONFIG).map(
                                             ([key, config]) => ({
                                                 value: key,
                                                 label: config.name,
                                                 description: `${config.provider} • ${config.dimensions}D`,
-                                            })
+                                            }),
                                         )}
                                         placeholder="Select embedding model..."
                                         searchPlaceholder="Search models..."
@@ -777,15 +777,17 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                             Chat Model
                                         </div>
                                         <div className="text-muted-foreground text-xs">
-                                            {models.find(m => m.id === ragChatModel)?.name ||
-                                                'Unknown Model'}
+                                            {models.find((m) => m.id === ragChatModel)?.name ||
+                                                "Unknown Model"}
                                         </div>
                                     </div>
                                     <Combobox
                                         className="w-full"
-                                        onValueChange={value => setRagChatModel(value as ModelEnum)}
+                                        onValueChange={(value) =>
+                                            setRagChatModel(value as ModelEnum)
+                                        }
                                         options={models
-                                            .filter(model =>
+                                            .filter((model) =>
                                                 // Filter to show commonly used models for RAG
                                                 [
                                                     ModelEnum.GPT_4o,
@@ -795,9 +797,9 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                                     ModelEnum.GEMINI_2_5_PRO,
                                                     ModelEnum.GEMINI_2_5_FLASH,
                                                     ModelEnum.GEMINI_2_5_FLASH_LITE,
-                                                ].includes(model.id)
+                                                ].includes(model.id),
                                             )
-                                            .map(model => ({
+                                            .map((model) => ({
                                                 value: model.id,
                                                 label: model.name,
                                                 description: `${model.provider} • ${model.contextWindow} tokens`,
@@ -817,7 +819,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30">
                         <Sparkles className="h-4 w-4" />
                         <AlertDescription className="text-amber-800 dark:text-amber-200">
-                            <strong>Ready to upgrade?</strong> Get VT+ for{' '}
+                            <strong>Ready to upgrade?</strong> Get VT+ for{" "}
                             {VT_PLUS_PRICE_WITH_INTERVAL} with free trial included and cancel
                             anytime. Unlock premium AI models, research capabilities, and AI memory.
                         </AlertDescription>

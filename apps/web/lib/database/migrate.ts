@@ -1,21 +1,21 @@
-import { log } from '@repo/shared/logger';
-import { config } from 'dotenv';
-import { migrate } from 'drizzle-orm/neon-serverless/migrator';
-import { db } from './index';
+import { log } from "@repo/shared/logger";
+import { config } from "dotenv";
+import { migrate } from "drizzle-orm/neon-serverless/migrator";
+import { db } from "./index";
 
 // Load environment variables
-config({ path: '.env.local' });
+config({ path: ".env.local" });
 
 export async function runMigrations() {
-    log.info({}, 'Running database migrations...');
+    log.info({}, "Running database migrations...");
 
     try {
         await migrate(db, {
-            migrationsFolder: './lib/database/migrations',
+            migrationsFolder: "./lib/database/migrations",
         });
-        log.info({}, '✅ Database migrations completed successfully!');
+        log.info({}, "✅ Database migrations completed successfully!");
     } catch (error) {
-        log.error({ error }, '❌ Database migration failed');
+        log.error({ error }, "❌ Database migration failed");
         throw error;
     }
 }

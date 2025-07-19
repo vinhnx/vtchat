@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useChatStore } from '@repo/common/store';
-import { GENERATION_TIMEOUTS } from '@repo/shared/constants';
-import { useEffect, useRef } from 'react';
+import { useChatStore } from "@repo/common/store";
+import { GENERATION_TIMEOUTS } from "@repo/shared/constants";
+import { useEffect, useRef } from "react";
 
 interface UseGenerationTimeoutOptions {
     timeoutThreshold?: number;
@@ -15,9 +15,9 @@ export const useGenerationTimeout = ({
     slowResponseThreshold = GENERATION_TIMEOUTS.SLOW_RESPONSE_THRESHOLD,
     enabled = true,
 }: UseGenerationTimeoutOptions = {}) => {
-    const isGenerating = useChatStore(state => state.isGenerating);
-    const generationStartTime = useChatStore(state => state.generationStartTime);
-    const setShowTimeoutIndicator = useChatStore(state => state.setShowTimeoutIndicator);
+    const isGenerating = useChatStore((state) => state.isGenerating);
+    const generationStartTime = useChatStore((state) => state.generationStartTime);
+    const setShowTimeoutIndicator = useChatStore((state) => state.setShowTimeoutIndicator);
 
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const slowResponseRef = useRef<NodeJS.Timeout | null>(null);

@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
-import { handleIncompleteTable, normalizeContent, removeIncompleteTags } from '../markdown-content';
+import { describe, expect, it } from "vitest";
+import { handleIncompleteTable, normalizeContent, removeIncompleteTags } from "../markdown-content";
 
-describe('MarkdownContent utilities', () => {
-    describe('handleIncompleteTable', () => {
-        it('should handle complete table markdown', () => {
+describe("MarkdownContent utilities", () => {
+    describe("handleIncompleteTable", () => {
+        it("should handle complete table markdown", () => {
             const completeTable = `
 | Name | Age | City |
 |------|-----|------|
@@ -14,7 +14,7 @@ describe('MarkdownContent utilities', () => {
             expect(result).toBe(completeTable);
         });
 
-        it('should remove incomplete table with only header', () => {
+        it("should remove incomplete table with only header", () => {
             const incompleteTable = `
 Some text before
 | Name | Age | City |
@@ -27,22 +27,22 @@ Some text after
 `);
         });
 
-        it('should remove incomplete table with header but no separator', () => {
+        it("should remove incomplete table with header but no separator", () => {
             const incompleteTable = `
 | Name | Age | City |
 | John | 25  | NYC  |
 `;
             const result = handleIncompleteTable(incompleteTable);
-            expect(result).toBe('');
+            expect(result).toBe("");
         });
 
-        it('should handle content without tables', () => {
-            const noTable = 'This is just regular text with no tables.';
+        it("should handle content without tables", () => {
+            const noTable = "This is just regular text with no tables.";
             const result = handleIncompleteTable(noTable);
             expect(result).toBe(noTable);
         });
 
-        it('should handle mixed content with incomplete table', () => {
+        it("should handle mixed content with incomplete table", () => {
             const mixedContent = `
 # Title
 
@@ -64,7 +64,7 @@ More text after.
 `);
         });
 
-        it('should preserve complete table with proper separator', () => {
+        it("should preserve complete table with proper separator", () => {
             const completeTable = `
 # Data Table
 
@@ -79,7 +79,7 @@ End of content.
             expect(result).toBe(completeTable);
         });
 
-        it('should handle table with different separator styles', () => {
+        it("should handle table with different separator styles", () => {
             const tableWithDashes = `
 | Name | Age |
 |:-----|----:|
@@ -89,42 +89,42 @@ End of content.
             expect(result).toBe(tableWithDashes);
         });
 
-        it('should remove single line table', () => {
-            const singleLine = '| Name | Age | City |';
+        it("should remove single line table", () => {
+            const singleLine = "| Name | Age | City |";
             const result = handleIncompleteTable(singleLine);
-            expect(result).toBe('');
+            expect(result).toBe("");
         });
     });
 
-    describe('normalizeContent', () => {
-        it('should replace literal \\n with actual newlines', () => {
-            const content = 'Line 1\\nLine 2\\nLine 3';
+    describe("normalizeContent", () => {
+        it("should replace literal \\n with actual newlines", () => {
+            const content = "Line 1\\nLine 2\\nLine 3";
             const result = normalizeContent(content);
-            expect(result).toBe('Line 1\nLine 2\nLine 3');
+            expect(result).toBe("Line 1\nLine 2\nLine 3");
         });
 
-        it('should handle content without escaped newlines', () => {
-            const content = 'Line 1\nLine 2\nLine 3';
+        it("should handle content without escaped newlines", () => {
+            const content = "Line 1\nLine 2\nLine 3";
             const result = normalizeContent(content);
             expect(result).toBe(content);
         });
     });
 
-    describe('removeIncompleteTags', () => {
-        it('should remove incomplete HTML tags', () => {
-            const content = 'Some text <div>complete</div> and incomplete <span';
+    describe("removeIncompleteTags", () => {
+        it("should remove incomplete HTML tags", () => {
+            const content = "Some text <div>complete</div> and incomplete <span";
             const result = removeIncompleteTags(content);
-            expect(result).toBe('Some text <div>complete</div> and incomplete ');
+            expect(result).toBe("Some text <div>complete</div> and incomplete ");
         });
 
-        it('should handle content without incomplete tags', () => {
-            const content = 'Some text <div>complete</div>';
+        it("should handle content without incomplete tags", () => {
+            const content = "Some text <div>complete</div>";
             const result = removeIncompleteTags(content);
             expect(result).toBe(content);
         });
 
-        it('should handle content without any tags', () => {
-            const content = 'Just plain text';
+        it("should handle content without any tags", () => {
+            const content = "Just plain text";
             const result = removeIncompleteTags(content);
             expect(result).toBe(content);
         });

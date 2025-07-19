@@ -5,15 +5,15 @@
  * The fix ensures that the container div has proper centering styles when isSidebarOpen is false.
  */
 
-import { expect, test } from '@playwright/test';
+import { expect, test } from "@playwright/test";
 
-test.describe('Sidebar User Icon Alignment', () => {
-    test('user icon should be centered when sidebar is collapsed', async ({ page }) => {
+test.describe("Sidebar User Icon Alignment", () => {
+    test("user icon should be centered when sidebar is collapsed", async ({ page }) => {
         // Navigate to the application
-        await page.goto('/');
+        await page.goto("/");
 
         // Wait for the page to load
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState("networkidle");
 
         // Check if user is logged in by looking for avatar
         const avatar = page.locator('[data-testid="user-avatar"]');
@@ -42,25 +42,25 @@ test.describe('Sidebar User Icon Alignment', () => {
 
             if (await userSection.isVisible()) {
                 // Verify the container has justify-center class when collapsed
-                const containerClasses = await userSection.getAttribute('class');
-                expect(containerClasses).toContain('justify-center');
+                const containerClasses = await userSection.getAttribute("class");
+                expect(containerClasses).toContain("justify-center");
 
                 // Get the user icon trigger element
                 const userTrigger = userSection.locator('[data-testid="sidebar-user-trigger"]');
                 await expect(userTrigger).toBeVisible();
 
                 // Check that the trigger has proper sizing for collapsed state
-                const triggerClasses = await userTrigger.getAttribute('class');
-                expect(triggerClasses).toContain('h-8');
-                expect(triggerClasses).toContain('w-8');
-                expect(triggerClasses).toContain('justify-center');
+                const triggerClasses = await userTrigger.getAttribute("class");
+                expect(triggerClasses).toContain("h-8");
+                expect(triggerClasses).toContain("w-8");
+                expect(triggerClasses).toContain("justify-center");
             }
         }
     });
 
-    test('sidebar should maintain user icon centering across state changes', async ({ page }) => {
-        await page.goto('/');
-        await page.waitForLoadState('networkidle');
+    test("sidebar should maintain user icon centering across state changes", async ({ page }) => {
+        await page.goto("/");
+        await page.waitForLoadState("networkidle");
 
         // Test multiple collapse/expand cycles to ensure alignment is maintained
         for (let i = 0; i < 3; i++) {
@@ -80,8 +80,8 @@ test.describe('Sidebar User Icon Alignment', () => {
                 // Verify centering is maintained
                 const userSection = page.locator('[data-testid="sidebar-user-section"]').first();
                 if (await userSection.isVisible()) {
-                    const containerClasses = await userSection.getAttribute('class');
-                    expect(containerClasses).toContain('justify-center');
+                    const containerClasses = await userSection.getAttribute("class");
+                    expect(containerClasses).toContain("justify-center");
                 }
             }
         }

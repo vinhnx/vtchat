@@ -5,7 +5,7 @@ export function getCacheBustedAvatarUrl(url: string | null | undefined): string 
     if (!url) return undefined;
 
     // If URL already has query parameters, append with &, otherwise use ?
-    const separator = url.includes('?') ? '&' : '?';
+    const separator = url.includes("?") ? "&" : "?";
     const timestamp = Date.now();
 
     return `${url}${separator}_t=${timestamp}`;
@@ -23,7 +23,7 @@ export function getSessionCacheBustedAvatarUrl(url: string | null | undefined): 
 
     try {
         sessionId =
-            typeof window !== 'undefined' && window.performance
+            typeof window !== "undefined" && window.performance
                 ? window.performance.timeOrigin || Date.now()
                 : Date.now();
     } catch {
@@ -31,7 +31,7 @@ export function getSessionCacheBustedAvatarUrl(url: string | null | undefined): 
         sessionId = Date.now();
     }
 
-    const separator = url.includes('?') ? '&' : '?';
+    const separator = url.includes("?") ? "&" : "?";
 
     return `${url}${separator}_sid=${Math.floor(sessionId)}`;
 }

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { log } from '@repo/shared/logger';
-import { useEffect } from 'react';
+import { log } from "@repo/shared/logger";
+import { useEffect } from "react";
 
 interface GlobalErrorProps {
     error: Error & { digest?: string };
@@ -17,12 +17,12 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                 digest: error.digest,
                 stack: error.stack,
             },
-            'Global error encountered'
+            "Global error encountered",
         );
     }, [error]);
 
     const handleHomeNavigation = () => {
-        window.location.href = '/';
+        window.location.href = "/";
     };
 
     return (

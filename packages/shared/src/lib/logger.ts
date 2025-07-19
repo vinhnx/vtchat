@@ -16,35 +16,35 @@ interface Logger {
 // Simple logger that wraps console methods
 const createLogger = (): Logger => {
     const info: LogFunction = (obj: any, msg?: string) => {
-        if (typeof obj === 'string') {
+        if (typeof obj === "string") {
             console.log(obj);
         } else {
-            console.log(msg || 'Info:', obj);
+            console.log(msg || "Info:", obj);
         }
     };
 
     const warn: LogFunction = (obj: any, msg?: string) => {
-        if (typeof obj === 'string') {
+        if (typeof obj === "string") {
             console.warn(obj);
         } else {
-            console.warn(msg || 'Warn:', obj);
+            console.warn(msg || "Warn:", obj);
         }
     };
 
     const error: LogFunction = (obj: any, msg?: string) => {
-        if (typeof obj === 'string') {
+        if (typeof obj === "string") {
             console.error(obj);
         } else {
-            console.error(msg || 'Error:', obj);
+            console.error(msg || "Error:", obj);
         }
     };
 
     const debug: LogFunction = (obj: any, msg?: string) => {
-        if (process.env.NODE_ENV === 'development') {
-            if (typeof obj === 'string') {
+        if (process.env.NODE_ENV === "development") {
+            if (typeof obj === "string") {
                 console.debug(obj);
             } else {
-                console.debug(msg || 'Debug:', obj);
+                console.debug(msg || "Debug:", obj);
             }
         }
     };

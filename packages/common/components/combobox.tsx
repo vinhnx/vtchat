@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Button,
@@ -12,9 +12,9 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@repo/ui';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
+} from "@repo/ui";
+import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
 interface ComboboxOption {
     value: string;
@@ -36,21 +36,21 @@ export function Combobox({
     options,
     value,
     onValueChange,
-    placeholder = 'Select option...',
-    searchPlaceholder = 'Search...',
+    placeholder = "Select option...",
+    searchPlaceholder = "Search...",
     className,
     disabled = false,
 }: ComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
-    const selectedOption = options.find(option => option.value === value);
+    const selectedOption = options.find((option) => option.value === value);
 
     return (
         <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild>
                 <Button
                     aria-expanded={open}
-                    className={cn('justify-between', className)}
+                    className={cn("justify-between", className)}
                     disabled={disabled}
                     role="combobox"
                     variant="outline"
@@ -65,7 +65,7 @@ export function Combobox({
                     <CommandList>
                         <CommandEmpty>No option found.</CommandEmpty>
                         <CommandGroup>
-                            {options.map(option => (
+                            {options.map((option) => (
                                 <CommandItem
                                     key={option.value}
                                     onSelect={() => {
@@ -84,8 +84,8 @@ export function Combobox({
                                     </div>
                                     <Check
                                         className={cn(
-                                            'ml-auto h-4 w-4',
-                                            value === option.value ? 'opacity-100' : 'opacity-0'
+                                            "ml-auto h-4 w-4",
+                                            value === option.value ? "opacity-100" : "opacity-0",
                                         )}
                                     />
                                 </CommandItem>

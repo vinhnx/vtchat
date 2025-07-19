@@ -6,10 +6,10 @@
  * Types of reasoning implementations supported by different providers
  */
 export const ReasoningType = {
-    DEEPSEEK_REASONING: 'deepseek-reasoning',
-    ANTHROPIC_REASONING: 'anthropic-reasoning',
-    GEMINI_THINKING: 'gemini-thinking',
-    NONE: 'none',
+    DEEPSEEK_REASONING: "deepseek-reasoning",
+    ANTHROPIC_REASONING: "anthropic-reasoning",
+    GEMINI_THINKING: "gemini-thinking",
+    NONE: "none",
 } as const;
 
 export type ReasoningType = (typeof ReasoningType)[keyof typeof ReasoningType];
@@ -18,8 +18,8 @@ export type ReasoningType = (typeof ReasoningType)[keyof typeof ReasoningType];
  * Reasoning tag names used by different providers
  */
 export const ReasoningTagName = {
-    THINK: 'think',
-    THINKING: 'thinking',
+    THINK: "think",
+    THINKING: "thinking",
 } as const;
 
 export type ReasoningTagName = (typeof ReasoningTagName)[keyof typeof ReasoningTagName];
@@ -28,8 +28,8 @@ export type ReasoningTagName = (typeof ReasoningTagName)[keyof typeof ReasoningT
  * Store and configuration keys
  */
 export const StoreKeys = {
-    THINKING_MODE: 'thinkingMode',
-    API_KEYS: '[REDACTED:api-key]',
+    THINKING_MODE: "thinkingMode",
+    API_KEYS: "[REDACTED:api-key]",
 } as const;
 
 export type StoreKeys = (typeof StoreKeys)[keyof typeof StoreKeys];
@@ -40,7 +40,7 @@ export type StoreKeys = (typeof StoreKeys)[keyof typeof StoreKeys];
 export const REASONING_CONFIG = {
     DEEPSEEK_TAG: ReasoningTagName.THINK,
     ANTHROPIC_TAG: ReasoningTagName.THINKING,
-    SEPARATOR: '\n',
+    SEPARATOR: "\n",
 } as const;
 
 /**
@@ -57,7 +57,7 @@ export const REASONING_BUDGETS = {
  */
 export const CLAUDE_4_CONFIG = {
     DEFAULT_THINKING_BUDGET: 15_000,
-    BETA_HEADER: 'interleaved-thinking-2025-05-14',
-    BETA_HEADER_KEY: 'anthropic-beta',
+    BETA_HEADER: "interleaved-thinking-2025-05-14",
+    BETA_HEADER_KEY: "anthropic-beta",
     SUPPORTS_TOOL_THINKING: true,
 } as const;
