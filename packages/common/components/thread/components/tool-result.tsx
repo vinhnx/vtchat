@@ -80,7 +80,7 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
                         <div className="border-muted/50 border-t p-3 pt-3">
                             {isResultChartTool ? (
                                 <div className="w-full">
-                                    <DynamicChartRenderer {...(toolResult.result as any)} />
+                                    <DynamicChartRenderer {...(toolResult.output as any)} />
                                 </div>
                             ) : (
                                 <div>
@@ -92,7 +92,7 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
                                     </div>
                                     <CodeBlock
                                         className="border-muted/50 rounded-md"
-                                        code={JSON.stringify(toolResult.result, null, 2)}
+                                        code={JSON.stringify(toolResult.output, null, 2)}
                                         lang="json"
                                         showHeader={false}
                                         variant="secondary"

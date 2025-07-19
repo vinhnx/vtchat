@@ -173,7 +173,7 @@ When users ask about your capabilities or technical details, you can reference t
                     addResource: tool({
                         description:
                             "Add information to the knowledge base. Use this ONLY when the user provides new information to store. Do not use this repeatedly for the same content.",
-                        parameters: z.object({
+                        inputSchema: z.object({
                             content: z
                                 .string()
                                 .describe("the content or resource to add to the knowledge base"),
@@ -184,7 +184,7 @@ When users ask about your capabilities or technical details, you can reference t
                     getInformation: tool({
                         description:
                             "Search the knowledge base to find relevant information for answering questions. Use this ONLY when the user asks a question that might be answered from stored information.",
-                        parameters: z.object({
+                        inputSchema: z.object({
                             question: z.string().describe("the users question to search for"),
                         }),
                         execute: async ({ question }) =>

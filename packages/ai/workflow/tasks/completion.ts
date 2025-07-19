@@ -174,7 +174,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
-                            reasoning: {
+                            reasoningText: {
                                 data: fullText,
                                 status: "COMPLETED",
                             },
@@ -256,7 +256,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         status: "COMPLETED",
                         steps: {
                             ...prev?.[0]?.steps,
-                            reasoningDetails: {
+                            reasoningText: {
                                 data: details,
                                 status: "COMPLETED",
                             },
@@ -268,7 +268,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                 chunkBuffer.add(chunk);
             },
             onToolCall: (toolCall) => {
-                log.info({ toolName: toolCall.toolName, args: toolCall.args }, "🔧 Tool call");
+                log.info({ toolName: toolCall.toolName, args: toolCall.input }, "🔧 Tool call");
                 // Send tool call event to UI
                 events?.update("steps", (prev) => ({
                     ...prev,
@@ -281,7 +281,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             toolCall: {
                                 data: {
                                     toolName: toolCall.toolName,
-                                    args: toolCall.args,
+                                    args: toolCall.input,
                                     type:
                                         charts &&
                                         Object.keys(chartTools()).includes(toolCall.toolName)
@@ -302,13 +302,13 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     {
                         toolCallId: toolCall.toolCallId,
                         toolName: toolCall.toolName,
-                        args: toolCall.args,
+                        args: toolCall.input,
                     },
                 ]);
             },
             onToolResult: (toolResult) => {
                 log.info(
-                    { toolName: toolResult.toolName, result: toolResult.result },
+                    { toolName: toolResult.toolName, result: toolResult.output },
                     "🔧 Tool result for",
                 );
                 // Send tool result event to UI
@@ -322,7 +322,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             ...prev?.[0]?.steps,
                             toolResult: {
                                 data: {
-                                    result: toolResult.result,
+                                    result: toolResult.output,
                                     type:
                                         charts &&
                                         Object.keys(chartTools()).includes(
@@ -345,7 +345,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     {
                         toolCallId: toolResult.toolCallId,
                         toolName: toolResult.toolName || "unknown",
-                        result: toolResult.result,
+                        result: toolResult.output,
                     },
                 ]);
             },

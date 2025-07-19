@@ -22,7 +22,7 @@ export const openaiWebSearchTool = () =>
     tool({
         description:
             "Search the web for current information and return relevant results with sources",
-        parameters: z.object({
+        inputSchema: z.object({
             query: z.string().describe("The search query to find information about"),
         }),
         execute: async ({ query }) => {
@@ -72,7 +72,7 @@ export const supportsOpenAIWebSearch = (modelId: string): boolean => {
 export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
     tool({
         description: `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
-        parameters: z.object({
+        inputSchema: z.object({
             query: z.string().describe("The search query to find information about"),
             maxResults: z
                 .number()
