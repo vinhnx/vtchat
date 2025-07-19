@@ -31,6 +31,15 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+        // SECURITY: Check request size before processing
+        const contentLength = request.headers.get('content-length');
+        if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) { // 10MB limit
+            return new Response(
+                JSON.stringify({ error: "Request too large" }),
+                { status: 413, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
         const session = await auth.api.getSession({
             headers: request.headers,
         });
@@ -77,11 +86,19 @@ export async function POST(request: NextRequest) {
         const { data } = validatedBody;
         const ip = getIp(request);
 
+        // SECURITY: Validate IP format and reject invalid IPs
         if (!ip) {
             return new Response(JSON.stringify({ error: "Unauthorized" }), {
                 status: 401,
                 headers: { "Content-Type": "application/json" },
             });
+        }
+
+        // SECURITY: Basic IP format validation
+        const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+        if (!ipv4Regex.test(ip) && !ipv6Regex.test(ip) && ip !== "::1" && ip !== "127.0.0.1") {
+            log.warn("Invalid IP format detected", { ip: ip.substring(0, 10) + "..." });
         }
 
         // SECURITY: Extract API keys from secure headers first, then fallback to body
@@ -518,7 +535,10 @@ export async function POST(request: NextRequest) {
         return new Response(
             JSON.stringify({
                 error: errorMessage,
-                details: process.env.NODE_ENV === "development" ? String(error) : undefined,
+                // SECURITY: Never expose stack traces, even in development
+                ...(process.env.NODE_ENV === "development" && { 
+                    debugInfo: error instanceof Error ? error.message : 'Unknown error'
+                }),
             }),
             { status: statusCode, headers: { "Content-Type": "application/json" } },
         );

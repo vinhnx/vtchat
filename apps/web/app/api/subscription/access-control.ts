@@ -104,17 +104,11 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                 };
             }, "Get user subscription status");
         } catch (dbError) {
-            log.error("Database query failed, using fallback:", { data: dbError });
-            // Ultimate fallback - assume free tier access
-            return {
-                plan: PlanSlug.VT_BASE,
-                isActive: true,
-                expiresAt: null,
-                source: "fallback" as const,
-                hasDbSubscription: false,
-                userPlanSlug: null,
-                needsSync: false,
-            };
+            log.error("Database query failed, denying access for security:", { 
+                error: dbError instanceof Error ? dbError.message : 'Unknown error'
+            });
+            // SECURITY: Don't provide fallback access when database fails
+            throw new Error("Unable to verify subscription status");
         }
     }
 }
@@ -177,10 +171,14 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
             planSlug: subscriptionStatus.plan,
         };
     } catch (error) {
-        log.error("Failed to check VT+ access:", { error });
+        // SECURITY: Log error without exposing sensitive subscription data
+        log.error("Failed to check VT+ access:", { 
+            error: error instanceof Error ? error.message : 'Unknown error',
+            userId: userId ? 'present' : 'missing'
+        });
         return {
             hasAccess: false,
-            reason: "Failed to verify subscription status",
+            reason: "Unable to verify subscription status",
             subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
