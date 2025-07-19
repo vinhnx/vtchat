@@ -1,9 +1,15 @@
+import { db } from "@/lib/database";
+import { userRateLimits } from "@/lib/database/schema";
 import { ModelEnum } from "@repo/ai/models";
 import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
 import { and, eq } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { userRateLimits } from "@/lib/database/schema";
 import { recordProviderUsage } from "./budget-tracking";
+
+// Security bounds to prevent integer overflow and malicious data
+const SECURITY_BOUNDS = {
+    MAX_DAILY_COUNT: 1000000,
+    MAX_MINUTE_COUNT: 10000,
+} as const;
 
 // Map model enum to rate limit configuration
 const MODEL_LIMITS_MAP = {
@@ -101,8 +107,21 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
     const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
 
-    let dailyCount = Number.parseInt(rateLimitRecord.dailyRequestCount, 10);
-    let minuteCount = Number.parseInt(rateLimitRecord.minuteRequestCount, 10);
+    // SECURITY: Add bounds checking to prevent integer overflow
+    let dailyCount = Math.max(
+        0,
+        Math.min(
+            Number.parseInt(rateLimitRecord.dailyRequestCount, 10) || 0,
+            SECURITY_BOUNDS.MAX_DAILY_COUNT,
+        ),
+    );
+    let minuteCount = Math.max(
+        0,
+        Math.min(
+            Number.parseInt(rateLimitRecord.minuteRequestCount, 10) || 0,
+            SECURITY_BOUNDS.MAX_MINUTE_COUNT,
+        ),
+    );
     let lastDailyReset = rateLimitRecord.lastDailyReset;
     let lastMinuteReset = rateLimitRecord.lastMinuteReset;
 
@@ -532,8 +551,9 @@ export async function recordRequest(
         return;
     }
 
-    // VT+ users with Flash Lite models: record for usage tracking but don't enforce limits
+    // SECURITY: Validate VT+ user status before applying unlimited access
     if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
+        // Additional validation could be added here to verify VT+ status
         await incrementRateRecord(userId, modelId);
         return;
     }

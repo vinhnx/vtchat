@@ -4,7 +4,11 @@
 export const dynamic = "force-dynamic";
 
 import { useSession } from "@repo/shared/lib/auth-client";
-import { ThreadWithSuspense, ChatInputWithSuspense, FooterWithSuspense } from "../components/lazy-components";
+import {
+    ThreadWithSuspense,
+    ChatInputWithSuspense,
+    FooterWithSuspense,
+} from "../components/lazy-components";
 
 export default function HomePage() {
     const { data: session, isPending } = useSession();

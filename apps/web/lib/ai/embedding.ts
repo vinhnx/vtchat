@@ -99,15 +99,13 @@ export const generateEmbeddings = async (
     // VT+ users can use server API key, free users need their own
     const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
-        const availableKeys = Object.keys(apiKeys || {}).filter((key) => key.endsWith("_API_KEY"));
+        // SECURITY: Don't expose available API key names in error messages
         throw new Error(`RAG Knowledge Chat requires a Google Gemini API key.
 
 🔧 To fix this:
 1. Go to Settings → API Keys
 2. Add your Google Gemini API key 
    - Get free key: https://ai.google.dev/api
-
-You currently have: ${availableKeys.length > 0 ? availableKeys.join(", ") : "no API keys configured"}
 
 Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);
     }
@@ -150,19 +148,47 @@ export const findRelevantContent = async (
         throw new Error("User ID is required for knowledge base search to ensure data isolation");
     }
 
-    const userQueryEmbedded = await generateEmbedding(userQuery, apiKeys, userModel);
+    // SECURITY: Validate userId format to prevent injection
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
+        throw new Error("Invalid user ID format");
+    }
+
+    // SECURITY: Validate and sanitize user query
+    if (!userQuery || typeof userQuery !== "string") {
+        throw new Error("Invalid query format");
+    }
+
+    // Limit query length to prevent abuse
+    const sanitizedQuery = userQuery.trim().substring(0, 1000);
+    if (sanitizedQuery.length === 0) {
+        return [];
+    }
+
+    const userQueryEmbedded = await generateEmbedding(sanitizedQuery, apiKeys, userModel);
+
+    // SECURITY: Use parameterized similarity threshold
+    const similarityThreshold = 0.5;
     const similarity = sql<number>`1 - (${cosineDistance(
         embeddings.embedding,
         userQueryEmbedded,
     )})`;
 
-    // Query for similar embeddings (filtering by user through resources table)
+    // SECURITY: Explicit user isolation with parameterized queries
     const similarGuides = await db
-        .select({ name: embeddings.content, similarity })
+        .select({
+            name: embeddings.content,
+            similarity: similarity,
+        })
         .from(embeddings)
         .innerJoin(resources, eq(embeddings.resourceId, resources.id))
-        .where(and(gt(similarity, 0.5), eq(resources.userId, userId)))
-        .orderBy((t) => desc(t.similarity))
+        .where(
+            and(
+                gt(similarity, similarityThreshold),
+                eq(resources.userId, userId), // Explicit user filtering
+            ),
+        )
+        .orderBy(desc(similarity))
         .limit(4);
 
     // SECURITY: Apply additional PII masking to retrieved content as a safety net
