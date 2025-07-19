@@ -27,7 +27,7 @@ describe("GEMINI_2_5_FLASH_LITE Chart Function Calling", () => {
             // Tools should have proper structure
             Object.values(tools).forEach((tool) => {
                 expect(tool?.description).toBeDefined();
-                expect(tool?.parameters).toBeDefined();
+                expect(tool?.inputSchema).toBeDefined();
                 expect(tool?.execute).toBeDefined();
                 expect(typeof tool?.execute).toBe("function");
             });
@@ -176,7 +176,7 @@ describe("GEMINI_2_5_FLASH_LITE Chart Function Calling", () => {
             // Simulate the tool call parameters that AI would generate
             const expectedToolCall = {
                 toolName: "barChart",
-                args: {
+                input: {
                     title: "Q1 2024 Sales Data",
                     data: [
                         { name: "Jan", value: 100 },
