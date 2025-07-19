@@ -155,10 +155,10 @@ export const findRelevantContent = async (
     }
 
     // SECURITY: Validate and sanitize user query
-    if (!userQuery || typeof userQuery !== 'string') {
+    if (!userQuery || typeof userQuery !== "string") {
         throw new Error("Invalid query format");
     }
-    
+
     // Limit query length to prevent abuse
     const sanitizedQuery = userQuery.trim().substring(0, 1000);
     if (sanitizedQuery.length === 0) {
@@ -166,7 +166,7 @@ export const findRelevantContent = async (
     }
 
     const userQueryEmbedded = await generateEmbedding(sanitizedQuery, apiKeys, userModel);
-    
+
     // SECURITY: Use parameterized similarity threshold
     const similarityThreshold = 0.5;
     const similarity = sql<number>`1 - (${cosineDistance(
@@ -176,16 +176,18 @@ export const findRelevantContent = async (
 
     // SECURITY: Explicit user isolation with parameterized queries
     const similarGuides = await db
-        .select({ 
-            name: embeddings.content, 
-            similarity: similarity 
+        .select({
+            name: embeddings.content,
+            similarity: similarity,
         })
         .from(embeddings)
         .innerJoin(resources, eq(embeddings.resourceId, resources.id))
-        .where(and(
-            gt(similarity, similarityThreshold),
-            eq(resources.userId, userId) // Explicit user filtering
-        ))
+        .where(
+            and(
+                gt(similarity, similarityThreshold),
+                eq(resources.userId, userId), // Explicit user filtering
+            ),
+        )
         .orderBy(desc(similarity))
         .limit(4);
 

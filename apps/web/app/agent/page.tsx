@@ -109,8 +109,8 @@ export default function RAGPage() {
     return (
         <div className="flex h-dvh flex-col overflow-hidden">
             {/* Desktop Header - Hidden on mobile */}
-            <div className="container mx-auto hidden flex-shrink-0 px-2 py-4 md:block md:px-4 md:py-8">
-                <div className="mb-4 md:mb-6">
+            <div className="container mx-auto hidden flex-shrink-0 px-2 py-2 md:block md:px-8 md:py-12">
+                <div className="mb-2 md:mb-4">
                     <h1 className="flex items-center gap-2 text-xl font-bold md:text-2xl">
                         Personal AI Assistant with Memory
                         <Badge

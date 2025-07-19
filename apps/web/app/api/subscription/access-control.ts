@@ -104,8 +104,8 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                 };
             }, "Get user subscription status");
         } catch (dbError) {
-            log.error("Database query failed, denying access for security:", { 
-                error: dbError instanceof Error ? dbError.message : 'Unknown error'
+            log.error("Database query failed, denying access for security:", {
+                error: dbError instanceof Error ? dbError.message : "Unknown error",
             });
             // SECURITY: Don't provide fallback access when database fails
             throw new Error("Unable to verify subscription status");
@@ -172,9 +172,9 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         };
     } catch (error) {
         // SECURITY: Log error without exposing sensitive subscription data
-        log.error("Failed to check VT+ access:", { 
-            error: error instanceof Error ? error.message : 'Unknown error',
-            userId: userId ? 'present' : 'missing'
+        log.error("Failed to check VT+ access:", {
+            error: error instanceof Error ? error.message : "Unknown error",
+            userId: userId ? "present" : "missing",
         });
         return {
             hasAccess: false,

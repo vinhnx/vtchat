@@ -86,6 +86,7 @@ export type ThreadItem = {
     threadId: string;
     metadata?: Record<string, any>;
     mode: ChatMode;
+    model?: string;
     error?: string;
     suggestions?: string[];
     persistToDB?: boolean;
