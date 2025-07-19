@@ -1,6 +1,8 @@
 import { count, eq, gte, sql, sum } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
+import { requireAdminAuth } from "@/lib/middleware/admin-auth";
+import { getAdminDateRanges } from "@repo/shared/utils/admin-date-utils";
+import { AdminApiSuccess, handleAdminRouteError, formatCostFromCents, calculateConversionRate } from "@repo/shared/utils/admin-api-responses";
 import { db } from "@/lib/database";
 import {
     feedback,
@@ -12,29 +14,15 @@ import {
 } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
-    const session = await auth.api.getSession({
-        headers: request.headers,
-    });
-
-    if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is admin
-    const user = await db.query.users.findFirst({
-        where: eq(users.id, session.user.id),
-    });
-
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    // Use centralized admin authentication
+    const authResult = await requireAdminAuth(request);
+    if (!authResult.success) {
+        return authResult.response;
     }
 
     try {
-        // Date ranges for analytics
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        // Use centralized date utilities
+        const { thirtyDaysAgo, sevenDaysAgo, oneDayAgo } = getAdminDateRanges();
 
         // User growth metrics
         const [totalUsersCount] = await db.select({ count: count() }).from(users);
@@ -120,16 +108,14 @@ export async function GET(request: NextRequest) {
             .groupBy(sql`DATE(${users.createdAt})`)
             .orderBy(sql`DATE(${users.createdAt})`);
 
-        return NextResponse.json({
+        // Use centralized response utilities and helper functions
+        return AdminApiSuccess.ok({
             userMetrics: {
                 totalUsers: totalUsersCount.count,
                 newUsersLast30Days: newUsersLast30Days.count,
                 newUsersLast7Days: newUsersLast7Days.count,
                 vtPlusUsers: vtPlusUsers.count,
-                conversionRate:
-                    totalUsersCount.count > 0
-                        ? ((vtPlusUsers.count / totalUsersCount.count) * 100).toFixed(2)
-                        : "0.00",
+                conversionRate: calculateConversionRate(vtPlusUsers.count, totalUsersCount.count),
             },
             activityMetrics: {
                 activeSessionsLast24h: activeSessionsLast24h.count,
@@ -141,9 +127,7 @@ export async function GET(request: NextRequest) {
             providerUsage: providerUsageStats.map((stat) => ({
                 provider: stat.provider,
                 requests: stat.totalRequests,
-                costUsd: stat.totalCostCents
-                    ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
+                costUsd: formatCostFromCents(stat.totalCostCents),
             })),
             vtPlusUsage: vtPlusFeatureUsage.map((usage) => ({
                 feature: usage.feature,
@@ -161,7 +145,7 @@ export async function GET(request: NextRequest) {
                 })),
             },
         });
-    } catch {
-        return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
+    } catch (error) {
+        return handleAdminRouteError(error, "analytics");
     }
 }

@@ -1,33 +1,22 @@
 import { log } from "@repo/shared/lib/logger";
 import { and, count, desc, eq, gte, isNotNull, ne, or, sql, sum } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
+import { requireAdminAuth } from "@/lib/middleware/admin-auth";
+import { getAdminDateRanges } from "@repo/shared/utils/admin-date-utils";
+import { AdminApiResponses, AdminApiSuccess, handleAdminRouteError } from "@repo/shared/utils/admin-api-responses";
 import { db } from "@/lib/database";
 import { providerUsage, sessions, users } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
-    const session = await auth.api.getSession({
-        headers: request.headers,
-    });
-
-    if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is admin
-    const user = await db.query.users.findFirst({
-        where: eq(users.id, session.user.id),
-    });
-
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    // Use centralized admin authentication
+    const authResult = await requireAdminAuth(request);
+    if (!authResult.success) {
+        return authResult.response;
     }
 
     try {
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        // Use centralized date utilities
+        const { thirtyDaysAgo, sevenDaysAgo, oneDayAgo } = getAdminDateRanges();
 
         // Security Metrics
         const [bannedUsersCount] = await db
@@ -156,7 +145,7 @@ export async function GET(request: NextRequest) {
             .groupBy(sql`DATE(${users.updatedAt})`)
             .orderBy(sql`DATE(${users.updatedAt})`);
 
-        return NextResponse.json({
+        return AdminApiSuccess.ok({
             securityMetrics: {
                 totalBannedUsers: bannedUsersCount.count,
                 activeBans: activeBansCount.count,
@@ -175,27 +164,15 @@ export async function GET(request: NextRequest) {
             securityTimeline,
         });
     } catch (error) {
-        log.error({ error }, "Failed to fetch security data");
-        return NextResponse.json({ error: "Failed to fetch security data" }, { status: 500 });
+        return handleAdminRouteError(error, "security");
     }
 }
 
 export async function POST(request: NextRequest) {
-    const session = await auth.api.getSession({
-        headers: request.headers,
-    });
-
-    if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is admin
-    const user = await db.query.users.findFirst({
-        where: eq(users.id, session.user.id),
-    });
-
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    // Use centralized admin authentication
+    const authResult = await requireAdminAuth(request);
+    if (!authResult.success) {
+        return authResult.response;
     }
 
     try {
@@ -230,12 +207,11 @@ export async function POST(request: NextRequest) {
                 break;
 
             default:
-                return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+                return AdminApiResponses.badRequest("Invalid action");
         }
 
-        return NextResponse.json({ success: true });
+        return AdminApiSuccess.ok({ success: true }, "Security action completed successfully");
     } catch (error) {
-        log.error({ error }, "Failed to perform security action");
-        return NextResponse.json({ error: "Failed to perform security action" }, { status: 500 });
+        return handleAdminRouteError(error, "security action");
     }
 }
