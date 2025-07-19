@@ -65,7 +65,7 @@ export function useCreemSubscription() {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
+                const errorText = await response.text.text.text();
                 log.error(
                     { status: response.status, errorText },
                     "[useCreemSubscription] Portal API error",

@@ -255,8 +255,8 @@ export const ThreadItem = memo(
                                     <SourceGrid sources={validSources} />
 
                                     {/* Show thinking log if reasoning data is available */}
-                                    {(threadItem.reasoning ||
-                                        threadItem.reasoningDetails?.length ||
+                                    {(threadItem.reasoningText ||
+                                        threadItem.reasoningText?.length ||
                                         threadItem.parts?.some(
                                             (part) => part.type === "reasoning",
                                         )) && <ThinkingLog threadItem={threadItem} />}
@@ -314,7 +314,7 @@ export const ThreadItem = memo(
                                         <div className="mt-4 w-full space-y-4">
                                             {chartToolResults.map((toolResult) => (
                                                 <ChartComponent
-                                                    chartData={toolResult.result}
+                                                    chartData={toolResult.output}
                                                     key={toolResult.toolCallId}
                                                 />
                                             ))}

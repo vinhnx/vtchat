@@ -26,8 +26,13 @@ export const buildCoreMessagesFromThreadItems = ({
             const buffer = Buffer.from(base64Data, "base64");
             content.push({
                 type: "file",
-                data: buffer,
-                mimeType: item.documentAttachment.mimeType,
+
+                file: {
+                    file: {
+                        data: buffer,
+                        mimeType: item.documentAttachment.mimeType
+                    }
+                }
             });
         }
 
@@ -42,8 +47,13 @@ export const buildCoreMessagesFromThreadItems = ({
                     const buffer = Buffer.from(base64Data, "base64");
                     content.push({
                         type: "file",
-                        data: buffer,
-                        mimeType: attachment.contentType,
+
+                        file: {
+                            file: {
+                                data: buffer,
+                                mimeType: attachment.contentType
+                            }
+                        }
                     });
                 }
             });
@@ -74,8 +84,13 @@ export const buildCoreMessagesFromThreadItems = ({
         const buffer = Buffer.from(base64Data, "base64");
         currentContent.push({
             type: "file",
-            data: buffer,
-            mimeType: documentAttachment.mimeType,
+
+            file: {
+                file: {
+                    data: buffer,
+                    mimeType: documentAttachment.mimeType
+                }
+            }
         });
     }
 
@@ -90,8 +105,13 @@ export const buildCoreMessagesFromThreadItems = ({
                 const buffer = Buffer.from(base64Data, "base64");
                 currentContent.push({
                     type: "file",
-                    data: buffer,
-                    mimeType: attachment.contentType,
+
+                    file: {
+                        file: {
+                            data: buffer,
+                            mimeType: attachment.contentType
+                        }
+                    }
                 });
             }
         });

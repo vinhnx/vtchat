@@ -14,7 +14,7 @@ import {
 
 const ClarificationResponseSchema = z.object({
     needsClarification: z.boolean(),
-    reasoning: z.string().optional(),
+    reasoningText: z.string().optional(),
     clarifyingQuestion: z
         .object({
             question: z.string(),
@@ -129,8 +129,8 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
         if (object?.needsClarification) {
             updateAnswer({
-                text: object.reasoning,
-                finalText: object.reasoning,
+                text: object.reasoningText,
+                finalText: object.reasoningText,
                 status: "COMPLETED",
             });
             object?.clarifyingQuestion &&

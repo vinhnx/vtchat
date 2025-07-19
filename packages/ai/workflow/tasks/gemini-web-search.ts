@@ -76,8 +76,8 @@ Please include:
 
             log.info("generateTextWithGeminiSearch result:", {
                 hasResult: !!result,
-                hasText: !!result?.text,
-                textLength: result?.text?.length,
+                hasText: !!result?.text.text.text,
+                textLength: result?.text.text.text?.length,
                 hasSources: !!result?.sources,
                 sourcesLength: result?.sources?.length,
                 hasGroundingMetadata: !!result?.groundingMetadata,
@@ -105,7 +105,7 @@ Please include:
                 });
             }
 
-            context?.update("summaries", (current) => [...(current ?? []), result.text]);
+            context?.update("summaries", (current) => [...(current ?? []), result.text.text.text]);
 
             // Mark step as completed
             if (stepId !== undefined) {
@@ -120,7 +120,7 @@ Please include:
             log.info("=== gemini-web-search EXECUTE END ===");
             return {
                 stepId,
-                summary: result.text,
+                summary: result.text.text.text,
                 sources: result.sources,
                 groundingMetadata: result.groundingMetadata,
             };

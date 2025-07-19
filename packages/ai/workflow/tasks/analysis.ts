@@ -65,7 +65,7 @@ ${s}
                     stepStatus: "PENDING",
                     text: chunk,
                     subSteps: {
-                        reasoning: { status: "PENDING", data: fullText },
+                        reasoningText: { status: "PENDING", data: fullText },
                     },
                 });
             },
@@ -95,7 +95,7 @@ ${s}
                     stepId,
                     stepStatus: "COMPLETED",
                     subSteps: {
-                        reasoningDetails: {
+                        reasoningText: {
                             status: "COMPLETED",
                             data: details,
                         },
@@ -110,7 +110,7 @@ ${s}
             stepId,
             stepStatus: "COMPLETED",
             subSteps: {
-                reasoning: { status: "COMPLETED" },
+                reasoningText: { status: "COMPLETED" },
             },
         });
 

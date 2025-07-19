@@ -34,7 +34,7 @@ async function testOllamaQwen3Integration() {
         const { text } = await generateText({
             model,
             prompt: "What is the capital of Japan? Answer in one word.",
-            maxTokens: 10,
+            maxOutputTokens: 10,
             maxRetries: 1, // Recommended for immediate feedback if server isn't running
         });
 
@@ -46,7 +46,7 @@ async function testOllamaQwen3Integration() {
         const { text: codeText } = await generateText({
             model,
             prompt: "Write a simple function to add two numbers in JavaScript. Just the function, no explanation.",
-            maxTokens: 50,
+            maxOutputTokens: 50,
             maxRetries: 1,
         });
 
@@ -58,7 +58,7 @@ async function testOllamaQwen3Integration() {
         const { text: reasoningText } = await generateText({
             model,
             prompt: "If a train travels 60 miles in 1 hour, how far will it travel in 30 minutes? Answer with just the number and unit.",
-            maxTokens: 15,
+            maxOutputTokens: 15,
             maxRetries: 1,
         });
 
