@@ -38,7 +38,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva(
-    "group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 font-medium text-sm transition-colors hover:bg-stone-100 hover:text-stone-900 focus:bg-stone-100 focus:text-stone-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-stone-100/50 data-[state=open]:text-stone-900 data-[state=open]:focus:bg-stone-100 data-[state=open]:hover:bg-stone-100 dark:bg-stone-950 dark:data-[state=open]:bg-stone-800/50 dark:data-[state=open]:text-stone-50 dark:focus:bg-stone-800 dark:focus:text-stone-50 dark:data-[state=open]:focus:bg-stone-800 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:data-[state=open]:hover:bg-stone-800",
+    "group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 font-medium text-sm transition-colors hover:bg-stone-100 hover:text-stone-900 focus:bg-stone-100 focus:text-stone-900 focus:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-stone-100/50 data-[state=open]:text-stone-900 data-[state=open]:focus:bg-stone-100 data-[state=open]:hover:bg-stone-100 dark:bg-stone-950 dark:data-[state=open]:bg-stone-800/50 dark:data-[state=open]:text-stone-50 dark:focus:bg-stone-800 dark:focus:text-stone-50 dark:data-[state=open]:focus:bg-stone-800 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:data-[state=open]:hover:bg-stone-800",
 );
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -84,7 +84,7 @@ const NavigationMenuViewport = React.forwardRef<
     <div className={cn("absolute left-0 top-full flex justify-center")}>
         <NavigationMenuPrimitive.Viewport
             className={cn(
-                "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 origin-[--radix-navigation-menu-viewport-transform-origin] data-[state=closed]:animate-out data-[state=open]:animate-in relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border border-stone-200 bg-white text-stone-950 shadow md:w-[var(--radix-navigation-menu-viewport-width)] dark:border-stone-800 dark:bg-stone-950 dark:text-stone-50",
+                "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 origin-[--radix-navigation-menu-viewport-transform-origin] data-[state=closed]:animate-out data-[state=open]:animate-in relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border border-stone-200 bg-white text-stone-950 shadow-sm md:w-[var(--radix-navigation-menu-viewport-width)] dark:border-stone-800 dark:bg-stone-950 dark:text-stone-50",
                 className,
             )}
             ref={ref}

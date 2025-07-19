@@ -14,7 +14,7 @@ export const Announcement = ({
 }: AnnouncementProps) => (
     <Badge
         className={cn(
-            "group max-w-full gap-2 rounded-full bg-background px-3 py-0.5 font-medium shadow-sm transition-all",
+            "group max-w-full gap-2 rounded-full bg-background px-3 py-0.5 font-medium shadow-xs transition-all",
             "hover:shadow-md",
             themed && "announcement-themed border-foreground/5",
             className,

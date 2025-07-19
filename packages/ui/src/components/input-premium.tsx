@@ -4,16 +4,16 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 
 const premiumInputVariants = cva(
-    "flex w-full rounded-lg border bg-background text-sm transition-all duration-200 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    "flex w-full rounded-lg border bg-background text-sm transition-all duration-200 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
     {
         variants: {
             variant: {
                 default:
-                    "border-input shadow-sm hover:shadow-md focus-visible:border-ring focus-visible:shadow-lg focus-visible:ring-1 focus-visible:ring-ring",
+                    "border-input shadow-xs hover:shadow-md focus-visible:border-ring-3 focus-visible:shadow-lg focus-visible:ring-1 focus-visible:ring-ring-3",
                 premium:
                     "border-slate-200 shadow-md backdrop-blur-sm hover:shadow-lg focus-visible:border-blue-500 focus-visible:shadow-xl focus-visible:ring-2 focus-visible:ring-blue-500/20 dark:border-slate-700",
                 ghost: "border-transparent bg-transparent hover:bg-accent/50 focus-visible:border-input focus-visible:bg-background",
-                filled: "border-transparent bg-secondary hover:bg-secondary/80 focus-visible:border-ring focus-visible:bg-background",
+                filled: "border-transparent bg-secondary hover:bg-secondary/80 focus-visible:border-ring-3 focus-visible:bg-background",
             },
             size: {
                 sm: "h-8 px-3 text-xs",
@@ -96,7 +96,7 @@ const PremiumInput = React.forwardRef<HTMLInputElement, PremiumInputProps>(
                     <label
                         className={cn(
                             "text-sm font-medium transition-colors",
-                            focused && "text-ring",
+                            focused && "text-ring-3",
                             currentState === "error" && "text-red-500",
                             currentState === "success" && "text-green-500",
                         )}

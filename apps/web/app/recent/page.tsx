@@ -100,7 +100,7 @@ export default function ThreadsPage() {
                 </TypographyH3>
                 <Command className="!max-h-auto bg-secondary w-full">
                     <CommandInput
-                        className="bg-tertiary h-8 w-full rounded-sm"
+                        className="bg-tertiary h-8 w-full rounded-xs"
                         placeholder="Search"
                     />
 
@@ -116,7 +116,7 @@ export default function ThreadsPage() {
                                             <div className="flex flex-col items-start gap-1">
                                                 {editingId === thread.id ? (
                                                     <input
-                                                        className="bg-quaternary rounded px-2 py-1 text-sm"
+                                                        className="bg-quaternary rounded-xs px-2 py-1 text-sm"
                                                         onBlur={handleInputBlur}
                                                         onChange={handleInputChange}
                                                         onClick={(e) => e.stopPropagation()}
