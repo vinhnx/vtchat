@@ -2,7 +2,7 @@ import { createTask } from "@repo/orchestrator";
 import { log } from "@repo/shared/logger";
 import { chartTools } from "../../../../apps/web/lib/tools/charts";
 import { calculatorTools } from "../../../../apps/web/lib/tools/math";
-import { getModelFromChatMode, supportsOpenAIWebSearch, supportsTools } from "../../models";
+import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from "../../models";
 import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
 import { getWebSearchTool } from "../../tools";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
@@ -46,6 +46,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         }
 
         const model = getModelFromChatMode(mode);
+        const modelName = models.find((m) => m.id === model)?.name || model;
 
         // Check if model supports OpenAI web search when web search is enabled
         const supportsOpenAISearch = supportsOpenAIWebSearch(model);
@@ -55,7 +56,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             return;
         }
 
-        const prompt = `You are VT Chat AI, an advanced AI assistant designed to help users with a wide range of tasks and questions. You have access to multiple powerful capabilities and tools to provide comprehensive, accurate, and helpful responses.
+        const prompt = `You are VT Chat AI, an advanced AI assistant powered by ${modelName}. You are designed to help users with a wide range of tasks and questions. You have access to multiple powerful capabilities and tools to provide comprehensive, accurate, and helpful responses.
 
 ## Current Context
 - Today is ${getHumanizedDate()}
