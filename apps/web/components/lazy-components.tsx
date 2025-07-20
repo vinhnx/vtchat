@@ -1,5 +1,5 @@
 import { InlineLoader } from "@repo/common/components";
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 
 // Lazy load heavy components for better performance with error boundaries
 export const LazyThread = lazy(() =>
@@ -7,8 +7,12 @@ export const LazyThread = lazy(() =>
         .then((mod) => ({
             default: mod.Thread,
         }))
-        .catch(() => ({
-            default: () => <div className="text-destructive">Failed to load Thread component</div>,
+        .catch((error) => ({
+            default: () => (
+                <div className="text-destructive">
+                    Failed to load Thread component: {error.message}
+                </div>
+            ),
         })),
 );
 

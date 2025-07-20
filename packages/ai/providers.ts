@@ -49,6 +49,7 @@ const getApiKey = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>,
     isVtPlus?: boolean,
+    isFreeModel?: boolean,
 ): string => {
     // First check BYOK keys if provided
     if (byokKeys) {
@@ -70,9 +71,17 @@ const getApiKey = (
     if (typeof process !== "undefined" && process.env) {
         switch (provider) {
             case Providers.GOOGLE:
-                // Only Gemini can use server-funded API key, and only for VT+ users
-                if (isVtPlus) {
-                    return process.env.GEMINI_API_KEY || "";
+                // Server-funded API key policy for Google/Gemini:
+                // 1. VT+ users can always use server-funded API key
+                // 2. Free model users can use server-funded API key (counted usage)
+                // 3. Other users must use BYOK
+                if (isVtPlus || isFreeModel) {
+                    // Set both environment variables for compatibility with new Google provider
+                    const geminiKey = process.env.GEMINI_API_KEY || "";
+                    if (geminiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+                        process.env.GOOGLE_GENERATIVE_AI_API_KEY = geminiKey;
+                    }
+                    return geminiKey;
                 }
                 return "";
             default:
@@ -119,7 +128,7 @@ export const getProviderInstance = (
     claude4InterleavedThinking?: boolean,
     isVtPlus?: boolean,
 ): ProviderInstance => {
-    const apiKey = getApiKey(provider, byokKeys, isVtPlus);
+    const apiKey = getApiKey(provider, byokKeys, isVtPlus, isFreeModel);
 
     log.info("Provider instance debug:", {
         provider,

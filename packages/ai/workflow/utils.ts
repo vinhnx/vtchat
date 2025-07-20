@@ -358,12 +358,6 @@ export const generateTextWithGeminiSearch = async ({
                     throw new Error("Operation aborted");
                 }
 
-                log.info("Received chunk:", {
-                    type: chunk?.type,
-                    hasTextDelta: !!(chunk as any)?.textDelta,
-                    chunkKeys: chunk ? Object.keys(chunk) : undefined,
-                });
-
                 if (chunk.type === "text-delta") {
                     fullText += chunk.textDelta;
                     onChunk?.(chunk.textDelta, fullText);

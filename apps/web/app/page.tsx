@@ -5,9 +5,9 @@ export const dynamic = "force-dynamic";
 
 import { useSession } from "@repo/shared/lib/auth-client";
 import {
-    ThreadWithSuspense,
     ChatInputWithSuspense,
     FooterWithSuspense,
+    ThreadWithSuspense,
 } from "../components/lazy-components";
 
 export default function HomePage() {

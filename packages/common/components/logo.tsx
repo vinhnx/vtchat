@@ -2,14 +2,16 @@ import type * as React from "react";
 
 interface LogoProps extends React.SVGProps<SVGSVGElement> {
     round?: boolean;
+    className?: string;
 }
 
-export const Logo = ({ round = false, ...props }: LogoProps) => (
+export const Logo = ({ round = false, className, ...props }: LogoProps) => (
     <svg
-        height="800px"
         viewBox="-7.5 0 32 32"
-        width="800px"
         xmlns="http://www.w3.org/2000/svg"
+        className={className}
+        width="24"
+        height="24"
         {...props}
     >
         <title>{"v"}</title>
@@ -27,12 +29,13 @@ export const Logo = ({ round = false, ...props }: LogoProps) => (
     </svg>
 );
 
-export const DarkLogo = ({ round = false, ...props }: LogoProps) => (
+export const DarkLogo = ({ round = false, className, ...props }: LogoProps) => (
     <svg
-        height="800px"
         viewBox="-7.5 0 32 32"
-        width="800px"
         xmlns="http://www.w3.org/2000/svg"
+        className={className}
+        width="24"
+        height="24"
         {...props}
     >
         <title>{"v"}</title>

@@ -13,7 +13,7 @@ describe("Agent Page Updates", () => {
             // Verify the default model ID is correct
             expect(defaultModelConfig.id).toBe("gemini-embedding-001");
             expect(defaultModelConfig.name).toBe("Gemini Embedding 001");
-            expect(defaultModelConfig.dimensions).toBe(768);
+            expect(defaultModelConfig.dimensions).toBe(3072);
             expect(defaultModelConfig.provider).toBe("Google");
         });
 

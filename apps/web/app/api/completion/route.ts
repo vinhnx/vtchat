@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
             /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
         const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
         if (!ipv4Regex.test(ip) && !ipv6Regex.test(ip) && ip !== "::1" && ip !== "127.0.0.1") {
-            log.warn("Invalid IP format detected", { ip: ip.substring(0, 10) + "..." });
+            log.warn("Invalid IP format detected", { ip: `${ip.substring(0, 10)}...` });
         }
 
         // SECURITY: Extract API keys from secure headers first, then fallback to body

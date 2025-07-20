@@ -146,7 +146,7 @@ DotsLoader.displayName = "DotsLoader";
 
 // Premium skeleton loader with shimmer effect
 export interface PremiumSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-    variant?: "default" | "rounded-sm" | "circle";
+    variant?: "default" | "roundedSm" | "circle";
     shimmer?: boolean;
     lines?: number;
     height?: number | string;
@@ -168,7 +168,7 @@ const PremiumSkeleton = React.forwardRef<HTMLDivElement, PremiumSkeletonProps>(
     ) => {
         const variants = {
             default: "rounded-md",
-            rounded-sm: "rounded-lg",
+            roundedSm: "rounded-lg",
             circle: "rounded-full",
         };
 

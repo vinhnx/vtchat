@@ -9,13 +9,13 @@ import { FeatureSlug } from "@repo/shared/types/subscription";
 import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from "@repo/shared/utils";
 import {
     Button,
+    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -26,8 +26,8 @@ import {
     useToast,
 } from "@repo/ui";
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFeatureAccess } from "../hooks/use-subscription-access";
 import { GatedFeatureAlert } from "./gated-feature-alert";
@@ -150,7 +150,12 @@ export const CommandSearch = () => {
                     return;
                 }
 
-                const thread = await getThread(currentThreadId as string);
+                if (!currentThreadId) {
+                    log.warn({}, "Cannot delete thread: no current thread ID");
+                    return;
+                }
+
+                const thread = await getThread(currentThreadId);
                 if (thread) {
                     removeThread(thread.id);
                     router.push("/");
@@ -271,7 +276,7 @@ export const CommandSearch = () => {
                                 heading={groupsNames[key as keyof typeof groupsNames]}
                                 key={key}
                             >
-                                {threads.map((thread) => (
+                                {threads.slice(0, 3).map((thread) => (
                                     <CommandItem
                                         className={cn("w-full gap-3")}
                                         key={thread.id}

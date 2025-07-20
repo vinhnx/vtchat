@@ -45,23 +45,23 @@ export interface ButtonProps
     asChild?: boolean;
     tooltip?: string;
     tooltipSide?: "left" | "right" | "top" | "bottom";
-    rounded-sm?: "sm" | "md" | "lg" | "full";
+    roundedSm?: "sm" | "md" | "lg" | "full";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
-        { className, variant, size, asChild = false, tooltip, tooltipSide, rounded-sm, ...props },
+        { className, variant, size, asChild = false, tooltip, tooltipSide, roundedSm, ...props },
         ref,
     ) => {
         const Comp = asChild ? SlotPrimitive.Slot : "button";
 
-        const roundedClass = rounded-sm
+        const roundedClass = roundedSm
             ? {
                   sm: "rounded-xs",
                   md: "rounded-md",
                   lg: "rounded-lg",
                   full: "rounded-full",
-              }[rounded-sm]
+              }[roundedSm]
             : "";
 
         const buttonElement = (

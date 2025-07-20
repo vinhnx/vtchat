@@ -14,7 +14,7 @@ const inputVariants = cva(
                 default: "h-9 px-4 text-sm",
                 sm: "h-9 px-3 text-xs md:text-sm",
             },
-            rounded-sm: {
+            roundedSm: {
                 default: "rounded-md",
                 lg: "rounded-lg",
                 full: "rounded-full",
@@ -23,7 +23,7 @@ const inputVariants = cva(
         defaultVariants: {
             variant: "default",
             size: "default",
-            rounded-sm: "default",
+            roundedSm: "default",
         },
     },
 );
@@ -33,11 +33,11 @@ export interface InputProps
         VariantProps<typeof inputVariants> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, variant, size, rounded-sm, ...props }, ref) => {
+    ({ className, type, variant, size, roundedSm, ...props }, ref) => {
         return (
             <input
                 autoComplete="off"
-                className={cn(inputVariants({ variant, size, rounded-sm, className }))}
+                className={cn(inputVariants({ variant, size, roundedSm, className }))}
                 ref={ref}
                 type={type}
                 {...props}

@@ -90,7 +90,8 @@
         "!**/node_modules"
     ],
     "dependencies": {
-        "@ai-sdk/google": "^1.2.19",
+        "@ai-sdk/gateway": "^1.0.0-alpha.15",
+        "@ai-sdk/google": "2.0.0-canary.20",
         "@better-auth/utils": "^0.2.6",
         "@mozilla/readability": "^0.6.0",
         "@neondatabase/serverless": "^1.0.1",
@@ -100,7 +101,7 @@
         "@types/react-dom": "19.1.6",
         "@types/react-window": "^1.8.8",
         "@vercel/functions": "^2.2.0",
-        "ai": "^4.3.19",
+        "ai": "4.3.19",
         "better-auth": "^1.2.9",
         "better-auth-harmony": "^1.2.5",
         "creem": "^0.3.37",

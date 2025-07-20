@@ -1,8 +1,8 @@
-import { db } from "@/lib/database";
-import { userRateLimits } from "@/lib/database/schema";
 import { ModelEnum } from "@repo/ai/models";
 import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
 import { and, eq } from "drizzle-orm";
+import { db } from "@/lib/database";
+import { userRateLimits } from "@/lib/database/schema";
 import { recordProviderUsage } from "./budget-tracking";
 
 // Security bounds to prevent integer overflow and malicious data
