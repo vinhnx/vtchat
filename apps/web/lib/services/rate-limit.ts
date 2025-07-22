@@ -106,8 +106,8 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
         .values({
             userId,
             modelId,
-            dailyRequestCount: '1',
-            minuteRequestCount: '1',
+            dailyRequestCount: "1",
+            minuteRequestCount: "1",
             lastDailyReset: now,
             lastMinuteReset: now,
             createdAt: now,
@@ -125,7 +125,7 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
         });
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
-    recordProviderUsage(userId, modelId, 'gemini').catch((_error) => {
+    recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
