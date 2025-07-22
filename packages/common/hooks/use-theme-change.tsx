@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
  * This helps ensure components properly update their styling when theme changes
  */
 export function useThemeChange() {
-  const { theme, resolvedTheme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState<string | undefined>(undefined);
-  
-  // Force re-render when theme changes
-  useEffect(() => {
-    if (theme !== currentTheme) {
-      setCurrentTheme(theme);
-    }
-  }, [theme, currentTheme]);
-  
-  return { theme, resolvedTheme, currentTheme };
+    const { theme, resolvedTheme } = useTheme();
+    const [currentTheme, setCurrentTheme] = useState<string | undefined>(undefined);
+
+    // Force re-render when theme changes
+    useEffect(() => {
+        if (theme !== currentTheme) {
+            setCurrentTheme(theme);
+        }
+    }, [theme, currentTheme]);
+
+    return { theme, resolvedTheme, currentTheme };
 }
