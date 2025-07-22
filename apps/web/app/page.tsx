@@ -5,9 +5,9 @@ export const dynamic = "force-dynamic";
 
 import { useSession } from "@repo/shared/lib/auth-client";
 import {
-    ThreadWithSuspense,
     ChatInputWithSuspense,
     FooterWithSuspense,
+    ThreadWithSuspense,
 } from "../components/lazy-components";
 
 export default function HomePage() {
@@ -15,6 +15,7 @@ export default function HomePage() {
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
+            <h1 className="sr-only">VT - Privacy-First AI Chat</h1>
             <main id="main-content" className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col">
                     <div className="flex-1 overflow-y-auto">

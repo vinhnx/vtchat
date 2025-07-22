@@ -114,6 +114,7 @@ export function PricingClient() {
 
     return (
         <div className="relative min-h-dvh w-full">
+            <h1 className="sr-only">Pricing</h1>
             <div className="container relative z-10 mx-auto px-2 py-4 pt-8 md:px-4 md:py-8 md:pt-16">
                 {/* Hero Section */}
                 <div className="mb-4 space-y-3 pt-4 text-center md:mb-8 md:pt-8">
