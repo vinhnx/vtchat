@@ -1,12 +1,13 @@
 import { ModelEnum } from "@repo/ai/models";
 import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
-import { and, eq } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { userRateLimits } from "@/lib/database/schema";
+import { db } from "@repo/shared/lib/database";
+import { and, eq, sql } from "drizzle-orm";
+import type { UserRateLimit } from "../database/schema";
+import { userRateLimits } from "../database/schema";
 import { recordProviderUsage } from "./budget-tracking";
 
 // Security bounds to prevent integer overflow and malicious data
-const SECURITY_BOUNDS = {
+const _SECURITY_BOUNDS = {
     MAX_DAILY_COUNT: 1000000,
     MAX_MINUTE_COUNT: 10000,
 } as const;
@@ -68,9 +69,15 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
 
         try {
             await db.insert(userRateLimits).values(rateLimitRecord);
-        } catch (error: any) {
-            // Handle race condition - another request may have created the record
-            if (error?.code === "23505" && error?.constraint === "unique_user_model") {
+        } catch (error: unknown) {
+            if (
+                error &&
+                typeof error === "object" &&
+                "code" in error &&
+                (error as { code?: string }).code === "23505" &&
+                "constraint" in error &&
+                (error as { constraint?: string }).constraint === "unique_user_model"
+            ) {
                 // Fetch the existing record
                 const existingRecord = await db
                     .select()
@@ -101,55 +108,28 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
 async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<void> {
     const now = new Date();
 
-    const rateLimitRecord = await getOrCreateRateRecord(userId, modelId);
-
-    // Check if resets are needed
-    const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
-    const needsMinuteReset = isNewMinute(rateLimitRecord.lastMinuteReset, now);
-
-    // SECURITY: Add bounds checking to prevent integer overflow
-    let dailyCount = Math.max(
-        0,
-        Math.min(
-            Number.parseInt(rateLimitRecord.dailyRequestCount, 10) || 0,
-            SECURITY_BOUNDS.MAX_DAILY_COUNT,
-        ),
-    );
-    let minuteCount = Math.max(
-        0,
-        Math.min(
-            Number.parseInt(rateLimitRecord.minuteRequestCount, 10) || 0,
-            SECURITY_BOUNDS.MAX_MINUTE_COUNT,
-        ),
-    );
-    let lastDailyReset = rateLimitRecord.lastDailyReset;
-    let lastMinuteReset = rateLimitRecord.lastMinuteReset;
-
-    if (needsDailyReset) {
-        dailyCount = 0;
-        lastDailyReset = now;
-    }
-
-    if (needsMinuteReset) {
-        minuteCount = 0;
-        lastMinuteReset = now;
-    }
-
-    // Increment counts
-    dailyCount += 1;
-    minuteCount += 1;
-
-    // Update record
     await db
-        .update(userRateLimits)
-        .set({
-            dailyRequestCount: dailyCount.toString(),
-            minuteRequestCount: minuteCount.toString(),
-            lastDailyReset,
-            lastMinuteReset,
+        .insert(userRateLimits)
+        .values({
+            userId,
+            modelId,
+            dailyRequestCount: "1",
+            minuteRequestCount: "1",
+            lastDailyReset: now,
+            lastMinuteReset: now,
+            createdAt: now,
             updatedAt: now,
         })
-        .where(eq(userRateLimits.id, rateLimitRecord.id));
+        .onConflictDoUpdate({
+            target: [userRateLimits.userId, userRateLimits.modelId],
+            set: {
+                dailyRequestCount: sql`CASE WHEN (timezone('UTC', now()))::date <> (timezone('UTC', ${userRateLimits.lastDailyReset}))::date THEN '1' ELSE (CAST(${userRateLimits.dailyRequestCount} AS integer) + 1)::text END`,
+                minuteRequestCount: sql`CASE WHEN floor(extract(epoch from now())/60) <> floor(extract(epoch from ${userRateLimits.lastMinuteReset})/60) THEN '1' ELSE (CAST(${userRateLimits.minuteRequestCount} AS integer) + 1)::text END`,
+                lastDailyReset: sql`CASE WHEN (timezone('UTC', now()))::date <> (timezone('UTC', ${userRateLimits.lastDailyReset}))::date THEN ${now} ELSE ${userRateLimits.lastDailyReset} END`,
+                lastMinuteReset: now,
+                updatedAt: now,
+            },
+        });
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
@@ -490,7 +470,7 @@ export async function checkRateLimit(
  * Helper function to update an existing rate limit record
  */
 async function updateExistingRateLimitRecord(
-    rateLimitRecord: any,
+    rateLimitRecord: UserRateLimit,
     now: Date,
     userId: string,
     modelId: ModelEnum,
@@ -593,9 +573,15 @@ export async function recordRequest(
                 updatedAt: now,
             });
             return;
-        } catch (error: any) {
-            // If duplicate key error, fetch the existing record and update it
-            if (error?.code === "23505") {
+        } catch (error: unknown) {
+            if (
+                error &&
+                typeof error === "object" &&
+                "code" in error &&
+                (error as { code?: string }).code === "23505" &&
+                "constraint" in error &&
+                (error as { constraint?: string }).constraint === "unique_user_model"
+            ) {
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)

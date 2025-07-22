@@ -40,6 +40,7 @@ export default function PrivacyPage() {
             {/* Main Content */}
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
+                    <h1 className="mb-4 text-3xl font-semibold md:text-4xl">Privacy Policy</h1>
                     <div className="prose prose-neutral dark:prose-invert max-w-none">
                         <MarkdownContent content={privacyPolicy} />
                     </div>

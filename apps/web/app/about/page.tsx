@@ -1,5 +1,5 @@
 import { Footer } from "@repo/common/components";
-import { Button, TypographyH2 } from "@repo/ui";
+import { Button, TypographyH1 } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -61,9 +61,9 @@ function AboutContent() {
         <section className="py-8 md:py-16">
             <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
-                    <TypographyH2 className="mb-4 text-3xl font-semibold md:text-4xl">
+                    <TypographyH1 className="mb-4 text-3xl font-semibold md:text-4xl">
                         About VT
-                    </TypographyH2>
+                    </TypographyH1>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
                         VT is a production-ready, privacy-first AI chat application with advanced AI
                         capabilities, offering all premium models for free with BYOK and exclusive

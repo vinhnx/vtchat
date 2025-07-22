@@ -6,7 +6,7 @@ import {
     AccordionItem,
     AccordionTrigger,
     Button,
-    TypographyH2,
+    TypographyH1,
 } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -27,6 +27,8 @@ export const metadata: Metadata = {
         follow: true,
     },
 };
+
+export const dynamic = "force-static";
 
 export default function HelpCenterPage() {
     return (
@@ -66,9 +68,9 @@ function HelpCenterContent() {
         <section className="py-8 md:py-16">
             <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
-                    <TypographyH2 className="mb-4 text-3xl font-semibold md:text-4xl">
+                    <TypographyH1 className="mb-4 text-3xl font-semibold md:text-4xl">
                         Help Center
-                    </TypographyH2>
+                    </TypographyH1>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
                         Everything you need to know about VT's privacy-focused AI chat features,
                         account management, and advanced capabilities.

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>VT - Offline</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,20 +18,24 @@
             text-align: center;
             padding: 1rem;
         }
+
         .container {
             max-width: 28rem;
         }
+
         .title {
             font-size: 1.25rem;
             font-weight: 500;
             margin-bottom: 0.75rem;
         }
+
         .description {
             font-size: 0.875rem;
             color: #666666;
             line-height: 1.5;
             margin-bottom: 2rem;
         }
+
         .button {
             display: inline-flex;
             align-items: center;
@@ -46,20 +51,24 @@
             cursor: pointer;
             transition: background-color 0.2s, color 0.2s;
         }
+
         .button:hover {
             background-color: #333333;
         }
+
         .button:disabled {
             background-color: #cccccc;
             color: #666666;
             cursor: not-allowed;
             border-color: #cccccc;
         }
+
         .hidden {
             display: none;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="title">You're offline</h1>
@@ -68,55 +77,8 @@
         </p>
         <button class="button" id="retry-button" onclick="retryConnection()">
             <span id="button-text">Retry Now</span>
-            <span id="button-loading" class="hidden">Reconnecting...</span>
         </button>
     </div>
-
-    <script>
-        const retryButton = document.getElementById('retry-button');
-        const buttonText = document.getElementById('button-text');
-        const buttonLoading = document.getElementById('button-loading');
-
-        function setButtonState(loading) {
-            if (loading) {
-                retryButton.disabled = true;
-                buttonText.classList.add('hidden');
-                buttonLoading.classList.remove('hidden');
-            } else {
-                retryButton.disabled = false;
-                buttonText.classList.remove('hidden');
-                buttonLoading.classList.add('hidden');
-            }
-        }
-
-        async function retryConnection() {
-            setButtonState(true);
-            try {
-                // A small, fast request to check connectivity.
-                const response = await fetch('/favicon.ico?' + Date.now(), {
-                    method: 'HEAD',
-                    cache: 'no-cache',
-                });
-                if (response.ok) {
-                    window.location.reload();
-                }
-            } catch (error) {
-                // Stay on the offline page if the connection fails.
-                setButtonState(false);
-            }
-        }
-
-        // Listen for the online event to automatically reload.
-        window.addEventListener('online', () => {
-            setButtonState(true);
-            window.location.reload();
-        });
-
-        // Initial check in case the page loads while already online.
-        if (navigator.onLine) {
-             setButtonState(true);
-             window.location.reload();
-        }
-    </script>
 </body>
+
 </html>
