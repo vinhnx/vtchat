@@ -33,7 +33,7 @@ export async function getEmbedding(
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
-            model: EMBEDDING_MODELS.GEMINI_001
+            model: EMBEDDING_MODELS.GEMINI_001,
         });
 
         const result = await model.embedContent(text.trim());

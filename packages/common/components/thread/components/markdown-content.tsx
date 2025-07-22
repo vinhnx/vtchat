@@ -3,24 +3,26 @@
 import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from "@repo/common/components";
 import { log } from "@repo/shared/logger";
 import { cn } from "@repo/ui";
+import { useTheme } from "next-themes";
 import { MDXRemote } from "next-mdx-remote";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
 import { memo, Suspense, useEffect, useState } from "react";
 import remarkGfm from "remark-gfm";
+import "./markdown-content.css";
 
 export const markdownStyles = {
-    "animate-fade-in prose prose-base min-w-full": true,
+    "animate-fade-in prose prose-base min-w-full dark:prose-invert": true,
 
-    // Text styles
-    "prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0": true,
-    "prose-headings:text-base prose-headings:font-medium ": true,
-    "prose-h1:text-2xl prose-h1:font-medium ": true,
-    "prose-h2:text-2xl prose-h2:font-medium ": true,
-    "prose-h3:text-lg prose-h3:font-medium ": true,
-    "prose-strong:font-medium prose-th:font-medium": true,
+    // Text styles - using markdown-text class for dynamic color changes
+    "prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0 markdown-text": true,
+    "prose-headings:text-base prose-headings:font-medium markdown-text": true,
+    "prose-h1:text-2xl prose-h1:font-medium markdown-text": true,
+    "prose-h2:text-2xl prose-h2:font-medium markdown-text": true,
+    "prose-h3:text-lg prose-h3:font-medium markdown-text": true,
+    "prose-strong:font-medium prose-th:font-medium markdown-text": true,
 
-    "prose-li:text-muted-foreground prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0": true,
+    "prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0 markdown-text": true,
 
     // Code styles
     "prose-code:font-sans prose-code:text-sm prose-code:font-normal": true,
@@ -36,7 +38,7 @@ export const markdownStyles = {
     "prose-tr:border-border prose-tr:border": true,
 
     // Table cell
-    "prose-td:px-3 prose-td:py-2.5": true,
+    "prose-td:px-3 prose-td:py-2.5 markdown-text": true,
 
     // Theme
     "prose-prosetheme": true,
@@ -153,6 +155,8 @@ export const MarkdownContent = memo(
     ({ content, className, isCompleted, isLast }: MarkdownContentProps) => {
         const [previousContent, setPreviousContent] = useState<string[]>([]);
         const [currentContent, setCurrentContent] = useState<string>("");
+        // Force re-render when theme changes
+        const { currentTheme } = useTheme();
 
         useEffect(() => {
             if (!content) return;
@@ -170,7 +174,7 @@ export const MarkdownContent = memo(
             } catch (error) {
                 log.error("Error processing content:", { data: error });
             }
-        }, [content, isCompleted]);
+        }, [content, isCompleted, currentTheme]);
 
         if (isCompleted && !isLast) {
             return (
@@ -205,6 +209,7 @@ MarkdownContent.displayName = "MarkdownContent";
 export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     const [mdx, setMdx] = useState<MDXRemoteSerializeResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (!chunk) return;
@@ -271,13 +276,13 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
         return () => {
             isMounted = false;
         };
-    }, [chunk]);
+    }, [chunk, theme]);
 
     if (error) {
         return (
             <div className="text-muted-foreground text-sm p-2 border border-border rounded">
                 <p>Content rendering error. Displaying as plain text:</p>
-                <pre className="whitespace-pre-wrap mt-2 text-xs">{chunk}</pre>
+                <pre className="whitespace-pre-wrap mt-2 text-xs markdown-text">{chunk}</pre>
             </div>
         );
     }
@@ -288,7 +293,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     return (
         <ErrorBoundary fallback={<ErrorPlaceholder />}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div className="markdown-text">Loading...</div>}>
                 <MDXRemote {...mdx} components={mdxComponents} />
             </Suspense>
         </ErrorBoundary>

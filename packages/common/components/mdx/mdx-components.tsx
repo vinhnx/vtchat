@@ -31,10 +31,10 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     p: ({ children }) => {
-        return <div className="mb-4">{children}</div>;
+        return <div className="mb-4 markdown-text">{children}</div>;
     },
     li: ({ children }) => {
-        return <li>{children}</li>;
+        return <li className="markdown-text">{children}</li>;
     },
 
     pre: ({ children }) => {

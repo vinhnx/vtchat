@@ -57,7 +57,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                 {!isEditing && (
                     <>
                         <div
-                            className={cn("prose-base relative px-3 py-1.5 font-normal", {
+                            className={cn("prose-base markdown-text relative px-3 py-1.5 font-normal", {
                                 "pb-12": isExpanded,
                                 markdownStyles,
                             })}

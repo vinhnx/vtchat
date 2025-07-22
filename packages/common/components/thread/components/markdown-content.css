@@ -1,0 +1,73 @@
+/* Markdown content text color overrides using CSS variables for dynamic theme changes */
+
+/* Base styles that apply to both themes */
+.prose p,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6,
+.prose li,
+.prose td,
+.prose th,
+.prose strong,
+.prose em,
+.prose blockquote,
+.prose ol,
+.prose ul,
+.prose a:not(.anchor) {
+    color: var(--markdown-text-color) !important;
+    transition: color 0.2s ease;
+}
+
+/* Light theme default (applied to :root) */
+:root {
+    --markdown-text-color: #000000;
+}
+
+/* Dark theme override (applied when .dark class is present) */
+.dark {
+    --markdown-text-color: #ffffff;
+}
+
+/* Ensure proper text color in error messages with transitions */
+.markdown-text {
+    color: var(--markdown-text-color) !important;
+    transition: color 0.2s ease;
+}
+
+/* Force immediate color update on theme change */
+html.light .markdown-text,
+html.light .prose p,
+html.light .prose li,
+html.light .prose h1,
+html.light .prose h2,
+html.light .prose h3,
+html.light .prose h4,
+html.light .prose h5,
+html.light .prose h6,
+html.light .prose strong,
+html.light .prose em,
+html.light .prose blockquote,
+html.light .prose td,
+html.light .prose th {
+    color: #000000 !important;
+}
+
+html.dark .markdown-text,
+html.dark .prose p,
+html.dark .prose li,
+html.dark .prose h1,
+html.dark .prose h2,
+html.dark .prose h3,
+html.dark .prose h4,
+html.dark .prose h5,
+html.dark .prose h6,
+html.dark .prose strong,
+html.dark .prose em,
+html.dark .prose blockquote,
+html.dark .prose td,
+html.dark .prose th {
+    color: #ffffff !important;
+}
