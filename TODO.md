@@ -30,9 +30,6 @@ https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-
 
 --
 
-fix: When we reload the chat, it doesn't resume the previous conversation - instead, it starts a new one
---
-
 fix settings container on desktop is appearing as mobile variant -> it should be full width and not have the mobile styles applied on desktop mode
 
 --
