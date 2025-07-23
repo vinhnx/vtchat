@@ -12,3 +12,58 @@
 .sidebar-collapsed {
     width: 52px !important;
 }
+
+/* Ensure proper spacing for pagination */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+    padding-bottom: 50px !important; /* Increased padding to ensure content doesn't get hidden behind pagination */
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.7);
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-thin {
+    scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 100, 100, 0.7);
+}
+
+/* Pagination styles */
+.sidebar-pagination {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--border-sidebar);
+    background-color: var(--bg-sidebar);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    width: 300px !important;
+    max-width: 300px !important;
+}
+
+/* Dark mode specific styles */
+.dark .sidebar-pagination {
+    background-color: var(--bg-sidebar);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}

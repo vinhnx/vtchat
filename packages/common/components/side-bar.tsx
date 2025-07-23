@@ -1,12 +1,4 @@
 "use client";
-import "./sidebar.css";
-import { Logo } from "./logo";
-import { HistoryItem } from "./history/history-item";
-import {
-    LoginRequiredDialog as SidebarLoginDialog,
-    useLoginRequired,
-} from "./login-required-dialog";
-import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 import { useRootContext } from "@repo/common/context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
 import { useAppStore, useChatStore } from "@repo/common/store";
@@ -38,6 +30,8 @@ import {
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
+    ChevronLeft,
+    ChevronRight,
     ChevronsUpDown,
     ChevronUp,
     Command,
@@ -61,6 +55,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { HistoryItem } from "./history/history-item";
+import {
+    LoginRequiredDialog as SidebarLoginDialog,
+    useLoginRequired,
+} from "./login-required-dialog";
+import { Logo } from "./logo";
+import "./sidebar.css";
+import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
@@ -68,6 +71,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const threads = useChatStore((state) => state.threads);
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
+    const [currentPage, setCurrentPage] = useState(1);
+    const threadsPerPage = 10; // Number of threads to display per page
+
     const sortThreads = (threads: Thread[], sortBy: "createdAt") => {
         return [...threads].sort((a, b) =>
             getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])),
@@ -87,6 +93,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { toast } = useToast();
     const { isAdmin } = useAdmin();
 
+    // Reset pagination when threads change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [threads.length]);
+
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -95,6 +106,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         previousMonths: [],
     };
 
+    // Group all threads by date
     sortThreads(threads, "createdAt")?.forEach((thread) => {
         const createdAt = new Date(thread.createdAt);
         const now = new Date();
@@ -110,23 +122,68 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         } else {
             groupedThreads.previousMonths.push(thread);
         }
-
-        //TODO: Paginate these threads
     });
+
+    // Calculate total pages based on total threads (excluding pinned ones)
+    const totalThreads = Object.values(groupedThreads).reduce(
+        (acc, group) => acc + group.length,
+        0,
+    );
+    const pinnedThreads = threads.filter((thread) => thread.pinned).length;
+    const totalPages = Math.ceil((totalThreads - pinnedThreads) / threadsPerPage);
+
+    // Apply pagination to each group
+    const paginateGroup = (group: Thread[], startIndex: number, endIndex: number) => {
+        return group.slice(startIndex, endIndex);
+    };
+
+    // Calculate pagination indices
+    const startIndex = (currentPage - 1) * threadsPerPage;
+    const endIndex = startIndex + threadsPerPage;
+
+    // Track how many threads we've processed for pagination
+    let processedThreads = 0;
+
+    // Function to get paginated threads for a specific group
+    const getPaginatedThreadsForGroup = (group: Thread[]) => {
+        if (processedThreads >= endIndex) {
+            // We've already shown enough threads for this page
+            return [];
+        }
+
+        if (processedThreads + group.length <= startIndex) {
+            // This entire group is before our pagination window
+            processedThreads += group.length;
+            return [];
+        }
+
+        // Calculate how many threads from this group should be shown
+        const groupStartIndex = Math.max(0, startIndex - processedThreads);
+        const groupEndIndex = Math.min(group.length, endIndex - processedThreads);
+
+        // Update the processed threads count
+        processedThreads += group.length;
+
+        // Return the slice of threads for this group
+        return group.slice(groupStartIndex, groupEndIndex);
+    };
 
     const renderGroup = ({
         title,
         threads,
-
         groupIcon,
         renderEmptyState,
+        isPinned = false,
     }: {
         title: string;
         threads: Thread[];
         groupIcon?: React.ReactNode;
         renderEmptyState?: () => React.ReactNode;
+        isPinned?: boolean;
     }) => {
+        // Skip rendering if no threads and no empty state to render
         if (threads.length === 0 && !renderEmptyState) return null;
+
         return (
             <Flex className="w-full gap-0.5" direction="col" items="start">
                 <div className="text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
@@ -365,7 +422,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         isSidebarOpen ? "mb-4 px-4 py-3" : "mb-2 px-2 py-2",
                     )}
                 >
-                    <Link className="w-full" href="/">
+                    <Link className={isSidebarOpen ? "flex-1" : "w-full"} href="/">
                         <motion.div
                             animate={{ opacity: 1 }}
                             className={cn(
@@ -388,6 +445,20 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </motion.div>
                     </Link>
+
+                    {/* Collapse sidebar button in header */}
+                    {isSidebarOpen && (
+                        <Button
+                            className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                            onClick={() => setIsSidebarOpen(false)}
+                            size="icon-sm"
+                            tooltip="Collapse Sidebar"
+                            tooltipSide="right"
+                            variant="ghost"
+                        >
+                            <PanelLeftClose size={16} strokeWidth={2} />
+                        </Button>
+                    )}
                 </div>
                 {/* Primary Actions Section */}
                 <Flex
@@ -698,86 +769,116 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Thread History Section */}
                 <div
                     className={cn(
-                        "scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200",
-                        isSidebarOpen ? "flex flex-col gap-4 px-4 pb-16 pt-4" : "hidden",
+                        "w-full flex-1 transition-all duration-200 overflow-hidden",
+                        isSidebarOpen ? "flex flex-col px-4 pt-4" : "hidden",
                     )}
                 >
-                    {threads.length === 0 ? (
-                        <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                            <div className="text-sidebar-foreground/30 text-center">
-                                <FileText size={24} strokeWidth={1.5} />
+                    <div className="scrollbar-thin h-full overflow-y-auto">
+                        {threads.length === 0 ? (
+                            <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
+                                <div className="text-sidebar-foreground/30 text-center">
+                                    <FileText size={24} strokeWidth={1.5} />
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-sidebar-foreground/70 text-sm font-medium">
+                                        No conversations yet
+                                    </p>
+                                    <p className="text-sidebar-foreground/50 text-xs">
+                                        Start a new chat to begin
+                                    </p>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <p className="text-sidebar-foreground/70 text-sm font-medium">
-                                    No conversations yet
-                                </p>
-                                <p className="text-sidebar-foreground/50 text-xs">
-                                    Start a new chat to begin
-                                </p>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            {/* Pinned Conversations */}
-                            {renderGroup({
-                                title: "Pinned",
-                                threads: threads
-                                    .filter((thread) => thread.pinned)
-                                    .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
-                                groupIcon: <Pin size={14} strokeWidth={2} />,
-                                renderEmptyState: () => (
-                                    <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                        <Pin
-                                            className="text-sidebar-foreground/30"
-                                            size={16}
-                                            strokeWidth={1.5}
-                                        />
-                                        <p className="text-sidebar-foreground/60 text-center text-xs">
-                                            Pin important conversations to keep them at the top
-                                        </p>
-                                    </div>
-                                ),
-                            })}
+                        ) : (
+                            <>
+                                {/* Pinned Conversations */}
+                                {renderGroup({
+                                    title: "Pinned",
+                                    threads: threads
+                                        .filter((thread) => thread.pinned)
+                                        .sort(
+                                            (a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime(),
+                                        ),
+                                    groupIcon: <Pin size={14} strokeWidth={2} />,
+                                    renderEmptyState: () => (
+                                        <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                            <Pin
+                                                className="text-sidebar-foreground/30"
+                                                size={16}
+                                                strokeWidth={1.5}
+                                            />
+                                            <p className="text-sidebar-foreground/60 text-center text-xs">
+                                                Pin important conversations to keep them at the top
+                                            </p>
+                                        </div>
+                                    ),
+                                    isPinned: true,
+                                })}
 
-                            {/* Recent Conversations */}
-                            {renderGroup({ title: "Today", threads: groupedThreads.today })}
-                            {renderGroup({
-                                title: "Yesterday",
-                                threads: groupedThreads.yesterday,
-                            })}
-                            {renderGroup({
-                                title: "Last 7 Days",
-                                threads: groupedThreads.last7Days,
-                            })}
-                            {renderGroup({
-                                title: "Last 30 Days",
-                                threads: groupedThreads.last30Days,
-                            })}
-                            {renderGroup({
-                                title: "Older",
-                                threads: groupedThreads.previousMonths,
-                            })}
-                        </>
-                    )}
+                                {/* Spacing between pinned and regular threads */}
+                                <div className="h-4"></div>
+
+                                {/* Recent Conversations */}
+                                {renderGroup({
+                                    title: "Today",
+                                    threads:
+                                        currentPage === 1
+                                            ? getPaginatedThreadsForGroup(groupedThreads.today)
+                                            : [],
+                                })}
+                                {renderGroup({
+                                    title: "Yesterday",
+                                    threads: getPaginatedThreadsForGroup(groupedThreads.yesterday),
+                                })}
+                                {renderGroup({
+                                    title: "Last 7 Days",
+                                    threads: getPaginatedThreadsForGroup(groupedThreads.last7Days),
+                                })}
+                                {renderGroup({
+                                    title: "Last 30 Days",
+                                    threads: getPaginatedThreadsForGroup(groupedThreads.last30Days),
+                                })}
+                                {renderGroup({
+                                    title: "Older",
+                                    threads: getPaginatedThreadsForGroup(
+                                        groupedThreads.previousMonths,
+                                    ),
+                                })}
+                            </>
+                        )}
+                    </div>
                 </div>
 
-                {/* Bottom Section - Collapse Button for Expanded State */}
-                {isSidebarOpen && (
-                    <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[300px] bg-gradient-to-t to-transparent px-4 py-4 border-t border-sidebar-border">
+                {/* Pagination Controls */}
+                {isSidebarOpen && totalPages > 1 && (
+                    <div className="fixed bottom-0 right-0 w-[300px] max-w-[300px] bg-sidebar py-2 px-4 z-20 sidebar-pagination shadow-md border-t border-sidebar-border">
                         <div className="flex flex-row items-center justify-between">
-                            <span className="text-sidebar-foreground/60 text-xs">
-                                Collapse sidebar
+                            <span className="text-sidebar-foreground/70 text-xs font-medium">
+                                Page {currentPage} of {totalPages}
                             </span>
-                            <Button
-                                className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
-                                onClick={() => setIsSidebarOpen(false)}
-                                size="icon-sm"
-                                tooltip="Close Sidebar"
-                                tooltipSide="left"
-                                variant="ghost"
-                            >
-                                <PanelLeftClose size={16} strokeWidth={2} />
-                            </Button>
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                                    size="icon-sm"
+                                    variant={currentPage === 1 ? "ghost" : "outline"}
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                    <span className="sr-only">Previous page</span>
+                                </Button>
+                                <Button
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() =>
+                                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                                    }
+                                    size="icon-sm"
+                                    variant={currentPage === totalPages ? "ghost" : "outline"}
+                                >
+                                    <ChevronRight className="h-4 w-4" />
+                                    <span className="sr-only">Next page</span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 )}
