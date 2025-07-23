@@ -8,14 +8,11 @@ const premiumButtonVariants = cva(
     {
         variants: {
             variant: {
-                default:
-                    "bg-primary text-primary-foreground hover:bg-primary/95",
-                destructive:
-                    "bg-destructive text-destructive-foreground hover:bg-destructive/95",
+                default: "bg-primary text-primary-foreground hover:bg-primary/95",
+                destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/95",
                 outline:
                     "border border-input bg-background transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent/50 hover:text-accent-foreground",
-                secondary:
-                    "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+                secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
                 ghost: "hover:bg-accent/50 hover:text-accent-foreground",
                 premium:
                     "border border-slate-600/50 bg-gradient-to-r from-slate-800 to-slate-900 text-white hover:from-slate-700 hover:to-slate-800",
