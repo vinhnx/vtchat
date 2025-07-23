@@ -1,6 +1,6 @@
 "use client";
 
-import { type Model, models } from "@repo/ai/models";
+import { models, type Model } from "@repo/ai/models";
 import { ChatMode } from "@repo/shared/config";
 import { THINKING_MODE } from "@repo/shared/constants";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
@@ -134,6 +134,16 @@ const loadInitialData = async () => {
         },
     });
 
+    // Log for debugging
+    log.info(
+        {
+            configThreadId: config.currentThreadId,
+            threadsCount: threads.length,
+            hasThreads: threads.length > 0,
+        },
+        "Loading initial data",
+    );
+
     const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
 
     // Get settings from app store
@@ -153,9 +163,28 @@ const loadInitialData = async () => {
 
     const initialThreads = threads.length ? threads : [];
 
+    // Determine the current thread ID
+    // First try from config, then from URL, then from threads
+    let currentThreadId = config.currentThreadId;
+
+    // If we have a thread ID in config but it doesn't exist in threads, use the first thread
+    if (currentThreadId && !initialThreads.find((t) => t.id === currentThreadId)) {
+        currentThreadId = initialThreads[0]?.id || null;
+        log.warn(
+            { configThreadId: config.currentThreadId },
+            "Thread ID from config not found in threads, using first thread",
+        );
+    }
+
+    // If we still don't have a thread ID but have threads, use the first one
+    if (!currentThreadId && initialThreads.length > 0) {
+        currentThreadId = initialThreads[0].id;
+        log.info({ firstThreadId: currentThreadId }, "Using first thread as current thread");
+    }
+
     return {
         threads: initialThreads.sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime()),
-        currentThreadId: config.currentThreadId || initialThreads[0]?.id,
+        currentThreadId,
         config,
         useWebSearch,
         useMathCalculator,
@@ -1264,12 +1293,72 @@ export const useChatStore = create(
             }),
 
         loadThreadItems: async (threadId: string) => {
-            const threadItems = await withDatabaseAsync(async (database) => {
-                return await database.threadItems.where("threadId").equals(threadId).toArray();
-            });
-            set((state) => {
-                state.threadItems = threadItems || [];
-            });
+            try {
+                log.info({ threadId }, "Loading thread items");
+
+                // Ensure the thread ID is persisted in localStorage for reload resilience
+                try {
+                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    if (existingConfig.currentThreadId !== threadId) {
+                        localStorage.setItem(
+                            CONFIG_KEY,
+                            JSON.stringify({ ...existingConfig, currentThreadId: threadId }),
+                        );
+                        log.info(
+                            { threadId },
+                            "Updated thread ID in localStorage during loadThreadItems",
+                        );
+                    }
+                } catch (storageError) {
+                    log.error(
+                        { threadId, error: storageError },
+                        "Failed to update thread ID in localStorage",
+                    );
+                }
+
+                const threadItems = await withDatabaseAsync(async (database) => {
+                    return await database.threadItems.where("threadId").equals(threadId).toArray();
+                });
+
+                if (threadItems) {
+                    set((state) => {
+                        // Only update if we're still on the same thread (prevent race conditions)
+                        if (state.currentThreadId === threadId) {
+                            state.threadItems = threadItems;
+                        } else {
+                            log.warn(
+                                {
+                                    requestedThreadId: threadId,
+                                    currentThreadId: state.currentThreadId,
+                                },
+                                "Thread ID changed during loading, not updating state",
+                            );
+                        }
+                    });
+
+                    log.info(
+                        { threadId, itemsCount: threadItems.length },
+                        "Successfully loaded thread items",
+                    );
+                    return threadItems;
+                } else {
+                    log.warn({ threadId }, "No thread items found");
+                    set((state) => {
+                        if (state.currentThreadId === threadId) {
+                            state.threadItems = [];
+                        }
+                    });
+                    return [];
+                }
+            } catch (error) {
+                log.error({ threadId, error }, "Error loading thread items");
+                set((state) => {
+                    if (state.currentThreadId === threadId) {
+                        state.threadItems = [];
+                    }
+                });
+                return [];
+            }
         },
 
         clearAllThreads: async () => {
@@ -1285,10 +1374,42 @@ export const useChatStore = create(
         },
 
         getThread: async (threadId: string) => {
-            return await withDatabaseAsync(async (database) => {
-                const thread = await database.threads.get(threadId);
-                return thread || null;
-            });
+            try {
+                log.info({ threadId }, "Getting thread");
+
+                // First check if the thread is in the store's state
+                const stateThreads = get().threads;
+                const stateThread = stateThreads.find((t) => t.id === threadId);
+
+                if (stateThread) {
+                    log.info({ threadId }, "Found thread in store state");
+                    return stateThread;
+                }
+
+                // If not in state, try to get it from the database
+                const dbThread = await withDatabaseAsync(async (database) => {
+                    return await database.threads.get(threadId);
+                });
+
+                if (dbThread) {
+                    log.info({ threadId }, "Found thread in database");
+
+                    // Update the store's state with this thread if it's not already there
+                    if (!stateThreads.some((t) => t.id === threadId)) {
+                        set((state) => {
+                            state.threads = [...state.threads, dbThread];
+                        });
+                    }
+
+                    return dbThread;
+                }
+
+                log.warn({ threadId }, "Thread not found in store or database");
+                return null;
+            } catch (error) {
+                log.error({ threadId, error }, "Error getting thread");
+                return null;
+            }
         },
 
         createThread: async (optimisticId: string, thread?: Pick<Thread, "title">) => {
@@ -1530,6 +1651,12 @@ export const useChatStore = create(
                     currentThreadId: threadId,
                 };
                 localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+
+                // Log for debugging
+                log.info(
+                    { threadId, model: currentModel.id },
+                    "Persisted thread ID and model to localStorage",
+                );
             } else {
                 // If model is not available yet, just update thread ID
                 const updatedConfig = {
@@ -1537,13 +1664,53 @@ export const useChatStore = create(
                     currentThreadId: threadId,
                 };
                 localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
+
+                // Log for debugging
+                log.info({ threadId }, "Persisted thread ID to localStorage");
             }
 
+            // Update state with the new thread ID first
             set((state) => {
                 state.currentThreadId = threadId;
                 state.currentThread = thread || null;
+                // Clear thread items while loading to prevent showing stale data
+                state.threadItems = [];
             });
-            get().loadThreadItems(threadId);
+
+            try {
+                // Force load thread items
+                const threadItems = await withDatabaseAsync(async (database) => {
+                    return await database.threadItems.where("threadId").equals(threadId).toArray();
+                });
+
+                if (threadItems) {
+                    set((state) => {
+                        // Only update if we're still on the same thread (prevent race conditions)
+                        if (state.currentThreadId === threadId) {
+                            state.threadItems = threadItems;
+                        }
+                    });
+
+                    log.info(
+                        { threadId, itemsCount: threadItems.length },
+                        "Loaded thread items in switchThread",
+                    );
+                } else {
+                    log.warn({ threadId }, "No thread items found in switchThread");
+                    set((state) => {
+                        if (state.currentThreadId === threadId) {
+                            state.threadItems = [];
+                        }
+                    });
+                }
+            } catch (error) {
+                log.error({ threadId, error }, "Error loading thread items in switchThread");
+                set((state) => {
+                    if (state.currentThreadId === threadId) {
+                        state.threadItems = [];
+                    }
+                });
+            }
         },
 
         deleteThreadItem: async (threadItemId) => {
@@ -1604,9 +1771,16 @@ export const useChatStore = create(
             debouncedNotify("thread-delete", { threadId });
         },
 
-        getPreviousThreadItems: (threadId) => {
+        getPreviousThreadItems: (threadId?: string) => {
             const state = get();
 
+            if (!threadId) {
+                log.warn("getPreviousThreadItems called without threadId");
+                return [];
+            }
+
+            // Don't trigger a load here, just return what we have
+            // This prevents infinite loops when components call this function repeatedly
             const allThreadItems = state.threadItems
                 .filter((item) => item.threadId === threadId)
                 .sort((a, b) => {
@@ -1617,11 +1791,22 @@ export const useChatStore = create(
             return result;
         },
 
-        getCurrentThreadItem: () => {
+        getCurrentThreadItem: (threadId?: string) => {
             const state = get();
 
+            if (!threadId && !state.currentThreadId) {
+                log.warn(
+                    "getCurrentThreadItem called without threadId and no currentThreadId in state",
+                );
+                return null;
+            }
+
+            const effectiveThreadId = threadId || state.currentThreadId;
+
+            // Don't trigger a load here, just return what we have
+            // This prevents infinite loops when components call this function repeatedly
             const allThreadItems = state.threadItems
-                .filter((item) => item.threadId === state.currentThreadId)
+                .filter((item) => item.threadId === effectiveThreadId)
                 .sort((a, b) => {
                     return a.createdAt.getTime() - b.createdAt.getTime();
                 });
@@ -1715,10 +1900,44 @@ if (typeof window !== "undefined") {
             showSuggestions,
             customInstructions,
         }) => {
+            // Check if we're on a chat page with a thread ID in the URL
+            let urlThreadId = null;
+            if (typeof window !== "undefined") {
+                const pathParts = window.location.pathname.split("/");
+                if (pathParts.length >= 3 && pathParts[1] === "chat") {
+                    urlThreadId = pathParts[2];
+                    log.info(
+                        { urlThreadId, storedThreadId: currentThreadId },
+                        "Found thread ID in URL",
+                    );
+                }
+            }
+
+            // Use URL thread ID if available, otherwise use the one from localStorage
+            const effectiveThreadId = urlThreadId || currentThreadId;
+
+            // Find the thread object
+            const currentThread = threads.find((t) => t.id === effectiveThreadId);
+            const finalThreadId = currentThread?.id || effectiveThreadId || null;
+
+            // If we're using a different thread ID than what's in localStorage, update localStorage
+            if (finalThreadId && finalThreadId !== currentThreadId) {
+                try {
+                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    localStorage.setItem(
+                        CONFIG_KEY,
+                        JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),
+                    );
+                    log.info({ threadId: finalThreadId }, "Updated thread ID in localStorage");
+                } catch (error) {
+                    log.error({ error }, "Failed to update thread ID in localStorage");
+                }
+            }
+
             useChatStore.setState({
                 threads,
-                currentThreadId,
-                currentThread: threads.find((t) => t.id === currentThreadId) || threads?.[0],
+                currentThreadId: finalThreadId,
+                currentThread: currentThread || null,
                 chatMode,
                 model,
                 useWebSearch,
@@ -1726,6 +1945,43 @@ if (typeof window !== "undefined") {
                 showSuggestions,
                 customInstructions,
             });
+
+            // If we have a thread ID and we're on a chat page, load the thread items
+            // Only do this if we're actually on the chat page to avoid unnecessary loading
+            if (finalThreadId && urlThreadId) {
+                // Set a flag in sessionStorage to indicate we're handling this thread ID
+                try {
+                    sessionStorage.setItem("handling_thread_id", finalThreadId);
+                    // Also ensure the thread ID is persisted in localStorage for reload resilience
+                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    localStorage.setItem(
+                        CONFIG_KEY,
+                        JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),
+                    );
+                    log.info(
+                        { threadId: finalThreadId },
+                        "Set handling flag and persisted thread ID for reload resilience",
+                    );
+                } catch (error) {
+                    log.error({ error }, "Failed to set handling flag in sessionStorage");
+                }
+
+                useChatStore
+                    .getState()
+                    .loadThreadItems(finalThreadId)
+                    .then((items) => {
+                        log.info(
+                            { threadId: finalThreadId, itemsCount: items.length },
+                            "Loaded thread items during initialization",
+                        );
+                    })
+                    .catch((error) => {
+                        log.error(
+                            { threadId: finalThreadId, error },
+                            "Failed to load thread items during initialization",
+                        );
+                    });
+            }
 
             // Initialize the shared worker for tab synchronization
             if ("SharedWorker" in window) {

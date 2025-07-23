@@ -394,7 +394,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         <Button
                             className={cn(
                                 "w-full",
-                                isSidebarOpen ? "justify-start" : "justify-center items-center"
+                                isSidebarOpen ? "justify-start" : "justify-center items-center",
                             )}
                             onClick={() => push("/login")}
                             rounded="lg"
@@ -404,10 +404,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             variant="ghost"
                         >
                             <User
-                                className={cn(
-                                    "flex-shrink-0", 
-                                    isSidebarOpen ? "mr-2" : ""
-                                )}
+                                className={cn("flex-shrink-0", isSidebarOpen ? "mr-2" : "")}
                                 size={16}
                                 strokeWidth={2}
                             />
@@ -804,7 +801,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         threads: threads
                                             .filter((thread) => thread.pinned)
                                             .sort(
-                                                (a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime(),
+                                                (a, b) =>
+                                                    b.pinnedAt.getTime() - a.pinnedAt.getTime(),
                                             ),
                                         groupIcon: <Pin size={14} strokeWidth={2} />,
                                         renderEmptyState: () => (
@@ -815,7 +813,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                                     strokeWidth={1.5}
                                                 />
                                                 <p className="text-sidebar-foreground/60 text-center text-xs">
-                                                    Pin important conversations to keep them at the top
+                                                    Pin important conversations to keep them at the
+                                                    top
                                                 </p>
                                             </div>
                                         ),
@@ -835,15 +834,21 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     })}
                                     {renderGroup({
                                         title: "Yesterday",
-                                        threads: getPaginatedThreadsForGroup(groupedThreads.yesterday),
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.yesterday,
+                                        ),
                                     })}
                                     {renderGroup({
                                         title: "Last 7 Days",
-                                        threads: getPaginatedThreadsForGroup(groupedThreads.last7Days),
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.last7Days,
+                                        ),
                                     })}
                                     {renderGroup({
                                         title: "Last 30 Days",
-                                        threads: getPaginatedThreadsForGroup(groupedThreads.last30Days),
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.last30Days,
+                                        ),
                                     })}
                                     {renderGroup({
                                         title: "Older",
@@ -855,7 +860,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </div>
                     )}
-                    
+
                     {/* Show a simplified view in collapsed mode */}
                     {!isSidebarOpen && threads.length > 0 && (
                         <div className="flex flex-col items-center gap-2 py-2">
