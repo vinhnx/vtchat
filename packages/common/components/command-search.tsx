@@ -249,7 +249,7 @@ export const CommandSearch = () => {
                 {/* Show only 3 most recent threads without day grouping */}
                 {threads.length > 0 && (
                     <CommandGroup heading="Recent Threads">
-                        {threads
+                        {[...threads]
                             .sort(
                                 (a, b) =>
                                     new Date(b.createdAt).getTime() -
