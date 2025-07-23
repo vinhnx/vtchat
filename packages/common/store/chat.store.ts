@@ -134,16 +134,6 @@ const loadInitialData = async () => {
         },
     });
 
-    // Log for debugging
-    log.info(
-        {
-            configThreadId: config.currentThreadId,
-            threadsCount: threads.length,
-            hasThreads: threads.length > 0,
-        },
-        "Loading initial data",
-    );
-
     const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
 
     // Get settings from app store
@@ -1430,6 +1420,9 @@ export const useChatStore = create(
                 state.threads.push(newThread);
                 state.currentThreadId = newThread.id;
                 state.currentThread = newThread;
+                // Clear thread items when creating a new thread
+                state.threadItems = [];
+                state.currentThreadItem = null;
             });
 
             // Notify other tabs through the worker

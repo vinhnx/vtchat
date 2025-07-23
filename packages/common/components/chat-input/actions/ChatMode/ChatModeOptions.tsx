@@ -304,7 +304,12 @@ export function ChatModeOptions({
                                                         <>
                                                             {supportsTools(model) && (
                                                                 <Wrench
-                                                                    className="text-gray-500"
+                                                                    className={cn(
+                                                                        "text-gray-500",
+                                                                        option.value ===
+                                                                            _chatMode &&
+                                                                            "text-blue-500",
+                                                                    )}
                                                                     size={12}
                                                                     title="Supports Tools"
                                                                 />

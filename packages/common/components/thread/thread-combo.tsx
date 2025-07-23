@@ -77,6 +77,16 @@ export function Thread() {
             },
             "Thread component using effective thread ID",
         );
+
+        // Clear thread items when navigating away from a thread (e.g., to create a new chat)
+        if (!effectiveThreadId) {
+            // Use the store's methods to clear thread items
+            useChatStore.setState((state) => ({
+                ...state,
+                threadItems: [],
+                currentThreadItem: null,
+            }));
+        }
     }, [effectiveThreadId, currentThreadId, storeThreadId]);
 
     const previousThreadItems = useChatStore(
@@ -172,12 +182,13 @@ export function Thread() {
         );
     }, [previousThreadItems.length, currentThreadItem, effectiveThreadId]);
 
-    // Show empty state if no thread items and not loading
+    // Show empty state if no thread ID or no thread items and not loading
     if (
-        previousThreadItems.length === 0 &&
-        !currentThreadItem &&
-        !isLoading &&
-        hasTriedReload.current
+        !effectiveThreadId ||
+        (previousThreadItems.length === 0 &&
+            !currentThreadItem &&
+            !isLoading &&
+            hasTriedReload.current)
     ) {
         return (
             <div className="flex h-full w-full flex-col items-center justify-center">

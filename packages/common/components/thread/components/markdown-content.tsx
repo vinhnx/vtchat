@@ -16,46 +16,46 @@ export const markdownStyles = {
     "animate-fade-in prose prose-base min-w-full dark:prose-invert": true,
 
     // Improved spacing and layout
-    "prose-p:mb-5 prose-p:leading-relaxed": true,
-    "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold": true,
+    "prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base": true,
+    "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold prose-headings:tracking-tight": true,
 
-    // Heading hierarchy
+    // Heading hierarchy with improved typography
     "prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:mb-6": true,
     "prose-h2:text-xl prose-h2:font-semibold prose-h2:border-b prose-h2:border-border/60 prose-h2:pb-1": true,
     "prose-h3:text-lg prose-h3:font-medium": true,
     "prose-h4:text-base prose-h4:font-medium prose-h4:opacity-90": true,
 
-    // List styling
+    // List styling with improved spacing
     "prose-ul:pl-6 prose-ul:my-4 prose-ol:pl-6 prose-ol:my-4": true,
-    "prose-li:my-2 prose-li:leading-relaxed": true,
+    "prose-li:my-2 prose-li:leading-relaxed prose-li:text-base prose-li:pl-1": true,
 
-    // Blockquote styling
-    "prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6": true,
+    // Blockquote styling with improved visual design
+    "prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:bg-secondary/20 prose-blockquote:rounded-r-md": true,
 
-    // Code styling
-    "prose-code:font-mono prose-code:text-sm prose-code:font-normal": true,
+    // Code styling with improved readability
+    "prose-code:font-mono prose-code:text-sm prose-code:font-normal prose-code:whitespace-nowrap": true,
     "prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5": true,
 
-    // Pre (code block) styling
+    // Pre (code block) styling with improved visual design
     "prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4": true,
 
-    // Table styling with improved readability
-    "prose-table:w-full prose-table:my-6 prose-table:border-collapse prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background": true,
-    "prose-th:text-sm prose-th:font-semibold prose-th:bg-tertiary prose-th:px-4 prose-th:py-2.5 prose-th:border prose-th:border-border": true,
-    "prose-tr:border-border prose-tr:border": true,
-    "prose-td:px-4 prose-td:py-3 prose-td:border prose-td:border-border": true,
+    // Table styling with improved structure and readability
+    "prose-table:w-full prose-table:my-6 prose-table:border-collapse prose-table:bg-background": true,
+    "prose-th:text-sm prose-th:font-semibold prose-th:bg-tertiary prose-th:px-4 prose-th:py-2.5 prose-th:border-b prose-th:border-r prose-th:last:border-r-0 prose-th:border-border prose-th:text-left": true,
+    "prose-tr:border-b prose-tr:border-border": true,
+    "prose-td:px-4 prose-td:py-3 prose-td:border-b prose-td:border-r prose-td:last:border-r-0 prose-td:border-border prose-td:align-top": true,
 
-    // Link styling
-    "prose-a:text-brand prose-a:underline prose-a:underline-offset-2 hover:prose-a:no-underline": true,
+    // Link styling with improved accessibility
+    "prose-a:text-brand prose-a:underline prose-a:underline-offset-2 prose-a:decoration-[0.08em] hover:prose-a:no-underline prose-a:font-medium": true,
 
-    // Strong and emphasis
+    // Strong and emphasis with improved contrast
     "prose-strong:font-semibold prose-em:italic": true,
 
     // Horizontal rule
     "prose-hr:my-8 prose-hr:border-border": true,
 
-    // Image styling
-    "prose-img:rounded-md prose-img:my-6 prose-img:max-w-full": true,
+    // Image styling with improved display
+    "prose-img:rounded-md prose-img:my-6 prose-img:max-w-full prose-img:shadow-sm prose-img:mx-auto": true,
 
     // Theme
     "prose-prosetheme": true,
@@ -191,11 +191,17 @@ export const MarkdownContent = memo(
             } catch (error) {
                 log.error("Error processing content:", { data: error });
             }
+
+            // Cleanup function to clear content when component unmounts
+            return () => {
+                setPreviousContent([]);
+                setCurrentContent("");
+            };
         }, [content, isCompleted, currentTheme]);
 
         if (isCompleted && !isLast) {
             return (
-                <div className={cn("", markdownStyles, className)}>
+                <div className={cn("markdown-content", markdownStyles, className)}>
                     <ErrorBoundary fallback={<ErrorPlaceholder />}>
                         <MemoizedMdxChunk chunk={currentContent} />
                     </ErrorBoundary>
@@ -204,7 +210,7 @@ export const MarkdownContent = memo(
         }
 
         return (
-            <div className={cn("", markdownStyles, className)}>
+            <div className={cn("markdown-content", markdownStyles, className)}>
                 {previousContent.length > 0 &&
                     previousContent.map((chunk, index) => (
                         <ErrorBoundary fallback={<ErrorPlaceholder />} key={`prev-${index}`}>
@@ -297,6 +303,10 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
         return () => {
             isMounted = false;
+            // Clear MDX content when component unmounts
+            setMdx(null);
+            setError(null);
+            setIsLoading(false);
         };
     }, [chunk, theme]);
 

@@ -26,6 +26,7 @@ export const SETTING_TABS = {
     TERMS: "terms",
     PRIVACY: "privacy",
     CACHE: "cache",
+    MODELS: "models",
 } as const;
 
 type SideDrawerProps = {

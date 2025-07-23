@@ -75,9 +75,32 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const threadsPerPage = 10; // Number of threads to display per page
 
     const sortThreads = (threads: Thread[], sortBy: "createdAt") => {
-        return [...threads].sort((a, b) =>
-            getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])),
+        if (!threads || !Array.isArray(threads)) {
+            return [];
+        }
+
+        // Filter out invalid threads
+        const validThreads = threads.filter(
+            (thread) =>
+                thread && typeof thread === "object" && thread.id && thread[sortBy] !== undefined,
         );
+
+        return [...validThreads].sort((a, b) => {
+            try {
+                const dateA = new Date(a[sortBy]);
+                const dateB = new Date(b[sortBy]);
+
+                // Check if dates are valid
+                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+                    return 0;
+                }
+
+                return getCompareDesc(dateA, dateB);
+            } catch (error) {
+                console.error("Error sorting threads:", error);
+                return 0;
+            }
+        });
     };
 
     const { data: session } = useSession();
@@ -108,29 +131,41 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
     // Group all threads by date
     sortThreads(threads, "createdAt")?.forEach((thread) => {
-        const createdAt = new Date(thread.createdAt);
-        const now = new Date();
+        // Skip invalid threads or pinned threads in regular groups to avoid duplicates
+        if (!thread || !thread.id || thread.pinned) return;
 
-        if (getIsToday(createdAt)) {
-            groupedThreads.today.push(thread);
-        } else if (getIsYesterday(createdAt)) {
-            groupedThreads.yesterday.push(thread);
-        } else if (getIsAfter(createdAt, getSubDays(now, 7))) {
-            groupedThreads.last7Days.push(thread);
-        } else if (getIsAfter(createdAt, getSubDays(now, 30))) {
-            groupedThreads.last30Days.push(thread);
-        } else {
-            groupedThreads.previousMonths.push(thread);
+        try {
+            const createdAt = new Date(thread.createdAt);
+            if (isNaN(createdAt.getTime())) {
+                // Skip threads with invalid dates
+                return;
+            }
+
+            const now = new Date();
+
+            if (getIsToday(createdAt)) {
+                groupedThreads.today.push(thread);
+            } else if (getIsYesterday(createdAt)) {
+                groupedThreads.yesterday.push(thread);
+            } else if (getIsAfter(createdAt, getSubDays(now, 7))) {
+                groupedThreads.last7Days.push(thread);
+            } else if (getIsAfter(createdAt, getSubDays(now, 30))) {
+                groupedThreads.last30Days.push(thread);
+            } else {
+                groupedThreads.previousMonths.push(thread);
+            }
+        } catch (error) {
+            // Skip threads that cause errors during date processing
+            console.error("Error processing thread date:", error);
         }
     });
 
     // Calculate total pages based on total threads (excluding pinned ones)
-    const totalThreads = Object.values(groupedThreads).reduce(
+    const totalNonPinnedThreads = Object.values(groupedThreads).reduce(
         (acc, group) => acc + group.length,
         0,
     );
-    const pinnedThreads = threads.filter((thread) => thread.pinned).length;
-    const totalPages = Math.ceil((totalThreads - pinnedThreads) / threadsPerPage);
+    const totalPages = Math.ceil(totalNonPinnedThreads / threadsPerPage);
 
     // Apply pagination to each group
     const paginateGroup = (group: Thread[], startIndex: number, endIndex: number) => {
@@ -146,26 +181,35 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
     // Function to get paginated threads for a specific group
     const getPaginatedThreadsForGroup = (group: Thread[]) => {
+        if (!Array.isArray(group)) {
+            return [];
+        }
+
+        // Filter out invalid thread objects
+        const validThreads = group.filter(
+            (thread) => thread && typeof thread === "object" && thread.id,
+        );
+
         if (processedThreads >= endIndex) {
             // We've already shown enough threads for this page
             return [];
         }
 
-        if (processedThreads + group.length <= startIndex) {
+        if (processedThreads + validThreads.length <= startIndex) {
             // This entire group is before our pagination window
-            processedThreads += group.length;
+            processedThreads += validThreads.length;
             return [];
         }
 
         // Calculate how many threads from this group should be shown
         const groupStartIndex = Math.max(0, startIndex - processedThreads);
-        const groupEndIndex = Math.min(group.length, endIndex - processedThreads);
+        const groupEndIndex = Math.min(validThreads.length, endIndex - processedThreads);
 
         // Update the processed threads count
-        processedThreads += group.length;
+        processedThreads += validThreads.length;
 
         // Return the slice of threads for this group
-        return group.slice(groupStartIndex, groupEndIndex);
+        return validThreads.slice(groupStartIndex, groupEndIndex);
     };
 
     const renderGroup = ({
@@ -181,8 +225,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         renderEmptyState?: () => React.ReactNode;
         isPinned?: boolean;
     }) => {
-        // Skip rendering if no threads and no empty state to render
+        // Skip rendering if threads is not an array or if no threads and no empty state to render
+        if (!threads || !Array.isArray(threads)) return null;
         if (threads.length === 0 && !renderEmptyState) return null;
+
+        // Filter out invalid threads
+        const validThreads = threads.filter(
+            (thread) => thread && typeof thread === "object" && thread.id,
+        );
 
         return (
             <Flex className="w-full gap-0.5" direction="col" items="start">
@@ -190,27 +240,34 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {groupIcon}
                     {title}
                 </div>
-                {threads.length === 0 && renderEmptyState ? (
+                {validThreads.length === 0 && renderEmptyState ? (
                     renderEmptyState()
                 ) : (
                     <Flex className="w-full gap-0.5" direction="col" gap="none">
-                        {threads.map((thread) => (
-                            <HistoryItem
-                                dismiss={() => {
-                                    if (forceMobile) {
-                                        setIsMobileSidebarOpen(false);
-                                    } else {
-                                        setIsSidebarOpen(() => false);
-                                    }
-                                }}
-                                isActive={thread.id === currentThreadId}
-                                isPinned={thread.pinned}
-                                key={thread.id}
-                                pinThread={() => pinThread(thread.id)}
-                                thread={thread}
-                                unpinThread={() => unpinThread(thread.id)}
-                            />
-                        ))}
+                        {validThreads.map((thread) => {
+                            // Ensure thread is valid before rendering
+                            if (!thread || !thread.id) {
+                                return null;
+                            }
+
+                            return (
+                                <HistoryItem
+                                    dismiss={() => {
+                                        if (forceMobile) {
+                                            setIsMobileSidebarOpen(false);
+                                        } else {
+                                            setIsSidebarOpen(() => false);
+                                        }
+                                    }}
+                                    isActive={thread.id === currentThreadId}
+                                    isPinned={thread.pinned}
+                                    key={`${isPinned ? "pinned-" : ""}${thread.id}`}
+                                    pinThread={() => pinThread(thread.id)}
+                                    thread={thread}
+                                    unpinThread={() => unpinThread(thread.id)}
+                                />
+                            );
+                        })}
                     </Flex>
                 )}
             </Flex>
@@ -799,11 +856,25 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     {renderGroup({
                                         title: "Pinned",
                                         threads: threads
-                                            .filter((thread) => thread.pinned)
-                                            .sort(
-                                                (a, b) =>
-                                                    b.pinnedAt.getTime() - a.pinnedAt.getTime(),
-                                            ),
+                                            .filter(
+                                                (thread) =>
+                                                    thread &&
+                                                    typeof thread === "object" &&
+                                                    thread.id &&
+                                                    thread.pinned,
+                                            )
+                                            .sort((a, b) => {
+                                                // Ensure pinnedAt exists and is a valid date
+                                                const aTime =
+                                                    a.pinnedAt instanceof Date
+                                                        ? a.pinnedAt.getTime()
+                                                        : 0;
+                                                const bTime =
+                                                    b.pinnedAt instanceof Date
+                                                        ? b.pinnedAt.getTime()
+                                                        : 0;
+                                                return bTime - aTime;
+                                            }),
                                         groupIcon: <Pin size={14} strokeWidth={2} />,
                                         renderEmptyState: () => (
                                             <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
@@ -829,32 +900,34 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         title: "Today",
                                         threads:
                                             currentPage === 1
-                                                ? getPaginatedThreadsForGroup(groupedThreads.today)
+                                                ? getPaginatedThreadsForGroup(
+                                                      groupedThreads.today,
+                                                  ).filter((thread) => !thread.pinned)
                                                 : [],
                                     })}
                                     {renderGroup({
                                         title: "Yesterday",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.yesterday,
-                                        ),
+                                        ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Last 7 Days",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.last7Days,
-                                        ),
+                                        ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Last 30 Days",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.last30Days,
-                                        ),
+                                        ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Older",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.previousMonths,
-                                        ),
+                                        ).filter((thread) => !thread.pinned),
                                     })}
                                 </>
                             )}

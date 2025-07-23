@@ -241,6 +241,18 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         }
     }, [currentThreadId, threadId, threadItems.length, loadThreadItems, isThreadLoaded]);
 
+    // Clear thread items when unmounting the component (e.g., navigating to a new chat)
+    useEffect(() => {
+        return () => {
+            // Cleanup function to clear thread items when component unmounts
+            useChatStore.setState((state) => ({
+                ...state,
+                threadItems: [],
+                currentThreadItem: null,
+            }));
+        };
+    }, []);
+
     // Show loading while threadId is being resolved
     if (!threadId || isLoading) {
         return (
@@ -251,14 +263,14 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     }
 
     return (
-        <div className="relative flex h-dvh w-full flex-col">
+        <div className="relative flex h-dvh w-full flex-col bg-muted/50">
             <div className="flex-1 overflow-hidden">
                 <div
                     className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
                     ref={scrollRef}
                 >
                     <div
-                        className="mx-auto w-[95%] max-w-3xl px-4 pb-[200px] pt-2 md:w-full"
+                        className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] pt-2 md:w-full"
                         ref={contentRef}
                     >
                         <Thread />

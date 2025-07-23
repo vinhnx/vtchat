@@ -231,14 +231,17 @@ export const ChatInput = ({
         <AnimatePresence>
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full px-3 md:px-4"
+                className={cn(
+                    "w-full px-3 md:px-4",
+                    currentThreadId ? "mb-3" : "mb-0", // Add bottom margin when in thread detail view
+                )}
                 initial={{ opacity: 0, y: 10 }}
                 key={"chat-input"}
                 transition={{ duration: 0.2, ease: "easeOut" }}
             >
                 <Flex
                     className={cn(
-                        "bg-background relative z-10 w-full max-w-4xl mx-auto rounded-2xl border border-border/60 shadow-lg",
+                        "bg-background relative z-10 w-full max-w-4xl mx-auto rounded-2xl border border-border/60",
                     )}
                     direction="col"
                 >
@@ -408,7 +411,7 @@ export const ChatInput = ({
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
-                    ? "pb-safe absolute bottom-0"
+                    ? "pb-safe absolute bottom-0 mb-4" // Add bottom margin when in thread detail view
                     : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
             )}
         >
@@ -423,7 +426,7 @@ export const ChatInput = ({
                 <Flex
                     className={cn(
                         "pb-safe w-full pb-4 md:pb-4",
-                        threadItemsLength > 0 ? "mb-0" : "h-full",
+                        threadItemsLength > 0 ? "mb-4" : "h-full", // Add bottom margin when there are thread items
                     )}
                     direction="col"
                     items="start"
@@ -432,7 +435,7 @@ export const ChatInput = ({
                     {!currentThreadId && showGreeting && (
                         <motion.div
                             animate={{ opacity: 1 }}
-                            className="mb-2 flex w-full flex-col items-center gap-2"
+                            className="mb-6 flex w-full flex-col items-center gap-2"
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.3, ease: "easeOut" }}
                         >

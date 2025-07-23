@@ -31,18 +31,18 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     p: ({ children }) => {
-        return <div className="mb-5 leading-relaxed markdown-text">{children}</div>;
+        return <div className="mb-5 leading-relaxed text-base markdown-text">{children}</div>;
     },
     h1: ({ children }) => {
         return (
-            <h1 className="text-2xl font-bold border-b border-border pb-2 mb-6 mt-8 markdown-text">
+            <h1 className="text-2xl font-bold border-b border-border pb-2 mb-6 mt-8 markdown-text tracking-tight">
                 {children}
             </h1>
         );
     },
     h2: ({ children }) => {
         return (
-            <h2 className="text-xl font-semibold border-b border-border/60 pb-1 mb-4 mt-7 markdown-text">
+            <h2 className="text-xl font-semibold border-b border-border/60 pb-1 mb-4 mt-7 markdown-text tracking-tight">
                 {children}
             </h2>
         );
@@ -59,7 +59,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return (
             <a
                 href={href}
-                className="text-brand underline underline-offset-2 hover:no-underline transition-colors"
+                className="text-brand underline underline-offset-2 decoration-[0.08em] hover:no-underline transition-colors font-medium"
                 target={href?.startsWith("http") ? "_blank" : undefined}
                 rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
             >
@@ -74,11 +74,11 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return <ol className="pl-6 my-4 space-y-2 list-decimal">{children}</ol>;
     },
     li: ({ children }) => {
-        return <li className="my-2 leading-relaxed markdown-text">{children}</li>;
+        return <li className="my-2 leading-relaxed text-base markdown-text pl-1">{children}</li>;
     },
     blockquote: ({ children }) => {
         return (
-            <blockquote className="border-l-4 border-border pl-4 italic my-6 text-muted-foreground">
+            <blockquote className="border-l-4 border-border pl-4 py-1 italic my-6 text-muted-foreground bg-secondary/20 rounded-r-md">
                 {children}
             </blockquote>
         );
@@ -91,7 +91,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
             <img
                 src={src}
                 alt={alt || "Image"}
-                className="rounded-md my-6 max-w-full h-auto"
+                className="rounded-md my-6 max-w-full h-auto shadow-sm mx-auto"
                 loading="lazy"
                 {...props}
             />
@@ -99,22 +99,24 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     },
     table: ({ children }) => {
         return (
-            <div className="overflow-x-auto my-6">
-                <table className="w-full border-collapse border border-border rounded-lg bg-background">
-                    {children}
-                </table>
+            <div className="overflow-x-auto my-6 rounded-lg border border-border">
+                <table className="w-full border-collapse bg-background">{children}</table>
             </div>
         );
     },
     th: ({ children }) => {
         return (
-            <th className="text-sm font-semibold bg-tertiary px-4 py-2.5 border border-border markdown-text">
+            <th className="text-sm font-semibold bg-tertiary px-4 py-2.5 border-b border-r last:border-r-0 border-border markdown-text text-left">
                 {children}
             </th>
         );
     },
     td: ({ children }) => {
-        return <td className="px-4 py-3 border border-border markdown-text">{children}</td>;
+        return (
+            <td className="px-4 py-3 border-b border-r last:border-r-0 border-border markdown-text align-top">
+                {children}
+            </td>
+        );
     },
     pre: ({ children }) => {
         if (typeof children === "string") {
@@ -130,7 +132,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     code: ({ children, className }) => {
         if (!className) {
             return (
-                <code className="font-mono text-sm bg-secondary border-border border rounded-md px-1.5 py-0.5">
+                <code className="font-mono text-sm bg-secondary border-border border rounded-md px-1.5 py-0.5 whitespace-nowrap">
                     {children}
                 </code>
             );

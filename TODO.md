@@ -5,9 +5,6 @@
 ok go-> https://vtchat.io.vn/
 
 --
-fix tools selections color and styles (check image gen button effects)
-
---
 
 invite credit system to raise user engagement and retention. users can earn credits by inviting friends, which can be redeemed for premium features or services. implement a referral tracking system to monitor successful invites and credit distribution. ensure that the process is seamless and incentivizes users to share the platform with their network. consider gamification elements, such as leaderboards or badges, to further encourage participation in the invite program.
 
@@ -15,28 +12,12 @@ https://lovable.dev/invite/c0438cac-ab38-40f5-bf50-aa07a3ce7d76
 
 --
 
-improve chat thread markdown-content mdx typography, line height, font size, and spacing. make it more readable and visually appealing. use consistent styles across all markdown elements (headings, paragraphs, lists, code blocks, etc.). font size should be 16px, line height 1.5, and consistent spacing between elements. font family should be SF Pro Display / Helvetica Neue or similar sans-serif for better readability. ensure that code blocks have a distinct background color and padding for better visibility. headings should have consistent margins and font weights to create a clear hierarchy. lists should have proper indentation and spacing to enhance readability. overall, aim for a clean, modern look that is easy on the eyes and enhances the user experience.
-
---
-
-increase bottom margin from chat input box to bottom of the screen on thread detail screen (currently it is too close to the bottom)
-
---
-
-remove shadow on chat input box
-
 --
 https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-5/
 
 --
 
-fix settings container on desktop is appearing as mobile variant -> it should be full width and not have the mobile styles applied on desktop mode
-
---
-
 https://v5.ai-sdk.dev/docs/announcing-ai-sdk-5-beta#new-features
-
---
 
 --
 

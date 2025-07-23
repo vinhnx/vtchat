@@ -2,8 +2,9 @@
 
 import { useChatStore } from "@repo/common/store";
 import { Button } from "@repo/ui";
+import { cn } from "@repo/ui/src/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, Clock, Square } from "lucide-react";
+import { ArrowUp, Clock, Loader2, Square } from "lucide-react";
 import { ICON_SIZES } from "../config/constants";
 import { useIsChatPage } from "../hooks/useIsChatPage";
 
@@ -60,9 +61,22 @@ export function SendStopButton({
                             size="icon-sm"
                             tooltip={getStopTooltip()}
                             variant={showTimeoutIndicator ? "destructive" : "default"}
+                            className={cn(
+                                "transition-all duration-200",
+                                showTimeoutIndicator
+                                    ? "hover:bg-destructive/90"
+                                    : "hover:bg-muted-foreground/10",
+                            )}
+                            disabled={isGenerating && showTimeoutIndicator}
                         >
                             {showTimeoutIndicator ? (
                                 <Clock size={ICON_SIZES.small} strokeWidth={2} />
+                            ) : isGenerating ? (
+                                <Loader2
+                                    size={ICON_SIZES.small}
+                                    strokeWidth={2}
+                                    className="animate-spin"
+                                />
                             ) : (
                                 <Square size={ICON_SIZES.small} strokeWidth={2} />
                             )}
@@ -85,6 +99,7 @@ export function SendStopButton({
                             size="icon-sm"
                             tooltip="Send Message"
                             variant="default"
+                            className="transition-all duration-200 hover:bg-muted-foreground/10"
                         >
                             <ArrowUp size={ICON_SIZES.small} strokeWidth={2} />
                         </Button>
