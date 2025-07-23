@@ -56,7 +56,7 @@
     display: flex;
     align-items: center;
     border-top: 1px solid var(--border-sidebar);
-    background-color: var(--bg-sidebar);
+    background-color: rgba(240, 240, 240, 0.9) !important; /* Light mode background */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     width: 300px !important;
     max-width: 300px !important;
@@ -64,6 +64,6 @@
 
 /* Dark mode specific styles */
 .dark .sidebar-pagination {
-    background-color: var(--bg-sidebar);
+    background-color: rgba(30, 30, 30, 0.9) !important; /* Dark mode background */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }

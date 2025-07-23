@@ -850,7 +850,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                 {/* Pagination Controls */}
                 {isSidebarOpen && totalPages > 1 && (
-                    <div className="fixed bottom-0 right-0 w-[300px] max-w-[300px] bg-sidebar py-2 px-4 z-20 sidebar-pagination shadow-md border-t border-sidebar-border">
+                    <div className="fixed bottom-0 right-0 w-[300px] max-w-[300px] bg-sidebar-accent/20 py-2 px-4 z-20 sidebar-pagination shadow-md border-t border-sidebar-border">
                         <div className="flex flex-row items-center justify-between">
                             <span className="text-sidebar-foreground/70 text-xs font-medium">
                                 Page {currentPage} of {totalPages}

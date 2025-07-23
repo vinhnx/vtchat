@@ -8,10 +8,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-make sure thread view in sidebar scrollable. also implmentation pagination
-
---
-
 https://v5.ai-sdk.dev/docs/announcing-ai-sdk-5-beta#new-features
 
 --
