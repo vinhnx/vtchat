@@ -304,27 +304,27 @@ html.dark .shiki span {
 .custom-scrollbar {
     /* Firefox */
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 3px;
+    background: hsl(var(--muted-foreground) / 0.5);
+    border-radius: 4px;
     transition: background-color 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.5);
+    background: hsl(var(--muted-foreground) / 0.8);
 }
 
 .custom-scrollbar::-webkit-scrollbar-corner {
@@ -335,27 +335,27 @@ html.dark .shiki span {
 .thin-scrollbar {
     /* Firefox */
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
 }
 
 .thin-scrollbar::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 2px;
+    background: hsl(var(--muted-foreground) / 0.5);
+    border-radius: 3px;
     transition: background-color 0.2s ease;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.6);
+    background: hsl(var(--muted-foreground) / 0.8);
 }
 
 .thin-scrollbar::-webkit-scrollbar-corner {
